@@ -1,0 +1,1183 @@
+# SL 1.7 — Amortization and annuities（ローン返済と年金） {#sec-sl-1-7}
+
+::: {.callout-note}
+## What you should be able to do
+- **amortization**（ローンの返済）と **annuity**（年金）が、どういう仕組みなのかを説明できる。
+- Finance Solver の `Pmt` 欄を使って、**毎回の返済額・受取額**を求められる。
+- お金の流れから、$PV$・$Pmt$・$FV$ の**符号**を正しく決められる。
+- **総返済額**と**支払った利息の総額**を求められる。
+- 途中の時点での **outstanding balance**（残高）を求められる。
+- 返済期間や利率を、Finance Solver で逆に求められる。
+:::
+
+::: {.callout-important}
+## Formula booklet には、何も載っていません
+SL 1.7 の欄は、**公式集にありません。** SL 1.2〜1.6 には式が印刷されていますが、1.7 は飛ばされています。
+
+理由はシラバスに書いてあります。
+
+> Knowledge of the annuity formula will enhance understanding but **will not be examined**.
+
+つまり **annuity の公式は試験に出ません。** 覚える必要もありません。
+
+そのかわり、シラバスの Content 欄はこうなっています。
+
+> Amortization and annuities **using technology**.
+
+**この項目は、電卓で解くことが前提です。** 公式を探すのではなく、Finance Solver の使い方を身につけてください。
+:::
+
+::: {.callout-warning}
+## 支払いは「期末」と決まっています
+シラバスに、はっきりこう書いてあります。
+
+> In examinations the payments will be made at the **end** of the period.
+
+ですから Finance Solver の `PmtAt` は、**いつも `END`** です。`BEGIN` にする問題は出ません。**触らないでください。**
+:::
+
+## The idea
+
+::: {.callout-tip}
+## 電卓を開きながら、このページを読んでください
+このページは、**Finance Solver を開いた状態で読む**のが一番わかりやすいです。まず電卓を出してください。
+
+```
+menu → Finance → Finance Solver
+```
+
+`N` `I(%)` `PV` `Pmt` `FV` `PpY` `CpY` `PmtAt` の8つの欄が、縦に並んだ画面が出ます。
+
+**これから出てくる説明は、全部この8つの欄の話です。** 読むだけだと記号の羅列に見えますが、画面を見ながらだと「ああ、この欄のことか」とすぐ分かります。
+
+例題も、読みながら**実際に打ち込んでみてください。** 自分で数字を入れて答えが出た経験が1回あれば、試験でも手が動きます。
+:::
+
+### SL 1.4 と何が違うのか
+
+SL 1.4 では、最初に1回お金を預けて、あとは放っておきました。**途中でお金が動かない**ので、Finance Solver の `Pmt` はいつも $0$ でした。
+
+SL 1.7 では、**毎回お金が動きます。**
+
+- ローンを組んだら、**毎月返します**
+- 年金を積み立てるなら、**毎月払い込みます**
+- 老後に受け取るなら、**毎月受け取ります**
+
+この「毎回同じ額」が `Pmt`（payment）です。**新しいのは、`Pmt` がゼロでなくなる、それだけ**です。
+
+| | SL 1.4 | SL 1.7 |
+|---|---|---|
+| 最初のお金 | $PV$ | $PV$ |
+| 毎回のお金 | **なし**（$Pmt = 0$） | **あり**（$Pmt \neq 0$） |
+| 最後のお金 | $FV$ | $FV$ |
+| 使う道具 | 公式 または Finance Solver | **Finance Solver**（公式集に式がない） |
+
+: SL 1.4 と SL 1.7 の違い {#tbl-14-vs-17}
+
+### amortization（ローンの返済）
+
+**amortization**（アモチゼーション、元利均等返済）は、**借りたお金を毎回同じ額ずつ返して、最後にちょうど $0$ にする**返し方です。日本語では「元利均等返済」といいます。
+
+$\$15\,000$ を借りて、毎月同じ額を5年間返す。5年後に借金が $0$ になるように、毎月いくら返せばいいか。**これが典型的な amortization の問題**です。
+
+お金の流れは3つです。
+
+$$
+\underbrace{\text{借りる}}_{PV \ (+)}
+\quad \longrightarrow \quad
+\underbrace{\text{毎月返す}}_{Pmt \ (-)}
+\quad \longrightarrow \quad
+\underbrace{\text{完済}}_{FV = 0}
+$$
+
+**借りたときはお金が入ってくる**ので $PV$ は正、**返すときは出ていく**ので $Pmt$ は負。最後は借金がなくなるので $FV = 0$ です。
+
+### annuity（年金）
+
+**annuity**（アニュイティ、年金）は、**毎回同じ額を払い込む、または受け取る**仕組みです。2つの向きがあります。
+
+**（1）積み立てる年金**
+
+毎月お金を払い込んで、将来まとまった額を作ります。
+
+$$
+\underbrace{PV = 0}_{\text{最初は空}}
+\quad \longrightarrow \quad
+\underbrace{\text{毎月払い込む}}_{Pmt \ (-)}
+\quad \longrightarrow \quad
+\underbrace{\text{受け取る}}_{FV \ (+)}
+$$
+
+**（2）受け取る年金**
+
+最初にまとまった額を預けて、毎月受け取っていき、最後に使い切ります。
+
+$$
+\underbrace{\text{預ける}}_{PV \ (-)}
+\quad \longrightarrow \quad
+\underbrace{\text{毎月受け取る}}_{Pmt \ (+)}
+\quad \longrightarrow \quad
+\underbrace{\text{使い切る}}_{FV = 0}
+$$
+
+### 符号を決める、たったひとつの考え方
+
+3つの場合を覚えようとしないでください。**覚えるのは1つだけ**です。
+
+::: {.callout-important}
+## お金が自分から出ていくなら負、入ってくるなら正
+これだけです。SL 1.4 でも同じでした。
+
+- **借りる** → お金が入ってくる → **正**
+- **返す** → お金が出ていく → **負**
+- **預ける・払い込む** → お金が出ていく → **負**
+- **受け取る** → お金が入ってくる → **正**
+
+$PV$、$Pmt$、$FV$ の3つに、この規則を1つずつ当てはめるだけです。
+
+**同じ符号ばかりが並ぶことは、まずありません。** 3つとも負や3つとも正になったら、どこかで間違えています。
+:::
+
+表にすると、こうなります。
+
+| | $PV$ | $Pmt$ | $FV$ |
+|---|---|---|---|
+| **ローンの返済**（amortization） | $+$（借りる） | $-$（返す） | $0$ |
+| **積み立てる年金** | $0$ | $-$（払い込む） | $+$（受け取る） |
+| **受け取る年金** | $-$（預ける） | $+$（受け取る） | $0$ |
+
+: 3つの場合の符号 {#tbl-signs}
+
+::: {.callout-tip}
+## 符号は反対でも通ります
+ローンの問題を $PV = -15\,000$、$Pmt = +$（正）で入れても、**同じ大きさの答えが出ます。** 「銀行の側から見た流れ」になるだけで、$PV$ と $Pmt$ が**反対の符号**になっていることが大事だからです。
+
+ただし混乱のもとなので、**この本では「自分から見た流れ」で統一します。** どちらかに決めてしまってください。
+
+答案には、**絶対値（大きさ）を書きます。** 「毎月 $\$289.99$ 返す」であって、$-289.99$ とは書きません。
+:::
+
+### 総額と利息
+
+Finance Solver が出してくれるのは `Pmt` だけです。**そのあとの2つは、自分で計算します。**
+
+$$
+\text{総返済額} = |Pmt| \times N
+$$ {#eq-total-paid}
+
+$$
+\text{支払った利息} = \text{総返済額} - \text{借りた額}
+$$ {#eq-total-interest}
+
+$\$15\,000$ を借りて総額 $\$17\,399.52$ 返したなら、差額の $\$2399.52$ が利息です。**「借りた額より多く返す」その差が利息**、というだけの話です。
+
+積み立てる年金なら、向きが逆になります。
+
+$$
+\text{受け取った利息} = FV - |Pmt| \times N
+$$
+
+## Why it works
+
+ここでは、**なぜ電卓が必要なのか**だけを見ます。annuity の公式はシラバスで試験に出ないと明記されているので、深入りしません。
+
+$\$15\,000$ を年利 $6\%$（monthly）で借りて、毎月 $\$289.99$ 返すとします。1か月あたりの利率は $\dfrac{6\%}{12} = 0.5\%$ です。
+
+**1回目の返済で何が起きるか**を追ってみましょう。
+
+| | 金額 |
+|---|---|
+| 1か月分の利息 | $15\,000 \times 0.005 = \$75.00$ |
+| 返した額 | $\$289.99$ |
+| **元本が減った分** | $289.99 - 75.00 = \$214.99$ |
+| 残高 | $15\,000 - 214.99 = \$14\,785.01$ |
+
+: 1回目の返済の中身 {#tbl-first-payment}
+
+**毎回の返済額は同じでも、中身は毎回違います。** 残高が減ると利息も減るので、元本に回る分がだんだん増えていきます。
+
+$$
+\text{2回目の利息} = 14\,785.01 \times 0.005 = \$73.93 \quad (\text{1回目より少ない})
+$$
+
+つまり、**残高が次の利息を決め、その利息が次の残高を決める**という繰り返しです。これを60回分たどらないと最終的な残高が分かりません。
+
+**手計算で60回たどるのは現実的ではありません。** だから電卓が要ります。シラバスが `using technology` と書いているのは、このためです。
+
+::: {.callout-note}
+## 「amortization（償却）」という言葉の意味
+借金が少しずつ削られて、最後に $0$ になることを **amortize**（償却する）といいます。
+
+@tbl-first-payment の「元本が減った分」が、まさに削られている部分です。**最初は利息の割合が大きく、終わりに近づくほど元本の割合が大きくなります。**
+
+ローンを組んだ最初の数年は、返しても返しても元本が減らない、と感じるのはこのためです。
+:::
+
+## Worked examples
+
+::: {.callout-note appearance="simple"}
+問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
+:::
+
+::: {#exm-am-loan}
+[Paper 2]{.ib-tag} [Aiko borrows $\$15\,000$ to buy a car. The loan is charged interest at a nominal annual rate of $6\%$, compounded monthly. She repays the loan in equal monthly instalments over 5 years.]{.q-en}
+
+**(a)** [Find her monthly repayment, correct to two decimal places.]{.q-en}
+
+**(b)** [Find the total amount she repays.]{.q-en}
+
+**(c)** [Find the total interest she pays.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+愛子さんは車を買うために $\$15\,000$ を借りました。このローンには、名目年利 $6\%$、利息は毎月つく、という条件で利息がかかります。彼女は5年間、毎月同じ額を返します。
+
+**(a)** 毎月の返済額を、小数第2位まで求めなさい。
+
+**(b)** 返済の総額を求めなさい。
+
+**(c)** 支払う利息の総額を求めなさい。
+
+</details>
+
+---
+
+::: {.callout-important}
+## 計算の前に：お金の流れを決める
+**借りる**ので $PV$ は正、**返す**ので $Pmt$ は負、5年後に**完済**するので $FV = 0$（@tbl-signs）。
+
+`compounded monthly` かつ毎月返すので $PpY = CpY = 12$。5年なので $N = 12 \times 5 = 60$ です。**$N$ は年数ではありません。**
+:::
+
+**(a)** Finance Solver に次のように入れて、`Pmt` の欄で `enter` を押します。
+
+```
+N     = 60
+I(%)  = 6
+PV    = 15000
+Pmt   = （ここにカーソルを置いて enter）
+FV    = 0
+PpY   = 12
+CpY   = 12
+PmtAt = END
+```
+
+$$
+Pmt = -289.9920\ldots
+$$
+
+負の数で返ってきますが、これは「出ていくお金」という意味です。答えは大きさで書きます。
+
+$$
+\text{毎月の返済額} \approx \$289.99
+$$
+
+**(b)** 60回払うので
+
+$$
+289.9920\ldots \times 60 = 17\,399.52\ldots \approx \$17\,399.52
+$$
+
+**(c)** 借りたのは $\$15\,000$ でした。
+
+$$
+17\,399.52 - 15\,000 = \$2399.52
+$$
+
+::: {.callout-warning}
+## (b) では、丸める前の値を掛けてください
+$289.99 \times 60 = \$17\,399.40$ となり、正しい $\$17\,399.52$ と $12$ セントずれます。
+
+電卓の `Pmt` 欄に入っているのは $-289.9920\ldots$ という正確な値です。**手で打ち直さずに、その値をそのまま使ってください。**
+
+SL 1.4 でも書いた「途中で四捨五入しない」と同じ話です。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$N = 60, \quad I\% = 6, \quad PV = 15\,000, \quad FV = 0, \quad PpY = CpY = 12$$
+
+**(a)** *Using the GDC Finance Solver:*
+$$Pmt = -289.992\ldots \quad \Rightarrow \quad \text{monthly repayment} = \$289.99$$
+
+**(b)**
+$$289.992\ldots \times 60 = 17\,399.52\ldots \approx \$17\,399.52$$
+
+**(c)**
+$$17\,399.52 - 15\,000 = \$2399.52$$
+:::
+:::
+
+::: {#exm-am-savings}
+[Paper 2]{.ib-tag} [Ben pays $\$200$ at the end of each month into a savings account. The account pays a nominal annual rate of $4.2\%$, compounded monthly. He does this for 15 years.]{.q-en}
+
+**(a)** [Find the value of the account after 15 years.]{.q-en}
+
+**(b)** [Find the total amount Ben has paid in.]{.q-en}
+
+**(c)** [Find the total interest earned.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ベンさんは毎月末に $\$200$ を貯蓄口座に払い込みます。この口座には名目年利 $4.2\%$、利息は毎月つく、という条件がついています。彼はこれを15年間続けます。
+
+**(a)** 15年後の口座の価値を求めなさい。
+
+**(b)** ベンさんが払い込んだ総額を求めなさい。
+
+**(c)** 得た利息の総額を求めなさい。
+
+</details>
+
+---
+
+**これは「積み立てる年金」です。** 最初は空っぽなので $PV = 0$、毎月**払い込む**ので $Pmt$ は負、最後に**受け取る**ので $FV$ は正になります（@tbl-signs）。
+
+**(a)**
+
+```
+N     = 180          ← 12 × 15
+I(%)  = 4.2
+PV    = 0
+Pmt   = −200
+FV    = （ここにカーソルを置いて enter）
+PpY   = 12
+CpY   = 12
+```
+
+$$
+FV = 50\,031.23\ldots \approx \$50\,031.23
+$$
+
+**(b)** 毎月 $\$200$ を180回です。
+
+$$
+200 \times 180 = \$36\,000
+$$
+
+**(c)** 増えた分が利息です。
+
+$$
+50\,031.23 - 36\,000 = \$14\,031.23
+$$
+
+::: {.callout-tip}
+## 答えの大きさを確かめる習慣
+払い込んだ $\$36\,000$ より $FV$ が**大きく**なるはずです。実際 $\$50\,031$ で、つじつまが合っています。
+
+もし $FV$ が $\$36\,000$ より小さく出たら、**$Pmt$ の符号を間違えています。** $Pmt$ を正にすると「毎月引き出す」意味になってしまい、口座が減っていきます。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$N = 180, \quad I\% = 4.2, \quad PV = 0, \quad Pmt = -200, \quad PpY = CpY = 12$$
+
+**(a)** *Using the GDC Finance Solver:*
+$$FV = 50\,031.23\ldots \approx \$50\,031.23$$
+
+**(b)**
+$$200 \times 180 = \$36\,000$$
+
+**(c)**
+$$50\,031.23 - 36\,000 = \$14\,031.23$$
+:::
+:::
+
+::: {#exm-am-payout}
+[Paper 2]{.ib-tag} [Chen has $\$250\,000$ in a retirement account when he retires. The account pays a nominal annual rate of $5\%$, compounded monthly. He plans to withdraw an equal amount at the end of each month for 20 years, after which the account will be empty.]{.q-en}
+
+**(a)** [Find the amount he can withdraw each month.]{.q-en}
+
+**(b)** [Find the total amount he withdraws over the 20 years.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+チェンさんは退職したとき、退職金の口座に $\$250\,000$ を持っています。この口座には名目年利 $5\%$、利息は毎月つく、という条件がついています。彼はこれから20年間、毎月末に同じ額を引き出していき、20年後に口座が空になるようにするつもりです。
+
+**(a)** 毎月引き出せる額を求めなさい。
+
+**(b)** 20年間で引き出す総額を求めなさい。
+
+</details>
+
+---
+
+**これは「受け取る年金」です。** 最初に**預ける**ので $PV$ は負、毎月**受け取る**ので $Pmt$ は正、最後に**使い切る**ので $FV = 0$（@tbl-signs）。
+
+**(a)**
+
+```
+N     = 240          ← 12 × 20
+I(%)  = 5
+PV    = −250000
+Pmt   = （ここにカーソルを置いて enter）
+FV    = 0
+PpY   = 12
+CpY   = 12
+```
+
+$$
+Pmt = 1649.89\ldots \approx \$1649.89
+$$
+
+**(b)**
+
+$$
+1649.89\ldots \times 240 = 395\,973.44\ldots \approx \$395\,973.44
+$$
+
+::: {.callout-important}
+## $250\,000 \div 240$ ではありません
+単純に割ると $\dfrac{250\,000}{240} = \$1041.67$ ですが、実際には **$\$1649.89$ 引き出せます。** $600$ 以上も多いのです。
+
+理由は、**引き出さずに残っているお金にも、その間ずっと利息がついている**からです。20年かけて $\$145\,973$ ほどの利息が生まれ、そのぶん多く受け取れます。
+
+答えが $\$1041.67$ に近い値になったら、$FV$ か符号を間違えています。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$N = 240, \quad I\% = 5, \quad PV = -250\,000, \quad FV = 0, \quad PpY = CpY = 12$$
+
+**(a)** *Using the GDC Finance Solver:*
+$$Pmt = 1649.89\ldots \approx \$1649.89$$
+
+**(b)**
+$$1649.89\ldots \times 240 = 395\,973.44\ldots \approx \$395\,973.44$$
+:::
+:::
+
+::: {#exm-am-balance}
+[Paper 2]{.ib-tag} [Aiko's loan is described in @exm-am-loan. She borrowed $\$15\,000$ at a nominal annual rate of $6\%$, compounded monthly, repaying $\$289.99$ at the end of each month for 5 years.]{.q-en}
+
+**(a)** [Find the amount she still owes after 3 years.]{.q-en}
+
+**(b)** [Hence find the total interest she has paid during those 3 years.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+愛子さんのローンは @exm-am-loan のとおりです。名目年利 $6\%$、利息は毎月、$\$15\,000$ を借りて、毎月末に $\$289.99$ ずつ5年間返します。
+
+**(a)** 3年後にまだ残っている借金の額を求めなさい。
+
+**(b)** **その結果を使って**、その3年間に支払った利息の総額を求めなさい。
+
+</details>
+
+---
+
+**(a)** 考え方は簡単です。**「3年で終わるローン」だと思って $FV$ を求めます。**
+
+$N$ だけを $36$ に変えて、あとは同じです。
+
+```
+N     = 36           ← 3年ぶんだけ払った時点
+I(%)  = 6
+PV    = 15000
+Pmt   = −289.992...
+FV    = （ここにカーソルを置いて enter）
+PpY   = 12
+CpY   = 12
+```
+
+$$
+FV = -6543.05\ldots
+$$
+
+負の数は「まだ返す側」という意味です。答えは大きさで書きます。
+
+$$
+\text{残っている借金} \approx \$6543.05
+$$
+
+**(b)** `Hence` とあるので、**(a) の答えを使います。**
+
+3年間に払ったお金と、実際に減った借金を比べます。
+
+$$
+\text{払った額} = 289.9920\ldots \times 36 = \$10\,439.71
+$$
+
+$$
+\text{減った借金} = 15\,000 - 6543.05 = \$8456.95
+$$
+
+差が利息です。
+
+$$
+10\,439.71 - 8456.95 = \$1982.76
+$$
+
+::: {.callout-important}
+## 5年ぶんの利息の、半分以上を3年で払っています
+@exm-am-loan で、5年間の利息の総額は $\$2399.52$ でした。そのうち $\$1982.76$、**$83\%$ を最初の3年で払っている**ことになります。
+
+[Why it works](#why-it-works) で見たとおり、**最初は利息の割合が大きい**からです。この非対称さが amortization の本質で、`Comment on` を求められたときに書ける内容です。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** *Using the GDC Finance Solver with $N = 36$:*
+$$FV = -6543.05\ldots \quad \Rightarrow \quad \text{amount still owed} = \$6543.05$$
+
+**(b)**
+$$\text{paid} = 289.992\ldots \times 36 = \$10\,439.71$$
+$$\text{principal repaid} = 15\,000 - 6543.05 = \$8456.95$$
+$$\text{interest} = 10\,439.71 - 8456.95 = \$1982.76$$
+:::
+:::
+
+::: {#exm-am-creditcard}
+[Paper 2]{.ib-tag} [Maya owes $\$4000$ on a credit card. The card charges interest at a nominal annual rate of $19.9\%$, compounded monthly. She pays $\$100$ at the end of each month.]{.q-en}
+
+**(a)** [Find the number of months it will take her to pay off the debt.]{.q-en}
+
+**(b)** [Find the number of months it would take if she paid $\$200$ each month instead.]{.q-en}
+
+**(c)** [Comment on your answers.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+マヤさんはクレジットカードに $\$4000$ の借金があります。このカードには名目年利 $19.9\%$、利息は毎月つく、という条件で利息がかかります。彼女は毎月末に $\$100$ を支払います。
+
+**(a)** 借金を返し終えるのに何か月かかるかを求めなさい。
+
+**(b)** かわりに毎月 $\$200$ 支払った場合、何か月かかるかを求めなさい。
+
+**(c)** 得られた答えについてコメントしなさい。
+
+</details>
+
+---
+
+**(a)** 分からないのが $N$ なので、$N$ の欄で `enter` を押します。
+
+```
+N     = （ここにカーソルを置いて enter）
+I(%)  = 19.9
+PV    = 4000
+Pmt   = −100
+FV    = 0
+PpY   = 12
+CpY   = 12
+```
+
+$$
+N = 66.19\ldots
+$$
+
+**小数で出ます。** $66$ 回では返しきれないので、**切り上げて $67$ か月**です（最後の1回は $\$100$ より少なくなります）。
+
+**(b)** $Pmt = -200$ に変えるだけです。
+
+$$
+N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
+$$
+
+**(c)** 数値だけでは点になりません。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*Doubling the monthly payment from \$100 to \$200 reduces the time from 67 months to 25 months, which is much less than half. This is because a larger payment reduces the balance faster, so less interest is charged each month. Paying only \$100 means that most of the early payments go towards interest rather than towards reducing the debt.*
+:::
+
+（毎月の支払いを $\$100$ から $\$200$ に倍にすると、期間は67か月から25か月に減ります。これは半分よりずっと短い期間です。支払いが多いほど残高が速く減り、毎月かかる利息も少なくなるからです。$\$100$ しか払わないと、最初のほうの支払いの大部分が、借金を減らすのではなく利息に消えてしまいます。）
+
+::: {.callout-important}
+## 数字を1つ出すと、説得力が上がります
+1か月目の利息を計算してみてください。
+
+$$
+4000 \times \frac{19.9}{1200} = \$66.33
+$$
+
+**$\$100$ 払っても、借金が減るのは $\$33.67$ だけ**です。$3$ 分の $2$ が利息に消えています。
+
+シラバスの Aim 8 には、こう書かれています。
+
+> Ethical perceptions of borrowing and lending money; short-term loans at high interest rates, how can knowledge of mathematics result in individuals being exploited or protected from extortion?
+
+**数学を知っていると、自分を守れる。** この項目は、そういう項目です。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$I\% = 19.9, \quad PV = 4000, \quad FV = 0, \quad PpY = CpY = 12$$
+
+**(a)** *With $Pmt = -100$:*
+$$N = 66.19\ldots \quad \Rightarrow \quad \mathbf{67} \text{ months}$$
+
+**(b)** *With $Pmt = -200$:*
+$$N = 24.50\ldots \quad \Rightarrow \quad \mathbf{25} \text{ months}$$
+
+**(c)** *Doubling the payment reduces the time from 67 months to 25 months, which is much less than half. A larger payment reduces the balance faster, so less interest is charged each month.*
+:::
+:::
+
+## Common errors
+
+::: {.callout-warning}
+## $PV$ と $Pmt$ を同じ符号で入れる
+**これがこの項目で一番多い間違いです。**
+
+$PV = 15\,000$、$Pmt = 289.99$ と両方正にすると、「借りたうえに毎月さらに払い込む」という意味になり、答えが出ないか、まったく違う値が返ってきます。
+
+**お金が出ていくなら負、入ってくるなら正**（@tbl-signs）。$PV$ と $Pmt$ が**反対の符号**になっているかを、`enter` を押す前に確認してください。
+:::
+
+::: {.callout-warning}
+## $N$ に年数を入れる
+`monthly` で5年なら $N = 60$ です。$5$ ではありません。
+
+$PpY$、$CpY$、$N$ の**3つはセットで動きます。** $PpY = CpY = 12$ にしたら、$N$ も $12 \times (\text{年数})$ にしてください。
+
+答えが極端に小さい（または大きい）ときは、まず $N$ を疑ってください。
+:::
+
+::: {.callout-warning}
+## $FV = 0$ を入れ忘れる
+ローンの問題では、$FV$ の欄が空だったり、前の問題の値が残っていたりすると、答えが変わってしまいます。
+
+**「最後に借金が $0$ になる」から $FV = 0$** です。使わない欄も、必ず $0$ を入れてください。
+:::
+
+::: {.callout-warning}
+## 答えを負の数のまま書く
+$Pmt = -289.99$ と出ても、答案には **$\$289.99$** と書きます。
+
+負の符号は「お金の向き」を表しているだけで、金額そのものではありません。「毎月 $-289.99$ 円返す」という日本語がおかしいのと同じです。
+:::
+
+::: {.callout-warning}
+## 丸めた値を掛けて総額を出す
+$289.99 \times 60 = \$17\,399.40$ は、正しい $\$17\,399.52$ とずれます。
+
+**電卓の中の値をそのまま使ってください。** 手で打ち直すと、そこで丸めが入ります。
+:::
+
+::: {.callout-warning}
+## $N$ が小数のときに切り捨てる
+$N = 66.19$ を $66$ とするのは間違いです。**$66$ 回では返しきれません。**
+
+借金を返しきる問題では、いつも**切り上げ**です。最後の1回が少なくなるだけで、回数としては1回多く必要になります。
+:::
+
+::: {.callout-warning}
+## 「毎月の受取額 = 元金 ÷ 回数」だと思う
+$\dfrac{250\,000}{240} = \$1041.67$ ではありません。正しくは $\$1649.89$ です。
+
+**残っているお金に利息がつき続ける**ので、そのぶん多く受け取れます。単純な割り算に近い値が出たら、どこかで利息が効いていません。
+:::
+
+## Using your GDC (TI-Nspire CX II)
+
+**この項目は、電卓なしでは解けません。** シラバスが `using technology` と指定しているので、遠慮なく使ってください。
+
+### Finance Solver を開く
+
+Calculator ページで、
+
+```
+menu → Finance → Finance Solver
+```
+
+SL 1.4 と同じ画面です。違うのは、**`Pmt` の欄を実際に使う**ことだけです。
+
+| 欄 | 意味 | SL 1.7 では |
+|---|---|---|
+| `N` | 支払いの回数 | 年数 $\times$ $k$ |
+| `I(%)` | 名目年利 | $r$ |
+| `PV` | present value | 借りた額（$+$）／預けた額（$-$）／$0$ |
+| `Pmt` | **毎回の支払額** | 返す・払い込む（$-$）／受け取る（$+$） |
+| `FV` | future value | 完済なら $0$／積み立ての受取額なら $+$ |
+| `PpY` | payments per year | $k$ |
+| `CpY` | compoundings per year | $k$ |
+| `PmtAt` | 支払いのタイミング | **いつも `END`** |
+
+: SL 1.7 での Finance Solver {#tbl-fs-17}
+
+::: {.callout-tip}
+## `PmtAt` は触らない
+シラバスに `In examinations the payments will be made at the end of the period` と明記されています。**`BEGIN` を使う問題は出ません。**
+
+もし間違えて `BEGIN` にすると、答えが少しだけ違ってしまいます。**設定を確認する習慣**をつけてください。
+:::
+
+### 求めたい欄で `enter` を押す
+
+Finance Solver の使い方は、いつも同じです。
+
+1. **分かっている欄を全部埋める**（使わない欄には $0$）
+2. **求めたい欄にカーソルを置く**
+3. **`enter` を押す**
+
+$Pmt$ でも $N$ でも $I\%$ でも $FV$ でも、**同じやり方で求められます。** これが Finance Solver の強みです。
+
+| 何を求めるか | 例 |
+|---|---|
+| 毎回の返済額 | @exm-am-loan |
+| 将来の価値 | @exm-am-savings |
+| 毎回の受取額 | @exm-am-payout |
+| 途中の残高 | @exm-am-balance |
+| かかる回数 | @exm-am-creditcard |
+
+: Finance Solver で求められるもの {#tbl-fs-uses}
+
+### 途中の残高を求める ★よく出ます
+
+@exm-am-balance でやったやり方を、もう一度整理します。
+
+**「そこまでで終わるローン」だと思って、$FV$ を求めます。**
+
+- $N$ を「**そこまでに払った回数**」にする
+- $Pmt$ は元のまま
+- $FV$ の欄で `enter`
+
+返ってきた $FV$ の**大きさ**が、その時点で残っている借金です。
+
+::: {.callout-note}
+## Amortization の専用ツールもあります
+`menu → Finance` の中には、`Amortization`（償却）というメニューもあり、残高や利息の合計を直接求める機能が入っています。
+
+ただ、**引数の順番を覚える必要があり、間違えやすい**です。上に書いた「$N$ を変えて $FV$ を求める」方法なら、**Finance Solver ひとつで足ります。**
+
+この本では Finance Solver に統一します。専用ツールを使いたい場合は、メニューから選ぶと入力欄に名前が出るので、それを見ながら埋めてください。
+:::
+
+### 総額と利息は、自分で計算する
+
+**Finance Solver は総額を出してくれません。** 出てきた $Pmt$ を使って、自分で掛け算します。
+
+$$
+\text{総返済額} = |Pmt| \times N, \qquad \text{利息} = \text{総返済額} - PV
+$$
+
+このとき、**丸める前の $Pmt$** を使ってください。Finance Solver の画面を閉じずに、そのまま計算式に使うのが確実です。
+
+::: {.callout-tip}
+## 画面を閉じても値は残っています
+Finance Solver を閉じたあと、Calculator ページで `tvmPmt` などの変数名を使うと、さっきの値が呼び出せます。
+
+もっと簡単なのは、**Finance Solver の画面を開いたまま、答えをメモしておく**ことです。試験中はそのほうが速いです。
+:::
+
+### 答えが合っているかの検算
+
+計算が終わったら、**大きさが妥当かどうかを1回だけ見てください。**
+
+| 場面 | 確かめること |
+|---|---|
+| ローン | 総返済額 $>$ 借りた額 |
+| 積み立て | $FV$ $>$ 払い込んだ総額 |
+| 受け取り | 毎月の受取額 $>$ 元金 $\div$ 回数 |
+| 残高 | 元の借金より**小さい** |
+
+: 答えの妥当性チェック {#tbl-sanity}
+
+**どれかが逆になっていたら、符号を間違えています。** これで多くの失点を防げます。
+
+## Exercises
+
+::: {.callout-note appearance="simple"}
+各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
+
+まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
+:::
+
+::: {.exercise-block}
+
+[1]{.ex-no} [Paper 2]{.ib-tag} [A loan of $\$8000$ is taken out at a nominal annual rate of $7\%$, compounded monthly, and repaid in equal monthly instalments over 4 years. Find the monthly repayment, correct to two decimal places.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$\$8000$ のローンを、名目年利 $7\%$（利息は毎月）で借り、4年間の毎月同額の返済で返します。毎月の返済額を、小数第2位まで求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$N = 48, \quad I\% = 7, \quad PV = 8000, \quad FV = 0, \quad PpY = CpY = 12$$
+
+*Using the GDC Finance Solver:*
+
+$$Pmt = -191.57\ldots \quad \Rightarrow \quad \text{monthly repayment} = \$191.57$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+$N = 12 \times 4 = 48$ です。$4$ ではありません。
+
+**借りるので $PV$ は正、返すので $Pmt$ は負**（@tbl-signs）。$Pmt$ が負で返ってきたら、正しく入力できています。
+
+**検算。** $191.57 \times 48 = \$9195.36$ で、借りた $\$8000$ より多い。つじつまが合っています（@tbl-sanity）。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[2]{.ex-no} [Paper 2]{.ib-tag} [Sam pays $\$150$ at the end of each month into an account paying a nominal annual rate of $5\%$, compounded monthly, for 10 years.]{.q-en}
+
+**(a)** [Find the value of the account after 10 years.]{.q-en}
+
+**(b)** [Find the total interest earned.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+サムさんは毎月末に $\$150$ を、名目年利 $5\%$（利息は毎月）の口座に10年間払い込みます。
+
+**(a)** 10年後の口座の価値を求めなさい。
+
+**(b)** 得た利息の総額を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$N = 120, \quad I\% = 5, \quad PV = 0, \quad Pmt = -150, \quad PpY = CpY = 12$$
+
+**(a)** *Using the GDC Finance Solver:*
+$$FV = 23\,292.34\ldots \approx \$23\,292.34$$
+
+**(b)**
+$$150 \times 120 = \$18\,000$$
+$$23\,292.34 - 18\,000 = \$5292.34$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+積み立てる年金なので $PV = 0$ です。**空欄のままにせず、$0$ と入れてください。**
+
+払い込むので $Pmt = -150$。$FV$ が正で返ってくれば正しい向きです。
+
+$FV$ が $\$18\,000$ より小さく出たら、$Pmt$ の符号が逆になっています。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[3]{.ex-no} [Paper 2]{.ib-tag} [Priya has $\$180\,000$ in an account paying a nominal annual rate of $4.5\%$, compounded monthly. She withdraws an equal amount at the end of each month for 15 years, after which the account is empty. Find the monthly withdrawal.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+プリヤさんは、名目年利 $4.5\%$（利息は毎月）の口座に $\$180\,000$ を持っています。彼女は15年間、毎月末に同じ額を引き出していき、15年後に口座が空になります。毎月の引き出し額を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$N = 180, \quad I\% = 4.5, \quad PV = -180\,000, \quad FV = 0, \quad PpY = CpY = 12$$
+
+*Using the GDC Finance Solver:*
+
+$$Pmt = 1376.99\ldots \approx \$1376.99$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+受け取る年金なので、**預ける $PV$ が負、受け取る $Pmt$ が正**です（@tbl-signs）。
+
+$\dfrac{180\,000}{180} = \$1000$ ですが、答えは $\$1376.99$。**残っているお金に利息がつく**ので、単純な割り算より多く受け取れます（@tbl-sanity）。
+
+$\$1000$ に近い値が出たら、$I\%$ を入れ忘れています。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[4]{.ex-no} [Paper 2]{.ib-tag} [A loan of $\$22\,000$ is repaid in equal monthly instalments over 6 years. The nominal annual rate is $5.5\%$, compounded monthly.]{.q-en}
+
+**(a)** [Find the monthly repayment.]{.q-en}
+
+**(b)** [Find the total interest paid over the 6 years.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$\$22\,000$ のローンを、6年間の毎月同額の返済で返します。名目年利は $5.5\%$、利息は毎月つきます。
+
+**(a)** 毎月の返済額を求めなさい。
+
+**(b)** 6年間に支払う利息の総額を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$N = 72, \quad I\% = 5.5, \quad PV = 22\,000, \quad FV = 0, \quad PpY = CpY = 12$$
+
+**(a)** *Using the GDC Finance Solver:*
+$$Pmt = -359.43\ldots \quad \Rightarrow \quad \$359.43$$
+
+**(b)**
+$$359.43\ldots \times 72 = 25\,879.21\ldots$$
+$$25\,879.21 - 22\,000 = \$3879.21$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+(b) は @eq-total-paid と @eq-total-interest のとおりです。**Finance Solver は総額を出してくれない**ので、自分で掛け算と引き算をします。
+
+**丸める前の $Pmt$ を使ってください。** $359.43 \times 72 = \$25\,878.96$ となり、正しい $\$25\,879.21$ と $25$ セントずれます。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[5]{.ex-no} [Paper 2]{.ib-tag} [For the loan in question 4, find the amount still owed after 4 years.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+問題4のローンについて、4年後にまだ残っている借金の額を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+*Using the GDC Finance Solver with $N = 48$ and the same $Pmt$:*
+
+$$N = 48, \quad I\% = 5.5, \quad PV = 22\,000, \quad Pmt = -359.43\ldots, \quad PpY = CpY = 12$$
+
+$$FV = -8151.22\ldots \quad \Rightarrow \quad \text{amount still owed} = \$8151.22$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**$N$ だけを $48$ に変えて、$FV$ を求めます。** 「4年で終わるローン」だと思えばよい、というのが考え方です。
+
+$FV$ は負で返ってきますが、答えは大きさで書きます。
+
+**検算。** 元の $\$22\,000$ より小さい $\$8151.22$。6年のうち4年が過ぎたので、$3$ 分の $1$ ちょっとが残っているのは自然です（@tbl-sanity）。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[6]{.ex-no} [Paper 2]{.ib-tag} [A debt of $\$12\,000$ is charged interest at a nominal annual rate of $8\%$, compounded monthly. Payments of $\$250$ are made at the end of each month. Find the number of months needed to repay the debt.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$\$12\,000$ の借金に、名目年利 $8\%$（利息は毎月）で利息がかかります。毎月末に $\$250$ ずつ支払います。借金を返し終えるのに必要な月数を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$I\% = 8, \quad PV = 12\,000, \quad Pmt = -250, \quad FV = 0, \quad PpY = CpY = 12$$
+
+*Using the GDC Finance Solver:*
+
+$$N = 58.04\ldots \quad \Rightarrow \quad \mathbf{59} \text{ months}$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+$58.04$ を $58$ にしないでください。**$58$ 回払っても、まだ $\$10.46$ 残っています。**
+
+$59$ 回目の支払いは $\$10.53$ で済みますが、**回数としては $59$ 回必要**です。
+
+借金を返し終える問題では、**いつも切り上げ**です。「あと少しだから」で切り捨てると失点します。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[7]{.ex-no} [Paper 2]{.ib-tag} [A loan of $\$10\,000$ is repaid by monthly instalments of $\$220$ over 5 years. Interest is compounded monthly. Find the nominal annual rate of interest, correct to three significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$\$10\,000$ のローンを、5年間、毎月 $\$220$ ずつで返します。利息は毎月つきます。名目年利を有効数字3桁で求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$N = 60, \quad PV = 10\,000, \quad Pmt = -220, \quad FV = 0, \quad PpY = CpY = 12$$
+
+*Using the GDC Finance Solver:*
+
+$$I\% = 11.51\ldots \approx 11.5\%$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**Finance Solver は、どの欄でも求められます**（@tbl-fs-uses）。今回は $I\%$ の欄で `enter` を押すだけです。
+
+**検算。** 総返済額は $220 \times 60 = \$13\,200$ で、借りた $\$10\,000$ より $\$3200$ 多い。5年で $32\%$ 多く返しているので、年利は $10\%$ を超えるくらい。$11.5\%$ はつじつまが合っています。
+
+このように、**答えを見て「だいたいこのくらいのはず」と確かめられる**と、符号ミスに気づけます。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[8]{.ex-no} [Paper 2]{.ib-tag} [A loan of $\$20\,000$ is charged interest at a nominal annual rate of $6\%$, compounded monthly.]{.q-en}
+
+**(a)** [Find the monthly repayment if the loan is repaid over 3 years.]{.q-en}
+
+**(b)** [Find the monthly repayment if the loan is repaid over 6 years.]{.q-en}
+
+**(c)** [Find the total interest paid in each case, and comment on the difference.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$\$20\,000$ のローンに、名目年利 $6\%$（利息は毎月）で利息がかかります。
+
+**(a)** 3年で返す場合の毎月の返済額を求めなさい。
+
+**(b)** 6年で返す場合の毎月の返済額を求めなさい。
+
+**(c)** それぞれの場合の利息の総額を求め、その違いについてコメントしなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$I\% = 6, \quad PV = 20\,000, \quad FV = 0, \quad PpY = CpY = 12$$
+
+**(a)** $N = 36$:
+$$Pmt = -608.44\ldots \quad \Rightarrow \quad \$608.44$$
+
+**(b)** $N = 72$:
+$$Pmt = -331.46\ldots \quad \Rightarrow \quad \$331.46$$
+
+**(c)**
+$$\text{3 years: } 608.44\ldots \times 36 - 20\,000 = \$1903.79$$
+$$\text{6 years: } 331.46\ldots \times 72 - 20\,000 = \$3864.96$$
+
+*Repaying over 6 years gives a much smaller monthly payment, but the total interest is about twice as much. The debt is outstanding for twice as long, so interest is charged for twice as many months.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**期間を2倍にすると、毎月の返済は半分近くになりますが、利息は約2倍になります。**
+
+毎月の負担だけを見て「6年のほうが楽」と考えがちですが、**払う総額は $\$1961$ 多くなります。** これが `Comment on` で書くべき内容です。
+
+$608.44$ は $331.46$ の $2$ 倍より少し小さいことにも注目してください。期間が短いほうが、1回あたりの利息が少なくて済むからです。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[9]{.ex-no} [Paper 2]{.ib-tag} [Kenta wants to have $\$50\,000$ in 12 years' time. He will pay an equal amount into an account at the end of each month. The account pays a nominal annual rate of $4.8\%$, compounded monthly.]{.q-en}
+
+**(a)** [Find the amount he must pay in each month.]{.q-en}
+
+**(b)** [Find the total amount he pays in.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+健太さんは12年後に $\$50\,000$ を持っていたいと考えています。彼は毎月末に同じ額を口座に払い込みます。この口座には名目年利 $4.8\%$、利息は毎月、という条件がついています。
+
+**(a)** 毎月払い込むべき額を求めなさい。
+
+**(b)** 払い込む総額を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$N = 144, \quad I\% = 4.8, \quad PV = 0, \quad FV = 50\,000, \quad PpY = CpY = 12$$
+
+**(a)** *Using the GDC Finance Solver:*
+$$Pmt = -257.44\ldots \quad \Rightarrow \quad \$257.44$$
+
+**(b)**
+$$257.44\ldots \times 144 = 37\,072.04\ldots \approx \$37\,072.04$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**目標額が $FV$ です。** $\$50\,000$ を $FV$ の欄に正の数で入れ、$PV = 0$、$Pmt$ の欄で `enter` を押します。
+
+これまでと違って、**求めるのが $Pmt$ で、$FV$ が分かっている**という形です。Finance Solver はどの欄でも求められるので、やることは変わりません。
+
+**検算。** 払い込む総額 $\$37\,072$ に対して受け取るのは $\$50\,000$。差の $\$12\,928$ が利息です。$FV$ のほうが大きいので、向きは合っています（@tbl-sanity）。
+
+$\dfrac{50\,000}{144} = \$347.22$ と比べると、**利息のおかげで毎月の負担が $\$90$ ほど軽くなっている**ことが分かります。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[10]{.ex-no} [Paper 2]{.ib-tag} [A family takes out a mortgage of $\$320\,000$ at a nominal annual rate of $4.2\%$, compounded monthly, repaid over 25 years.]{.q-en}
+
+**(a)** [Find the monthly repayment.]{.q-en}
+
+**(b)** [Find the total interest paid over the 25 years.]{.q-en}
+
+**(c)** [The family considers repaying the mortgage over 20 years instead. Find the monthly repayment and the total interest in this case.]{.q-en}
+
+**(d)** [Comment on whether the family should choose the 20-year mortgage.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある家族が $\$320\,000$ の住宅ローンを、名目年利 $4.2\%$（利息は毎月）で組み、25年で返します。
+
+**(a)** 毎月の返済額を求めなさい。
+
+**(b)** 25年間に支払う利息の総額を求めなさい。
+
+**(c)** この家族は、かわりに20年で返すことも考えています。その場合の毎月の返済額と利息の総額を求めなさい。
+
+**(d)** この家族が20年のローンを選ぶべきかどうか、コメントしなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$I\% = 4.2, \quad PV = 320\,000, \quad FV = 0, \quad PpY = CpY = 12$$
+
+**(a)** $N = 300$:
+$$Pmt = -1724.62\ldots \quad \Rightarrow \quad \$1724.62$$
+
+**(b)**
+$$1724.62\ldots \times 300 - 320\,000 = \$197\,384.63$$
+
+**(c)** $N = 240$:
+$$Pmt = -1973.03\ldots \quad \Rightarrow \quad \$1973.03$$
+$$1973.03\ldots \times 240 - 320\,000 = \$153\,526.32$$
+
+**(d)** *The 20-year mortgage saves about \$43 858 in interest, but the monthly repayment is about \$248 higher. The family should choose it only if they can afford the higher monthly payment. If their income is uncertain, the lower payment of the 25-year mortgage may be safer, even though it costs more in total.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(d) が、この問題の本体です。** `Comment on whether ... should` と聞かれたら、**「どちらか一方が正しい」とは書けません。**
+
+数字だけ見れば20年のほうが $\$43\,858$ 得です。ですが毎月 $\$248$ 多く払える家族でなければ、その選択はできません。
+
+**両方の面に触れて、条件つきで答える**のが型です。
+
+1. **数字で差を示す** — *saves about \$43 858 in interest*
+2. **代償を示す** — *but the monthly repayment is about \$248 higher*
+3. **条件をつけて結論** — *only if they can afford the higher payment*
+
+「20年を選ぶべきです」とだけ書くと、片面しか見ていないことになります。**AI で問われているのは、この判断の質です。**
+:::
+
+:::

@@ -1,0 +1,210 @@
+/*-- scss:defaults --*/
+
+// 読みやすさ重視のタイポグラフィ
+$font-size-root:  17px;
+$line-height-base: 1.7;
+$body-color:      #1f2328;
+$link-color:      #0b5fff;
+$primary:         #0b5fff;
+
+/*-- scss:rules --*/
+
+// 本文の行長を抑える（数式が長い教科書では重要）
+main {
+  max-width: 46rem;
+}
+
+// 定理・定義・例のブロック
+.theorem, .definition, .corollary, .lemma, .example, .proposition {
+  border-left: 4px solid #0b5fff;
+  background: #f6f9ff;
+  padding: 0.9rem 1.1rem;
+  margin: 1.4rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.definition {
+  border-left-color: #12855b;
+  background: #f2fbf7;
+}
+
+.example {
+  border-left-color: #b8860b;
+  background: #fffbf0;
+}
+
+.proof {
+  margin: 1rem 0 1.4rem 0;
+  padding-left: 1rem;
+  border-left: 2px dashed #c8ccd2;
+  color: #3a4048;
+}
+
+// 表示数式に少し余白を持たせる
+mjx-container[display="true"] {
+  margin: 1.2rem 0 !important;
+}
+
+// ══════════════════════════════════════════════
+//  演習問題（1問ずつはっきり区切る）
+// ══════════════════════════════════════════════
+
+.exercise-block {
+  background: #fafbfc;
+  border: 1px solid #e3e6ea;
+  border-radius: 8px;
+  padding: 1.2rem 1.4rem;
+  margin: 1.5rem 0;
+}
+
+// 問題と問題のあいだの区切り。枠いっぱいに線を引く
+.ex-sep {
+  height: 0;
+  border-top: 1px solid #dde2e8;
+  margin: 2.6rem -1.4rem 2.4rem -1.4rem;
+}
+
+// 問題番号のバッジ
+.ex-no {
+  display: inline-block;
+  min-width: 1.7rem;
+  height: 1.7rem;
+  line-height: 1.7rem;
+  text-align: center;
+  border-radius: 6px;
+  background: #0b5fff;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+  vertical-align: 0.08em;
+}
+
+// 各問の中の折りたたみは、少し内側に寄せて「1問のかたまり」に見せる
+.exercise-block > .callout {
+  margin-left: 0.35rem;
+}
+
+// IB特有の表記（Paper 1 / Paper 2 など）のタグ
+.ib-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #eef2f7;
+  color: #47505c;
+  margin-right: 0.4rem;
+}
+
+// ── 日本語用の追加設定 ──
+
+// 日本語フォントを明示（游ゴシック → ヒラギノ → Noto の順）
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+               "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic,
+               "Noto Sans JP", Meiryo, sans-serif;
+}
+
+// 日本語は行長をもう少し詰めたほうが読みやすい
+main {
+  max-width: 44rem;
+}
+
+// 英語の数学用語を目立たせる（本文中の <span class="en"> 用）
+.en {
+  font-weight: 600;
+}
+
+// 対訳表の英語列を等幅寄りに
+table code {
+  font-size: 0.95em;
+}
+
+// ══════════════════════════════════════════════
+//  問題文は英語、日本語訳は折りたたみ
+// ══════════════════════════════════════════════
+
+// 英語の問題文。日本語より少し行間を空けたほうが読みやすい
+.q-en {
+  line-height: 1.75;
+}
+
+// 日本語訳の折りたたみ本体
+details.jp-trans {
+  margin: 0.7rem 0 0.3rem 0;
+  padding-left: 0.9rem;
+  border-left: 3px solid #dde1e6;
+  font-size: 0.94rem;
+  color: #414852;
+}
+
+details.jp-trans > summary {
+  cursor: pointer;
+  list-style: none;
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #6b7480;
+  user-select: none;
+  padding: 0.1rem 0;
+}
+
+// ブラウザ既定の三角マークを消して、自前の記号に差し替える
+details.jp-trans > summary::-webkit-details-marker { display: none; }
+details.jp-trans > summary::marker { content: ""; }
+
+details.jp-trans > summary::before {
+  content: "▸";
+  display: inline-block;
+  width: 1em;
+  color: #9aa3ad;
+}
+
+details.jp-trans[open] > summary::before { content: "▾"; }
+
+details.jp-trans > summary:hover {
+  color: #0b5fff;
+}
+
+details.jp-trans[open] > summary {
+  margin-bottom: 0.35rem;
+}
+
+details.jp-trans > *:not(summary):last-child {
+  margin-bottom: 0;
+}
+
+// ══════════════════════════════════════════════
+//  試験でこう書く（英語の模範解答）
+// ══════════════════════════════════════════════
+
+.model-answer {
+  border-left: 4px solid #12855b;
+  background: #f2fbf7;
+  padding: 0.8rem 1.05rem;
+  margin: 1.1rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.model-answer > p:first-child {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #0e6b4a;
+  margin-bottom: 0.45rem;
+}
+
+.model-answer > p:last-child {
+  margin-bottom: 0;
+}
+
+// 模範解答の英文そのもの
+.model-answer em,
+.model-answer i {
+  font-style: normal;
+  font-weight: 500;
+  color: #16324a;
+}

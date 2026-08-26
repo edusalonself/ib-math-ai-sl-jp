@@ -1,0 +1,1211 @@
+# SL 1.8 — Solving equations with technology（連立方程式と多項式方程式を解く） {#sec-sl-1-8}
+
+::: {.callout-note}
+## What you should be able to do
+- **system of linear equations**（連立1次方程式）を、変数3つまで電卓で解ける。
+- **polynomial equation**（多項式方程式）の解を、電卓で求められる。
+- **zeros**（零点）と **roots**（解）という言葉を、正しく使える。
+- 文章題を読んで、自分で変数を決め、**連立方程式の形に書き直せる**。
+- 電卓が出した解のうち、**問題の状況に合わないものを捨てられる**。
+- 電卓が「実数解なし」と表示したとき、それが何を意味するかを説明できる。
+:::
+
+::: {.callout-important}
+## Formula booklet に載っているもの
+**SL 1.8 の欄は、公式集にありません。**
+
+Topic 1 で公式集に載っているのは 1.2, 1.3, 1.4, 1.5, 1.6 の5つだけです。**1.8 には、覚えるべき公式が1つもありません。**
+
+そのかわり、この項目は**電卓の操作そのものが中身**です。
+:::
+
+::: {.callout-warning}
+## シラバスが、はっきり書いてくれていること
+この項目には、生徒にとってありがたい一文が2つあります。
+
+> In examinations, no specific method of solution will be required.
+
+**解き方は指定されません。** 因数分解でも、公式でも、電卓でも、答えが合っていれば構いません。
+
+> In examinations, there will always be a unique solution to a system of equations.
+
+**連立方程式の解は、必ず1組だけです。** 「解が無数にある」「解がない」という連立方程式は、試験では出ません。日本の教科書に出てくる「不定・不能」の話は、ここでは考えなくて大丈夫です。
+
+ただしこれは、**system of equations**（連立方程式）についての約束です。**polynomial equation のほうは、解が2つ以上あることも、実数解がないこともあります。** 混同しないでください。
+:::
+
+## The idea
+
+::: {.callout-tip}
+## 電卓を開きながら、このページを読んでください
+この項目は、読むだけでは身につきません。**TI-Nspire を手元に置いて、出てくる画面を実際に出しながら読んでください。**
+
+使うのは、Calculator ページの次の2つです。
+
+```
+menu → Algebra → Solve System of Linear Equations
+menu → Algebra → Polynomial Tools → Find Roots of Polynomial
+```
+
+**この2つの場所を、迷わず開けるようにする。** それが、この項目のゴールです。
+:::
+
+この項目でやることは、2つだけです。
+
+1. **system of linear equations**（連立1次方程式）を解く ── 変数は3つまで
+2. **polynomial equation**（多項式方程式）を解く
+
+どちらも、**電卓が答えを出してくれます。** ですからこの項目で点を落とす原因は、計算ではありません。**「式を立てられない」か「出てきた解を使いこなせない」か**のどちらかです。この2つに絞って説明していきます。
+
+### 1. system of linear equations とは {#system-of-equations}
+
+**linear equation**（1次方程式）は、変数に $2$ 乗や $3$ 乗が付いていない方程式のことです。
+
+$$
+3x + 2y = 12 \qquad \text{← linear（1次）}
+$$
+
+$$
+3x^{2} + 2y = 12 \qquad \text{← linear ではない}
+$$
+
+その linear equation を**何本か同時に成り立たせる**のが、**system of linear equations**（連立1次方程式）です。日本の教科書で言う「連立方程式」と同じものです。
+
+$$
+\begin{cases}
+2x + 3y = 17 \\
+5x - 2y = 14
+\end{cases}
+$$
+
+#### 式の本数と、変数の個数
+
+**求めたい変数が $n$ 個あるなら、式も $n$ 本必要です。**
+
+| 変数 | 必要な式の本数 | AI SL で出るか |
+|---|---|---|
+| $x, y$ の2つ | 2本 | よく出ます |
+| $x, y, z$ の3つ | 3本 | 出ます |
+| 4つ以上 | 4本以上 | **出ません**（シラバスは `up to 3 variables`） |
+
+: 変数と式の本数 {#tbl-sl18-nvars}
+
+文章題では、この「本数を数える」ことが最初の作業になります。**変数を3つ置いたのに、条件が2つしか読み取れていないなら、問題文を読み落としています。**
+
+### 2. 文章題を式に直す、3つの手順 {#three-steps}
+
+AI SL では、連立方程式が「解きなさい」という形でそのまま出ることもありますが、**文章題として出るほうが多い**です。手順はいつも同じです。
+
+**手順1：分からないものに、文字を付ける。**
+
+「大人のチケット1枚の値段を $a$ ドルとする」のように、**何を表す文字なのかを言葉で書きます。** これは答案に書いてください。書かないと、あとの式が何のことか伝わりません。
+
+**手順2：条件を1つずつ、式にする。**
+
+問題文の1文が、だいたい1本の式になります。「1日目は大人 20 枚、生徒 30 枚、子ども 10 枚で、売上は 710 ドル」なら、
+
+$$
+20a + 30s + 10c = 710
+$$
+
+**手順3：式の本数が、文字の数と同じか数える。**
+
+同じなら、電卓に入れます。足りなければ、読み落とした条件を探します。
+
+::: {.callout-important}
+## 文字の名前は、自分で決めてよいです
+$x, y, z$ でも、$a, s, c$ でも構いません。**意味の分かる文字を使うほうが、間違えにくくなります**（adult の $a$、student の $s$、child の $c$）。
+
+ただし**電卓に入れるときは、$u_1$ のような添字付きの文字は入力しづらい**ので、$a$ のような1文字にしてください。SL 1.2 でも同じことをしました。
+
+**答案に写すときに、元の名前に戻すのを忘れないでください。**
+:::
+
+### 3. polynomial equation の用語 ── zeros と roots {#zeros-and-roots}
+
+**polynomial**（多項式）は、$x$ の累乗を足したり引いたりした式のことです。
+
+$$
+2x^{3} - 5x^{2} - 4x + 3
+$$
+
+- 一番高い次数（ここでは $3$）を **degree**（次数）といいます。
+- $x^3, x^2, x$ の前に付いている数（$2, -5, -4$）を **coefficient**（係数）といいます。最後の $3$ は **constant term**（定数項）です。
+
+**polynomial equation**（多項式方程式）は、これを $= 0$ とおいたものです。
+
+$$
+2x^{3} - 5x^{2} - 4x + 3 = 0
+$$
+
+#### zeros と roots と solutions ── どれも同じものを指します
+
+シラバスに、次の一文があります。
+
+> Standard terminology, such as zeros or roots, should be taught.
+
+**用語を知らないと、問題文が読めない**ということです。ここは覚えてください。
+
+| English | 日本語 | どんなときに使うか |
+|---|---|---|
+| **roots** of the equation | 方程式の解 | $f(x) = 0$ という**方程式**の話をしているとき |
+| **zeros** of the function | 関数の零点 | $y = f(x)$ という**関数**の話をしているとき |
+| **solutions** of the equation | 方程式の解 | 一番ふつうの言い方 |
+| **$x$-intercepts** | $x$ 切片 | **グラフ**の話をしているとき |
+
+: 同じものの4つの呼び名 {#tbl-sl18-words}
+
+**指しているものは、どれも同じ数です。** $x^2 - 5x + 6 = 0$ の roots は $2$ と $3$ で、$f(x) = x^2 - 5x + 6$ の zeros も $2$ と $3$、グラフが $x$ 軸を切るのも $x = 2$ と $x = 3$ です。
+
+**問題文がどの言葉を使っていても、やることは同じ**です。「$= 0$ とおいて、電卓で解く」だけです。
+
+#### 解はいくつあるか
+
+**degree の数だけ**あります。ただし**実数とはかぎりません。**
+
+| degree | 式の形 | 実数解の個数 |
+|---|---|---|
+| $2$（quadratic） | $ax^2 + bx + c = 0$ | $2$ 個、$1$ 個、または $0$ 個 |
+| $3$（cubic） | $ax^3 + bx^2 + cx + d = 0$ | $3$ 個、$2$ 個、または $1$ 個 |
+
+: degree と実数解の個数 {#tbl-sl18-degree}
+
+**3次方程式には、実数解が必ず1つはあります。** グラフが必ずどこかで $x$ 軸を横切るからです。
+
+::: {.callout-note}
+## 「実数解がない」とはどういうことか
+$x^{2} - 4x + 7 = 0$ を電卓に入れると、実数の解が返ってきません。グラフをかくと、**放物線が $x$ 軸より上にあって、まったく触れていない**のが見えます。
+
+数学では、こういう場合に **imaginary**（虚数）という数を使って解を書くことがあります。ですが、**AI SL では虚数を扱いません**（HL の内容です）。
+
+ですから答案には、こう書きます。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The equation has no real solutions, since the graph of $y = x^{2} - 4x + 7$ does not intersect the $x$-axis.*
+:::
+
+（この方程式には実数解がありません。$y = x^{2} - 4x + 7$ のグラフが $x$ 軸と交わらないからです。）
+
+**`real`（実数の）という単語を落とさないでください。** ただ `no solutions` と書くと、意味が変わってしまいます。
+:::
+
+### 4. 出てきた解を、そのまま答えにしない {#check-solutions}
+
+ここが、この項目で一番点差がつくところです。
+
+電卓は、**式の上での解を全部返します。** 問題の状況に合うかどうかは、見てくれません。
+
+たとえば「長さ $x$ cm」を求める問題で $x = -2.5$ が出たら、それは**答えにはなりません**。長さは負にならないからです。
+
+出てきた解を見たら、必ず次の2つを確認してください。
+
+1. **負になっていないか**（長さ・時間・人数・値段など）
+2. **問題の中で意味が通るか**（「$20$ cm の紙から $34$ cm 切り取る」ようなことになっていないか）
+
+**捨てた解については、なぜ捨てたのかを一言書いてください。** IB は、そこに点を付けます。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*$x = 17.1$ is rejected, since $20 - 2x$ would be negative.*
+:::
+
+（$x = 17.1$ は捨てます。$20 - 2x$ が負になってしまうからです。）
+
+## Why it works
+
+ここでは、**「解が1組だけ」とはどういうことか**を、絵で見ておきます。公式の導出ではないので、軽く読んでください。
+
+$2x + 3y = 17$ という式は、$xy$ 平面では**1本の直線**です。$5x - 2y = 14$ も1本の直線です。
+
+**連立方程式を解くとは、その2本の直線の交点を探すこと**です。傾きが違う2直線は、必ず1点で交わります。だから、解が1組だけ出るのです。
+
+変数が3つになると、$x + y + z = 5$ のような式は**空間の中の平面**になります。3枚の平面が1点で交わる ── それが3元連立方程式の解です。**絵にすると難しく見えますが、電卓にとっては2元のときと同じ作業です。**
+
+シラバスが「試験では必ず解が1組」と約束してくれているので、**2直線が平行になる場合や、3枚の平面が1本の直線で交わる場合を心配する必要はありません。**
+
+## Worked examples
+
+::: {.callout-note appearance="simple"}
+問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
+:::
+
+::: {#exm-sl18-linear2}
+[Paper 1]{.ib-tag} [Solve the following system of equations.]{.q-en}
+
+$$
+\begin{cases}
+2x + 3y = 17 \\
+5x - 2y = 14
+\end{cases}
+$$
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次の連立方程式を解きなさい。
+
+$$
+\begin{cases}
+2x + 3y = 17 \\
+5x - 2y = 14
+\end{cases}
+$$
+
+（`system of equations` は「連立方程式」です。`Solve` なので、$x$ と $y$ の値を両方書きます。）
+
+</details>
+
+---
+
+まず、**式が2本、変数が2つ**であることを確認します（@tbl-sl18-nvars）。数が合っているので、そのまま電卓に入れられます。
+
+Calculator ページで、
+
+```
+menu → Algebra → Solve System of Linear Equations
+```
+
+を開きます。**方程式の数は 2、変数は x, y** と入れます。
+
+出てきた枠に、上の2本の式をそのまま打ち込みます。答えは
+
+$$
+x = 4, \qquad y = 3
+$$
+
+**検算します。** $2(4) + 3(3) = 8 + 9 = 17$ ✓、$5(4) - 2(3) = 20 - 6 = 14$ ✓
+
+両方の式に入れて確かめるのは、**打ち間違いを見つける一番早い方法**です。1本だけでは足りません。片方だけ合っていることがあるからです。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$x = 4, \quad y = 3$$
+:::
+:::
+
+::: {#exm-sl18-linear3}
+[Paper 2]{.ib-tag} [A theatre sells three types of ticket: adult, student and child.]{.q-en}
+
+[The table shows the number of tickets sold on three days, and the total takings for each day.]{.q-en}
+
+| Day | Adult | Student | Child | Takings (\$) |
+|---|---|---|---|---|
+| 1 | 20 | 30 | 10 | 710 |
+| 2 | 10 | 20 | 30 | 610 |
+| 3 | 40 | 10 | 20 | 870 |
+
+: Ticket sales {#tbl-sl18-tickets}
+
+**(a)** [Write down a system of three equations for this information.]{.q-en}
+
+**(b)** [Find the price of each type of ticket.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある劇場では、大人（adult）、生徒（student）、子ども（child）の3種類のチケットを売っています。
+
+表は、3日間に売れた枚数と、その日の売上合計です。表の見出しは、`Day` が「日」、`Takings` が「売上」です。
+
+**(a)** この情報を表す、3本の連立方程式を書きなさい。
+
+**(b)** それぞれのチケットの値段を求めなさい。
+
+</details>
+
+---
+
+**(a)** まず、**分からないものに文字を付けます**（[文章題を式に直す3つの手順](#three-steps)）。
+
+- 大人のチケット1枚を $a$ ドル
+- 生徒のチケット1枚を $s$ ドル
+- 子どものチケット1枚を $c$ ドル
+
+**この3行を、答案に書いてください。** 書かないと、次の式が何を表しているのか伝わりません。
+
+次に、**表の1行を、1本の式にします。** 1日目は大人 $20$ 枚、生徒 $30$ 枚、子ども $10$ 枚で、売上は $710$ ドルでした。
+
+$$
+20a + 30s + 10c = 710
+$$
+
+2日目、3日目も同じように書きます。
+
+$$
+\begin{cases}
+20a + 30s + 10c = 710 \\
+10a + 20s + 30c = 610 \\
+40a + 10s + 20c = 870
+\end{cases}
+$$
+
+**式が3本、文字が3つ**です。数が合っているので、これで解けます。
+
+**(b)** (a) で作った3本の式を、電卓に入れます。
+
+```
+menu → Algebra → Solve System of Linear Equations
+```
+
+**方程式の数は 3、変数は a, s, c** です。
+
+$$
+a = 15, \qquad s = 11, \qquad c = 8
+$$
+
+最後に、**問題が聞いているのは「値段」**なので、単位を付けて答えます。文字のまま $a = 15$ と書いて終わりにしないでください。
+
+**検算**：1日目は $20(15) + 30(11) + 10(8) = 300 + 330 + 80 = 710$ ✓
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** Let $a$, $s$ and $c$ be the price, in dollars, of an adult, student and child ticket.
+
+$$
+\begin{cases}
+20a + 30s + 10c = 710 \\
+10a + 20s + 30c = 610 \\
+40a + 10s + 20c = 870
+\end{cases}
+$$
+
+**(b)** $a = 15$, $s = 11$, $c = 8$
+
+Adult $\$15$, student $\$11$, child $\$8$.
+:::
+:::
+
+::: {#exm-sl18-quadratic}
+[Paper 2]{.ib-tag} **(a)** [Find the roots of the equation $x^{2} - 5x + 3 = 0$, giving your answers correct to three significant figures.]{.q-en}
+
+**(b)** [Write down the zeros of the function $f(x) = x^{2} - 5x + 3$.]{.q-en}
+
+**(c)** [Explain why the equation $x^{2} - 4x + 7 = 0$ has no real solutions.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+**(a)** 方程式 $x^{2} - 5x + 3 = 0$ の解（roots）を、有効数字3桁で求めなさい。
+
+**(b)** 関数 $f(x) = x^{2} - 5x + 3$ の零点（zeros）を書きなさい。
+
+**(c)** 方程式 $x^{2} - 4x + 7 = 0$ に実数解がない理由を説明しなさい。
+
+（`Explain why` は「理由を言葉で書きなさい」です。計算だけでは点になりません。）
+
+</details>
+
+---
+
+**(a)** これは degree が $2$ の polynomial equation です。$= 0$ の形になっているので、そのまま電卓に入れられます。
+
+```
+menu → Algebra → Polynomial Tools → Find Roots of Polynomial
+```
+
+**Degree は 2** です。係数を聞かれるので、$1, -5, 3$ の順に入れます。
+
+$$
+x = 0.697224\ldots, \qquad x = 4.302775\ldots
+$$
+
+有効数字3桁にすると、
+
+$$
+x = 0.697, \qquad x = 4.30
+$$
+
+**$4.30$ の $0$ を消して $4.3$ と書かないでください**（SL 1.6）。有効数字3桁と指定されています。
+
+**(b)** [zeros と roots は同じもの](#zeros-and-roots)です。(a) と同じ数を書けば正解です。
+
+$$
+x = 0.697 \quad \text{and} \quad x = 4.30
+$$
+
+**計算し直す必要はありません。** `Write down` は「計算はほとんど不要」という指示です。
+
+**(c)** 同じように電卓に入れると、**実数の解が返ってきません。**
+
+理由を書くには、**グラフを見るのが一番はっきりします。** Graphs ページで $f_1(x) = x^{2} - 4x + 7$ をかくと、放物線が $x$ 軸のずっと上にあって、触れてもいないのが見えます。
+
+$x$ 軸と交わらない、つまり $y = 0$ になる $x$ がない。だから実数解がありません。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** $x = 0.697$ and $x = 4.30$ (3 s.f.)
+
+**(b)** $x = 0.697$ and $x = 4.30$
+
+**(c)** *The graph of $y = x^{2} - 4x + 7$ lies entirely above the $x$-axis, so it has no $x$-intercepts. Therefore the equation has no real solutions.*
+:::
+:::
+
+::: {#exm-sl18-cubic}
+[Paper 2]{.ib-tag} [Solve the equation $2x^{3} - 5x^{2} - 4x + 3 = 0$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+方程式 $2x^{3} - 5x^{2} - 4x + 3 = 0$ を解きなさい。
+
+</details>
+
+---
+
+degree が $3$ の cubic equation（3次方程式）です。**やることは2次のときとまったく同じ**です。
+
+```
+menu → Algebra → Polynomial Tools → Find Roots of Polynomial
+```
+
+**Degree は 3**。係数は $x^3, x^2, x$、定数の順に $2, -5, -4, 3$ と入れます。
+
+$$
+x = -1, \qquad x = 0.5, \qquad x = 3
+$$
+
+**3つとも書いてください。** 1つだけ書いて終わりにすると、満点になりません。
+
+::: {.callout-important}
+## 係数の順番と、抜けている項
+係数は **degree の高いほうから順に**入れます。ここでは $2, -5, -4, 3$ です。
+
+もし $x^{3} - 7x + 6 = 0$ のように **$x^2$ の項がない**なら、そこは $0$ を入れます。
+
+$$
+1, \quad \mathbf{0}, \quad -7, \quad 6
+$$
+
+**$0$ を飛ばして $1, -7, 6$ と入れると、degree 2 の式として計算されてしまいます。** 抜けている項がないか、必ず目で確かめてください。
+
+「**係数の個数 = degree + 1**」と覚えておくと、数えて確かめられます。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$x = -1, \quad x = 0.5, \quad x = 3$$
+:::
+:::
+
+::: {#exm-sl18-box}
+[Paper 2]{.ib-tag} [An open box is made from a rectangular piece of card measuring $20$ cm by $30$ cm. A square of side $x$ cm is cut from each corner, and the sides are folded up.]{.q-en}
+
+**(a)** [Show that the volume of the box is given by $V = 4x^{3} - 100x^{2} + 600x$.]{.q-en}
+
+**(b)** [The volume of the box is $1000$ cm$^{3}$. Find the possible values of $x$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$20$ cm × $30$ cm の長方形の厚紙から、ふたのない箱を作ります。四隅から1辺 $x$ cm の正方形を切り取り、辺を折り上げます。
+
+**(a)** 箱の体積が $V = 4x^{3} - 100x^{2} + 600x$ で表されることを示しなさい。
+
+**(b)** 箱の体積が $1000$ cm$^{3}$ のとき、$x$ としてありうる値を求めなさい。
+
+（`Show that` は「与えられた式に向かって、途中を全部書く」という指示です。答えは書いてあるので、**過程が点になります。**）
+
+</details>
+
+---
+
+**(a)** まず、**箱の3辺がそれぞれいくつになるか**を考えます。
+
+四隅から $x$ cm ずつ切り取って折り上げるので、
+
+- 高さ … $x$
+- 短いほうの辺 … $20 - 2x$
+- 長いほうの辺 … $30 - 2x$
+
+**$20 - x$ ではありません。** 左右の**両方**から切り取るので、$2x$ 減ります。
+
+$$
+V = x(20 - 2x)(30 - 2x)
+$$
+
+`Show that` なので、**展開の途中も書きます。**
+
+$$
+(20 - 2x)(30 - 2x) = 600 - 40x - 60x + 4x^{2} = 4x^{2} - 100x + 600
+$$
+
+$$
+V = x(4x^{2} - 100x + 600) = 4x^{3} - 100x^{2} + 600x
+$$
+
+与えられた式と一致しました。
+
+**(b)** $V = 1000$ とおきます。**polynomial equation にするために、右辺を $0$ にします。**
+
+$$
+4x^{3} - 100x^{2} + 600x - 1000 = 0
+$$
+
+これを Find Roots of Polynomial に入れます。**Degree は 3**、係数は $4, -100, 600, -1000$ です。
+
+$$
+x = 2.928932\ldots, \qquad x = 5, \qquad x = 17.071067\ldots
+$$
+
+**ここで終わりにしてはいけません。** [出てきた解が使えるかどうか](#check-solutions)を確かめます。
+
+$x = 17.07$ のとき、短いほうの辺は $20 - 2(17.07) = -14.1$ となって**負**になります。$20$ cm の紙から $34$ cm 切り取ることはできないので、**これは箱になりません。**
+
+残りの2つは、どちらも本当に箱になります。
+
+- $x = 2.93$ のとき … $2.93 \times 14.1 \times 24.1 \approx 1000$ ✓
+- $x = 5$ のとき … $5 \times 10 \times 20 = 1000$ ✓
+
+**答えは2つです。** 「1つ見つけたから終わり」としないでください。問題文も `values`（複数形）になっています。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** Height $= x$, width $= 20 - 2x$, length $= 30 - 2x$.
+
+$$V = x(20-2x)(30-2x)$$
+$$= x(4x^{2} - 100x + 600)$$
+$$= 4x^{3} - 100x^{2} + 600x$$
+
+**(b)** $4x^{3} - 100x^{2} + 600x - 1000 = 0$
+
+$$x = 2.93, \quad x = 5, \quad x = 17.1$$
+
+*$x = 17.1$ is rejected, since $20 - 2x$ would be negative.*
+
+$$x = 2.93 \ \text{cm} \quad \text{or} \quad x = 5 \ \text{cm}$$
+:::
+:::
+
+## Common errors
+
+::: {.callout-warning}
+## $= 0$ の形にせずに、係数を読み取る
+@exm-sl18-box の (b) で、$4x^{3} - 100x^{2} + 600x = 1000$ のまま係数を $4, -100, 600, 0$ と読んでしまう誤りです。
+
+**Find Roots of Polynomial は「$= 0$ の方程式」しか受け付けません。** 右辺の $1000$ を左辺に移して、定数項を $-1000$ にしてから入れてください。
+:::
+
+::: {.callout-warning}
+## 抜けている項の $0$ を入れ忘れる
+$x^{3} - 7x + 6 = 0$ で、$x^2$ の項がないからと $1, -7, 6$ と入れてしまう誤りです。
+
+**degree 3 なら、係数は必ず4つ**です。$1, 0, -7, 6$ と入れてください。
+:::
+
+::: {.callout-warning}
+## 解を1つだけ書いて終わりにする
+2次なら2つ、3次なら3つまで解があります。**電卓は全部返してくれるのに、写すときに1つ落とす**のが、実際の答案で一番多い失点です。
+
+`Find the values of ...` と**複数形**になっていたら、答えも複数あるという合図です。**問題文の `s` を見てください。**
+:::
+
+::: {.callout-warning}
+## 状況に合わない解を、捨てずに書く
+長さが負、時間が負、人数が小数 ── こういう解は答えになりません。
+
+ただし、**黙って消してもいけません。** 「$x = 17.1$ は捨てる、なぜなら…」と**一言書く**のが正解です。IB は、その一言に点を付けます。
+:::
+
+::: {.callout-warning}
+## `no solutions` と書いてしまう
+$x^{2} - 4x + 7 = 0$ のような場合、正しくは **no real solutions** です。
+
+**`real` を落とすと、意味が変わります。** HL では虚数を使って解を書くので、「解がない」わけではありません。AI SL では虚数を扱わない、というだけです。
+:::
+
+::: {.callout-warning}
+## 文字が何を表すか書かずに、式だけ書く
+文章題で、いきなり $20a + 30s + 10c = 710$ と書き始める答案です。
+
+**採点者には、$a$ が何なのか分かりません。** `Let a be the price of an adult ticket in dollars.` の1行を、必ず先に書いてください。
+
+**単位（dollars）も書いてください。** $15$ とだけ書かれていると、$15$ ドルなのか $15$ セントなのか分かりません。
+:::
+
+::: {.callout-warning}
+## 電卓の答えを、確かめずに写す
+連立方程式は、**元の式に代入すれば必ず確かめられます。** 打ち間違いは誰にでも起こるので、確かめる習慣をつけてください。
+
+このとき、**式は全部使ってください。** 1本だけで合っていても、他の式では合わないことがあります。
+:::
+
+## Using your GDC (TI-Nspire CX II)
+
+Press-to-Test（試験モード）でも、この項目で使う機能は**すべて使えます。** 制限されていません。
+
+### 1. 連立方程式 ── Solve System of Linear Equations
+
+Calculator ページで、
+
+```
+menu → Algebra → Solve System of Linear Equations
+```
+
+（OS によっては `Simultaneous Equation Solver` という名前で出ます。SL 1.2 で $u_1$ と $d$ を求めるときにも使いました。）
+
+**まず小さなダイアログが出ます。**
+
+- `Number of equations` … 式の本数（$2$ か $3$）
+- `Variables` … 変数の名前をカンマで区切って入れる（`x,y` や `a,s,c`）
+
+`OK` を押すと、式を入れる**波カッコの枠**が出てきます。上から順に式を打ち込み、`tab` で次の行に移ります。
+
+$$
+\begin{cases}
+2x + 3y = 17 \\
+5x - 2y = 14
+\end{cases}
+\qquad \longrightarrow \qquad
+\{4, \ 3\}
+$$
+
+**答えは、変数を入れた順に並んで出ます。** `x,y` と入れたなら、最初の $4$ が $x$、次の $3$ が $y$ です。
+
+::: {.callout-warning}
+## 変数の順番は、自分で決めたものです
+`Variables` に `a,s,c` と入れたなら、答えも $a, s, c$ の順です。
+
+**この順番は、電卓が勝手に決めるものではありません。** 答案に写すときに $s$ と $c$ を取り違えないよう、**入力した順番を問題用紙にメモしておいてください。**
+:::
+
+### 2. 多項式方程式 ── Find Roots of Polynomial
+
+```
+menu → Algebra → Polynomial Tools → Find Roots of Polynomial
+```
+
+こちらも、最初にダイアログが出ます。
+
+- `Degree` … 次数（$2$ か $3$）
+- 入力方法 … 係数を1つずつ入れる方法と、式をそのまま書く方法があります
+
+**係数を入れる方法のほうが、打ち間違えにくい**です。degree の高いほうから順に入れてください。
+
+$$
+2x^{3} - 5x^{2} - 4x + 3 = 0 \quad \longrightarrow \quad 2, \ -5, \ -4, \ 3 \quad \longrightarrow \quad \{-1, \ 0.5, \ 3\}
+$$
+
+**必ず $= 0$ の形にしてから、係数を読み取ってください。**
+
+::: {.callout-note}
+## 実数解がないときの画面
+$x^{2} - 4x + 7 = 0$ を入れると、**空のリスト、または実数でない値**が返ってきます。OS のバージョンによって表示が違います。
+
+どちらにしても、**「実数解はない」という意味**です。答案には `no real solutions` と書いてください。
+:::
+
+### 3. `nSolve` ── 1つだけ解が欲しいとき
+
+polynomial ではない方程式（$2^{x} = 50$ など）は、Polynomial Tools では解けません。そのときは `nSolve` です。
+
+```
+menu → Algebra → Numerical Solve
+```
+
+```
+nSolve(x^2 - 5x + 3 = 0, x)   →   0.697224
+```
+
+::: {.callout-warning}
+## `nSolve` は解を1つしか返さないことがあります
+上の例では解が $0.697$ と $4.30$ の**2つ**あるのに、$0.697$ だけが返ってきました。
+
+**polynomial の方程式では、`nSolve` ではなく Find Roots of Polynomial を使ってください。** そのほうが確実です。
+
+どうしても `nSolve` を使うなら、**探す場所を指定します。**
+
+```
+nSolve(x^2 - 5x + 3 = 0, x, 4)
+```
+
+最後の $4$ は「$4$ の近くを探せ」という意味です。これで $4.302775\ldots$ が出ます。**ただし、どこを探せばよいかはグラフを見ないと分かりません。**
+:::
+
+### 4. グラフで解く ── Analyze Graph
+
+**解き方は指定されない**ので、グラフを使っても構いません。**答えが合っていれば、同じ点数です。**
+
+**$x$ 軸との交点を探す**（zeros / roots を求める）
+
+Graphs ページで $f_1(x) = x^{2} - 5x + 3$ をかいて、
+
+```
+menu → Analyze Graph → Zero
+```
+
+交点の**左側と右側**をクリックして範囲を挟むと、その中の交点が1つ出ます。**交点が2つあるなら、2回やってください。**
+
+**2つのグラフの交点を探す**
+
+$y = x^{2} - 3x + 1$ と $y = 2x - 4$ の交点なら、$f_1$ と $f_2$ の両方をかいて、
+
+```
+menu → Analyze Graph → Intersection
+```
+
+$x$ 座標だけでなく、**$y$ 座標も一緒に出ます。** 交点の座標を聞かれている問題では、こちらのほうが速いです。
+
+::: {.callout-tip}
+## グラフは「検算」に使うのが一番よいです
+**解を出すのは Polynomial Tools、正しいかを見るのはグラフ**、という使い分けをおすすめします。
+
+グラフをかけば、**解がいくつあるか**が目で分かります。「電卓が3つ返してきたけれど、本当に3つあるのか」を確かめられますし、@exm-sl18-quadratic の (c) のように**理由を言葉で書くとき**にも、グラフを見ていると書きやすくなります。
+
+**AI SL で点差がつくのは、その「言葉で書く」ところ**です。グラフを見る習慣は、そこで効いてきます。
+:::
+
+## Exercises
+
+::: {.callout-note appearance="simple"}
+各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
+
+まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
+:::
+
+::: {.exercise-block}
+
+[1]{.ex-no} [Paper 1]{.ib-tag} [Solve the following system of equations.]{.q-en}
+
+$$
+\begin{cases}
+3x + 2y = 21 \\
+x - 4y = -7
+\end{cases}
+$$
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次の連立方程式を解きなさい。
+
+$$
+\begin{cases}
+3x + 2y = 21 \\
+x - 4y = -7
+\end{cases}
+$$
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$x = 5, \quad y = 3$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+式が2本、変数が2つなので、そのまま `Solve System of Linear Equations` に入れます。
+
+**変数は `x,y` の順**に入れたので、出てくる $\{5, 3\}$ は $x = 5$、$y = 3$ です。
+
+検算：$3(5) + 2(3) = 15 + 6 = 21$ ✓、$5 - 4(3) = 5 - 12 = -7$ ✓
+
+**$-7$ の負の符号を打ち忘れる**と、まったく違う答えになります。右辺が負の数のときは、入力を見直してください。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[2]{.ex-no} [Paper 2]{.ib-tag} [Solve the following system of equations, giving your answers correct to three significant figures.]{.q-en}
+
+$$
+\begin{cases}
+4x + 7y = 25 \\
+6x - 5y = 9
+\end{cases}
+$$
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次の連立方程式を解き、答えを有効数字3桁で書きなさい。
+
+$$
+\begin{cases}
+4x + 7y = 25 \\
+6x - 5y = 9
+\end{cases}
+$$
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$x = 3.03, \quad y = 1.84 \quad \text{(3 s.f.)}$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+電卓が返すのは $x = 3.032258\ldots$、$y = 1.838709\ldots$ です。
+
+**答えが整数にならない連立方程式もあります。** 「きれいな数にならないから間違えた」と思わないでください。有効数字を指定されているのは、**きれいにならないと分かっているから**です。
+
+$3.032\ldots$ を3桁にすると $3.03$、$1.838\ldots$ を3桁にすると $1.84$ です（4桁目で四捨五入。SL 1.6）。
+
+電卓が $\dfrac{94}{31}$ のような分数で表示することがあります。そのときは `ctrl + enter` で押し直すと小数になります。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[3]{.ex-no} [Paper 2]{.ib-tag} [Solve the following system of equations.]{.q-en}
+
+$$
+\begin{cases}
+x + y + z = 5 \\
+2x - y + 3z = 20 \\
+x + 4y - z = -9
+\end{cases}
+$$
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次の連立方程式を解きなさい。
+
+$$
+\begin{cases}
+x + y + z = 5 \\
+2x - y + 3z = 20 \\
+x + 4y - z = -9
+\end{cases}
+$$
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$x = 3, \quad y = -2, \quad z = 4$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+`Number of equations` を **3**、`Variables` を `x,y,z` にします。
+
+**変数が3つになっても、やることは2つのときと同じ**です。枠が1行増えるだけです。
+
+$y$ が負の数になりますが、**問題ありません。** ここでは $y$ が長さや人数を表しているわけではないので、負でも構いません。
+
+検算：$3 + (-2) + 4 = 5$ ✓、$2(3) - (-2) + 3(4) = 6 + 2 + 12 = 20$ ✓、$3 + 4(-2) - 4 = 3 - 8 - 4 = -9$ ✓
+
+**3本とも確かめてください。** 2本だけ合っていることがあります。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[4]{.ex-no} [Paper 1]{.ib-tag} [Find the roots of the equation $2x^{2} - 7x + 3 = 0$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+方程式 $2x^{2} - 7x + 3 = 0$ の解（roots）を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$x = 0.5, \quad x = 3$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+`Find Roots of Polynomial` で **Degree は 2**、係数は $2, -7, 3$ です。
+
+**$x^2$ の係数が $1$ ではない**ことに注意してください。最初の欄は $2$ です。$1$ と入れてしまうと、別の方程式になります。
+
+$x = 0.5$ は $\dfrac{1}{2}$ と書いても構いません。**どちらでも正解です。**
+
+`roots` という言葉が使われていますが、[やることは `solve` と同じ](#zeros-and-roots)です。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[5]{.ex-no} [Paper 2]{.ib-tag} [Find the zeros of the function $f(x) = x^{2} - 6x + 4$, giving your answers correct to three significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+関数 $f(x) = x^{2} - 6x + 4$ の零点（zeros）を、有効数字3桁で求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$x^{2} - 6x + 4 = 0$$
+$$x = 0.764, \quad x = 5.24 \quad \text{(3 s.f.)}$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**`zeros` と言われたら、$f(x) = 0$ とおきます。** 関数の話ですが、解くのは方程式です。
+
+**この $= 0$ の1行を、答案に書いてください。** ここが読み取りの点です。
+
+係数は $1, -6, 4$。電卓は $0.7639320\ldots$ と $5.2360679\ldots$ を返します。3桁に丸めると $0.764$ と $5.24$ です。
+
+**答えは $x$ の値だけでよいです。** $(0.764, 0)$ のような座標で書く必要はありません。座標が必要なのは、`x-intercepts` の座標を聞かれたときです。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[6]{.ex-no} [Paper 2]{.ib-tag} [Solve the equation $x^{3} - 2x^{2} - 5x + 6 = 0$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+方程式 $x^{3} - 2x^{2} - 5x + 6 = 0$ を解きなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$x = -2, \quad x = 1, \quad x = 3$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**Degree は 3**、係数は $1, -2, -5, 6$ の4つです。
+
+**解を3つとも書いてください。** 1つでも落とすと満点になりません。
+
+グラフをかいて確かめると、曲線が $x$ 軸を**3回**横切っているのが見えます。「3つで合っている」と確認できます。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[7]{.ex-no} [Paper 2]{.ib-tag} [A ball is thrown upwards from a balcony. Its height above the ground, $h$ metres, after $t$ seconds is given by]{.q-en}
+
+$$
+h = -4.9t^{2} + 18t + 1.2 .
+$$
+
+**(a)** [Find the time at which the ball hits the ground, correct to three significant figures.]{.q-en}
+
+**(b)** [The equation also has a negative solution. Explain why this solution is rejected.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+バルコニーからボールを上に投げます。$t$ 秒後の地面からの高さ $h$ メートルは、次の式で表されます。
+
+$$
+h = -4.9t^{2} + 18t + 1.2
+$$
+
+**(a)** ボールが地面に着く時刻を、有効数字3桁で求めなさい。
+
+**(b)** この方程式には負の解もあります。その解を捨てる理由を説明しなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** The ball hits the ground when $h = 0$.
+
+$$-4.9t^{2} + 18t + 1.2 = 0$$
+$$t = -0.0655 \quad \text{or} \quad t = 3.74$$
+$$t = 3.74 \ \text{seconds} \quad \text{(3 s.f.)}$$
+
+**(b)** *$t = -0.0655$ is rejected because $t$ represents the time after the ball is thrown, which cannot be negative.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** 「地面に着く」は「高さが $0$ になる」ということです。まず、それを式にします。
+
+$$-4.9t^{2} + 18t + 1.2 = 0$$
+
+**この1行を答案に書いてください。** ここが読み取りの点です。
+
+係数は $-4.9, 18, 1.2$。**最初の係数が負**であることに注意してください。電卓は $t = -0.06549\ldots$ と $t = 3.73896\ldots$ を返します。
+
+3桁にすると $3.74$ 秒です。
+
+**(b)** $t$ は「投げてからの秒数」なので、負にはなりません。$t = -0.0655$ は、**式の上では成り立つけれど、現実には起こらない**解です。
+
+こういう解は、[捨てた理由を一言書く](#check-solutions)のが決まりです。黙って消すと、点が出ないことがあります。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[8]{.ex-no} [Paper 2]{.ib-tag} [A café sells coffee in three sizes: small, medium and large. The table shows the number of each size sold on three days, and the total takings for each day.]{.q-en}
+
+| Day | Small | Medium | Large | Takings (\$) |
+|---|---|---|---|---|
+| 1 | 4 | 3 | 2 | 37.90 |
+| 2 | 2 | 5 | 3 | 46.30 |
+| 3 | 6 | 1 | 4 | 46.90 |
+
+: Coffee sales {#tbl-sl18-coffee}
+
+[Find the price of each size of coffee.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+あるカフェでは、コーヒーを small、medium、large の3サイズで売っています。表は、3日間に売れた杯数と、その日の売上合計です。
+
+それぞれのサイズの値段を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+Let $S$, $M$ and $L$ be the price, in dollars, of a small, medium and large coffee.
+
+$$
+\begin{cases}
+4S + 3M + 2L = 37.90 \\
+2S + 5M + 3L = 46.30 \\
+6S + M + 4L = 46.90
+\end{cases}
+$$
+
+$$S = 3.20, \quad M = 4.50, \quad L = 5.80$$
+
+Small $\$3.20$, medium $\$4.50$, large $\$5.80$.
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+[3つの手順](#three-steps)のとおりに進めます。
+
+**手順1**：分からないのは3つの値段なので、$S, M, L$ と置きます。**`in dollars` まで書いてください。**
+
+**手順2**：表の1行が、1本の式になります。1日目は small が $4$ 杯、medium が $3$ 杯、large が $2$ 杯で、売上は $37.90$ ドルでした。
+
+**手順3**：式が3本、文字が3つ。合っているので解けます。
+
+3日目の medium は $1$ 杯なので $1M$ です。**係数が $1$ のときも、電卓の入力では省略しないほうが安全**です。
+
+答えが $3.2$ と表示されたら、**お金なので $\$3.20$ と小数第2位まで書きます。**
+
+検算：$4(3.20) + 3(4.50) + 2(5.80) = 12.80 + 13.50 + 11.60 = 37.90$ ✓
+:::
+
+
+::: {.ex-sep}
+:::
+
+[9]{.ex-no} [Paper 2]{.ib-tag} [A cuboid has dimensions $x$ cm, $(x+3)$ cm and $(x+5)$ cm. Its volume is $200$ cm$^{3}$.]{.q-en}
+
+**(a)** [Show that $x^{3} + 8x^{2} + 15x - 200 = 0$.]{.q-en}
+
+**(b)** [Find the value of $x$, correct to three significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+直方体の3辺の長さが $x$ cm、$(x+3)$ cm、$(x+5)$ cm で、体積が $200$ cm$^{3}$ です。
+
+**(a)** $x^{3} + 8x^{2} + 15x - 200 = 0$ となることを示しなさい。
+
+**(b)** $x$ の値を、有効数字3桁で求めなさい。
+
+（`cuboid` は「直方体」、`dimensions` は「辺の長さ」です。）
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$V = x(x+3)(x+5) = 200$$
+$$x(x^{2} + 8x + 15) = 200$$
+$$x^{3} + 8x^{2} + 15x = 200$$
+$$x^{3} + 8x^{2} + 15x - 200 = 0$$
+
+**(b)** $x = 3.56$ (3 s.f.)
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** `Show that` なので、**展開の途中を全部書きます。** 答えは問題に書いてあるので、点が付くのは過程のほうです。
+
+まず $(x+3)(x+5) = x^{2} + 8x + 15$、次に $x$ を掛けます。
+
+最後に $200$ を左辺に移すのを忘れないでください。**$-200$ の形にするところまでが (a) です。**
+
+**(b)** (a) で作った式を、そのまま `Find Roots of Polynomial` に入れます。**Degree は 3**、係数は $1, 8, 15, -200$ です。
+
+**定数項の $-200$ の符号**に気をつけてください。$200$ と入れると、答えが変わります。
+
+実数の解は $x = 3.560847\ldots$ の1つだけです。他の解は実数ではないので、答案には書きません。3桁にして $x = 3.56$ です。
+
+検算：$3.56 \times 6.56 \times 8.56 \approx 200$ ✓
+:::
+
+
+::: {.ex-sep}
+:::
+
+[10]{.ex-no} [Paper 2]{.ib-tag} [The graphs of $y = x^{2} - 3x + 1$ and $y = 2x - 4$ intersect at two points.]{.q-en}
+
+**(a)** [Show that the $x$-coordinates of these points satisfy $x^{2} - 5x + 5 = 0$.]{.q-en}
+
+**(b)** [Find the coordinates of the two points of intersection, correct to three significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$y = x^{2} - 3x + 1$ のグラフと $y = 2x - 4$ のグラフは、2点で交わります。
+
+**(a)** これらの点の $x$ 座標が $x^{2} - 5x + 5 = 0$ を満たすことを示しなさい。
+
+**(b)** 2つの交点の座標を、有効数字3桁で求めなさい。
+
+（`intersect` は「交わる」、`coordinates` は「座標」です。）
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** At the points of intersection,
+
+$$x^{2} - 3x + 1 = 2x - 4$$
+$$x^{2} - 3x + 1 - 2x + 4 = 0$$
+$$x^{2} - 5x + 5 = 0$$
+
+**(b)** $x = 1.381966\ldots$ or $x = 3.618033\ldots$
+
+$$y = 2(1.381966\ldots) - 4 = -1.236\ldots$$
+$$y = 2(3.618033\ldots) - 4 = 3.236\ldots$$
+
+$(1.38, \ -1.24)$ and $(3.62, \ 3.24)$ (3 s.f.)
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** **交点では、$y$ の値が等しくなります。** だから、2つの式を $=$ で結びます。
+
+$$x^{2} - 3x + 1 = 2x - 4$$
+
+あとは右辺を左辺に移すだけです。$-3x - 2x = -5x$、$1 + 4 = 5$。
+
+**(b)** 係数 $1, -5, 5$ で `Find Roots of Polynomial` に入れると、$x = 1.381966\ldots$ と $x = 3.618033\ldots$ が出ます。
+
+**ここで終わらないでください。** 聞かれているのは `coordinates`（座標）なので、**$y$ の値も必要**です。
+
+$y$ は、**簡単なほうの式**（$y = 2x - 4$）に入れて求めます。放物線の式に入れても同じ答えになりますが、計算が増えるだけです。
+
+**丸める前の値を代入してください。** $1.38$ を入れて計算すると、$y$ がわずかにずれることがあります。電卓の中に入っている値をそのまま使うのが確実です。
+
+**別の解き方**：Graphs ページで2つのグラフをかいて `Analyze Graph → Intersection` を使えば、$x$ と $y$ が一度に出ます。**この問題では、そちらのほうが速いです。** (a) は `Show that` なので式の変形が必要ですが、(b) はグラフで構いません。
+:::
+
+:::

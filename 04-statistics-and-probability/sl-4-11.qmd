@@ -1,0 +1,1481 @@
+# SL 4.11 — Hypothesis testing: χ² and t-tests（仮説検定 — カイ二乗検定とt検定） {#sec-sl-4-11}
+
+::: {.callout-note}
+## What you should be able to do
+- **null hypothesis** $H_0$ と **alternative hypothesis** $H_1$ を、英語で正しく書ける。
+- **significance level**（有意水準）と **$p$-value** が何を表すかを説明できる。
+- 3つの検定（**$\chi^2$ independence**・**$\chi^2$ goodness of fit**・**$t$-test**）を使い分けられる。
+- **degrees of freedom**（自由度）を求められる。
+- GDC で $p$-value と検定統計量を出せる。
+- $p$ と $\alpha$、または統計量と critical value を比べて、**結論を文脈に戻して英語で書ける**。
+:::
+
+::: {.callout-important}
+## Formula booklet には、何も載っていません
+Topic 4 の欄は **SL 4.8 で終わっています。** 4.9（正規分布）、4.10（Spearman）、そしてこの 4.11 の式は、**公式集に印刷されていません。**
+
+理由はシラバスに書いてあります。
+
+> students will be expected to **use technology** to find a $p$-value and the $\chi^2$ statistic
+
+つまり **$\chi^2$ の式を手で計算する問題は出ません。** 電卓が出してくれます。
+
+さらに、こうも書かれています。
+
+> the $\chi^2$ critical value **will be given if appropriate**
+
+**critical value も問題文に書いてあります。** 表を覚える必要も、探す必要もありません。
+:::
+
+::: {.callout-warning}
+## この項目は「計算」ではなく「記述」で点が決まります
+シラバスの $t$-test の欄に、こう書かれています。
+
+> Students will be asked to **interpret** the results of a test.
+
+電卓が $p$-value を出したあと、**それを言葉にするところ**が採点対象です。数値だけ書いて終わると、ほとんど点になりません。
+
+この本では、**書くべき英文を型として全部載せます。**
+:::
+
+## The idea
+
+::: {.callout-tip}
+## 電卓を開きながら、このページを読んでください
+この項目は、**電卓の Stat Tests を開いた状態で読む**のが一番わかりやすいです。まず電卓を出してください。
+
+Lists & Spreadsheet ページか Calculator ページで、
+
+```
+menu → Statistics → Stat Tests
+```
+
+一覧の中に `χ² 2-way Test`、`χ² GOF`、`2-Sample t Test` の3つがあるのを確認してください。
+
+**このページで扱うのは、この3つだけです。** ほかにもたくさん並んでいますが、AI SL では使いません。
+:::
+
+### 仮説検定とは何をすることか
+
+手元にデータがあって、何かの差や関係が見えたとします。
+
+> このクラスの平均点は、隣のクラスより $5$ 点高かった。
+
+このとき問いたいのは、**「その差は本物か、それともたまたまか」**です。
+
+**hypothesis test**（仮説検定）は、この問いに答えるための手続きです。考え方はこうです。
+
+> **まず「差はない」と仮定してみる。** その仮定のもとで、手元のようなデータが出る確率を計算する。その確率がとても小さければ、最初の仮定のほうが疑わしい。
+
+「差はない」という仮定が **null hypothesis**（帰無仮説、$H_0$）、その確率が **$p$-value** です。
+
+### 5つのステップ
+
+**どの検定でも、やることは同じ5つです。** これを覚えてしまえば、あとは電卓の操作が変わるだけです。
+
+| | ステップ | 英語で |
+|---|---|---|
+| **1** | $H_0$ と $H_1$ を書く | State the hypotheses |
+| **2** | 有意水準 $\alpha$ を確認する | State the significance level |
+| **3** | 電卓で $p$-value（と統計量）を出す | Use the GDC |
+| **4** | $p$ と $\alpha$ を比べる | Compare |
+| **5** | **文脈に戻して結論を書く** | Conclude **in context** |
+
+: 仮説検定の5ステップ {#tbl-5-steps}
+
+**5番が一番大事**です。ここを書かないと、1〜4が全部合っていても点になりません。
+
+### $H_0$ と $H_1$ の書き方
+
+シラバスにこう書かれています。
+
+> Students should express $H_0$ and $H_1$ as an **equation or inequality, or in words** as appropriate.
+
+つまり**言葉で書いても構いません。** 記号にこだわらなくて大丈夫です。
+
+| 検定 | $H_0$ | $H_1$ |
+|---|---|---|
+| $\chi^2$ independence | *The two variables are independent.* | *The two variables are not independent.* |
+| $\chi^2$ goodness of fit | *The data fit the proposed distribution.* | *The data do not fit the proposed distribution.* |
+| $t$-test（両側） | $\mu_1 = \mu_2$ | $\mu_1 \neq \mu_2$ |
+| $t$-test（片側） | $\mu_1 = \mu_2$ | $\mu_1 > \mu_2$（または $<$） |
+
+: $H_0$ と $H_1$ の型 {#tbl-hypotheses}
+
+::: {.callout-important}
+## $H_0$ はいつも「差がない」「関係がない」ほう
+$H_0$ は、**否定したい退屈なほう**を書きます。「何も起きていない」という仮定です。
+
+$H_1$ は、**主張したいほう**です。「関係がある」「平均が違う」。
+
+**逆に書くと、以降の判定が全部ひっくり返ります。** 一番よくある間違いなので、書いたあとに「$H_0$ は退屈なほうか？」と1回確かめてください。
+:::
+
+### significance level と $p$-value
+
+**significance level**（有意水準、$\alpha$）は、**どのくらい珍しければ「たまたまではない」と判断するか**の基準です。問題文に必ず書いてあります。
+
+シラバスによれば、試験で使われるのは次の3つだけです。
+
+> only questions on upper tail tests with commonly-used significance levels (**1%, 5%, 10%**) will be set
+
+**$p$-value** は、「$H_0$ が正しいとしたら、手元のようなデータが出る確率」です。**小さいほど $H_0$ が疑わしい**ということになります。
+
+### 判定のルール
+
+**比べるものは2通りあります。** どちらも問題文の指示に従ってください。
+
+::: {.callout-important}
+## $p$-value で判定する（こちらが基本）
+$$
+p < \alpha \quad \Longrightarrow \quad \textbf{reject } H_0
+$$
+
+$$
+p \geq \alpha \quad \Longrightarrow \quad \textbf{do not reject } H_0
+$$
+
+**「$p$ が小さいと reject」**です。向きを覚えてください。$p$ が小さい＝$H_0$ のもとではめったに起きない＝$H_0$ が怪しい、という流れです。
+:::
+
+::: {.callout-important}
+## critical value で判定する（$\chi^2$ のとき）
+$$
+\chi^2_{\text{calc}} > \chi^2_{\text{crit}} \quad \Longrightarrow \quad \textbf{reject } H_0
+$$
+
+$$
+\chi^2_{\text{calc}} \leq \chi^2_{\text{crit}} \quad \Longrightarrow \quad \textbf{do not reject } H_0
+$$
+
+**$p$ のときと向きが逆**です。統計量は**大きい**ほど $H_0$ が怪しくなります。
+
+critical value は問題文に与えられます。自分で表を引く必要はありません。
+:::
+
+::: {.callout-warning}
+## 「accept $H_0$」と書いてはいけません
+$p \geq \alpha$ のとき、正しい言い方は **do not reject $H_0$** です。
+
+`accept H₀` や「$H_0$ が正しいと分かった」と書くと、**減点されます。**
+
+理由は、検定が**証明ではない**からです。「$H_0$ を否定するだけの証拠が集まらなかった」だけで、$H_0$ が正しいと示したわけではありません。「無罪」と「やっていないことの証明」が違うのと同じです。
+
+**英語の型を、そのまま覚えてください。**
+
+- reject するとき … *There is sufficient evidence at the 5% level to reject $H_0$.*
+- reject しないとき … *There is insufficient evidence at the 5% level to reject $H_0$.*
+:::
+
+### 3つの検定の使い分け
+
+**どの検定を使うかは、データの形で決まります。**
+
+| 検定 | 何を調べるか | データの形 | 自由度 |
+|---|---|---|---|
+| **$\chi^2$ test for independence** | 2つの**カテゴリ**に関係があるか | 表（contingency table） | $(r-1)(c-1)$ |
+| **$\chi^2$ goodness of fit** | データが**予想した割合**に合うか | 観測度数と期待度数のリスト | $n - 1$ |
+| **$t$-test** | 2つのグループの**平均**が違うか | 数値データ2組 | 電卓が出す |
+
+: 3つの検定の使い分け {#tbl-three-tests}
+
+**見分け方は簡単です。**
+
+- 表が出てきたら → **independence**
+- 「割合はこうなるはず」と書いてあったら → **goodness of fit**
+- 数値のリストが2つあって「平均」の話なら → **$t$-test**
+
+### $\chi^2$ test for independence
+
+2つのカテゴリを組み合わせた表を **contingency table**（分割表）といいます。
+
+「もし関係がなかったら、こうなるはず」という度数を **expected frequency**（期待度数）といい、実際の **observed frequency**（観測度数）とどれだけずれているかを測ります。
+
+$$
+\text{expected} = \frac{\text{行の合計} \times \text{列の合計}}{\text{全体の合計}}
+$$ {#eq-expected}
+
+自由度は、行数を $r$、列数を $c$ として
+
+$$
+\nu = (r-1)(c-1) .
+$$ {#eq-df-indep}
+
+::: {.callout-tip}
+## 試験に出る表の大きさは決まっています
+シラバスに、こう書かれています。
+
+> - the maximum number of rows or columns in a contingency table will be **4**
+> - the degrees of freedom will always be **greater than one**
+> - expected frequencies will be **greater than 5**
+
+つまり試験では、
+
+- 表は最大 $4 \times 4$
+- **$2 \times 2$ の表は出ません**（$\nu = 1$ になってしまうため）
+- 期待度数が $5$ 以下になる心配もありません
+
+一番小さいのは $2 \times 3$（$\nu = 2$）です。
+:::
+
+### $\chi^2$ goodness of fit
+
+「サイコロは公平か」「商品の色の割合は $2:3:5$ か」のように、**あらかじめ決まった割合に合うか**を調べます。
+
+期待度数は、**全体の個数にその割合を掛けて**作ります。
+
+自由度は、シラバスに明記されています。
+
+> At SL the degrees of freedom for the goodness of fit test will always be $n-1$
+
+$n$ は**カテゴリの数**です。$3$ 色なら $\nu = 2$、サイコロの $6$ 面なら $\nu = 5$ です。
+
+### $t$-test
+
+2つのグループの**平均**が違うかどうかを調べます。シラバスの条件が細かいので、そのまま引きます。
+
+> At SL, samples will be **unpaired**, and population variance will always be **unknown**.
+>
+> Students should know that the underlying distribution of the variables must be **normal** for the $t$-test to be applied. In examinations, students should assume that variance of the two groups is **equal** and therefore the **pooled** two-sample $t$-test should be used.
+
+**試験で使うのは、いつも同じ設定です。**
+
+- unpaired（対応なし）… 2つのグループは別々の人・もの
+- pooled（プールした分散を使う）… 電卓の `Pooled` を **Yes** にする
+- 元の分布は normal と仮定してよい
+
+**one-tailed（片側）か two-tailed（両側）か**は、問題文で決まります。
+
+| 問題文 | $H_1$ | 電卓の設定 |
+|---|---|---|
+| `Is there a difference?`（違いがあるか） | $\mu_1 \neq \mu_2$ | **両側** |
+| `Is A greater than B?`（A のほうが大きいか） | $\mu_1 > \mu_2$ | **片側** |
+| `Is A less than B?`（A のほうが小さいか） | $\mu_1 < \mu_2$ | **片側** |
+
+: 片側か両側か {#tbl-tails}
+
+**「違いがあるか」なら両側、「どちらが大きいか」なら片側**です。
+
+## Why it works
+
+ここでは、**$\chi^2$ という数が何を測っているのか**だけを見ます。式を手で計算する問題は出ないので、意味だけつかめば十分です。
+
+$\chi^2$ は、こう定義されています。
+
+$$
+\chi^2 = \sum \frac{(\text{observed} - \text{expected})^2}{\text{expected}}
+$$ {#eq-chi2}
+
+**分子は「ずれ」です。** 実際の度数が、期待した度数からどれだけ離れているか。$2$ 乗しているのは、プラスのずれとマイナスのずれが打ち消し合わないようにするためです。
+
+**分母で割っているのは、大きさをそろえるため**です。期待度数 $100$ に対する $10$ のずれと、期待度数 $10$ に対する $10$ のずれでは、後者のほうがずっと大きな異常です。
+
+ですから、
+
+- **ぴったり合っていれば $\chi^2 = 0$**
+- **ずれが大きいほど $\chi^2$ が大きくなる**
+
+@exm-chi-gof の数字で見てみましょう。期待度数が $40, 60, 100$、観測度数が $32, 68, 100$ でした。
+
+$$
+\frac{(32-40)^2}{40} + \frac{(68-60)^2}{60} + \frac{(100-100)^2}{100} = 1.6 + 1.0667 + 0 = 2.667
+$$
+
+3つ目のカテゴリは**ぴったり合っている**ので、$0$ です。何も足しません。
+
+::: {.callout-note}
+## $p$-value は「$\chi^2$ がここまで大きくなる確率」
+$H_0$ が正しくても、偶然のせいで $\chi^2$ は $0$ にはなりません。多少はずれます。
+
+**$p$-value は、「$H_0$ が正しいとして、$\chi^2$ が今回の値以上になる確率」**です。
+
+$\chi^2$ が大きいほど、その確率は小さくなります。だから **$\chi^2$ が大きい ⟺ $p$ が小さい** で、2つの判定ルールは同じことを言っています。
+
+$\chi^2$ は「大きいと怪しい」、$p$ は「小さいと怪しい」。**向きが逆になるのは、このためです。**
+:::
+
+## Worked examples
+
+::: {.callout-note appearance="simple"}
+問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
+:::
+
+::: {#exm-chi-indep}
+[Paper 2]{.ib-tag} [A café records whether each customer orders tea or coffee, and their age group. The results are shown in the table below.]{.q-en}
+
+| | Under 30 | 30–50 | Over 50 |
+|---|---|---|---|
+| **Tea** | 30 | 45 | 55 |
+| **Coffee** | 70 | 55 | 45 |
+
+[A $\chi^2$ test for independence is carried out at the $5\%$ significance level.]{.q-en}
+
+**(a)** [State the null and alternative hypotheses.]{.q-en}
+
+**(b)** [Write down the number of degrees of freedom.]{.q-en}
+
+**(c)** [Find the $p$-value for this test.]{.q-en}
+
+**(d)** [State the conclusion of the test. Justify your answer.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+あるカフェが、客がお茶を注文したかコーヒーを注文したかと、その年齢層を記録しました。結果は上の表のとおりです（見出しは Under 30 が「30歳未満」、30–50 が「30〜50歳」、Over 50 が「50歳超」、Tea が「お茶」、Coffee が「コーヒー」です）。
+
+有意水準 $5\%$ で $\chi^2$ 独立性の検定を行います。
+
+**(a)** 帰無仮説と対立仮説を述べなさい。
+
+**(b)** 自由度を書きなさい。
+
+**(c)** この検定の $p$-value を求めなさい。
+
+**(d)** 検定の結論を述べなさい。根拠も示しなさい。
+
+</details>
+
+---
+
+::: {.callout-important}
+## 計算の前に：どの検定か
+**表（contingency table）が出てきました。** ですから $\chi^2$ test for independence です（@tbl-three-tests）。
+
+$2$ 行 $3$ 列なので、自由度は $(2-1)(3-1) = 2$。シラバスどおり $1$ より大きくなっています。
+:::
+
+**(a)** 「関係がない」ほうが $H_0$ です（@tbl-hypotheses）。
+
+> $H_0$: *The type of drink ordered is independent of age group.*
+>
+> $H_1$: *The type of drink ordered is not independent of age group.*
+
+**(b)** @eq-df-indep より
+
+$$
+\nu = (2-1)(3-1) = 2
+$$
+
+**(c)** 電卓に表を行列として入れて、`χ² 2-way Test` を実行します（やり方は [Using your GDC](#using-your-gdc-ti-nspire-cx-ii) に書きました）。
+
+$$
+\chi^2 = 12.9 \ (3\text{ s.f.}), \qquad p = 0.00158 \ (3\text{ s.f.})
+$$
+
+**(d)** $\alpha = 0.05$ と比べます。
+
+$$
+p = 0.00158 < 0.05
+$$
+
+$p$ のほうが小さいので **reject $H_0$** です。ここで終わらず、**文脈に戻します。**
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*Since $p = 0.00158 < 0.05$, we reject $H_0$. There is sufficient evidence at the $5\%$ significance level to conclude that the type of drink ordered is not independent of age group.*
+:::
+
+（$p = 0.00158 < 0.05$ なので $H_0$ を棄却します。有意水準 $5\%$ において、注文される飲み物の種類は年齢層と独立ではない、と結論するのに十分な証拠があります。）
+
+::: {.callout-important}
+## (d) の書き方が、この項目の本体です
+**必ず3つ入れてください。**
+
+1. **数値の比較** — *Since $p = 0.00158 < 0.05$*
+2. **判定** — *we reject $H_0$*
+3. **文脈** — *the type of drink is not independent of age group*
+
+3つ目を落とす生徒が非常に多いです。`reject H₀` だけで止めると、**何について結論したのかが伝わりません。**
+
+問題文に出てくる言葉（`type of drink`、`age group`）を、そのまま結論の文に入れてください。それが「文脈に戻す」ということです。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** *$H_0$: The type of drink ordered is independent of age group.*
+
+*$H_1$: The type of drink ordered is not independent of age group.*
+
+**(b)** $\nu = (2-1)(3-1) = 2$
+
+**(c)** *Using the GDC ($\chi^2$ 2-way Test):*
+$$\chi^2 = 12.9, \qquad p = 0.00158$$
+
+**(d)** *Since $p = 0.00158 < 0.05$, we reject $H_0$. There is sufficient evidence at the $5\%$ significance level to conclude that the type of drink ordered is not independent of age group.*
+:::
+:::
+
+::: {#exm-chi-critical}
+[Paper 2]{.ib-tag} [A company tests four different advertisements. For each advertisement, it records whether people remembered the product afterwards.]{.q-en}
+
+| | Remembered | Did not remember |
+|---|---|---|
+| **Advert A** | 42 | 18 |
+| **Advert B** | 35 | 25 |
+| **Advert C** | 28 | 32 |
+| **Advert D** | 25 | 35 |
+
+[A $\chi^2$ test for independence is carried out at the $5\%$ significance level. The critical value is $7.815$.]{.q-en}
+
+**(a)** [Find the expected frequency for people who remembered the product after seeing Advert A.]{.q-en}
+
+**(b)** [Find the $\chi^2$ statistic.]{.q-en}
+
+**(c)** [State, with a reason, the conclusion of the test.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある会社が4種類の広告をテストしました。それぞれの広告について、見た人があとで商品を覚えていたかどうかを記録しています（見出しは Remembered が「覚えていた」、Did not remember が「覚えていなかった」です）。
+
+有意水準 $5\%$ で $\chi^2$ 独立性の検定を行います。臨界値は $7.815$ です。
+
+**(a)** 広告 A を見て商品を覚えていた人の期待度数を求めなさい。
+
+**(b)** $\chi^2$ 統計量を求めなさい。
+
+**(c)** 検定の結論を、理由をつけて述べなさい。
+
+</details>
+
+---
+
+**(a)** @eq-expected を使います。行の合計、列の合計、全体の合計を読み取ります。
+
+- Advert A の行の合計 … $42 + 18 = 60$
+- Remembered の列の合計 … $42 + 35 + 28 + 25 = 130$
+- 全体の合計 … $60 \times 4 = 240$
+
+$$
+\text{expected} = \frac{60 \times 130}{240} = 32.5
+$$
+
+実際は $42$ 人だったので、**期待より $9.5$ 人多かった**ことになります。
+
+**(b)** 電卓で `χ² 2-way Test` を実行します。
+
+$$
+\chi^2 = 11.6 \ (3\text{ s.f.})
+$$
+
+**(c)** **今回は $p$-value ではなく critical value と比べます。** 問題文が $7.815$ を与えているからです。
+
+$$
+\chi^2 = 11.6 > 7.815
+$$
+
+**統計量のほうが大きい**ので reject です。$p$ のときと向きが逆なので注意してください。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*Since $\chi^2 = 11.6 > 7.815$, we reject $H_0$. There is sufficient evidence at the $5\%$ significance level to conclude that whether people remember the product is not independent of which advertisement they saw.*
+:::
+
+（$\chi^2 = 11.6 > 7.815$ なので $H_0$ を棄却します。有意水準 $5\%$ において、人が商品を覚えているかどうかは、どの広告を見たかと独立ではない、と結論するのに十分な証拠があります。）
+
+::: {.callout-tip}
+## critical value が問題文にあったら、それを使う
+$p$-value でも同じ結論になります（$p = 0.00883 < 0.05$）。**どちらでも正解です。**
+
+ただし、**問題文が critical value を与えているときは、それを使うのが自然**です。わざわざ与えているのは「これと比べなさい」という合図だからです。
+
+自由度が $(4-1)(2-1) = 3$ であることも確認しておいてください。critical value は自由度ごとに違うので、$\nu = 3$ の値が与えられています。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)**
+$$\text{expected} = \frac{60 \times 130}{240} = 32.5$$
+
+**(b)** *Using the GDC:*
+$$\chi^2 = 11.6$$
+
+**(c)** *Since $\chi^2 = 11.6 > 7.815$, we reject $H_0$. There is sufficient evidence at the $5\%$ significance level to conclude that whether people remember the product is not independent of which advertisement they saw.*
+:::
+:::
+
+::: {#exm-chi-gof}
+[Paper 2]{.ib-tag} [A company claims that its bags of sweets contain red, green and yellow sweets in the ratio $2:3:5$. A sample of $200$ sweets contains $32$ red, $68$ green and $100$ yellow.]{.q-en}
+
+[A $\chi^2$ goodness of fit test is carried out at the $5\%$ significance level.]{.q-en}
+
+**(a)** [Find the expected frequencies.]{.q-en}
+
+**(b)** [Write down the number of degrees of freedom.]{.q-en}
+
+**(c)** [Find the $p$-value.]{.q-en}
+
+**(d)** [State the conclusion of the test in context.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある会社は、自社のお菓子の袋には赤・緑・黄のお菓子が $2:3:5$ の比で入っていると主張しています。$200$ 個を調べたところ、赤が $32$ 個、緑が $68$ 個、黄が $100$ 個でした。
+
+有意水準 $5\%$ で $\chi^2$ 適合度検定を行います。
+
+**(a)** 期待度数を求めなさい。
+
+**(b)** 自由度を書きなさい。
+
+**(c)** $p$-value を求めなさい。
+
+**(d)** 検定の結論を、文脈に沿って述べなさい。
+
+</details>
+
+---
+
+::: {.callout-important}
+## 計算の前に：どの検定か
+**「割合はこうなるはず」という主張があります。** ですから goodness of fit です（@tbl-three-tests）。表ではなくリストなので、independence ではありません。
+:::
+
+**(a)** 比 $2:3:5$ の合計は $2+3+5 = 10$ です。$200$ 個をこの割合で分けます。
+
+$$
+\text{red} = 200 \times \frac{2}{10} = 40, \quad
+\text{green} = 200 \times \frac{3}{10} = 60, \quad
+\text{yellow} = 200 \times \frac{5}{10} = 100
+$$
+
+**(b)** カテゴリが $3$ つなので
+
+$$
+\nu = 3 - 1 = 2
+$$
+
+**(c)** 電卓で `χ² GOF` を実行します。
+
+$$
+\chi^2 = 2.67 \ (3\text{ s.f.}), \qquad p = 0.264 \ (3\text{ s.f.})
+$$
+
+**(d)** $\alpha = 0.05$ と比べます。
+
+$$
+p = 0.264 > 0.05
+$$
+
+**今回は $p$ のほうが大きい**ので、reject **しません**。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*Since $p = 0.264 > 0.05$, we do not reject $H_0$. There is insufficient evidence at the $5\%$ significance level to conclude that the sweets are not in the ratio $2:3:5$.*
+:::
+
+（$p = 0.264 > 0.05$ なので $H_0$ を棄却しません。有意水準 $5\%$ において、お菓子が $2:3:5$ の比になっていない、と結論するだけの証拠は十分ではありません。）
+
+::: {.callout-warning}
+## 「会社の主張は正しいと分かった」と書かない
+$p > \alpha$ でも、**会社の主張が証明されたわけではありません。**
+
+書けるのは「$2:3:5$ ではない、と言えるだけの証拠が足りなかった」ということだけです。
+
+- ✗ *The company's claim is correct.*
+- ✗ *We accept $H_0$.*
+- ◎ *There is insufficient evidence to reject $H_0$.*
+
+**この違いで点が決まります。** 型のまま覚えてください。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** *Total ratio $= 2+3+5 = 10$*
+
+$$\text{red} = 200 \times \tfrac{2}{10} = 40, \quad \text{green} = 60, \quad \text{yellow} = 100$$
+
+**(b)** $\nu = 3 - 1 = 2$
+
+**(c)** *Using the GDC ($\chi^2$ GOF):*
+$$\chi^2 = 2.67, \qquad p = 0.264$$
+
+**(d)** *Since $p = 0.264 > 0.05$, we do not reject $H_0$. There is insufficient evidence at the $5\%$ significance level to conclude that the sweets are not in the ratio $2:3:5$.*
+:::
+:::
+
+::: {#exm-t-two-tailed}
+[Paper 2]{.ib-tag} [Two classes take the same test. Their scores are shown below.]{.q-en}
+
+[Class A: $72, \ 68, \ 75, \ 80, \ 66, \ 71, \ 78, \ 74, \ 69, \ 77$]{.q-en}
+
+[Class B: $65, \ 70, \ 62, \ 68, \ 71, \ 64, \ 67, \ 60, \ 69, \ 66$]{.q-en}
+
+[A teacher wants to know whether there is a difference between the mean scores of the two classes. A $t$-test is carried out at the $5\%$ significance level. It may be assumed that the scores are normally distributed and that the variances are equal.]{.q-en}
+
+**(a)** [State the null and alternative hypotheses.]{.q-en}
+
+**(b)** [Find the $p$-value.]{.q-en}
+
+**(c)** [State the conclusion in context.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+2つのクラスが同じテストを受けました。得点は上のとおりです。
+
+先生は、2つのクラスの平均点に**違いがあるかどうか**を知りたいと思っています。有意水準 $5\%$ で $t$ 検定を行います。得点は正規分布に従い、分散は等しいと仮定してよいものとします。
+
+**(a)** 帰無仮説と対立仮説を述べなさい。
+
+**(b)** $p$-value を求めなさい。
+
+**(c)** 結論を文脈に沿って述べなさい。
+
+</details>
+
+---
+
+::: {.callout-important}
+## 計算の前に：片側か両側か
+`whether there is a difference`（違いがあるかどうか）と書かれています。**どちらが大きいかは問われていません。**
+
+ですから **two-tailed（両側）** です（@tbl-tails）。電卓の `Alternative Hyp` は $\mu_1 \neq \mu_2$ を選びます。
+:::
+
+**(a)**
+
+> $H_0$: $\mu_A = \mu_B$ （*The mean scores of the two classes are equal.*）
+>
+> $H_1$: $\mu_A \neq \mu_B$ （*The mean scores of the two classes are not equal.*）
+
+**(b)** 2つのリストを電卓に入れて、`2-Sample t Test` を実行します。**`Pooled` は `Yes`** です（シラバスの指定）。
+
+$$
+t = 3.71 \ (3\text{ s.f.}), \qquad p = 0.00159 \ (3\text{ s.f.})
+$$
+
+**(c)**
+
+$$
+p = 0.00159 < 0.05
+$$
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*Since $p = 0.00159 < 0.05$, we reject $H_0$. There is sufficient evidence at the $5\%$ significance level to conclude that there is a difference between the mean scores of the two classes.*
+:::
+
+（$p = 0.00159 < 0.05$ なので $H_0$ を棄却します。有意水準 $5\%$ において、2つのクラスの平均点には違いがある、と結論するのに十分な証拠があります。）
+
+::: {.callout-tip}
+## 平均を出しておくと、答えの検算になります
+Class A の平均は $73.0$、Class B の平均は $66.2$ で、$6.8$ 点の差があります。
+
+$p$ が小さく出たのは、この差が大きいからです。**もし平均がほとんど同じなのに $p$ が小さく出たら、入力を間違えています。**
+
+平均は `2-Sample t Test` の結果画面にも $\bar{x}_1$、$\bar{x}_2$ として表示されます。**一度見ておく習慣**をつけてください。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** $H_0$: $\mu_A = \mu_B$ &nbsp;&nbsp; $H_1$: $\mu_A \neq \mu_B$
+
+**(b)** *Using the GDC (2-Sample $t$ Test, pooled, two-tailed):*
+$$t = 3.71, \qquad p = 0.00159$$
+
+**(c)** *Since $p = 0.00159 < 0.05$, we reject $H_0$. There is sufficient evidence at the $5\%$ significance level to conclude that there is a difference between the mean scores of the two classes.*
+:::
+:::
+
+::: {#exm-t-one-tailed}
+[Paper 2]{.ib-tag} [A gardener wants to test whether a new fertiliser makes plants taller. She grows $8$ plants with the fertiliser and $8$ plants without it, and measures their heights in cm after four weeks.]{.q-en}
+
+[With fertiliser: $23.6, \ 24.2, \ 22.9, \ 25.1, \ 23.8, \ 24.5, \ 22.7, \ 25.3$]{.q-en}
+
+[Without fertiliser: $21.4, \ 23.1, \ 20.8, \ 22.5, \ 21.9, \ 20.2, \ 22.8, \ 21.1$]{.q-en}
+
+[A $t$-test is carried out at the $1\%$ significance level. It may be assumed that the heights are normally distributed and that the variances are equal.]{.q-en}
+
+**(a)** [State the null and alternative hypotheses.]{.q-en}
+
+**(b)** [Find the $p$-value.]{.q-en}
+
+**(c)** [State the conclusion in context.]{.q-en}
+
+**(d)** [State one assumption that must be made for this test to be valid.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある庭師が、新しい肥料で植物が**背が高くなるかどうか**を調べようとしています。肥料ありで $8$ 本、肥料なしで $8$ 本を育て、4週間後に高さ（cm）を測りました。
+
+有意水準 $1\%$ で $t$ 検定を行います。高さは正規分布に従い、分散は等しいと仮定してよいものとします。
+
+**(a)** 帰無仮説と対立仮説を述べなさい。
+
+**(b)** $p$-value を求めなさい。
+
+**(c)** 結論を文脈に沿って述べなさい。
+
+**(d)** この検定が有効であるために必要な仮定を1つ述べなさい。
+
+</details>
+
+---
+
+::: {.callout-important}
+## 計算の前に：片側か両側か
+`makes plants taller`（背が高くなる）と書かれています。**向きが指定されています。**
+
+ですから **one-tailed（片側）** です（@tbl-tails）。$\mu_1$ を肥料ありとして、$H_1$ は $\mu_1 > \mu_2$ です。
+
+**有意水準も $5\%$ ではなく $1\%$** です。問題文をよく読んでください。
+:::
+
+**(a)** $\mu_1$ を肥料ありの平均、$\mu_2$ を肥料なしの平均とします。
+
+> $H_0$: $\mu_1 = \mu_2$
+>
+> $H_1$: $\mu_1 > \mu_2$
+
+**(b)** `2-Sample t Test` で、`Alternative Hyp` を $\mu_1 > \mu_2$ にします。`Pooled` は `Yes`。
+
+$$
+t = 4.63 \ (3\text{ s.f.}), \qquad p = 0.000193 \ (3\text{ s.f.})
+$$
+
+**(c)**
+
+$$
+p = 0.000193 < 0.01
+$$
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*Since $p = 0.000193 < 0.01$, we reject $H_0$. There is sufficient evidence at the $1\%$ significance level to conclude that plants grown with the fertiliser are taller on average than plants grown without it.*
+:::
+
+（$p = 0.000193 < 0.01$ なので $H_0$ を棄却します。有意水準 $1\%$ において、肥料を与えた植物のほうが与えなかった植物より平均して背が高い、と結論するのに十分な証拠があります。）
+
+**(d)** シラバスに書かれている仮定を1つ書けば十分です。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The heights of the plants must be normally distributed.*
+
+（または *The variances of the two populations must be equal.*）
+:::
+
+::: {.callout-important}
+## リストの順番と $H_1$ の向きをそろえる
+片側検定では、**どちらを $\mu_1$ にしたかで $H_1$ の向きが変わります。**
+
+肥料ありを List 1 に入れたなら $H_1: \mu_1 > \mu_2$、肥料なしを List 1 に入れたなら $H_1: \mu_1 < \mu_2$ です。
+
+**逆にすると $p$ が $1$ に近い値になります**（今回なら $p = 0.9998$）。$p$ が異様に大きく出たら、**まず向きを疑ってください。**
+
+答案には「$\mu_1$ を肥料ありの平均とする」と**一言書いておく**と、採点者に伝わります。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+*Let $\mu_1$ be the mean height with fertiliser and $\mu_2$ the mean height without.*
+
+**(a)** $H_0$: $\mu_1 = \mu_2$ &nbsp;&nbsp; $H_1$: $\mu_1 > \mu_2$
+
+**(b)** *Using the GDC (2-Sample $t$ Test, pooled, one-tailed):*
+$$t = 4.63, \qquad p = 0.000193$$
+
+**(c)** *Since $p = 0.000193 < 0.01$, we reject $H_0$. There is sufficient evidence at the $1\%$ significance level to conclude that plants grown with the fertiliser are taller on average.*
+
+**(d)** *The heights must be normally distributed.*
+:::
+:::
+
+## Common errors
+
+::: {.callout-warning}
+## $H_0$ と $H_1$ を逆に書く
+$H_0$ は**いつも「差がない」「関係がない」ほう**です（@tbl-hypotheses）。
+
+主張したいことを $H_0$ に書いてしまうと、以降の判定が全部ひっくり返ります。書いたあとに「$H_0$ は退屈なほうか？」と1回確かめてください。
+:::
+
+::: {.callout-warning}
+## `accept H₀` と書く
+正しくは **do not reject $H_0$** です。検定は $H_0$ を証明する道具ではありません。
+
+`accept` は英語の型として間違いなので、そのまま減点されます。**書き出しごと覚えてください。**
+
+*There is insufficient evidence at the $5\%$ level to reject $H_0$.*
+:::
+
+::: {.callout-warning}
+## 結論を文脈に戻さない
+`reject H₀` だけで止めるのが、**この項目で一番多い失点**です。
+
+問題文の言葉（`type of drink`、`age group`、`mean scores` など）を、**必ず結論の文に入れてください。**
+
+型は3つセットです。**数値の比較 → 判定 → 文脈。**
+:::
+
+::: {.callout-warning}
+## $p$ と $\chi^2$ で、比較の向きを取り違える
+- **$p$ は小さいと reject**（$p < \alpha$）
+- **$\chi^2$ は大きいと reject**（$\chi^2 > \chi^2_{\text{crit}}$）
+
+**向きが逆です。** どちらを使っているのかを、比べる前に確認してください。
+
+迷ったら「$p$ は確率だから、小さいほど珍しい＝怪しい」と考え直してください。
+:::
+
+::: {.callout-warning}
+## 自由度を間違える
+- independence … $\nu = (r-1)(c-1)$
+- goodness of fit … $\nu = n - 1$（$n$ はカテゴリの数）
+
+**$\chi^2$ GOF では、電卓に自由度を自分で入力します。** ここを間違えると $p$-value が変わってしまいます。
+
+independence のほうは電卓が自動で計算してくれます。
+:::
+
+::: {.callout-warning}
+## $t$-test で `Pooled` を `No` にする
+シラバスに `students should assume that variance of the two groups is equal and therefore the pooled two-sample t-test should be used` と明記されています。
+
+**`Pooled` は必ず `Yes`** です。`No` にすると自由度も $p$-value も変わります。
+
+試験前に、この設定を一度確認しておいてください。
+:::
+
+::: {.callout-warning}
+## 片側と両側を取り違える
+- `Is there a difference?` → **両側**
+- `Is A greater / less than B?` → **片側**
+
+片側なのに両側で計算すると、$p$ がちょうど $2$ 倍になります。ぎりぎりの問題では、それだけで結論が変わります。
+
+**問題文の動詞を見てください**（@tbl-tails）。
+:::
+
+::: {.callout-warning}
+## 「significant」を「正しい」の意味で使う
+$p < \alpha$ で言えるのは「偶然では説明しにくい」ということだけです。**「主張が真である」ことは示していません。**
+
+シラバスの TOK にも、こう書かれています。
+
+> In practical terms, is saying that a result is significant the same as saying it is true?
+
+答えは **No** です。`Comment on` や `Interpret` を求められたときに、この点に触れられると強いです。
+:::
+
+## Using your GDC (TI-Nspire CX II)
+
+**この項目は、電卓なしでは解けません。** シラバスが `students will be expected to use technology to find a p-value and the χ² statistic` と指定しています。
+
+### $\chi^2$ test for independence
+
+**表を「行列」として入力するところが、唯一むずかしい部分です。**
+
+**1. 行列を作る**
+
+Calculator ページで、**テンプレートのパレット**（9キーの右）を開き、行列のテンプレートを選びます。行数と列数を聞かれるので、表と同じ数（@exm-chi-indep なら $2$ 行 $3$ 列）を入れます。
+
+点線のボックスが並ぶので、`tab` で移動しながら**表の数字だけ**を入れます。**行や列の合計は入れません。**
+
+$$
+\begin{pmatrix}
+30 & 45 & 55 \\
+70 & 55 & 45
+\end{pmatrix}
+$$
+
+**2. 変数に入れる**
+
+入力した行列を、名前をつけて保存します。
+
+```
+（行列） → obs
+```
+
+矢印は `ctrl` + `var` で出ます。名前は `obs` でも `a` でも構いません。
+
+**3. 検定を実行する**
+
+```
+menu → Statistics → Stat Tests → χ² 2-way Test
+```
+
+`Observed Matrix` の欄に `obs` と入れて `OK`。
+
+**4. 結果を読む**
+
+| 表示 | 意味 |
+|---|---|
+| `χ²` | 検定統計量 |
+| `PVal` | $p$-value |
+| `df` | 自由度（自動で計算されます） |
+| `ExpMatrix` | 期待度数の行列 |
+
+: $\chi^2$ 2-way Test の結果 {#tbl-chi2-output}
+
+::: {.callout-tip}
+## 期待度数も電卓が出してくれます
+@exm-chi-critical の (a) のように「期待度数を求めよ」と言われたら、@eq-expected で手計算してもよいですし、**`ExpMatrix` を見ても構いません。**
+
+ただし `Find the expected frequency` と単独で問われた場合は、**式を書いておくほうが安全**です。過程に点が付くことがあります。
+
+$$\frac{60 \times 130}{240} = 32.5$$
+:::
+
+### $\chi^2$ goodness of fit
+
+こちらは**行列ではなくリスト**を使います。
+
+**1. Lists & Spreadsheet ページで、2つの列を作る**
+
+- 列 A（`obs`）… 観測度数 $32, 68, 100$
+- 列 B（`exp`）… 期待度数 $40, 60, 100$
+
+**期待度数は自分で計算して入れます。** 電卓は作ってくれません。
+
+**2. 検定を実行する**
+
+```
+menu → Statistics → Stat Tests → χ² GOF
+```
+
+`Observed List` に `obs`、`Expected List` に `exp`、そして **`Deg of Freedom` に自分で $\nu$ を入れます。**
+
+::: {.callout-warning}
+## GOF では自由度を自分で入れます
+independence と違って、**GOF は自由度を聞いてきます。** SL では $\nu = n - 1$（カテゴリの数 $-1$）です。
+
+$3$ 色なら $2$、サイコロなら $5$。**ここを間違えると $p$-value が変わります。**
+:::
+
+### 2-Sample $t$ Test
+
+**1. Lists & Spreadsheet ページで、2つの列にデータを入れる**
+
+列 A に Class A の得点、列 B に Class B の得点。**名前をつけておく**と選びやすくなります。
+
+**2. 検定を実行する**
+
+```
+menu → Statistics → Stat Tests → 2-Sample t Test
+```
+
+`Data Input Method` は `Data`（生データを使う）を選びます。
+
+**3. 設定を確認する**
+
+| 欄 | 入れるもの |
+|---|---|
+| `List 1` / `List 2` | 2つのデータ列 |
+| `Freq 1` / `Freq 2` | `1` のまま |
+| `Alternative Hyp` | $\mu_1 \neq \mu_2$ / $\mu_1 > \mu_2$ / $\mu_1 < \mu_2$ |
+| **`Pooled`** | **`Yes`** ★必ず |
+
+: 2-Sample $t$ Test の設定 {#tbl-ttest-setup}
+
+**4. 結果を読む**
+
+`t`、`PVal`、`df`、そして $\bar{x}_1$、$\bar{x}_2$（2つの平均）が表示されます。
+
+::: {.callout-tip}
+## 平均を必ず見てください
+$\bar{x}_1$ と $\bar{x}_2$ を見れば、**どちらが大きいか**がすぐ分かります。
+
+片側検定で $p$ が $1$ に近い値になったときは、**$H_1$ の向きとリストの順番が食い違っています。** 平均を見れば、どちらを List 1 にすべきだったかが分かります。
+:::
+
+### 結果の書き写し方
+
+**電卓の画面をそのまま写さないでください。** 答案には、必要なものだけを書きます。
+
+| 書くもの | 書かないもの |
+|---|---|
+| $\chi^2$ または $t$ の値（3 s.f.） | `SE`、`sx1`、`n1` など |
+| $p$-value（3 s.f.） | 画面の全項目 |
+| 自由度（聞かれたら） | |
+
+: 答案に書くもの {#tbl-what-to-write}
+
+そのうえで、**結論の英文が必要**です。数値だけでは点になりません。
+
+::: {.callout-note}
+## `Stat Tests` は Press-to-Test でも使えます
+試験モード（Press-to-Test）でも、`Stat Tests` の項目は制限されません。安心して使ってください。
+
+制限されるのは、幾何機能・3Dグラフ・微分方程式などです（付録A参照）。
+:::
+
+## Exercises
+
+::: {.callout-note appearance="simple"}
+各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
+
+まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
+:::
+
+::: {.exercise-block}
+
+[1]{.ex-no} [Paper 2]{.ib-tag} [A school records whether students in three year groups walk or cycle to school.]{.q-en}
+
+| | Walk | Cycle |
+|---|---|---|
+| **Year 9** | 25 | 35 |
+| **Year 10** | 40 | 20 |
+| **Year 11** | 30 | 30 |
+
+[A $\chi^2$ test for independence is carried out at the $5\%$ significance level.]{.q-en}
+
+**(a)** [Write down the number of degrees of freedom.]{.q-en} **(b)** [Find the $p$-value.]{.q-en} **(c)** [State the conclusion in context.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある学校が、3つの学年の生徒が徒歩で通学するか自転車で通学するかを記録しました（Walk が「徒歩」、Cycle が「自転車」です）。
+
+有意水準 $5\%$ で $\chi^2$ 独立性の検定を行います。
+
+**(a)** 自由度を書きなさい。 **(b)** $p$-value を求めなさい。 **(c)** 結論を文脈に沿って述べなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** $\nu = (3-1)(2-1) = 2$
+
+**(b)** *Using the GDC ($\chi^2$ 2-way Test):*
+$$\chi^2 = 7.80, \qquad p = 0.0202$$
+
+**(c)** *Since $p = 0.0202 < 0.05$, we reject $H_0$. There is sufficient evidence at the $5\%$ significance level to conclude that the method of travel is not independent of year group.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+行が $3$、列が $2$ なので $\nu = 2 \times 1 = 2$ です。
+
+$p = 0.0202$ は $0.05$ より小さいので reject。ただし $1\%$ で検定していたら $0.0202 > 0.01$ で reject **しない**ことになります。**有意水準によって結論が変わる**、よい例です。
+
+(c) では `method of travel` と `year group` の両方を入れてください。片方だけだと文脈が不十分です。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[2]{.ex-no} [Paper 2]{.ib-tag} [A survey asks people in three cities which of three brands they prefer.]{.q-en}
+
+| | Brand X | Brand Y | Brand Z |
+|---|---|---|---|
+| **City A** | 20 | 30 | 25 |
+| **City B** | 35 | 25 | 20 |
+| **City C** | 15 | 25 | 35 |
+
+[A $\chi^2$ test for independence is carried out at the $5\%$ significance level. The critical value is $9.488$.]{.q-en}
+
+**(a)** [Write down the number of degrees of freedom.]{.q-en} **(b)** [Find the $\chi^2$ statistic.]{.q-en} **(c)** [State, with a reason, the conclusion of the test.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある調査で、3つの都市の人々に3つのブランドのうちどれが好きかを聞きました。
+
+有意水準 $5\%$ で $\chi^2$ 独立性の検定を行います。臨界値は $9.488$ です。
+
+**(a)** 自由度を書きなさい。 **(b)** $\chi^2$ 統計量を求めなさい。 **(c)** 検定の結論を、理由をつけて述べなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** $\nu = (3-1)(3-1) = 4$
+
+**(b)** *Using the GDC:*
+$$\chi^2 = 13.9$$
+
+**(c)** *Since $\chi^2 = 13.9 > 9.488$, we reject $H_0$. There is sufficient evidence at the $5\%$ significance level to conclude that brand preference is not independent of city.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+critical value が与えられているので、**$\chi^2$ 統計量と比べます。** $p$-value と比べる問題ではありません。
+
+**向きに注意。** 統計量は**大きいと reject** です。$p$ とは逆でした。
+
+$p$-value でも同じ結論になります（$p = 0.00761 < 0.05$）。どちらでも正解ですが、与えられたほうを使うのが自然です。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[3]{.ex-no} [Paper 2]{.ib-tag} [A die is rolled $120$ times. The results are shown below.]{.q-en}
+
+| Score | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|
+| **Frequency** | 18 | 22 | 15 | 25 | 20 | 20 |
+
+[A $\chi^2$ goodness of fit test is carried out at the $5\%$ significance level to test whether the die is fair.]{.q-en}
+
+**(a)** [Write down the expected frequency for each score.]{.q-en} **(b)** [Write down the number of degrees of freedom.]{.q-en} **(c)** [Find the $p$-value and state the conclusion.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+サイコロを $120$ 回振りました。結果は上のとおりです（Score が「出た目」、Frequency が「度数」です）。
+
+サイコロが公平かどうかを調べるため、有意水準 $5\%$ で $\chi^2$ 適合度検定を行います。
+
+**(a)** それぞれの目の期待度数を書きなさい。 **(b)** 自由度を書きなさい。 **(c)** $p$-value を求め、結論を述べなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$\text{expected} = \frac{120}{6} = 20 \text{ for each score}$$
+
+**(b)** $\nu = 6 - 1 = 5$
+
+**(c)** *Using the GDC ($\chi^2$ GOF):*
+$$\chi^2 = 2.90, \qquad p = 0.715$$
+
+*Since $p = 0.715 > 0.05$, we do not reject $H_0$. There is insufficient evidence at the $5\%$ significance level to conclude that the die is not fair.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+「公平」なら $6$ つの目が等しく出るはずなので、期待度数はどれも $\dfrac{120}{6} = 20$ です。
+
+$\nu = 6 - 1 = 5$。**電卓に自分で入力する**のを忘れないでください。
+
+**(c) の結論の書き方に注意。** *the die is fair*（公平である）と書いてはいけません。書けるのは *insufficient evidence to conclude that the die is not fair*（公平でないと言うだけの証拠がない）です。
+
+$p = 0.715$ はかなり大きく、「よく合っている」ことを表しています。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[4]{.ex-no} [Paper 2]{.ib-tag} [A shop expects its customers to choose small, medium and large drinks in the ratio $5:2.5:2.5$. On one day, $200$ customers choose $88$ small, $52$ medium and $60$ large.]{.q-en}
+
+[A $\chi^2$ goodness of fit test is carried out at the $5\%$ significance level.]{.q-en}
+
+**(a)** [Find the expected frequencies.]{.q-en} **(b)** [Find the $p$-value and state the conclusion in context.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある店は、客が小・中・大の飲み物を $5:2.5:2.5$ の比で選ぶと予想しています。ある日、$200$ 人の客のうち小が $88$ 人、中が $52$ 人、大が $60$ 人でした。
+
+有意水準 $5\%$ で $\chi^2$ 適合度検定を行います。
+
+**(a)** 期待度数を求めなさい。 **(b)** $p$-value を求め、結論を文脈に沿って述べなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** *Total ratio $= 5 + 2.5 + 2.5 = 10$*
+
+$$\text{small} = 200 \times \tfrac{5}{10} = 100, \quad \text{medium} = 50, \quad \text{large} = 50$$
+
+**(b)** *Using the GDC ($\chi^2$ GOF, $\nu = 2$):*
+$$\chi^2 = 3.52, \qquad p = 0.172$$
+
+*Since $p = 0.172 > 0.05$, we do not reject $H_0$. There is insufficient evidence at the $5\%$ significance level to conclude that the drink sizes are not chosen in the ratio $5:2.5:2.5$.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+比に小数が入っていますが、やることは同じです。合計 $10$ で割って $200$ を分けます。
+
+**期待度数が整数になるとはかぎりません。** そのまま小数で入れて構いません（今回はたまたま整数です）。
+
+$\nu = 3 - 1 = 2$ です。カテゴリの数から $1$ を引きます。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[5]{.ex-no} [Paper 2]{.ib-tag} [A researcher wishes to test whether the colour of a car is independent of the country in which it was bought. She collects data from $4$ countries and $3$ colours.]{.q-en}
+
+**(a)** [State the null and alternative hypotheses.]{.q-en}
+
+**(b)** [Write down the number of degrees of freedom.]{.q-en}
+
+**(c)** [The $p$-value is found to be $0.0384$. State the conclusion at the $5\%$ significance level, and at the $1\%$ significance level.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある研究者が、車の色がそれを買った国と独立かどうかを調べようとしています。彼女は $4$ か国、$3$ 色のデータを集めました。
+
+**(a)** 帰無仮説と対立仮説を述べなさい。
+
+**(b)** 自由度を書きなさい。
+
+**(c)** $p$-value が $0.0384$ でした。有意水準 $5\%$ の場合と $1\%$ の場合の結論をそれぞれ述べなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** *$H_0$: The colour of a car is independent of the country in which it was bought.*
+
+*$H_1$: The colour of a car is not independent of the country in which it was bought.*
+
+**(b)** $\nu = (4-1)(3-1) = 6$
+
+**(c)** *At the $5\%$ level: since $p = 0.0384 < 0.05$, we reject $H_0$. There is sufficient evidence to conclude that colour is not independent of country.*
+
+*At the $1\%$ level: since $p = 0.0384 > 0.01$, we do not reject $H_0$. There is insufficient evidence to conclude that colour is not independent of country.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**同じ $p$-value でも、有意水準が違えば結論が変わります。** これがこの問題の狙いです。
+
+$0.0384$ は $0.05$ と $0.01$ のあいだにあります。ですから $5\%$ では reject、$1\%$ では reject しない。
+
+**「有意である」は絶対的な性質ではありません。** どの基準で見るかによって変わります。TOK の議論につながるところです。
+
+(b) は $4$ か国 $\times$ $3$ 色なので $(4-1)(3-1) = 6$。データがなくても自由度は求められます。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[6]{.ex-no} [Paper 2]{.ib-tag} [Two groups of students take the same test. Their scores are shown below.]{.q-en}
+
+[Group C: $45, \ 52, \ 48, \ 60, \ 55, \ 47, \ 51, \ 58$]{.q-en}
+
+[Group D: $50, \ 58, \ 62, \ 55, \ 64, \ 59, \ 61, \ 57$]{.q-en}
+
+[A $t$-test is carried out at the $5\%$ significance level to test whether there is a difference between the mean scores. It may be assumed that the scores are normally distributed with equal variances.]{.q-en}
+
+**(a)** [State the hypotheses.]{.q-en} **(b)** [Find the $p$-value.]{.q-en} **(c)** [State the conclusion in context.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+2つのグループの生徒が同じテストを受けました。得点は上のとおりです。
+
+平均点に**違いがあるかどうか**を調べるため、有意水準 $5\%$ で $t$ 検定を行います。得点は正規分布に従い、分散は等しいと仮定してよいものとします。
+
+**(a)** 仮説を述べなさい。 **(b)** $p$-value を求めなさい。 **(c)** 結論を文脈に沿って述べなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** $H_0$: $\mu_C = \mu_D$ &nbsp;&nbsp; $H_1$: $\mu_C \neq \mu_D$
+
+**(b)** *Using the GDC (2-Sample $t$ Test, pooled, two-tailed):*
+$$t = -2.55, \qquad p = 0.0230$$
+
+**(c)** *Since $p = 0.0230 < 0.05$, we reject $H_0$. There is sufficient evidence at the $5\%$ significance level to conclude that there is a difference between the mean scores of the two groups.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+`whether there is a difference` なので **両側**です（@tbl-tails）。
+
+$t$ が**負**になっていますが、問題ありません。Group C の平均（$52.0$）が Group D の平均（$58.25$）より小さいからです。**両側検定では符号は結論に影響しません。**
+
+$p$ を答案に書くときは、符号のない $p = 0.0230$ をそのまま使ってください。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[7]{.ex-no} [Paper 2]{.ib-tag} [A coach claims that a new training programme increases the distance athletes can jump. Seven athletes follow the programme and seven do not. Their jump distances, in metres, are shown below.]{.q-en}
+
+[With programme: $13.8, \ 14.2, \ 13.5, \ 14.6, \ 13.9, \ 14.1, \ 13.3$]{.q-en}
+
+[Without programme: $12.5, \ 13.1, \ 11.8, \ 12.9, \ 13.4, \ 12.2, \ 12.7$]{.q-en}
+
+[A $t$-test is carried out at the $1\%$ significance level. It may be assumed that the distances are normally distributed with equal variances.]{.q-en}
+
+**(a)** [State the hypotheses.]{.q-en} **(b)** [Find the $p$-value.]{.q-en} **(c)** [State the conclusion in context.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+あるコーチが、新しいトレーニングプログラムによって選手の跳躍距離が**伸びる**と主張しています。$7$ 人がプログラムを行い、$7$ 人が行いませんでした。跳躍距離（m）は上のとおりです。
+
+有意水準 $1\%$ で $t$ 検定を行います。距離は正規分布に従い、分散は等しいと仮定してよいものとします。
+
+**(a)** 仮説を述べなさい。 **(b)** $p$-value を求めなさい。 **(c)** 結論を文脈に沿って述べなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+*Let $\mu_1$ be the mean distance with the programme and $\mu_2$ without.*
+
+**(a)** $H_0$: $\mu_1 = \mu_2$ &nbsp;&nbsp; $H_1$: $\mu_1 > \mu_2$
+
+**(b)** *Using the GDC (2-Sample $t$ Test, pooled, one-tailed):*
+$$t = 4.76, \qquad p = 0.000231$$
+
+**(c)** *Since $p = 0.000231 < 0.01$, we reject $H_0$. There is sufficient evidence at the $1\%$ significance level to conclude that athletes who follow the programme jump further on average.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+`increases`（伸びる）と向きが指定されているので **片側**です。
+
+**プログラムありを List 1 に入れて、$H_1: \mu_1 > \mu_2$** とそろえてください。逆にすると $p$ が $1$ に近い値（$0.99977$）になります。
+
+答案の冒頭に「$\mu_1$ を〜とする」と書いておくと、採点者に向きが伝わります。**片側検定では必ず書いてください。**
+
+有意水準が $5\%$ ではなく **$1\%$** であることも見落とさないように。今回はどちらでも reject ですが、ぎりぎりの問題では結論が変わります。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[8]{.ex-no} [Paper 2]{.ib-tag} [In a $\chi^2$ test for independence, the $p$-value is found to be $0.062$.]{.q-en}
+
+**(a)** [State the conclusion at the $5\%$ significance level.]{.q-en}
+
+**(b)** [State the conclusion at the $10\%$ significance level.]{.q-en}
+
+**(c)** [A student says: "The test at the $10\%$ level proves that the two variables are related." Comment on this statement.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある $\chi^2$ 独立性の検定で、$p$-value が $0.062$ でした。
+
+**(a)** 有意水準 $5\%$ での結論を述べなさい。
+
+**(b)** 有意水準 $10\%$ での結論を述べなさい。
+
+**(c)** ある生徒が「$10\%$ での検定は、2つの変数に関係があることを証明している」と言いました。この発言についてコメントしなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** *Since $p = 0.062 > 0.05$, we do not reject $H_0$. There is insufficient evidence at the $5\%$ significance level to conclude that the variables are not independent.*
+
+**(b)** *Since $p = 0.062 < 0.10$, we reject $H_0$. There is sufficient evidence at the $10\%$ significance level to conclude that the variables are not independent.*
+
+**(c)** *The statement is not correct. A hypothesis test does not prove anything. It only says that, if $H_0$ were true, a result like this one would occur less than $10\%$ of the time. The same data give the opposite conclusion at the $5\%$ level, so the result depends on the significance level chosen.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(c) がこの問題の本体です。** 2つのことを言えば十分です。
+
+1. **検定は証明ではない** — *A hypothesis test does not prove anything.*
+2. **有意水準を変えれば結論が変わる** — *The same data give the opposite conclusion at the $5\%$ level.*
+
+シラバスの TOK に `is saying that a result is significant the same as saying it is true?` とあります。**答えは No** です。
+
+この型は `Comment on` を求められたときに何度でも使えます。**英語のまま覚えてください。**
+:::
+
+
+::: {.ex-sep}
+:::
+
+[9]{.ex-no} [Paper 2]{.ib-tag} [For each of the following situations, state which test should be used: a $\chi^2$ test for independence, a $\chi^2$ goodness of fit test, or a $t$-test. Justify each answer.]{.q-en}
+
+**(a)** [Testing whether the mean height of boys differs from the mean height of girls in a school.]{.q-en}
+
+**(b)** [Testing whether a spinner with four colours is fair.]{.q-en}
+
+**(c)** [Testing whether the type of pet owned is related to the type of housing lived in.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次のそれぞれの状況について、$\chi^2$ 独立性の検定、$\chi^2$ 適合度検定、$t$ 検定のうちどれを使うべきかを述べなさい。それぞれ理由も書きなさい。
+
+**(a)** ある学校で、男子の平均身長が女子の平均身長と異なるかどうかを調べる。
+
+**(b)** 4色のスピナーが公平かどうかを調べる。
+
+**(c)** 飼っているペットの種類が、住んでいる住宅の種類と関係があるかどうかを調べる。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** *A $t$-test, because we are comparing the means of two sets of numerical data.*
+
+**(b)** *A $\chi^2$ goodness of fit test, because we are comparing observed frequencies with the frequencies expected if all four colours were equally likely.*
+
+**(c)** *A $\chi^2$ test for independence, because we are testing whether two categorical variables are related, using a contingency table.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+@tbl-three-tests の使い分けを、そのまま言葉にする問題です。
+
+見分けるポイントは3つです。
+
+- **平均を比べる → $t$-test**（データが数値）
+- **決まった割合と比べる → goodness of fit**
+- **2つのカテゴリの関係 → independence**（表になる）
+
+`Justify` と書かれているので、**答えだけでは点になりません。** 「なぜその検定か」を一文で書いてください。
+
+こういう問題は短時間で確実に点が取れます。**取りこぼさないように。**
+:::
+
+
+::: {.ex-sep}
+:::
+
+[10]{.ex-no} [Paper 2]{.ib-tag} [A researcher carries out a $t$-test to compare the mean lifetimes of two brands of battery. She finds $p = 0.003$ and concludes at the $5\%$ significance level that Brand A batteries last longer.]{.q-en}
+
+**(a)** [State one assumption she must have made for the $t$-test to be valid.]{.q-en}
+
+**(b)** [She tested $6$ batteries of each brand. Comment on the reliability of her conclusion.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある研究者が、2つのブランドの電池の平均寿命を比べるために $t$ 検定を行いました。$p = 0.003$ となり、有意水準 $5\%$ でブランド A の電池のほうが長持ちすると結論しました。
+
+**(a)** $t$ 検定が有効であるために、彼女がしたはずの仮定を1つ述べなさい。
+
+**(b)** 彼女はそれぞれのブランドの電池を $6$ 個ずつ調べました。この結論の信頼性についてコメントしなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** *The lifetimes of the batteries must be normally distributed.*
+
+*(or: The variances of the two populations must be equal.)*
+
+**(b)** *The sample size of $6$ for each brand is very small, so the sample means may not be typical of the whole population. A larger sample would make the conclusion more reliable. Also, the batteries may not have been chosen at random, which could introduce bias.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** はシラバスに書かれている仮定をそのまま書けば正解です。**normal** か **equal variances** のどちらかで十分です。
+
+**(b)** は `Comment on the reliability` なので、独立した記述の設問です。次の3つのどれかを書けば点になります。
+
+1. **標本が小さい** — *The sample size of 6 is very small.*
+2. **大きくすれば信頼できる** — *A larger sample would be more reliable.*
+3. **抽出方法** — *The batteries may not have been chosen at random.*
+
+$p = 0.003$ という小さい値が出ていても、**標本が $6$ 個では強い主張はできません。** $p$ の小ささと標本の大きさは別の話です。
+
+**この区別ができると、AI の統計では大きく差がつきます。**
+:::
+
+:::

@@ -1,0 +1,1144 @@
+# SL 1.3 — Geometric sequences and series（等比数列と等比級数） {#sec-sl-1-3}
+
+::: {.callout-note}
+## What you should be able to do
+- **geometric sequence**（等比数列）とは何かを説明できる。
+- **common ratio**（公比）$r$ を、割り算で求められる。
+- $n$ 番目の項 $u_n$ と、最初の $n$ 項の和 $S_n$ を、公式を使って求められる。
+- 2つの項が与えられたときに、$u_1$ と $r$ を求められる。
+- **sigma notation** で書かれた等比の和を計算できる。
+- **population growth**（人口増加）や **salary increase**（昇給）などの応用問題を解ける。
+- 与えられた数列が **arithmetic か geometric か**を、自分で見分けられる。
+:::
+
+::: {.callout-important}
+## Formula booklet に載っているもの
+SL 1.3 の欄には、次の2行が印刷されています。
+
+$$
+u_n = u_1 r^{\,n-1}
+$$
+
+$$
+S_n = \frac{u_1(r^n - 1)}{r - 1} = \frac{u_1(1 - r^n)}{1 - r}, \quad r \neq 1
+$$
+
+和の公式は**2つの形が並べて書いてあります。** どちらを使っても答えは同じです。使い分けは後で説明します。
+
+$r \neq 1$ という条件も、そのまま印刷されています。**なぜこの条件が要るのか**は [Why it works](#why-it-works) で分かります。
+:::
+
+::: {.callout-warning}
+## AI SL に「無限等比級数」はありません
+$S_\infty = \dfrac{u_1}{1-r}$ という公式を見たことがあるかもしれません。**これは AI SL の範囲外です。**
+
+シラバスでは **AHL 1.11**、つまり **HL だけ**の項目です。AI SL の formula booklet にも載っていません。
+
+AA の教科書やネットの解説には出てきますが、**SL の試験では問われません。** ここに時間を使う必要はありません。
+:::
+
+## The idea
+
+**geometric sequence**（等比数列）は、となり合う **term**（項）の**比がいつも同じ**数列のことです。
+
+$$
+3, \quad 6, \quad 12, \quad 24, \quad 48, \quad \ldots
+$$
+
+この数列は、いつも $2$ 倍になっています。この $2$ を **common ratio**（公比）といい、$r$ と書きます。最初の項 $u_1$ の呼び方（**first term**、初項）は、等差のときと同じです。
+
+この例では $u_1 = 3$、$r = 2$ です。
+
+### arithmetic とどこが違うのか
+
+SL 1.2 の arithmetic sequence と、見た目はよく似ています。**違いは1つだけ**です。
+
+| | どうやって見つけるか | どう変わっていくか |
+|---|---|---|
+| **arithmetic**（等差） | **引き算** $u_{n+1} - u_n$ | 一定の**額**ずつ |
+| **geometric**（等比） | **割り算** $\dfrac{u_{n+1}}{u_n}$ | 一定の**割合**で |
+
+: 等差と等比の違い {#tbl-arith-vs-geo}
+
+**$r$ は割り算で求めます。** ここを引き算でやってしまうのが、この項目で一番多い間違いです。
+
+$$
+r = \frac{6}{3} = 2, \qquad \frac{12}{6} = 2, \qquad \frac{24}{12} = 2 \quad ✓
+$$
+
+**どれで割っても同じ**になれば、たしかに geometric sequence です。1組だけ調べて決めつけないでください。
+
+### $r$ の値で、数列の様子が変わる
+
+$r$ がどんな数かによって、数列の見た目が3通りに分かれます。
+
+| $r$ の範囲 | $r$ の例 | 数列の例 | どうなるか |
+|---|---|---|---|
+| $r > 1$ | $2$ | $3, \ 6, \ 12, \ 24, \ \ldots$ | どんどん**増える** |
+| $0 < r < 1$ | $0.5$ | $800, \ 400, \ 200, \ \ldots$ | どんどん**減る** |
+| $r < 0$ | $-3$ | $2, \ -6, \ 18, \ -54, \ \ldots$ | 符号が**交互**に変わる |
+
+: 公比 $r$ と数列の様子 {#tbl-r-values}
+
+::: {.callout-tip}
+## 「$x\%$ 増える」「$x\%$ 減る」を $r$ に直す
+応用問題では、$r$ が直接は書かれていません。**パーセントから自分で作ります。**
+
+- 毎年 $4\%$ **増える** → 元の $100\%$ に $4\%$ が加わって $104\%$ → $r = 1.04$
+- 毎年 $6\%$ **減る** → 元の $100\%$ から $6\%$ が減って $94\%$ → $r = 0.94$
+
+$r = 0.04$ や $r = -0.06$ ではありません。**残る割合**が $r$ です。ここを間違えると、以降が全部ずれます。
+:::
+
+### $n$ 番目の項
+
+等差のときと同じで、$20$ 番目の項が知りたいときに $20$ 回書き出すわけにはいきません。**$u_1$ と $r$ さえ分かっていれば、いきなり $n$ 番目が出せる**というのが、次の公式です。
+
+$$
+u_n = u_1 r^{\,n-1}
+$$ {#eq-geo-nth}
+
+#### なぜ $n$ 乗ではなく $(n-1)$ 乗なのか
+
+**理由は、等差の $(n-1)d$ とまったく同じです。**
+
+$u_1$ から $u_n$ まで進むとき、$r$ を掛ける回数は $n$ 回ではありません。
+
+$$
+\underbrace{u_1}_{1\text{番目}}
+\xrightarrow{\times r} \underbrace{u_2}_{2\text{番目}}
+\xrightarrow{\times r} \underbrace{u_3}_{3\text{番目}}
+\xrightarrow{\times r} \cdots
+\xrightarrow{\times r} \underbrace{u_n}_{n\text{番目}}
+$$
+
+矢印の数を数えてください。項が $n$ 個あるとき、矢印は $n-1$ 本です。だから $r$ を掛けるのは $(n-1)$ 回。これが $r^{\,n-1}$ の正体です。
+
+**足し算が掛け算に変わっただけ**で、構造はそっくりそのままです。
+
+| | 等差 | 等比 |
+|---|---|---|
+| 1回あたり | $+d$ | $\times r$ |
+| $n$ 番目までの回数 | $(n-1)$ 回 | $(n-1)$ 回 |
+| 公式 | $u_n = u_1 + (n-1)d$ | $u_n = u_1 r^{\,n-1}$ |
+
+: 等差と等比は同じ形をしている {#tbl-parallel}
+
+さっきの $3, 6, 12, 24, 48, \ldots$ で確かめます。$u_1 = 3$、$r = 2$ なので
+
+$$
+u_5 = 3 \times 2^{\,5-1} = 3 \times 16 = 48 . \quad ✓
+$$
+
+書き出した5番目の項と、ちゃんと一致しました。
+
+### 最初の $n$ 項の和
+
+等差のときと同じように、項を足したものを **series**（級数、和）といい、最初の $n$ 項の和を $S_n$ と書きます。
+
+$$
+S_n = u_1 + u_1 r + u_1 r^2 + \cdots + u_1 r^{\,n-1}
+$$
+
+これを公式にしたのが、次のものです。
+
+$$
+S_n = \frac{u_1(r^n - 1)}{r - 1} = \frac{u_1(1 - r^n)}{1 - r}, \quad r \neq 1
+$$ {#eq-geo-sum}
+
+**イコールでつないで、2つの形が書いてあります。** 分子と分母の両方の符号をひっくり返しただけなので、**どちらも同じもの**です。
+
+::: {.callout-tip}
+## 和の公式は、どちらを使えばいい？
+**分母が正になるほう**を選んでください。負の数で割らずに済むので、計算ミスが減ります。
+
+| $r$ の値 | 使う形 | 理由 |
+|---|---|---|
+| $r > 1$（増える） | $S_n = \dfrac{u_1(r^n - 1)}{r - 1}$ | $r - 1$ が正 |
+| $r < 1$（減る） | $S_n = \dfrac{u_1(1 - r^n)}{1 - r}$ | $1 - r$ が正 |
+
+: 和の公式の使い分け {#tbl-which-geo-sum}
+
+「**増えるなら左、減るなら右**」と覚えてください。もちろん逆を使っても答えは同じです。
+:::
+
+### sigma notation で書かれた等比の和 {#geo-sigma}
+
+$\sum$ の読み方そのものは、SL 1.2 の [sigma notation](sl-1-2.qmd#sigma-notation) と同じです。「$k$ に順に数を入れて全部足す」というだけです。
+
+等比の場合に気をつけるのは、**$u_1$ と $r$ の読み取り方**です。
+
+$$
+\sum_{k=1}^{6} 3 \times 2^{\,k}
+$$
+
+ここで $u_1 = 3$ としてはいけません。**$u_1$ は、$k$ に最初の値を入れて計算した数**です。
+
+$$
+k=1: \ 3 \times 2^1 = 6, \qquad k=2: \ 3 \times 2^2 = 12, \qquad k=3: \ 3 \times 2^3 = 24
+$$
+
+ですから $u_1 = 6$、$r = 2$、項の数は $6$ 個です。
+
+::: {.callout-tip}
+## $\sum$ が出たら、やはり3つ書き出す
+等差のときと同じで、**3つ書き出せば全部分かります。** $6, 12, 24$ から、$u_1 = 6$（最初の数）、$r = 2$（割り算）が読み取れます。
+
+**$r$ は、指数の中にある数**です。$\sum a \times b^{\,k}$ なら $r = b$ です。$a$ ではありません。
+
+そして $3 \times 2^{\,k}$ と $3 \times 2^{\,k-1}$ では $u_1$ が変わります（$6$ と $3$）。**指数を必ず確認してください。**
+:::
+
+## Why it works
+
+ここでは、**和の公式 @eq-geo-sum がなぜあの形になるのか**を見ます。$(n-1)$ 乗の理由は、上の [The idea](#the-idea) で説明したとおりです。
+
+等差のときは「両端からペアを作る」でした。等比では**別の手**を使います。
+
+まず、$S_n$ を書き並べます。
+
+$$
+S_n = u_1 + u_1 r + u_1 r^2 + \cdots + u_1 r^{\,n-1}
+$$
+
+次に、**両辺を $r$ 倍**します。
+
+$$
+r S_n = u_1 r + u_1 r^2 + \cdots + u_1 r^{\,n-1} + u_1 r^{\,n}
+$$
+
+2つの式を見くらべてください。**真ん中がそっくり同じ**です。ですから引き算すると、まとめて消えます。残るのは両端の2つだけです。
+
+$$
+S_n - r S_n = u_1 - u_1 r^{\,n}
+$$
+
+あとは $S_n$ について解くだけです。
+
+$$
+S_n(1 - r) = u_1(1 - r^{\,n}) \qquad \Longrightarrow \qquad S_n = \frac{u_1(1 - r^{\,n})}{1 - r}
+$$
+
+分子と分母に $-1$ を掛ければ、もう1つの形になります。**2つの公式は、同じ1つの式から出ています。**
+
+::: {.callout-note}
+## $r \neq 1$ が必要な理由
+最後の割り算を見てください。$r = 1$ だと $1 - r = 0$ で、**$0$ で割ることになってしまいます。**
+
+もっとも、$r = 1$ なら $u_1, u_1, u_1, \ldots$ と同じ数がずっと並ぶだけです。和は $S_n = n\,u_1$ で、公式を使うまでもありません。
+
+**公式集に $r \neq 1$ と印刷されているのは、このためです。**
+:::
+
+## Worked examples
+
+::: {.callout-note appearance="simple"}
+問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
+:::
+
+::: {#exm-geo-basic}
+[Paper 1]{.ib-tag} [A geometric sequence has first term $u_1 = 3$ and common ratio $r = 2$.]{.q-en}
+
+**(a)** [Find the 8th term of the sequence.]{.q-en}
+
+**(b)** [Find the sum of the first 8 terms.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある geometric sequence の first term は $u_1 = 3$、common ratio は $r = 2$ です。
+
+**(a)** この数列の8番目の項を求めなさい。
+
+**(b)** 最初の8項の和を求めなさい。
+
+</details>
+
+---
+
+**(a)** @eq-geo-nth に $u_1 = 3$、$r = 2$、$n = 8$ を代入します。
+
+$$
+u_8 = 3 \times 2^{\,8-1} = 3 \times 2^7 = 3 \times 128 = 384
+$$
+
+指数は $7$ であって $8$ ではありません。$2^8 = 256$ を使うと $768$ になり、**ちょうど2倍ずれます。**
+
+**(b)** $r = 2 > 1$ なので、和の公式は**左の形**を使います（@tbl-which-geo-sum）。
+
+$$
+S_8 = \frac{3(2^8 - 1)}{2 - 1} = \frac{3(256 - 1)}{1} = 3 \times 255 = 765
+$$
+
+**検算。** 書き出すと $3, 6, 12, 24, 48, 96, 192, 384$ です。8番目が $384$ で (a) と一致し、全部足すと $765$ になります ✓
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)**
+$$u_8 = 3 \times 2^{\,8-1} = 3 \times 128 = 384$$
+
+**(b)**
+$$S_8 = \frac{3(2^8 - 1)}{2 - 1} = 3(255) = 765$$
+:::
+:::
+
+::: {#exm-geo-two-terms}
+[Paper 1]{.ib-tag} [In a geometric sequence, $u_3 = 20$ and $u_6 = 160$.]{.q-en}
+
+[Find the value of $r$ and the value of $u_1$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある geometric sequence で、$u_3 = 20$、$u_6 = 160$ です。
+
+$r$ の値と $u_1$ の値を求めなさい。
+
+</details>
+
+---
+
+**考え方：$u_3$ から $u_6$ まで、$r$ を何回掛けたか。**
+
+等差のときは「何回**足した**か」でした。等比では「何回**掛けた**か」を考えます。ここでも**割り算**を使います。
+
+$3$ 番目から $6$ 番目まで進むには、$6 - 3 = 3$ 回掛けます。ですから
+
+$$
+\frac{u_6}{u_3} = \frac{u_1 r^5}{u_1 r^2} = r^3 .
+$$
+
+$u_1$ がきれいに消えました。あとは数を入れるだけです。
+
+$$
+r^3 = \frac{160}{20} = 8 \qquad \Longrightarrow \qquad r = 2
+$$
+
+次に $u_1$ です。$u_3 = u_1 r^2$ なので
+
+$$
+20 = u_1 \times 2^2 = 4u_1 \qquad \Longrightarrow \qquad u_1 = 5 .
+$$
+
+**答え：$r = 2$、$u_1 = 5$**
+
+**検算。** $5, 10, 20, 40, 80, 160$ … 3番目が $20$、6番目が $160$ ✓
+
+::: {.callout-tip}
+## $r^3 = 8$ の解き方
+$8$ の3乗根が $2$ だと見えれば、それで構いません。
+
+見えないときは電卓に解かせます。Calculator ページで
+
+```
+nSolve(r^3 = 8, r)
+```
+
+または、$\sqrt[3]{\phantom{x}}$ のテンプレート（9キーの右のパレット）で $\sqrt[3]{8}$ と入力しても出ます。
+
+**AI では Paper 1 でも電卓が使える**ので、3乗根を暗算する必要はありません。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$\frac{u_6}{u_3} = r^3$$
+$$\frac{160}{20} = r^3 \quad \Longrightarrow \quad r^3 = 8 \quad \Longrightarrow \quad r = 2$$
+
+$$u_3 = u_1 r^2 \quad \Longrightarrow \quad 20 = 4u_1 \quad \Longrightarrow \quad u_1 = 5$$
+:::
+:::
+
+::: {#exm-geo-salary}
+[Paper 2]{.ib-tag} [Kenji starts a job with an annual salary of $\$32\,000$. His salary increases by $3\%$ at the end of each year.]{.q-en}
+
+**(a)** [Find his salary in his 10th year of work. Give your answer correct to the nearest dollar.]{.q-en}
+
+**(b)** [Find the total amount he earns during his first 10 years of work.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+健二さんは、年収 $\$32\,000$ で仕事を始めました。彼の年収は、毎年の終わりに $3\%$ ずつ上がります。
+
+**(a)** 働き始めて10年目の年収を求めなさい。答えは1ドル未満を四捨五入して答えなさい。
+
+**(b)** 最初の10年間で彼が稼ぐ総額を求めなさい。
+
+</details>
+
+---
+
+::: {.callout-important}
+## 計算の前に：これは等差か等比か
+問題文に `increases by 3%` とあります。**「$3\%$」はパーセント、つまり割合です。**
+
+もしこれが `increases by $3000` なら、毎年同じ**額**なので arithmetic sequence でした。ここは同じ**割合**なので **geometric sequence** です。
+
+`by ...%` と書いてあったら等比、`by $...`（金額）と書いてあったら等差。**まずここを読み分けます。**
+:::
+
+**(a)** $3\%$ 増えるので、毎年 $103\%$ になります。ですから $r = 1.03$ です（$0.03$ ではありません）。
+
+1年目の年収がそのまま $u_1 = 32\,000$ です。10年目は**10番目の項**なので $n = 10$。
+
+$$
+u_{10} = 32\,000 \times 1.03^{\,10-1} = 32\,000 \times 1.03^{9} = 41\,752.74\ldots \approx \$41\,753
+$$
+
+**(b)** 「総額」なので $S_{10}$ です。$r = 1.03 > 1$ なので**左の形**を使います。
+
+$$
+S_{10} = \frac{32\,000(1.03^{10} - 1)}{1.03 - 1} = \frac{32\,000(1.03^{10} - 1)}{0.03} = 366\,844.13\ldots \approx \$366\,844
+$$
+
+::: {.callout-warning}
+## (a) で $1.03^{10}$ としない
+10年目の年収は、$3\%$ の値上がりを **9回**しか経験していません。1年目は、まだ1回も上がっていないからです。
+
+一方 (b) の**和**の公式では、項が10個あるので $1.03^{10}$ が出てきます。**$n-1$ が出る場所と $n$ が出る場所が違う**ので、公式集を見ながら落ち着いて入れてください。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$u_1 = 32\,000, \quad r = 1.03$$
+
+**(a)**
+$$u_{10} = 32\,000 \times 1.03^{\,9} = 41\,752.74\ldots \approx \$41\,753$$
+
+**(b)**
+$$S_{10} = \frac{32\,000(1.03^{10} - 1)}{1.03 - 1} = 366\,844.13\ldots \approx \$366\,844$$
+:::
+:::
+
+::: {#exm-geo-sigma}
+[Paper 1]{.ib-tag} [Find the value of $\displaystyle\sum_{k=1}^{10} 3 \times 2^{\,k}$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$\displaystyle\sum_{k=1}^{10} 3 \times 2^{\,k}$ の値を求めなさい。
+
+</details>
+
+---
+
+[sigma notation で書かれた等比の和](#geo-sigma) で見たとおり、**まず3つ書き出します。**
+
+$$
+k=1: \ 3 \times 2^1 = 6, \qquad k=2: \ 3 \times 2^2 = 12, \qquad k=3: \ 3 \times 2^3 = 24
+$$
+
+割り算で確かめると、$12 \div 6 = 2$、$24 \div 12 = 2$。たしかに geometric sequence です。
+
+必要なものを3つそろえます。**初項** $u_1 = 6$（$k=1$ を入れた値。$3$ ではありません）、**公比** $r = 2$（指数の中の数）、**項の数** $n = 10$。
+
+$r > 1$ なので左の形を使って
+
+$$
+S_{10} = \frac{6(2^{10} - 1)}{2 - 1} = 6(1024 - 1) = 6 \times 1023 = 6138 .
+$$
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$u_1 = 3 \times 2^1 = 6, \quad r = 2, \quad n = 10$$
+
+$$S_{10} = \frac{6(2^{10} - 1)}{2 - 1} = 6(1023) = 6138$$
+:::
+:::
+
+::: {#exm-geo-decline}
+[Paper 2]{.ib-tag} [The population of a village is currently $4800$. The population is decreasing by $6\%$ each year.]{.q-en}
+
+**(a)** [Find the population of the village after 5 years. Give your answer correct to the nearest whole number.]{.q-en}
+
+**(b)** [Find the number of complete years after which the population first falls below $3000$.]{.q-en}
+
+**(c)** [Comment on whether this model is likely to remain valid for the next 100 years.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある村の人口は、現在 $4800$ 人です。人口は毎年 $6\%$ ずつ減っています。
+
+**(a)** 5年後の村の人口を求めなさい。答えは小数第1位を四捨五入して、整数で答えなさい。
+
+**(b)** 人口がはじめて $3000$ 人を下回るのは、何年後（ちょうど何年）ですか。
+
+**(c)** この model が今後100年にわたって成り立ち続けるかどうか、コメントしなさい。
+
+</details>
+
+---
+
+**(a)** $6\%$ **減る**ので、毎年 $94\%$ が残ります。ですから $r = 0.94$ です。
+
+現在の人口を出発点として、$n$ 年後の人口を $P_n$ と書くことにします。
+
+$$
+P_n = 4800 \times 0.94^{\,n}
+$$
+
+$$
+P_5 = 4800 \times 0.94^{5} = 3522.73\ldots \approx 3523 \ \text{人}
+$$
+
+::: {.callout-warning}
+## 「$5$ 年後」と「$5$ 番目の項」は別物です
+公式 $u_n = u_1 r^{\,n-1}$ と見くらべてください。$u_1 = 4800$ は「**現在**」の人口です。ですから
+
+- $u_1$ = 現在（$0$ 年後）
+- $u_2$ = $1$ 年後
+- $u_6$ = $5$ 年後 ← **$u_5$ ではありません**
+
+$u_6 = 4800 \times 0.94^{\,6-1} = 4800 \times 0.94^5$ で、上と同じ式になります。
+
+**指数に入るのは「何年経ったか」です。** 混乱しそうなときは、$u_n$ を使わずに $P_n = 4800 \times 0.94^{\,n}$ と自分で書いてしまうほうが安全です。
+:::
+
+**(b)** $P_n < 3000$ となる最小の整数 $n$ を探します。
+
+$$
+4800 \times 0.94^{\,n} < 3000
+$$
+
+対数を使わずに、**電卓で表を作って読みます**（やり方は下の [Using your GDC](#using-your-gdc-ti-nspire-cx-ii) に書きました）。
+
+| $n$ | $P_n$ |
+|---|---|
+| 6 | $3311.4$ |
+| 7 | $3112.7$ |
+| **8** | $\mathbf{2925.9}$ |
+
+: 何年後に $3000$ を下回るか {#tbl-village}
+
+$7$ 年後はまだ $3112.7$ で $3000$ を上回っています。$8$ 年後にはじめて下回るので、答えは **$8$ 年**です。
+
+**(c)** 数値だけでは点になりません。**英語で一文書いてください。**
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The model assumes that the population keeps decreasing by exactly $6\%$ every year. After 100 years this model gives a population of about 10 people, which is not realistic. People may move into the village, or the rate of decrease may change, so the model is unlikely to remain valid for that long.*
+:::
+
+（この model は、人口が毎年ちょうど $6\%$ ずつ減り続けると仮定しています。100年たつと人口が10人ほどになってしまい、現実的ではありません。人が引っ越してくることもありますし、減り方そのものが変わることもあります。ですから、そこまで長くは成り立たないでしょう。）
+
+::: {.callout-important}
+## この (c) が AI の本体です
+(a)(b) は、電卓に入れて計算するだけです。**(c) で点差がつきます。**
+
+geometric model のコメントでは、次の3つが定番です。
+
+1. **仮定を言う** — *The model assumes the rate of decrease stays exactly the same.*
+2. **極端な値を入れてみる** — *After 100 years the model gives about 10 people, which is not realistic.*
+3. **現実に何が起こりうるか** — *People may move into the village, or the birth rate may change.*
+
+とくに **2 が強い**です。指数の model は、遠い未来を入れると必ずおかしな値になります。**そこを指摘できると、採点者に「分かっている」と伝わります。**
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$r = 1 - 0.06 = 0.94$$
+
+**(a)**
+$$P_5 = 4800 \times 0.94^{5} = 3522.73\ldots \approx 3523$$
+
+**(b)**
+$$4800 \times 0.94^{\,n} < 3000$$
+$$n = 7: \ 3112.7 \ \ (> 3000) \qquad n = 8: \ 2925.9 \ \ (< 3000)$$
+
+*The population first falls below 3000 after **8 years**.*
+
+**(c)** *The model assumes the population keeps decreasing by exactly 6% every year. After 100 years it gives about 10 people, which is not realistic. The rate of decrease may change, or people may move into the village, so the model is unlikely to remain valid.*
+:::
+:::
+
+## Common errors
+
+::: {.callout-warning}
+## $r$ を引き算で求めてしまう
+$3, 6, 12, 24$ を見て $r = 3$（$6-3$）としてしまう間違いです。正しくは $r = 6 \div 3 = 2$。
+
+**等差は引き算、等比は割り算**（@tbl-arith-vs-geo）。数列を見たら、まず**割ってみる**習慣をつけてください。割って同じ数になれば等比です。
+:::
+
+::: {.callout-warning}
+## $r^{\,n-1}$ の指数を $n$ にする
+$u_8 = 3 \times 2^8 = 768$ としてしまう間違いです。正しくは $3 \times 2^7 = 384$。
+
+等差の $(n-1)d$ で $-1$ を忘れるのと、**まったく同じ間違い**です。矢印の数を思い出してください（[The idea](#the-idea) を参照）。
+
+ただし等差では答えが $d$ の分だけずれるのに対し、**等比では答えが $r$ 倍ずれます。** $r$ が大きいほど、被害も大きくなります。
+:::
+
+::: {.callout-warning}
+## パーセントを $r$ に直し間違える
+`increases by 4%` を $r = 0.04$、`decreases by 6%` を $r = -0.06$ としてしまう間違いです。
+
+正しくは $r = 1.04$、$r = 0.94$。**$r$ は「元の何倍になるか」**です。$r = 0.04$ だと、毎年 $96\%$ も減ってしまいます。
+
+計算のあとに **1回だけ確かめてください。** 増える問題なのに答えが減っていたら、$r$ が間違っています。
+:::
+
+::: {.callout-warning}
+## 和の公式で分母を取り違える
+$r < 1$ のときに $\dfrac{u_1(r^n-1)}{r-1}$ を使うと、**分子も分母も負**になります。答えは合いますが、符号を1つ落とすと一気に間違えます。
+
+$r < 1$ なら $\dfrac{u_1(1-r^n)}{1-r}$ を使ってください（@tbl-which-geo-sum）。**両方とも正の数**になるので安全です。
+:::
+
+::: {.callout-warning}
+## $u_n$ と $S_n$ を取り違える
+等差のときと同じです。**英語のまま覚えるのが確実です。**
+
+- `Find the 10th term` / `Find his salary in the 10th year` → $u_{10}$
+- `Find the sum of the first 10 terms` / `Find the total amount he earns` → $S_{10}$
+
+`total` という語が出てきたら、まず $S_n$ を疑ってください。
+:::
+
+::: {.callout-warning}
+## 「現在」を $u_1$ にしたまま、年数をそのまま $n$ に入れる
+`The population is currently 4800` のとき、$5$ 年後は $u_5$ ではなく $u_6$ です。
+
+こういう問題では、**$u_n$ の記号を使わずに $P_n = 4800 \times 0.94^{\,n}$ と自分で書いてしまう**のが確実です。指数に入るのは「経った年数」だと決めてしまえば、迷いません。
+:::
+
+::: {.callout-warning}
+## AA 用の $S_\infty$ を持ち込む
+$S_\infty = \dfrac{u_1}{1-r}$ は **AI SL の範囲外**です（AHL 1.11）。
+
+公式集にも載っていないので、使ってしまうと答えが合っていても根拠を示せません。**SL で「無限に足す」問題は出ません。**
+:::
+
+## Using your GDC (TI-Nspire CX II)
+
+AI では Paper 1 でも電卓が使えます。等比数列は数が大きくなりやすいので、**電卓で出して検算する**習慣をつけてください。
+
+### 数列を一気に作る（`seq`）
+
+Calculator ページで、次のように打ちます。
+
+```
+seq(3 × 2^(n−1), n, 1, 8)
+```
+
+$u_1$ から $u_8$ までの8個が、リストとして一気に出ます。@exm-geo-basic の $384$ が最後に見えるはずです。
+
+`seq(` の場所は、等差のときと同じです。
+
+```
+menu → 3: List & Spreadsheet → 1: Sequence
+```
+
+### 合計を出す（`sum`）
+
+作ったリストをそのまま `sum(` で囲めば、$S_n$ が出ます。
+
+```
+sum(seq(3 × 2^(n−1), n, 1, 8))     →  765
+```
+
+**公式を使わずに和が出せる**ので、検算にとても便利です。
+
+### $\sum$ をそのまま入力する
+
+@exm-geo-sigma のようなシグマ記号は、**テンプレートでそのまま**書けます。
+
+$$
+\texttt{9 キーの右にあるテンプレートのパレット} \ \to \ \sum
+$$
+
+$\sum$ の下・上・中身の3つの点線ボックスを `tab` で移動しながら埋めます。
+
+$$
+\sum_{k=1}^{10} 3 \times 2^{\,k} \quad \longrightarrow \quad 6138
+$$
+
+::: {.callout-warning}
+## 指数から出るのを忘れない
+`^` を押したあと、次の記号を打つ前に**右矢印キーで指数から出てください。**
+
+出ないまま続きを打つと、$2^{k}\times 3$ のつもりが $2^{k \times 3}$ になってしまいます。画面では小さくて見分けにくいので、**入力したあとに式の形を目で確かめる**のが確実です。
+:::
+
+### 「はじめて〜を下回る」を表で読む ★重要
+
+@exm-geo-decline の (b) のような問題が、AI SL では非常によく出ます。**表を作って読むのが一番確実**です。
+
+**Lists & Spreadsheet ページ**を開いて、
+
+1. 列 A の名前を `n`、列 B の名前を `p` にする
+2. 列 A の式のセル（グレーの行）に次を入れる
+
+```
+=seq(n, n, 0, 20)
+```
+
+3. 列 B の式のセルに次を入れる
+
+```
+=4800 × 0.94^a[]
+```
+
+これで $0$ 年後から $20$ 年後までが一気に表になります。あとは $3000$ を下回る最初の行を目で探すだけです。
+
+::: {.callout-tip}
+## なぜ表がおすすめなのか
+`complete years`（ちょうど何年）と聞かれているので、**答えは整数**です。
+
+グラフの交点を求めると $7.59\ldots$ のような小数が出て、そこから「切り上げて $8$」と判断する手間が増えます。表なら**整数の行を直接見て決められる**ので、切り上げ・切り捨てで迷いません。
+
+$n$ を $0$ から始めるのを忘れないでください。「現在」が $0$ 年後です。
+:::
+
+### グラフで解く方法（別解）
+
+Graphs ページで2本のグラフをかき、交点を求めるやり方もあります。
+
+$$
+f_1(x) = 4800 \times 0.94^{\,x}, \qquad f_2(x) = 3000
+$$
+
+```
+menu → 6: Analyze Graph → 4: Intersection
+```
+
+$x = 7.59\ldots$ が出ます。**「ちょうど何年」なので、切り上げて $8$ 年**です。$7$ ではありません。
+
+::: {.callout-warning}
+## 切り上げるか切り捨てるかは、問題文で決まります
+- `first falls below`（はじめて下回る）→ **切り上げ**（$7.59 \to 8$）
+- `remains above`（〜を上回っている間）→ **切り捨て**（$7.59 \to 7$）
+
+交点の $7.59$ を見て機械的に処理せず、**「$7$ 年後はまだ $3000$ 人以上いる」と日本語で言い直して**から決めてください。表を使えば、この判断そのものが要らなくなります。
+:::
+
+### $r$ を求める（`nSolve`）
+
+@exm-geo-two-terms の $r^3 = 8$ のような式は、`nSolve` で解けます。
+
+```
+nSolve(r^3 = 8, r)     →  2
+```
+
+3乗根のテンプレート $\sqrt[3]{\phantom{x}}$ を使っても構いません。
+
+答えが複数あるかもしれない問題（2次方程式など）では、`nSolve` は**解を1つしか返さない**ことがあります。そのときは
+
+```
+menu → Algebra → Polynomial Tools → Find Roots of Polynomial
+```
+
+を使ってください。演習10で実際に使います。
+
+::: {.callout-note}
+## 対数はまだ使わなくて大丈夫です
+$0.94^{\,n} < 0.625$ のような式は、対数を使えば一発で解けます。ですが **対数は SL 1.5** の内容です。
+
+AI SL では、ここを**電卓の表やグラフで解いてよい**ことになっています。シラバスにも `Spreadsheets, GDCs and graphing software may be used` と書かれています。**対数が苦手でも、この項目で困ることはありません。**
+:::
+
+## Exercises
+
+::: {.callout-note appearance="simple"}
+各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
+
+まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
+:::
+
+::: {.exercise-block}
+
+[1]{.ex-no} [Paper 1]{.ib-tag} [A geometric sequence has $u_1 = 2$ and $r = 3$.]{.q-en}
+
+**(a)** [Find $u_7$.]{.q-en} **(b)** [Find $S_7$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある geometric sequence は $u_1 = 2$、$r = 3$ です。
+
+**(a)** $u_7$ を求めなさい。 **(b)** $S_7$ を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$u_7 = 2 \times 3^{\,7-1} = 2 \times 729 = 1458$$
+
+**(b)**
+$$S_7 = \frac{2(3^7 - 1)}{3 - 1} = \frac{2(2186)}{2} = 2186$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+指数は $6$ です。$3^7 = 2187$ を使ってしまうと $4374$ になり、**3倍ずれます。**
+
+(b) は $r = 3 > 1$ なので左の形を使いました。分母が $3-1 = 2$ になり、分子の $2$ と約分できて $2186$ です。
+
+**電卓で確かめる。** `sum(seq(2×3^(n−1), n, 1, 7))` → $2186$ ✓
+:::
+
+
+::: {.ex-sep}
+:::
+
+[2]{.ex-no} [Paper 1]{.ib-tag} [In a geometric sequence, $u_2 = 12$ and $u_5 = 96$. Find the value of $r$ and the value of $u_1$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある geometric sequence で $u_2 = 12$、$u_5 = 96$ です。$r$ の値と $u_1$ の値を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$\frac{u_5}{u_2} = r^3$$
+$$\frac{96}{12} = r^3 \quad \Longrightarrow \quad r^3 = 8 \quad \Longrightarrow \quad r = 2$$
+
+$$u_2 = u_1 r \quad \Longrightarrow \quad 12 = 2u_1 \quad \Longrightarrow \quad u_1 = 6$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+@exm-geo-two-terms と同じ考え方です。$2$ 番目から $5$ 番目までは $5 - 2 = 3$ 回掛けているので、比は $r^3$ になります。
+
+**指数の差が、そのまま $r$ の指数になります。** 等差で「何回足したか」を数えたのと同じ場所です。
+
+$u_1$ を出すときは $u_2 = u_1 r$（$1$ 回だけ掛ける）です。$r^2$ ではありません。
+
+**検算。** $6, 12, 24, 48, 96$ ✓
+:::
+
+
+::: {.ex-sep}
+:::
+
+[3]{.ex-no} [Paper 1]{.ib-tag} [Find the sum of the first 10 terms of the series $5 + 10 + 20 + 40 + \cdots$]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+級数 $5 + 10 + 20 + 40 + \cdots$ の最初の10項の和を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$u_1 = 5, \quad r = \frac{10}{5} = 2, \quad n = 10$$
+
+$$S_{10} = \frac{5(2^{10} - 1)}{2 - 1} = 5(1023) = 5115$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+$u_1$ と $r$ は問題文に直接は書かれていません。**書き出された数から自分で読み取ります。**
+
+$10 \div 5 = 2$、$20 \div 10 = 2$、$40 \div 20 = 2$。どれも $2$ なので geometric sequence です。
+
+$2^{10} = 1024$ は覚えておくと速いです。よく出てきます。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[4]{.ex-no} [Paper 1]{.ib-tag} [Find the value of $\displaystyle\sum_{k=1}^{8} 4 \times 3^{\,k-1}$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$\displaystyle\sum_{k=1}^{8} 4 \times 3^{\,k-1}$ の値を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$u_1 = 4 \times 3^{0} = 4, \quad r = 3, \quad n = 8$$
+
+$$S_8 = \frac{4(3^8 - 1)}{3 - 1} = \frac{4(6560)}{2} = 13\,120$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**指数が $k-1$ になっていることに注意してください。** $k=1$ を入れると $3^0 = 1$ なので、$u_1 = 4$ です。
+
+@exm-geo-sigma は指数が $k$ だったので $u_1 = 6$ でした。**似た形でも、指数が1つ違うだけで初項が変わります。** 迷ったら、$k$ に最初の値を入れて計算するのが確実です。
+
+**電卓で確かめる。** `sum(seq(4×3^(k−1), k, 1, 8))` → $13120$ ✓
+:::
+
+
+::: {.ex-sep}
+:::
+
+[5]{.ex-no} [Paper 2]{.ib-tag} [A ball is dropped from a height of $2$ m. After each bounce, the ball reaches $70\%$ of the height of the previous bounce. The height of the first bounce is $1.4$ m.]{.q-en}
+
+**(a)** [Find the height of the 5th bounce.]{.q-en}
+
+**(b)** [Find the number of the first bounce whose height is less than $0.2$ m.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ボールを高さ $2$ m から落とします。1回はねるごとに、ボールは前回の高さの $70\%$ まで上がります。1回目にはねた高さは $1.4$ m です。
+
+**(a)** 5回目にはねた高さを求めなさい。
+
+**(b)** はねた高さがはじめて $0.2$ m 未満になるのは、何回目ですか。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$u_1 = 1.4, \quad r = 0.7$$
+
+**(a)**
+$$u_5 = 1.4 \times 0.7^{\,4} = 0.33614 \approx 0.336 \text{ m}$$
+
+**(b)**
+$$u_6 = 1.4 \times 0.7^{5} = 0.2353\ldots \ \ (> 0.2)$$
+$$u_7 = 1.4 \times 0.7^{6} = 0.1647\ldots \ \ (< 0.2)$$
+
+*The height is first less than 0.2 m at the **7th bounce**.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**$u_1$ を $2$ にしないでください。** 数列になっているのは「はねた高さ」で、最初にはねた高さは $1.4$ m です。$2$ m は落とした高さであって、はねた高さではありません。
+
+問題文が親切に $1.4$ m を教えてくれているのは、ここで迷う生徒が多いからです。
+
+**(b)** は表を作るのが確実です。Lists & Spreadsheet で `=seq(1.4×0.7^(n−1), n, 1, 12)` と入れて、$0.2$ を下回る最初の行を探してください。
+
+なお、**「全部で何 m 動いたか」を無限まで足す問題は AI SL では出ません**（AHL 1.11）。安心してください。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[6]{.ex-no} [Paper 2]{.ib-tag} [Maria starts a job with an annual salary of $\$28\,000$. Her salary increases by $4\%$ at the end of each year.]{.q-en}
+
+**(a)** [Find her salary in her 8th year of work, correct to the nearest dollar.]{.q-en}
+
+**(b)** [Find the total amount she earns during her first 8 years of work, correct to the nearest dollar.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+マリアさんは、年収 $\$28\,000$ で仕事を始めました。彼女の年収は、毎年の終わりに $4\%$ ずつ上がります。
+
+**(a)** 働き始めて8年目の年収を、1ドル未満を四捨五入して求めなさい。
+
+**(b)** 最初の8年間で彼女が稼ぐ総額を、1ドル未満を四捨五入して求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$u_1 = 28\,000, \quad r = 1.04$$
+
+**(a)**
+$$u_8 = 28\,000 \times 1.04^{\,7} = 36\,846.08\ldots \approx \$36\,846$$
+
+**(b)**
+$$S_8 = \frac{28\,000(1.04^{8} - 1)}{1.04 - 1} = 257\,998.33\ldots \approx \$257\,998$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+`by 4%` なので等比です。`by $1000` なら等差でした。
+
+(a) の指数は $7$、(b) の指数は $8$ です。**同じ問題の中で $n-1$ と $n$ が両方出てきます。** 公式集を見ながら入れてください。
+
+- $u_n = u_1 r^{\,n-1}$ … 指数は $n-1$
+- $S_n = \dfrac{u_1(r^n-1)}{r-1}$ … 指数は $n$
+
+答えの大きさも、検算の材料になります。$28\,000 \times 8 = 224\,000$ より少し大きいはずで、実際そうなっています。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[7]{.ex-no} [Paper 2]{.ib-tag} [The population of a town is currently $12\,000$. It is decreasing by $8\%$ each year.]{.q-en}
+
+**(a)** [Find the population after 6 years, correct to the nearest whole number.]{.q-en}
+
+**(b)** [Find the number of complete years after which the population first falls below $6000$.]{.q-en}
+
+**(c)** [Comment on the reliability of this model for predicting the population in 50 years' time.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある町の人口は、現在 $12\,000$ 人です。人口は毎年 $8\%$ ずつ減っています。
+
+**(a)** 6年後の人口を、小数第1位を四捨五入して整数で求めなさい。
+
+**(b)** 人口がはじめて $6000$ 人を下回るのは、何年後（ちょうど何年）ですか。
+
+**(c)** この model が50年後の人口を予測するのにどのくらい信頼できるか、コメントしなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$r = 1 - 0.08 = 0.92$$
+
+**(a)**
+$$P_6 = 12\,000 \times 0.92^{6} = 7276.26\ldots \approx 7276$$
+
+**(b)**
+$$n = 8: \ 6158.6 \ \ (> 6000) \qquad n = 9: \ 5665.9 \ \ (< 6000)$$
+
+*The population first falls below 6000 after **9 years**.*
+
+**(c)** *The model assumes the population decreases by exactly 8% every year. After 50 years it predicts about 200 people, which is unlikely to be realistic. The rate of decrease may change, or people may move into the town, so the prediction is not reliable that far ahead.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** $8\%$ 減るので残るのは $92\%$、$r = 0.92$ です。$-0.08$ ではありません。
+
+**(b)** 表で読みます。Lists & Spreadsheet に `=seq(12000×0.92^n, n, 0, 15)` を入れて、$6000$ を下回る最初の行を探してください。$8$ 年後はまだ $6158.6$ 人いるので、答えは $9$ 年です。
+
+**(c)** は `Comment on` なので**独立した設問**です。数値だけでは $0$ 点です。@exm-geo-decline の3つの型が、そのまま使えます。
+
+とくに強いのは**極端な値を入れてみる**ことです。$12\,000 \times 0.92^{50} \approx 200$ 人。これを書けば、model の限界を理解していることが伝わります。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[8]{.ex-no} [Paper 1]{.ib-tag} [A geometric sequence begins $3, \ -6, \ 12, \ -24, \ \ldots$]{.q-en}
+
+**(a)** [Find the value of $r$.]{.q-en} **(b)** [Find $u_7$.]{.q-en} **(c)** [Find $S_7$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある geometric sequence は $3, \ -6, \ 12, \ -24, \ \ldots$ で始まります。
+
+**(a)** $r$ の値を求めなさい。 **(b)** $u_7$ を求めなさい。 **(c)** $S_7$ を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$r = \frac{-6}{3} = -2$$
+
+**(b)**
+$$u_7 = 3 \times (-2)^{6} = 3 \times 64 = 192$$
+
+**(c)**
+$$S_7 = \frac{3\bigl((-2)^7 - 1\bigr)}{-2 - 1} = \frac{3(-129)}{-3} = 129$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+$r$ が**負**の数列です。符号が交互に変わるのが特徴です（@tbl-r-values）。
+
+**(b)** で $(-2)^6$ は**正**です。指数が偶数なので符号が消えます。
+
+**(c)** 分子も分母も負になりましたが、割れば正です。$r = -2 < 1$ なので右の形 $\dfrac{u_1(1-r^n)}{1-r}$ を使ってもよく、$\dfrac{3(1+128)}{3} = 129$ となって同じです。
+
+**カッコを必ずつけてください。** $-2^6$ と書くと $-64$ になってしまい、$(-2)^6 = 64$ とは別物です。電卓に入れるときも同じです。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[9]{.ex-no} [Paper 1]{.ib-tag} [For each of the following sequences, state whether it is arithmetic, geometric, or neither. Justify your answer.]{.q-en}
+
+**(a)** [$4, \ 12, \ 36, \ 108, \ \ldots$]{.q-en} **(b)** [$4, \ 12, \ 20, \ 28, \ \ldots$]{.q-en} **(c)** [$4, \ 12, \ 24, \ 40, \ \ldots$]{.q-en}
+
+**(d)** [Find the 6th term of the sequence in part (a).]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次のそれぞれの数列について、arithmetic か geometric か、どちらでもないかを述べなさい。理由も書きなさい。
+
+**(a)** $4, \ 12, \ 36, \ 108, \ \ldots$ **(b)** $4, \ 12, \ 20, \ 28, \ \ldots$ **(c)** $4, \ 12, \ 24, \ 40, \ \ldots$
+
+**(d)** (a) の数列の6番目の項を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** Ratios: $\dfrac{12}{4} = 3$, $\dfrac{36}{12} = 3$, $\dfrac{108}{36} = 3$
+
+*The ratio is constant, so the sequence is **geometric** with $r = 3$.*
+
+**(b)** Differences: $8, \ 8, \ 8$
+
+*The difference is constant, so the sequence is **arithmetic** with $d = 8$.*
+
+**(c)** Differences: $8, \ 12, \ 16$ &nbsp; Ratios: $3, \ 2, \ 1.67$
+
+*Neither the difference nor the ratio is constant, so the sequence is **neither**.*
+
+**(d)**
+$$u_6 = 4 \times 3^{5} = 4 \times 243 = 972$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**3つとも $4, 12$ で始まっています。** 最初の2つだけを見て決めつけると、全部同じに見えてしまいます。**必ず3組以上調べてください。**
+
+`Justify` と書かれているので、**答えだけでは点になりません。** 差か比を書いて、「一定である／一定でない」と述べるところまでが解答です。
+
+(c) は差が $8, 12, 16$ と、**差そのものが等差数列**になっています。こういう数列もありますが、AI SL の範囲では「どちらでもない」で構いません。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[10]{.ex-no} [Paper 2]{.ib-tag} [A geometric sequence has $u_1 = 5$ and $S_3 = 105$. Find the possible values of $r$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある geometric sequence は $u_1 = 5$、$S_3 = 105$ です。$r$ としてあり得る値をすべて求めなさい。
+
+`possible values` と複数形になっているので、**答えは1つではありません。**
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$S_3 = u_1 + u_1 r + u_1 r^2 = 5(1 + r + r^2) = 105$$
+$$1 + r + r^2 = 21$$
+$$r^2 + r - 20 = 0$$
+$$(r + 5)(r - 4) = 0$$
+
+$$r = 4 \quad \text{or} \quad r = -5$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+$S_3$ は項が3つしかないので、**公式を使わずに $u_1 + u_1r + u_1r^2$ と書いてしまう**のが速いです。公式に入れると $\dfrac{5(r^3-1)}{r-1}$ となり、3次方程式になってかえって面倒です。
+
+出てきた2次方程式は、**電卓に解かせて構いません。**
+
+```
+menu → Algebra → Polynomial Tools → Find Roots of Polynomial
+```
+
+次数 $2$、係数 $1, \ 1, \ -20$ と入れれば $4$ と $-5$ が出ます。`nSolve` は解を1つしか返さないことがあるので、`possible values` と複数形の問題ではこちらのほうが安全です。
+
+**両方とも答えです。** $r = 4$ なら $5, 20, 80$ で和は $105$ ✓ $r = -5$ なら $5, -25, 125$ で、これも $105$ ✓
+
+$r \neq 1$ にも触れないので、どちらも捨てる理由がありません。
+:::
+
+:::
