@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>SL 1.6 — Approximation and percentage error（近似・誤差・概算） – IB数学 AI SL</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../01-number-and-algebra/sl-1-7.html" rel="next">
+<link href="../01-number-and-algebra/sl-1-5.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-12f6e5691cea3a8b6194083efea12813.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="サイドバーを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-number-and-algebra/sl-1-1.html">Topic 1 — Number and algebra</a></li><li class="breadcrumb-item"><a href="../01-number-and-algebra/sl-1-6.html"><span class="chapter-title">SL 1.6 — Approximation and percentage error</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="サイドバーを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="サーチ" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">IB数学 AI SL</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="サーチ"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">はじめに</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Topic 1 — Number and algebra</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="セクションを切り替え">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-number-and-algebra/sl-1-1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">SL 1.1 — Numbers in standard form</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-number-and-algebra/sl-1-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">SL 1.2 — Arithmetic sequences and series</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-number-and-algebra/sl-1-3.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">SL 1.3 — Geometric sequences and series</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-number-and-algebra/sl-1-4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">SL 1.4 — Compound interest and depreciation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-number-and-algebra/sl-1-5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">SL 1.5 — Exponents and logarithms</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-number-and-algebra/sl-1-6.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">SL 1.6 — Approximation and percentage error</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-number-and-algebra/sl-1-7.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">SL 1.7 — Amortization and annuities</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-number-and-algebra/sl-1-8.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">SL 1.8 — Solving equations with technology</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Topic 4 — Statistics and probability</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="セクションを切り替え">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-statistics-and-probability/sl-4-11.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">SL 4.11 — Hypothesis testing: χ² and t-tests</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">付録</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="セクションを切り替え">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix-terms.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">英日対訳表</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">このページの内容</h2>
+   
+  <ul>
+  <li><a href="#the-idea" id="toc-the-idea" class="nav-link active" data-scroll-target="#the-idea">The idea</a>
+  <ul class="collapse">
+  <li><a href="#丸め方-2つのものさし" id="toc-丸め方-2つのものさし" class="nav-link" data-scroll-target="#丸め方-2つのものさし">1. 丸め方 ── 2つのものさし</a></li>
+  <li><a href="#upper-bound-と-lower-bound" id="toc-upper-bound-と-lower-bound" class="nav-link" data-scroll-target="#upper-bound-と-lower-bound">2. upper bound と lower bound</a></li>
+  <li><a href="#percentage-error誤差率" id="toc-percentage-error誤差率" class="nav-link" data-scroll-target="#percentage-error誤差率">3. percentage error（誤差率）</a></li>
+  <li><a href="#estimation-と答えが妥当か" id="toc-estimation-と答えが妥当か" class="nav-link" data-scroll-target="#estimation-と答えが妥当か">4. estimation と「答えが妥当か」</a></li>
+  </ul></li>
+  <li><a href="#why-it-works" id="toc-why-it-works" class="nav-link" data-scroll-target="#why-it-works">Why it works</a>
+  <ul class="collapse">
+  <li><a href="#なぜ-4.15-は入らないのか" id="toc-なぜ-4.15-は入らないのか" class="nav-link" data-scroll-target="#なぜ-4.15-は入らないのか">なぜ <span class="math inline">\(4.15\)</span> は入らないのか</a></li>
+  </ul></li>
+  <li><a href="#worked-examples" id="toc-worked-examples" class="nav-link" data-scroll-target="#worked-examples">Worked examples</a></li>
+  <li><a href="#common-errors" id="toc-common-errors" class="nav-link" data-scroll-target="#common-errors">Common errors</a></li>
+  <li><a href="#using-your-gdc-ti-nspire-cx-ii" id="toc-using-your-gdc-ti-nspire-cx-ii" class="nav-link" data-scroll-target="#using-your-gdc-ti-nspire-cx-ii">Using your GDC (TI-Nspire CX II)</a>
+  <ul class="collapse">
+  <li><a href="#表示桁数を増やしておく" id="toc-表示桁数を増やしておく" class="nav-link" data-scroll-target="#表示桁数を増やしておく">表示桁数を増やしておく</a></li>
+  <li><a href="#丸めるのは答えを書くときだけ" id="toc-丸めるのは答えを書くときだけ" class="nav-link" data-scroll-target="#丸めるのは答えを書くときだけ">丸めるのは、答えを書くときだけ</a></li>
+  <li><a href="#答えが妥当かをその場で見る" id="toc-答えが妥当かをその場で見る" class="nav-link" data-scroll-target="#答えが妥当かをその場で見る">答えが妥当かを、その場で見る</a></li>
+  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01-number-and-algebra/sl-1-1.html">Topic 1 — Number and algebra</a></li><li class="breadcrumb-item"><a href="../01-number-and-algebra/sl-1-6.html"><span class="chapter-title">SL 1.6 — Approximation and percentage error</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-sl-1-6" class="quarto-section-identifier"><span class="chapter-title">SL 1.6 — Approximation and percentage error（近似・誤差・概算）</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>What you should be able to do
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>decimal places</strong>（小数第◯位）と <strong>significant figures</strong>（有効数字）に正しく丸められる。</li>
+<li>丸めた数の <strong>upper bound / lower bound</strong>（上限・下限）を求められる。</li>
+<li><span class="math inline">\(\leq\)</span> と <span class="math inline">\(&lt;\)</span> を正しく使い分けられる。</li>
+<li>公式集の式を使って、<strong>percentage error</strong>（誤差率）を求められる。</li>
+<li><strong>estimation</strong>（概算）で、答えのだいたいの大きさを見積もれる。</li>
+<li>出てきた答えが<strong>現実的かどうか</strong>を判断できる。</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">重要</span>Formula booklet に載っているもの
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>SL 1.6 の欄には、次の1行だけが印刷されています。</p>
+<p><span class="math display">\[
+\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
+\]</span></p>
+<blockquote class="blockquote">
+<p>where <span class="math inline">\(v_E\)</span> is the <strong>exact</strong> value and <span class="math inline">\(v_A\)</span> is the <strong>approximate</strong> value of <span class="math inline">\(v\)</span></p>
+</blockquote>
+<p><strong><span class="math inline">\(\varepsilon\)</span>（イプシロン）が誤差率</strong>です。記号の意味も公式集に書かれています。</p>
+<p><strong>式の外側に <span class="math inline">\(|\ \ |\)</span> という記号が付いている</strong>ことに注目してください。これは <strong>absolute value</strong>（絶対値）の記号です。次の欄で説明します。</p>
+</div>
+</div>
+<div id="absolute-value" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span><span class="math inline">\(|\ \ |\)</span> という記号について
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(|\ \ |\)</span> は <strong>absolute value</strong>（絶対値）の記号です。<strong>中身のマイナスを外す</strong>、それだけの記号です。</p>
+<p><span class="math display">\[
+|7| = 7, \qquad |-7| = 7, \qquad |0| = 0
+\]</span></p>
+<ul>
+<li>中身が<strong>正</strong>なら … そのまま</li>
+<li>中身が<strong>負</strong>なら … マイナスを外す</li>
+<li>中身が <span class="math inline">\(0\)</span> なら … <span class="math inline">\(0\)</span></li>
+</ul>
+<p><strong>「<span class="math inline">\(0\)</span> からどれだけ離れているか」</strong>を表している、と考えると分かりやすくなります。<span class="math inline">\(7\)</span> も <span class="math inline">\(-7\)</span> も、<span class="math inline">\(0\)</span> からの距離は <span class="math inline">\(7\)</span> です。<strong>向きを捨てて、大きさだけを見る</strong>記号です。</p>
+<p><span class="math display">\[
+|-0.7| = 0.7, \qquad \left| \frac{-3}{5} \right| = \frac{3}{5} = 0.6
+\]</span></p>
+<p><strong>結果は必ず <span class="math inline">\(0\)</span> 以上になります。</strong> 絶対値が負になることはありません。</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>電卓では <code>abs</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>TI-Nspire では <code>abs( )</code> と打ちます。テンプレート（<span class="math inline">\(\square\)</span> に <span class="math inline">\(|\ \ |\)</span> が付いた形）もありますが、<strong><code>abs(</code> と直接打つほうが速い</strong>です。</p>
+<pre><code>abs(-0.7)   →   0.7</code></pre>
+<p>ただし percentage error では、<strong>わざわざ電卓に入れなくても構いません。</strong> 出てきた答えが負だったら、<strong>マイナスを取って書けばよい</strong>だけです。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">重要</span>絶対値が付いていることの意味
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>公式の外側に <span class="math inline">\(|\ \ |\)</span> が付いているので、<strong>percentage error は必ず <span class="math inline">\(0\)</span> 以上</strong>になります。負にはなりません。</p>
+<p>つまり、<strong>「<span class="math inline">\(5\%\)</span> 大きい」も「<span class="math inline">\(5\%\)</span> 小さい」も、どちらも <span class="math inline">\(\varepsilon = 5\%\)</span></strong> です。誤差率は「どちらにずれたか」ではなく、<strong>「どれだけずれたか」だけ</strong>を表しています。</p>
+<p>答えが <span class="math inline">\(-4\%\)</span> と出たら、<strong>マイナスを外して <span class="math inline">\(4\%\)</span> と書いてください。</strong></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>「丸め方」で点を落とす人が一番多い項目です
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>この項目は計算そのものは簡単ですが、<strong>書き方で失点しやすい</strong>ところです。</p>
+<ul>
+<li><span class="math inline">\(3.00\)</span> の <span class="math inline">\(0\)</span> を消して <span class="math inline">\(3\)</span> と書く</li>
+<li><span class="math inline">\(\leq\)</span> と <span class="math inline">\(&lt;\)</span> を逆にする</li>
+<li>分母に <strong>approximate value</strong> を入れてしまう</li>
+</ul>
+<p>どれも、<strong>知っていれば防げる</strong>ものばかりです。</p>
+</div>
+</div>
+<section id="the-idea" class="level2">
+<h2 class="anchored" data-anchor-id="the-idea">The idea</h2>
+<p>この項目には、<strong>4つの中身</strong>があります。順番に見ていきます。</p>
+<ol type="1">
+<li><strong>丸め方</strong>（decimal places と significant figures）</li>
+<li><strong>上限と下限</strong>（upper and lower bounds）</li>
+<li><strong>誤差率</strong>（percentage error）</li>
+<li><strong>概算と、答えの妥当性</strong>（estimation）</li>
+</ol>
+<section id="丸め方-2つのものさし" class="level3">
+<h3 class="anchored" data-anchor-id="丸め方-2つのものさし">1. 丸め方 ── 2つのものさし</h3>
+<p>丸め方には<strong>2つのものさし</strong>があり、まったく別のものです。</p>
+<div id="tbl-dp-sf" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dp-sf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;1: 2つのものさし
+</figcaption>
+<div aria-describedby="tbl-dp-sf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>何を数えるか</th>
+<th>例：<span class="math inline">\(0.004736\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>decimal places</strong>（d.p.）</td>
+<td><strong>小数点から</strong>何桁か</td>
+<td><span class="math inline">\(3\)</span> d.p. なら <span class="math inline">\(0.005\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>significant figures</strong>（s.f.）</td>
+<td><strong>最初の <span class="math inline">\(0\)</span> でない数字から</strong>何桁か</td>
+<td><span class="math inline">\(3\)</span> s.f. なら <span class="math inline">\(0.00474\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><strong>同じ数でも、まったく違う答えになります。</strong> 問題文がどちらを指定しているかを、必ず確認してください。</p>
+<section id="significant-figures-の数え方" class="level4">
+<h4 class="anchored" data-anchor-id="significant-figures-の数え方">significant figures の数え方</h4>
+<p><strong>「最初の <span class="math inline">\(0\)</span> でない数字」から数え始めます。</strong> それより前の <span class="math inline">\(0\)</span> は数えません。</p>
+<p><span class="math display">\[
+0.00\underbrace{4736}_{\text{ここから数える}} \qquad \longrightarrow \qquad 4, \ 7, \ 3, \ 6 \ \text{が1桁目から4桁目}
+\]</span></p>
+<p><span class="math inline">\(3\)</span> s.f. なら4桁目の <span class="math inline">\(6\)</span> で四捨五入して、<span class="math inline">\(0.00474\)</span> です。</p>
+<p><strong>途中や後ろの <span class="math inline">\(0\)</span> は数えます。</strong></p>
+<div id="tbl-count-sf" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-count-sf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;2: 有効数字の数え方
+</figcaption>
+<div aria-describedby="tbl-count-sf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>数</th>
+<th>有効数字の桁数</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(0.00474\)</span></td>
+<td><span class="math inline">\(3\)</span> 桁</td>
+<td><span class="math inline">\(4, 7, 4\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(2.05\)</span></td>
+<td><span class="math inline">\(3\)</span> 桁</td>
+<td>途中の <span class="math inline">\(0\)</span> は<strong>数える</strong></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(30.0\)</span></td>
+<td><span class="math inline">\(3\)</span> 桁</td>
+<td>後ろの <span class="math inline">\(0\)</span> も<strong>数える</strong></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(0.0300\)</span></td>
+<td><span class="math inline">\(3\)</span> 桁</td>
+<td>前の <span class="math inline">\(0\)</span> は数えない、後ろは数える</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span><span class="math inline">\(3.00\)</span> の <span class="math inline">\(0\)</span> を消さない
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(2.996\)</span> を <span class="math inline">\(3\)</span> s.f. に丸めると <span class="math inline">\(3.00\)</span> です。<strong><span class="math inline">\(3\)</span> と書いてはいけません。</strong></p>
+<p><span class="math inline">\(3\)</span> だと有効数字1桁になってしまい、<strong>指定された精度を満たしていない</strong>と見なされます。</p>
+<p>同じように、<span class="math inline">\(\ln 20 = 2.9957\ldots\)</span> を <span class="math inline">\(3\)</span> s.f. にすると <span class="math inline">\(3.00\)</span> です（SL 1.5 の演習5）。<strong><span class="math inline">\(0\)</span> を2つ書いてください。</strong></p>
+<p><strong>この <span class="math inline">\(0\)</span> は「意味のある <span class="math inline">\(0\)</span>」</strong>です。「ちょうど <span class="math inline">\(3\)</span> に近い値だ」という情報を持っています。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="upper-bound-と-lower-bound" class="level3">
+<h3 class="anchored" data-anchor-id="upper-bound-と-lower-bound">2. upper bound と lower bound</h3>
+<p><span class="math inline">\(4.1\)</span> という数を見たとき、<strong>それが丸めた結果なら、本当の値は <span class="math inline">\(4.1\)</span> ちょうどとはかぎりません。</strong></p>
+<p>シラバスに、そのままの例が載っています。</p>
+<blockquote class="blockquote">
+<p>If <span class="math inline">\(x = 4.1\)</span> to one decimal place, <span class="math inline">\(4.05 \leq x &lt; 4.15\)</span>.</p>
+</blockquote>
+<p><strong><span class="math inline">\(4.05\)</span> から <span class="math inline">\(4.15\)</span> のあいだのどこかにある</strong>、ということです。</p>
+<p><span class="math display">\[
+4.05 \leq x &lt; 4.15
+\]</span></p>
+<ul>
+<li><strong>lower bound</strong>（下限）… <span class="math inline">\(4.05\)</span></li>
+<li><strong>upper bound</strong>（上限）… <span class="math inline">\(4.15\)</span></li>
+</ul>
+<section id="求め方は半分ずつ" class="level4">
+<h4 class="anchored" data-anchor-id="求め方は半分ずつ">求め方は「半分ずつ」</h4>
+<p>丸めた単位の<strong>半分</strong>を、上と下に足し引きします。</p>
+<p><span class="math display">\[
+\underbrace{4.1}_{\text{丸めた値}} \ \pm \ \underbrace{0.05}_{\text{単位 } 0.1 \text{ の半分}}
+\]</span></p>
+<div id="tbl-bounds" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-bounds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;3: bounds の求め方
+</figcaption>
+<div aria-describedby="tbl-bounds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>丸め方</th>
+<th>単位</th>
+<th>半分</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1 d.p.</td>
+<td><span class="math inline">\(0.1\)</span></td>
+<td><span class="math inline">\(0.05\)</span></td>
+<td><span class="math inline">\(4.1 \to 4.05 \leq x &lt; 4.15\)</span></td>
+</tr>
+<tr class="even">
+<td>2 d.p.</td>
+<td><span class="math inline">\(0.01\)</span></td>
+<td><span class="math inline">\(0.005\)</span></td>
+<td><span class="math inline">\(3.72 \to 3.715 \leq x &lt; 3.725\)</span></td>
+</tr>
+<tr class="odd">
+<td>整数（nearest whole）</td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(0.5\)</span></td>
+<td><span class="math inline">\(18 \to 17.5 \leq x &lt; 18.5\)</span></td>
+</tr>
+<tr class="even">
+<td>nearest <span class="math inline">\(10\)</span></td>
+<td><span class="math inline">\(10\)</span></td>
+<td><span class="math inline">\(5\)</span></td>
+<td><span class="math inline">\(350 \to 345 \leq x &lt; 355\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">重要</span>下は <span class="math inline">\(\leq\)</span>、上は <span class="math inline">\(&lt;\)</span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+4.05 \leq x &lt; 4.15
+\]</span></p>
+<p><strong>下限は「以上」、上限は「未満」</strong>です。逆にしないでください。</p>
+<p>理由は、<strong>四捨五入のきまり</strong>です。<span class="math inline">\(4.05\)</span> は切り上げて <span class="math inline">\(4.1\)</span> になりますが、<span class="math inline">\(4.15\)</span> は切り上げて <span class="math inline">\(4.2\)</span> になってしまいます。ですから <span class="math inline">\(4.15\)</span> は <span class="math inline">\(x\)</span> の候補に<strong>入りません</strong>。</p>
+<p>答案では、<span class="math inline">\(\leq\)</span> と <span class="math inline">\(&lt;\)</span> を書き分けてください。<strong>両方 <span class="math inline">\(\leq\)</span> にすると減点されることがあります。</strong></p>
+</div>
+</div>
+</section>
+</section>
+<section id="percentage-error誤差率" class="level3">
+<h3 class="anchored" data-anchor-id="percentage-error誤差率">3. percentage error（誤差率）</h3>
+<p>近い値を使って計算したとき、<strong>本当の値からどれだけずれているか</strong>を割合で表したものが percentage error です。</p>
+<p><span id="eq-pct-error"><span class="math display">\[
+\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
+\tag{1}\]</span></span></p>
+<div id="tbl-pct-symbols" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pct-symbols-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;4: 記号の意味
+</figcaption>
+<div aria-describedby="tbl-pct-symbols-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>記号</th>
+<th>英語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(v_E\)</span></td>
+<td><strong>exact</strong> value</td>
+<td><strong>本当の値</strong>（分母に来る）</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(v_A\)</span></td>
+<td><strong>approximate</strong> value</td>
+<td><strong>近似した値</strong>（測った値・丸めた値）</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\varepsilon\)</span></td>
+<td>percentage error</td>
+<td>誤差率（パーセント）</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">重要</span>分母は、いつも exact value
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
+\]</span></p>
+<p><strong>分母の <span class="math inline">\(v_E\)</span> は「本当の値」</strong>です。<span class="math inline">\(v_A\)</span>（近似値）を分母に入れると、違う答えになります。</p>
+<p>見分け方は簡単で、<strong>問題文が <code>exact value</code> と呼んでいるほう</strong>が <span class="math inline">\(v_E\)</span> です。「真の値」「実際の値」と書いてあれば、それが <span class="math inline">\(v_E\)</span> です。</p>
+<p>分子には <span class="math inline">\(v_A - v_E\)</span>（近似 <span class="math inline">\(-\)</span> 本当）と書いてありますが、<strong><a href="#absolute-value">絶対値</a>が付いているので順番は気にしなくて大丈夫</strong>です。引き算の向きを逆にしても、マイナスを外せば同じになります。</p>
+</div>
+</div>
+<p><span class="math inline">\(\pi\)</span> を <span class="math inline">\(3.14\)</span> で計算した場合の誤差率を出してみましょう。</p>
+<p><span class="math display">\[
+\varepsilon = \left| \frac{3.14 - \pi}{\pi} \right| \times 100\% = 0.0507\% \ (3\text{ s.f.})
+\]</span></p>
+<p><span class="math inline">\(0.05\%\)</span> ほどのずれです。<strong><span class="math inline">\(3.14\)</span> はかなりよい近似</strong>だと分かります。</p>
+</section>
+<section id="estimation-と答えが妥当か" class="level3">
+<h3 class="anchored" data-anchor-id="estimation-と答えが妥当か">4. estimation と「答えが妥当か」</h3>
+<p>シラバスにこう書かれています。</p>
+<blockquote class="blockquote">
+<p>Students should be able to <strong>recognize whether the results of calculations are reasonable</strong>. For example <strong>lengths cannot be negative</strong>.</p>
+</blockquote>
+<p><strong>答えが出たら、1回だけ「これはありえる値か」と見てください。</strong></p>
+<div id="tbl-reasonable" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-reasonable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;5: 答えの妥当性チェック
+</figcaption>
+<div aria-describedby="tbl-reasonable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>場面</th>
+<th>ありえないもの</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>長さ・面積・体積</td>
+<td><strong>負の値</strong></td>
+</tr>
+<tr class="even">
+<td>人数・個数</td>
+<td><strong>負の値、小数</strong></td>
+</tr>
+<tr class="odd">
+<td>確率</td>
+<td><strong><span class="math inline">\(0\)</span> 未満、<span class="math inline">\(1\)</span> より大きい値</strong></td>
+</tr>
+<tr class="even">
+<td>割合（パーセント）</td>
+<td>文脈によるが、ふつう <span class="math inline">\(0 \sim 100\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><strong>estimation</strong>（概算）は、そのための道具です。<strong>それぞれの数を1桁に丸めて掛ける</strong>だけで、答えのだいたいの大きさが分かります。</p>
+<p><span class="math display">\[
+47.3 \times 28.6 \quad \approx \quad 50 \times 30 = 1500
+\]</span></p>
+<p>電卓が <span class="math inline">\(1352.78\)</span> と出したなら、<span class="math inline">\(1500\)</span> に近いので妥当です。<strong><span class="math inline">\(135.278\)</span> や <span class="math inline">\(13527.8\)</span> が出たら、桁を間違えています。</strong></p>
+</section>
+</section>
+<section id="why-it-works" class="level2">
+<h2 class="anchored" data-anchor-id="why-it-works">Why it works</h2>
+<p>ここでは、<strong>bounds がなぜ「半分」なのか</strong>だけを見ます。</p>
+<p><span class="math inline">\(4.1\)</span> という値は、<strong>1 d.p. に四捨五入した結果</strong>でした。どんな数が <span class="math inline">\(4.1\)</span> に丸まるでしょうか。</p>
+<p><span class="math display">\[
+4.05, \quad 4.08, \quad 4.10, \quad 4.13, \quad 4.149 \quad \longrightarrow \quad \text{すべて } 4.1
+\]</span></p>
+<p><span class="math display">\[
+4.04 \longrightarrow 4.0, \qquad 4.15 \longrightarrow 4.2
+\]</span></p>
+<p><strong>境目は、となりの値とのちょうど真ん中</strong>です。<span class="math inline">\(4.1\)</span> のとなりは <span class="math inline">\(4.0\)</span> と <span class="math inline">\(4.2\)</span> で、真ん中はそれぞれ <span class="math inline">\(4.05\)</span> と <span class="math inline">\(4.15\)</span>。</p>
+<p><span class="math display">\[
+\underbrace{4.0}_{\text{となり}} \quad \overbrace{\Big|}^{4.05} \quad \underbrace{4.1}_{\text{これ}} \quad \overbrace{\Big|}^{4.15} \quad \underbrace{4.2}_{\text{となり}}
+\]</span></p>
+<p>となりとの間隔が <span class="math inline">\(0.1\)</span> なので、<strong>真ん中までは <span class="math inline">\(0.05\)</span></strong>。これが「単位の半分」の正体です。</p>
+<section id="なぜ-4.15-は入らないのか" class="level3">
+<h3 class="anchored" data-anchor-id="なぜ-4.15-は入らないのか">なぜ <span class="math inline">\(4.15\)</span> は入らないのか</h3>
+<p><strong>ちょうど真ん中の数は、切り上げる</strong>というのが四捨五入のきまりです。</p>
+<ul>
+<li><span class="math inline">\(4.05\)</span> … 切り上げて <span class="math inline">\(4.1\)</span> になる → <strong><span class="math inline">\(x\)</span> の候補に入る</strong></li>
+<li><span class="math inline">\(4.15\)</span> … 切り上げて <span class="math inline">\(4.2\)</span> になる → <strong><span class="math inline">\(x\)</span> の候補に入らない</strong></li>
+</ul>
+<p>だから下は <span class="math inline">\(\leq\)</span>、上は <span class="math inline">\(&lt;\)</span> になります。<strong>きまりの非対称さが、そのまま不等号に出ている</strong>だけです。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>なぜ分母が exact value なのか
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>percentage error は「<strong>本当の値に対して、何パーセントずれたか</strong>」を表します。</p>
+<p><span class="math inline">\(100\)</span> に対する <span class="math inline">\(1\)</span> のずれ（<span class="math inline">\(1\%\)</span>）と、<span class="math inline">\(10\)</span> に対する <span class="math inline">\(1\)</span> のずれ（<span class="math inline">\(10\%\)</span>）では、後者のほうがずっと大きな間違いです。<strong>基準になるのは本当の値のほう</strong>なので、分母に来ます。</p>
+<p>近似値を分母にすると、<strong>基準が毎回変わってしまい、比べられなくなります。</strong></p>
+</div>
+</div>
+</section>
+</section>
+<section id="worked-examples" class="level2">
+<h2 class="anchored" data-anchor-id="worked-examples">Worked examples</h2>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>問題文は英語です。意味が理解できなかったら、問題文の下の「<strong>日本語訳</strong>」を開いてください。解説は日本語です。</p>
+</div>
+</div>
+</div>
+<div id="exm-ap-round" class="theorem example">
+<p><span class="theorem-title"><strong>例題 1</strong></span> <strong>(a)</strong> <span class="q-en">Write <span class="math inline">\(0.004736\)</span> correct to three significant figures.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Write <span class="math inline">\(0.004736\)</span> correct to three decimal places.</span></p>
+<p><strong>(c)</strong> <span class="q-en">Write <span class="math inline">\(12\,049\)</span> correct to three significant figures.</span></p>
+<p><strong>(d)</strong> <span class="q-en">Write <span class="math inline">\(2.996\)</span> correct to three significant figures.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p><strong>(a)</strong> <span class="math inline">\(0.004736\)</span> を有効数字3桁で書きなさい。</p>
+<p><strong>(b)</strong> <span class="math inline">\(0.004736\)</span> を小数第3位まで書きなさい。</p>
+<p><strong>(c)</strong> <span class="math inline">\(12\,049\)</span> を有効数字3桁で書きなさい。</p>
+<p><strong>(d)</strong> <span class="math inline">\(2.996\)</span> を有効数字3桁で書きなさい。</p>
+</details>
+<hr>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">重要</span>計算の前に：s.f. か d.p. か
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li>と (b) は<strong>同じ数</strong>ですが、ものさしが違います（<a href="#tbl-dp-sf" class="quarto-xref">表&nbsp;<span>1</span></a>）。</li>
+</ol>
+<ul>
+<li><code>significant figures</code> … <strong>最初の <span class="math inline">\(0\)</span> でない数字</strong>から数える</li>
+<li><code>decimal places</code> … <strong>小数点</strong>から数える</li>
+</ul>
+<p>読み違えると、まったく違う答えになります。</p>
+</div>
+</div>
+<p><strong>(a)</strong> 最初の <span class="math inline">\(0\)</span> でない数字は <span class="math inline">\(4\)</span> です。そこから3桁は <span class="math inline">\(4, 7, 3\)</span>。次の桁 <span class="math inline">\(6\)</span> を見て切り上げます。</p>
+<p><span class="math display">\[
+0.004736 \approx 0.00474
+\]</span></p>
+<p><strong>(b)</strong> 小数点から3桁目までです。<span class="math inline">\(0.004\)</span> までを残し、次の桁 <span class="math inline">\(7\)</span> を見て切り上げます。</p>
+<p><span class="math display">\[
+0.004736 \approx 0.005
+\]</span></p>
+<p><strong>同じ数なのに <span class="math inline">\(0.00474\)</span> と <span class="math inline">\(0.005\)</span>。</strong> ものさしが違うと、これだけ変わります。</p>
+<p><strong>(c)</strong> 最初の数字は <span class="math inline">\(1\)</span> です。<span class="math inline">\(1, 2, 0\)</span> の3桁を残し、次の桁 <span class="math inline">\(4\)</span> を見て切り捨てます。</p>
+<p><span class="math display">\[
+12\,049 \approx 12\,000
+\]</span></p>
+<p><strong><span class="math inline">\(12\)</span> とは書きません。</strong> 桁を保つために <span class="math inline">\(0\)</span> を補います。</p>
+<p><strong>(d)</strong> <span class="math inline">\(2, 9, 9\)</span> の3桁。次の桁 <span class="math inline">\(6\)</span> を見て切り上げると、<span class="math inline">\(9\)</span> が繰り上がって</p>
+<p><span class="math display">\[
+2.996 \approx 3.00
+\]</span></p>
+<p><strong><span class="math inline">\(3\)</span> ではありません。</strong> <span class="math inline">\(0\)</span> を2つ書いて、有効数字3桁であることを示します。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(0.00474\)</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(0.005\)</span></p>
+<p><strong>(c)</strong> <span class="math inline">\(12\,000\)</span></p>
+<p><strong>(d)</strong> <span class="math inline">\(3.00\)</span></p>
+</div>
+</div>
+</div>
+<div id="exm-ap-bounds" class="theorem example">
+<p><span class="theorem-title"><strong>例題 2</strong></span> <span class="q-en">Write down the lower bound and the upper bound of each of the following.</span></p>
+<p><strong>(a)</strong> <span class="q-en"><span class="math inline">\(x = 4.1\)</span>, correct to one decimal place.</span></p>
+<p><strong>(b)</strong> <span class="q-en"><span class="math inline">\(m = 350\)</span> g, correct to the nearest <span class="math inline">\(10\)</span> g.</span></p>
+<p><strong>(c)</strong> <span class="q-en"><span class="math inline">\(L = 6.0\)</span> cm, correct to two significant figures.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>次のそれぞれについて、下限と上限を書きなさい。</p>
+<p><strong>(a)</strong> <span class="math inline">\(x = 4.1\)</span>（小数第1位まで）</p>
+<p><strong>(b)</strong> <span class="math inline">\(m = 350\)</span> g（<span class="math inline">\(10\)</span> g 単位）</p>
+<p><strong>(c)</strong> <span class="math inline">\(L = 6.0\)</span> cm（有効数字2桁）</p>
+</details>
+<hr>
+<p><strong>(a)</strong> <span class="math inline">\(1\)</span> d.p. なので単位は <span class="math inline">\(0.1\)</span>、その半分は <span class="math inline">\(0.05\)</span>（<a href="#tbl-bounds" class="quarto-xref">表&nbsp;<span>3</span></a>）。</p>
+<p><span class="math display">\[
+4.05 \leq x &lt; 4.15
+\]</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(10\)</span> g 単位なので、半分は <span class="math inline">\(5\)</span> g。</p>
+<p><span class="math display">\[
+345 \leq m &lt; 355
+\]</span></p>
+<p><strong>(c)</strong> <span class="math inline">\(6.0\)</span> は有効数字2桁で、最後の桁は小数第1位です。単位は <span class="math inline">\(0.1\)</span>、半分は <span class="math inline">\(0.05\)</span>。</p>
+<p><span class="math display">\[
+5.95 \leq L &lt; 6.05
+\]</span></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>「最後の桁がどこか」を見る
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>s.f. でも d.p. でも、やることは同じです。<strong>最後の桁の1つ分</strong>を単位として、その半分を足し引きします。</p>
+<p><span class="math inline">\(6.0\)</span> の最後の桁は小数第1位 → 単位 <span class="math inline">\(0.1\)</span> → 半分 <span class="math inline">\(0.05\)</span>。</p>
+<p><span class="math inline">\(350\)</span>（<span class="math inline">\(10\)</span> g 単位）の最後の桁は十の位 → 単位 <span class="math inline">\(10\)</span> → 半分 <span class="math inline">\(5\)</span>。</p>
+<p><strong>「有効数字だから」と身構えず、最後の桁を指で押さえてください。</strong></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(4.05 \leq x &lt; 4.15\)</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(345 \leq m &lt; 355\)</span></p>
+<p><strong>(c)</strong> <span class="math inline">\(5.95 \leq L &lt; 6.05\)</span></p>
+</div>
+</div>
+</div>
+<div id="exm-ap-error" class="theorem example">
+<p><span class="theorem-title"><strong>例題 3</strong></span> <strong>(a)</strong> <span class="q-en">A student uses <span class="math inline">\(3.14\)</span> as an approximation for <span class="math inline">\(\pi\)</span>. Find the percentage error, correct to three significant figures.</span></p>
+<p><strong>(b)</strong> <span class="q-en">The exact length of a rod is <span class="math inline">\(25\)</span> cm. A student measures it as <span class="math inline">\(24\)</span> cm. Find the percentage error.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p><strong>(a)</strong> ある生徒が <span class="math inline">\(\pi\)</span> の近似値として <span class="math inline">\(3.14\)</span> を使いました。誤差率を有効数字3桁で求めなさい。</p>
+<p><strong>(b)</strong> ある棒の正確な長さは <span class="math inline">\(25\)</span> cm です。ある生徒はそれを <span class="math inline">\(24\)</span> cm と測りました。誤差率を求めなさい。</p>
+</details>
+<hr>
+<p><strong>(a)</strong> <strong>どちらが exact かを決めます。</strong> <span class="math inline">\(\pi\)</span> が本当の値、<span class="math inline">\(3.14\)</span> が近似値です。</p>
+<p><span class="math display">\[
+v_E = \pi, \qquad v_A = 3.14
+\]</span></p>
+<p><a href="#eq-pct-error" class="quarto-xref">式&nbsp;<span>1</span></a> に入れます。</p>
+<p><span class="math display">\[
+\varepsilon = \left| \frac{3.14 - \pi}{\pi} \right| \times 100\% = 0.05069\ldots\% \approx 0.0507\%
+\]</span></p>
+<p><strong>(b)</strong> <code>exact length</code> と書かれているので、<span class="math inline">\(25\)</span> が <span class="math inline">\(v_E\)</span>、<span class="math inline">\(24\)</span> が <span class="math inline">\(v_A\)</span> です。</p>
+<p><span class="math display">\[
+\varepsilon = \left| \frac{24 - 25}{25} \right| \times 100\% = \frac{1}{25} \times 100\% = 4\%
+\]</span></p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span><span class="math inline">\(24\)</span> を分母に入れない
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(\dfrac{1}{24} \times 100 = 4.17\%\)</span> となり、<strong>正しい <span class="math inline">\(4\%\)</span> とは違います。</strong></p>
+<p>分母はいつも <strong>exact value</strong>（<a href="#tbl-pct-symbols" class="quarto-xref">表&nbsp;<span>4</span></a>）。問題文が <code>exact</code> と呼んでいるほうです。</p>
+<p><span class="math inline">\(4\%\)</span> と <span class="math inline">\(4.17\%\)</span> では有効数字3桁でも別の答えなので、<strong>ここは必ず確認してください。</strong></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(v_E = \pi\)</span>, <span class="math inline">\(v_A = 3.14\)</span></p>
+<p><span class="math display">\[\varepsilon = \left|\frac{3.14 - \pi}{\pi}\right| \times 100\% = 0.0507\%\]</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(v_E = 25\)</span>, <span class="math inline">\(v_A = 24\)</span></p>
+<p><span class="math display">\[\varepsilon = \left|\frac{24 - 25}{25}\right| \times 100\% = 4\%\]</span></p>
+</div>
+</div>
+</div>
+<div id="exm-ap-circle" class="theorem example">
+<p><span class="theorem-title"><strong>例題 4</strong></span> <span class="q-en">The radius of a circle is measured as <span class="math inline">\(2.5\)</span> cm, correct to one decimal place.</span></p>
+<p><strong>(a)</strong> <span class="q-en">Write down the lower bound and the upper bound of the radius.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Find the lower bound and the upper bound of the area of the circle, correct to three significant figures.</span></p>
+<p><strong>(c)</strong> <span class="q-en">The exact radius is <span class="math inline">\(2.47\)</span> cm. Find the percentage error in the area calculated from the measured radius, correct to three significant figures.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>ある円の半径を測ったところ、小数第1位まで <span class="math inline">\(2.5\)</span> cm でした。</p>
+<p><strong>(a)</strong> 半径の下限と上限を書きなさい。</p>
+<p><strong>(b)</strong> 円の面積の下限と上限を、有効数字3桁で求めなさい。</p>
+<p><strong>(c)</strong> 正確な半径は <span class="math inline">\(2.47\)</span> cm です。測った半径から計算した面積の誤差率を、有効数字3桁で求めなさい。</p>
+</details>
+<hr>
+<p><strong>(a)</strong> <span class="math inline">\(1\)</span> d.p. なので <span class="math inline">\(\pm 0.05\)</span>（<a href="#tbl-bounds" class="quarto-xref">表&nbsp;<span>3</span></a>）。</p>
+<p><span class="math display">\[
+2.45 \leq r &lt; 2.55
+\]</span></p>
+<p><strong>(b)</strong> 面積は <span class="math inline">\(A = \pi r^2\)</span> です。<strong>半径が大きいほど面積も大きい</strong>ので、そのまま両端を入れます。</p>
+<p><span class="math display">\[
+A_{\text{lower}} = \pi (2.45)^2 = 18.857\ldots \approx 18.9 \ \text{cm}^2
+\]</span></p>
+<p><span class="math display">\[
+A_{\text{upper}} = \pi (2.55)^2 = 20.428\ldots \approx 20.4 \ \text{cm}^2
+\]</span></p>
+<p><strong>(c)</strong> 測った <span class="math inline">\(2.5\)</span> から計算した面積が<strong>近似値</strong>、本当の半径 <span class="math inline">\(2.47\)</span> から計算した面積が<strong>正確な値</strong>です。</p>
+<p><span class="math display">\[
+v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
+\]</span></p>
+<p><span class="math display">\[
+\varepsilon = \left| \frac{19.6349\ldots - 19.1665\ldots}{19.1665\ldots} \right| \times 100\% = 2.4439\ldots\% \approx 2.44\%
+\]</span></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">重要</span>半径の誤差は、面積では約2倍になります
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>半径の誤差率を計算してみてください。</p>
+<p><span class="math display">\[
+\left| \frac{2.5 - 2.47}{2.47} \right| \times 100\% = 1.21\%
+\]</span></p>
+<p>半径のずれは <span class="math inline">\(1.21\%\)</span> なのに、<strong>面積のずれは <span class="math inline">\(2.44\%\)</span></strong> です。ほぼ2倍。</p>
+<p>面積は半径の<strong>2乗</strong>なので、誤差も約2倍に膨らみます。同じように、体積なら約3倍です。</p>
+<p><strong>測定の精度が大事なのは、このためです。</strong> 「たった <span class="math inline">\(0.03\)</span> cm」が、面積では <span class="math inline">\(2.4\%\)</span> の違いになります。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>「maximum percentage error」を聞かれたら
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>シラバスには、こういう問い方も挙げられています。</p>
+<blockquote class="blockquote">
+<p>finding the <strong>maximum</strong> percentage error in the area of a circle if the radius measured is 2.5 cm to one decimal place</p>
+</blockquote>
+<p>正確な値が分からず、<strong>bounds のどこかにある</strong>という場合です。このときは<strong>両端で計算して、大きいほうを答えます。</strong></p>
+<p><span class="math inline">\(v_A = \pi(2.5)^2 = 19.6349\ldots\)</span> として、</p>
+<ul>
+<li><span class="math inline">\(v_E = \pi(2.45)^2\)</span> のとき … <span class="math inline">\(\varepsilon = 4.12\%\)</span></li>
+<li><span class="math inline">\(v_E = \pi(2.55)^2\)</span> のとき … <span class="math inline">\(\varepsilon = 3.88\%\)</span></li>
+</ul>
+<p>大きいほうを取って <strong><span class="math inline">\(4.12\%\)</span></strong> です。</p>
+<p><strong>どちらを <span class="math inline">\(v_E\)</span>（分母）にするかは、問題文が決めます。</strong> <code>exact value</code> と呼んでいるほうを分母に入れてください。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(2.45 \leq r &lt; 2.55\)</span></p>
+<p><strong>(b)</strong> <span class="math display">\[A_{\text{lower}} = \pi(2.45)^2 = 18.857\ldots \approx 18.9 \text{ cm}^2\]</span> <span class="math display">\[A_{\text{upper}} = \pi(2.55)^2 = 20.428\ldots \approx 20.4 \text{ cm}^2\]</span></p>
+<p><strong>(c)</strong> <span class="math inline">\(v_A = \pi(2.5)^2 = 19.635\ldots\)</span>, <span class="math inline">\(v_E = \pi(2.47)^2 = 19.167\ldots\)</span></p>
+<p><span class="math display">\[\varepsilon = \left|\frac{19.635\ldots - 19.167\ldots}{19.167\ldots}\right| \times 100\% = 2.44\%\]</span></p>
+</div>
+</div>
+</div>
+<div id="exm-ap-estimate" class="theorem example">
+<p><span class="theorem-title"><strong>例題 5</strong></span> <span class="q-en">A rectangular field measures <span class="math inline">\(47.3\)</span> m by <span class="math inline">\(28.6\)</span> m.</span></p>
+<p><strong>(a)</strong> <span class="q-en">By rounding each measurement to one significant figure, estimate the area of the field.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Find the exact area of the field.</span></p>
+<p><strong>(c)</strong> <span class="q-en">Find the percentage error in the estimate, correct to three significant figures.</span></p>
+<p><strong>(d)</strong> <span class="q-en">A student calculates the area and obtains <span class="math inline">\(-1352.78\)</span> m<span class="math inline">\(^2\)</span>. Explain why this answer must be wrong.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>長方形の畑の大きさは <span class="math inline">\(47.3\)</span> m <span class="math inline">\(\times\)</span> <span class="math inline">\(28.6\)</span> m です。</p>
+<p><strong>(a)</strong> それぞれの測定値を有効数字1桁に丸めて、畑の面積を概算しなさい。</p>
+<p><strong>(b)</strong> 畑の正確な面積を求めなさい。</p>
+<p><strong>(c)</strong> 概算の誤差率を、有効数字3桁で求めなさい。</p>
+<p><strong>(d)</strong> ある生徒が面積を計算して <span class="math inline">\(-1352.78\)</span> m<span class="math inline">\(^2\)</span> を得ました。この答えが間違いであるはずの理由を説明しなさい。</p>
+</details>
+<hr>
+<p><strong>(a)</strong> それぞれを1桁に丸めます。</p>
+<p><span class="math display">\[
+47.3 \approx 50, \qquad 28.6 \approx 30
+\]</span></p>
+<p><span class="math display">\[
+\text{estimate} = 50 \times 30 = 1500 \ \text{m}^2
+\]</span></p>
+<p><strong>(b)</strong></p>
+<p><span class="math display">\[
+47.3 \times 28.6 = 1352.78 \ \text{m}^2
+\]</span></p>
+<p><strong>(c)</strong> 概算が <span class="math inline">\(v_A\)</span>、正確な値が <span class="math inline">\(v_E\)</span> です。</p>
+<p><span class="math display">\[
+\varepsilon = \left| \frac{1500 - 1352.78}{1352.78} \right| \times 100\% = 10.88\ldots\% \approx 10.9\%
+\]</span></p>
+<p><strong>(d)</strong> 数値ではなく、<strong>言葉で答える設問</strong>です。</p>
+<div class="model-answer">
+<p><strong>試験ではこう書く</strong></p>
+<p><em>An area cannot be negative, so the answer must be wrong. The student has probably made a sign error, since the magnitude <span class="math inline">\(1352.78\)</span> is correct.</em></p>
+</div>
+<p>（面積が負になることはないので、この答えは間違いです。大きさの <span class="math inline">\(1352.78\)</span> は正しいので、符号を間違えたと考えられます。）</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>概算は「桁が合っているか」を見るためのもの
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(10.9\%\)</span> という誤差は、正確な答えとしては大きすぎます。<strong>概算はそのために使うのではありません。</strong></p>
+<p>概算の役目は、<strong>電卓の答えの桁が合っているかを確かめる</strong>ことです。</p>
+<ul>
+<li>電卓が <span class="math inline">\(1352.78\)</span> → <span class="math inline">\(1500\)</span> に近い ✓</li>
+<li>電卓が <span class="math inline">\(135.278\)</span> → <span class="math inline">\(1500\)</span> と1桁違う ✗（どこかで間違えた）</li>
+</ul>
+<p><strong>掛け算のキーを押し忘れた、小数点を打ち間違えた</strong>といったミスが、これで見つかります。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(47.3 \approx 50\)</span>, <span class="math inline">\(28.6 \approx 30\)</span></p>
+<p><span class="math display">\[\text{estimate} = 50 \times 30 = 1500 \text{ m}^2\]</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(47.3 \times 28.6 = 1352.78 \text{ m}^2\)</span></p>
+<p><strong>(c)</strong> <span class="math display">\[\varepsilon = \left|\frac{1500 - 1352.78}{1352.78}\right| \times 100\% = 10.9\%\]</span></p>
+<p><strong>(d)</strong> <em>An area cannot be negative, so the answer must be wrong.</em></p>
+</div>
+</div>
+</div>
+</section>
+<section id="common-errors" class="level2">
+<h2 class="anchored" data-anchor-id="common-errors">Common errors</h2>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span><span class="math inline">\(3.00\)</span> の <span class="math inline">\(0\)</span> を消す
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(2.996\)</span> を <span class="math inline">\(3\)</span> s.f. にすると <span class="math inline">\(3.00\)</span> です。<strong><span class="math inline">\(3\)</span> と書くと有効数字1桁</strong>になってしまいます。</p>
+<p><span class="math inline">\(3.0\)</span> も2桁なので足りません。<strong><span class="math inline">\(0\)</span> を2つ</strong>書いてください。</p>
+<p>同じように、<span class="math inline">\(4.50\)</span> を <span class="math inline">\(4.5\)</span> と書くのも、有効数字3桁の指定なら不足です。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>s.f. と d.p. を取り違える
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(0.004736\)</span> は、<span class="math inline">\(3\)</span> s.f. なら <span class="math inline">\(0.00474\)</span>、<span class="math inline">\(3\)</span> d.p. なら <span class="math inline">\(0.005\)</span>。<strong>まったく違います。</strong></p>
+<p>問題文の <code>significant figures</code> と <code>decimal places</code> を、<strong>指で押さえて確認してください。</strong></p>
+<ul>
+<li><code>s.f.</code> … 最初の <span class="math inline">\(0\)</span> でない数字から</li>
+<li><code>d.p.</code> … 小数点から</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>有効数字の <span class="math inline">\(0\)</span> を数え間違える
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><span class="math inline">\(0.00474\)</span> … <strong><span class="math inline">\(3\)</span> 桁</strong>（前の <span class="math inline">\(0\)</span> は数えない）</li>
+<li><span class="math inline">\(2.05\)</span> … <strong><span class="math inline">\(3\)</span> 桁</strong>（途中の <span class="math inline">\(0\)</span> は数える）</li>
+<li><span class="math inline">\(30.0\)</span> … <strong><span class="math inline">\(3\)</span> 桁</strong>（後ろの <span class="math inline">\(0\)</span> も数える）</li>
+</ul>
+<p><strong>数え始めるのは、最初の <span class="math inline">\(0\)</span> でない数字から</strong>です。そこから先は <span class="math inline">\(0\)</span> も数えます（<a href="#tbl-count-sf" class="quarto-xref">表&nbsp;<span>2</span></a>）。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>bounds の <span class="math inline">\(\leq\)</span> と <span class="math inline">\(&lt;\)</span> を逆にする
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>正しくは</p>
+<p><span class="math display">\[
+4.05 \leq x &lt; 4.15
+\]</span></p>
+<p><strong>下が「以上」、上が「未満」</strong>です。<span class="math inline">\(4.15\)</span> は切り上げて <span class="math inline">\(4.2\)</span> になるので、<span class="math inline">\(x\)</span> の候補には入りません。</p>
+<p>両方を <span class="math inline">\(\leq\)</span> で書くと、減点されることがあります。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>percentage error の分母に approximate value を入れる
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
+\]</span></p>
+<p><strong>分母は <span class="math inline">\(v_E\)</span>（exact value）</strong>です。公式集にそう書いてあります。</p>
+<p>問題文で <code>exact</code>、「正確な」、「真の」と呼ばれているほうを分母に入れてください。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>誤差率を負のまま書く
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>公式には<strong>絶対値</strong>が付いています。<span class="math inline">\(\varepsilon\)</span> が負になることはありません。</p>
+<p><span class="math inline">\(-4\%\)</span> と出たら、<strong><a href="#absolute-value">絶対値</a>を取り忘れています。</strong> マイナスを外して <span class="math inline">\(4\%\)</span> と書いてください。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>途中で丸める
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(\pi(2.47)^2\)</span> を <span class="math inline">\(19.17\)</span> に丸めてから割り算すると、答えが少しずれます。</p>
+<p><strong>電卓の中では丸めず、最後に一度だけ</strong>丸めてください。SL 1.4 や SL 1.7 でも同じことを書きました。金額でも面積でも、考え方は同じです。</p>
+</div>
+</div>
+</section>
+<section id="using-your-gdc-ti-nspire-cx-ii" class="level2">
+<h2 class="anchored" data-anchor-id="using-your-gdc-ti-nspire-cx-ii">Using your GDC (TI-Nspire CX II)</h2>
+<section id="表示桁数を増やしておく" class="level3">
+<h3 class="anchored" data-anchor-id="表示桁数を増やしておく">表示桁数を増やしておく</h3>
+<p>途中の値を目で確かめたいので、<strong>表示桁数を多めにしておく</strong>と便利です。</p>
+<pre><code>ctrl + menu → Document Settings → Display Digits</code></pre>
+<p><code>Float 10</code> などにしておくと、<span class="math inline">\(19.16649\ldots\)</span> のように細かく見えます。</p>
+<p>試験の前に一度設定しておいてください。</p>
+</section>
+<section id="丸めるのは答えを書くときだけ" class="level3">
+<h3 class="anchored" data-anchor-id="丸めるのは答えを書くときだけ">丸めるのは、答えを書くときだけ</h3>
+<p><strong>電卓は自動で丸めてくれません。</strong> 画面に <span class="math inline">\(19.17\)</span> と見えていても、中身は <span class="math inline">\(19.16649\ldots\)</span> です。</p>
+<p>計算の途中では、<strong><code>ans</code> を使って正確な値をそのまま渡します。</strong></p>
+<pre><code>π × 2.47²             →  19.16649...
+(π × 2.5² − ans) / ans × 100   →  2.44390...</code></pre>
+<p><strong>手で <span class="math inline">\(19.17\)</span> と打ち直すと、そこで丸めが入ってしまいます。</strong></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>有効数字3桁は、自分で数える
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>電卓に「有効数字3桁で表示」という機能はありません。<strong>画面の数を見て、自分で数えて書きます。</strong></p>
+<p><span class="math inline">\(2.4439\ldots\)</span> → <span class="math inline">\(2.44\)</span>、<span class="math inline">\(0.050695\ldots\)</span> → <span class="math inline">\(0.0507\)</span>。</p>
+<p><strong>前の <span class="math inline">\(0\)</span> は数えない</strong>ので、<span class="math inline">\(0.0507\)</span> は3桁です（<a href="#tbl-count-sf" class="quarto-xref">表&nbsp;<span>2</span></a>）。ここを間違えて <span class="math inline">\(0.051\)</span>（2桁）と書かないように。</p>
+</div>
+</div>
+</section>
+<section id="答えが妥当かをその場で見る" class="level3">
+<h3 class="anchored" data-anchor-id="答えが妥当かをその場で見る">答えが妥当かを、その場で見る</h3>
+<p>計算が終わったら、<strong>画面の数を見て1回だけ考えてください。</strong></p>
+<div id="tbl-gdc-check" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-gdc-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;6: 電卓の答えを見るときの3点
+</figcaption>
+<div aria-describedby="tbl-gdc-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>見るところ</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>符号</td>
+<td>面積・長さが<strong>負</strong>になっていないか</td>
+</tr>
+<tr class="even">
+<td>桁</td>
+<td>概算とくらべて、<strong>1桁ずれていない</strong>か</td>
+</tr>
+<tr class="odd">
+<td>大きさ</td>
+<td>確率が <span class="math inline">\(1\)</span> を超えていないか</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><strong>打ち間違いのほとんどは、この3つで見つかります。</strong></p>
+</section>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>各問題に、折りたたみが3つ付いています。<strong>日本語訳</strong>、<strong>解答例</strong>（答案用紙に書くべきこと。英語です）、<strong>解説</strong>（なぜそうなるか。日本語です）。</p>
+<p>まず自分で解いて、次に解答例と見くらべてください。<strong>解説は、合わなかったときだけ開けば十分です。</strong></p>
+</div>
+</div>
+</div>
+<div class="exercise-block">
+<p><span class="ex-no">1</span> <strong>(a)</strong> <span class="q-en">Write <span class="math inline">\(0.08067\)</span> correct to three significant figures.</span> <strong>(b)</strong> <span class="q-en">Write <span class="math inline">\(0.08067\)</span> correct to two decimal places.</span> <strong>(c)</strong> <span class="q-en">Write <span class="math inline">\(3.9962\)</span> correct to three significant figures.</span> <strong>(d)</strong> <span class="q-en">Write <span class="math inline">\(45\,870\)</span> correct to two significant figures.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p><strong>(a)</strong> <span class="math inline">\(0.08067\)</span> を有効数字3桁で書きなさい。 <strong>(b)</strong> <span class="math inline">\(0.08067\)</span> を小数第2位まで書きなさい。 <strong>(c)</strong> <span class="math inline">\(3.9962\)</span> を有効数字3桁で書きなさい。 <strong>(d)</strong> <span class="math inline">\(45\,870\)</span> を有効数字2桁で書きなさい。</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(0.0807\)</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(0.08\)</span></p>
+<p><strong>(c)</strong> <span class="math inline">\(4.00\)</span></p>
+<p><strong>(d)</strong> <span class="math inline">\(46\,000\)</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> 最初の <span class="math inline">\(0\)</span> でない数字は <span class="math inline">\(8\)</span>。<span class="math inline">\(8, 0, 6\)</span> の3桁で、次の <span class="math inline">\(7\)</span> を見て切り上げて <span class="math inline">\(0.0807\)</span> です。<strong>途中の <span class="math inline">\(0\)</span> は数えます。</strong></p>
+<p><strong>(c)</strong> <span class="math inline">\(3, 9, 9\)</span> の次が <span class="math inline">\(6\)</span> なので切り上げ。<span class="math inline">\(9\)</span> が繰り上がって <span class="math inline">\(4.00\)</span>。<strong><span class="math inline">\(4\)</span> と書かないでください。</strong></p>
+<p><strong>(d)</strong> <span class="math inline">\(4, 5\)</span> の次が <span class="math inline">\(8\)</span> なので切り上げて <span class="math inline">\(46\)</span>。桁を保つために <span class="math inline">\(0\)</span> を3つ補って <span class="math inline">\(46\,000\)</span> です。</p>
+</div>
+</div>
+</div>
+<div class="ex-sep">
+
+</div>
+<p><span class="ex-no">2</span> <span class="q-en">Write down the lower bound and the upper bound of each of the following.</span></p>
+<p><strong>(a)</strong> <span class="q-en"><span class="math inline">\(x = 7.3\)</span>, correct to one decimal place.</span> <strong>(b)</strong> <span class="q-en"><span class="math inline">\(n = 40\)</span>, correct to the nearest <span class="math inline">\(10\)</span>.</span> <strong>(c)</strong> <span class="q-en"><span class="math inline">\(t = 5.28\)</span>, correct to two decimal places.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>次のそれぞれについて、下限と上限を書きなさい。</p>
+<p><strong>(a)</strong> <span class="math inline">\(x = 7.3\)</span>（小数第1位まで） <strong>(b)</strong> <span class="math inline">\(n = 40\)</span>（<span class="math inline">\(10\)</span> 単位） <strong>(c)</strong> <span class="math inline">\(t = 5.28\)</span>（小数第2位まで）</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(7.25 \leq x &lt; 7.35\)</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(35 \leq n &lt; 45\)</span></p>
+<p><strong>(c)</strong> <span class="math inline">\(5.275 \leq t &lt; 5.285\)</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>最後の桁の1つ分の半分</strong>を足し引きします（<a href="#tbl-bounds" class="quarto-xref">表&nbsp;<span>3</span></a>）。</p>
+<p><strong>(a)</strong> 単位 <span class="math inline">\(0.1\)</span>、半分 <span class="math inline">\(0.05\)</span>。 <strong>(b)</strong> 単位 <span class="math inline">\(10\)</span>、半分 <span class="math inline">\(5\)</span>。 <strong>(c)</strong> 単位 <span class="math inline">\(0.01\)</span>、半分 <span class="math inline">\(0.005\)</span>。</p>
+<p><strong>下が <span class="math inline">\(\leq\)</span>、上が <span class="math inline">\(&lt;\)</span></strong> です。3問とも書き分けてください。</p>
+</div>
+</div>
+</div>
+<div class="ex-sep">
+
+</div>
+<p><span class="ex-no">3</span> <span class="q-en">The exact mass of an object is <span class="math inline">\(19.2\)</span> g. A student measures it as <span class="math inline">\(18.5\)</span> g. Find the percentage error, correct to three significant figures.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>ある物体の正確な質量は <span class="math inline">\(19.2\)</span> g です。ある生徒はそれを <span class="math inline">\(18.5\)</span> g と測りました。誤差率を有効数字3桁で求めなさい。</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[v_E = 19.2, \qquad v_A = 18.5\]</span></p>
+<p><span class="math display">\[\varepsilon = \left|\frac{18.5 - 19.2}{19.2}\right| \times 100\% = 3.6458\ldots\% \approx 3.65\%\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>exact mass</code> と書かれているので、<span class="math inline">\(19.2\)</span> が <span class="math inline">\(v_E\)</span> です。<strong>分母に来ます。</strong></p>
+<p><span class="math inline">\(18.5\)</span> を分母にすると <span class="math inline">\(3.78\%\)</span> になり、別の答えです。</p>
+<p>分子は <span class="math inline">\(18.5 - 19.2 = -0.7\)</span> ですが、<strong><a href="#absolute-value">絶対値</a>を取って <span class="math inline">\(0.7\)</span></strong> です。答えを負のまま書かないでください。</p>
+</div>
+</div>
+</div>
+<div class="ex-sep">
+
+</div>
+<p><span class="ex-no">4</span> <span class="q-en">A rectangle has length <span class="math inline">\(8.4\)</span> cm and width <span class="math inline">\(5.7\)</span> cm, each correct to one decimal place.</span></p>
+<p><strong>(a)</strong> <span class="q-en">Find the lower bound and the upper bound of the perimeter.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Find the lower bound and the upper bound of the area, correct to three significant figures.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>ある長方形の縦は <span class="math inline">\(8.4\)</span> cm、横は <span class="math inline">\(5.7\)</span> cm で、どちらも小数第1位までの値です。</p>
+<p><strong>(a)</strong> 周の長さの下限と上限を求めなさい。</p>
+<p><strong>(b)</strong> 面積の下限と上限を、有効数字3桁で求めなさい。</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-36" class="callout-36-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[8.35 \leq \ell &lt; 8.45, \qquad 5.65 \leq w &lt; 5.75\]</span></p>
+<p><strong>(a)</strong> <span class="math display">\[P_{\text{lower}} = 2(8.35 + 5.65) = 28.0 \text{ cm}\]</span> <span class="math display">\[P_{\text{upper}} = 2(8.45 + 5.75) = 28.4 \text{ cm}\]</span></p>
+<p><strong>(b)</strong> <span class="math display">\[A_{\text{lower}} = 8.35 \times 5.65 = 47.1775 \approx 47.2 \text{ cm}^2\]</span> <span class="math display">\[A_{\text{upper}} = 8.45 \times 5.75 = 48.5875 \approx 48.6 \text{ cm}^2\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>まず2つの辺それぞれの bounds を出します。</strong> どちらも <span class="math inline">\(\pm 0.05\)</span> です。</p>
+<p>そのあと、<strong>下限どうし・上限どうしを組み合わせます。</strong> 周も面積も、辺が長いほど大きくなるからです。</p>
+<p><span class="math inline">\(28.0\)</span> の <span class="math inline">\(0\)</span> を消さないでください。有効数字3桁の指定がなくても、<strong><span class="math inline">\(2(8.35+5.65) = 28\)</span> ちょうど</strong>なので <span class="math inline">\(28\)</span> と書いても構いませんが、<span class="math inline">\(28.0\)</span> のほうが精度が伝わります。</p>
+</div>
+</div>
+</div>
+<div class="ex-sep">
+
+</div>
+<p><span class="ex-no">5</span> <span class="q-en">A student uses <span class="math inline">\(1.33\)</span> as an approximation for <span class="math inline">\(\dfrac{4}{3}\)</span>. Find the percentage error, correct to three significant figures.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>ある生徒が <span class="math inline">\(\dfrac{4}{3}\)</span> の近似値として <span class="math inline">\(1.33\)</span> を使いました。誤差率を有効数字3桁で求めなさい。</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-38" class="callout-38-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[v_E = \frac{4}{3}, \qquad v_A = 1.33\]</span></p>
+<p><span class="math display">\[\varepsilon = \left|\frac{1.33 - \frac{4}{3}}{\frac{4}{3}}\right| \times 100\% = 0.25\%\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong><span class="math inline">\(\frac{4}{3}\)</span> をそのまま電卓に入れてください。</strong> <span class="math inline">\(1.3333\)</span> と打ち直すと、そこで丸めが入ります。</p>
+<p><span class="math inline">\(\frac{4}{3} = 1.33333\ldots\)</span> で、<span class="math inline">\(1.33\)</span> とのずれは <span class="math inline">\(0.00333\ldots\)</span>。それを <span class="math inline">\(1.3333\)</span> で割ると <span class="math inline">\(0.0025\)</span>、つまり <span class="math inline">\(0.25\%\)</span> です。</p>
+<p>ちょうど <span class="math inline">\(0.25\%\)</span> になるので、<span class="math inline">\(0.250\%\)</span> と書いても構いません。</p>
+</div>
+</div>
+</div>
+<div class="ex-sep">
+
+</div>
+<p><span class="ex-no">6</span> <span class="q-en">A rectangular room measures <span class="math inline">\(39.2\)</span> m by <span class="math inline">\(61.8\)</span> m.</span></p>
+<p><strong>(a)</strong> <span class="q-en">By rounding each measurement to one significant figure, estimate the area.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Find the percentage error in this estimate, correct to three significant figures.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>長方形の部屋の大きさは <span class="math inline">\(39.2\)</span> m <span class="math inline">\(\times\)</span> <span class="math inline">\(61.8\)</span> m です。</p>
+<p><strong>(a)</strong> それぞれの測定値を有効数字1桁に丸めて、面積を概算しなさい。</p>
+<p><strong>(b)</strong> この概算の誤差率を、有効数字3桁で求めなさい。</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-40" class="callout-40-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(39.2 \approx 40\)</span>, <span class="math inline">\(61.8 \approx 60\)</span></p>
+<p><span class="math display">\[\text{estimate} = 40 \times 60 = 2400 \text{ m}^2\]</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(v_E = 39.2 \times 61.8 = 2422.56\)</span></p>
+<p><span class="math display">\[\varepsilon = \left|\frac{2400 - 2422.56}{2422.56}\right| \times 100\% = 0.9312\ldots\% \approx 0.931\%\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-41" class="callout-41-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>誤差が <span class="math inline">\(1\%\)</span> 未満</strong>です。<a href="#exm-ap-estimate" class="quarto-xref">例&nbsp;<span>5</span></a> では <span class="math inline">\(10.9\%\)</span> もあったのに、なぜでしょうか。</p>
+<p><strong>丸めの向きが打ち消し合った</strong>からです。<span class="math inline">\(39.2 \to 40\)</span> は切り上げ、<span class="math inline">\(61.8 \to 60\)</span> は切り捨て。片方が大きくなり、片方が小さくなったので、掛け算するとほぼ元に戻りました。</p>
+<p><a href="#exm-ap-estimate" class="quarto-xref">例&nbsp;<span>5</span></a> では <span class="math inline">\(47.3 \to 50\)</span>、<span class="math inline">\(28.6 \to 30\)</span> と<strong>両方とも切り上げ</strong>だったので、誤差が積み上がりました。</p>
+<p><strong>概算の精度は、丸めの向きしだい</strong>です。だから概算は「桁の確認」にだけ使います。</p>
+</div>
+</div>
+</div>
+<div class="ex-sep">
+
+</div>
+<p><span class="ex-no">7</span> <span class="q-en">Two students measure the same length of <span class="math inline">\(12.0\)</span> cm. Student A records <span class="math inline">\(12.4\)</span> cm and Student B records <span class="math inline">\(11.7\)</span> cm.</span></p>
+<p><strong>(a)</strong> <span class="q-en">Find the percentage error of each measurement.</span></p>
+<p><strong>(b)</strong> <span class="q-en">State which measurement is more accurate, and justify your answer.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>2人の生徒が、同じ <span class="math inline">\(12.0\)</span> cm の長さを測りました。生徒 A は <span class="math inline">\(12.4\)</span> cm、生徒 B は <span class="math inline">\(11.7\)</span> cm と記録しました。</p>
+<p><strong>(a)</strong> それぞれの測定値の誤差率を求めなさい。</p>
+<p><strong>(b)</strong> どちらの測定値のほうが正確かを述べ、理由も書きなさい。</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-42" class="callout-42-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(v_E = 12.0\)</span></p>
+<p><span class="math display">\[\text{Student A: } \varepsilon = \left|\frac{12.4 - 12.0}{12.0}\right| \times 100\% = 3.33\%\]</span></p>
+<p><span class="math display">\[\text{Student B: } \varepsilon = \left|\frac{11.7 - 12.0}{12.0}\right| \times 100\% = 2.5\%\]</span></p>
+<p><strong>(b)</strong> <em>Student B’s measurement is more accurate, because its percentage error (<span class="math inline">\(2.5\%\)</span>) is smaller than Student A’s (<span class="math inline">\(3.33\%\)</span>).</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-43-contents" aria-controls="callout-43" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-43" class="callout-43-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>両方とも分母は <span class="math inline">\(12.0\)</span></strong> です。同じものを測っているので、exact value は共通です。</p>
+<p>A のずれは <span class="math inline">\(+0.4\)</span>、B のずれは <span class="math inline">\(-0.3\)</span>。<strong>符号は違いますが、絶対値を取るので比べられます。</strong></p>
+<p><code>Justify</code> と書かれているので、<strong>答えだけでは点になりません。</strong> 「誤差率が小さいから」という理由を必ず書いてください。</p>
+</div>
+</div>
+</div>
+<div class="ex-sep">
+
+</div>
+<p><span class="ex-no">8</span> <span class="q-en">The side of a cube is measured as <span class="math inline">\(6.2\)</span> cm, correct to one decimal place. The volume calculated from this measurement is taken as the approximate value.</span></p>
+<p><strong>(a)</strong> <span class="q-en">Find the volume calculated from the measured side.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Find the lower bound and the upper bound of the volume.</span></p>
+<p><strong>(c)</strong> <span class="q-en">Find the maximum percentage error in the volume, correct to three significant figures.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>ある立方体の一辺を測ったところ、小数第1位まで <span class="math inline">\(6.2\)</span> cm でした。この測定値から計算した体積を<strong>近似値</strong>とします。</p>
+<p><strong>(a)</strong> 測った辺から計算した体積を求めなさい。</p>
+<p><strong>(b)</strong> 体積の下限と上限を求めなさい。</p>
+<p><strong>(c)</strong> 体積の最大誤差率を、有効数字3桁で求めなさい。</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-44-contents" aria-controls="callout-44" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-44" class="callout-44-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(v_A = 6.2^3 = 238.328 \text{ cm}^3\)</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(6.15 \leq s &lt; 6.25\)</span> <span class="math display">\[V_{\text{lower}} = 6.15^3 = 232.608\ldots \text{ cm}^3, \qquad V_{\text{upper}} = 6.25^3 = 244.140\ldots \text{ cm}^3\]</span></p>
+<p><strong>(c)</strong> <span class="math display">\[\text{with } v_E = 232.608\ldots : \quad \varepsilon = \left|\frac{238.328 - 232.608\ldots}{232.608\ldots}\right| \times 100\% = 2.459\%\]</span></p>
+<p><span class="math display">\[\text{with } v_E = 244.140\ldots : \quad \varepsilon = \left|\frac{238.328 - 244.140\ldots}{244.140\ldots}\right| \times 100\% = 2.381\%\]</span></p>
+<p><em>The maximum percentage error is <strong>2.46%</strong>.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-45-contents" aria-controls="callout-45" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-45" class="callout-45-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>maximum</code> と聞かれたら、<strong>両端で計算して大きいほうを取ります</strong>（<a href="#exm-ap-circle" class="quarto-xref">例&nbsp;<span>4</span></a> の callout 参照）。</p>
+<p>問題文が「測定値から計算した体積を<strong>近似値</strong>とする」と決めてくれているので、<span class="math inline">\(v_A = 238.328\)</span>、<span class="math inline">\(v_E\)</span> は bounds のほうです。<strong>迷わずに済みます。</strong></p>
+<p><strong>辺の誤差率と比べてみてください。</strong></p>
+<p><span class="math display">\[\left|\frac{6.2 - 6.15}{6.15}\right| \times 100\% = 0.813\%\]</span></p>
+<p>辺は <span class="math inline">\(0.813\%\)</span>、体積は <span class="math inline">\(2.46\%\)</span>。<strong>約3倍</strong>です。体積は辺の3乗だからです（面積なら約2倍でした）。</p>
+</div>
+</div>
+</div>
+<div class="ex-sep">
+
+</div>
+<p><span class="ex-no">9</span> <span class="q-en">A student calculates the probability of an event and obtains <span class="math inline">\(1.35\)</span>. Another student calculates the length of a side of a triangle and obtains <span class="math inline">\(-4.2\)</span> cm.</span></p>
+<p><span class="q-en">Explain why each of these answers must be wrong.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>ある生徒が、ある事象の確率を計算して <span class="math inline">\(1.35\)</span> を得ました。別の生徒が、三角形の1辺の長さを計算して <span class="math inline">\(-4.2\)</span> cm を得ました。</p>
+<p>それぞれの答えが間違いであるはずの理由を説明しなさい。</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-46-contents" aria-controls="callout-46" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-46" class="callout-46-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><em>A probability must be between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, so <span class="math inline">\(1.35\)</span> cannot be a probability.</em></p>
+<p><em>A length cannot be negative, so <span class="math inline">\(-4.2\)</span> cm cannot be the length of a side.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-47-contents" aria-controls="callout-47" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-47" class="callout-47-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>シラバスにこう書かれています。</p>
+<blockquote class="blockquote">
+<p>Students should be able to recognize whether the results of calculations are reasonable. For example lengths cannot be negative.</p>
+</blockquote>
+<p><strong>わざわざ1行が用意されている</strong>ので、こういう問いは実際に出ます。</p>
+<p>書くことは短くて構いません。<strong>「なぜありえないか」を1文で</strong>述べれば十分です（<a href="#tbl-reasonable" class="quarto-xref">表&nbsp;<span>5</span></a>）。</p>
+<p>計算の途中でこういう値が出たら、<strong>そこで止まって見直してください。</strong> 先に進んでも、答えは合いません。</p>
+</div>
+</div>
+</div>
+<div class="ex-sep">
+
+</div>
+<p><span class="ex-no">10</span> <span class="q-en">A runner completes <span class="math inline">\(100\)</span> m in <span class="math inline">\(12.4\)</span> seconds, correct to one decimal place.</span></p>
+<p><strong>(a)</strong> <span class="q-en">Find the speed of the runner, correct to three significant figures.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Find the lower bound and the upper bound of the speed, correct to three significant figures.</span></p>
+<p><strong>(c)</strong> <span class="q-en">Comment on how many significant figures it is appropriate to use for the speed.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>ある走者が <span class="math inline">\(100\)</span> m を、小数第1位まで <span class="math inline">\(12.4\)</span> 秒で走りました。</p>
+<p><strong>(a)</strong> 走者の速さを、有効数字3桁で求めなさい。</p>
+<p><strong>(b)</strong> 速さの下限と上限を、有効数字3桁で求めなさい。</p>
+<p><strong>(c)</strong> 速さを有効数字何桁で書くのが適切かについて、コメントしなさい。</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-48-contents" aria-controls="callout-48" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-48" class="callout-48-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math display">\[\text{speed} = \frac{100}{12.4} = 8.0645\ldots \approx 8.06 \text{ m s}^{-1}\]</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(12.35 \leq t &lt; 12.45\)</span></p>
+<p><span class="math display">\[\text{lower} = \frac{100}{12.45} = 8.0321\ldots \approx 8.03 \text{ m s}^{-1}\]</span></p>
+<p><span class="math display">\[\text{upper} = \frac{100}{12.35} = 8.0971\ldots \approx 8.10 \text{ m s}^{-1}\]</span></p>
+<p><strong>(c)</strong> <em>The time is given to three significant figures, so the speed should not be given to more than three significant figures. The bounds show that the speed is between 8.03 and 8.10, so only the first two figures are certain.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-49-contents" aria-controls="callout-49" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-49" class="callout-49-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(b) で向きが逆になる</strong>ところが要です。<strong>時間が長いほど、速さは遅くなります。</strong> ですから</p>
+<ul>
+<li>時間の<strong>上限</strong> <span class="math inline">\(12.45\)</span> → 速さの<strong>下限</strong></li>
+<li>時間の<strong>下限</strong> <span class="math inline">\(12.35\)</span> → 速さの<strong>上限</strong></li>
+</ul>
+<p>割り算では、この入れ替わりが起きます。<strong>「大きいほうを入れたら大きくなる」とはかぎりません。</strong></p>
+<p><strong>(c)</strong> はシラバスの <code>choose an appropriate degree of accuracy based on given data</code> に当たります。</p>
+<p>書くことは2つです。</p>
+<ol type="1">
+<li><strong>元のデータの精度</strong> — <em>The time is given to three significant figures.</em></li>
+<li><strong>だから答えもそれ以上には書けない</strong> — <em>so the speed should not be given to more than three significant figures.</em></li>
+</ol>
+<p>bounds が <span class="math inline">\(8.03 \sim 8.10\)</span> と幅があるので、<strong>3桁目はもう確かではありません。</strong> そこまで触れられると強い解答になります。</p>
+</div>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../01-number-and-algebra/sl-1-5.html" class="pagination-link" aria-label="SL 1.5 — Exponents and logarithms">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">SL 1.5 — Exponents and logarithms</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../01-number-and-algebra/sl-1-7.html" class="pagination-link" aria-label="SL 1.7 — Amortization and annuities">
+        <span class="nav-page-text"><span class="chapter-title">SL 1.7 — Amortization and annuities</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 学習サロン SELF</p>
+</div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.selfsg.com/">
+<p>学習サロン SELF</p>
+</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+<p>IB（国際バカロレア機構）とは関係のない独立した教材です</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
