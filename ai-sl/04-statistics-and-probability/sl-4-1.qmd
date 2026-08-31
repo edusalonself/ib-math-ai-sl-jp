@@ -1,0 +1,1158 @@
+# SL 4.1 — Sampling, bias and outliers（標本の取り方・かたより・外れ値） {#sec-sl-4-1}
+
+::: {.callout-note}
+## What you should be able to do
+- **population**（母集団）と **sample**（標本）の違いを説明できる。
+- **discrete data**（離散データ）と **continuous data**（連続データ）を見分けられる。
+- **5つの sampling technique** を名前で言え、それぞれの弱点を説明できる。
+- **stratified sampling** で、各グループから何人取るかを計算できる。
+- 標本に **bias**（かたより）があるかどうかを判断し、理由を英語で書ける。
+- **outlier**（外れ値）を $1.5 \times \text{IQR}$ の決まりで判定できる。
+- 外れ値を**捨てるべきか残すべきか**を、問題の文脈から判断できる。
+:::
+
+::: {.callout-important}
+## Formula booklet に載っているもの
+**SL 4.1 の欄はありません。** 公式集の Topic 4 は **4.2 から始まります。**
+
+そこに、この項目で使う式が1つだけ載っています。
+
+$$
+\text{IQR} = Q_3 - Q_1
+$$
+
+**ただし、外れ値の $1.5 \times \text{IQR}$ という決まりは、公式集に載っていません。** シラバスの Guidance 欄にだけ書かれています。**ここは自分で覚えておく必要があります。**
+:::
+
+::: {.callout-warning}
+## Topic 4 に入る前に ── 大事な前提が1つあります
+シラバスの Topic 4 の冒頭に、次の一文があります。
+
+> At SL the data set will be considered to be the population unless otherwise stated.
+
+**SL では、問題に出てくるデータは「母集団そのもの」として扱います。** 「特に断りがなければ」という条件付きです。
+
+いまはピンとこなくて構いません。ただ、これが効いてくる場面が SL 4.3 で来ます。電卓が $\sigma_x$ と $s_x$ の**2種類の標準偏差**を出してくるとき、**どちらを答えに書くか**がこの一文で決まります。
+
+**この項目のうちに、この一文があることだけ覚えておいてください。**
+:::
+
+## The idea
+
+[Topic 3](../03-geometry-and-trigonometry/sl-3-1.qmd) では、**距離・角度・位置**を使って現実の状況をモデル化しました。Topic 4 では、**集めた data から特徴や関係を読み取り、その結論がどこまで信頼できるか**を考えます。
+
+この項目には、**計算がほとんどありません。** そのかわり、**言葉で説明する設問**がたくさん出ます。AI SL で点差がつくところそのものです。
+
+中身は4つです。
+
+1. **population と sample** ── 誰を調べたいのか、実際に誰を調べたのか
+2. **discrete と continuous** ── データの種類
+3. **5つの sampling technique** ── 標本の取り方
+4. **bias と outlier** ── そのデータは信用できるか
+
+### 1. population と sample {#population-sample}
+
+**population**（母集団）は、**本当に知りたい相手の全部**です。
+
+**sample**（標本）は、そこから**実際に取り出して調べた一部**です。
+
+例を1つ。「シンガポールに住む日本人高校生の、1日の勉強時間」を調べたいとします。
+
+| | 中身 | この例では |
+|---|---|---|
+| **population** | 知りたい相手の**全部** | シンガポールの日本人高校生**全員** |
+| **sample** | 実際に調べた**一部** | ある学校の3年生 $40$ 人 |
+
+: population と sample {#tbl-sl41-pop-sample}
+
+#### なぜ全部調べないのか
+
+全部調べられるなら、そのほうが正確です。実際にはできないことがほとんどです。
+
+- **数が多すぎる** … 全員に聞くには時間もお金も足りません
+- **調べると壊れる** … 電球の寿命を調べるのに全部の電球を切れるまで点けたら、売る商品がなくなります
+- **全員が誰なのか分からない** … 「シンガポールに住む日本人高校生」の完全な名簿は、ふつう手に入りません
+
+だから一部だけ調べて、**そこから全体を推測します。** そのとき「その一部は全体を代表しているか」が問題になります。それが後で出てくる **bias** の話です。
+
+#### random sample とは
+
+**random sample**（無作為標本）は、**母集団の誰もが、選ばれる可能性を等しく持っている**標本のことです。
+
+「適当に選んだ」という意味ではありません。**「選び方に人の都合が入っていない」**という意味です。ここを取り違えると、次の sampling technique の話が全部ずれます。
+
+### 2. discrete data と continuous data {#discrete-continuous}
+
+**discrete data**（離散データ）は**数えるもの**、**continuous data**（連続データ）は**測るもの**です。
+
+| | 何をするか | 例 |
+|---|---|---|
+| **discrete** | **数える** | 兄弟の人数、サイコロの目、1日に売れたパンの個数 |
+| **continuous** | **測る** | 身長、体重、時間、気温 |
+
+: 2種類のデータ {#tbl-sl41-data-type}
+
+#### 見分け方は「あいだの値がありうるか」
+
+**兄弟の人数**は $2$ 人か $3$ 人で、$2.4$ 人はいません。**あいだの値がない**ので discrete です。
+
+**身長**は $165$ cm と $166$ cm のあいだに $165.3$ cm も $165.37$ cm もあります。**測る道具の精度を上げれば、いくらでも細かくなる**ので continuous です。
+
+::: {.callout-warning}
+## 迷いやすい3つ
+**年齢** … 「$17$ 歳」と答えるので discrete に見えますが、**時間は連続して流れている**ので continuous として扱うのがふつうです。ただし「$17$ 歳の人が何人」と数えているなら discrete です。**何を調べているかで決まります。**
+
+**お金** … $\$3.20$ の次は $\$3.21$ で、$1$ セントより細かくは払えません。ですから**厳密には discrete** です。ただし値が細かいので、continuous のように扱うこともあります。
+
+**靴のサイズ** … $25.0$、$25.5$、$26.0$ と決まった値しかないので **discrete** です。足の長さそのものは continuous ですが、サイズは discrete です。
+
+**試験でここが単独で問われることは多くありません。** 迷ったら「**数えているのか、測っているのか**」に戻ってください。
+:::
+
+### 3. 5つの sampling technique {#sampling-methods}
+
+ここがこの項目の中心です。**シラバスに名前が5つ挙がっています。**
+
+> Simple random, convenience, systematic, quota and stratified sampling methods.
+
+**この5つだけです。** 他の方法は出ません。
+
+| English | 日本語 | どうやるか |
+|---|---|---|
+| **simple random sampling** | 単純無作為抽出 | 全員に番号を付け、乱数で選ぶ |
+| **convenience sampling** | 便宜抽出 | **手近な人**に聞く |
+| **systematic sampling** | 系統抽出 | 並べて**一定間隔ごと**に選ぶ |
+| **quota sampling** | 割当抽出 | グループごとに**人数を決めて**、その数が集まるまで集める |
+| **stratified sampling** | 層化抽出 | グループごとに、**もとの割合どおり**の人数を無作為に選ぶ |
+
+: 5つの sampling technique {#tbl-sl41-methods}
+
+#### それぞれの長所と短所
+
+**試験で聞かれるのは、たいてい短所のほうです。** `State one disadvantage of this method`（この方法の短所を1つ書け）という形で出ます。
+
+| 方法 | 長所 | 短所 |
+|---|---|---|
+| **simple random** | かたよりが出にくい | 全員の名簿が必要。手間がかかる |
+| **convenience** | 速い、安い | **かたよりが大きい**。全体を代表しない |
+| **systematic** | 手間が少ない。名簿があればすぐできる | 名簿の並びに**周期**があると、かたよる |
+| **quota** | 速い。名簿が要らない | 誰を選ぶかが**調べる人の判断**になり、かたよる |
+| **stratified** | **各グループが正しい割合で入る** | グループ分けの情報が必要。手間がかかる |
+
+: 長所と短所 {#tbl-sl41-pros-cons}
+
+#### quota と stratified の違い ── ここを一番間違えます {#quota-strat}
+
+**どちらも「グループごとに人数を決める」**ので、混同する人がとても多いところです。
+
+違いは、**その人数をどうやって集めるか**です。
+
+| | 人数の決め方 | 集め方 |
+|---|---|---|
+| **quota** | 決める | **手近な人**から、その人数に達するまで |
+| **stratified** | もとの割合どおりに決める | 各グループの中から**無作為に**選ぶ |
+
+: quota と stratified {#tbl-sl41-quota-strat}
+
+**stratified は「無作為」が入っています。quota には入っていません。** そこが決定的な違いです。
+
+だから **stratified のほうが信頼できます。** quota は、最後の人数合わせで「声をかけやすい人」ばかりになりがちです。
+
+#### stratified sampling の計算 {#stratified-calc}
+
+**この項目で唯一、計算が出るところです。**
+
+各グループから何人取るかは、**もとの割合をそのまま使います。**
+
+$$
+(\text{そのグループから取る人数}) = \frac{\text{そのグループの人数}}{\text{全体の人数}} \times (\text{標本の大きさ})
+$$
+
+@exm-sl41-stratified で実際に使います。
+
+::: {.callout-warning}
+## 端数が出たときは、合計を確認する
+割り切れないことがあります。$100$ 人を $33 : 33 : 34$ に分けて $10$ 人取るなら、
+
+$$
+3.3, \qquad 3.3, \qquad 3.4
+$$
+
+四捨五入すると $3, 3, 3$ で、**合計が $9$ 人**にしかなりません。
+
+このときは、まず**小数を切り捨てて** $3,\ 3,\ 3$（合計 $9$ 人）とし、足りない $1$ 人を、**比例計算をしたあとの小数部分が大きいグループから順に**足します。この例では小数部分が $0.3,\ 0.3,\ 0.4$ なので、いちばん大きい $0.4$ のグループを $4$ 人にして、合計を $10$ 人にします。
+
+**答えを書いたら、合計が標本の大きさと合っているか必ず足してください。**
+:::
+
+#### systematic sampling の間隔
+
+一定間隔の $k$ は、こう決めます。
+
+$$
+k = \frac{\text{母集団の大きさ}}{\text{標本の大きさ}}
+$$
+
+$1200$ 人から $40$ 人なら $k = 30$ で、**$30$ 人ごとに1人**選びます。
+
+**最初の1人は、$1$ から $30$ の中から無作為に決めます。** ここを $1$ 番から始めてしまうと無作為ではなくなります。
+
+### 4. bias（かたより）{#bias}
+
+**bias** は、**標本が母集団を正しく代表していない**ことです。
+
+日本語では「かたより」「偏り」と言います。**「間違い」ではありません。** 計算は正しくても、集め方のせいで結論がずれる、という話です。
+
+#### bias が起きる典型的な場面
+
+- **聞く相手がかたよっている** … 駅前で朝7時に聞けば、通勤する人ばかりになります
+- **答えてくれた人だけを数えている** … アンケートに答える人は、そもそも関心が高い人です
+- **質問の仕方が答えを誘導している**
+- **データが抜けている**（missing data）… 答えなかった人を無視すると、その人たちの意見が消えます
+- **記録の間違い**（errors in the recording of data）… 打ち間違い、単位の取り違え
+
+シラバスにも `Dealing with missing data, errors in the recording of data` と書かれています。**データが手に入った時点で「これは信用できるか」と考える**、というのがこの項目の狙いです。
+
+#### 答案での書き方
+
+`Explain why the sample may be biased` は、**理由を英語の文で書く**設問です。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The sample is biased because only students at the library were asked, and students who study at the library are likely to study more than average. The sample does not represent all students in the school.*
+:::
+
+（図書館にいた生徒にしか聞いていないので、この標本にはかたよりがあります。図書館で勉強する生徒は平均より勉強時間が長いと考えられます。この標本は学校全体を代表していません。）
+
+**型は2文です。**
+
+1. **なぜかたよるのか**（who was left out / who was over-represented）
+2. **だからどうなるのか**（the sample does not represent …）
+
+**「ランダムじゃないから」だけでは点になりません。** 「誰が抜けているのか」を具体的に書いてください。
+
+### 5. outlier（外れ値）{#outliers}
+
+**quartile**（四分位数）の意味と求め方は、このあとの [SL 4.2](sl-4-2.qmd#cumfreq)・[SL 4.3](sl-4-3.qmd#dispersion) でくわしく学びます。このページでは、**GDC が出した $Q_1$、$Q_3$ をそのまま使い、外れ値の判定のしかたに集中します。**
+
+**outlier** は、**他の値から大きく離れた値**です。
+
+「大きく離れた」の意味を、シラバスがはっきり決めています。
+
+> Outlier is defined as a data item which is more than $1.5 \times$ interquartile range (IQR) from the nearest quartile.
+
+**近いほうの quartile から $1.5 \times \text{IQR}$ より遠い値**、ということです。式にすると次の2本になります。
+
+$$
+x < Q_1 - 1.5 \times \text{IQR} \qquad \text{または} \qquad x > Q_3 + 1.5 \times \text{IQR}
+$$ {#eq-sl41-outlier}
+
+この2つの境目を **fence**（さかい目）と呼ぶことがあります。
+
+::: {.callout-note}
+## $Q_1$、$Q_3$、$\text{IQR}$ がまだ分からない人へ
+$Q_1$（第1四分位数）、$Q_3$（第3四分位数）、$\text{IQR}$（四分位範囲）については、**このあとの [SL 4.2](sl-4-2.qmd#cumfreq) と [SL 4.3](sl-4-3.qmd#dispersion) を参考にしてください。**
+
+- **[SL 4.2](sl-4-2.qmd#cumfreq)** … 累積度数グラフから $Q_1$、$Q_3$ を読み取る方法と、箱ひげ図
+- **[SL 4.3](sl-4-3.qmd#dispersion)** … $\text{IQR}$ が散らばりの尺度として何を表しているか
+
+**いまの段階では、次の2つだけ分かっていれば足ります。**
+
+- $Q_1$ と $Q_3$ は、データを小さい順に並べて**4等分したときの境目**（電卓が出してくれます）
+- $\text{IQR} = Q_3 - Q_1$
+:::
+
+#### 手順は4つです
+
+1. $Q_1$ と $Q_3$ を出す（電卓の One-Variable Statistics）
+2. $\text{IQR} = Q_3 - Q_1$（公式集にあります）
+3. $1.5 \times \text{IQR}$ を計算する
+4. $Q_1$ から引いた値、$Q_3$ に足した値を出して、**その外側にあるデータを探す**
+
+::: {.callout-important}
+## 平均から測るのではありません
+$1.5 \times \text{IQR}$ を測る**起点は $Q_1$ と $Q_3$** です。**平均（mean）ではありません。**
+
+外れ値があると平均そのものが引っぱられてしまうので、起点には使えないのです。$Q_1$ と $Q_3$ は、外れ値があってもほとんど動きません。
+:::
+
+#### 外れ値は、捨てるとはかぎりません
+
+ここが、この項目で一番大事なところです。シラバスにこう書かれています。
+
+> Awareness that, in context, some outliers are a valid part of the sample but some outlying data items may be an error in the sample.
+
+**外れ値には2種類あります。**
+
+| | どういうものか | どうするか |
+|---|---|---|
+| **本物の値** | 珍しいけれど、実際にそうだった | **残す** |
+| **記録の間違い** | 打ち間違い、単位の取り違え | 直すか、**除く** |
+
+: 2種類の外れ値 {#tbl-sl41-outlier-kind}
+
+たとえばクラスの身長に $196$ cm が1つあったとします。**背の高い生徒が実際にいるなら、それは本物**です。捨ててはいけません。
+
+一方、$15$ cm があったら、**$150$ cm の打ち間違い**でしょう。人の身長が $15$ cm ということはありません。
+
+**どちらなのかは、計算では決まりません。** 問題の文脈から判断します。だから `Comment on` や `Explain` で聞かれます。
+
+## Why it works
+
+:::: {.callout-note collapse="true" appearance="simple"}
+## クリックすると開きます
+ここでは、**なぜ $1.5$ 倍なのか**だけを見ておきます。
+
+$\text{IQR}$ は、**まん中の $50\%$ がどれくらいの幅に収まっているか**を表しています。つまり「このデータのふつうのばらつき」の目安です。
+
+その**さらに $1.5$ 倍ぶん外側**まで出たら、さすがに珍しい ── というのが、この決まりの考え方です。
+
+$1.5$ という数字に深い理由はなく、**使いやすいように決められた約束**です。ただ、よくできた数字ではあります。もしデータが normal distribution（正規分布、SL 4.9）に近ければ、この決まりで外れ値になるのは**全体の約 $0.7\%$**、およそ $143$ 個に1個だけです。
+
+**「めったに出ないが、出たときは見に行く価値がある」**という、ちょうどよい厳しさになっています。
+
+なお、**この $0.7\%$ という数字を試験で使うことはありません。** $1.5$ 倍という決まりを正しく使えれば十分です。
+::::
+
+## Worked examples
+
+::: {.callout-note appearance="simple"}
+問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
+:::
+
+::: {#exm-sl41-pop}
+[A researcher wants to find the average number of hours per week that students at a school of $1500$ students spend on homework. She asks $60$ students.]{.q-en}
+
+**(a)** [State the population and the sample.]{.q-en}
+
+**(b)** [State whether the number of hours is discrete or continuous data.]{.q-en}
+
+**(c)** [Give one reason why the researcher did not ask every student.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある研究者が、生徒数 $1500$ 人の学校で、生徒が1週間に宿題に使う平均時間を調べたいと考えています。彼女は $60$ 人に質問しました。
+
+**(a)** 母集団（population）と標本（sample）を答えなさい。
+
+**(b)** その時間数が discrete データか continuous データかを答えなさい。
+
+**(c)** 全員に質問しなかった理由を1つ挙げなさい。
+
+（`State` は「短く答える。理由は不要」、`Give one reason` は「理由を1つ書く」という指示です。）
+
+</details>
+
+---
+
+**(a)** **知りたい相手の全部**が population です（[population と sample](#population-sample)）。
+
+研究者が知りたいのは「この学校の生徒」の宿題時間なので、population は **$1500$ 人全員**です。実際に聞いたのは $60$ 人なので、そちらが sample です。
+
+**「$1500$」「$60$」と数字だけ書かないでください。** 何の $1500$ なのかを言葉で書きます。
+
+**(b)** 時間は**測るもの**です（[discrete と continuous](#discrete-continuous)）。$3$ 時間と $4$ 時間のあいだに $3.5$ 時間も $3.75$ 時間もあります。ですから **continuous** です。
+
+**(c)** 理由は1つで構いません。$1500$ 人に聞くのは時間がかかりすぎる、というのが一番素直です。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** *Population: all $1500$ students at the school. Sample: the $60$ students she asked.*
+
+**(b)** *Continuous.*
+
+**(c)** *Asking all $1500$ students would take too much time.*
+:::
+:::
+
+::: {#exm-sl41-methods}
+[For each of the following, state the sampling method used.]{.q-en}
+
+**(a)** [A teacher puts all $600$ student names into a computer and uses it to select $30$ names at random.]{.q-en}
+
+**(b)** [A reporter stands outside a shopping centre and interviews the first $50$ people who walk past.]{.q-en}
+
+**(c)** [A factory tests every $20$th item that comes off the production line.]{.q-en}
+
+**(d)** [A researcher decides to interview $40$ men and $40$ women, and stops interviewing men once she has reached $40$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次のそれぞれについて、使われている sampling method（標本の取り方）を答えなさい。
+
+**(a)** ある先生が $600$ 人の生徒の名前をすべてコンピュータに入れ、そこから無作為に $30$ 人を選びます。
+
+**(b)** ある記者がショッピングセンターの外に立ち、通りかかった最初の $50$ 人に取材します。
+
+**(c)** ある工場が、生産ラインから出てくる $20$ 個ごとに1個を検査します。
+
+**(d)** ある研究者が男性 $40$ 人と女性 $40$ 人に取材すると決め、男性が $40$ 人に達したところで男性への取材をやめます。
+
+</details>
+
+---
+
+[5つの方法の表](#sampling-methods)と見くらべながら読んでください。
+
+**(a)** 全員をコンピュータに入れて、そこから無作為に選んでいます。**全員が選ばれる可能性を等しく持っている**ので **simple random sampling** です。
+
+**(b)** 「通りかかった最初の $50$ 人」── **手近な人に聞いている**だけです。**convenience sampling** です。
+
+**(c)** 「$20$ 個ごとに1個」── **一定間隔**で選んでいます。**systematic sampling** です。
+
+**(d)** ここが迷うところです。**男女それぞれ人数を決めて、その数に達したらやめる**というやり方です。
+
+**無作為に選ぶという話がどこにも出てきません。** ですから stratified ではなく **quota sampling** です（[quota と stratified の違い](#quota-strat)）。
+
+もし「男性 $40$ 人を、全男性の名簿から無作為に選ぶ」と書いてあれば stratified でした。**「無作為」の一言があるかどうか**を探してください。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** *Simple random sampling.*
+
+**(b)** *Convenience sampling.*
+
+**(c)** *Systematic sampling.*
+
+**(d)** *Quota sampling.*
+:::
+:::
+
+::: {#exm-sl41-stratified}
+[A school has $1500$ students, as shown in the table.]{.q-en}
+
+| Grade | Number of students |
+|---|---|
+| 10 | 500 |
+| 11 | 600 |
+| 12 | 400 |
+
+: Students in each grade {#tbl-sl41-school}
+
+[The principal wants to take a stratified sample of $60$ students.]{.q-en}
+
+**(a)** [Find the number of students that should be selected from each grade.]{.q-en}
+
+**(b)** [Explain why a stratified sample is better than a convenience sample in this situation.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある学校の生徒数は、表のとおり $1500$ 人です。表の見出しは `Grade` が「学年」、`Number of students` が「生徒数」です。
+
+校長先生は、$60$ 人の stratified sample（層化抽出による標本）を取りたいと考えています。
+
+**(a)** 各学年から選ぶべき生徒の人数を求めなさい。
+
+**(b)** この場面で、stratified sample が convenience sample よりも優れている理由を説明しなさい。
+
+</details>
+
+---
+
+**(a)** stratified sampling は、**もとの割合をそのまま使います**（[計算のしかた](#stratified-calc)）。
+
+Grade 10 は $1500$ 人のうち $500$ 人なので、$60$ 人のうちの
+
+$$
+\frac{500}{1500} \times 60 = \frac{1}{3} \times 60 = 20
+$$
+
+同じように、
+
+$$
+\text{Grade 11} : \quad \frac{600}{1500} \times 60 = 24
+$$
+
+$$
+\text{Grade 12} : \quad \frac{400}{1500} \times 60 = 16
+$$
+
+**必ず合計を確かめます。** $20 + 24 + 16 = 60$ ✓
+
+**(b)** `Explain why` なので、**言葉で理由を書きます。**
+
+stratified の強みは「各学年が正しい割合で入る」ことです。convenience だと、たまたま声をかけた場所にいた学年ばかりになってしまいます。
+
+**片方をほめるだけでなく、もう片方の何が問題かも書く**と、理由として完成します。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)**
+$$\text{Grade 10}: \ \frac{500}{1500} \times 60 = 20$$
+$$\text{Grade 11}: \ \frac{600}{1500} \times 60 = 24$$
+$$\text{Grade 12}: \ \frac{400}{1500} \times 60 = 16$$
+
+Check: $20 + 24 + 16 = 60$ ✓
+
+**(b)** *A stratified sample includes students from each grade in the same proportion as the whole school, so every grade is represented fairly. A convenience sample would only include students who happened to be nearby, which may over-represent one grade.*
+:::
+:::
+
+::: {#exm-sl41-outlier}
+[The waiting times, in minutes, of $11$ patients at a clinic are]{.q-en}
+
+$$
+4, \quad 6, \quad 7, \quad 9, \quad 10, \quad 12, \quad 13, \quad 15, \quad 17, \quad 19, \quad 45 .
+$$
+
+**(a)** [Find $Q_1$, $Q_3$ and the interquartile range.]{.q-en}
+
+**(b)** [Determine whether any of the waiting times are outliers.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある診療所での、患者 $11$ 人の待ち時間（分）は次のとおりです。
+
+$$
+4, \quad 6, \quad 7, \quad 9, \quad 10, \quad 12, \quad 13, \quad 15, \quad 17, \quad 19, \quad 45
+$$
+
+**(a)** $Q_1$、$Q_3$、四分位範囲（interquartile range）を求めなさい。
+
+**(b)** 外れ値（outlier）があるかどうかを判定しなさい。
+
+（`Determine` は「求めた上で、なぜそう言えるかを示す」という指示です。判定の根拠まで書きます。）
+
+</details>
+
+---
+
+**(a)** 電卓の One-Variable Statistics に入れると、$Q_1$ と $Q_3$ が出ます（[GDCの使い方](#onevar)）。**この $2$ つが、(b) で使う途中結果**です。
+
+$$
+Q_1 = 7, \qquad Q_3 = 17
+$$
+
+公式集の式で、
+
+$$
+\text{IQR} = Q_3 - Q_1 = 17 - 7 = 10
+$$
+
+**(b)** [4つの手順](#outliers)のとおりに進めます。
+
+$$
+1.5 \times \text{IQR} = 1.5 \times 10 = 15
+$$
+
+さかい目を2つ出します。
+
+$$
+Q_1 - 15 = 7 - 15 = -8
+$$
+
+$$
+Q_3 + 15 = 17 + 15 = 32
+$$
+
+つまり、**$-8$ より小さいか、$32$ より大きい**値が外れ値です。
+
+データを見ると、$32$ を超えているのは **$45$ だけ**です。一番小さい $4$ は $-8$ より大きいので、外れ値ではありません。
+
+**$-8$ という数が出ても気にしないでください。** 待ち時間が負になることはないので、**下側には外れ値がありえない**というだけの意味です。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** $Q_1 = 7$, $Q_3 = 17$
+
+$$\text{IQR} = 17 - 7 = 10$$
+
+**(b)** $1.5 \times \text{IQR} = 15$
+
+$$Q_1 - 15 = -8, \qquad Q_3 + 15 = 32$$
+
+*$45 > 32$, so $45$ is an outlier. No other value lies outside these limits.*
+:::
+:::
+
+::: {#exm-sl41-judge}
+[A teacher records the heights, in cm, of the students in her class. Two of the recorded values, $15$ and $196$, are identified as outliers.]{.q-en}
+
+[Comment on whether each of these values should be removed from the data set.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある先生が、クラスの生徒の身長（cm）を記録しました。記録された値のうち $15$ と $196$ の2つが、外れ値と判定されました。
+
+これらの値をそれぞれデータから取り除くべきかどうかについて、コメントしなさい。
+
+（`Comment on` は「数値の意味を、問題の文脈に沿って言葉で説明する」という指示です。計算ではありません。）
+
+</details>
+
+---
+
+**計算する問題ではありません。** [外れ値には2種類ある](#outliers)という話が、そのまま問われています。
+
+**$15$ cm について。** 人の身長が $15$ cm ということはありえません。**記録の間違い**です。$150$ cm の打ち間違いか、単位を取り違えたのでしょう。**除くか、正しい値に直します。**
+
+**$196$ cm について。** 高いですが、**実際にありえる身長**です。背の高い生徒が本当にいるのかもしれません。**本物の値なら残します。**
+
+**「外れ値だから捨てる」と機械的に書かないでください。** それがこの設問で見られているところです。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+*$15$ cm is not a possible height for a student, so it is an error in recording the data. It should be corrected or removed.*
+
+*$196$ cm is unusually tall but it is a possible height, so it is likely to be a valid part of the sample. It should be kept.*
+:::
+:::
+
+## Common errors
+
+::: {.callout-warning}
+## population と sample を数字だけで答える
+「$1500$」「$60$」とだけ書く答案です。
+
+**何の $1500$ なのかが伝わりません。** `all 1500 students at the school` のように、**言葉で書いてください。**
+:::
+
+::: {.callout-warning}
+## quota と stratified を取り違える
+**一番多い間違いです。**
+
+見分けるポイントは1つだけ ── **「無作為に選ぶ」と書いてあるか**です。
+
+- 書いてある → **stratified**
+- 書いていない（人数が集まるまで手近な人から）→ **quota**
+:::
+
+::: {.callout-warning}
+## systematic を「無作為」だと思ってしまう
+「$20$ 個ごと」は規則的な選び方で、**無作為ではありません。**
+
+名簿の並びに周期があると、かたよります。たとえば「男・女・男・女…」と並んだ名簿から $2$ 人ごとに選ぶと、**全員同じ性別**になってしまいます。
+:::
+
+::: {.callout-warning}
+## bias の説明が「ランダムでないから」で終わる
+これでは点になりません。
+
+**誰が抜けているのか、誰が多く入りすぎているのかを具体的に書いてください。** 「図書館にいた生徒だけ」「朝の通勤客だけ」のように書きます。
+:::
+
+::: {.callout-warning}
+## $1.5 \times \text{IQR}$ を平均から測る
+起点は **$Q_1$ と $Q_3$** です。平均ではありません。
+
+平均は外れ値に引っぱられて動いてしまうので、起点には使えません。
+:::
+
+::: {.callout-warning}
+## 「大きく見えるから外れ値」と決めてしまう
+$1.5 \times \text{IQR}$ で**必ず計算してください。**
+
+見た目が飛び抜けていても、計算するとさかい目の内側に入っていることがあります（演習7がその例です）。
+:::
+
+::: {.callout-warning}
+## 外れ値を無条件に捨てる
+**捨ててよいのは、記録の間違いだと言える場合だけ**です。
+
+本物の値なら残します。捨てるにしても残すにしても、**理由を一言書いてください。**
+:::
+
+## Using your GDC (TI-Nspire CX II)
+
+### データを入れる ── Lists & Spreadsheet {#onevar}
+
+Topic 4 では、このページをずっと使います。**まず開き方を手に覚えさせてください。**
+
+```
+ctrl + doc → 4: Add Lists & Spreadsheet
+```
+
+一番上の**グレーの行に列の名前**を入れます。`time` のように、意味の分かる名前にしてください。
+
+その下に、データを1つずつ入れて `enter` で下に進みます。
+
+::: {.callout-warning}
+## 列に名前を付けないと、あとで選べません
+名前を付けずにデータだけ入れると、統計メニューで**どの列を使うか指定できません。**
+
+**必ず一番上のグレーの行に名前を入れてから**、データを打ち込んでください。
+:::
+
+### $Q_1$ と $Q_3$ を出す ── One-Variable Statistics
+
+```
+menu → Statistics → Stat Calculations → One-Variable Statistics
+```
+
+`Num of Lists` は **1** です。次の画面で `X1 List` に列の名前（`time` など）を選びます。他の欄はそのままで `OK` です。
+
+結果が表の形で出てきます。この項目で使うのは次の3つです。
+
+| 表示 | 意味 |
+|---|---|
+| `MedianX` | 中央値 |
+| `Q1X` | 第1四分位数 $Q_1$ |
+| `Q3X` | 第3四分位数 $Q_3$ |
+
+: One-Variable Statistics の読み方 {#tbl-sl41-gdc}
+
+**$\text{IQR}$ は出てきません。** $Q_3 - Q_1$ を自分で引いてください。
+
+::: {.callout-note}
+## $\sigma_x$ と $s_x$ が並んで出てきます
+同じ画面に $\sigma_x$ と $s_x$ という**2つの標準偏差**が出ます。この項目では使いませんが、**SL 4.3 でどちらを書くかが問われます。**
+
+このページの冒頭に書いた `the data set will be considered to be the population` が、そこで効いてきます。**いまは「2つ出てくる」ことだけ見ておいてください。**
+:::
+
+### 外れ値を目で確かめる ── 箱ひげ図
+
+計算した結果が合っているかは、**箱ひげ図で見ると早い**です。
+
+```
+ctrl + doc → 5: Add Data & Statistics
+```
+
+下の軸をクリックして列を選び、
+
+```
+menu → Plot Type → Box Plot
+```
+
+TI-Nspire は**外れ値を箱ひげから離れた点として表示します。** 手で計算した結果と点の位置が合っているか、**目で確かめてください。**
+
+**ただし答案には、計算のほうを書きます。** グラフは検算に使うものです。
+
+### 無作為に選ぶ ── `randInt`
+
+simple random sampling を実際にやってみることもできます。Calculator ページで、
+
+```
+randInt(1, 600, 30)
+```
+
+$1$ から $600$ までの整数を $30$ 個返します。名簿に番号を振っておけば、これで選べます。
+
+::: {.callout-note}
+## 同じ番号が出ることがあります
+`randInt` は**同じ数を2回返すことがあります。** 実際に標本を作るなら、重複した番号は捨てて引き直します。
+
+**試験でこの操作を求められることはほとんどありません。** 「コンピュータで乱数を使う」とはこういうことだ、と分かれば十分です。
+:::
+
+## Exercises
+
+::: {.callout-note appearance="simple"}
+各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
+
+まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
+:::
+
+::: {.exercise-block}
+
+[1]{.ex-no} [A company has $4000$ employees. The manager asks $200$ of them about their travel to work.]{.q-en}
+
+**(a)** [State the population.]{.q-en}
+
+**(b)** [State the sample.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある会社には $4000$ 人の従業員がいます。部長はそのうち $200$ 人に、通勤について質問しました。
+
+**(a)** 母集団を答えなさい。
+
+**(b)** 標本を答えなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** *All $4000$ employees of the company.*
+
+**(b)** *The $200$ employees the manager asked.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**知りたい相手の全部**が population です。部長が知りたいのは会社全体の通勤の様子なので、$4000$ 人全員が population になります。
+
+**数字だけ書かないでください。** 「$4000$」ではなく「会社の従業員 $4000$ 人全員」と言葉で書きます。
+:::
+
+::: {.ex-sep}
+:::
+
+[2]{.ex-no} [State whether each of the following is discrete or continuous data.]{.q-en}
+
+**(a)** [The number of cars in a car park]{.q-en}
+
+**(b)** [The mass of a letter]{.q-en}
+
+**(c)** [The time taken to run $100$ m]{.q-en}
+
+**(d)** [The number of goals scored in a match]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次のそれぞれが discrete データか continuous データかを答えなさい。
+
+**(a)** 駐車場にある車の台数
+
+**(b)** 手紙の重さ
+
+**(c)** $100$ m を走るのにかかった時間
+
+**(d)** 試合で入ったゴールの数
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** *Discrete.* **(b)** *Continuous.* **(c)** *Continuous.* **(d)** *Discrete.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**数えるものが discrete、測るものが continuous** です。
+
+**(a)** 車は $1$ 台、$2$ 台と数えます。$2.5$ 台はありません。
+
+**(b)** 重さは測るものです。$20$ g と $21$ g のあいだに $20.4$ g があります。
+
+**(c)** 時間も測るものです。$9.58$ 秒のように、いくらでも細かくなります。
+
+**(d)** ゴールは数えます。$1.5$ 点は入りません。
+:::
+
+::: {.ex-sep}
+:::
+
+[3]{.ex-no} [State the sampling method used in each of the following.]{.q-en}
+
+**(a)** [A librarian selects every $15$th book on a shelf to check its condition.]{.q-en}
+
+**(b)** [A student asks his own classmates about their favourite sport.]{.q-en}
+
+**(c)** [A company gives each employee a number and uses a random number generator to choose $50$ numbers.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次のそれぞれで使われている sampling method を答えなさい。
+
+**(a)** ある司書が、棚の $15$ 冊ごとに1冊を選んで状態を確認します。
+
+**(b)** ある生徒が、自分のクラスメイトに好きなスポーツを聞きます。
+
+**(c)** ある会社が従業員1人ずつに番号を付け、乱数発生器で $50$ 個の番号を選びます。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** *Systematic sampling.* **(b)** *Convenience sampling.* **(c)** *Simple random sampling.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** 「$15$ 冊ごと」＝**一定間隔**なので systematic です。
+
+**(b)** 自分のクラスメイト＝**一番手近な人**です。convenience です。
+
+**(c)** 全員に番号を付けて乱数で選んでいるので、**全員が等しく選ばれる可能性**があります。simple random です。
+:::
+
+::: {.ex-sep}
+:::
+
+[4]{.ex-no} [A sports club has $245$ members: $98$ junior, $84$ senior and $63$ veteran. A stratified sample of $35$ members is to be taken.]{.q-en}
+
+[Find the number of members to be selected from each group.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+あるスポーツクラブには $245$ 人の会員がいます。内訳は junior が $98$ 人、senior が $84$ 人、veteran が $63$ 人です。ここから $35$ 人の stratified sample を取ります。
+
+各グループから選ぶ人数を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$\text{Junior}: \ \frac{98}{245} \times 35 = 14$$
+$$\text{Senior}: \ \frac{84}{245} \times 35 = 12$$
+$$\text{Veteran}: \ \frac{63}{245} \times 35 = 9$$
+
+Check: $14 + 12 + 9 = 35$ ✓
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**もとの割合をそのまま使うだけ**です（[計算のしかた](#stratified-calc)）。
+
+$$\frac{\text{そのグループの人数}}{245} \times 35$$
+
+を3回やります。電卓に入れるだけなので、計算そのものでは差がつきません。
+
+**最後に足して $35$ になるか必ず確かめてください。** ここが合っていないと、どこかで計算を間違えています。
+
+この問題はちょうど割り切れますが、**割り切れないこともあります。** そのときは[第3節の手順](#stratified-calc)のとおり、切り捨ててから、小数部分の大きいグループに $1$ 人ずつ足して合計を合わせます。
+:::
+
+::: {.ex-sep}
+:::
+
+[5]{.ex-no} [A school has $1200$ students. A systematic sample of $40$ students is to be taken from an alphabetical list.]{.q-en}
+
+**(a)** [Find the sampling interval.]{.q-en}
+
+**(b)** [Explain how the first student should be chosen.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある学校には $1200$ 人の生徒がいます。名簿（アルファベット順）から $40$ 人の systematic sample を取ります。
+
+**(a)** 抽出間隔を求めなさい。
+
+**(b)** 最初の1人をどのように選ぶべきかを説明しなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$k = \frac{1200}{40} = 30$$
+
+**(b)** *The first student should be chosen at random from the first $30$ students on the list. Every $30$th student after that is then selected.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** $1200$ 人から $40$ 人なので、$30$ 人ごとに1人です。
+
+**(b)** ここが落としやすいところです。**$1$ 番目の生徒から始めてはいけません。**
+
+$1$ 番から始めると決めてしまうと、選ばれる人が最初から決まってしまい、無作為ではなくなります。**$1$ から $30$ の中から無作為に決める**、と書いてください。
+:::
+
+::: {.ex-sep}
+:::
+
+[6]{.ex-no} [A researcher wants to find out how much time people in a city spend exercising each week. She stands outside a gym at $7$ am and asks people as they arrive.]{.q-en}
+
+[Explain why her sample is likely to be biased.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある研究者が、ある都市の人々が週にどれくらい運動しているかを調べたいと考えています。彼女は午前7時にジムの外に立ち、来た人に質問します。
+
+彼女の標本にかたよりがあると考えられる理由を説明しなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+*The sample only includes people who go to a gym, so they are likely to exercise much more than the average person in the city. People who do not exercise at all are not included. The sample does not represent everyone in the city.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+[bias の書き方](#bias)の**2文の型**を使います。
+
+1. **なぜかたよるのか** … ジムに来る人しか聞いていない。運動しない人が入っていない
+2. **だからどうなるのか** … 都市全体を代表していない
+
+**「ランダムでないから」だけでは点になりません。** 「**誰が抜けているのか**」を書くのが大事です。ここでは「まったく運動しない人」が完全に抜けています。
+
+午前7時という時刻も理由になります（朝に運動する人だけになる）。**理由は1つ書ければ十分**ですが、2つ書いても構いません。
+:::
+
+::: {.ex-sep}
+:::
+
+[7]{.ex-no} [The test scores of $11$ students are]{.q-en}
+
+$$
+32, \quad 45, \quad 48, \quad 52, \quad 55, \quad 58, \quad 60, \quad 63, \quad 66, \quad 70, \quad 88 .
+$$
+
+[Determine whether $88$ is an outlier.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$11$ 人の生徒のテストの点は次のとおりです。
+
+$$
+32, \quad 45, \quad 48, \quad 52, \quad 55, \quad 58, \quad 60, \quad 63, \quad 66, \quad 70, \quad 88
+$$
+
+$88$ が外れ値かどうかを判定しなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$Q_1 = 48, \qquad Q_3 = 66$$
+$$\text{IQR} = 66 - 48 = 18$$
+$$1.5 \times \text{IQR} = 27$$
+$$Q_3 + 27 = 66 + 27 = 93$$
+
+*$88 < 93$, so $88$ is not an outlier.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**この問題は「外れ値ではない」が答えです。**
+
+$88$ は他の点から離れて見えますが、**計算するとさかい目の $93$ に届いていません。**
+
+見た目で「飛び抜けているから外れ値」と決めてしまうと間違えます。**必ず $1.5 \times \text{IQR}$ で計算してください。**
+
+$Q_1$ と $Q_3$ は電卓の One-Variable Statistics で出します。$Q_3 + 27 = 93$ まで書けば、$88 < 93$ の一言で結論が付きます。
+
+**`Determine` なので、根拠の数字を答案に書いてください。** 「外れ値ではない」だけでは点が出ません。
+:::
+
+::: {.ex-sep}
+:::
+
+[8]{.ex-no} [The masses, in grams, of $11$ apples are]{.q-en}
+
+$$
+2, \quad 21, \quad 24, \quad 26, \quad 28, \quad 30, \quad 33, \quad 35, \quad 37, \quad 40, \quad 42 .
+$$
+
+**(a)** [Find the interquartile range.]{.q-en}
+
+**(b)** [Determine whether there are any outliers.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+りんご $11$ 個の重さ（グラム）は次のとおりです。
+
+$$
+2, \quad 21, \quad 24, \quad 26, \quad 28, \quad 30, \quad 33, \quad 35, \quad 37, \quad 40, \quad 42
+$$
+
+**(a)** 四分位範囲を求めなさい。
+
+**(b)** 外れ値があるかどうかを判定しなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** $Q_1 = 24$, $Q_3 = 37$
+
+$$\text{IQR} = 37 - 24 = 13$$
+
+**(b)** $1.5 \times \text{IQR} = 19.5$
+
+$$Q_1 - 19.5 = 24 - 19.5 = 4.5$$
+$$Q_3 + 19.5 = 37 + 19.5 = 56.5$$
+
+*$2 < 4.5$, so $2$ is an outlier. No value is greater than $56.5$.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+今度は**下側**に外れ値があります。
+
+$1.5 \times 13 = 19.5$ を、$Q_1$ から**引き**、$Q_3$ に**足します**。**両方やってください。** 片方だけだと見落とします。
+
+$2$ g のりんごはありえないので、これは**記録の間違い**の可能性が高いです。$20$ g の打ち間違いかもしれません。もし `Comment on` と聞かれたら、そこまで書きます。
+
+演習7と合わせて見ると、**大きい側にも小さい側にも外れ値はありうる**こと、そして**見た目ではなく計算で決まる**ことが分かると思います。
+:::
+
+::: {.ex-sep}
+:::
+
+[9]{.ex-no} [A scientist measures the time, in seconds, that $50$ mice take to complete a maze. One mouse has a time that is identified as an outlier. The scientist finds that this mouse stopped to rest during the maze.]{.q-en}
+
+[Comment on whether this value should be removed from the data set.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある科学者が、$50$ 匹のネズミが迷路を抜けるのにかかった時間（秒）を測りました。1匹の時間が外れ値と判定されました。科学者は、そのネズミが迷路の途中で休んでいたことを見つけました。
+
+この値をデータから取り除くべきかどうかについて、コメントしなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+*The value is not a recording error, since the time was measured correctly. The mouse really did take that long. It is a valid part of the sample and should be kept.*
+
+*However, if the scientist only wants to measure how fast mice can complete the maze, she could report the result both with and without this value, and explain why.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**この値は「記録の間違い」ではありません。** 測り方は正しく、そのネズミは本当にその時間がかかったのです。
+
+ですから、**基本は「残す」**です（[2種類の外れ値](#outliers)）。
+
+「休んだから」という理由で捨ててしまうと、**都合の悪いデータを消したことになります。** それは統計として正しい態度ではありません。
+
+解答例の2段落目は書かなくても正解ですが、**「両方の結果を示して、理由を説明する」**というのが実際の研究のやり方です。`Comment on` は考えを見る設問なので、ここまで書けると強くなります。
+
+**捨てるにしても残すにしても、理由を必ず書いてください。**
+:::
+
+::: {.ex-sep}
+:::
+
+[10]{.ex-no} [A town council wants to survey $100$ residents about a new park. The town has $8000$ residents living in three districts: North ($3200$), Central ($2800$) and South ($2000$).]{.q-en}
+
+**(a)** [Find the number of residents that should be surveyed in each district if a stratified sample is used.]{.q-en}
+
+**(b)** [The council instead decides to ask the first $100$ people who visit the town hall. State the name of this sampling method and give one disadvantage of it.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある町議会が、新しい公園について住民 $100$ 人に調査をしたいと考えています。町には $8000$ 人の住民がいて、3つの地区に分かれています。North が $3200$ 人、Central が $2800$ 人、South が $2000$ 人です。
+
+**(a)** stratified sample を使う場合、各地区で調査すべき住民の人数を求めなさい。
+
+**(b)** 町議会はかわりに、町役場を訪れた最初の $100$ 人に質問することにしました。この sampling method の名前を答え、その短所を1つ挙げなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$\text{North}: \ \frac{3200}{8000} \times 100 = 40$$
+$$\text{Central}: \ \frac{2800}{8000} \times 100 = 35$$
+$$\text{South}: \ \frac{2000}{8000} \times 100 = 25$$
+
+Check: $40 + 35 + 25 = 100$ ✓
+
+**(b)** *Convenience sampling.*
+
+*People who visit the town hall are not representative of all residents in the town, so the sample is likely to be biased.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** 演習4と同じです。$\dfrac{\text{地区の人数}}{8000} \times 100$ を3回。合計が $100$ になることを確かめます。
+
+**(b)** 「訪れた最初の $100$ 人」＝**手近な人**なので convenience sampling です。
+
+短所は「かたよる」ですが、**それだけでは足りません。** 「なぜかたよるのか」を書きます。町役場に来る人は、たまたま用事があった人や、時間に余裕のある人にかたよります。町全体を代表していません。
+
+**`give one disadvantage` は1つで十分**です。たくさん書いても点は増えません。1つを、理由まで含めて書いてください。
+:::
+
+:::

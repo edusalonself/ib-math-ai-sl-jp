@@ -27,8 +27,7 @@
 
 `Create repository` を押します。
 
-次の画面に出てくる URL（`https://github.com/○○○/ib-math-ai-sl-jp.git`）を控えてください。
-`○○○` があなたの GitHub ユーザー名です。
+次の画面に出てくる URL は `https://github.com/edusalonself/ib-math-ai-sl-jp.git` になります。
 
 ### A-2. Positron のターミナルで、手元のフォルダをつなぐ
 
@@ -38,7 +37,7 @@
 Positron でこのフォルダを開き、**ターミナル**（Terminal タブ）で1行ずつ実行します。
 
 ```bash
-git remote add origin https://github.com/○○○/ib-math-ai-sl-jp.git
+git remote add origin https://github.com/edusalonself/ib-math-ai-sl-jp.git
 git branch -M main
 git push -u origin main
 ```
@@ -62,7 +61,7 @@ quarto publish gh-pages
 終わると URL が表示されます。
 
 ```
-https://○○○.github.io/ib-math-ai-sl-jp/
+https://edusalonself.github.io/ib-math-ai-sl-jp/
 ```
 
 **この URL が本のアドレスです。**
@@ -112,54 +111,64 @@ quarto publish gh-pages
 
 ## D-2. 下書きを手元だけで見る
 
-**まだ公開したくないページ**は `_quarto-draft.yml` に書いてあります。
+**まだ書きかけのコース**（AI HL / AA SL / AA HL）は `_quarto-draft.yml` に書いてあります。
 
 ```bash
-quarto preview --profile draft     # ← 下書きも見える
-quarto preview                     # ← 公開されるものだけ
+quarto preview --profile draft     # ← 書きかけのコースも見える
+quarto preview                     # ← 公開するものだけ
 ```
 
-`--profile draft` を付けると、サイドバーの一番下に
-**「下書き（まだ公開していません）」**という区分が出て、その中に入ります。
+`--profile draft` を付けると、ナビバーに **AI HL / AA SL / AA HL** と
+**「AI と AA、どちらを取るか」** が増え、それぞれのサイドバーが見られます。
 
 **`quarto publish gh-pages` には profile を付けません。** ですから
-**下書きが誤って公開されることはありません。**
+**書きかけのコースが誤って公開されることはありません。**
 
-公開する段になったら、
-
-1. `_quarto-draft.yml` からその行を消す
-2. `_quarto.yml` の該当行のコメント（`# `）を外す
-3. `index.qmd` の「いまは執筆中です」の項目数を直す
-
-の3つをやります。
+そのコースを公開する段になったら、`_quarto-draft.yml` から
+navbar の項目と sidebar のかたまりを切り取って、`_quarto.yml` の
+該当箇所に貼ります。
 
 ---
 
-### 新しい項目を公開するときに忘れやすいこと
+### AI SL について（2026年8月に変わりました）
 
-`_quarto.yml` の該当行が **コメントアウトされたまま**だと、書いてもサイドバーに出ません。
+**AI SL の39項目は、もう `_quarto.yml` に入っています。**
+以前は Topic 2〜5 を `_quarto-draft.yml` に隠していましたが、
+全項目を無料公開する方針に決めたので、その仕組みは畳みました。
+
+ただし **公開はまだしていません。** 上の `quarto publish gh-pages` を
+実行するまで、オンラインに出ているのは Topic 1 の8項目だけです。
+手元でビルドしたものと、公開されているものは、いまは違います。
+
+---
+
+### 新しい項目を足すときに忘れやすいこと
+
+`_quarto.yml` の sidebar に行を足さないと、ファイルを書いてもサイドバーに出ません。
+**パスの先頭にコース名が付く**ことに注意してください。
 
 ```yaml
-        # - file: 02-functions/sl-2-1.qmd
-        #   text: "SL 2.1 — Equations of a straight line"
+            - file: ai-sl/02-functions/sl-2-1.qmd
+              text: "SL 2.1 — Equations of a straight line"
 ```
 
-先頭の `# ` を2行とも外してください。
-その Topic 全体がコメントアウトされている場合は、`- part:` の行も戻します。
+図を作る Python も、コースごとに分けてあります。
 
-`index.qmd` の「いまは執筆中です」の項目数も、あわせて直します。
+```bash
+python3 figs/ai-sl/make_sl_5_8.py     # → ai-sl/05-calculus/img/*.svg
+```
 
 ---
 
 ## E. あとで：math.selfsg.com にする
 
-URL を `○○○.github.io/...` から `math.selfsg.com` に変えられます。無料です。
+URL を `edusalonself.github.io/...` から `math.selfsg.com` に変えられます。無料です。
 
 1. GitHub の `リポジトリ → Settings → Pages → Custom domain` に `math.selfsg.com` と入れて `Save`
 2. Wix の管理画面で **ドメイン → ドメインのアクション → DNSレコードを管理**
 3. **CNAME（エイリアス）** に1件追加
    - ホスト名 … `math`
-   - 値 … `○○○.github.io`
+   - 値 … `edusalonself.github.io`
 4. 保存（反映に最大48時間）
 5. GitHub Pages の画面に戻り、**Enforce HTTPS** にチェック
 6. Wix のメニューのリンク先を、新しい URL に差し替える
@@ -174,7 +183,7 @@ URL を `○○○.github.io/...` から `math.selfsg.com` に変えられます
 `.gitignore` で次のものを除外しています。**この設定は消さないでください。**
 
 - **`*.pdf`** … IBO のシラバスと公式集。**再配布は著作権に触れます。**
-- `_book/`、`.quarto/` … 生成物（`quarto publish` が別ルートで送ります）
+- `_site/`、`.quarto/` … 生成物（`quarto publish` が別ルートで送ります）
 - `*プレビュー.html`、`*_preview.zip` … 手元の確認用
 - `.DS_Store`
 

@@ -1,0 +1,1056 @@
+# SL 1.2 — Arithmetic sequences and series（等差数列と等差級数） {#sec-sl-1-2}
+
+::: {.callout-note}
+## What you should be able to do
+- **arithmetic sequence**（等差数列）とは何かを説明できる。
+- $n$ 番目の項 $u_n$ と、最初の $n$ 項の和 $S_n$ を、公式を使って求められる。
+- 2つの項が与えられたときに、$u_1$ と $d$ を求められる。
+- **sigma notation**（シグマ記号）で書かれた和を計算できる。
+- **simple interest**（単利）などの応用問題を解ける。
+- **実際のデータが完全な等差数列でないとき**に、**common difference**（公差）を近似して予測に使える。
+:::
+
+::: {.callout-important}
+## Formula booklet に載っているもの
+SL 1.2 の欄には、次の2行が印刷されています。
+
+$$
+u_n = u_1 + (n-1)d
+$$
+
+$$
+S_n = \frac{n}{2}\bigl(2u_1 + (n-1)d\bigr) = \frac{n}{2}\bigl(u_1 + u_n\bigr)
+$$
+
+**和の公式は2つの形が並べて書いてあります。** どちらを使ってもかまいません。使い分けは後で説明します。
+
+公式は配られるので、**覚える必要はありません。** 覚えるべきなのは「**どういうときに、どちらを使うか**」です。
+:::
+
+## The idea
+
+**arithmetic sequence**（等差数列）は、となり合う **term**（項）の**差がいつも同じ**数列のことです。
+
+$$
+5, \quad 8, \quad 11, \quad 14, \quad 17, \quad \ldots
+$$
+
+この数列は、いつも $3$ ずつ増えています。この $3$ を **common difference**（公差）といい、$d$ と書きます。最初の項を **first term**（初項）といい、$u_1$ と書きます。
+
+この例では $u_1 = 5$、$d = 3$ です。
+
+### $n$ 番目の項
+
+数列の $n$ 番目の項を、$u_n$ と書きます。$u_{20}$ なら20番目の項です。
+
+100番目の項が知りたいとき、$5, 8, 11, \ldots$ と100回書き出すわけにはいきません。**$u_1$ と $d$ さえ分かっていれば、いきなり $n$ 番目が出せる**というのが、次の公式です。
+
+$$
+u_n = u_1 + (n-1)d
+$$ {#eq-arith-nth}
+
+#### なぜ $n$ ではなく $(n-1)$ なのか
+
+ここが、この項目で一番よく間違えるところです。**先に理由を見ておきましょう。**
+
+$u_1$ から $u_n$ まで進むとき、$d$ を足す回数は $n$ 回ではありません。
+
+$$
+\underbrace{u_1}_{1\text{番目}}
+\xrightarrow{+d} \underbrace{u_2}_{2\text{番目}}
+\xrightarrow{+d} \underbrace{u_3}_{3\text{番目}}
+\xrightarrow{+d} \cdots
+\xrightarrow{+d} \underbrace{u_n}_{n\text{番目}}
+$$
+
+矢印の数を数えてみてください。項が $n$ 個あるとき、矢印は $n-1$ 本です。だから $d$ を足すのは $(n-1)$ 回。これが $(n-1)d$ の正体です。
+
+さっきの $5, 8, 11, 14, 17, \ldots$ で確かめます。$u_1 = 5$、$d = 3$ なので
+
+$$
+u_5 = 5 + (5-1)\times 3 = 5 + 12 = 17 . \quad ✓
+$$
+
+書き出した5番目の項と、ちゃんと一致しました。
+
+::: {.callout-note}
+## 電柱と電線の関係
+電柱が $n$ 本立っているとき、その間に張られた電線は $n-1$ 本です。項が電柱、$d$ が電線だと思ってください。
+
+**$-1$ を忘れるのが、この項目で一番多い間違い**です。理由が分かっていれば忘れません。
+:::
+
+### 最初の $n$ 項の和
+
+数列の項を足したものを **series**（級数、和）といい、最初の $n$ 項の和を $S_n$ と書きます。
+
+$$
+S_n = u_1 + u_2 + u_3 + \cdots + u_n
+$$
+
+これも、1つずつ足していたのでは大変です。**これを公式にしたのが、次のものです。**
+
+$$
+S_n = \frac{n}{2}\bigl(2u_1 + (n-1)d\bigr) = \frac{n}{2}\bigl(u_1 + u_n\bigr)
+$$ {#eq-arith-sum}
+
+**イコールでつないで、2つの形が書いてあります。** どちらも同じもので、使い分けは下のとおりです。なぜこの形になるのかは、次の [Why it works](#why-it-works) で説明します。
+
+::: {.callout-tip}
+## 和の公式は、どちらを使えばいい？
+2つの形は同じものです。使い分けは簡単で、**手元にある情報で決めます。**
+
+| 分かっているもの | 使う形 |
+|---|---|
+| $u_1$ と $d$ | $S_n = \dfrac{n}{2}\bigl(2u_1 + (n-1)d\bigr)$ |
+| $u_1$ と $u_n$（最初と最後） | $S_n = \dfrac{n}{2}\bigl(u_1 + u_n\bigr)$ |
+
+: 和の公式の使い分け {#tbl-which-sum}
+
+「最後の項が分かっているなら右、分かっていないなら左」と覚えてください。
+:::
+
+### sigma notation（シグマ記号） {#sigma-notation}
+
+和を書くときに、$u_1 + u_2 + \cdots + u_n$ と点々で書くかわりに、**$\sum$（sigma、シグマ）** という記号を使うことがあります。試験ではこの形で出ることがよくあるので、ここで読み方だけ確認しておきます。
+
+$$
+\sum_{k=1}^{5} (4k+1)
+$$
+
+これは「**$k$ に $1$ から $5$ まで順に入れて、出てきた数を全部足しなさい**」という意味です。$\sum$ の3か所が、それぞれ次を表しています。
+
+| 場所 | 意味 |
+|---|---|
+| $\sum$ の**下**（$k=1$） | $k$ をいくつから始めるか |
+| $\sum$ の**上**（$5$） | $k$ をいくつまで動かすか |
+| $\sum$ の**右**（$4k+1$） | $k$ から作る式 |
+
+: シグマ記号の読み方 {#tbl-sigma}
+
+実際にやってみましょう。
+
+$$
+k=1: \ 5, \qquad k=2: \ 9, \qquad k=3: \ 13, \qquad k=4: \ 17, \qquad k=5: \ 21
+$$
+
+$$
+\sum_{k=1}^{5}(4k+1) = 5 + 9 + 13 + 17 + 21 = 65
+$$
+
+::: {.callout-tip}
+## $\sum$ が出たら、まず3つ書き出す
+$5, 9, 13, \ldots$ と3つ書けば、**差がいつも $4$** だと分かります。つまりこれは arithmetic sequence なので、和の公式 @eq-arith-sum がそのまま使えます。
+
+慣れてきたら、書き出さなくても分かります。**$k$ の係数が、そのまま $d$ になります。** $\sum(ak+b)$ なら $d = a$ です。$k$ が $1$ 増えると $ak+b$ は $a$ 増えるからです。
+
+**項の数にも注意してください。** $\displaystyle\sum_{k=1}^{15}$ なら $15$ 個ですが、$\displaystyle\sum_{k=0}^{15}$ なら $0$ から数えるので $16$ 個です。1つずれるだけで答えが変わります。
+:::
+
+## Why it works
+
+:::: {.callout-note collapse="true" appearance="simple"}
+## クリックすると開きます
+ここでは、**和の公式 @eq-arith-sum がなぜあの形になるのか**を見ます。$(n-1)$ の理由は、上の [The idea](#the-idea) で説明したとおりです。
+
+$1$ から $100$ までの和を考えてみましょう。
+
+$$
+1 + 2 + 3 + \cdots + 98 + 99 + 100
+$$
+
+**両端からペアを作ります。**
+
+$$
+\underbrace{1 + 100}_{101}, \quad
+\underbrace{2 + 99}_{101}, \quad
+\underbrace{3 + 98}_{101}, \quad \ldots
+$$
+
+どのペアも $101$ になります。これは偶然ではありません。左の数が $1$ ずつ増えると、右の数が $1$ ずつ減るので、**足すと必ず同じ**になるのです。
+
+ペアは $100 \div 2 = 50$ 組できるので、
+
+$$
+1 + 2 + \cdots + 100 = 50 \times 101 = 5050 .
+$$
+
+一般に書くと、ペアの数が $\dfrac{n}{2}$、1組の値が $(u_1 + u_n)$ なので
+
+$$
+S_n = \frac{n}{2}\bigl(u_1 + u_n\bigr) .
+$$
+
+ここに $u_n = u_1 + (n-1)d$ を代入すれば、もう1つの形になります。**2つの公式は、同じ1つの考え方から出ています。**
+::::
+
+## Worked examples
+
+::: {.callout-note appearance="simple"}
+問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
+:::
+
+::: {#exm-arith-basic}
+[An arithmetic sequence has first term $u_1 = 5$ and common difference $d = 3$.]{.q-en}
+
+**(a)** [Find the 20th term of the sequence.]{.q-en}
+
+**(b)** [Find the sum of the first 20 terms.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある arithmetic sequence の first term は $u_1 = 5$、common difference は $d = 3$ です。
+
+**(a)** この数列の20番目の項を求めなさい。
+
+**(b)** 最初の20項の和を求めなさい。
+
+</details>
+
+---
+
+**(a)** @eq-arith-nth に $u_1 = 5$、$d = 3$、$n = 20$ を代入します。
+
+$$
+u_{20} = 5 + (20-1)\times 3 = 5 + 57 = 62
+$$
+
+$19$ であって $20$ ではないことに注意してください。
+
+**(b)** $u_1$ と $d$ が分かっているので、和の公式は左の形を使います。
+
+$$
+S_{20} = \frac{20}{2}\bigl(2\times 5 + (20-1)\times 3\bigr) = 10\,(10 + 57) = 670
+$$
+
+**検算。** (a) で $u_{20} = 62$ が出ているので、右の形でも計算できます。
+
+$$
+S_{20} = \frac{20}{2}(5 + 62) = 10 \times 67 = 670 \quad ✓
+$$
+
+両方で同じ答えが出たら、まず間違っていません。**時間が余ったら、もう一方の形で検算する**のがおすすめです。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)**
+$$u_{20} = 5 + (20-1)(3) = 5 + 57 = 62$$
+
+**(b)**
+$$S_{20} = \frac{20}{2}\bigl(2(5) + (20-1)(3)\bigr) = 10(67) = 670$$
+:::
+:::
+
+::: {#exm-arith-two-terms}
+[In an arithmetic sequence, $u_3 = 11$ and $u_8 = 31$.]{.q-en}
+
+[Find the value of $u_1$ and the value of $d$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある arithmetic sequence で、$u_3 = 11$、$u_8 = 31$ です。
+
+$u_1$ の値と $d$ の値を求めなさい。
+
+</details>
+
+---
+
+**考え方：$u_3$ から $u_8$ まで、$d$ を何回足したか。**
+
+$3$ 番目から $8$ 番目まで進むには、$8 - 3 = 5$ 回足します。その間に値は $31 - 11 = 20$ 増えました。だから
+
+$$
+5d = 20 \qquad \Longrightarrow \qquad d = 4 .
+$$
+
+次に $u_1$ です。$u_3 = 11$ で、$u_1$ から $u_3$ までは $2$ 回足しているので
+
+$$
+u_3 = u_1 + 2d \quad \Longrightarrow \quad 11 = u_1 + 8 \quad \Longrightarrow \quad u_1 = 3 .
+$$
+
+**答え：$u_1 = 3$、$d = 4$**
+
+**検算。** $3, 7, 11, 15, 19, 23, 27, 31$ … 3番目が $11$、8番目が $31$ ✓
+
+::: {.callout-tip}
+## 連立方程式にして、GDC に解かせることもできます
+$u_3$ と $u_8$ を公式で書くと、$u_1$ と $d$ についての**連立方程式**になります。
+
+$$
+\begin{cases}
+u_1 + 2d = 11 \\
+u_1 + 7d = 31
+\end{cases}
+$$
+
+これは電卓が解いてくれます（[GDCの使い方は SL 1.8](sl-1-8.qmd#simeq)）。Calculator ページで、
+
+```
+menu → Algebra → Solve System of Linear Equations
+```
+
+（OS によっては `Simultaneous Equation Solver` という名前です。）
+
+方程式の数は **2**、変数も **2つ**です。
+
+ただし、**電卓では $u_1$ のような添字は入力しにくい**ので、$a$ などの1文字に置きかえるのをおすすめします。
+
+$$
+\begin{cases}
+a + 2d = 11 \\
+a + 7d = 31
+\end{cases}
+$$
+
+変数の欄に `a, d` と入れて解かせれば、$a = 3$、$d = 4$ が出ます。この $a$ が $u_1$ です。
+
+**答案用紙に写すときは、$u_1 = 3$ と書き直すのを忘れないでください。** 電卓の中だけの名前です。
+
+**AI では Paper 1 でも電卓が使えるので、これも正当な解き方です。** 連立方程式を technology で解くことは、SL 1.8 で改めて扱います。
+
+どちらでも構いません。「何回足したか」で考えるほうが速いですが、**式が複雑で自信がないときは、電卓に解かせるほうが確実**です。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$u_8 - u_3 = 5d$$
+$$31 - 11 = 5d \quad \Longrightarrow \quad d = 4$$
+
+$$u_3 = u_1 + 2d \quad \Longrightarrow \quad 11 = u_1 + 8 \quad \Longrightarrow \quad u_1 = 3$$
+:::
+:::
+
+::: {#exm-arith-simple-interest}
+[Taro invests $\$2000$ in an account that pays **simple interest** at an annual rate of $4\%$. With simple interest, the interest earned each year is calculated on the original amount of $\$2000$.]{.q-en}
+
+**(a)** [Find the balance of the account after 1 year, after 2 years and after 3 years.]{.q-en}
+
+**(b)** [Explain why the yearly balances form an arithmetic sequence.]{.q-en}
+
+**(c)** [Find the balance after 10 years.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+太郎さんは $\$2000$ を、年利 $4\%$ の **simple interest**（単利）の口座に預けました。単利では、利息は毎年**元金 $\$2000$ に対して**計算されます。
+
+**(a)** 1年後、2年後、3年後の残高を求めなさい。
+
+**(b)** 毎年の残高が arithmetic sequence になる理由を説明しなさい。
+
+**(c)** 10年後の残高を求めなさい。
+
+</details>
+
+---
+
+::: {.callout-important}
+## 計算の前に：`simple` か `compound` かを確かめる
+金融の問題では、**まずここを読みます。** 見落とすと、最初から違う問題を解くことになります。
+
+- **simple interest**（単利）… 利息はいつも**最初の元金**に対して計算される。毎年**同じ額**ずつ増える → **arithmetic sequence**
+- **compound interest**（複利）… 利息は**そのときの残高**に対して計算される。毎年**同じ割合**で増える → **geometric sequence**
+
+この問題文には `simple interest` と書いてあります。ですから**毎年同じ額ずつ増える**、つまり等差数列として扱います。複利のほうは SL 1.4 で扱います。
+:::
+
+**(a)** 単利なので、利息は毎年ずっと**元金 $\$2000$ に対して**計算されます。その $4\%$ ですから、
+
+$$
+2000 \times 0.04 = \$80
+$$
+
+これが**毎年**加わります。1年後は $2000 + 80$、2年後はそこにもう $80$、という具合です。
+
+| Year | Balance |
+|---|---|
+| 1 | $\$2080$ |
+| 2 | $\$2160$ |
+| 3 | $\$2240$ |
+
+: 単利の残高 {#tbl-simple-interest}
+
+**(b)** (a) で見たとおり、**加わる利息は毎年 $\$80$ で変わりません。** 元金がずっと $\$2000$ のままだからです。
+
+ですから残高はちょうど $\$80$ ずつ増えていきます。となり合う項の差がいつも同じ、これが arithmetic sequence の定義そのものです。$u_1 = 2080$、$d = 80$ となります。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The interest is always calculated on the original $\$2000$, so the account gains $\$80$ every year. The difference between consecutive balances is constant, so the balances form an arithmetic sequence with $u_1 = 2080$ and $d = 80$.*
+:::
+
+**(c)** (b) で $u_1 = 2080$、$d = 80$ が分かりました。あとは @eq-arith-nth に $n = 10$ を入れるだけです。
+
+$$
+u_{10} = 2080 + (10-1)\times 80 = 2080 + 720 = \$2800
+$$
+
+10年後ではなく9回しか足さないのは、$u_1$ が「**1年後**の残高」だからです。$u_1$ が何を指しているのかを、いつも確かめてください。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** Interest per year $= 2000 \times 0.04 = \$80$
+
+$$\text{After 1 year: } \$2080 \qquad \text{After 2 years: } \$2160 \qquad \text{After 3 years: } \$2240$$
+
+**(b)** *The interest is always calculated on the original $\$2000$, so the account gains $\$80$ every year. The difference between consecutive balances is constant, so the balances form an arithmetic sequence with $u_1 = 2080$ and $d = 80$.*
+
+**(c)**
+$$u_{10} = 2080 + (10-1)(80) = 2080 + 720 = \$2800$$
+:::
+:::
+
+::: {#exm-arith-sigma}
+[Find the value of $\displaystyle\sum_{k=1}^{15}(4k+1)$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$\displaystyle\sum_{k=1}^{15}(4k+1)$ の値を求めなさい。
+
+</details>
+
+---
+
+[sigma notation](#sigma-notation) で見たとおり、これは「$k$ に $1$ から $15$ まで順に入れて、全部足しなさい」という意味です。
+
+**まず3つ書き出して**、arithmetic sequence かどうかを確かめます。
+
+$$
+k=1: \ 5, \qquad k=2: \ 9, \qquad k=3: \ 13, \qquad \ldots
+$$
+
+差はいつも $4$ です。等差数列だと分かったので、和の公式が使えます。
+
+必要なものを3つそろえます。**初項** $u_1 = 5$（$k=1$ を入れた値）、**公差** $d = 4$（$k$ の係数）、**項の数** $n = 15$（$k$ が $1$ から $15$ まで動くので15個）。
+
+$$
+S_{15} = \frac{15}{2}\bigl(2\times 5 + (15-1)\times 4\bigr) = \frac{15}{2}(10+56) = \frac{15}{2}\times 66 = 495
+$$
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+$$u_1 = 4(1) + 1 = 5, \quad d = 4, \quad n = 15$$
+
+$$S_{15} = \frac{15}{2}\bigl(2(5) + (15-1)(4)\bigr) = \frac{15}{2}(66) = 495$$
+:::
+:::
+
+::: {#exm-arith-not-perfect}
+[The height of a plant was measured once a week for six weeks. The results are shown in the table below.]{.q-en}
+
+| Week | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|
+| Height (cm) | 152 | 158 | 163 | 169 | 174 | 181 |
+
+: Height of the plant {#tbl-plant}
+
+**(a)** [Show that the heights do not form a perfect arithmetic sequence.]{.q-en}
+
+**(b)** [Find an approximate value for the common difference.]{.q-en}
+
+**(c)** [Use your answer to part (b) to predict the height of the plant in week 10.]{.q-en}
+
+**(d)** [Comment on the reliability of your prediction in part (c).]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある植物の高さを、6週間にわたって毎週1回測りました。結果は上の表のとおりです（表の見出しは Week が「週」、Height (cm) が「高さ、単位 cm」です）。
+
+**(a)** この高さが完全な arithmetic sequence ではないことを示しなさい。
+
+**(b)** common difference のおよその値を求めなさい。
+
+**(c)** (b) の答えを使って、10週目の植物の高さを予測しなさい。
+
+**(d)** (c) の予測がどのくらい信頼できるか、コメントしなさい。
+
+</details>
+
+---
+
+**(a)** となり合う項の差を計算します。
+
+$$
+6, \quad 5, \quad 6, \quad 5, \quad 7
+$$
+
+**差が一定ではありません。** よって完全な arithmetic sequence ではありません。
+
+**(b)** 差の平均をとります。
+
+$$
+d \approx \frac{6+5+6+5+7}{5} = \frac{29}{5} = 5.8
+$$
+
+同じことですが、**最初と最後だけを使っても**求められます。
+
+$$
+d \approx \frac{181 - 152}{6 - 1} = \frac{29}{5} = 5.8
+$$
+
+**(c)** $u_1 = 152$、$d = 5.8$ として
+
+$$
+u_{10} = 152 + (10-1)\times 5.8 = 152 + 52.2 = 204.2 \ \text{cm}
+$$
+
+**(d)** 数値だけでは点になりません。**英語で一文書いてください。**
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The differences are all close to $5.8$, so an arithmetic model fits the data well over these six weeks. However, week 10 is outside the range of the data, so this is an extrapolation and the prediction is less reliable. A real plant will eventually stop growing, so the model cannot continue indefinitely.*
+:::
+
+（差はどれも $5.8$ に近いので、この6週間についてはよく当てはまっています。しかし10週目はデータの外側なので **extrapolation**（外挿）であり、信頼度は下がります。実際の植物はいつか成長が止まるので、この model がずっと続くことはありません。）
+
+::: {.callout-important}
+## この (d) が AI の本体です
+(a)〜(c) は、電卓に入れて計算するだけです。
+
+**(d) が AI で点差のつくところ**です。シラバスにも "Analysis, interpretation and prediction where a model is not perfectly arithmetic in real life" と書かれていて、**わざわざこのために1行が用意されています。**
+
+コメントを書くときに使える型を3つ挙げておきます。
+
+1. **どれくらい合っているか** — *The differences are close to constant, so the model fits well.*
+2. **データの外か中か** — *Week 10 is outside the data, so this is an extrapolation.*
+3. **現実的にどうか** — *A plant cannot grow forever, so the model will break down.*
+
+この3つのうち2つ書ければ、たいてい満点です。**日本語で考えてから英語にするのではなく、この型を英語のまま覚えてください。**
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** Differences: $6, \ 5, \ 6, \ 5, \ 7$
+
+*The differences are not constant, so the heights do not form a perfect arithmetic sequence.*
+
+**(b)**
+$$d \approx \frac{181 - 152}{6 - 1} = \frac{29}{5} = 5.8$$
+
+**(c)**
+$$u_{10} = 152 + (10-1)(5.8) = 152 + 52.2 = 204.2 \text{ cm}$$
+
+**(d)** *The differences are all close to $5.8$, so an arithmetic model fits the data well over these six weeks. However, week 10 is outside the range of the data, so this is an extrapolation and the prediction is less reliable.*
+:::
+:::
+
+## Common errors
+
+::: {.callout-warning}
+## $(n-1)$ の $-1$ を忘れる
+$u_{20} = 5 + 20 \times 3 = 65$ としてしまう間違いです。正しくは $5 + 19 \times 3 = 62$。
+
+**電柱と電線**を思い出してください（[The idea](#the-idea) を参照）。項が20個なら、$d$ を足すのは19回です。
+:::
+
+::: {.callout-warning}
+## $d$ の符号を落とす
+数列が減っていくとき、$d$ は**負**です。$20, 17, 14, 11, \ldots$ なら $d = -3$ であって $3$ ではありません。
+
+公式に入れるときは $d = -3$ と**カッコをつけて**書いてください。$u_{10} = 20 + 9 \times (-3)$ のように。
+:::
+
+::: {.callout-warning}
+## $u_n$ と $S_n$ を取り違える
+問題文をよく読んでください。**英語のまま覚えるのが確実です。**
+
+- `Find the 20th term` → $u_{20}$
+- `Find the sum of the first 20 terms` → $S_{20}$
+
+まったく違うものです。文章題では、次の言い方が出てきたら $S_n$ だと思ってください。
+
+- `Find the total number of ...`（全部でいくつ）
+- `Find the total cost / the total amount`（合計いくら）
+- `How many ... altogether?`（合わせて何個）
+:::
+
+::: {.callout-warning}
+## 項の数を数え間違える
+$u_5$ から $u_{12}$ までは何項あるでしょうか。$12 - 5 = 7$ ではありません。**$12 - 5 + 1 = 8$ 項**です。
+
+両端を含むときは $+1$ が必要です。指を折って $5, 6, 7, 8, 9, 10, 11, 12$ と数えてみると分かります。
+:::
+
+::: {.callout-warning}
+## 実際のデータを、完全な等差数列だと思い込む
+@exm-arith-not-perfect のように、現実のデータの差はぴったり同じにはなりません。
+
+**"Show that this is an arithmetic sequence" と書かれていないなら、確かめる必要があります。** 差を全部計算して、「だいたい同じだから arithmetic model が使える」と一言書いてください。何も書かずに公式を使うと、そこで点を落とします。
+:::
+
+::: {.callout-warning}
+## 予測したのに、コメントを書かない
+`Comment on`、`Justify`、`Interpret` は**独立した設問**です。数値を出しただけでは点になりません。
+
+英語で一文書いてください。文法が少し崩れていても、**内容が合っていれば点になります。** 書かないと必ず $0$ です。
+:::
+
+## Using your GDC (TI-Nspire CX II)
+
+AI では Paper 1 でも電卓が使えます。数列は電卓で作ってしまうのが速いです。
+
+### 数列を一気に作る（`seq` を使う）
+
+Calculator ページで、次のように打ちます。
+
+```
+seq(5 + (n−1)×3, n, 1, 20)
+```
+
+これで $u_1$ から $u_{20}$ までの20個が、リストとして一気に出ます。
+
+`seq(` は次の場所にあります。
+
+```
+menu → 3: List & Spreadsheet → 1: Sequence
+```
+
+または `catalog` から `seq(` を選んでもかまいません。
+
+### 合計を出す（`sum` を使う）
+
+作ったリストをそのまま `sum(` で囲めば、$S_n$ が出ます。
+
+```
+sum(seq(5 + (n−1)×3, n, 1, 20))     →  670
+```
+
+@exm-arith-basic の答えと一致します。**公式を使わずに和が出せる**ので、検算にとても便利です。
+
+### $\sum$ をそのまま入力する
+
+@exm-arith-sigma のようなシグマ記号は、**テンプレートでそのまま**書けます。
+
+$$
+\texttt{9 キーの右にあるテンプレートのパレット} \ \to \ \sum
+$$
+
+$\sum$ の下・上・中身の3つの点線ボックスを `tab` で移動しながら埋めます。
+
+$$
+\sum_{k=1}^{15}(4k+1) \quad \longrightarrow \quad 495
+$$
+
+::: {.callout-tip}
+## Σ テンプレートは試験モードでも使えます
+IB の Press-to-Test の設定では、$\sum$ は**無効になりません**。安心して使ってください。
+
+ただし、**下の数字が $k=1$ から始まっているか $k=0$ から始まっているか**を必ず確認してください。1つずれるだけで答えが変わります。
+:::
+
+### 実データから common difference を近似する
+
+@exm-arith-not-perfect のようなデータでは、**Lists & Spreadsheet ページ**が便利です。
+
+1. 列 A にデータ（152, 158, 163, 169, 174, 181）を入力する
+2. 列 B の式のセルに次を入れる
+
+```
+=a[]−shift(a[],−1)
+```
+
+これで差が一気に出ます。あとは `mean(b[])` で平均をとれば $5.8$ が得られます。
+
+::: {.callout-note}
+## もっと簡単な方法
+差の平均は、結局「（最後 − 最初）÷（間の数）」と同じです。
+
+$$
+\frac{181-152}{5} = 5.8
+$$
+
+途中の差は全部打ち消し合うので、両端しか残らないからです。**試験ではこちらのほうが速いです。** 電卓を使うのは、差が本当にだいたい一定かどうかを**確かめたいとき**です。
+:::
+
+### 直線として扱う（Paper 2 向け）
+
+arithmetic sequence は、グラフにすると**直線**になります。$n$ を横軸、$u_n$ を縦軸にとると、傾きが $d$、$n=0$ での値が $u_1 - d$ の直線です。
+
+ですから **Data & Statistics ページで散布図をかき、linear regression をかける**という方法も使えます。これは SL 4.4 で詳しく扱いますが、AI ではこの2つの項目がつながっていることを知っておくと得です。
+
+## Exercises
+
+::: {.callout-note appearance="simple"}
+各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
+
+まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
+:::
+
+::: {.exercise-block}
+
+[1]{.ex-no} [An arithmetic sequence has $u_1 = 7$ and $d = -2$.]{.q-en}
+
+**(a)** [Find $u_{25}$.]{.q-en}
+
+**(b)** [Find $S_{25}$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある arithmetic sequence は $u_1 = 7$、$d = -2$ です。
+
+**(a)** $u_{25}$ を求めなさい。
+
+**(b)** $S_{25}$ を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$u_{25} = 7 + (25-1)(-2) = 7 - 48 = -41$$
+
+**(b)**
+$$S_{25} = \frac{25}{2}\bigl(2(7) + (25-1)(-2)\bigr) = \frac{25}{2}(-34) = -425$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+$d$ が**負**なので、公式に入れるときは $(-2)$ と**カッコをつけて**書いてください。$-2$ のまま書くと、符号を落としやすくなります。
+
+答えが負になるのは、おかしくありません。$7, 5, 3, 1, -1, \ldots$ と減っていく数列なので、25項も足せば合計は負になります。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[2]{.ex-no} [In an arithmetic sequence, $u_4 = 14$ and $u_9 = 34$. Find the value of $u_1$ and the value of $d$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある arithmetic sequence で $u_4 = 14$、$u_9 = 34$ です。$u_1$ の値と $d$ の値を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$u_9 - u_4 = 5d$$
+$$34 - 14 = 5d \quad \Longrightarrow \quad d = 4$$
+
+$$u_4 = u_1 + 3d \quad \Longrightarrow \quad 14 = u_1 + 12 \quad \Longrightarrow \quad u_1 = 2$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+@exm-arith-two-terms と同じ考え方です。$4$ 番目から $9$ 番目までは $9 - 4 = 5$ 回足していて、その間に値は $34 - 14 = 20$ 増えています。だから1回あたり $4$ です。
+
+$u_1$ を出すときも同じで、$u_1$ から $u_4$ までは $3$ 回足しているので $u_4 = u_1 + 3d$ です。$4$ 回ではありません。
+
+**検算。** $2, 6, 10, 14, 18, 22, 26, 30, 34$ … 4番目が $14$、9番目が $34$ ✓
+:::
+
+
+::: {.ex-sep}
+:::
+
+[3]{.ex-no} [Find the sum of the first 20 terms of the series $1 + 4 + 7 + 10 + \cdots$]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+級数 $1 + 4 + 7 + 10 + \cdots$ の最初の20項の和を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$u_1 = 1, \quad d = 3, \quad n = 20$$
+
+$$S_{20} = \frac{20}{2}\bigl(2(1) + (20-1)(3)\bigr) = 10(2 + 57) = 590$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+最後の項 $u_{20}$ が分かっていないので、和の公式は**左の形**を使います（@tbl-which-sum）。
+
+$u_1$ と $d$ は問題文に直接は書かれていません。**書き出された数から自分で読み取ります。** $1, 4, 7, 10$ の差はどれも $3$ なので、$u_1 = 1$、$d = 3$ です。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[4]{.ex-no} [Find the value of $\displaystyle\sum_{k=1}^{30}(2k - 5)$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$\displaystyle\sum_{k=1}^{30}(2k - 5)$ の値を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$u_1 = 2(1) - 5 = -3, \quad d = 2, \quad n = 30$$
+
+$$S_{30} = \frac{30}{2}\bigl(2(-3) + (30-1)(2)\bigr) = 15(-6 + 58) = 780$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+[sigma notation](#sigma-notation) のとおり、3つそろえます。
+
+- **初項** … $k = 1$ を入れて $2(1) - 5 = -3$
+- **公差** … $k$ の係数がそのまま $d$ なので $d = 2$
+- **項の数** … $k$ が $1$ から $30$ まで動くので $30$ 個
+
+初項が負でも、公式はそのまま使えます。
+
+**電卓で確かめる。** `sum(seq(2k−5, k, 1, 30))` → $780$ ✓
+:::
+
+
+::: {.ex-sep}
+:::
+
+[5]{.ex-no} [A theatre has 24 rows of seats. The first row has 18 seats. Each row after the first has 2 more seats than the row in front of it.]{.q-en}
+
+**(a)** [Find the number of seats in the 24th row.]{.q-en}
+
+**(b)** [Find the total number of seats in the theatre.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある劇場には24列の座席があります。1列目は18席です。2列目より後ろの各列は、そのすぐ前の列より2席多くなっています。
+
+**(a)** 24列目の座席数を求めなさい。
+
+**(b)** 劇場全体の座席数を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$u_1 = 18, \quad d = 2$$
+
+**(a)**
+$$u_{24} = 18 + (24-1)(2) = 18 + 46 = 64 \text{ seats}$$
+
+**(b)**
+$$S_{24} = \frac{24}{2}(18 + 64) = 12(82) = 984 \text{ seats}$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+まず**何が数列なのか**を決めます。ここでは「各列の座席数」が数列で、$u_1 = 18$、$d = 2$ です。
+
+**(a)** は `the 24th row` なので $u_{24}$、**(b)** は `the total number` なので $S_{24}$ です。ここを取り違えると、両方とも落とします。
+
+(b) では (a) で $u_{24} = 64$ を出したばかりなので、**右の形**が使えます。$\frac{24}{2}(18+64)$ のほうが、左の形より計算が軽くて済みます。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[6]{.ex-no} [Hanako invests $\$5000$ in an account paying simple interest at an annual rate of $3\%$.]{.q-en}
+
+**(a)** [Find the balance after 1 year.]{.q-en}
+
+**(b)** [Find the number of complete years after which the balance first exceeds $\$6500$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+花子さんは $\$5000$ を、年利 $3\%$ の simple interest の口座に預けました。
+
+**(a)** 1年後の残高を求めなさい。
+
+**(b)** 残高がはじめて $\$6500$ を超えるのは、何年後（ちょうど何年）ですか。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** Interest per year $= 5000 \times 0.03 = \$150$
+
+$$\text{Balance after 1 year} = 5000 + 150 = \$5150$$
+
+**(b)** Balance after $n$ years $= 5000 + 150n$
+
+$$5000 + 150n > 6500$$
+$$150n > 1500$$
+$$n > 10$$
+
+*The balance first exceeds $\$6500$ after **11 years**.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+`simple interest` と書いてあるので、利息は毎年ずっと元金 $\$5000$ に対して計算されます。毎年 $\$150$ ずつ、同じ額だけ増えていきます。
+
+**(b)** で気をつけるのは不等号です。`exceeds` は $>$ であって $\geq$ ではありません。ちょうど10年後の残高は $5000 + 1500 = \$6500$ で、これは「超えて」いません。ですから答えは $11$ 年です。
+
+英語の言い方も覚えておいてください。
+
+- `exceeds` / `is more than` → $>$
+- `is at least` / `is no less than` → $\geq$
+:::
+
+
+::: {.ex-sep}
+:::
+
+[7]{.ex-no} [The annual sales of a company, in millions of yen, over a five-year period are shown in the table below.]{.q-en}
+
+| Year | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|
+| Sales | 42 | 47 | 51 | 56 | 62 |
+
+**(a)** [Show that the sales do not form a perfect arithmetic sequence.]{.q-en}
+
+**(b)** [Find an approximate value for the common difference, and use it to predict the sales in year 8.]{.q-en}
+
+**(c)** [Comment on your prediction in part (b).]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある会社の年間売上（単位：百万円）の5年分が上の表に示されています（見出しは Year が「年」、Sales が「売上」です）。
+
+**(a)** この売上が完全な arithmetic sequence ではないことを示しなさい。
+
+**(b)** common difference のおよその値を求め、それを使って8年目の売上を予測しなさい。
+
+**(c)** (b) の予測についてコメントしなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** Differences: $5, \ 4, \ 5, \ 6$
+
+*The differences are not constant, so the sales do not form a perfect arithmetic sequence.*
+
+**(b)**
+$$d \approx \frac{62 - 42}{5 - 1} = \frac{20}{4} = 5$$
+
+$$u_8 = 42 + (8-1)(5) = 42 + 35 = 77 \text{ million yen}$$
+
+**(c)** *Year 8 is outside the range of the data, so this is an extrapolation and the prediction may not be reliable.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** は `Show that` なので、**差を全部書くことが点になります。** 「一定ではない」と結論まで書いてください。差を出しただけで止めると、点が出ないことがあります。
+
+**(b)** の $d$ は、差の平均でも、両端から求めても同じ $5$ になります。途中の差が打ち消し合うからです（@exm-arith-not-perfect 参照）。試験では両端を使うほうが速いです。
+
+**(c)** は**独立した設問**です。数値を出しただけでは $0$ 点です。次の3つの型のどれかを英語で一文書いてください。
+
+1. どれくらい合っているか — *The differences are close to constant, so the model fits well.*
+2. データの外か中か — *Year 8 is outside the data, so this is an extrapolation.*
+3. 現実的にどうか — *Sales could be affected by the economy or by competition.*
+
+文法が少し崩れていても、**内容が合っていれば点になります。** 書かないと必ず $0$ です。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[8]{.ex-no} [Find the number of terms in the sequence from $u_5$ to $u_{18}$ inclusive.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$u_5$ から $u_{18}$ まで（両端を含む）に、項は何個ありますか。
+
+`inclusive` は「両端を含めて」という意味です。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$18 - 5 + 1 = 14 \text{ terms}$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+$13$ ではありません。**両端を含むので $+1$** が必要です。
+
+$n$ 番目の項の公式で $(n-1)$ を使ったのと、ちょうど**逆**の話です。あちらは「間の数」を数えるので $-1$、こちらは「項の数」を数えるので $+1$ になります。
+
+心配なら小さい例で確かめてください。$u_1$ から $u_3$ までは $1, 2, 3$ の3個で、$3 - 1 + 1 = 3$ ✓
+:::
+
+
+::: {.ex-sep}
+:::
+
+[9]{.ex-no} [In an arithmetic sequence, $u_1 = 2$ and the sum of the first 10 terms is $155$. Find the value of $d$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある arithmetic sequence で、$u_1 = 2$、最初の10項の和が $155$ です。$d$ の値を求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$S_{10} = \frac{10}{2}\bigl(2(2) + 9d\bigr) = 155$$
+$$5(4 + 9d) = 155$$
+$$4 + 9d = 31$$
+$$9d = 27 \quad \Longrightarrow \quad d = 3$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+これまでと**逆向き**の問題です。$d$ を使って $S_{10}$ を作り、それが $155$ に等しいという方程式を立てます。
+
+$u_n$ が分かっていないので、和の公式は**左の形**しか使えません。
+
+**検算。** $2, 5, 8, 11, 14, 17, 20, 23, 26, 29$ の和は $155$ ✓
+電卓なら `sum(seq(2+(n−1)×3, n, 1, 10))` で一発です。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[10]{.ex-no} [Explain, in your own words, why the formula $S_n = \dfrac{n}{2}(u_1 + u_n)$ is true.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$S_n = \dfrac{n}{2}(u_1 + u_n)$ という公式がなぜ成り立つのかを、自分の言葉で説明しなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+*Pair the terms from the two ends: $(u_1 + u_n)$, $(u_2 + u_{n-1})$, $(u_3 + u_{n-2})$, and so on.*
+
+*As the left term increases by $d$, the right term decreases by $d$, so every pair has the same sum $u_1 + u_n$.*
+
+*There are $n$ terms, so there are $\dfrac{n}{2}$ pairs. Therefore*
+
+$$S_n = \frac{n}{2}(u_1 + u_n).$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**日本語で考えてから、上の英文を写す練習をしてください。** 説明を英語で書く問題は、書き出しが一番むずかしいので、型を1つ持っておくと楽になります。
+
+考え方は @sec-sl-1-2 の [Why it works](#why-it-works) と同じです。
+
+$$(u_1 + u_n), \quad (u_2 + u_{n-1}), \quad (u_3 + u_{n-2}), \quad \ldots$$
+
+左の項が $d$ ずつ増えるとき、右の項は $d$ ずつ減るので、**どのペアも和が同じ**になります。
+
+（$n$ が奇数のときはペアが1つ余りますが、余った項はちょうど $\dfrac{u_1+u_n}{2}$ になるので、式はそのまま成り立ちます。）
+:::
+
+:::

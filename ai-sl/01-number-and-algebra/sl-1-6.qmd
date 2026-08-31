@@ -1,0 +1,1218 @@
+# SL 1.6 — Approximation and percentage error（近似・誤差・概算） {#sec-sl-1-6}
+
+::: {.callout-note}
+## What you should be able to do
+- **decimal places**（小数第◯位）と **significant figures**（有効数字）に正しく丸められる。
+- 丸めた数の **upper bound / lower bound**（上限・下限）を求められる。
+- $\leq$ と $<$ を正しく使い分けられる。
+- 公式集の式を使って、**percentage error**（誤差率）を求められる。
+- **estimation**（概算）で、答えのだいたいの大きさを見積もれる。
+- 出てきた答えが**現実的かどうか**を判断できる。
+:::
+
+::: {.callout-important}
+## Formula booklet に載っているもの
+SL 1.6 の欄には、次の1行だけが印刷されています。
+
+$$
+\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
+$$
+
+> where $v_E$ is the **exact** value and $v_A$ is the **approximate** value of $v$
+
+**$\varepsilon$（イプシロン）が誤差率**です。記号の意味も公式集に書かれています。
+
+**式の外側に $|\ \ |$ という記号が付いている**ことに注目してください。これは **absolute value**（絶対値）の記号です。次の欄で説明します。
+:::
+
+::: {#absolute-value .callout-note}
+## $|\ \ |$ という記号について
+$|\ \ |$ は **absolute value**（絶対値）の記号です。**中身のマイナスを外す**、それだけの記号です。
+
+$$
+|7| = 7, \qquad |-7| = 7, \qquad |0| = 0
+$$
+
+- 中身が**正**なら … そのまま
+- 中身が**負**なら … マイナスを外す
+- 中身が $0$ なら … $0$
+
+**「$0$ からどれだけ離れているか」**を表している、と考えると分かりやすくなります。$7$ も $-7$ も、$0$ からの距離は $7$ です。**向きを捨てて、大きさだけを見る**記号です。
+
+$$
+|-0.7| = 0.7, \qquad \left| \frac{-3}{5} \right| = \frac{3}{5} = 0.6
+$$
+
+**結果は必ず $0$ 以上になります。** 絶対値が負になることはありません。
+
+::: {.callout-tip}
+## 電卓では `abs`
+TI-Nspire では `abs( )` と打ちます。テンプレート（$\square$ に $|\ \ |$ が付いた形）もありますが、**`abs(` と直接打つほうが速い**です。
+
+```
+abs(-0.7)   →   0.7
+```
+
+ただし percentage error では、**わざわざ電卓に入れなくても構いません。** 出てきた答えが負だったら、**マイナスを取って書けばよい**だけです。
+:::
+:::
+
+::: {.callout-important}
+## 絶対値が付いていることの意味
+公式の外側に $|\ \ |$ が付いているので、**percentage error は必ず $0$ 以上**になります。負にはなりません。
+
+つまり、**「$5\%$ 大きい」も「$5\%$ 小さい」も、どちらも $\varepsilon = 5\%$** です。誤差率は「どちらにずれたか」ではなく、**「どれだけずれたか」だけ**を表しています。
+
+答えが $-4\%$ と出たら、**マイナスを外して $4\%$ と書いてください。**
+:::
+
+::: {.callout-warning}
+## 「丸め方」で点を落とす人が一番多い項目です
+この項目は計算の手数は少ないのですが、**書き方で失点しやすい**ところです。
+
+- $3.00$ の $0$ を消して $3$ と書く
+- $\leq$ と $<$ を逆にする
+- 分母に **approximate value** を入れてしまう
+
+どれも、**知っていれば防げる**ものばかりです。
+:::
+
+## The idea
+
+この項目には、**4つの中身**があります。順番に見ていきます。
+
+1. **丸め方**（decimal places と significant figures）
+2. **上限と下限**（upper and lower bounds）
+3. **誤差率**（percentage error）
+4. **概算と、答えの妥当性**（estimation）
+
+### 1. 丸め方 ── 2つのものさし
+
+丸め方には**2つのものさし**があり、まったく別のものです。
+
+| | 何を数えるか | 例：$0.004736$ |
+|---|---|---|
+| **decimal places**（d.p.） | **小数点から**何桁か | $3$ d.p. なら $0.005$ |
+| **significant figures**（s.f.） | **最初の $0$ でない数字から**何桁か | $3$ s.f. なら $0.00474$ |
+
+: 2つのものさし {#tbl-dp-sf}
+
+**同じ数でも、まったく違う答えになります。** 問題文がどちらを指定しているかを、必ず確認してください。
+
+#### significant figures の数え方
+
+**「最初の $0$ でない数字」から数え始めます。** それより前の $0$ は数えません。
+
+$$
+0.00\underbrace{4736}_{\text{ここから数える}} \qquad \longrightarrow \qquad 4, \ 7, \ 3, \ 6 \ \text{が1桁目から4桁目}
+$$
+
+$3$ s.f. なら4桁目の $6$ で四捨五入して、$0.00474$ です。
+
+**途中や後ろの $0$ は数えます。**
+
+| 数 | 有効数字の桁数 | 理由 |
+|---|---|---|
+| $0.00474$ | $3$ 桁 | $4, 7, 4$ |
+| $2.05$ | $3$ 桁 | 途中の $0$ は**数える** |
+| $30.0$ | $3$ 桁 | 後ろの $0$ も**数える** |
+| $0.0300$ | $3$ 桁 | 前の $0$ は数えない、後ろは数える |
+
+: 有効数字の数え方 {#tbl-count-sf}
+
+::: {.callout-warning}
+## $3.00$ の $0$ を消さない
+$2.996$ を $3$ s.f. に丸めると $3.00$ です。**$3$ と書いてはいけません。**
+
+$3$ だと有効数字1桁になってしまい、**指定された精度を満たしていない**と見なされます。
+
+同じように、$\ln 20 = 2.9957\ldots$ を $3$ s.f. にすると $3.00$ です（SL 1.5 の演習5）。**$0$ を2つ書いてください。**
+
+**この $0$ は「意味のある $0$」**です。「ちょうど $3$ に近い値だ」という情報を持っています。
+:::
+
+### 2. upper bound と lower bound
+
+$4.1$ という数を見たとき、**それが丸めた結果なら、本当の値は $4.1$ ちょうどとはかぎりません。**
+
+シラバスに、そのままの例が載っています。
+
+> If $x = 4.1$ to one decimal place, $4.05 \leq x < 4.15$.
+
+**$4.05$ から $4.15$ のあいだのどこかにある**、ということです。
+
+$$
+4.05 \leq x < 4.15
+$$
+
+- **lower bound**（下限）… $4.05$
+- **upper bound**（上限）… $4.15$
+
+#### 求め方は「半分ずつ」
+
+丸めた単位の**半分**を、上と下に足し引きします。
+
+$$
+\underbrace{4.1}_{\text{丸めた値}} \ \pm \ \underbrace{0.05}_{\text{単位 } 0.1 \text{ の半分}}
+$$
+
+| 丸め方 | 単位 | 半分 | 例 |
+|---|---|---|---|
+| 1 d.p. | $0.1$ | $0.05$ | $4.1 \to 4.05 \leq x < 4.15$ |
+| 2 d.p. | $0.01$ | $0.005$ | $3.72 \to 3.715 \leq x < 3.725$ |
+| 整数（nearest whole） | $1$ | $0.5$ | $18 \to 17.5 \leq x < 18.5$ |
+| nearest $10$ | $10$ | $5$ | $350 \to 345 \leq x < 355$ |
+
+: bounds の求め方 {#tbl-bounds}
+
+::: {.callout-important}
+## 下は $\leq$、上は $<$
+$$
+4.05 \leq x < 4.15
+$$
+
+**下限は「以上」、上限は「未満」**です。逆にしないでください。
+
+理由は、**四捨五入のきまり**です。$4.05$ は切り上げて $4.1$ になりますが、$4.15$ は切り上げて $4.2$ になってしまいます。ですから $4.15$ は $x$ の候補に**入りません**。
+
+答案では、$\leq$ と $<$ を書き分けてください。**両方 $\leq$ にすると減点されることがあります。**
+:::
+
+### 3. percentage error（誤差率）
+
+近い値を使って計算したとき、**本当の値からどれだけずれているか**を割合で表したものが percentage error です。
+
+$$
+\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
+$$ {#eq-pct-error}
+
+| 記号 | 英語 | 意味 |
+|---|---|---|
+| $v_E$ | **exact** value | **本当の値**（分母に来る） |
+| $v_A$ | **approximate** value | **近似した値**（測った値・丸めた値） |
+| $\varepsilon$ | percentage error | 誤差率（パーセント） |
+
+: 記号の意味 {#tbl-pct-symbols}
+
+::: {.callout-important}
+## 分母は、いつも exact value
+$$
+\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
+$$
+
+**分母の $v_E$ は「本当の値」**です。$v_A$（近似値）を分母に入れると、違う答えになります。
+
+見分け方は簡単で、**問題文が `exact value` と呼んでいるほう**が $v_E$ です。「真の値」「実際の値」と書いてあれば、それが $v_E$ です。
+
+分子には $v_A - v_E$（近似 $-$ 本当）と書いてありますが、**[絶対値](#absolute-value)が付いているので順番は気にしなくて大丈夫**です。引き算の向きを逆にしても、マイナスを外せば同じになります。
+:::
+
+$\pi$ を $3.14$ で計算した場合の誤差率を出してみましょう。
+
+$$
+\varepsilon = \left| \frac{3.14 - \pi}{\pi} \right| \times 100\% = 0.0507\% \ (3\text{ s.f.})
+$$
+
+$0.05\%$ ほどのずれです。**$3.14$ はかなりよい近似**だと分かります。
+
+### 4. estimation と「答えが妥当か」
+
+シラバスにこう書かれています。
+
+> Students should be able to **recognize whether the results of calculations are reasonable**. For example **lengths cannot be negative**.
+
+**答えが出たら、1回だけ「これはありえる値か」と見てください。**
+
+| 場面 | ありえないもの |
+|---|---|
+| 長さ・面積・体積 | **負の値** |
+| 人数・個数 | **負の値、小数** |
+| 確率 | **$0$ 未満、$1$ より大きい値** |
+
+: 答えの妥当性チェック {#tbl-reasonable}
+
+**割合や変化率は、この表に入れていません。** 負になることも、$100\%$ を超えることもあるからです。「前年比 $-8\%$」も「$250\%$ 増加」も、どちらもありえる値です。**ありえるかどうかは、問題の文脈で判断してください。**
+
+例外は**確率をパーセントで表したとき**だけで、これは $0\%$ 以上 $100\%$ 以下におさまります。
+
+**estimation**（概算）は、そのための道具です。**それぞれの数を1桁に丸めて掛ける**だけで、答えのだいたいの大きさが分かります。
+
+$$
+47.3 \times 28.6 \quad \approx \quad 50 \times 30 = 1500
+$$
+
+電卓が $1352.78$ と出したなら、$1500$ に近いので妥当です。**$135.278$ や $13527.8$ が出たら、桁を間違えています。**
+
+## Why it works
+
+:::: {.callout-note collapse="true" appearance="simple"}
+## クリックすると開きます
+ここでは、**bounds がなぜ「半分」なのか**だけを見ます。
+
+$4.1$ という値は、**1 d.p. に四捨五入した結果**でした。どんな数が $4.1$ に丸まるでしょうか。
+
+$$
+4.05, \quad 4.08, \quad 4.10, \quad 4.13, \quad 4.149 \quad \longrightarrow \quad \text{すべて } 4.1
+$$
+
+$$
+4.04 \longrightarrow 4.0, \qquad 4.15 \longrightarrow 4.2
+$$
+
+**境目は、となりの値とのちょうど真ん中**です。$4.1$ のとなりは $4.0$ と $4.2$ で、真ん中はそれぞれ $4.05$ と $4.15$。
+
+$$
+\underbrace{4.0}_{\text{となり}} \quad \overbrace{\Big|}^{4.05} \quad \underbrace{4.1}_{\text{これ}} \quad \overbrace{\Big|}^{4.15} \quad \underbrace{4.2}_{\text{となり}}
+$$
+
+となりとの間隔が $0.1$ なので、**真ん中までは $0.05$**。これが「単位の半分」の正体です。
+
+### なぜ $4.15$ は入らないのか
+
+**ちょうど真ん中の数は、切り上げる**というのが四捨五入のきまりです。
+
+- $4.05$ … 切り上げて $4.1$ になる → **$x$ の候補に入る**
+- $4.15$ … 切り上げて $4.2$ になる → **$x$ の候補に入らない**
+
+だから下は $\leq$、上は $<$ になります。**きまりの非対称さが、そのまま不等号に出ている**だけです。
+
+::: {.callout-note}
+## なぜ分母が exact value なのか
+percentage error は「**本当の値に対して、何パーセントずれたか**」を表します。
+
+$100$ に対する $1$ のずれ（$1\%$）と、$10$ に対する $1$ のずれ（$10\%$）では、後者のほうがずっと大きな間違いです。**基準になるのは本当の値のほう**なので、分母に来ます。
+
+近似値を分母にすると、**基準が毎回変わってしまい、比べられなくなります。**
+:::
+::::
+
+## Worked examples
+
+::: {.callout-note appearance="simple"}
+問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
+:::
+
+::: {#exm-ap-round}
+**(a)** [Write $0.004736$ correct to three significant figures.]{.q-en}
+
+**(b)** [Write $0.004736$ correct to three decimal places.]{.q-en}
+
+**(c)** [Write $12\,049$ correct to three significant figures.]{.q-en}
+
+**(d)** [Write $2.996$ correct to three significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+**(a)** $0.004736$ を有効数字3桁で書きなさい。
+
+**(b)** $0.004736$ を小数第3位まで書きなさい。
+
+**(c)** $12\,049$ を有効数字3桁で書きなさい。
+
+**(d)** $2.996$ を有効数字3桁で書きなさい。
+
+</details>
+
+---
+
+::: {.callout-important}
+## 計算の前に：s.f. か d.p. か
+(a) と (b) は**同じ数**ですが、ものさしが違います（@tbl-dp-sf）。
+
+- `significant figures` … **最初の $0$ でない数字**から数える
+- `decimal places` … **小数点**から数える
+
+読み違えると、まったく違う答えになります。
+:::
+
+**(a)** 最初の $0$ でない数字は $4$ です。そこから3桁は $4, 7, 3$。次の桁 $6$ を見て切り上げます。
+
+$$
+0.004736 \approx 0.00474
+$$
+
+**(b)** 小数点から3桁目までです。$0.004$ までを残し、次の桁 $7$ を見て切り上げます。
+
+$$
+0.004736 \approx 0.005
+$$
+
+**同じ数なのに $0.00474$ と $0.005$。** ものさしが違うと、これだけ変わります。
+
+**(c)** 最初の数字は $1$ です。$1, 2, 0$ の3桁を残し、次の桁 $4$ を見て切り捨てます。
+
+$$
+12\,049 \approx 12\,000
+$$
+
+**$12$ とは書きません。** 桁を保つために $0$ を補います。
+
+**(d)** $2, 9, 9$ の3桁。次の桁 $6$ を見て切り上げると、$9$ が繰り上がって
+
+$$
+2.996 \approx 3.00
+$$
+
+**$3$ ではありません。** $0$ を2つ書いて、有効数字3桁であることを示します。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** $0.00474$
+
+**(b)** $0.005$
+
+**(c)** $12\,000$
+
+**(d)** $3.00$
+:::
+:::
+
+::: {#exm-ap-bounds}
+[Write down the lower bound and the upper bound of each of the following.]{.q-en}
+
+**(a)** [$x = 4.1$, correct to one decimal place.]{.q-en}
+
+**(b)** [$m = 350$ g, correct to the nearest $10$ g.]{.q-en}
+
+**(c)** [$L = 6.0$ cm, correct to two significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次のそれぞれについて、下限と上限を書きなさい。
+
+**(a)** $x = 4.1$（小数第1位まで）
+
+**(b)** $m = 350$ g（$10$ g 単位）
+
+**(c)** $L = 6.0$ cm（有効数字2桁）
+
+</details>
+
+---
+
+**(a)** $1$ d.p. なので単位は $0.1$、その半分は $0.05$（@tbl-bounds）。
+
+$$
+4.05 \leq x < 4.15
+$$
+
+**(b)** $10$ g 単位なので、半分は $5$ g。
+
+$$
+345 \leq m < 355
+$$
+
+**(c)** $6.0$ は有効数字2桁で、最後の桁は小数第1位です。単位は $0.1$、半分は $0.05$。
+
+$$
+5.95 \leq L < 6.05
+$$
+
+::: {.callout-tip}
+## 「最後の桁がどこか」を見る
+s.f. でも d.p. でも、やることは同じです。**最後の桁の1つ分**を単位として、その半分を足し引きします。
+
+$6.0$ の最後の桁は小数第1位 → 単位 $0.1$ → 半分 $0.05$。
+
+$350$（$10$ g 単位）の最後の桁は十の位 → 単位 $10$ → 半分 $5$。
+
+**「有効数字だから」と身構えず、最後の桁を指で押さえてください。**
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** $4.05 \leq x < 4.15$
+
+**(b)** $345 \leq m < 355$
+
+**(c)** $5.95 \leq L < 6.05$
+:::
+:::
+
+::: {#exm-ap-error}
+**(a)** [A student uses $3.14$ as an approximation for $\pi$. Find the percentage error, correct to three significant figures.]{.q-en}
+
+**(b)** [The exact length of a rod is $25$ cm. A student measures it as $24$ cm. Find the percentage error.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+**(a)** ある生徒が $\pi$ の近似値として $3.14$ を使いました。誤差率を有効数字3桁で求めなさい。
+
+**(b)** ある棒の正確な長さは $25$ cm です。ある生徒はそれを $24$ cm と測りました。誤差率を求めなさい。
+
+</details>
+
+---
+
+**(a)** **どちらが exact かを決めます。** $\pi$ が本当の値、$3.14$ が近似値です。
+
+$$
+v_E = \pi, \qquad v_A = 3.14
+$$
+
+@eq-pct-error に入れます。
+
+$$
+\varepsilon = \left| \frac{3.14 - \pi}{\pi} \right| \times 100\% = 0.05069\ldots\% \approx 0.0507\%
+$$
+
+**(b)** `exact length` と書かれているので、$25$ が $v_E$、$24$ が $v_A$ です。
+
+$$
+\varepsilon = \left| \frac{24 - 25}{25} \right| \times 100\% = \frac{1}{25} \times 100\% = 4\%
+$$
+
+::: {.callout-warning}
+## $24$ を分母に入れない
+$\dfrac{1}{24} \times 100 = 4.17\%$ となり、**正しい $4\%$ とは違います。**
+
+分母はいつも **exact value**（@tbl-pct-symbols）。問題文が `exact` と呼んでいるほうです。
+
+$4\%$ と $4.17\%$ では有効数字3桁でも別の答えなので、**ここは必ず確認してください。**
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** $v_E = \pi$, $v_A = 3.14$
+
+$$\varepsilon = \left|\frac{3.14 - \pi}{\pi}\right| \times 100\% = 0.0507\%$$
+
+**(b)** $v_E = 25$, $v_A = 24$
+
+$$\varepsilon = \left|\frac{24 - 25}{25}\right| \times 100\% = 4\%$$
+:::
+:::
+
+::: {#exm-ap-circle}
+[The radius of a circle is measured as $2.5$ cm, correct to one decimal place.]{.q-en}
+
+**(a)** [Write down the lower bound and the upper bound of the radius.]{.q-en}
+
+**(b)** [Find the lower bound and the upper bound of the area of the circle, correct to three significant figures.]{.q-en}
+
+**(c)** [The exact radius is $2.47$ cm. Find the percentage error in the area calculated from the measured radius, correct to three significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある円の半径を測ったところ、小数第1位まで $2.5$ cm でした。
+
+**(a)** 半径の下限と上限を書きなさい。
+
+**(b)** 円の面積の下限と上限を、有効数字3桁で求めなさい。
+
+**(c)** 正確な半径は $2.47$ cm です。測った半径から計算した面積の誤差率を、有効数字3桁で求めなさい。
+
+</details>
+
+---
+
+**(a)** $1$ d.p. なので $\pm 0.05$（@tbl-bounds）。
+
+$$
+2.45 \leq r < 2.55
+$$
+
+**(b)** 面積は $A = \pi r^2$ です。**半径が大きいほど面積も大きい**ので、そのまま両端を入れます。
+
+$$
+A_{\text{lower}} = \pi (2.45)^2 = 18.857\ldots \approx 18.9 \ \text{cm}^2
+$$
+
+$$
+A_{\text{upper}} = \pi (2.55)^2 = 20.428\ldots \approx 20.4 \ \text{cm}^2
+$$
+
+**(c)** 測った $2.5$ から計算した面積が**近似値**、本当の半径 $2.47$ から計算した面積が**正確な値**です。
+
+$$
+v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
+$$
+
+$$
+\varepsilon = \left| \frac{19.6349\ldots - 19.1665\ldots}{19.1665\ldots} \right| \times 100\% = 2.4439\ldots\% \approx 2.44\%
+$$
+
+::: {.callout-important}
+## 半径の誤差は、面積では約2倍になります
+半径の誤差率を計算してみてください。
+
+$$
+\left| \frac{2.5 - 2.47}{2.47} \right| \times 100\% = 1.21\%
+$$
+
+半径のずれは $1.21\%$ なのに、**面積のずれは $2.44\%$** です。ほぼ2倍。
+
+面積は半径の**2乗**なので、誤差も約2倍に膨らみます。同じように、体積なら約3倍です。
+
+**測定の精度が大事なのは、このためです。** 「たった $0.03$ cm」が、面積では $2.4\%$ の違いになります。
+:::
+
+::: {.callout-note}
+## 「maximum percentage error」を聞かれたら
+シラバスには、こういう問い方も挙げられています。
+
+> finding the **maximum** percentage error in the area of a circle if the radius measured is 2.5 cm to one decimal place
+
+正確な値が分からず、**bounds のどこかにある**という場合です。このときは**両端で計算して、大きいほうを答えます。**
+
+$v_A = \pi(2.5)^2 = 19.6349\ldots$ として、
+
+- $v_E = \pi(2.45)^2$ のとき … $\varepsilon = 4.12\%$
+- $v_E = \pi(2.55)^2$ のとき … $\varepsilon = 3.88\%$
+
+大きいほうを取って **$4.12\%$** です。
+
+**どちらを $v_E$（分母）にするかは、問題文が決めます。** `exact value` と呼んでいるほうを分母に入れてください。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** $2.45 \leq r < 2.55$
+
+**(b)**
+$$A_{\text{lower}} = \pi(2.45)^2 = 18.857\ldots \approx 18.9 \text{ cm}^2$$
+$$A_{\text{upper}} = \pi(2.55)^2 = 20.428\ldots \approx 20.4 \text{ cm}^2$$
+
+**(c)** $v_A = \pi(2.5)^2 = 19.635\ldots$, $v_E = \pi(2.47)^2 = 19.167\ldots$
+
+$$\varepsilon = \left|\frac{19.635\ldots - 19.167\ldots}{19.167\ldots}\right| \times 100\% = 2.44\%$$
+:::
+:::
+
+::: {#exm-ap-estimate}
+[A rectangular field measures $47.3$ m by $28.6$ m.]{.q-en}
+
+**(a)** [By rounding each measurement to one significant figure, estimate the area of the field.]{.q-en}
+
+**(b)** [Find the exact area of the field.]{.q-en}
+
+**(c)** [Find the percentage error in the estimate, correct to three significant figures.]{.q-en}
+
+**(d)** [A student calculates the area and obtains $-1352.78$ m$^2$. Explain why this answer must be wrong.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+長方形の畑の大きさは $47.3$ m $\times$ $28.6$ m です。
+
+**(a)** それぞれの測定値を有効数字1桁に丸めて、畑の面積を概算しなさい。
+
+**(b)** 畑の正確な面積を求めなさい。
+
+**(c)** 概算の誤差率を、有効数字3桁で求めなさい。
+
+**(d)** ある生徒が面積を計算して $-1352.78$ m$^2$ を得ました。この答えが間違いであるはずの理由を説明しなさい。
+
+</details>
+
+---
+
+**(a)** それぞれを1桁に丸めます。
+
+$$
+47.3 \approx 50, \qquad 28.6 \approx 30
+$$
+
+$$
+\text{estimate} = 50 \times 30 = 1500 \ \text{m}^2
+$$
+
+**(b)**
+
+$$
+47.3 \times 28.6 = 1352.78 \ \text{m}^2
+$$
+
+**(c)** 概算が $v_A$、正確な値が $v_E$ です。
+
+$$
+\varepsilon = \left| \frac{1500 - 1352.78}{1352.78} \right| \times 100\% = 10.88\ldots\% \approx 10.9\%
+$$
+
+**(d)** 数値ではなく、**言葉で答える設問**です。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*An area cannot be negative, so the answer must be wrong. The student has probably made a sign error, since the magnitude $1352.78$ is correct.*
+:::
+
+（面積が負になることはないので、この答えは間違いです。大きさの $1352.78$ は正しいので、符号を間違えたと考えられます。）
+
+::: {.callout-tip}
+## 概算は「桁が合っているか」を見るためのもの
+$10.9\%$ という誤差は、正確な答えとしては大きすぎます。**概算はそのために使うのではありません。**
+
+概算の役目は、**電卓の答えの桁が合っているかを確かめる**ことです。
+
+- 電卓が $1352.78$ → $1500$ に近い ✓
+- 電卓が $135.278$ → $1500$ と1桁違う ✗（どこかで間違えた）
+
+**掛け算のキーを押し忘れた、小数点を打ち間違えた**といったミスが、これで見つかります。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** $47.3 \approx 50$, $28.6 \approx 30$
+
+$$\text{estimate} = 50 \times 30 = 1500 \text{ m}^2$$
+
+**(b)** $47.3 \times 28.6 = 1352.78 \text{ m}^2$
+
+**(c)**
+$$\varepsilon = \left|\frac{1500 - 1352.78}{1352.78}\right| \times 100\% = 10.9\%$$
+
+**(d)** *An area cannot be negative, so the answer must be wrong.*
+:::
+:::
+
+## Common errors
+
+::: {.callout-warning}
+## $3.00$ の $0$ を消す
+$2.996$ を $3$ s.f. にすると $3.00$ です。**$3$ と書くと有効数字1桁**になってしまいます。
+
+$3.0$ も2桁なので足りません。**$0$ を2つ**書いてください。
+
+同じように、$4.50$ を $4.5$ と書くのも、有効数字3桁の指定なら不足です。
+:::
+
+::: {.callout-warning}
+## s.f. と d.p. を取り違える
+$0.004736$ は、$3$ s.f. なら $0.00474$、$3$ d.p. なら $0.005$。**まったく違います。**
+
+問題文の `significant figures` と `decimal places` を、**指で押さえて確認してください。**
+
+- `s.f.` … 最初の $0$ でない数字から
+- `d.p.` … 小数点から
+:::
+
+::: {.callout-warning}
+## 有効数字の $0$ を数え間違える
+- $0.00474$ … **$3$ 桁**（前の $0$ は数えない）
+- $2.05$ … **$3$ 桁**（途中の $0$ は数える）
+- $30.0$ … **$3$ 桁**（後ろの $0$ も数える）
+
+**数え始めるのは、最初の $0$ でない数字から**です。そこから先は $0$ も数えます（@tbl-count-sf）。
+:::
+
+::: {.callout-warning}
+## bounds の $\leq$ と $<$ を逆にする
+正しくは
+
+$$
+4.05 \leq x < 4.15
+$$
+
+**下が「以上」、上が「未満」**です。$4.15$ は切り上げて $4.2$ になるので、$x$ の候補には入りません。
+
+両方を $\leq$ で書くと、減点されることがあります。
+:::
+
+::: {.callout-warning}
+## percentage error の分母に approximate value を入れる
+$$
+\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
+$$
+
+**分母は $v_E$（exact value）**です。公式集にそう書いてあります。
+
+問題文で `exact`、「正確な」、「真の」と呼ばれているほうを分母に入れてください。
+:::
+
+::: {.callout-warning}
+## 誤差率を負のまま書く
+公式には**絶対値**が付いています。$\varepsilon$ が負になることはありません。
+
+$-4\%$ と出たら、**[絶対値](#absolute-value)を取り忘れています。** マイナスを外して $4\%$ と書いてください。
+:::
+
+::: {.callout-warning}
+## 途中で丸める
+$\pi(2.47)^2$ を $19.17$ に丸めてから割り算すると、答えが少しずれます。
+
+**電卓の中では丸めず、最後に一度だけ**丸めてください。SL 1.4 や SL 1.7 でも同じことを書きました。金額でも面積でも、考え方は同じです。
+:::
+
+## Using your GDC (TI-Nspire CX II)
+
+### 表示桁数を増やしておく
+
+途中の値を目で確かめたいので、**表示桁数を多めにしておく**と便利です。
+
+```
+ctrl + menu → Document Settings → Display Digits
+```
+
+`Float 10` などにしておくと、$19.16649\ldots$ のように細かく見えます。
+
+試験の前に一度設定しておいてください。
+
+### 丸めるのは、答えを書くときだけ
+
+**電卓は自動で丸めてくれません。** 画面に $19.17$ と見えていても、中身は $19.16649\ldots$ です。
+
+計算の途中では、**`ans` を使って正確な値をそのまま渡します。**
+
+```
+π × 2.47²             →  19.16649...
+(π × 2.5² − ans) / ans × 100   →  2.44390...
+```
+
+**手で $19.17$ と打ち直すと、そこで丸めが入ってしまいます。**
+
+::: {.callout-tip}
+## 有効数字3桁は、自分で数える
+電卓に「有効数字3桁で表示」という機能はありません。**画面の数を見て、自分で数えて書きます。**
+
+$2.4439\ldots$ → $2.44$、$0.050695\ldots$ → $0.0507$。
+
+**前の $0$ は数えない**ので、$0.0507$ は3桁です（@tbl-count-sf）。ここを間違えて $0.051$（2桁）と書かないように。
+:::
+
+### 答えが妥当かを、その場で見る
+
+計算が終わったら、**画面の数を見て1回だけ考えてください。**
+
+| 見るところ | 例 |
+|---|---|
+| 符号 | 面積・長さが**負**になっていないか |
+| 桁 | 概算とくらべて、**1桁ずれていない**か |
+| 大きさ | 確率が $1$ を超えていないか |
+
+: 電卓の答えを見るときの3点 {#tbl-gdc-check}
+
+**打ち間違いのほとんどは、この3つで見つかります。**
+
+## Exercises
+
+::: {.callout-note appearance="simple"}
+各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
+
+まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
+:::
+
+::: {.exercise-block}
+
+[1]{.ex-no} **(a)** [Write $0.08067$ correct to three significant figures.]{.q-en}
+
+**(b)** [Write $0.08067$ correct to two decimal places.]{.q-en}
+
+**(c)** [Write $3.9962$ correct to three significant figures.]{.q-en}
+
+**(d)** [Write $45\,870$ correct to two significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+**(a)** $0.08067$ を有効数字3桁で書きなさい。
+
+**(b)** $0.08067$ を小数第2位まで書きなさい。
+
+**(c)** $3.9962$ を有効数字3桁で書きなさい。
+
+**(d)** $45\,870$ を有効数字2桁で書きなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** $0.0807$
+
+**(b)** $0.08$
+
+**(c)** $4.00$
+
+**(d)** $46\,000$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** 最初の $0$ でない数字は $8$。$8, 0, 6$ の3桁で、次の $7$ を見て切り上げて $0.0807$ です。**途中の $0$ は数えます。**
+
+**(c)** $3, 9, 9$ の次が $6$ なので切り上げ。$9$ が繰り上がって $4.00$。**$4$ と書かないでください。**
+
+**(d)** $4, 5$ の次が $8$ なので切り上げて $46$。桁を保つために $0$ を3つ補って $46\,000$ です。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[2]{.ex-no} [Write down the lower bound and the upper bound of each of the following.]{.q-en}
+
+**(a)** [$x = 7.3$, correct to one decimal place.]{.q-en}
+
+**(b)** [$n = 40$, correct to the nearest $10$.]{.q-en}
+
+**(c)** [$t = 5.28$, correct to two decimal places.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次のそれぞれについて、下限と上限を書きなさい。
+
+**(a)** $x = 7.3$（小数第1位まで）
+
+**(b)** $n = 40$（$10$ 単位）
+
+**(c)** $t = 5.28$（小数第2位まで）
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** $7.25 \leq x < 7.35$
+
+**(b)** $35 \leq n < 45$
+
+**(c)** $5.275 \leq t < 5.285$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**最後の桁の1つ分の半分**を足し引きします（@tbl-bounds）。
+
+**(a)** 単位 $0.1$、半分 $0.05$。 **(b)** 単位 $10$、半分 $5$。 **(c)** 単位 $0.01$、半分 $0.005$。
+
+**下が $\leq$、上が $<$** です。3問とも書き分けてください。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[3]{.ex-no} [The exact mass of an object is $19.2$ g. A student measures it as $18.5$ g. Find the percentage error, correct to three significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある物体の正確な質量は $19.2$ g です。ある生徒はそれを $18.5$ g と測りました。誤差率を有効数字3桁で求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$v_E = 19.2, \qquad v_A = 18.5$$
+
+$$\varepsilon = \left|\frac{18.5 - 19.2}{19.2}\right| \times 100\% = 3.6458\ldots\% \approx 3.65\%$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+`exact mass` と書かれているので、$19.2$ が $v_E$ です。**分母に来ます。**
+
+$18.5$ を分母にすると $3.78\%$ になり、別の答えです。
+
+分子は $18.5 - 19.2 = -0.7$ ですが、**[絶対値](#absolute-value)を取って $0.7$** です。答えを負のまま書かないでください。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[4]{.ex-no} [A rectangle has length $8.4$ cm and width $5.7$ cm, each correct to one decimal place.]{.q-en}
+
+**(a)** [Find the lower bound and the upper bound of the perimeter.]{.q-en}
+
+**(b)** [Find the lower bound and the upper bound of the area, correct to three significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある長方形の縦は $8.4$ cm、横は $5.7$ cm で、どちらも小数第1位までの値です。
+
+**(a)** 周の長さの下限と上限を求めなさい。
+
+**(b)** 面積の下限と上限を、有効数字3桁で求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$8.35 \leq \ell < 8.45, \qquad 5.65 \leq w < 5.75$$
+
+**(a)**
+$$P_{\text{lower}} = 2(8.35 + 5.65) = 28.0 \text{ cm}$$
+$$P_{\text{upper}} = 2(8.45 + 5.75) = 28.4 \text{ cm}$$
+
+**(b)**
+$$A_{\text{lower}} = 8.35 \times 5.65 = 47.1775 \approx 47.2 \text{ cm}^2$$
+$$A_{\text{upper}} = 8.45 \times 5.75 = 48.5875 \approx 48.6 \text{ cm}^2$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**まず2つの辺それぞれの bounds を出します。** どちらも $\pm 0.05$ です。
+
+そのあと、**下限どうし・上限どうしを組み合わせます。** 周も面積も、辺が長いほど大きくなるからです。
+
+$28.0$ の $0$ を消さないでください。有効数字3桁の指定がなくても、**$2(8.35+5.65) = 28$ ちょうど**なので $28$ と書いても構いませんが、$28.0$ のほうが精度が伝わります。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[5]{.ex-no} [A student uses $1.33$ as an approximation for $\dfrac{4}{3}$. Find the percentage error, correct to three significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある生徒が $\dfrac{4}{3}$ の近似値として $1.33$ を使いました。誤差率を有効数字3桁で求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+$$v_E = \frac{4}{3}, \qquad v_A = 1.33$$
+
+$$\varepsilon = \left|\frac{1.33 - \frac{4}{3}}{\frac{4}{3}}\right| \times 100\% = 0.25\%$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**$\frac{4}{3}$ をそのまま電卓に入れてください。** $1.3333$ と打ち直すと、そこで丸めが入ります。
+
+$\frac{4}{3} = 1.33333\ldots$ で、$1.33$ とのずれは $0.00333\ldots$。それを $1.3333$ で割ると $0.0025$、つまり $0.25\%$ です。
+
+ちょうど $0.25\%$ になるので、$0.250\%$ と書いても構いません。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[6]{.ex-no} [A rectangular room measures $39.2$ m by $61.8$ m.]{.q-en}
+
+**(a)** [By rounding each measurement to one significant figure, estimate the area.]{.q-en}
+
+**(b)** [Find the percentage error in this estimate, correct to three significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+長方形の部屋の大きさは $39.2$ m $\times$ $61.8$ m です。
+
+**(a)** それぞれの測定値を有効数字1桁に丸めて、面積を概算しなさい。
+
+**(b)** この概算の誤差率を、有効数字3桁で求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** $39.2 \approx 40$, $61.8 \approx 60$
+
+$$\text{estimate} = 40 \times 60 = 2400 \text{ m}^2$$
+
+**(b)** $v_E = 39.2 \times 61.8 = 2422.56$
+
+$$\varepsilon = \left|\frac{2400 - 2422.56}{2422.56}\right| \times 100\% = 0.9312\ldots\% \approx 0.931\%$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**誤差が $1\%$ 未満**です。@exm-ap-estimate では $10.9\%$ もあったのに、なぜでしょうか。
+
+**丸めの向きが打ち消し合った**からです。$39.2 \to 40$ は切り上げ、$61.8 \to 60$ は切り捨て。片方が大きくなり、片方が小さくなったので、掛け算するとほぼ元に戻りました。
+
+@exm-ap-estimate では $47.3 \to 50$、$28.6 \to 30$ と**両方とも切り上げ**だったので、誤差が積み上がりました。
+
+**概算の精度は、丸めの向きしだい**です。だから概算は「桁の確認」にだけ使います。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[7]{.ex-no} [Two students measure the same length of $12.0$ cm. Student A records $12.4$ cm and Student B records $11.7$ cm.]{.q-en}
+
+**(a)** [Find the percentage error of each measurement.]{.q-en}
+
+**(b)** [State which measurement is more accurate, and justify your answer.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+2人の生徒が、同じ $12.0$ cm の長さを測りました。生徒 A は $12.4$ cm、生徒 B は $11.7$ cm と記録しました。
+
+**(a)** それぞれの測定値の誤差率を求めなさい。
+
+**(b)** どちらの測定値のほうが正確かを述べ、理由も書きなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** $v_E = 12.0$
+
+$$\text{Student A: } \varepsilon = \left|\frac{12.4 - 12.0}{12.0}\right| \times 100\% = 3.33\%$$
+
+$$\text{Student B: } \varepsilon = \left|\frac{11.7 - 12.0}{12.0}\right| \times 100\% = 2.5\%$$
+
+**(b)** *Student B's measurement is more accurate, because its percentage error ($2.5\%$) is smaller than Student A's ($3.33\%$).*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**両方とも分母は $12.0$** です。同じものを測っているので、exact value は共通です。
+
+A のずれは $+0.4$、B のずれは $-0.3$。**符号は違いますが、絶対値を取るので比べられます。**
+
+`Justify` と書かれているので、**答えだけでは点になりません。** 「誤差率が小さいから」という理由を必ず書いてください。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[8]{.ex-no} [The side of a cube is measured as $6.2$ cm, correct to one decimal place. The volume calculated from this measurement is taken as the approximate value.]{.q-en}
+
+**(a)** [Find the volume calculated from the measured side.]{.q-en}
+
+**(b)** [Find the lower bound and the upper bound of the volume.]{.q-en}
+
+**(c)** [Find the maximum percentage error in the volume, correct to three significant figures.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある立方体の一辺を測ったところ、小数第1位まで $6.2$ cm でした。この測定値から計算した体積を**近似値**とします。
+
+**(a)** 測った辺から計算した体積を求めなさい。
+
+**(b)** 体積の下限と上限を求めなさい。
+
+**(c)** 体積の最大誤差率を、有効数字3桁で求めなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** $v_A = 6.2^3 = 238.328 \text{ cm}^3$
+
+**(b)** $6.15 \leq s < 6.25$
+$$V_{\text{lower}} = 6.15^3 = 232.608\ldots \text{ cm}^3, \qquad V_{\text{upper}} = 6.25^3 = 244.140\ldots \text{ cm}^3$$
+
+**(c)**
+$$\text{with } v_E = 232.608\ldots : \quad \varepsilon = \left|\frac{238.328 - 232.608\ldots}{232.608\ldots}\right| \times 100\% = 2.459\%$$
+
+$$\text{with } v_E = 244.140\ldots : \quad \varepsilon = \left|\frac{238.328 - 244.140\ldots}{244.140\ldots}\right| \times 100\% = 2.381\%$$
+
+*The maximum percentage error is **2.46%**.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+`maximum` と聞かれたら、**両端で計算して大きいほうを取ります**（@exm-ap-circle の callout 参照）。
+
+問題文が「測定値から計算した体積を**近似値**とする」と決めてくれているので、$v_A = 238.328$、$v_E$ は bounds のほうです。**迷わずに済みます。**
+
+**辺の誤差率と比べてみてください。**
+
+$$\left|\frac{6.2 - 6.15}{6.15}\right| \times 100\% = 0.813\%$$
+
+辺は $0.813\%$、体積は $2.46\%$。**約3倍**です。体積は辺の3乗だからです（面積なら約2倍でした）。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[9]{.ex-no} [A student calculates the probability of an event and obtains $1.35$. Another student calculates the length of a side of a triangle and obtains $-4.2$ cm.]{.q-en}
+
+[Explain why each of these answers must be wrong.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある生徒が、ある事象の確率を計算して $1.35$ を得ました。別の生徒が、三角形の1辺の長さを計算して $-4.2$ cm を得ました。
+
+それぞれの答えが間違いであるはずの理由を説明しなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+*A probability must be between $0$ and $1$, so $1.35$ cannot be a probability.*
+
+*A length cannot be negative, so $-4.2$ cm cannot be the length of a side.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+シラバスにこう書かれています。
+
+> Students should be able to recognize whether the results of calculations are reasonable. For example lengths cannot be negative.
+
+**わざわざ1行が用意されている**ので、こういう問いは実際に出ます。
+
+書くことは短くて構いません。**「なぜありえないか」を1文で**述べれば十分です（@tbl-reasonable）。
+
+計算の途中でこういう値が出たら、**そこで止まって見直してください。** 先に進んでも、答えは合いません。
+:::
+
+
+::: {.ex-sep}
+:::
+
+[10]{.ex-no} [A runner completes $100$ m in $12.4$ seconds, correct to one decimal place.]{.q-en}
+
+**(a)** [Find the speed of the runner, correct to three significant figures.]{.q-en}
+
+**(b)** [Find the lower bound and the upper bound of the speed, correct to three significant figures.]{.q-en}
+
+**(c)** [Comment on how many significant figures it is appropriate to use for the speed.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある走者が $100$ m を、小数第1位まで $12.4$ 秒で走りました。
+
+**(a)** 走者の速さを、有効数字3桁で求めなさい。
+
+**(b)** 速さの下限と上限を、有効数字3桁で求めなさい。
+
+**(c)** 速さを有効数字何桁で書くのが適切かについて、コメントしなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$\text{speed} = \frac{100}{12.4} = 8.0645\ldots \approx 8.06 \text{ m s}^{-1}$$
+
+**(b)** $12.35 \leq t < 12.45$
+
+$$\text{lower} = \frac{100}{12.45} = 8.0321\ldots \approx 8.03 \text{ m s}^{-1}$$
+
+$$\text{upper} = \frac{100}{12.35} = 8.0971\ldots \approx 8.10 \text{ m s}^{-1}$$
+
+**(c)** *The time is given to three significant figures, so the speed should not be given to more than three significant figures. The bounds show that the speed is between 8.03 and 8.10, so only the first two figures are certain.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(b) で向きが逆になる**ところが要です。**時間が長いほど、速さは遅くなります。** ですから
+
+- 時間の**上限** $12.45$ → 速さの**下限**
+- 時間の**下限** $12.35$ → 速さの**上限**
+
+割り算では、この入れ替わりが起きます。**「大きいほうを入れたら大きくなる」とはかぎりません。**
+
+**(c)** はシラバスの `choose an appropriate degree of accuracy based on given data` に当たります。
+
+書くことは2つです。
+
+1. **元のデータの精度** — *The time is given to three significant figures.*
+2. **だから答えもそれ以上には書けない** — *so the speed should not be given to more than three significant figures.*
+
+bounds が $8.03 \sim 8.10$ と幅があるので、**3桁目はもう確かではありません。** そこまで触れられると強い解答になります。
+:::
+
+:::
