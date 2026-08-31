@@ -841,27 +841,27 @@ r_s = (\text{順位に付けかえたデータの、Pearson's } r)
 </figcaption>
 <div aria-describedby="tbl-sl410-choose-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
 <thead>
 <tr class="header">
-<th>こういうときは</th>
+<th>こう調べたい</th>
 <th>どちらを使うか</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>データが<strong>直線的</strong>に並んでいる</td>
+<td><strong>直線の関係</strong>（linear relationship）を調べたい</td>
 <td><strong>Pearson’s <span class="math inline">\(r\)</span></strong></td>
 </tr>
 <tr class="even">
-<td>曲がっているが、<strong>ずっと増える／減る</strong></td>
+<td><strong>monotonic relationship</strong>（ずっと増える／減る関係）を調べたい</td>
 <td><strong>Spearman’s <span class="math inline">\(r_s\)</span></strong></td>
 </tr>
 <tr class="odd">
-<td><strong>outlier がある</strong></td>
-<td><strong>Spearman’s <span class="math inline">\(r_s\)</span></strong></td>
-</tr>
-<tr class="even">
-<td><strong>回帰直線で予測したい</strong></td>
+<td><strong>regression line で予測したい</strong></td>
 <td><strong>Pearson’s <span class="math inline">\(r\)</span></strong>（SL 4.4）</td>
 </tr>
 </tbody>
@@ -869,7 +869,9 @@ r_s = (\text{順位に付けかえたデータの、Pearson's } r)
 </div>
 </figure>
 </div>
-<p><code>Which is more appropriate</code> と聞かれたら、<strong>この表のどれに当てはまるかを言い、理由を1文つけてください。</strong></p>
+<p><strong>「outlier があるから Spearman」と自動的に決めないでください。</strong> 選ぶ基準は、<strong>monotonic relationship を調べたいのか、それとも linear regression による予測が必要なのか</strong>です。outlier に強いことは、<span class="math inline">\(r_s\)</span> を選ぶ理由の <span class="math inline">\(1\)</span> つにはなりますが、それだけで決まるわけではありません。</p>
+<p>そもそも、その outlier が<strong>有効なデータなのか記録ミスなのか</strong>を先に確かめてください（<a href="../../ai-sl/04-statistics-and-probability/sl-4-1.html#outliers">SL 4.1</a>）。記録ミスなら、係数を変えるより前に、データのほうを直します。</p>
+<p><code>Which is more appropriate</code> と聞かれたら、<strong>何を調べたいのかを言い、理由を1文つけてください。</strong></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -891,12 +893,25 @@ r_s = (\text{順位に付けかえたデータの、Pearson's } r)
 </section>
 <section id="why-it-works" class="level2">
 <h2 class="anchored" data-anchor-id="why-it-works">Why it works</h2>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>クリックすると開きます
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>ここでは、<strong>なぜ順位に付けかえると、曲がった関係もとらえられるのか</strong>だけを説明します。</p>
 <p>Pearson’s <span class="math inline">\(r\)</span> は、点が<strong>1本の直線にどれだけ近いか</strong>を測っています（SL 4.4）。ですから <a href="#fig-sl410-monotonic" class="quarto-xref">図&nbsp;1</a> の右のように<strong>曲がっている</strong>と、どれだけきれいな関係でも <span class="math inline">\(r\)</span> は <span class="math inline">\(1\)</span> になりません。</p>
 <p>ここで、<strong>データを順位に付けかえる</strong>と何が起きるでしょうか。</p>
 <p>順位は <span class="math inline">\(1, 2, 3, 4, \ldots\)</span> と、<strong>必ず等間隔に並びます。</strong> もとの <span class="math inline">\(y\)</span> が <span class="math inline">\(2, 3, 5, 9, 16, 28, 50, 90\)</span> とどれだけ急に増えていても、順位にすれば（大きいほうから）<span class="math inline">\(8, 7, 6, 5, 4, 3, 2, 1\)</span> という等間隔の数に置きかわります。</p>
 <p><span class="math inline">\(x\)</span> の順位も同じく <span class="math inline">\(8, 7, 6, \ldots, 1\)</span> ですから、<strong>順位どうしをグラフにすると、完全な直線</strong>になります。だから <span class="math inline">\(r_s = 1\)</span> です。</p>
-<p><strong>曲がりぐあいの情報を捨てて、順番だけを残す。</strong> これが順位に付けかえるということです。<strong>捨てるからこそ、outlier の影響も一緒に消えます。</strong></p>
+<p><strong>曲がりぐあいの情報を捨てて、順番だけを残す。</strong> これが順位に付けかえるということです。</p>
+<p>同じ理由で、<strong>outlier の影響も Pearson’s <span class="math inline">\(r\)</span> より小さくなることが多い</strong>です。ただし、<strong>完全になくなるわけではありません。</strong> 順位が入れかわるほど大きく外れていれば、<span class="math inline">\(r_s\)</span> も動きます。</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -915,6 +930,9 @@ r_s = 1 - \frac{6 \sum d^{2}}{n(n^{2} - 1)}
 <p>ただし、<strong>この式は AI SL の公式集に載っていません。</strong> シラバスが「電卓で求めること」と指定しているので、<strong>使う必要もありません。</strong></p>
 <p>さらに、<strong>同じ値があって順位を平均したときには、この式は正確ではなくなります。</strong> 正しい <span class="math inline">\(r_s\)</span> は、あくまで <a href="#eq-sl410-def" class="quarto-xref">式&nbsp;1</a> の「順位から計算した Pearson’s <span class="math inline">\(r\)</span>」です。</p>
 <p><strong>電卓で出してください。</strong> そのほうが速く、同順位があっても正しい値が出ます。</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </section>
@@ -1758,7 +1776,7 @@ r_s = (\text{順位に対する } r)
 <p>次の値に、大きいほうから順位を付けなさい。同じ値があるときは、順位を平均しなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1767,7 +1785,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <table class="caption-top table">
 <thead>
@@ -1801,7 +1819,7 @@ r_s = (\text{順位に対する } r)
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1810,7 +1828,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>まず大きい順に並べます。</strong></p>
 <p><span class="math display">\[20, \quad 18, \quad 15, \quad 15, \quad 15, \quad 12, \quad 12, \quad 9\]</span></p>
@@ -1877,7 +1895,7 @@ r_s = (\text{順位に対する } r)
 <p>Spearman の順位相関係数 <span class="math inline">\(r_s\)</span> を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1886,14 +1904,14 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\(r_s = 0.929\)</span> (3 s.f.)</p>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1902,7 +1920,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-26" class="callout-26-contents callout-collapse collapse">
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>この問題では、すでに順位が与えられています。</strong> 順位を作る手間がないので、<strong>そのまま Linear Regression に入れるだけ</strong>です。</p>
 <pre><code>menu → Statistics → Stat Calculations → Linear Regression (a+bx)</code></pre>
@@ -1965,7 +1983,7 @@ r_s = (\text{順位に対する } r)
 <p><strong>(b)</strong> 答えの意味を、問題の文脈で説明しなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1974,7 +1992,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> Ranks:</p>
 <table class="caption-top table">
@@ -2011,7 +2029,7 @@ r_s = (\text{順位に対する } r)
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2020,7 +2038,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-28" class="callout-28-contents callout-collapse collapse">
+<div id="callout-29" class="callout-29-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <strong>同じ値はありません</strong>ので、ふつうに <span class="math inline">\(1\)</span> 位から <span class="math inline">\(8\)</span> 位まで付けます。</p>
 <p>Maths を大きい順に並べると <span class="math inline">\(92, 88, 78, 74, 70, 65, 60, 55\)</span>。ですから <span class="math inline">\(78\)</span> は <span class="math inline">\(3\)</span> 位、<span class="math inline">\(65\)</span> は <span class="math inline">\(6\)</span> 位、というように付けていきます。</p>
@@ -2080,7 +2098,7 @@ r_s = (\text{順位に対する } r)
 <p><strong>(b)</strong> どちらの係数がこの関係をよりよく表しているかを、理由をつけて述べなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2089,7 +2107,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(r = 0.872\)</span> (3 s.f.), <span class="math inline">\(r_s = 1\)</span></p>
 <p><strong>(b)</strong> <em><span class="math inline">\(r_s\)</span> describes the relationship better. The value increases every year, so the relationship is perfectly monotonic and <span class="math inline">\(r_s = 1\)</span>. However the increase is not linear — the value rises more and more steeply — so Pearson’s <span class="math inline">\(r\)</span> is less than <span class="math inline">\(1\)</span>.</em></p>
@@ -2097,7 +2115,7 @@ r_s = (\text{順位に対する } r)
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2106,7 +2124,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-30" class="callout-30-contents callout-collapse collapse">
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(r\)</span> は<strong>もとの値</strong>、<span class="math inline">\(r_s\)</span> は<strong>順位</strong>で実行します。</p>
 <p>年も価値も<strong>増えていく順</strong>なので、大きいほうから付けると順位はどちらも <span class="math inline">\(7, 6, 5, 4, 3, 2, 1\)</span>。<strong>完全に一致</strong>しているので <span class="math inline">\(r_s = 1\)</span> です。</p>
@@ -2171,7 +2189,7 @@ r_s = (\text{順位に対する } r)
 <p><strong>(b)</strong> outlier がなければ <span class="math inline">\(r = 0.999\)</span>、<span class="math inline">\(r_s = 1\)</span> になります。どちらの係数がより大きく影響を受けるかをコメントし、その理由を説明しなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2180,7 +2198,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(r = 0.692\)</span> (3 s.f.), <span class="math inline">\(r_s = 0.929\)</span> (3 s.f.)</p>
 <p><strong>(b)</strong> <em>Pearson’s <span class="math inline">\(r\)</span> is affected much more, falling from <span class="math inline">\(0.999\)</span> to <span class="math inline">\(0.692\)</span>, because it uses the actual data values and the point <span class="math inline">\((12,\ 95)\)</span> lies far from the straight line. Spearman’s <span class="math inline">\(r_s\)</span> falls only from <span class="math inline">\(1\)</span> to <span class="math inline">\(0.929\)</span>, because it uses only the ranks and the outlier changes that point’s rank by two places.</em></p>
@@ -2188,7 +2206,7 @@ r_s = (\text{順位に対する } r)
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2197,7 +2215,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-32" class="callout-32-contents callout-collapse collapse">
+<div id="callout-33" class="callout-33-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> outlier は <span class="math inline">\((12,\ 95)\)</span> です。<span class="math inline">\(y\)</span> の値がまわりから大きく外れています。</p>
 <p><strong><span class="math inline">\(y\)</span> の順位</strong>を見ます。<span class="math inline">\(95\)</span> は一番大きいので <strong><span class="math inline">\(1\)</span> 位</strong>。<span class="math inline">\(55\)</span> と <span class="math inline">\(50\)</span> が <span class="math inline">\(1\)</span> つずつ下がって、<strong><span class="math inline">\(2\)</span> 位と <span class="math inline">\(3\)</span> 位</strong>になります。</p>
@@ -2286,7 +2304,7 @@ r_s = (\text{順位に対する } r)
 <p><strong>(b)</strong> 答えの意味を、問題の文脈で説明しなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2295,7 +2313,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(r_s = -1\)</span></p>
 <p><strong>(b)</strong> <em>There is a perfect negative monotonic relationship: as the number of hours watching television increases, the memory test score always decreases.</em></p>
@@ -2303,7 +2321,7 @@ r_s = (\text{順位に対する } r)
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2312,7 +2330,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-34" class="callout-34-contents callout-collapse collapse">
+<div id="callout-35" class="callout-35-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> Hours は <span class="math inline">\(6\)</span> が一番大きいので、大きいほうから付けると <span class="math inline">\(6, 5, 4, 3, 2, 1\)</span> 位。</p>
 <p>Score は <span class="math inline">\(100\)</span> が一番大きいので <strong><span class="math inline">\(1\)</span> 位</strong>。順に <span class="math inline">\(2, 3, 4, 5, 6\)</span> 位となり、</p>
@@ -2358,7 +2376,7 @@ r_s = (\text{順位に対する } r)
 <p>（<code>advantage</code> は「利点」、<code>preferred</code> は「好まれる」です。）</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2367,7 +2385,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div id="callout-36" class="callout-36-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em>Spearman’s <span class="math inline">\(r_s\)</span> is less affected by outliers than Pearson’s <span class="math inline">\(r\)</span>, because it uses only the ranks of the data rather than the actual values.</em></p>
 <p><em>For example, if a set of data on house prices contains one extremely expensive house, <span class="math inline">\(r\)</span> would be pulled towards that point, while <span class="math inline">\(r_s\)</span> would still describe the general trend.</em></p>
@@ -2375,7 +2393,7 @@ r_s = (\text{順位に対する } r)
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2384,7 +2402,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-36" class="callout-36-contents callout-collapse collapse">
+<div id="callout-37" class="callout-37-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>利点は2つあります。</strong> どちらか <span class="math inline">\(1\)</span> つを書けば十分です。</p>
 <ol type="1">
@@ -2410,7 +2428,7 @@ r_s = (\text{順位に対する } r)
 <p>（<code>justify</code> は「正当化する・根拠づける」です。）</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2419,14 +2437,14 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div id="callout-38" class="callout-38-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em><span class="math inline">\(r_s\)</span> uses only the ranks of the data, so a value close to <span class="math inline">\(1\)</span> shows that the relationship is monotonic but does not show that it is linear. A regression line assumes a linear relationship, so <span class="math inline">\(r_s\)</span> cannot justify using one. Pearson’s <span class="math inline">\(r\)</span> would be needed to judge whether a linear model is suitable.</em></p>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2435,7 +2453,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-38" class="callout-38-contents callout-collapse collapse">
+<div id="callout-39" class="callout-39-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>回帰直線は「直線の関係」を前提にしています</strong>（SL 4.4）。</p>
 <p><span class="math inline">\(r_s = 0.95\)</span> が言っているのは「<strong>順位がよく合っている</strong>」ということだけで、<strong>直線かどうかは何も言っていません。</strong> <a href="#fig-sl410-monotonic" class="quarto-xref">図&nbsp;1</a> の右のように、<span class="math inline">\(r_s = 1\)</span> でも大きく曲がっていることがあります。</p>
@@ -2463,7 +2481,7 @@ r_s = (\text{順位に対する } r)
 <p>（本書オリジナルの問題です。）</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2472,7 +2490,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div id="callout-40" class="callout-40-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em>The statement is not correct. <span class="math inline">\(r_s\)</span> is calculated from the ranks of the data, not from the values, so <span class="math inline">\(r_s = 1\)</span> only means that the ranks of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> agree exactly.</em></p>
 <p><em>This tells us that the relationship is perfectly monotonic increasing: whenever <span class="math inline">\(x\)</span> increases, <span class="math inline">\(y\)</span> also increases. The points may still lie on a curve. Only <span class="math inline">\(r = 1\)</span> would show that the points lie exactly on a straight line.</em></p>
@@ -2480,7 +2498,7 @@ r_s = (\text{順位に対する } r)
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2489,7 +2507,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-40" class="callout-40-contents callout-collapse collapse">
+<div id="callout-41" class="callout-41-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>この本で何度か出てきた考え方</strong>です。</p>
 <p><span class="math inline">\(r_s = 1\)</span> が言っているのは、<strong>「順位がぴったり同じ」</strong>ということだけ。<a href="#fig-sl410-monotonic" class="quarto-xref">図&nbsp;1</a> の右の細菌のデータがまさにこれで、<span class="math inline">\(r_s = 1\)</span> ですが、<strong>点は曲線の上</strong>にあります。</p>
@@ -2573,7 +2591,7 @@ r_s = (\text{順位に対する } r)
 <p><strong>(d)</strong> 先生は「これは、練習問題を多く解くことが高い得点の<strong>原因</strong>になっていることを示している」と言いました。この主張についてコメントしなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2582,7 +2600,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-41" class="callout-41-contents callout-collapse collapse">
+<div id="callout-42" class="callout-42-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong></p>
 <table class="caption-top table">
@@ -2620,7 +2638,7 @@ r_s = (\text{順位に対する } r)
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-43-contents" aria-controls="callout-43" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2629,7 +2647,7 @@ r_s = (\text{順位に対する } r)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-42" class="callout-42-contents callout-collapse collapse">
+<div id="callout-43" class="callout-43-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <strong><code>Papers</code> に <span class="math inline">\(9\)</span> が2つあります。</strong> 大きい順に並べると <span class="math inline">\(12, 10, 9, 9, 7, 6, 4, 3\)</span> なので、<span class="math inline">\(9\)</span> は <strong><span class="math inline">\(3\)</span> 位と <span class="math inline">\(4\)</span> 位</strong>の場所です。</p>
 <p><span class="math display">\[\frac{3 + 4}{2} = 3.5\]</span></p>

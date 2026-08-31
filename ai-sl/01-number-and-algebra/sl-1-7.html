@@ -770,7 +770,8 @@ window.Quarto = {
 </section>
 <section id="総額と利息" class="level3">
 <h3 class="anchored" data-anchor-id="総額と利息">総額と利息</h3>
-<p>Finance Solver が出してくれるのは <code>Pmt</code> だけです。<strong>そのあとの2つは、自分で計算します。</strong></p>
+<p>この例では、Finance Solver で <code>Pmt</code> を求めました。Finance Solver は <code>N</code>、<code>I(%)</code>、<code>PV</code>、<code>FV</code> など<strong>どの欄でも求められます</strong>（<a href="#tbl-fs-uses" class="quarto-xref">表&nbsp;5</a>）。</p>
+<p>ただし、<strong>総返済額と支払った利息は、どの欄にもありません。</strong> 画面には出てこないので、次の <span class="math inline">\(2\)</span> つは自分で計算します。</p>
 <p><span id="eq-total-paid"><span class="math display">\[
 \text{総返済額} = |Pmt| \times N
 \tag{1}\]</span></span></p>
@@ -786,6 +787,18 @@ window.Quarto = {
 </section>
 <section id="why-it-works" class="level2">
 <h2 class="anchored" data-anchor-id="why-it-works">Why it works</h2>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>クリックすると開きます
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>ここでは、<strong>なぜ電卓が必要なのか</strong>だけを見ます。annuity の公式はシラバスで試験に出ないと明記されているので、深入りしません。</p>
 <p><span class="math inline">\(\$15\,000\)</span> を年利 <span class="math inline">\(6\%\)</span>（monthly）で借りて、毎月 <span class="math inline">\(\$289.99\)</span> 返すとします。1か月あたりの利率は <span class="math inline">\(\dfrac{6\%}{12} = 0.5\%\)</span> です。</p>
 <p><strong>1回目の返済で何が起きるか</strong>を追ってみましょう。</p>
@@ -843,6 +856,9 @@ window.Quarto = {
 <p>借金が少しずつ削られて、最後に <span class="math inline">\(0\)</span> になることを <strong>amortize</strong>（償却する）といいます。</p>
 <p><a href="#tbl-first-payment" class="quarto-xref">表&nbsp;3</a> の「元本が減った分」が、まさに削られている部分です。<strong>最初は利息の割合が大きく、終わりに近づくほど元本の割合が大きくなります。</strong></p>
 <p>ローンを組んだ最初の数年は、返しても返しても元本が減らない、と感じるのはこのためです。</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </section>
@@ -1244,7 +1260,8 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-body-container callout-body">
 <p><code>monthly</code> で5年なら <span class="math inline">\(N = 60\)</span> です。<span class="math inline">\(5\)</span> ではありません。</p>
-<p><span class="math inline">\(PpY\)</span>、<span class="math inline">\(CpY\)</span>、<span class="math inline">\(N\)</span> の<strong>3つはセットで動きます。</strong> <span class="math inline">\(PpY = CpY = 12\)</span> にしたら、<span class="math inline">\(N\)</span> も <span class="math inline">\(12 \times (\text{年数})\)</span> にしてください。</p>
+<p><span class="math inline">\(N\)</span> は<strong>支払いの総回数</strong>なので、ふつうは <span class="math inline">\((\text{年数}) \times PpY\)</span> で決めます。<span class="math inline">\(PpY = 12\)</span> で <span class="math inline">\(5\)</span> 年なら <span class="math inline">\(N = 60\)</span> です。</p>
+<p>いっぽう <span class="math inline">\(CpY\)</span> は、<strong>問題文に書かれた複利計算の頻度</strong>に合わせます。<code>compounded monthly</code> なら <span class="math inline">\(12\)</span>、<code>compounded quarterly</code> なら <span class="math inline">\(4\)</span> です。</p>
 <p>答えが極端に小さい（または大きい）ときは、まず <span class="math inline">\(N\)</span> を疑ってください。</p>
 </div>
 </div>
@@ -1334,6 +1351,11 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </figcaption>
 <div aria-describedby="tbl-fs-17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>欄</th>
@@ -1344,8 +1366,8 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 <tbody>
 <tr class="odd">
 <td><code>N</code></td>
-<td>支払いの回数</td>
-<td>年数 <span class="math inline">\(\times\)</span> <span class="math inline">\(k\)</span></td>
+<td>支払いの総回数</td>
+<td>年数 <span class="math inline">\(\times\)</span> <code>PpY</code></td>
 </tr>
 <tr class="even">
 <td><code>I(%)</code></td>
@@ -1369,13 +1391,13 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </tr>
 <tr class="even">
 <td><code>PpY</code></td>
-<td>payments per year</td>
-<td><span class="math inline">\(k\)</span></td>
+<td>payments per year（<span class="math inline">\(1\)</span> 年間の<strong>支払回数</strong>）</td>
+<td>毎月払いなら <span class="math inline">\(12\)</span></td>
 </tr>
 <tr class="odd">
 <td><code>CpY</code></td>
-<td>compoundings per year</td>
-<td><span class="math inline">\(k\)</span></td>
+<td>compoundings per year（<span class="math inline">\(1\)</span> 年間の<strong>複利計算回数</strong>）</td>
+<td><code>compounded monthly</code> なら <span class="math inline">\(12\)</span></td>
 </tr>
 <tr class="even">
 <td><code>PmtAt</code></td>
@@ -1387,6 +1409,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 </figure>
 </div>
+<p><code>PpY</code> と <code>CpY</code> は<strong>別のもの</strong>ですが、この項目に出てくる問題は「毎月返して、毎月複利」のように <span class="math inline">\(2\)</span> つがそろっている場合がほとんどです。そのときは <span class="math inline">\(PpY = CpY = 12\)</span> のように<strong>同じ値</strong>を入れます。ずれている問題（たとえば毎月払いで四半期複利）が出たら、<strong>それぞれ別々に入れてください。</strong></p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1562,7 +1585,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 <p><span class="math inline">\(\$8000\)</span> のローンを、名目年利 <span class="math inline">\(7\%\)</span>（利息は毎月）で借り、4年間の毎月同額の返済で返します。毎月の返済額を、小数第2位まで求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1571,7 +1594,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[N = 48, \quad I\% = 7, \quad PV = 8000, \quad FV = 0, \quad PpY = CpY = 12\]</span></p>
 <p><em>Using the GDC Finance Solver:</em></p>
@@ -1580,7 +1603,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1589,7 +1612,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-30" class="callout-30-contents callout-collapse collapse">
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\(N = 12 \times 4 = 48\)</span> です。<span class="math inline">\(4\)</span> ではありません。</p>
 <p><strong>借りるので <span class="math inline">\(PV\)</span> は正、返すので <span class="math inline">\(Pmt\)</span> は負</strong>（<a href="#tbl-signs" class="quarto-xref">表&nbsp;2</a>）。<span class="math inline">\(Pmt\)</span> が負で返ってきたら、正しく入力できています。</p>
@@ -1612,7 +1635,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 <p><strong>(b)</strong> 得た利息の総額を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1621,7 +1644,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[N = 120, \quad I\% = 5, \quad PV = 0, \quad Pmt = -150, \quad PpY = CpY = 12\]</span></p>
 <p><strong>(a)</strong> <em>Using the GDC Finance Solver:</em> <span class="math display">\[FV = 23\,292.34\ldots \approx \$23\,292.34\]</span></p>
@@ -1630,7 +1653,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1639,7 +1662,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-32" class="callout-32-contents callout-collapse collapse">
+<div id="callout-33" class="callout-33-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>積み立てる年金なので <span class="math inline">\(PV = 0\)</span> です。<strong>空欄のままにせず、<span class="math inline">\(0\)</span> と入れてください。</strong></p>
 <p>払い込むので <span class="math inline">\(Pmt = -150\)</span>。<span class="math inline">\(FV\)</span> が正で返ってくれば正しい向きです。</p>
@@ -1658,7 +1681,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 <p>プリヤさんは、名目年利 <span class="math inline">\(4.5\%\)</span>（利息は毎月）の口座に <span class="math inline">\(\$180\,000\)</span> を持っています。彼女は15年間、毎月末に同じ額を引き出していき、15年後に口座が空になります。毎月の引き出し額を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1667,7 +1690,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[N = 180, \quad I\% = 4.5, \quad PV = -180\,000, \quad FV = 0, \quad PpY = CpY = 12\]</span></p>
 <p><em>Using the GDC Finance Solver:</em></p>
@@ -1676,7 +1699,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1685,7 +1708,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-34" class="callout-34-contents callout-collapse collapse">
+<div id="callout-35" class="callout-35-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>受け取る年金なので、<strong>預ける <span class="math inline">\(PV\)</span> が負、受け取る <span class="math inline">\(Pmt\)</span> が正</strong>です（<a href="#tbl-signs" class="quarto-xref">表&nbsp;2</a>）。</p>
 <p><span class="math inline">\(\dfrac{180\,000}{180} = \$1000\)</span> ですが、答えは <span class="math inline">\(\$1376.99\)</span>。<strong>残っているお金に利息がつく</strong>ので、単純な割り算より多く受け取れます（<a href="#tbl-sanity" class="quarto-xref">表&nbsp;6</a>）。</p>
@@ -1708,7 +1731,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 <p><strong>(b)</strong> 6年間に支払う利息の総額を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1717,7 +1740,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div id="callout-36" class="callout-36-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[N = 72, \quad I\% = 5.5, \quad PV = 22\,000, \quad FV = 0, \quad PpY = CpY = 12\]</span></p>
 <p><strong>(a)</strong> <em>Using the GDC Finance Solver:</em> <span class="math display">\[Pmt = -359.43\ldots \quad \Rightarrow \quad \$359.43\]</span></p>
@@ -1726,7 +1749,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1735,7 +1758,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-36" class="callout-36-contents callout-collapse collapse">
+<div id="callout-37" class="callout-37-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol start="2" type="a">
 <li>は <a href="#eq-total-paid" class="quarto-xref">式&nbsp;1</a> と <a href="#eq-total-interest" class="quarto-xref">式&nbsp;2</a> のとおりです。<strong>Finance Solver は総額を出してくれない</strong>ので、自分で掛け算と引き算をします。</li>
@@ -1755,7 +1778,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 <p>問題4のローンについて、4年後にまだ残っている借金の額を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1764,7 +1787,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div id="callout-38" class="callout-38-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em>Using the GDC Finance Solver with <span class="math inline">\(N = 48\)</span> and the same <span class="math inline">\(Pmt\)</span>:</em></p>
 <p><span class="math display">\[N = 48, \quad I\% = 5.5, \quad PV = 22\,000, \quad Pmt = -359.43\ldots, \quad PpY = CpY = 12\]</span></p>
@@ -1773,7 +1796,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1782,7 +1805,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-38" class="callout-38-contents callout-collapse collapse">
+<div id="callout-39" class="callout-39-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong><span class="math inline">\(N\)</span> だけを <span class="math inline">\(48\)</span> に変えて、<span class="math inline">\(FV\)</span> を求めます。</strong> 「4年で終わるローン」だと思えばよい、というのが考え方です。</p>
 <p><span class="math inline">\(FV\)</span> は負で返ってきますが、答えは大きさで書きます。</p>
@@ -1801,7 +1824,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 <p><span class="math inline">\(\$12\,000\)</span> の借金に、名目年利 <span class="math inline">\(8\%\)</span>（利息は毎月）で利息がかかります。毎月末に <span class="math inline">\(\$250\)</span> ずつ支払います。借金を返し終えるのに必要な月数を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1810,7 +1833,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div id="callout-40" class="callout-40-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[I\% = 8, \quad PV = 12\,000, \quad Pmt = -250, \quad FV = 0, \quad PpY = CpY = 12\]</span></p>
 <p><em>Using the GDC Finance Solver:</em></p>
@@ -1819,7 +1842,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1828,7 +1851,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-40" class="callout-40-contents callout-collapse collapse">
+<div id="callout-41" class="callout-41-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\(58.04\)</span> を <span class="math inline">\(58\)</span> にしないでください。<strong><span class="math inline">\(58\)</span> 回払っても、まだ <span class="math inline">\(\$10.46\)</span> 残っています。</strong></p>
 <p><span class="math inline">\(59\)</span> 回目の支払いは <span class="math inline">\(\$10.53\)</span> で済みますが、<strong>回数としては <span class="math inline">\(59\)</span> 回必要</strong>です。</p>
@@ -1847,7 +1870,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 <p><span class="math inline">\(\$10\,000\)</span> のローンを、5年間、毎月 <span class="math inline">\(\$220\)</span> ずつで返します。利息は毎月つきます。名目年利を有効数字3桁で求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1856,7 +1879,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-41" class="callout-41-contents callout-collapse collapse">
+<div id="callout-42" class="callout-42-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[N = 60, \quad PV = 10\,000, \quad Pmt = -220, \quad FV = 0, \quad PpY = CpY = 12\]</span></p>
 <p><em>Using the GDC Finance Solver:</em></p>
@@ -1865,7 +1888,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-43-contents" aria-controls="callout-43" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1874,7 +1897,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-42" class="callout-42-contents callout-collapse collapse">
+<div id="callout-43" class="callout-43-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Finance Solver は、どの欄でも求められます</strong>（<a href="#tbl-fs-uses" class="quarto-xref">表&nbsp;5</a>）。今回は <span class="math inline">\(I\%\)</span> の欄で <code>enter</code> を押すだけです。</p>
 <p><strong>検算。</strong> 総返済額は <span class="math inline">\(220 \times 60 = \$13\,200\)</span> で、借りた <span class="math inline">\(\$10\,000\)</span> より <span class="math inline">\(\$3200\)</span> 多い。5年で <span class="math inline">\(32\%\)</span> 多く返しているので、年利は <span class="math inline">\(10\%\)</span> を超えるくらい。<span class="math inline">\(11.5\%\)</span> はつじつまが合っています。</p>
@@ -1899,7 +1922,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 <p><strong>(c)</strong> それぞれの場合の利息の総額を求め、その違いについてコメントしなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-43-contents" aria-controls="callout-43" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-44-contents" aria-controls="callout-44" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1908,7 +1931,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-43" class="callout-43-contents callout-collapse collapse">
+<div id="callout-44" class="callout-44-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[I\% = 6, \quad PV = 20\,000, \quad FV = 0, \quad PpY = CpY = 12\]</span></p>
 <p><strong>(a)</strong> <span class="math inline">\(N = 36\)</span>: <span class="math display">\[Pmt = -608.44\ldots \quad \Rightarrow \quad \$608.44\]</span></p>
@@ -1919,7 +1942,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-44-contents" aria-controls="callout-44" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-45-contents" aria-controls="callout-45" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1928,7 +1951,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-44" class="callout-44-contents callout-collapse collapse">
+<div id="callout-45" class="callout-45-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>期間を2倍にすると、毎月の返済は半分近くになりますが、利息は約2倍になります。</strong></p>
 <p>毎月の負担だけを見て「6年のほうが楽」と考えがちですが、<strong>払う総額は <span class="math inline">\(\$1961\)</span> 多くなります。</strong> これが <code>Comment on</code> で書くべき内容です。</p>
@@ -1951,7 +1974,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 <p><strong>(b)</strong> 払い込む総額を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-45-contents" aria-controls="callout-45" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-46-contents" aria-controls="callout-46" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1960,7 +1983,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-45" class="callout-45-contents callout-collapse collapse">
+<div id="callout-46" class="callout-46-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[N = 144, \quad I\% = 4.8, \quad PV = 0, \quad FV = 50\,000, \quad PpY = CpY = 12\]</span></p>
 <p><strong>(a)</strong> <em>Using the GDC Finance Solver:</em> <span class="math display">\[Pmt = -257.44\ldots \quad \Rightarrow \quad \$257.44\]</span></p>
@@ -1969,7 +1992,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-46-contents" aria-controls="callout-46" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-47-contents" aria-controls="callout-47" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1978,7 +2001,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-46" class="callout-46-contents callout-collapse collapse">
+<div id="callout-47" class="callout-47-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>目標額が <span class="math inline">\(FV\)</span> です。</strong> <span class="math inline">\(\$50\,000\)</span> を <span class="math inline">\(FV\)</span> の欄に正の数で入れ、<span class="math inline">\(PV = 0\)</span>、<span class="math inline">\(Pmt\)</span> の欄で <code>enter</code> を押します。</p>
 <p>これまでと違って、<strong>求めるのが <span class="math inline">\(Pmt\)</span> で、<span class="math inline">\(FV\)</span> が分かっている</strong>という形です。Finance Solver はどの欄でも求められるので、やることは変わりません。</p>
@@ -2006,7 +2029,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 <p><strong>(d)</strong> この家族が20年のローンを選ぶべきかどうか、コメントしなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-47-contents" aria-controls="callout-47" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-48-contents" aria-controls="callout-48" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2015,7 +2038,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-47" class="callout-47-contents callout-collapse collapse">
+<div id="callout-48" class="callout-48-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[I\% = 4.2, \quad PV = 320\,000, \quad FV = 0, \quad PpY = CpY = 12\]</span></p>
 <p><strong>(a)</strong> <span class="math inline">\(N = 300\)</span>: <span class="math display">\[Pmt = -1724.62\ldots \quad \Rightarrow \quad \$1724.62\]</span></p>
@@ -2026,7 +2049,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-48-contents" aria-controls="callout-48" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-49-contents" aria-controls="callout-49" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2035,7 +2058,7 @@ N = 24.50\ldots \quad \longrightarrow \quad \mathbf{25} \ \text{か月}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-48" class="callout-48-contents callout-collapse collapse">
+<div id="callout-49" class="callout-49-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(d) が、この問題の本体です。</strong> <code>Comment on whether ... should</code> と聞かれたら、<strong>「どちらか一方が正しい」とは書けません。</strong></p>
 <p>数字だけ見れば20年のほうが <span class="math inline">\(\$43\,858\)</span> 得です。ですが毎月 <span class="math inline">\(\$248\)</span> 多く払える家族でなければ、その選択はできません。</p>
