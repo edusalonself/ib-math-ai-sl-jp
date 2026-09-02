@@ -6,41 +6,85 @@ sidebar: ai-hl
 
 ::: {.callout-note}
 ## What you should be able to do
-- **graph**（グラフ）の **vertex**（頂点）と **edge**（辺）が何かを言える。
-- **adjacent vertices**（隣り合う頂点）、**adjacent edges**（隣り合う辺）、**degree**（次数）が読める。
-- degree の合計が edge の数の $2$ 倍になることを使える。
-- **simple graph**（単純グラフ）、**complete graph**（完全グラフ）、**weighted graph**（重み付きグラフ）を見分けられる。
-- **directed graph**（有向グラフ）の **in degree** と **out degree** を数えられる。
-- **connected**（連結）と **strongly connected**（強連結）のちがいを説明できる。
-- **subgraph**（部分グラフ）と **tree**（木）が何かを言える。
-- 道路網や部屋の配置など、**現実のものをグラフで表せる**。
+- 道路網・部屋・回路などの**現実の構造を、自分で graph に直せる**。何を **vertex**（頂点）にし、何を **edge**（辺）にするかを決められる。
+- **adjacent**（隣り合う）と **degree**（次数）を読み取り、degree の合計が edge の数の $2$ 倍になる理由を言える。
+- **unweighted / weighted**、**directed**、**simple**、**complete** を見分けられる。
+- **adjacent** と **connected**（連結）のちがい、**connected** と **strongly connected**（強連結）のちがいを説明できる。
+- **subgraph**（部分グラフ）が何かを言える。
+- **tree**（木）かどうかを、**connected であること**と **cycle がないこと**の $2$ つで判定できる。
 :::
 
 ::: {.callout-note}
 ## 日本の高校では習いません
 graph theory は、日本の高校数学の課程にありません。ですから、**まったく初めてで当たり前**です。このページは、何も知らないところから読めるように書いてあります。
 
-新しいのは**言葉だけ**で、計算そのものは足し算と数えることしかありません。**用語を覚えるのが、この項目の中身**です。
+計算そのものは、足し算と数えることだけです。**新しいのは言葉と、その言葉が何を指しているか**です。
 :::
 
-::: {.callout-important}
-## 公式集には、graph theory の欄がありません
-AI HL の formula booklet で Topic 3 に欄があるのは、**AHL 3.9 の変換行列**と、ベクトルの **AHL 3.10、3.11、3.13** だけです。**graph theory の欄は $1$ つもありません。**
+::: {.callout-note}
+## graph theory は $3$ ページ続きます
+この $3$ つは、$1$ つの単元です。
 
-ですから、この項目で出てくる数少ない関係（degree の合計、complete graph の edge の数、tree の edge の数）は、**自分で覚えることになります。** どれも短いので、意味と一緒に覚えてしまってください。出てくるたびに、その場で説明します。
+| ページ | やること |
+|---|---|
+| **AHL 3.14**（このページ） | 現実の構造を graph に直し、**言葉を決める** |
+| [AHL 3.15](ahl-3-15.qmd) | graph を **adjacency matrix** に直して、**計算する** |
+| [AHL 3.16](ahl-3-16.qmd) | graph の上の**道**と、**最適化の algorithm** |
+
+このページで決めた言葉が、あとの $2$ ページでそのまま使われます。**急がずに、言葉の指すものを図で確かめながら読んでください。**
+
+なお、公式集にはこの $3$ ページの欄がありません。ただ、出てくる関係はどれも短く、**理由から作り直せます**。このページでも、そのつど理由を書きます。
 :::
 
 ## The idea
 
-この項目は、**「何と何がつながっているか」だけを取り出して図にする**項目です。
+### 1. まず、現実のものを graph にします {#modelling}
 
-### 1. graph は、点と線だけの図です {#what}
+シラバスは、この項目の出発点をこう書いています。
 
-**graph**（グラフ）は、**vertex**（頂点）と、それを結ぶ **edge**（辺）でできています。
+> Students should be able to represent real-world structures (circuits, maps, etc) as graphs (weighted and unweighted)
+
+つまり、**現実の場面を点と線に直すところ**から始まります。定義より先に、その作業を見てください。
+
+![From a map to a weighted graph](img/ahl-3-14-map.svg){#fig-ahl314-map width=98%}
+
+@fig-ahl314-map の左は地図です。町の位置、道路の曲がりぐあい、地図上の距離——いろいろな情報が入っています。
+
+右は、同じ場面から**「どの町とどの町が道でつながっているか」と「その距離」だけ**を取り出したものです。
+
+::: {.callout-important}
+## 捨てるのは位置、残すのは接続関係
+地図では、町の**位置**に意味がありました。右の図には、その意味がありません。**点をどこに置いても構いません。**
+
+残っているのは、**つながり方**（と、書き込まれた数）だけです。この「位置を捨てて、つながりだけを残した図」が **graph**（グラフ）です。
+:::
+
+同じことは、地図以外でもできます。
+
+| 現実のもの | vertex にするもの | edge にするもの |
+|---|---|---|
+| 道路網 | 町・交差点 | 道路 |
+| 部屋の配置 | 部屋 | ドア・通路 |
+| 電気回路 | 接続点 | 配線 |
+| 航空路線 | 空港 | 路線 |
+| ウェブサイト | ページ | リンク（**向きがあります**） |
+
+: 何を vertex にするか {#tbl-ahl314-model}
+
+::: {.callout-tip}
+## 「何を vertex にするか」を先に決めてください
+文章題では、まずここで迷います。**つながれる側**が vertex、**つなぐもの**が edge です。
+
+道路の問題なら、道路そのものを vertex にしてはいけません。町が vertex です。
+:::
+
+### 2. graph、vertex、edge {#what}
+
+言葉を決めます。**graph** は、**vertex**（頂点）と、それを結ぶ **edge**（辺）でできた図です。
 
 ![The parts of a graph](img/ahl-3-14-parts.svg){#fig-ahl314-parts width=84%}
 
-@fig-ahl314-parts には、vertex が $5$ つ、edge が $6$ 本あります。vertex は **vertices** と複数形になります。
+@fig-ahl314-parts には vertex が $5$ つ、edge が $6$ 本あります。vertex の複数形は **vertices** です。
 
 ::: {.callout-warning}
 ## 「グラフ」でも、$y = f(x)$ のグラフとは別のものです
@@ -49,27 +93,75 @@ AI HL の formula booklet で Topic 3 に欄があるのは、**AHL 3.9 の変�
 この項目の graph には、軸も座標もありません。あるのは「点」と「つながり」だけです。
 :::
 
-いちばん大事なのは、**点をどこに置いたかには意味がない**ということです。
+[第1節](#modelling)で位置を捨てたので、**同じ graph を、いくらでも違う形に描けます。**
 
 ![The same graph, drawn in two ways](img/ahl-3-14-same.svg){#fig-ahl314-same width=96%}
 
 @fig-ahl314-same の $2$ つは、見た目がまるで違いますが、**同じ graph** です。vertex の名前も、どれとどれが結ばれているかも、まったく同じだからです。
 
-**線の長さも、曲がっているかどうかも、関係ありません。** 意味があるのは「つながっているか、いないか」だけです。
+**線の長さも、曲がっているかどうかも、関係ありません。**
 
-### 2. adjacent と degree {#terms}
+### 3. 線が交差しても、そこは vertex ではありません {#crossing}
 
-用語を $3$ つ入れます。
+図を描き直していると、線どうしが交わることがあります。
 
-- $2$ つの vertex が edge で結ばれているとき、その $2$ つは **adjacent**（隣り合っている）といいます
-- $2$ 本の edge が同じ vertex を共有しているとき、その $2$ 本は **adjacent edges** です
-- $1$ つの vertex から出ている edge の本数を、その vertex の **degree**（次数）といいます
+![A crossing is not a vertex](img/ahl-3-14-crossing.svg){#fig-ahl314-crossing width=98%}
+
+@fig-ahl314-crossing の左では、$AD$ と $BC$ が真ん中で交わっています。**その交点は vertex ではありません。**
+
+vertex は、**丸が描いてあるところだけ**です。交点に丸がなければ、そこは「たまたま紙の上で線が重なった場所」にすぎません。
+
+右は、まったく同じ graph を、交差しないように描き直したものです。**vertex は $4$ つ、edge は $4$ 本**——左と同じです。
+
+::: {.callout-warning}
+## 交点を数えて、vertex が $5$ つと答えない
+左の図を見て「vertex は $5$ つ」と書いてしまうのが、この項目のいちばん最初の誤りです。
+
+**丸の数を数えてください。** 交差は、描き方の都合で出たり消えたりします。
+:::
+
+### 4. adjacent — 隣り合っているということ {#adjacent}
+
+言葉を $2$ つ入れます。どちらも「$1$ 本の edge を共有している」という意味です。
+
+- $2$ つの **vertex** が edge $1$ 本で直接結ばれているとき、その $2$ つは **adjacent vertices**（隣接する頂点）といいます
+- $2$ 本の **edge** が同じ vertex を共有しているとき、その $2$ 本は **adjacent edges**（隣接する辺）といいます
+
+@fig-ahl314-parts では、$A$ と $B$ は adjacent です。$A$ と $E$ は、直接結ばれていないので adjacent ではありません。
+
+[Write down the vertices adjacent to $B$.]{.q-en} と問われたら、**$B$ から edge が $1$ 本で届く先を全部**書きます。
+
+### 5. degree は、vertex に付いている edge の端の数です {#degree}
+
+**degree**（次数）$\deg(v)$ は、**その vertex に付いている edge の「端」の数**です。
 
 ![The degree of each vertex](img/ahl-3-14-degree.svg){#fig-ahl314-degree width=86%}
 
-@fig-ahl314-degree で、$B$ から出ている edge は $BA$、$BC$、$BD$ の $3$ 本なので $\deg(B) = 3$ です。$E$ からは $1$ 本しか出ていないので $\deg(E) = 1$ です。
+@fig-ahl314-degree で、$B$ に付いているのは $BA$、$BC$、$BD$ の $3$ 本なので $\deg(B) = 3$ です。$E$ には $1$ 本しか付いていないので $\deg(E) = 1$ です。
 
-#### degree の合計は、edge の数の $2$ 倍です {#handshake}
+「出ている edge の本数」と言っても、ふつうは同じことになります。ただし、**$1$ か所だけ違う場面**があります。
+
+::: {.callout-important}
+## loop は、degree に $2$ と数えます
+**loop**（自己ループ）は、同じ vertex にもどってくる edge です。この edge は、**両方の端が同じ vertex に付いています。**
+
+ですから、loop $1$ 本は degree に **$2$** を足します。$1$ ではありません。
+
+![A loop adds 2 to the degree](img/ahl-3-14-loop.svg){#fig-ahl314-loop width=98%}
+
+@fig-ahl314-loop の左では、$P$ に $PQ$ と $PR$ の $2$ 本が付いていて $\deg(P) = 2$ です。右で loop を $1$ 本足すと、その $1$ 本が**赤い点の $2$ か所で $P$ に付きます。** ですから端の数は $2$ 増えて、$\deg(P) = 4$ になります。
+
+「edge の本数」ではなく「**端の数**」と覚えておくと、ここで迷いません。
+:::
+
+::: {.callout-note}
+## degree の値だけで、edge の本数は決まりません
+$\deg(v) = 4$ と分かっても、$v$ に付いている edge が $4$ 本とはかぎりません。loop が $1$ 本あれば、edge は $3$ 本です。
+
+試験に出る graph の多くは loop のない **simple graph**（[第8節](#kinds)）なので、ふだんは気にせずに済みます。**loop が描いてあるときだけ、ここに戻ってきてください。**
+:::
+
+### 6. degree の合計は、edge の数の $2$ 倍です {#handshake}
 
 @fig-ahl314-degree の degree を全部足すと $2+3+3+3+1 = 12$ で、edge の数 $6$ のちょうど $2$ 倍です。これは**いつでも成り立ちます。**
 
@@ -77,7 +169,13 @@ $$
 \sum \deg(v) = 2 \times (\text{number of edges})
 $$ {#eq-ahl314-handshake}
 
-**公式集にはありません。覚えてください。** 理由は[Why it works](#why-it-works)で説明します。そこが分かっていれば、忘れても作り直せます。
+**覚えるものではありません。** 理由が $1$ 行だからです。
+
+> **$1$ 本の edge には、端が $2$ つある。**
+
+degree は「端の数」でした（[第5節](#degree)）。ですから、graph 全体の degree を足すということは、**全部の edge の端を数えている**ことになります。edge が $6$ 本なら端は $12$ 個、それが合計です。
+
+loop も、この $1$ 行にそのまま従います。loop の $2$ つの端は同じ vertex に付いているので、その vertex の degree に $2$ を足します。
 
 ::: {.callout-tip}
 ## 数え忘れの検算に使えます
@@ -86,15 +184,49 @@ degree を全部書き出したあと、合計が **edge の数の $2$ 倍にな
 **degree の合計は、必ず偶数です。** 奇数になったら、その時点で間違いです。
 :::
 
-### 3. graph の種類 {#kinds}
+### 7. unweighted graph と weighted graph {#weighted}
 
-問題文でよく出る $3$ つの言い方があります。
+ここまでの graph は、edge に何も書いてありませんでした。これを **unweighted graph**（重みなしグラフ）といいます。
+
+![Unweighted and weighted graphs](img/ahl-3-14-weighted.svg){#fig-ahl314-weighted width=98%}
+
+**weighted graph**（重み付きグラフ）は、edge $1$ 本ずつに**数**が書き込まれた graph です。その数を **weight**（重み）といいます。
+
+$2$ つの違いは、**答えられる問いの種類**です。
+
+| | 書いてあるもの | 答えられる問い |
+|---|---|---|
+| **unweighted** | つながっているかどうかだけ | 行けるか。何本の edge を通るか |
+| **weighted** | それに加えて、各 edge の数 | **どれだけかかるか**。どれがいちばん短いか |
+
+: unweighted と weighted {#tbl-ahl314-weighted}
+
+weight は距離とはかぎりません。**時間・費用・容量**など、問題文が決めます。
+
+::: {.callout-warning}
+## weight の大小と、線の長さは無関係です
+weight $9$ の edge が、weight $2$ の edge より短く描いてあることがあります。**図の見た目ではなく、書かれた数を読んでください。**
+
+[第1節](#modelling)で位置を捨てたので、線の長さには意味がありません。
+:::
+
+::: {.callout-note}
+## weight は、AHL 3.16 の主役です
+[AHL 3.16](ahl-3-16.qmd) の「最短の道」「いちばん軽くつなぐ」という問題は、すべて weighted graph の話です。
+
+このページでは、**足して比べられれば十分**です。
+:::
+
+### 8. simple graph、complete graph、directed graph {#kinds}
+
+問題文でよく出る言い方を、あと $3$ つ入れます。
 
 ![Kinds of graph](img/ahl-3-14-kinds.svg){#fig-ahl314-kinds width=100%}
 
-- **simple graph**（単純グラフ）… **loop**（同じ vertex にもどる edge）も、**multiple edge**（同じ $2$ 点を結ぶ $2$ 本以上の edge）もない graph
+- **simple graph**（単純グラフ）… **loop** も、**multiple edge**（多重辺。同じ $2$ 点を結ぶ $2$ 本以上の edge）もない graph
 - **complete graph**（完全グラフ）… **どの $2$ つの vertex も** edge で結ばれている graph。vertex が $n$ 個のものを $K_n$ と書きます
-- **weighted graph**（重み付きグラフ）… edge に数（距離・費用・時間など）が書き込まれている graph
+
+@fig-ahl314-kinds のいちばん右には、[第7節](#weighted)の **weighted graph** も並べてあります。$3$ つ目の **directed graph** は、このあとの見出しで扱います。
 
 #### complete graph の edge の数 {#complete}
 
@@ -104,19 +236,21 @@ $$
 \text{number of edges of } K_n = \frac{n(n-1)}{2}
 $$ {#eq-ahl314-complete}
 
+これも、理由のほうが短いものです。$1$ つの vertex から $n-1$ 本ずつ出ているので、端は全部で $n(n-1)$ 個。@eq-ahl314-handshake より、edge はその半分です。
+
 **検算。** @fig-ahl314-kinds の $K_5$ なら $\dfrac{5 \times 4}{2} = 10$ 本 ✓
 
-$K_n$ の各 vertex は、**自分以外の全部**と結ばれているので $\deg = n - 1$ です。@eq-ahl314-handshake で確かめると $n(n-1) = 2 \times \dfrac{n(n-1)}{2}$ ✓
+電卓の `nCr(n, 2)` でも同じ値が出ます。$\dfrac{n(n-1)}{2}$ が「$n$ 個から $2$ 個を選ぶ組み合わせ」の式だからです。
 
-これも公式集にはありません。ただ、**$\dfrac{n(n-1)}{2}$ は「$n$ 個から $2$ 個を選ぶ組み合わせ」の式**なので、電卓の `nCr(n, 2)` でも出せます。
-
-### 4. directed graph では、向きを数えます {#directed}
+#### directed graph {#directed}
 
 edge に矢印が付いたものを **directed graph**（有向グラフ）といいます。一方通行の道路や、$1$ 方向だけのリンクを表すのに使います。
 
+矢印の付いていない、ここまで見てきたほうの graph は **undirected graph**（無向グラフ）です。**このサイトでは、以降どちらも英語のまま書きます。**
+
 ![In degree and out degree](img/ahl-3-14-directed.svg){#fig-ahl314-directed width=90%}
 
-矢印が入ってくる本数を **in degree**、出ていく本数を **out degree** といいます。
+矢印が入ってくる本数を **in degree**（入次数）、出ていく本数を **out degree**（出次数）といいます。
 
 @fig-ahl314-directed の $D$ には $C$ と $B$ から $2$ 本入り、$A$ へ $1$ 本出ているので、in degree $= 2$、out degree $= 1$ です。
 
@@ -129,13 +263,31 @@ directed graph では、$A$ から $B$ へ行けても、$B$ から $A$ へ行�
 問題文に `directed` があるか、図に矢印が付いているか。**そこを見てから数え始めてください。**
 :::
 
-### 5. connected と strongly connected {#connected}
+### 9. adjacent と connected は、別のことです {#connected}
 
-**connected**（連結）は、**どの $2$ つの vertex のあいだにも道がある**という意味です。
+似ていますが、指しているものが違います。
+
+![Adjacent and connected](img/ahl-3-14-adjacent.svg){#fig-ahl314-adjacent width=94%}
+
+- **adjacent** … **edge $1$ 本で直接**結ばれている（[第4節](#adjacent)）
+- **connected**（連結）… **edge を何本か乗りついで**行き来できる
+
+@fig-ahl314-adjacent で、$A$ と $B$ は adjacent です。$A$ と $D$ は adjacent ではありませんが、$A \to B \to C \to D$ と乗りついで行けるので **connected** です。
+
+graph 全体について `connected` と言うときは、**どの $2$ つの vertex のあいだにも、乗りついで行ける道がある**という意味です。
 
 ![Connected and strongly connected](img/ahl-3-14-connected.svg){#fig-ahl314-connected width=100%}
 
-@fig-ahl314-connected の真ん中は、左半分と右半分のあいだに edge がないので、**connected ではありません。**
+@fig-ahl314-connected の真ん中は、左半分と右半分のあいだに edge が $1$ 本もないので、**connected ではありません。**
+
+::: {.callout-warning}
+## 「$A$ と $D$ は結ばれていないから connected ではない」としない
+それは **adjacent** でないというだけです。connected は、**乗りついでよい**のです。
+
+`connected` と問われたら、**行ける道を $1$ つ書いて**示してください。
+:::
+
+### 10. strongly connected {#strong}
 
 directed graph では、もう $1$ 段きびしい言い方があります。**strongly connected**（強連結）は、**どの $2$ つの vertex についても、矢印の向きに従って行き来できる**という意味です。
 
@@ -145,78 +297,104 @@ $A$ から $B$ へ行けるだけでは足りません。**$B$ から $A$ へも
 ## 一方通行の街だと思ってください
 strongly connected は、「どの交差点からどの交差点へも、一方通行の標識を守ったまま行ける」という意味です。
 
-矢印を全部無視すれば connected なのに、向きを守ると行けない場所ができる——これが strongly connected でない graph です。この区別は、[AHL 3.15](ahl-3-15.qmd) の transition matrix で必要になります。
+矢印を全部無視すれば connected なのに、向きを守ると行けない場所ができる——これが strongly connected でない graph です。この区別は、[AHL 3.15](ahl-3-15.qmd#transition) の transition matrix で必要になります。
 :::
 
-### 6. subgraph と tree {#tree}
+### 11. subgraph {#subgraph}
 
-**subgraph**（部分グラフ）は、**もとの graph から vertex と edge をいくつか選んだもの**です。新しい edge を足すことはできません。
+**subgraph**（部分グラフ）は、もとの graph から **vertex をいくつか選び、edge をいくつか選んだ**ものです。
+
+条件は $2$ つだけです。
+
+1. **新しい edge を足さない。** もとの graph にない結び方は、subgraph にも入りません。
+2. **選んだ edge の両端の vertex は、必ず選んでおく。** 端のない edge は描けないからです。
 
 ![A subgraph and a tree](img/ahl-3-14-tree.svg){#fig-ahl314-tree width=100%}
 
-**tree**（木）は、**connected で、cycle（一周してもどる道）がない** graph です。
+::: {.callout-important}
+## 選んだ vertex のあいだの edge を、全部残す必要はありません
+ここを取りちがえやすいところです。$A$、$B$、$C$ を選んだからといって、$AB$、$BC$、$AC$ を**全部入れなければならないわけではありません。** $AB$ と $BC$ だけの subgraph も、正しい subgraph です。
 
-@fig-ahl314-tree の右は tree です。$5$ つの vertex が全部つながっていて、どこをたどっても同じ場所にもどってきません。
+いっぽう、**選んだ vertex のあいだの edge をすべて残した** subgraph には、**induced subgraph**（誘導部分グラフ）という名前が付いています。試験でこの語が使われることはまれですが、問題文が「これらの頂点のあいだの辺をすべて含む部分グラフ」と書いていたら、それのことです。
 
-#### tree の edge の数 {#tree-edges}
+**問題文が edge をどう指定しているか**を、先に読んでください。
+:::
+
+### 12. tree {#tree}
+
+**tree**（木）は、次の $2$ つを**両方**みたす graph です。
+
+1. **connected** である（[第9節](#connected)）
+2. **cycle**（閉路。同じ vertex にもどってくる輪）がない
+
+@fig-ahl314-tree の右は tree です。$5$ つの vertex が全部つながっていて、どこをたどっても同じ場所にもどってきません。その部分だけを取り出すと、こうなります。
+
+![A tree](img/ahl-3-14-treeonly.svg){#fig-ahl314-treeonly width=72%}
+
+#### vertex が $n$ 個の tree は、edge が $n-1$ 本です {#tree-edges}
 
 vertex が $n$ 個の tree は、edge が必ず $n - 1$ 本です。
 
 $$
-\text{number of edges of a tree} = n - 1
+\text{a tree with } n \text{ vertices has } n - 1 \text{ edges}
 $$ {#eq-ahl314-tree}
 
-$1$ 本でも足すと cycle ができ、$1$ 本でも減らすと切りはなされてしまいます。**これも公式集にはないので、覚えてください。**
+$1$ 本でも足すと cycle ができ、$1$ 本でも減らすと切りはなされてしまいます。
+
+::: {.callout-warning}
+## 「$n$ 個と $n-1$ 本だから tree」は、成り立ちません
+これは**逆が言えない**関係です。$n$ 個の vertex と $n-1$ 本の edge があっても、tree でないことがあります。
+
+![Counting the edges is not a test](img/ahl-3-14-nottree.svg){#fig-ahl314-nottree width=98%}
+
+@fig-ahl314-nottree の左は、vertex が $4$ 個、edge が $3$ 本です。本数は合っています。しかし
+
+- $A$、$B$、$C$ が輪になっている（**cycle がある**）
+- $D$ がどこともつながっていない（**connected でない**）
+
+ので、tree ではありません。
+
+**判定するときは、必ず $2$ つとも確かめてください。** connected か。cycle がないか。本数を数えるのは、そのあとの**検算**です。
+:::
 
 ::: {.callout-note}
 ## tree はこのあと使います
-**AHL 3.16** の **minimum spanning tree**（最小全域木）は、「全部の vertex を、いちばん軽い重みでつなぐ tree」を探す問題です。
+[AHL 3.16](ahl-3-16.qmd#mst) の **minimum spanning tree**（最小全域木）は、「全部の vertex を、いちばん軽い重みでつなぐ tree」を探す問題です。
 
-この項目では、**言葉の意味だけ**押さえておけば十分です。
+この項目では、**言葉の意味と判定のしかた**だけ押さえておけば十分です。
 :::
 
-### 7. 現実のものを graph にします {#modelling}
-
-シラバスは、`Students should be able to represent real-world structures (circuits, maps, etc) as graphs` と書いています。**現実の場面を graph に直すところ**が、この項目の出口です。
-
-![From a map to a weighted graph](img/ahl-3-14-map.svg){#fig-ahl314-map width=98%}
-
-@fig-ahl314-map の左は地図、右は同じ情報の graph です。町が vertex、道路が edge、距離が weight になっています。
-
-**地図では町の位置に意味がありましたが、graph では意味がありません。** 残っているのは「どの町とどの町が道でつながっているか」と「その距離」だけです。
-
-| 現実のもの | vertex | edge |
-|---|---|---|
-| 道路網 | 町・交差点 | 道路 |
-| 部屋の配置 | 部屋 | ドア・通路 |
-| 電気回路 | 接続点 | 配線 |
-| 航空路線 | 空港 | 路線 |
-| ウェブサイト | ページ | リンク（**directed**） |
-
-: 何を vertex にするか {#tbl-ahl314-model}
-
-::: {.callout-tip}
-## 「何を vertex にするか」を先に決めてください
-文章題では、まずここで迷います。**つながれる側**が vertex、**つなぐもの**が edge です。
-
-道路の問題なら、道路そのものを vertex にしてはいけません。町が vertex です。
+::: {.callout-note appearance="simple"}
+なお、道のたどり方には **walk**、**trail**、**path**、**circuit**、**cycle** という $5$ つの名前があり、それぞれ意味が違います。ここでは「cycle = もとの場所にもどってくる輪」という、いちばんゆるい理解で構いません。**正式な区別は [AHL 3.16 の第1節](ahl-3-16.qmd#words)** でまとめて扱います。
 :::
 
 ## Why it works
 
 :::: {.callout-note collapse="true" appearance="simple"}
 ## クリックすると開きます
-ここで説明するのは、**なぜ degree の合計が edge の数の $2$ 倍になるのか**、その $1$ 点だけです。
+[第6節](#handshake)で、degree の合計が edge の数の $2$ 倍になる理由を見ました。ここでは、そこから出てくる**もう $1$ つの結論**を見ておきます。あとで何度も使うものです。
 
-edge を $1$ 本えらんでください。その edge には**両端**があり、片方の vertex の degree に $1$、もう片方の degree に $1$ を足しています。
+> **degree が奇数の vertex は、必ず偶数個ある。**
 
-つまり、**$1$ 本の edge は、degree の合計に必ず $2$ を足す**ということです。
+degree が奇数の vertex を **odd vertex** といいます。なぜ偶数個なのかを見ます。
 
-edge が $6$ 本あれば、degree の合計は $6 \times 2 = 12$。これが @eq-ahl314-handshake です。
+vertex を、degree が偶数のものと奇数のものに分けます。
+
+$$
+\sum \deg(v) = \underbrace{(\text{even vertex の degree の和})}_{\text{偶数どうしの和なので偶数}} + (\text{odd vertex の degree の和})
+$$
+
+左辺は @eq-ahl314-handshake より $2 \times (\text{edge の数})$、つまり**偶数**です。右辺の第 $1$ 項も偶数です。
+
+ですから、**odd vertex の degree の和も偶数**でなければなりません。
+
+奇数を足して偶数になるのは、**足した個数が偶数のとき**だけです（$3+5 = 8$ は偶数、$3+5+7 = 15$ は奇数）。したがって、odd vertex の個数は偶数です。
 
 ::: {.callout-note appearance="simple"}
 この関係は、英語では **handshake lemma**（握手の補題）と呼ばれます。「$1$ 回の握手には手が $2$ つ要る」からです。試験でこの名前が問われることはありません。
 :::
+
+この結論は、[AHL 3.16](ahl-3-16.qmd#euler) の Eulerian の判定でそのまま効きます。odd vertex の個数が $0$、$2$、$4$、… しかありえないから、判定表に「$1$ 個のとき」という行が無いのです。
 ::::
 
 ## Worked examples
@@ -253,9 +431,9 @@ edge が $6$ 本あれば、degree の合計は $6 \times 2 = 12$。これが @e
 
 **(a)** 数えます。$AB$、$AC$、$BC$、$BD$、$CD$、$CE$、$DE$ の $7$ 本です。
 
-**数え落としが出やすいところ**なので、$A$ から出るもの、$B$ から出るもの、と**順番に**拾ってください。
+**数え落としが出やすいところ**なので、$A$ に付いているもの、$B$ に付いているもの、と**順番に**拾ってください。
 
-**(b)** それぞれの vertex から出ている edge の本数です。
+**(b)** それぞれの vertex に付いている端の数です（[第5節](#degree)）。
 
 | vertex | $A$ | $B$ | $C$ | $D$ | $E$ |
 |---|---|---|---|---|---|
@@ -267,7 +445,7 @@ $$
 
 @eq-ahl314-handshake のとおりになっています。
 
-**(c)** simple graph の条件は $2$ つでした（[第3節](#kinds)）。loop がないこと、multiple edge がないことです。
+**(c)** simple graph の条件は $2$ つでした（[第8節](#kinds)）。loop がないこと、multiple edge がないことです。
 
 ::: {.model-answer}
 **試験ではこう書く**
@@ -325,7 +503,7 @@ $$
 | in degree | $2$ | $1$ | $1$ | $2$ | $1$ |
 | out degree | $1$ | $2$ | $2$ | $1$ | $1$ |
 
-**検算。** 矢印は $7$ 本で、in の合計も out の合計も $7$ です ✓（[第4節](#directed)）
+**検算。** 矢印は $7$ 本で、in の合計も out の合計も $7$ です ✓（[第8節](#directed)）
 
 **(b)** 「どの vertex からどの vertex へも、矢印の向きどおりに行けるか」を見ます。
 
@@ -454,7 +632,7 @@ $$
 
 ---
 
-**(a)** $L$ から出ている edge は $LH$、$LS$、$LM$ の $3$ 本です。$\deg(L) = 3$
+**(a)** $L$ に付いている edge は $LH$、$LS$、$LM$ の $3$ 本です。$\deg(L) = 3$
 
 **(b)** complete graph は、**どの $2$ 点も結ばれている** graph でした。
 
@@ -476,11 +654,13 @@ $$
 6 + 7 + 5 = 18 \ \text{km}
 $$
 
-**(d)** $S$ から edge が出ている先を全部書きます。
+**(d)** `adjacent` は「**edge $1$ 本で直接**結ばれている」でした（[第4節](#adjacent)）。$S$ から edge が $1$ 本で届く先を全部書きます。
 
 $$
 H,\ L,\ P
 $$
+
+$M$ は、$S \to P \to M$ と乗りつげば行けますが、**adjacent ではありません**（[第9節](#connected)）。
 
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
@@ -500,31 +680,38 @@ $$
 ## Common errors
 
 ::: {.callout-warning}
+## 線が交差したところを、vertex として数える
+交点に丸がなければ、そこは vertex ではありません（[第3節](#crossing)）。**丸の数を数えてください。**
+
+同じ graph でも、描き方を変えれば交差は消えます。
+:::
+
+::: {.callout-warning}
 ## 図の見た目で「別のグラフ」と判断する
-線が交差しているかどうか、線が長いか短いかで、違う graph だと考えてしまう誤りです。
+線が長いか短いか、曲がっているかどうかで、違う graph だと考えてしまう誤りです。
 
 **同じ vertex どうしが結ばれていれば、同じ graph** です（@fig-ahl314-same）。見るのは「つながりの表」であって、絵ではありません。
 :::
 
 ::: {.callout-warning}
-## degree を数えるときに、edge の数を数えてしまう
-$\deg(v)$ は「その vertex から出ている edge の本数」です。**graph 全体の edge の数ではありません。**
+## loop を degree に $1$ と数える
+loop は**両端が同じ vertex に付いている**ので、degree に $2$ を足します（[第5節](#degree)）。
 
-数えたあとで、[合計が edge の $2$ 倍になっているか](#handshake)を確かめてください。
+loop が $1$ 本だけなら、$1$ と数えたときに degree の合計が奇数になるので、そこで気づけます。ただし loop が $2$ 本あると合計は偶数のままで、気づけません。**loop を見つけたら、その場で $2$ と書いてください。**
 :::
 
 ::: {.callout-warning}
 ## degree の合計が奇数になる
 @eq-ahl314-handshake より、degree の合計は**必ず偶数**です。
 
-奇数が出たら、計算する前に**数え間違い**です。もう一度、$1$ つの vertex ずつ数え直してください。
+奇数が出たら、**数え間違い**です。もう一度、$1$ つの vertex ずつ数え直してください。
 :::
 
 ::: {.callout-warning}
 ## complete graph の edge の数を $n(n-1)$ とする
 $2$ で割るのを忘れる誤りです。
 
-$A$ と $B$ を結ぶ edge は $1$ 本で、「$A$ から $B$」と「$B$ から $A$」を別に数えてはいけません。**$2$ 回数えた分を、$2$ で割って戻します。**
+$n(n-1)$ は**端の数**であって、edge の数ではありません。$A$ と $B$ を結ぶ edge は $1$ 本で、「$A$ から $B$」と「$B$ から $A$」を別に数えてはいけません。
 :::
 
 ::: {.callout-warning}
@@ -532,6 +719,13 @@ $A$ と $B$ を結ぶ edge は $1$ 本で、「$A$ から $B$」と「$B$ から
 矢印付きの図で $\deg = 3$ とだけ書いてしまう誤りです。
 
 directed graph では、聞かれているのは **in degree** と **out degree** です。**$2$ つに分けて書いてください。**
+:::
+
+::: {.callout-warning}
+## adjacent と connected を混同する
+**adjacent は edge $1$ 本で直接、connected は乗りついでよい**、でした（[第9節](#connected)）。
+
+`adjacent` と聞かれて乗りついだ先まで書くと、余分なものが入ります。逆に `connected` と聞かれて「直接つながっていないから」と答えると、意味が変わってしまいます。
 :::
 
 ::: {.callout-warning}
@@ -550,16 +744,16 @@ directed graph では、聞かれているのは **in degree** と **out degree*
 
 ::: {.callout-warning}
 ## subgraph に、もとの graph にない edge を足す
-subgraph は「選ぶ」だけです。**新しく結ぶことはできません。**
+subgraph は「選ぶ」だけです。**新しく結ぶことはできません**（[第11節](#subgraph)）。
 
 選んだ vertex どうしでも、もとの graph で結ばれていなければ、subgraph でも結べません。
 :::
 
 ::: {.callout-warning}
-## tree なのに cycle を残してしまう
-`tree` と言われたのに、一周できる道が残っている図をかいてしまう誤りです。
+## 「$n$ 個の vertex と $n-1$ 本の edge」だけで tree と判定する
+本数が合っていても、cycle があったり、切りはなされた vertex があったりします（@fig-ahl314-nottree）。
 
-vertex が $n$ 個なら edge は $n-1$ 本（@eq-ahl314-tree）。**本数を数えるだけで、その場で確かめられます。**
+判定は、**connected か**と**cycle がないか**の $2$ つです（[第12節](#tree)）。本数は、そのあとの検算に使ってください。
 :::
 
 ## Using your GDC (TI-Nspire CX II)
@@ -586,7 +780,7 @@ $66$ と返ります。$K_{12}$ の edge の数です。手で $\dfrac{12 \times
 menu → Algebra → Polynomial Tools → Find Roots of Polynomial
 ```
 
-次数 $2$、係数 $1$、$-1$、$-90$ と入れると、$10$ と $-9$ が返ります。
+`Degree` の欄に $2$、係数に $1$、$-1$、$-90$ と入れると、$10$ と $-9$ が返ります。（この `Degree` は多項式の次数のことで、vertex の degree とは別のものです。）
 
 ::: {.callout-warning}
 ## 電卓が返した負の解は、必ず捨ててください
@@ -604,8 +798,8 @@ sum({2, 3, 4, 3, 2})
 $14$ と返れば、edge が $7$ 本のはずです。**合っていなければ、数え直しの合図**です。
 
 ::: {.callout-note}
-## 隣接行列は、次の項目です
-「つながりを行列で書く」やり方は [AHL 3.15](ahl-3-15.qmd) で扱います。そこからは、電卓の出番が一気に増えます。
+## adjacency matrix（隣接行列）は、次の項目です
+「つながりを行列で書く」やり方——**adjacency matrix**（隣接行列）——は [AHL 3.15](ahl-3-15.qmd) で扱います。そこからは、電卓の出番が一気に増えます。
 
 この項目では、**言葉と数え方**に集中してください。
 :::
@@ -663,9 +857,15 @@ $$
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-**(a)** $AB$、$AC$、$AD$、$BC$、$CD$、$DE$、$EF$、$CF$ の $8$ 本です。**$1$ つの vertex から出るものを順に拾う**と、数え落としが減ります。
+**(a)** $AB$、$AC$、$AD$、$BC$、$CD$、$DE$、$EF$、$CF$ の $8$ 本です。**$1$ つの vertex に付いているものを順に拾う**と、数え落としが減ります。
 
-**(c)** 合計 $16$ が $8$ の $2$ 倍になっているので、(a) と (b) はどちらも合っています（@eq-ahl314-handshake）。合わなかったら、**両方を疑ってください。**
+**(b)** $1$ つの vertex ずつ、付いている edge の端を数えます。$C$ には $AC$、$BC$、$CD$、$CF$ の $4$ 本が付いているので $\deg(C) = 4$ です。
+
+**(c)** 合計 $16$ が $8$ の $2$ 倍になっているので、**(a) と (b) は食い違ってはいません**（@eq-ahl314-handshake）。
+
+ただし、これで「両方合っている」とまでは言えません。**edge を $1$ 本まるごと数え落とすと、その両端の degree も同時に $1$ ずつ減る**ので、合計はやはり $2$ 倍のままになります。
+
+この検算が教えてくれるのは「**合わなければ、どこかが誤り**」ということだけです。合わなかったら、**両方を疑ってください。**
 :::
 
 ::: {.ex-sep}
@@ -763,6 +963,13 @@ $$
 ## 解説
 degree の合計は、edge の数の $2$ 倍でした。ですから、**必ず偶数**になります。
 
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The sum of the degrees equals twice the number of edges, so it is always even. Here the sum would be $5 \times 3 = 15$, which is odd, so no such graph exists.*
+:::
+
 $5 \times 3 = 15$ は奇数なので、そんな graph は作れません。
 
 **図をかいて試す必要はありません。** 合計が奇数だと分かった時点で、答えが出ています。この形の問題は、@eq-ahl314-handshake だけで片付きます。
@@ -813,7 +1020,7 @@ $$
 
 **入る矢印と出る矢印を、別々に数えてください。** 混ぜてしまうのが一番多い誤りです。
 
-**(b)** $1$ 本の矢印は「どこかから出て、どこかへ入る」ので、in の合計も out の合計も矢印の本数と同じになります（[第4節](#directed)）。
+**(b)** $1$ 本の矢印は「どこかから出て、どこかへ入る」ので、in の合計も out の合計も矢印の本数と同じになります（[第8節](#directed)）。
 :::
 
 ::: {.ex-sep}
@@ -849,61 +1056,126 @@ $2$ つの有向グラフが下に示されています。
 
 `justify` が付いているので、**行けない具体例を $1$ つ挙げる**ところまで書いてください。「いいえ」だけでは点になりません。
 
-なお graph 2 も、**矢印を無視すれば connected** です。connected と strongly connected を混同しないでください（[第5節](#connected)）。
+::: {.model-answer}
+**試験ではこう書く**
+
+*Graph 1 is strongly connected: $A \to B \to C \to A$ is a directed cycle, $C \to D$ reaches $D$, and $D \to B$ returns to the cycle, so every vertex is reachable from every other — for example $D \to B \to C \to A$. Graph 2 is not strongly connected: no directed edge leaves $S$, so $S$ cannot reach any other vertex.*
+:::
+
+
+なお graph 2 も、**矢印を無視すれば connected** です。connected と strongly connected を混同しないでください（[第10節](#strong)）。
 :::
 
 ::: {.ex-sep}
 :::
 
-[7]{.ex-no} [A tree has $12$ vertices. Write down the number of edges.]{.q-en}
+[7]{.ex-no} [A connected graph has $12$ vertices and no cycles.]{.q-en}
+
+**(a)** [State the name given to such a graph.]{.q-en}
+
+**(b)** [Write down the number of edges.]{.q-en}
+
+**(c)** [Another graph also has $12$ vertices and $11$ edges. Explain why this is not enough to conclude that it is a tree.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-ある tree の頂点の数は $12$ です。辺の数を書きなさい。
+ある connected なグラフは、頂点が $12$ 個あり、cycle がありません。
+
+**(a)** このようなグラフの名前を述べなさい。
+
+**(b)** 辺の数を書きなさい。
+
+**(c)** 別のグラフも、頂点が $12$ 個、辺が $11$ 本です。これだけでは tree であると結論できない理由を説明しなさい。
 
 </details>
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
+**(a)** *A tree.*
+
+**(b)**
 $$
 12 - 1 = 11
 $$
+
+**(c)** *The condition works only one way: a tree with $12$ vertices must have $11$ edges, but a graph with $12$ vertices and $11$ edges need not be a tree. For example, a triangle together with a separate tree on the other nine vertices has $12$ vertices and $11$ edges, but it contains a cycle and is not connected.*
 :::
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-tree の edge の数は、いつも「vertex の数 $- 1$」です（@eq-ahl314-tree）。
+**(a)** connected で cycle がない——これが tree の定義そのものです（[第12節](#tree)）。
+
+**(b)** @eq-ahl314-tree より $12 - 1 = 11$ 本です。
 
 **検算。** degree の合計は $2 \times 11 = 22$ になるはずです。
+
+**(c)** `Explain why` なので、**言葉で理由を書きます。** 要点は「**逆が言えない**」ことです。
+
+反例を $1$ つ挙げると、答案が強くなります。@fig-ahl314-nottree の左は、$4$ 個と $3$ 本で tree ではありませんでした。同じ作り方を $12$ 個に広げれば、**三角形 $1$ つ（$3$ 個・$3$ 本）＋ 残り $9$ 個をつないだ tree（$9$ 個・$8$ 本）**で、合計 $12$ 個・$11$ 本になります。
+
+**検算。** $3 + 8 = 11$ ✓ この graph には cycle があり、しかも $2$ つに分かれています。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The implication only works one way. A tree with $12$ vertices must have $11$ edges, but a graph with $12$ vertices and $11$ edges need not be a tree: for example, a triangle together with a tree on the other nine vertices has $12$ vertices and $3 + 8 = 11$ edges, yet it contains a cycle and is not connected.*
+:::
+
 :::
 
 ::: {.ex-sep}
 :::
 
-[8]{.ex-no} [Using the graph in question 1, write down the edges of the subgraph formed by the vertices $A$, $B$, $C$ and $D$ only.]{.q-en}
+[8]{.ex-no} [Consider the graph in question 1.]{.q-en}
+
+**(a)** [Write down the edges of the subgraph on the vertices $A$, $B$, $C$ and $D$ that contains every edge of the original graph joining two of them.]{.q-en}
+
+**(b)** [Write down the edges of a different subgraph on the same four vertices, and explain why it is also a subgraph.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-問題 1 のグラフについて、頂点 $A$、$B$、$C$、$D$ だけでできる部分グラフの辺を書きなさい。
+問題 1 のグラフを考えます。
+
+**(a)** 頂点 $A$、$B$、$C$、$D$ **だけ**からなり、そのうちの $2$ つを結ぶもとのグラフの辺を**すべて**含む部分グラフについて、その辺を書きなさい。
+
+**(b)** 同じ $4$ 頂点上の、これとは異なる部分グラフの辺を書き、それも部分グラフである理由を説明しなさい。
 
 </details>
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
+**(a)**
 $$
 AB,\quad AC,\quad AD,\quad BC,\quad CD
 $$
+
+**(b)** *For example $AB$, $AC$, $CD$.*
+
+*A subgraph only has to use vertices and edges of the original graph; it does not have to include every edge between the chosen vertices. Each of $AB$, $AC$, $CD$ is an edge of the original graph, and both of its endpoints are among $A$, $B$, $C$, $D$.*
 :::
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-$A$、$B$、$C$、$D$ の**両端がそろっている edge だけ**を残します。
+**(a)** 「そのうちの $2$ つを結ぶ辺をすべて」と指定されているので、**両端がそろっている edge を全部**残します。
 
 $DE$、$EF$、$CF$ は、$E$ や $F$ が選ばれていないので入りません。
 
-**新しい edge を足してはいけません。** たとえば $B$ と $D$ を結びたくなりますが、もとの graph に $BD$ がないので、subgraph にも入りません（[第6節](#tree)）。
+このように**選んだ vertex のあいだの edge を全部残した** subgraph を **induced subgraph**（誘導部分グラフ）といいます（[第11節](#subgraph)）。
+
+**(b)** ここが、subgraph でいちばん取りちがえやすいところです。**edge を全部残す必要はありません。** $AB$、$AC$、$CD$ の $3$ 本だけを選んでも、立派な subgraph です。
+
+ただし、**もとの graph にない edge は足せません。** $B$ と $D$ を結びたくなりますが、問題 1 の graph に $BD$ がないので、subgraph にも入りません。
+
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*A subgraph only has to use vertices and edges of the original graph; it does not have to include every edge between the chosen vertices. Each of $AB$, $AC$, $CD$ is an edge of the original graph and both of its endpoints are among $A$, $B$, $C$, $D$, so this is a subgraph.*
+:::
+
+（$AB$ だけ、あるいは edge を $1$ 本も選ばない形も subgraph です。答えは $1$ つに決まりません。）
 :::
 
 ::: {.ex-sep}
@@ -939,13 +1211,27 @@ $DE$、$EF$、$CF$ は、$E$ や $F$ が選ばれていないので入りませ�
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-**(a)** Hall から出ている edge は Kitchen、Lounge、Study の $3$ 本です。
+**(a)** Hall に付いている edge は Kitchen、Lounge、Study の $3$ 本です。
 
 `interpret this number in context` と言われたら、**$3$ という数字が現実で何なのか**を書きます。ここでは「ドアが $3$ つある」です。**数字だけでは点になりません。**
 
-**(b)** connected は「どの $2$ 点のあいだにも道がある」でした。ここでは「どの部屋からどの部屋へも行ける」という意味になります。
+::: {.model-answer}
+**試験ではこう書く**
 
-理由として**具体的な道を $1$ つ**書いておくと、答案が強くなります。
+*$\deg(\text{Hall}) = 3$, which means the hall has three doors leading directly to other areas of the house.*
+:::
+
+
+**(b)** connected は「乗りついで、どの $2$ 点のあいだも行き来できる」でした（[第9節](#connected)）。ここでは「どの部屋からどの部屋へも行ける」という意味になります。
+
+理由として**具体的な道を $1$ つ**書いておくと、答案が強くなります。Study と Garden は adjacent ではありませんが、Hall と Kitchen を乗りつげば行けます。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The graph is connected because every area can be reached from every other area, for example Study $\to$ Hall $\to$ Kitchen $\to$ Garden. This means you can walk from any area of the house to any other without going outside.*
+:::
+
 :::
 
 ::: {.ex-sep}
@@ -991,7 +1277,7 @@ $$
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-**(a)** $D$ から出ている edge は $DA$、$DB$、$DC$ の $3$ 本です。
+**(a)** $D$ に付いている edge は $DA$、$DB$、$DC$ の $3$ 本です。
 
 **(b)** 通った edge の weight を足すだけです。$AB = 5$、$BD = 6$、$DC = 4$ で $15$ 分。
 
@@ -1006,7 +1292,84 @@ $$
 
 $13$ 分の道が $2$ つあるので、**どちらを書いても正解**です。`a quicker route` は「(b) より速い道を $1$ つ」という意味なので、$1$ つ書けば足ります。
 
-**重みの大きい edge を通る道が、いつも遅いとはかぎりません。** $AD$ は $9$ と大きいのに、$A \to D \to C$ は速いほうに入ります。**必ず足して比べてください。**
+**weight の大きい edge を通る道が、いつも遅いとはかぎりません。** $AD$ は $9$ と大きいのに、$A \to D \to C$ は速いほうに入ります（[第7節](#weighted)）。**必ず足して比べてください。**
+:::
+
+::: {.ex-sep}
+:::
+
+[11]{.ex-no} [A small flat has a Hall, a Kitchen, a Bedroom, a Bathroom and a Balcony. There is a door between the Hall and each of the Kitchen, the Bedroom and the Bathroom. There is also a door between the Kitchen and the Balcony, and a door between the Bedroom and the Bathroom. There are no other doors.]{.q-en}
+
+**(a)** [Draw a graph to represent the flat, stating what the vertices and the edges represent.]{.q-en}
+
+**(b)** [Write down the degree of each vertex, and verify your graph using the sum of the degrees.]{.q-en}
+
+**(c)** [Determine whether the graph is a tree. Justify your answer.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+小さなアパートに、Hall（玄関ホール）、Kitchen（台所）、Bedroom（寝室）、Bathroom（浴室）、Balcony（バルコニー）があります。Hall と Kitchen、Hall と Bedroom、Hall と Bathroom のあいだに、それぞれドアがあります。また、Kitchen と Balcony のあいだ、Bedroom と Bathroom のあいだにもドアがあります。ほかにドアはありません。
+
+**(a)** このアパートを表すグラフをかき、頂点と辺が何を表しているかを述べなさい。
+
+**(b)** 各頂点の次数を書き、次数の合計を使ってグラフを確かめなさい。
+
+**(c)** このグラフが tree かどうかを判定しなさい。理由も書きなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** *Each vertex represents a room, and each edge represents a door between two rooms.*
+
+*Vertices: Hall, Kitchen, Bedroom, Bathroom, Balcony.*
+
+*Edges: Hall–Kitchen, Hall–Bedroom, Hall–Bathroom, Kitchen–Balcony, Bedroom–Bathroom.*
+
+**(b)**
+$$
+\deg(\text{Hall}) = 3, \quad \deg(\text{Kitchen}) = 2, \quad \deg(\text{Bedroom}) = 2
+$$
+$$
+\deg(\text{Bathroom}) = 2, \quad \deg(\text{Balcony}) = 1
+$$
+$$
+3+2+2+2+1 = 10 = 2 \times 5 \quad ✓
+$$
+
+**(c)** *It is not a tree. The graph is connected, but Hall $\to$ Bedroom $\to$ Bathroom $\to$ Hall is a cycle, so the second condition fails.*
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** [第1節](#modelling)の作業です。**つながれる側**が vertex なので、部屋が vertex、ドアが edge です（@tbl-ahl314-model）。
+
+ドアを vertex にしてはいけません。
+
+`stating what the vertices and the edges represent` と書かれているので、**その一文を必ず添えてください。** 図だけでは点になりません。
+
+なお、`Draw` は本来「定規と目盛りで正確にかく」という指示ですが、graph には**位置にも線の長さにも意味がありません**（[第1節](#modelling)）。ここでは、**どの vertex とどの vertex が結ばれているか**が読み取れれば十分です。
+
+**(b)** ドアは $5$ つなので edge は $5$ 本。degree の合計は $10 = 2 \times 5$ です（@eq-ahl314-handshake）。合わなければ、ドアを読み落としています。
+
+Balcony は Kitchen としかつながっていないので、$\deg = 1$ です。
+
+**(c)** tree の判定は $2$ つでした（[第12節](#tree)）。
+
+- **connected か。** どの部屋からも、Hall を通ってどこへでも行けます ✓
+- **cycle がないか。** Hall $\to$ Bedroom $\to$ Bathroom $\to$ Hall で、もとの場所にもどってきます ✗
+
+$1$ つ目は成り立ちますが、$2$ つ目が成り立たないので tree ではありません。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The graph is connected, but Hall $\to$ Bedroom $\to$ Bathroom $\to$ Hall is a cycle. A tree must be connected and have no cycle, so this graph is not a tree.*
+:::
+
+
+**本数で先に確かめることもできます。** vertex が $5$ 個なら tree の edge は $4$ 本のはずですが、ここは $5$ 本です。**ただしこれは「合わないから tree ではない」という使い方に限られます**（[第12節](#tree-edges)）。合っていても tree とはかぎらないので、答案には cycle を書いてください。
 :::
 
 :::

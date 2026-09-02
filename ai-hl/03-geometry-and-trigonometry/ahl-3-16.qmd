@@ -6,45 +6,63 @@ sidebar: ai-hl
 
 ::: {.callout-note}
 ## What you should be able to do
-- **walk**（歩道）、**trail**（小道）、**path**（道）、**circuit**（回路）、**cycle**（閉路）を区別できる。
-- つながったグラフに **Eulerian trail / circuit**（オイラー小道・回路）があるかどうかを、**odd vertex（奇数次数の頂点）の個数**で判定できる。
-- **Hamiltonian path / cycle**（ハミルトン道・閉路）が何かを言える。
-- **minimum spanning tree**（最小全域木）を、**Kruskal's algorithm** と **Prim's algorithm** の両方で求められる。
-- Prim を、**行列（表）の上で**実行できる。
-- **Chinese postman problem**（中国人郵便配達問題）を、odd vertex が $4$ 個までのグラフで解ける。**なぜその方法でよいのかを説明できる。**
-- **travelling salesman problem**（巡回セールスマン問題）で、**nearest neighbour algorithm**（最近傍法）による上界と、**deleted vertex algorithm**（頂点削除法）による下界を求められる。
-- 現実の問題を、**table of least distances**（最短距離の表）を作って、完全グラフの問題に直せる。
-:::
-
-::: {.callout-important}
-## 公式集には、この項目の欄がありません
-[AHL 3.14](ahl-3-14.qmd) と同じで、AHL 3.16 にも公式集に載る式はありません。**手順そのものを覚える**ことになります。
-
-覚える手順は $6$ つです。Eulerian の判定（odd vertex の個数）、Kruskal、Prim、Chinese postman、nearest neighbour、deleted vertex。どれも短いので、意味と一緒に覚えてしまってください。
+- **walk**、**trail**（小道）、**path**（道）、**circuit**（回路）、**cycle**（閉路）を区別できる。
+- **odd vertex の個数**から、**Eulerian trail / circuit** があるかを判定できる。**Hamiltonian path / cycle** との違いを言える。
+- **minimum spanning tree**（最小全域木）を **Kruskal** と **Prim** で求められる。Prim は**表の上でも**実行できる。
+- **Chinese postman problem**（中国人郵便配達問題）を、odd vertex が $4$ 個までのグラフで解ける。**なぜその方法でよいかを説明できる。**
+- **travelling salesman problem**（巡回セールスマン問題）で、**nearest neighbour** による上界と、**deleted vertex** による下界を求められる。
+- 現実の道路網を、**table of least distances**（最短距離の表）で **complete graph**（完全グラフ）に直せる。
 :::
 
 ::: {.callout-note}
-## $2$ つのページの続きです
-- [AHL 3.14](ahl-3-14.qmd) … vertex、edge、degree、weighted graph、tree
-- [AHL 3.15](ahl-3-15.qmd#walk) … walk と、隣接行列
+## $3$ つのページの最後です
+[AHL 3.15 の第6節](ahl-3-15.qmd#walk)で、**walk** —— edge をたどった道 —— を入れました。同じ vertex も同じ edge も、何度通ってもよい、いちばんゆるいたどり方でした。
 
-新しいのは、**「どうたどるか」を手順として決めること**です。この項目に出てくるものは、すべて **algorithm**（アルゴリズム）——つまり、迷わずに最後まで実行できる手順です。
+このページでは、まず **その walk を分類します。** 「edge を繰り返さない」「vertex を繰り返さない」「出発点にもどる」という制限を付けて、名前を分けます。
+
+そのうえで、graph の上の**道を選ぶ問題**を $3$ つ扱います。
+
+| 問題 | 何を全部通るか | 何を最小にするか |
+|---|---|---|
+| **minimum spanning tree** | vertex を全部**つなぐ** | つないだ edge の weight の合計 |
+| **Chinese postman** | **edge** を全部通る | 歩く距離の合計 |
+| **travelling salesman** | **vertex** を全部通る | 回る距離の合計 |
+
+: この項目で解く $3$ つの問題 {#tbl-ahl316-three}
+
+**edge の話か、vertex の話か。** 最初にそこを見分けるだけで、使う道具が決まります。$3$ つの見分け方は、[最後の節](#compare)にまとめてあります。
+:::
+
+::: {.callout-note}
+## この項目に出てくるのは、すべて algorithm です
+**algorithm**（アルゴリズム）とは、**迷わずに最後まで実行できる手順**のことです。この項目で覚えるのは、公式ではなく手順です。
+
+| algorithm | 何のため | 出てくるもの |
+|---|---|---|
+| Eulerian の判定 | edge を全部 $1$ 回ずつ通れるか | あるか・ないか |
+| **Kruskal** / **Prim** | 全部つなぐ最小の weight | **正確な値** |
+| Chinese postman | edge を全部通る最短 | **正確な値** |
+| **nearest neighbour** | vertex を全部回る道を $1$ つ作る | **upper bound**（上界） |
+| **deleted vertex** | 回る距離がこれを下回れないという値 | **lower bound**（下界） |
+
+: この項目の algorithm と、それぞれが出すもの {#tbl-ahl316-algos}
+
+**最後の列がいちばん大事です。** 「正確な値が出るのか、上からの押さえなのか、下からの押さえなのか」を取りちがえると、答え方そのものが変わります。
+
+（この項目にも公式集の欄はありません。手順の理由は、そのつど書きます。）
+:::
+
+::: {.callout-note appearance="simple"}
+シラバスは、この項目を `Tree and cycle algorithms with undirected graphs` と書いています。**この項目に出てくる graph は、矢印のない無向グラフ（undirected graph）です。**
 :::
 
 ## The idea
 
-この項目でやることは、$2$ 種類しかありません。
-
-- **全部の edge を通りたい**（Eulerian、Chinese postman）
-- **全部の vertex を通りたい**（Hamiltonian、travelling salesman）
-
-この $2$ つを混ぜないでください。**edge の話か、vertex の話か。** 最初にそこを見分けるだけで、使う道具が決まります。
-
 ### 1. walk、trail、path、circuit、cycle {#words}
 
-まず、たどり方の名前を $5$ つ決めます。ここは覚えるところです。図には、そのうち $4$ つを描いてあります。
+[AHL 3.15](ahl-3-15.qmd#walk) の walk に、制限を付けていきます。
 
-![Four ways of moving along a graph](img/ahl-3-16-words.svg){#fig-ahl316-words width=100%}
+![How the five words fit together](img/ahl-3-16-nested.svg){#fig-ahl316-nested width=100%}
 
 | 英語 | 日本語 | 決まり |
 |---|---|---|
@@ -56,23 +74,35 @@ sidebar: ai-hl
 
 : たどり方の $5$ つの名前 {#tbl-ahl316-words}
 
+@fig-ahl316-nested の左が、walk・trail・path の $3$ つの関係です。**path は必ず trail であり、trail は必ず walk** です。逆は言えません。
+
+vertex を繰り返さなければ、同じ edge を $2$ 度通ることもできません（$2$ 度目に通るには、その edge の端にもう $1$ 度立たなければならないからです）。ですから **path は自動的に trail** になります。
+
+![Four ways of moving along a graph](img/ahl-3-16-words.svg){#fig-ahl316-words width=100%}
+
 @fig-ahl316-words の $2$ 番目は、$C$ を $2$ 度通っています。だから path ではありません。しかし、**同じ edge を $2$ 度は通っていない**ので trail です。
+
+#### 出発点にもどると、名前が変わります {#closed}
+
+@fig-ahl316-nested の右です。**trail が出発点にもどれば circuit**、**path が出発点にもどれば cycle** です。
+
+::: {.callout-important}
+## cycle は、出発点と終点だけが同じです
+$A \to B \to C \to A$ は cycle です。$A$ が $2$ 度出てきますが、**それは出発点と終点として $1$ 度ずつ**であって、途中で $A$ を通り直しているわけではありません。
+
+**「出発点と終点以外の vertex は、$1$ 度ずつしか通らない」**——これが cycle の条件です。
+
+$A \to B \to C \to B \to A$ は、途中で $B$ を $2$ 度通っているので cycle ではありません（edge も繰り返しているので circuit でもありません）。
+:::
 
 ::: {.callout-tip}
 ## 見分け方は、$2$ つの質問だけです
 1. **同じ edge を $2$ 度通ったか。** 通っていれば walk 止まりです。
-2. **途中で同じ vertex を $2$ 度通ったか。** 通っていれば trail 止まりで、path ではありません。
+2. **出発点と終点を除いて、同じ vertex を $2$ 度通ったか。** 通っていれば trail 止まりで、path ではありません。
 
-そして、**出発点にもどったら**、trail は circuit に、path は cycle になります。
+そして、**出発点にもどっていれば**、trail は circuit に、path は cycle になります。
 
-$2$ 番目が「途中で」なのは、出発点にもどる場合を外すためです。cycle は出発点だけを $2$ 度通りますが、**それは path とは呼ばず cycle と呼びます**。
-:::
-
-::: {.callout-note}
-## $2$ 段構えになっています
-walk がいちばんゆるく、trail はその中で edge を繰り返さないもの、path はさらに vertex も繰り返さないものです。
-
-つまり **path は必ず trail であり、trail は必ず walk** です。逆は言えません。
+`State whether ... is a walk, a trail, or a path` と問われたら、**あてはまるいちばん強い言い方**を答えます。path は walk でもありますが、`walk` と書いても点にはなりません。
 :::
 
 ### 2. この項目でずっと使うグラフ {#graph}
@@ -87,7 +117,7 @@ $$
 \deg A = 3, \quad \deg B = 3, \quad \deg C = 4, \quad \deg D = 4, \quad \deg E = 2
 $$
 
-合計は $16 = 2 \times 8$ で、[AHL 3.14 の handshake の関係](ahl-3-14.qmd#handshake)と合っています。
+合計は $16 = 2 \times 8$ で、[AHL 3.14 の関係](ahl-3-14.qmd#handshake)と合っています。
 
 **odd vertex（次数が奇数の頂点）は $A$ と $B$ の $2$ 個**です。この $2$ 個という数字が、あとで何度も効いてきます。
 
@@ -96,7 +126,7 @@ $$
 **全部の edge を、ちょうど $1$ 回ずつ通る**たどり方を考えます。
 
 - **Eulerian trail**（オイラー小道）… 全部の edge を $1$ 回ずつ通る trail
-- **Eulerian circuit**（オイラー回路）… 全部の edge を $1$ 回ずつ通って、**出発点にもどる**もの
+- **Eulerian circuit**（オイラー回路）… それが**出発点にもどる**もの
 
 「一筆書き」のことです。**グラフがつながってさえいれば**、あるかないかは **odd vertex を数えるだけ**で分かります。
 
@@ -119,7 +149,7 @@ $$
 
 ::: {.callout-important}
 ## odd vertex は、$1$ 個や $3$ 個にはなりません
-[degree の合計は edge の数の $2$ 倍](ahl-3-14.qmd#handshake)、つまり偶数です。奇数を奇数個足すと奇数になってしまうので、**odd vertex の個数は必ず偶数**です。
+[AHL 3.14 の Why it works](ahl-3-14.qmd#why-it-works) で見たとおり、**odd vertex の個数は必ず偶数**です。
 
 $0$、$2$、$4$、$6$、… しかありません。判定表に「$1$ 個のとき」が無いのは、そのためです。
 :::
@@ -137,11 +167,22 @@ $0$、$2$、$4$、$6$、… しかありません。判定表に「$1$ 個のと
 
 @fig-ahl316-hamilton は $A \to B \to C \to E \to D \to A$ で、$5$ 個の vertex を $1$ 回ずつ通ってもどっています。使わなかった edge があってもかまいません。**Hamiltonian は edge を全部使う必要がない**からです。
 
+| | 全部通るもの | 判定 |
+|---|---|---|
+| **Eulerian** | **edge** | odd vertex を数えれば決まる |
+| **Hamiltonian** | **vertex** | 数えるだけでは決まらない |
+
+: Eulerian と Hamiltonian {#tbl-ahl316-eh}
+
 ::: {.callout-warning}
-## Hamiltonian には、odd vertex にあたる判定法がありません
-Eulerian は odd vertex を数えるだけでした。**Hamiltonian には、それにあたる判定法が知られていません。**
+## Hamiltonian には、このコースで使える簡単な必要十分条件はありません
+Eulerian は odd vertex を数えるだけで決まりました。**Hamiltonian には、それにあたる簡単な条件がありません。**
+
+「degree が全部これ以上なら必ずある」という**十分条件**はいくつか知られていますが、どれもこのコースの範囲外です。「あるとき、そしてそのときにかぎり」と言える簡単な条件は、この課程では扱いません。
 
 ですから問われるのは、たいてい**具体的に $1$ つ見つけて書く**ことです。見つけたら、$A \to B \to C \to E \to D \to A$ のように**順番を書いてください。**
+
+（ないことを示すのは、ずっと難しくなります。試験で問われるとすれば、ある vertex に edge が $1$ 本しか付いていないなど、**その vertex を通り抜けられない**ことが目で見て分かる場合です。）
 :::
 
 ::: {.callout-note}
@@ -149,13 +190,24 @@ Eulerian は odd vertex を数えるだけでした。**Hamiltonian には、そ
 Euler は $18$ 世紀のスイスの数学者で、ケーニヒスベルクの $7$ つの橋を一筆書きできるかという問題を、この odd vertex の考え方で解きました。Hamilton は $19$ 世紀のアイルランドの数学者で、正十二面体の頂点をめぐるパズルを作りました。
 :::
 
-### 5. spanning tree と minimum spanning tree {#mst}
+### 5. subgraph、spanning subgraph、spanning tree、MST {#mst}
 
-[AHL 3.14 で見たように](ahl-3-14.qmd#tree)、**tree** は cycle を持たない連結グラフで、vertex が $n$ 個なら edge はちょうど $n-1$ 本です。
+言葉が $4$ つ並ぶので、図で見分けてください。
 
-**spanning tree**（全域木）は、もとのグラフの **vertex を全部含む** tree です。edge は、もとのグラフの edge から選びます。
+![From a subgraph to a minimum spanning tree](img/ahl-3-16-spanning.svg){#fig-ahl316-spanning width=52%}
 
-**minimum spanning tree（MST、最小全域木）** は、その中で **weight の合計がいちばん小さい**ものです。
+| 言葉 | 条件 |
+|---|---|
+| **subgraph**（部分グラフ） | もとの graph から vertex と edge を選んだもの（[AHL 3.14](ahl-3-14.qmd#subgraph)） |
+| **spanning subgraph**（全域部分グラフ） | subgraph のうち、**vertex を全部含む**もの。cycle があってもよい |
+| **spanning tree**（全域木） | spanning subgraph のうち、**tree** であるもの（connected で cycle なし） |
+| **minimum spanning tree（MST）** | spanning tree のうち、**weight の合計が最小**のもの |
+
+: $4$ つの言葉 {#tbl-ahl316-spanning}
+
+$1$ つずつ条件が増えていきます。**vertex を全部入れる → 輪をなくす → いちばん軽くする**、という順です。
+
+vertex が $n$ 個なら、spanning tree の edge は必ず $n-1$ 本です（[AHL 3.14](ahl-3-14.qmd#tree-edges)）。
 
 ::: {.callout-tip}
 ## 何の問題を解いているのか
@@ -164,11 +216,18 @@ $5$ つの町を、ケーブルで**全部つなぎたい**。ただし、**ケ�
 このとき「全部つながる」が spanning、「余分な輪を作らない」が tree、「総延長最小」が minimum です。**cycle があったら、そのうち $1$ 本を切っても全部つながったまま**なので、必ず無駄になります。
 :::
 
+::: {.callout-important}
+## MST の $3$ 点
+- **通るもの** … vertex を全部**つなぐ**（回るのではありません）
+- **最小にするもの** … 選んだ edge の weight の合計
+- **出てくるもの** … **正確な最小値**。上界でも下界でもありません
+:::
+
 MST の求め方は $2$ つあります。**どちらを使っても、weight の合計は必ず同じ**になります。
 
 ### 6. Kruskal's algorithm {#kruskal}
 
-**軽い edge から順に、cycle ができないかぎり採る。** これだけです。
+**軽い edge から順に、cycle ができないかぎり採る。** 手順はこの $1$ 行です。
 
 ::: {.callout-note}
 ## Kruskal の手順
@@ -179,7 +238,7 @@ MST の求め方は $2$ つあります。**どちらを使っても、weight �
 
 $G$ でやってみます。edge を軽い順に並べると $2, 3, 4, 5, 6, 7, 8, 9$ です。
 
-![Kruskal on $G$](img/ahl-3-16-kruskal.svg){#fig-ahl316-kruskal width=100%}
+![Kruskal on $G$](img/ahl-3-16-kruskal.svg){#fig-ahl316-kruskal width=50%}
 
 | 順 | edge | weight | 採否 |
 |---|---|---|---|
@@ -204,6 +263,38 @@ vertex が $5$ 個なので edge は $4$ 本。**$4$ 本になった時点で止
 Kruskal は「つながっているか」を気にしません。気にするのは **cycle ができないか**だけです。最後にひとつながりになります。
 :::
 
+#### 同じ weight が並んだとき {#ties}
+
+軽い順に並べる途中で、**同じ weight の edge が $2$ 本以上**出てくることがあります。
+
+![Two different minimum spanning trees](img/ahl-3-16-tie.svg){#fig-ahl316-tie width=45%}
+
+@fig-ahl316-tie では、$QS$ と $RS$ がどちらも $4$ です。$PQ = 2$ と $PR = 2$ を採ったあと、$QR = 3$ は cycle を作るので捨て、次に $4$ の $2$ 本を見ます。
+
+- $QS$ を採ると、$\{PQ,\ PR,\ QS\}$
+- $RS$ を採ると、$\{PQ,\ PR,\ RS\}$
+
+**$2$ つは違う tree です。** どちらも $3$ 本で、全部の vertex をつないでいて、cycle がありません。そして合計は
+
+$$
+2 + 2 + 4 = 8
+$$
+
+で、**どちらも同じ**です。
+
+::: {.callout-important}
+## MST は $1$ つに決まらないことがあります。合計は決まります
+同じ weight が並んだら、**どちらを先に採っても構いません。** 出てくる tree が違っても、それは間違いではありません。
+
+**変わらないのは、weight の合計です。** `Find the minimum total weight` と問われているのなら、どちらの道を通っても同じ答えになります。
+
+`State the edges` と問われているときは、**自分が採ったほうを書けば正解**です。ただし、**同点があったことと、どちらを選んだかを書いておく**と、採点者に伝わります。
+
+$$
+\text{採った edge：} PQ\ (2),\ PR\ (2),\ QS\ (4) \quad (QS \text{ と } RS \text{ はどちらも } 4)
+$$
+:::
+
 ### 7. Prim's algorithm {#prim}
 
 Prim は、**$1$ 点から育てていく**やり方です。
@@ -217,7 +308,7 @@ Prim は、**$1$ 点から育てていく**やり方です。
 
 $A$ から始めます。
 
-![Prim on $G$, starting from $A$](img/ahl-3-16-prim.svg){#fig-ahl316-prim width=100%}
+![Prim on $G$, starting from $A$](img/ahl-3-16-prim.svg){#fig-ahl316-prim width=50%}
 
 | 順 | 木の中 | 候補 | 採る edge |
 |---|---|---|---|
@@ -241,12 +332,21 @@ $B$ から始めても、$E$ から始めても、**合計は $14$** です。�
 「$A$ から始めよ」と指定されたら、途中の順番も採点されます。**指定された vertex から始めてください。**
 :::
 
+Prim でも、**候補の中に同じ weight が $2$ つ以上あることがあります**（[第6節](#ties)）。そのときは、**どちらを採っても構いません。** 合計は変わりません。
+
 ::: {.callout-tip}
 ## Kruskal と Prim、どちらを使うか
 - **図が与えられていて、weight が読み取りやすい** → Kruskal（並べ替えるだけ）
 - **表・行列で与えられている**、または **vertex が多い** → Prim（並べ替えなくてよい）
 
-問題文が `starting at A` のように出発点を指定していれば Prim、`in order of weight` のように重み順を指定していれば Kruskal です。ただし、**どちらで求めても合計は同じ**なので、指定がなければ好きなほうで構いません。
+問題文が `starting at A` のように出発点を指定していれば Prim、`in order of weight` のように重み順を指定していれば Kruskal です。
+
+::: {.callout-warning}
+## algorithm を指定されたら、その手順どおりに書いてください
+`Use Kruskal's algorithm` と書かれているのに Prim で解くと、**答えが合っていても方法点が落ちます。**
+
+そして、どちらの場合も **edge を採った順番**を書いてください。`State the edges in the order in which they are added` は、そのままの意味です。合計だけでは、指定された手順を実行したことが示せません。
+:::
 :::
 
 ### 8. Prim を行列の上で走らせます {#prim-matrix}
@@ -256,6 +356,15 @@ $B$ から始めても、$E$ から始めても、**合計は $14$** です。�
 > Use of matrix method for Prim's algorithm
 
 つまり、**表の形で出された問題を、図に描き直さずにそのまま解く**やり方です。シラバスが名指ししている解き方なので、必ず練習してください。
+
+::: {.callout-important}
+## 使うのは、無向の重み付きグラフの「対称な表」です
+この項目の graph は無向なので（[AHL 3.15](ahl-3-15.qmd#symmetric)）、weight の表は**対角線をはさんで対称**になります。$AB$ の欄と $BA$ の欄には、同じ数が入っています。
+
+行列法は、その対称性を前提にしています。**$1$ 本の edge が表の $2$ か所に現れるので、行を見ても列を見ても同じ edge が見つかる**——それが、この手順が動く理由です。
+
+表が対称でなかったら、それは有向グラフの表です。**この項目の algorithm は、そこには使えません。**
+:::
 
 ![Prim's algorithm on the matrix](img/ahl-3-16-prim-matrix.svg){#fig-ahl316-prim-matrix width=88%}
 
@@ -277,27 +386,38 @@ $$
 ## 「行を消す」ではありません。消すのは**列**です
 行を消してしまうと、その vertex から出る edge が見えなくなります。木に入った vertex は、**これから外へ伸ばすために使う**ので、行は残しておかなければなりません。
 
-**列を消す = もうその vertex に入る必要はない**、という意味です。
+**列を消す $=$ もうその vertex に入る必要はない**、という意味です。
 :::
 
 ### 9. Chinese postman problem {#cpp}
 
 > the shortest route around a weighted graph with up to four odd vertices, going along each edge at least once
 
-**全部の edge を最低 $1$ 回は通って、出発点にもどる。その最短の長さ**を求める問題です。郵便配達員が全部の道を配って局にもどる、という場面から来ています。
+::: {.callout-important}
+## Chinese postman の $3$ 点
+- **通るもの** … **edge を全部**、最低 $1$ 回ずつ。**繰り返してよい**
+- **最小にするもの** … 歩く距離の合計。出発点にもどる
+- **出てくるもの** … **正確な最小値**
+:::
+
+郵便配達員が全部の道を配って局にもどる、という場面から来ています。
 
 odd vertex が $0$ 個なら、[Eulerian circuit がある](#euler)ので、**答えは weight の合計そのもの**です。何も繰り返さずにすみます（グラフがつながっている場合です）。
 
-問題になるのは、odd vertex がある場合です。$G$ では $A$ と $B$ が odd でした。
+問題になるのは、odd vertex がある場合です。
+
+#### odd vertex が $2$ 個のとき {#cpp2}
+
+$G$ では $A$ と $B$ が odd でした。
 
 ![Repeating the shortest path between the two odd vertices](img/ahl-3-16-cpp.svg){#fig-ahl316-cpp width=76%}
 
 ::: {.callout-note}
 ## odd vertex が $2$ 個のときの手順
 1. odd vertex を見つける（ここでは $A$ と $B$）。
-2. その $2$ 点のあいだの**最短の道**を探す。
+2. その $2$ 点のあいだの**最短の道**（least distance）を探す。
 3. その道の分だけ、**もう $1$ 度通る**（repeat する）。
-4. 答えは、**weight の合計 + その最短の道の長さ**。
+4. 答えは、**weight の合計 $+$ その最短の道の長さ**。
 :::
 
 $A$ と $B$ を結ぶ道を全部調べます。同じ vertex を $2$ 度通らない道は、$7$ 通りあります。
@@ -327,28 +447,54 @@ $$
 44 + 4 = 48
 $$
 
-::: {.callout-important}
-## odd vertex が $4$ 個のときは、組み合わせが $3$ 通りです
-$4$ 個を $W, X, Y, Z$ とすると、$2$ 個ずつのペアの作り方は $3$ 通りです。
+#### odd vertex が $4$ 個のとき {#cpp4}
 
-$$
-\{WX, YZ\}, \qquad \{WZ, XY\}, \qquad \{WY, XZ\}
-$$
+手順が $1$ 段増えます。**$4$ 個を $2$ 個ずつのペアに分ける方法が $3$ 通りある**ので、その $3$ 通りを比べます。
 
-**この $3$ 通りを全部計算して、合計がいちばん小さいものを採ります。** $1$ 通りだけでは、それが最小である理由が示せません。
-
-やり方は @exm-ahl316-cpp4 で見ます。
-
-なお、odd vertex が $6$ 個になると、ペアの作り方は $15$ 通りになります。シラバスが `up to four odd vertices` と限っているのは、この範囲までということです。
+::: {.callout-note}
+## odd vertex が $4$ 個のときの手順
+1. odd vertex を $4$ 個見つける。$W$、$X$、$Y$、$Z$ とする。
+2. **$6$ 組すべてについて、$2$ 点間の least distance を求める。**
+   $$
+   WX,\quad WY,\quad WZ,\quad XY,\quad XZ,\quad YZ
+   $$
+3. ペアの作り方 $3$ 通りについて、**$2$ つの least distance の和**を出す。
+   $$
+   \{WX,\ YZ\}, \qquad \{WY,\ XZ\}, \qquad \{WZ,\ XY\}
+   $$
+4. **いちばん小さい和**を、weight の合計に足す。
 :::
+
+::: {.callout-warning}
+## $3$ 通りを全部書いてください
+いちばん小さいものだけを書くと、**それが最小である理由が示せません。** $3$ 通りとも計算して並べたところまでが解答です。
+
+ペアの作り方が $3$ 通りなのは、**$W$ の相手を $X$、$Y$、$Z$ のどれにするかで $3$ 通り**あり、相手が決まれば残りの $2$ 個も自動的に決まるからです。
+
+なお、odd vertex が $6$ 個になるとペアの作り方は $15$ 通りになります。シラバスが `up to four odd vertices` と限っているのは、この範囲までということです。
+:::
+
+::: {.callout-warning}
+## 手順 $2$ の `least distance` を、直接の edge で済ませない
+$2$ つの odd vertex が直接つながっていても、**他の点を経由したほうが短いことがあります。** また、直接つながっていないこともあります。
+
+odd vertex を $P$ と $R$ とすると、$PR = 10$ でも $P \to Q \to R$ が $3 + 4 = 7$ なら、使うのは $7$ です。**$6$ 組すべてについて、経由路も比べてください。**
+:::
+
+やり方は @exm-ahl316-cpp4 と演習 $9$ で見ます。
 
 ### 10. travelling salesman problem {#tsp}
 
 > the Hamiltonian cycle of least weight in a weighted complete graph
 
-こんどは **vertex** の話です。**全部の町を $1$ 回ずつ回って、出発点にもどる。その最短**を求めます。
+::: {.callout-important}
+## travelling salesman の $3$ 点
+- **通るもの** … **vertex を全部**、ちょうど $1$ 回ずつ（$=$ Hamiltonian cycle）
+- **最小にするもの** … 回る距離の合計
+- **出てくるもの** … **正確な値は出しません。** 上界と下界ではさみます
+:::
 
-Chinese postman との違いは、次の表のとおりです。**edge か vertex か**で読み分けてください。
+Chinese postman との違いを、並べておきます。
 
 | | 通るもの | 何回 |
 |---|---|---|
@@ -361,16 +507,75 @@ Chinese postman との違いは、次の表のとおりです。**edge か verte
 ## travelling salesman には、うまい解き方がありません
 Chinese postman は、手順どおりにやれば**必ず最短が出ます**。
 
-travelling salesman は違います。vertex が $n$ 個なら、調べるべき cycle は $\dfrac{(n-1)!}{2}$ 通りあり、$n$ が少し増えるだけで手に負えなくなります。
+travelling salesman は違います。調べるべき cycle の数は
+
+$$
+\frac{(n-1)!}{2}
+$$ {#eq-ahl316-count}
+
+通りあり、$n$ が少し増えるだけで手に負えなくなります。$5$ 点で $12$ 通り、$6$ 点で $60$ 通り、$8$ 点になると $2520$ 通りです。
 
 だから、**最短そのものは求めず、「これ以下」と「これ以上」ではさむ**のがこの項目のやり方です。上から押さえるのが nearest neighbour、下から押さえるのが deleted vertex です。
 :::
 
-以下、$4$ つの町 $P, Q, R, S$ の完全グラフで説明します。
+::: {.callout-note}
+## @eq-ahl316-count が成り立つのは、次の $3$ つがそろうときです
+$1$. **undirected な complete graph** であること。どの $2$ 点も結ばれていて、向きがないこと。
+
+$2$. **出発点を $1$ つに固定する**こと。$(n-1)!$ の $-1$ は、ここから来ています。残り $n-1$ 個を並べる順が $(n-1)!$ 通りです。
+
+$3$. **逆回りを同じものと数える**こと。$P \to Q \to R \to S \to P$ と $P \to S \to R \to Q \to P$ は、通る edge がまったく同じで、長さも同じです。だから $2$ で割ります。
+
+**検算。** $4$ 点なら $\dfrac{3!}{2} = 3$ 通り。実際、$P$ を出発点に固定すると $PQRS$、$PQSR$、$PRQS$ の $3$ 通りしかありません（残りの $3$ 通りは、この $3$ つの逆回りです）。
+:::
+
+### 11. table of least distances {#least}
+
+> Practical problems should be converted to the classical problem by completion of a table of least distances where necessary
+
+travelling salesman は、**complete graph** の問題です。ところが現実の道路網は、そうなっていないことがあります。
+
+- $2$ 点のあいだに、**直接の道がない**
+- 直接の道はあるが、**他の点を経由したほうが短い**
+
+そこで、**「$2$ 点のあいだの最短距離」を表にして、complete graph に作り直します。**
+
+![A real road map, and its table of least distances](img/ahl-3-16-least.svg){#fig-ahl316-least width=100%}
+
+$L$ と $N$ は $12$ の道で直接つながっていますが、$L \to M \to N$ なら $5 + 6 = 11$ です。**最短は $11$** なので、表には $11$ と書きます。
+
+::: {.callout-warning}
+## 直接の道の長さを、そのまま書き写さないでください
+`table of least distances` の `least` は、「**回り道を含めて、いちばん短い行き方**」という意味です。
+
+表の各マスについて、**直接行った場合と、他の点を経由した場合を比べて**ください。短いほうを書きます。
+:::
+
+::: {.callout-important}
+## この表を作ってから、次の $2$ 節の algorithm を使います
+現実の道路網に nearest neighbour をそのままかけることはできません。**「$L$ から $P$ へ」の距離が表にないと、algorithm が止まってしまう**からです。
+
+順番はいつもこうです。
+
+$$
+\text{現実の道路網} \ \longrightarrow \ \text{table of least distances} \ \longrightarrow \ \text{nearest neighbour / deleted vertex}
+$$
+
+はじめから complete graph が与えられていれば、この作業は要りません。**表を作る必要があるかどうかを、先に確かめてください。**
+:::
+
+::: {.callout-note}
+## 答えを現実にもどす
+表の上で出てきた cycle は、「$L \to N$」と書いてあっても、**現実には $L \to M \to N$ と通る**ことになります。
+
+答案では、そこまで書けると丁寧です。
+:::
+
+以下、$4$ つの町 $P, Q, R, S$ の complete graph（すでに最短距離の表になっているもの）で説明します。
 
 ![Upper and lower bounds for the travelling salesman problem](img/ahl-3-16-tsp.svg){#fig-ahl316-tsp width=100%}
 
-### 11. nearest neighbour algorithm で、上界を出します {#nn}
+### 12. nearest neighbour algorithm で、上界を出します {#nn}
 
 **nearest neighbour algorithm**（最近傍法）は、その場でいちばん近いところへ進み続けるやり方です。
 
@@ -408,9 +613,44 @@ nearest neighbour は「その場でいちばん近い方へ」としか見て�
 上界は**小さいほど良い**ので、`starting at each vertex` と指示されたら、全部やって**いちばん小さいもの**を答えます。
 :::
 
-### 12. deleted vertex algorithm で、下界を出します {#lb}
+#### 同じ距離の候補が $2$ つ以上あるとき {#nn-ties}
+
+いま立っている vertex から、**まだ行っていない $2$ つの vertex が、同じ距離**ということがあります。
+
+そのときは、**どちらを選んでも構いません。** ただし、Kruskal の同点（[第6節](#ties)）とは違って、**出てくる上界が変わることがあります。**
+
+たとえば $AB = AC = 3$、$BC = 2$、$CD = 4$、$BD = 9$、$AD = 10$ の complete graph を $A$ から始めると、
+
+| 最初に選ぶ | できる cycle | 合計 |
+|---|---|---|
+| $B$ | $A \to B \to C \to D \to A$ | $3 + 2 + 4 + 10 = 19$ |
+| $C$ | $A \to C \to B \to D \to A$ | $3 + 2 + 9 + 10 = 24$ |
+
+: 同点の選び方で上界が変わる例 {#tbl-ahl316-nntie}
+
+**どちらも正しい上界です。** どちらも実際に通れる道だからです。ただし上界は小さいほど良いので、$19$ のほうが役に立ちます。
+
+::: {.callout-important}
+## 選んだほうを、答案に書いてください
+同点があったときは、**「$AB$ と $AC$ はどちらも $3$。$B$ を選んだ」**のように書きます。
+
+そうしないと、採点者は「$C$ を選ぶべきところを間違えた」のか「同点のうち一方を選んだ」のか区別できません。
+
+`Find an upper bound` と問われているだけなら、$1$ つ出せば足ります。`the best upper bound` を聞かれたら、**両方やって小さいほう**を答えてください。
+:::
+
+### 13. deleted vertex algorithm で、下界を出します {#lb}
 
 **deleted vertex algorithm**（頂点削除法）は、vertex を $1$ つ取り除いて考えるやり方です。
+
+::: {.callout-important}
+## 使えるのは、complete graph（または最短距離の表）に対してだけです
+この手順は、**消した vertex から他の全部の vertex へ距離がある**ことを前提にしています。「小さいほうから $2$ 本」を選ぶには、候補がそろっていなければなりません。
+
+また、**手順 $2$ で残ったグラフの MST を出す**にも、残りがひとつながりでなければなりません。complete graph なら、どちらの条件も自動的にみたされます。
+
+ですから、現実の道路網に直接かけることはできません。**先に table of least distances を作ってください**（[第11節](#least)）。
+:::
 
 ::: {.callout-note}
 ## deleted vertex の手順
@@ -434,6 +674,37 @@ $$
 
 **最短はこれ以上**です。
 
+#### なぜ、これが下界になるのか {#why-lb}
+
+::: {.callout-tip}
+## 残りが「$1$ 本道」になることが、鍵です
+どんな Hamiltonian cycle でも、そこから **$P$ と、$P$ に付いている $2$ 本の edge を取り除く**と、何が残るかを考えてください。
+
+cycle は輪なので、$P$ を切り取ると**輪がほどけて、$1$ 本の道になります。** しかも、その道は $P$ 以外の vertex を全部 $1$ 回ずつ通っています。これを **spanning path**（全域道）といいます。
+
+そこで、$2$ つのことが言えます。
+
+$1$. **spanning path は、$P$ を除いたグラフの spanning tree です。** 道は connected で cycle がないので、tree の条件をみたしています（[AHL 3.14](ahl-3-14.qmd#tree)）。ですから、その weight は **MST 以上**です。
+
+$$
+(\text{spanning path の weight}) \ \ge \ \text{MST}(\text{$P$ を除いたグラフ})
+$$
+
+$2$. **取り除いた $2$ 本は、$P$ に付いている edge です。** ですから、その $2$ 本の和は、$P$ に付いている edge のうち**小さいほうから $2$ 本の和以上**です。
+
+$$
+(\text{取り除いた $2$ 本の和}) \ \ge \ (\text{$P$ の最小 $2$ 本の和})
+$$
+
+この $2$ つを足すと
+
+$$
+(\text{cycle 全体の weight}) \ \ge \ \text{MST} + (\text{$P$ の最小 $2$ 本の和})
+$$
+
+**どの Hamiltonian cycle についても**成り立つので、最短のものについても成り立ちます。だから右辺は下界です。
+:::
+
 ::: {.callout-important}
 ## 上界と下界が一致したら、それが答えです
 いま、上界も下界も $22$ になりました。最短を $L$ とすると
@@ -448,48 +719,33 @@ $$
 :::
 
 ::: {.callout-tip}
-## なぜ「小さいほうから $2$ 本」なのか
-どんな Hamiltonian cycle でも、$P$ には**入って出る**ので、$P$ につながる edge を**ちょうど $2$ 本**使います。
-
-そして $P$ を取り除いた残りは、$P$ 以外の vertex を全部つないだ形になっているので、その weight は **MST 以上**です。
-
-だから「$P$ につながる edge のうち**小さいほうから $2$ 本**の和 + 残りの MST」は、どうやっても下回れない値になります。
-:::
-
-::: {.callout-tip}
 ## どの vertex を消すかで、下界は変わります
 消す vertex を変えると、別の下界が出ます。下界は**大きいほど良い**（最短をきつくはさめる）ので、`by deleting each vertex in turn` と指示されたら、全部やって**いちばん大きいもの**を答えます。
 
 nearest neighbour の上界とは、**逆向き**です。上界は小さいほど良く、下界は大きいほど良い。
 :::
 
-### 13. table of least distances {#least}
+### 14. $3$ つを見分けます {#compare}
 
-> Practical problems should be converted to the classical problem by completion of a table of least distances
+最後に、[第5節](#mst)・[第9節](#cpp)・[第10節](#tsp)を並べておきます。**問題文を読んで、まずこの表のどれかを決めてください。**
 
-travelling salesman は、**完全グラフ**の問題です。ところが現実の道路網は、そうなっていないことがあります。
+| | **minimum spanning tree** | **Chinese postman** | **travelling salesman** |
+|---|---|---|---|
+| **何を全部** | vertex を全部**つなぐ** | **edge** を全部通る | **vertex** を全部通る |
+| **何回** | — | 最低 $1$ 回（繰り返してよい） | ちょうど $1$ 回 |
+| **出発点にもどるか** | もどらない（輪を作らない） | **もどる** | **もどる** |
+| **最小にするもの** | 選んだ edge の weight の合計 | 歩く距離の合計 | 回る距離の合計 |
+| **使う手順** | Kruskal / Prim | odd vertex を見つけて、最短の道を繰り返す | nearest neighbour / deleted vertex |
+| **出てくるもの** | **正確な値** | **正確な値** | **upper bound と lower bound** |
+| **問題文の合図** | `connect all`, `cable`, `minimum spanning tree` | `along every road at least once`, `postman`, `inspector` | `visit every town once`, `salesman`, `tour` |
 
-- $2$ 点のあいだに、**直接の道がない**
-- 直接の道はあるが、**他の点を経由したほうが短い**
+: $3$ つの問題の見分け方 {#tbl-ahl316-compare}
 
-そこで、**「$2$ 点のあいだの最短距離」を表にして、完全グラフに作り直します。**
+::: {.callout-tip}
+## いちばん短い見分け方
+> **つなぐだけか（MST）。edge を全部通るか（postman）。vertex を全部通るか（salesman）。**
 
-![A real road map, and its table of least distances](img/ahl-3-16-least.svg){#fig-ahl316-least width=100%}
-
-$L$ と $N$ は $12$ の道で直接つながっていますが、$L \to M \to N$ なら $5 + 6 = 11$ です。**最短は $11$** なので、表には $11$ と書きます。
-
-::: {.callout-warning}
-## 直接の道の長さを、そのまま書き写さないでください
-`table of least distances` の `least` は、「**回り道を含めて、いちばん短い行き方**」という意味です。
-
-表の各マスについて、**直接行った場合と、他の点を経由した場合を比べて**ください。短いほうを書きます。
-:::
-
-::: {.callout-note}
-## 表を作ったあとは、いつもどおりです
-最短距離の表ができれば、それは完全グラフの weight の表です。あとは nearest neighbour と deleted vertex を、その表の上で走らせるだけです。
-
-ただし、出てきた cycle は「$L \to N$」と書いてあっても、**現実には $L \to M \to N$ と通る**ことになります。答案では、そこまで書けると丁寧です。
+問題文に `every road`（道を全部）とあれば edge、`every town`（町を全部）とあれば vertex です。**そこを読み違えなければ、あとは手順どおりです。**
 :::
 
 ## Why it works
@@ -498,7 +754,9 @@ $L$ と $N$ は $12$ の道で直接つながっていますが、$L \to M \to N
 ## クリックすると開きます
 シラバスは、Chinese postman について次のように求めています。
 
-> Students should be able to explain why the algorithm for constructing the Chinese postman problem works
+> Students should be able to explain why the algorithm for constructing the Chinese postman problem works, apply the algorithm and justify their choice of algorithm
+
+「どの algorithm を選んだかの理由を書く」ことも求められています。その見分け方は[第14節](#compare)にまとめてあります。
 
 ここで説明するのは、**なぜ「$2$ 点のあいだの最短の道を、もう $1$ 度通る」でよいのか**、その $1$ 点です。ただし、その理由は odd vertex の意味から出てくるので、そこから始めます。
 
@@ -533,6 +791,14 @@ $A$ と $B$ を結ぶ道に沿って全部の edge を繰り返すと、
 
 だから、**$A$ と $B$ を結ぶ最短の道を選べば、余分に歩く距離が最小**になります。これが、あの手順の意味です。
 
+### odd vertex が $4$ 個のときも、同じ理屈です {#why-cpp4}
+
+odd vertex が $W$、$X$、$Y$、$Z$ の $4$ 個あるとき、$1$ 本の道を繰り返しても、偶数に直せるのは**その両端の $2$ つだけ**です。残りの $2$ つは奇数のまま残ります。
+
+ですから、**$2$ 本の道が要ります。** $4$ 個を $2$ つの組に分け、それぞれの組を結ぶ道を繰り返す——それが[第9節の手順](#cpp4)です。
+
+分け方は $3$ 通りしかないので、**$3$ 通りとも計算して、合計が最小のものを採る**ことができます。
+
 ::: {.callout-tip}
 ## 説明を求められたら、この $2$ 行を書いてください
 *Repeating a path changes the parity of the degree at its two ends only.*
@@ -550,7 +816,9 @@ $A$ と $B$ を結ぶ道に沿って全部の edge を繰り返すと、
 :::
 
 ::: {#exm-ahl316-euler}
-[The graph $G$ has vertices $A$, $B$, $C$, $D$, $E$ and the edges shown in @fig-ahl316-graph.]{.q-en}
+[The graph $G$ has vertices $A$, $B$, $C$, $D$, $E$ and the edges shown below.]{.q-en}
+
+![](img/ahl-3-16-graph-plain.svg){width=78% fig-align="center"}
 
 **(a)** [Write down the degree of each vertex.]{.q-en}
 
@@ -561,7 +829,7 @@ $A$ と $B$ を結ぶ道に沿って全部の edge を繰り返すと、
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-グラフ $G$ は、頂点 $A$、$B$、$C$、$D$、$E$ と、@fig-ahl316-graph に示された辺をもちます。
+グラフ $G$ は、頂点 $A$、$B$、$C$、$D$、$E$ と、上に示された辺をもちます。
 
 **(a)** 各頂点の次数を書きなさい。
 
@@ -573,7 +841,7 @@ $A$ と $B$ を結ぶ道に沿って全部の edge を繰り返すと、
 
 ---
 
-**(a)** それぞれの vertex から出ている edge を数えます。
+**(a)** それぞれの vertex に付いている edge を数えます。
 
 $$
 \deg A = 3, \quad \deg B = 3, \quad \deg C = 4, \quad \deg D = 4, \quad \deg E = 2
@@ -606,12 +874,14 @@ $2$ 個なので、**Eulerian trail はあり、Eulerian circuit はありませ
 :::
 
 ::: {#exm-ahl316-kruskal}
-[Use Kruskal's algorithm to find a minimum spanning tree for the graph in @fig-ahl316-graph. State the edges in the order in which they are added, and give the total weight.]{.q-en}
+[Use Kruskal's algorithm to find a minimum spanning tree for the graph below. State the edges in the order in which they are added, and give the total weight.]{.q-en}
+
+![](img/ahl-3-16-graph-plain.svg){width=78% fig-align="center"}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-@fig-ahl316-graph のグラフについて、Kruskal のアルゴリズムを使って最小全域木を $1$ つ求めなさい。加えた順に辺を述べ、重みの合計も書きなさい。
+上のグラフについて、Kruskal のアルゴリズムを使って最小全域木を $1$ つ求めなさい。加えた順に辺を述べ、重みの合計も書きなさい。
 
 </details>
 
@@ -634,6 +904,8 @@ $$
 
 **検算。** cycle ができていないか確かめます。$DE$、$BC$、$AB$、$CD$ をつなぐと $A - B - C - D - E$ の一本道で、輪はありません ✓
 
+この $G$ には同じ weight の edge がないので、**MST は $1$ つに決まります**（[第6節](#ties)）。
+
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
 *Edges added in order: $DE$ $(2)$, $BC$ $(3)$, $AB$ $(4)$, $CD$ $(5)$.*
@@ -646,11 +918,13 @@ $$
 ::: {.callout-tip}
 ## `in the order` と書かれたら、順番まで書きます
 合計の $14$ だけでは、聞かれたことに答えたことになりません。**$2, 3, 4, 5$ の順に採ったこと**を見せてください。
+
+`Use Kruskal's algorithm` と指定されているので、**重み順に見ていったことが分かる書き方**にします（[第7節](#prim)）。
 :::
 :::
 
 ::: {#exm-ahl316-prim}
-[The table shows the weights of the edges of a graph.]{.q-en}
+[The table shows the weights of the edges of an undirected graph.]{.q-en}
 
 |  | $A$ | $B$ | $C$ | $D$ | $E$ |
 |---|---|---|---|---|---|
@@ -665,7 +939,7 @@ $$
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-表は、あるグラフの辺の重みを示しています。
+表は、ある無向グラフの辺の重みを示しています。
 
 $A$ から始めて Prim のアルゴリズムを使い、最小全域木を求めなさい。加えた順に辺を述べなさい。
 
@@ -673,15 +947,17 @@ $A$ から始めて Prim のアルゴリズムを使い、最小全域木を求�
 
 ---
 
-[行列法](#prim-matrix)で進めます。まず $A$ の列を消します。
+まず、**表が対称になっているか**を見ます。$AB$ の欄も $BA$ の欄も $4$、$CE$ も $EC$ も $9$。対称です ✓ 無向グラフの表なので、[行列法](#prim-matrix)が使えます。
 
-**手順1。** $A$ の行を見ます。消していない列で最小は $4$（$B$ 列）。$AB$ を採り、$B$ 列を消す。
+$A$ の列を消して始めます。
 
-**手順2。** $A$ と $B$ の行を見ます。残っている列は $C$、$D$、$E$。数は $6, 8$（$A$ 行）と $3, 7$（$B$ 行）。最小は $3$（$C$ 列）。$BC$ を採り、$C$ 列を消す。
+**手順 $1$。** $A$ の行を見ます。消していない列で最小は $4$（$B$ 列）。$AB$ を採り、$B$ 列を消す。
 
-**手順3。** $A$、$B$、$C$ の行を見ます。残るのは $D$、$E$ 列。数は $8, 7, 5$ と $9$。最小は $5$（$D$ 列）。$CD$ を採り、$D$ 列を消す。
+**手順 $2$。** $A$ と $B$ の行を見ます。残っている列は $C$、$D$、$E$。数は $6, 8$（$A$ 行）と $3, 7$（$B$ 行）。最小は $3$（$C$ 列）。$BC$ を採り、$C$ 列を消す。
 
-**手順4。** 残るのは $E$ 列だけ。数は $9$（$C$ 行）と $2$（$D$ 行）。最小は $2$。$DE$ を採る。
+**手順 $3$。** $A$、$B$、$C$ の行を見ます。残るのは $D$、$E$ 列。数は $8, 7, 5$ と $9$。最小は $5$（$D$ 列）。$CD$ を採り、$D$ 列を消す。
+
+**手順 $4$。** 残るのは $E$ 列だけ。数は $9$（$C$ 行）と $2$（$D$ 行）。最小は $2$。$DE$ を採る。
 
 $$
 4 + 3 + 5 + 2 = 14
@@ -701,11 +977,15 @@ $$
 ::: {.callout-tip}
 ## 表の問題で、図を描き直す必要はありません
 表のまま、列を消しながら進められます。図に描き直すと、写しまちがえる分だけ危険です。
+
+**表のどのマスに丸をつけ、どの列を消したかが分かるように**、答案にも表を写して印を残してください。
 :::
 :::
 
 ::: {#exm-ahl316-cpp}
-[A postman must walk along every road in the network shown in @fig-ahl316-graph at least once, starting and finishing at $A$. The weights are distances in kilometres.]{.q-en}
+[A postman must walk along every road in the network below at least once, starting and finishing at $A$. The weights are distances in kilometres.]{.q-en}
+
+![](img/ahl-3-16-graph-plain.svg){width=78% fig-align="center"}
 
 **(a)** [Explain why the postman must walk along at least one road twice.]{.q-en}
 
@@ -714,7 +994,7 @@ $$
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-郵便配達員が、@fig-ahl316-graph のネットワークのすべての道を最低 $1$ 回は歩き、$A$ で出発して $A$ で終わらなければなりません。重みは距離（km）です。
+郵便配達員が、上のネットワークのすべての道を最低 $1$ 回は歩き、$A$ で出発して $A$ で終わらなければなりません。重みは距離（km）です。
 
 **(a)** 配達員が、少なくとも $1$ 本の道を $2$ 回歩かなければならない理由を説明しなさい。
 
@@ -724,9 +1004,11 @@ $$
 
 ---
 
+`every road` とあるので、**edge を全部通る**問題です。Chinese postman です（@tbl-ahl316-compare）。
+
 **(a)** odd vertex が $A$ と $B$ の $2$ 個あります。Eulerian circuit があるのは odd vertex が $0$ 個のときだけ（[第3節](#euler)）なので、全部の道を $1$ 回ずつでもどることはできません。
 
-**(b)** $A$ と $B$ を結ぶ道を、[第9節の表](#cpp)のとおり全部調べます。
+**(b)** odd vertex が $2$ 個なので、[第9節の手順](#cpp2)です。$A$ と $B$ を結ぶ道を、[表](#tbl-ahl316-ab)のとおり全部調べます。
 
 $$
 4, \quad 9, \quad 15, \quad 16, \quad 18, \quad 22, \quad 24
@@ -793,7 +1075,7 @@ $$
 
 ---
 
-**(a)** 完全グラフなので、どの vertex も他の $3$ 個とつながっています。
+**(a)** complete graph なので、どの vertex も他の $3$ 個とつながっています。
 
 $$
 \deg W = \deg X = \deg Y = \deg Z = 3
@@ -801,11 +1083,24 @@ $$
 
 $3$ は奇数なので、$4$ つとも odd vertex です。
 
-**(b)** odd vertex が $4$ 個あるので、[$2$ 個ずつのペアを $3$ 通り](#cpp)作って比べます。
+**(b)** odd vertex が $4$ 個あるので、[第9節の手順](#cpp4)です。**手順 $1$**（odd vertex を見つける）は (a) で済んでいるので、**手順 $2$** から始めます。
 
 ![Three ways of pairing four odd vertices](img/ahl-3-16-cpp4.svg){#fig-ahl316-cpp4 width=100%}
 
-まず、必要な最短距離を出します。この $4$ 点では、どの $2$ 点も**直接の edge がいちばん短い**（たとえば $WY$ は直接 $5$、$W \to X \to Y$ は $3+4=7$、$W \to Z \to Y$ は $4+3=7$）ので、そのまま使えます。
+**手順 $2$。** まず、$6$ 組すべての **least distance** を出します。この $4$ 点では、どの $2$ 点も**直接の edge がいちばん短い**ので、そのまま使えます。
+
+| 組 | 直接 | 経由したとき | least distance |
+|---|---|---|---|
+| $WX$ | $3$ | $W \to Z \to X = 4+6 = 10$、$W \to Y \to X = 5+4 = 9$ | $\mathbf{3}$ |
+| $WY$ | $5$ | $W \to X \to Y = 3+4 = 7$、$W \to Z \to Y = 4+3 = 7$ | $\mathbf{5}$ |
+| $WZ$ | $4$ | $W \to Y \to Z = 5+3 = 8$、$W \to X \to Z = 3+6 = 9$ | $\mathbf{4}$ |
+| $XY$ | $4$ | $X \to W \to Y = 3+5 = 8$、$X \to Z \to Y = 6+3 = 9$ | $\mathbf{4}$ |
+| $XZ$ | $6$ | $X \to W \to Z = 3+4 = 7$、$X \to Y \to Z = 4+3 = 7$ | $\mathbf{7 > 6}$ なので $6$ |
+| $YZ$ | $3$ | $Y \to W \to Z = 5+4 = 9$、$Y \to X \to Z = 4+6 = 10$ | $\mathbf{3}$ |
+
+: $6$ 組の least distance {#tbl-ahl316-least6}
+
+**手順 $3$。** ペアの作り方 $3$ 通りを比べます。
 
 | ペアの作り方 | 合計 |
 |---|---|
@@ -815,7 +1110,7 @@ $3$ は奇数なので、$4$ つとも odd vertex です。
 
 : $3$ 通りのペア {#tbl-ahl316-pairs}
 
-いちばん小さいのは $6$ です。weight の合計は
+**手順 $4$。** いちばん小さいのは $6$ です。weight の合計は
 
 $$
 3 + 4 + 3 + 4 + 5 + 6 = 25
@@ -829,10 +1124,10 @@ $$
 ## 解答例（答案用紙にはこう書く）
 **(a)** *The graph is complete on four vertices, so every vertex has degree $3$, which is odd.*
 
-**(b)** *Pairings of the odd vertices:*
+**(b)** *In this graph the direct edge is the least distance for every pair. Pairings of the odd vertices:*
 
 $$
-WX + YZ = 6, \qquad WZ + XY = 8, \qquad WY + XZ = 11
+WX + YZ = 3 + 3 = 6, \qquad WZ + XY = 4 + 4 = 8, \qquad WY + XZ = 5 + 6 = 11
 $$
 
 *The least is $6$, and the total weight is $25$.*
@@ -846,12 +1141,14 @@ $$
 ## $3$ 通りを、全部書いてください
 $6$ がいちばん小さいことを示すには、$8$ と $11$ も出しておく必要があります。**$6$ だけを書くと、それが最小である理由が示せません。**
 
-ペアの作り方は、$W$ の相手を $X$、$Y$、$Z$ のどれにするかで $3$ 通りです。相手が決まれば、残りの $2$ 個も自動的に決まります。
+@tbl-ahl316-least6 のように、**直接と経由を比べたこと**も一言添えておくと、丁寧な答案になります。演習 $9$ では、ここが実際に効いてきます。
 :::
 :::
 
 ::: {#exm-ahl316-tsp}
-[The complete graph in @fig-ahl316-tsp has vertices $P$, $Q$, $R$, $S$.]{.q-en}
+[The complete graph below has vertices $P$, $Q$, $R$, $S$.]{.q-en}
+
+![](img/ahl-3-16-tsp-plain.svg){width=58% fig-align="center"}
 
 **(a)** [Use the nearest neighbour algorithm, starting at $R$, to find an upper bound for the travelling salesman problem.]{.q-en}
 
@@ -862,7 +1159,7 @@ $6$ がいちばん小さいことを示すには、$8$ と $11$ も出してお
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-@fig-ahl316-tsp の完全グラフは、頂点 $P$、$Q$、$R$、$S$ をもちます。
+上の完全グラフは、頂点 $P$、$Q$、$R$、$S$ をもちます。
 
 **(a)** $R$ から始めて nearest neighbour のアルゴリズムを使い、巡回セールスマン問題の上界を求めなさい。
 
@@ -874,7 +1171,9 @@ $6$ がいちばん小さいことを示すには、$8$ と $11$ も出してお
 
 ---
 
-**(a)** $R$ から、近い順に進みます。$R$ から出ているのは $RS = 4$、$RQ = 6$、$RP = 9$ です。
+はじめから complete graph が与えられているので、[table of least distances](#least) を作る作業は要りません。
+
+**(a)** $R$ から、近い順に進みます。$R$ から出ているのは $RS = 4$、$RQ = 6$、$RP = 9$ です。同じ距離のものはないので、迷うところはありません（[第12節](#nn-ties)）。
 
 | いる場所 | 行ける先 | 選ぶ |
 |---|---|---|
@@ -895,7 +1194,7 @@ $$
 
 **(b)** $S$ と、$S$ につながる edge を消します。残るのは $P$、$Q$、$R$ で、$PQ = 5$、$QR = 6$、$PR = 9$。
 
-MST は、軽いほうから $PQ = 5$ と $QR = 6$ で $11$。
+MST は、軽いほうから $PQ = 5$ と $QR = 6$ で $11$。$3$ 点なので edge は $2$ 本です。
 
 $S$ から出ていた $SR = 4$、$SP = 7$、$SQ = 8$ のうち、小さいほうから $2$ 本は $4$ と $7$。
 
@@ -928,7 +1227,7 @@ $$
 ## `Hence` は「いま出した $2$ つを使え」という指示です
 (c) で全部の cycle を書き出す必要はありません。**(a) と (b) がはさんでいる**ことを書けば、それが答えです。
 
-なお、[第11節](#nn)は $P$ から始めて、[第12節](#lb)は $P$ を消して、どちらも $22$ でした。この完全グラフでは、**どこから始めても、どこを消しても $22$** になります。そういうグラフばかりではないので（演習6と7を見てください）、$1$ つの結果から決めつけないでください。
+なお、[第12節](#nn)は $P$ から始めて、[第13節](#lb)は $P$ を消して、どちらも $22$ でした。この complete graph では、**どこから始めても、どこを消しても $22$** になります。そういうグラフばかりではないので（演習 $6$ と $7$ を見てください）、$1$ つの結果から決めつけないでください。
 :::
 :::
 
@@ -942,10 +1241,17 @@ $$
 :::
 
 ::: {.callout-warning}
-## Eulerian と Hamiltonian を混ぜる
-**Eulerian は edge を全部、Hamiltonian は vertex を全部**です。
+## cycle を「vertex を $2$ 度通っているから path ではない」と否定する
+cycle は**出発点にもどる path** です（[第1節](#closed)）。出発点だけは $2$ 度出てきますが、それでよいのです。
 
-Eulerian は odd vertex を数えれば判定できますが、**Hamiltonian には、そういう手軽な判定法がありません**。「odd vertex が $2$ 個だから Hamiltonian cycle がある」は、まったく別の話です。
+否定するべきなのは、**出発点と終点以外**の vertex を $2$ 度通っている場合です。
+:::
+
+::: {.callout-warning}
+## Eulerian と Hamiltonian を混ぜる
+**Eulerian は edge を全部、Hamiltonian は vertex を全部**です（@tbl-ahl316-eh）。
+
+Eulerian は odd vertex を数えれば判定できますが、**Hamiltonian には、このコースで使える簡単な必要十分条件がありません**。「odd vertex が $2$ 個だから Hamiltonian cycle がある」は、まったく別の話です。
 :::
 
 ::: {.callout-warning}
@@ -963,6 +1269,15 @@ $\deg C = 4$ なら $C$ は even vertex です。
 :::
 
 ::: {.callout-warning}
+## 同じ weight が並んだときに、手が止まる
+どちらを採っても構いません（[第6節](#ties)）。**合計は変わりません。**
+
+ただし、**同点があったことと、どちらを選んだか**を答案に書いてください。
+
+（nearest neighbour の同点は事情が違います。あちらは**上界の値が変わることがあります**（[第12節](#nn-ties)）。）
+:::
+
+::: {.callout-warning}
 ## MST の edge の数をまちがえる
 vertex が $n$ 個なら、edge は**必ず $n-1$ 本**です（[AHL 3.14](ahl-3-14.qmd#tree-edges)）。
 
@@ -971,7 +1286,14 @@ $5$ 個なら $4$ 本。$3$ 本で止めても、$5$ 本採っても、両方ま
 
 ::: {.callout-warning}
 ## Prim の行列法で、行を消してしまう
-消すのは**列**だけです。木に入った vertex の行は、**そこから外へ伸ばす候補を見るために残します**。
+消すのは**列**だけです。木に入った vertex の行は、**そこから外へ伸ばす候補を見るために残します**（[第8節](#prim-matrix)）。
+:::
+
+::: {.callout-warning}
+## 指定された algorithm と違う方法で解く
+`Use Kruskal's algorithm` に Prim で答えると、**答えが合っていても方法点が落ちます。**
+
+そして、どちらの場合も **edge を採った順番**を書いてください（[第7節](#prim)）。
 :::
 
 ::: {.callout-warning}
@@ -981,9 +1303,16 @@ $5$ 個なら $4$ 本。$3$ 本で止めても、$5$ 本採っても、両方ま
 
 ::: {.callout-warning}
 ## Chinese postman で、直接の edge だけを見る
-$A$ と $B$ が直接つながっていても、**他の点を経由したほうが短いことがあります。**
+$2$ つの odd vertex が直接つながっていても、**他の点を経由したほうが短いことがあります。**
 
-$AB = 10$ でも $A \to C \to B$ が $3 + 4 = 7$ なら、繰り返すのは後者です。**必ず全部の道を比べてください。**
+$PR = 10$ でも $P \to Q \to R$ が $3 + 4 = 7$ なら、繰り返すのは後者です。**必ず全部の道を比べてください**（[第9節](#cpp4)）。
+:::
+
+::: {.callout-warning}
+## odd vertex が $4$ 個のとき、$1$ 通りだけ計算する
+ペアの作り方は $3$ 通りあります（[第9節](#cpp4)）。**$3$ 通りとも書いて、いちばん小さいものを採ってください。**
+
+$1$ 通りだけでは、それが最小である理由が示せません。
 :::
 
 ::: {.callout-warning}
@@ -993,7 +1322,7 @@ vertex が $n$ 個なら、足す weight は **$n$ 本**です。$n-1$ 本で止
 
 ::: {.callout-warning}
 ## deleted vertex で、消した点の edge を $1$ 本しか足さない
-Hamiltonian cycle は、どの vertex にも**入って出る**ので、必ず $2$ 本使います。**小さいほうから $2$ 本**です。
+Hamiltonian cycle は、どの vertex にも**入って出る**ので、必ず $2$ 本使います。**小さいほうから $2$ 本**です（[第13節](#why-lb)）。
 :::
 
 ::: {.callout-warning}
@@ -1005,7 +1334,7 @@ Hamiltonian cycle は、どの vertex にも**入って出る**ので、必ず $
 
 ::: {.callout-warning}
 ## table of least distances に、直接の距離を書き写す
-`least` は「回り道を含めた最短」です。**直接行くより短い経由路がないか**を、マスごとに確かめてください。
+`least` は「回り道を含めた最短」です。**直接行くより短い経由路がないか**を、マスごとに確かめてください（[第11節](#least)）。
 :::
 
 ## Using your GDC (TI-Nspire CX II)
@@ -1036,7 +1365,7 @@ $44$ と返ります。**edge の本数と、リストの項目数が同じか**
 
 ### 3. Hamiltonian cycle の総数を確かめる {#gdc-count}
 
-vertex が $n$ 個の完全グラフでは、Hamiltonian cycle は $\dfrac{(n-1)!}{2}$ 通りです。
+@eq-ahl316-count は、そのまま打てます。
 
 ```
 (4-1)!/2
@@ -1089,7 +1418,7 @@ $5$ 点で $12$ 通り、$6$ 点で $60$ 通り、$8$ 点になると $2520$ 通
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
-**(a)** *It is a path: no vertex (and therefore no edge) is repeated.*
+**(a)** *It is a path, because no vertex is repeated (and therefore no edge is repeated either).*
 
 **(b)** *$A \to B \to C \to A$, which uses $3$ edges.*
 :::
@@ -1104,10 +1433,9 @@ $5$ 点で $12$ 通り、$6$ 点で $60$ 通り、$8$ 点になると $2520$ 通
 *It is a path, because no vertex is repeated (and therefore no edge is repeated either).*
 :::
 
-
 path は trail でもあり walk でもあるので、**いちばん強い言い方**を答えます。`walk` とだけ書いても嘘ではありませんが、点にはなりません。
 
-**(b)** $A \to B \to C \to A$ は、$AB$、$BC$、$CA$ の $3$ 本を使ってもどります。
+**(b)** $A \to B \to C \to A$ は、$AB$、$BC$、$CA$ の $3$ 本を使ってもどります。$A$ が $2$ 度出てきますが、**出発点と終点としてなので cycle です**（[第1節](#closed)）。
 
 $B \to C \to D \to B$、$A \to B \to D \to C \to A$ なども正解です。
 
@@ -1133,21 +1461,18 @@ $K_4$ は、$4$ 頂点の完全グラフです。$K_4$ に Eulerian trail があ
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
-*In $K_4$ every vertex is joined to the other three, so every degree is $3$.*
-
-*There are four vertices of odd degree, so $K_4$ has neither an Eulerian trail nor an Eulerian circuit.*
+*Every vertex of $K_4$ is joined to the other three, so every vertex has degree $3$. There are four vertices of odd degree, so $K_4$ has neither an Eulerian trail nor an Eulerian circuit.*
 :::
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-完全グラフ $K_n$ では、どの vertex も他の $n-1$ 個すべてとつながっています（[AHL 3.14](ahl-3-14.qmd#complete)）。$n = 4$ なので、degree は全部 $3$ です。
+complete graph $K_n$ では、どの vertex も他の $n-1$ 個すべてとつながっています（[AHL 3.14](ahl-3-14.qmd#complete)）。$n = 4$ なので、degree は全部 $3$ です。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
 *Every vertex of $K_4$ is joined to the other three, so every vertex has degree $3$. There are four vertices of odd degree, so $K_4$ has neither an Eulerian trail nor an Eulerian circuit.*
 :::
-
 
 $$
 \deg = 3, 3, 3, 3
@@ -1156,6 +1481,8 @@ $$
 odd vertex は $4$ 個。$0$ でも $2$ でもないので、**どちらもありません**（[第3節](#euler)）。
 
 **検算。** degree の合計は $12$。edge は $\dfrac{4 \times 3}{2} = 6$ 本で、$2 \times 6 = 12$ ✓
+
+なお、**Hamiltonian cycle のほうは存在します**（$K_4$ ではどの並びでも回れます）。Eulerian がないことと、Hamiltonian がないことは別の話です（@tbl-ahl316-eh）。
 :::
 
 ::: {.ex-sep}
@@ -1181,7 +1508,7 @@ $$
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-weight の小さい順は $2, 3, 4, 5, 6, 7, 8$ です。
+weight の小さい順は $2, 3, 4, 5, 6, 7, 8$ です。同じ weight は $1$ つもないので、採る順は $1$ つに決まります（[第6節](#ties)）。
 
 | edge | weight | 判断 |
 |---|---|---|
@@ -1226,9 +1553,11 @@ $$
 | $A,B,C$ | $BD=4$, $CD=6$, $CE=8$ | $BD=4$ |
 | $A,B,C,D$ | $CE=8$, $DE=2$ | $DE=2$ |
 
-合計は $14$ で、**問3（同じグラフを Kruskal で解いたもの）と一致します**。
+合計は $14$ で、**演習 $3$（同じグラフを Kruskal で解いたもの）と一致します**。
 
-採る順番は違います（問3 の Kruskal は $2,3,4,5$、こちらは $3,5,4,2$）。選んだ edge の集合は同じで、**合計はどちらも $14$** です。
+採る順番は違います（演習 $3$ の Kruskal は $2,3,4,5$、こちらは $3,5,4,2$）。選んだ edge の集合は同じで、**合計はどちらも $14$** です。
+
+**$A$ から始めよと指定されているので、$A$ から始めてください**（[第7節](#prim)）。他の点から始めても合計は $14$ ですが、採る順が変わるので、書いた順番が採点に合いません。
 :::
 
 ::: {.ex-sep}
@@ -1264,6 +1593,8 @@ $$
 
 ::: {.callout-tip collapse="true"}
 ## 解説
+`every road` なので Chinese postman です（@tbl-ahl316-compare）。
+
 **(a)** degree を数えます。
 
 $$
@@ -1276,7 +1607,7 @@ odd なのは $B$ と $D$ です。
 
 **(b)** weight の合計は $7+3+5+4+6+8+2 = 35$。
 
-$B$ から $D$ への道は $5$ 通りです。全部比べます。
+odd vertex が $2$ 個なので、[第9節の手順](#cpp2)です。$B$ から $D$ への道は $5$ 通りあります。全部比べます。
 
 | 道 | 重みの合計 |
 |---|---|
@@ -1334,6 +1665,8 @@ $$
 
 ::: {.callout-tip collapse="true"}
 ## 解説
+`visit all four towns` なので travelling salesman です（@tbl-ahl316-compare）。
+
 **(a)** $F$ からは $FJ = 5$ がいちばん安い。$J$ からは、残る $H = 11$、$K = 10$ で $K$。$K$ からは残る $H$ へ $2$。最後に $H \to F = 19$ でもどります。
 
 $$
@@ -1354,7 +1687,9 @@ $36$ と書いても間違いではありませんが、`the better` と聞か�
 
 ::: {.callout-note}
 ## ここでは、最短距離の表を作りません
-[第13節](#least)の作業が要るのは、**どこかの $2$ 点が直接つながっていないとき**です。この問題は、はじめから $6$ 本すべての運賃が与えられた完全グラフなので、そのまま nearest neighbour にかけられます。
+[第11節](#least)の作業が要るのは、**どこかの $2$ 点が直接つながっていないとき**、または**経由したほうが安いとき**です。この問題は、はじめから $6$ 本すべての運賃が与えられた complete graph なので、そのまま nearest neighbour にかけられます。
+
+（この運賃表は、$FH = 19$ より $F \to K \to H = 13 + 2 = 15$ のほうが安いので、**最短距離の表にはなっていません。** それでも、この問題は complete graph と使う algorithm を指定して出されているので、**与えられた数のまま nearest neighbour にかけてください。** 表を作り直すのは、[第11節](#least)のように「直接の道がない」と問題文が言っているときです。）
 :::
 :::
 
@@ -1397,7 +1732,7 @@ $$
 12 + 5 + 13 = 30
 $$
 
-問6で上界 $31$ が出ているので、
+演習 $6$ で上界 $31$ が出ているので、
 
 $$
 30 \le L \le 31
@@ -1405,7 +1740,7 @@ $$
 
 **ここでは一致しません。** @exm-ahl316-tsp では上界と下界が両方 $22$ になって答えが確定しましたが、それは運のよい場合です。ふつうは、このように**幅が残ります**。
 
-（このグラフでは、実際の最小は $31$ です。問6(b) で出した $J \to F \to K \to H \to J$ が、そのまま最小でした。ただし **$30 \le L \le 31$ と書けていれば、それが求められた答え**です。）
+（このグラフでは、実際の最小は $31$ です。演習 $6$(b) で出した $J \to F \to K \to H \to J$ が、そのまま最小でした。ただし **$30 \le L \le 31$ と書けていれば、それが求められた答え**です。）
 :::
 
 ::: {.ex-sep}
@@ -1446,9 +1781,9 @@ $$
 ## 解答例（答案用紙に書くこと）
 **(a)** *$A \to B \to C = 6 + 5 = 11$ km.*
 
-**(b)** *$A \to B \to C \to D = 6 + 5 + 4 = 15$ km (also $A \to B \to D = 6 + 9 = 15$ km), which is less than the direct road $A \to D = 20$ km.*
+**(b)** *$A \to B \to D = 6 + 9 = 15$ km (also $A \to B \to C \to D = 6 + 5 + 4 = 15$ km), which is less than the direct road $A \to D = 20$ km.*
 
-**(c)** *The travelling salesman algorithms need a complete graph, but there is no direct road from $A$ to $C$. Replacing each pair by its least distance produces a complete graph.*
+**(c)** *The nearest neighbour algorithm needs a complete graph, but there is no direct road from $A$ to $C$. Replacing each pair of villages by the least distance between them gives a complete graph, so the algorithm can then be used.*
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -1472,9 +1807,9 @@ $$
 | $A \to B \to C \to D$ | $6 + 5 + 4 = 15$ |
 | $A \to D$ | $20$ |
 
-最短は $15$ km。**直接の道 $20$ より短い**ので、表には $15$ と書きます（[第13節](#least)）。
+最短は $15$ km。**直接の道 $20$ より短い**ので、表には $15$ と書きます（[第11節](#least)）。$15$ の道が $2$ つありますが、**距離が同じなので、表に入る数は $15$ で変わりません。**
 
-**(c)** travelling salesman は**完全グラフ**の問題です（[第10節](#tsp)）。$A$ と $C$ のあいだに道がないので、このままでは nearest neighbour が「$A$ から $C$ への距離」を読めません。
+**(c)** travelling salesman は **complete graph** の問題です（[第10節](#tsp)）。$A$ と $C$ のあいだに道がないので、このままでは nearest neighbour が「$A$ から $C$ への距離」を読めません。
 
 ::: {.model-answer}
 **試験ではこう書く**
@@ -1482,8 +1817,7 @@ $$
 *The nearest neighbour algorithm needs a complete graph, but there is no direct road from $A$ to $C$. Replacing each pair of villages by the least distance between them gives a complete graph, so the algorithm can then be used.*
 :::
 
-
-最短距離で埋めた表を作れば、すべての組に数が入り、完全グラフとして扱えます。
+最短距離で埋めた表を作れば、すべての組に数が入り、complete graph として扱えます。**deleted vertex も同じ理由で、この表を作ってから使います**（[第13節](#lb)）。
 
 **答えを現実にもどすとき**は、表の「$A$–$C$ が $11$」は、実際には $A \to B \to C$ と通ることを意味します。ここまで書ければ丁寧です。
 :::
@@ -1514,7 +1848,7 @@ $$
 ## 解答例（答案用紙に書くこと）
 **(a)** *$A$, $B$, $D$ and $E$.*
 
-**(b)** *Total weight $= 8+5+6+7+4+9+3+6 = 48$. The three pairings give*
+**(b)** *Total weight $= 8+5+6+7+4+9+3+6 = 48$. The least distances between the odd vertices are $AB = 8$, $AD = 9$, $AE = 6$, $BD = 7$, $BE = 10$, $DE = 3$. The three pairings give*
 
 $$
 AB + DE = 8 + 3 = 11
@@ -1547,20 +1881,20 @@ odd なのは $A$、$B$、$D$、$E$ の $4$ 個です。
 
 **検算。** 合計は $16$。edge は $8$ 本で $2 \times 8 = 16$ ✓
 
-**(b)** odd vertex が $4$ 個なので、[ペアの作り方は $3$ 通り](#cpp)です。それぞれについて、$2$ 点のあいだの**最短の道**を出します。
+**(b)** odd vertex が $4$ 個なので、[第9節の手順](#cpp4)です。**手順 $2$** から始めます。$4$ 個から $2$ 個を選ぶ $6$ 組すべての **least distance** を出します。
 
-| ペア | 最短の道 | 長さ |
+| 組 | 最短の道 | 長さ |
 |---|---|---|
 | $A$–$B$ | $A \to B$（直接） | $8$ |
-| $D$–$E$ | $D \to E$（直接） | $3$ |
+| $A$–$D$ | $A \to C \to D$ | $5 + 4 = 9$ |
 | $A$–$E$ | $A \to E$（直接） | $6$ |
 | $B$–$D$ | $B \to D$（直接） | $7$ |
-| $A$–$D$ | $A \to C \to D$ | $5 + 4 = 9$ |
 | $B$–$E$ | $B \to D \to E$ | $7 + 3 = 10$ |
+| $D$–$E$ | $D \to E$（直接） | $3$ |
 
-$A$ と $D$ を結ぶ直接の道はないので、経由して出します。$A \to E \to D$ も $6 + 3 = 9$ で同じ長さです。
+**$A$ と $D$ を結ぶ直接の道はありません**ので、経由して出します。$A \to E \to D$ も $6 + 3 = 9$ で同じ長さです。
 
-$3$ 通りを比べます。
+**手順 $3$。** $3$ 通りを比べます。
 
 | ペアの作り方 | 合計 |
 |---|---|
@@ -1570,11 +1904,113 @@ $3$ 通りを比べます。
 
 いちばん小さいのは $11$ です。
 
+**手順 $4$。**
+
 $$
 48 + 11 = 59 \ \text{m}
 $$
 
 **$3$ 通りとも書いてください。** $11$ だけでは、それが最小である理由が示せません。
+:::
+
+::: {.ex-sep}
+:::
+
+[10]{.ex-no} [A complete graph has vertices $P$, $Q$, $R$ and $S$, with]{.q-en}
+
+$$
+PQ = 4, \quad PR = 4, \quad PS = 12, \quad QR = 3, \quad QS = 11, \quad RS = 5
+$$
+
+**(a)** [Explain why the nearest neighbour algorithm starting at $P$ does not give a single answer.]{.q-en}
+
+**(b)** [Carry out the algorithm for each of the two choices, and state the better upper bound.]{.q-en}
+
+**(c)** [By deleting $P$, find a lower bound, and hence write down an inequality satisfied by the weight $L$ of the Hamiltonian cycle of least weight.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある完全グラフは、頂点 $P$、$Q$、$R$、$S$ をもち、辺の重みは次のとおりです。
+
+$$
+PQ = 4, \quad PR = 4, \quad PS = 12, \quad QR = 3, \quad QS = 11, \quad RS = 5
+$$
+
+**(a)** $P$ から始める nearest neighbour のアルゴリズムが、答えを $1$ つに決めない理由を説明しなさい。
+
+**(b)** $2$ つの選び方それぞれについてアルゴリズムを実行し、よいほうの上界を述べなさい。
+
+**(c)** $P$ を消して下界を求め、それを使って、重みが最小のハミルトン閉路の重み $L$ が満たす不等式を書きなさい。
+
+</details>
+
+::: {.callout-note collapse="true"}
+## 解答例（答案用紙に書くこと）
+**(a)** *From $P$ the two nearest unvisited vertices are $Q$ and $R$, both at distance $4$. The algorithm does not say which of two equal choices to take, so either may be chosen.*
+
+**(b)** *Taking $Q$ first:*
+
+$$
+P \to Q \to R \to S \to P = 4 + 3 + 5 + 12 = 24
+$$
+
+*Taking $R$ first:*
+
+$$
+P \to R \to Q \to S \to P = 4 + 3 + 11 + 12 = 30
+$$
+
+*Both are upper bounds. The better one is $24$.*
+
+**(c)** *Deleting $P$ leaves $Q$, $R$, $S$ with $QR = 3$, $RS = 5$, $QS = 11$. MST $= 3 + 5 = 8$. The two least edges at $P$ are $4$ and $4$.*
+
+$$
+8 + 4 + 4 = 16
+$$
+
+$$
+16 \le L \le 24
+$$
+:::
+
+::: {.callout-tip collapse="true"}
+## 解説
+**(a)** $P$ からの距離は $PQ = 4$、$PR = 4$、$PS = 12$。**$Q$ と $R$ が同点**です（[第12節](#nn-ties)）。
+
+手順は「いちばん近いところへ行く」としか言っていないので、**同点のときはどちらでもよい**ことになります。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*From $P$ the two nearest unvisited vertices are $Q$ and $R$, both at distance $4$. The algorithm does not say which of two equal choices to take, so the route, and hence the upper bound, is not determined.*
+:::
+
+**(b)** $Q$ を先に取ると、$Q$ からは $QR = 3$ が最短なので $R$ へ。$R$ からは残る $S$ へ $5$。最後に $S \to P = 12$。
+
+$$
+4 + 3 + 5 + 12 = 24
+$$
+
+$R$ を先に取ると、$R$ からは $RQ = 3 < RS = 5$ なので $Q$ へ。$Q$ からは残る $S$ へ $11$。最後に $S \to P = 12$。
+
+$$
+4 + 3 + 11 + 12 = 30
+$$
+
+**どちらも正しい上界です。** どちらも実際に通れる道だからです。ただし上界は小さいほど良いので、$24$ のほうが役に立ちます。
+
+**この点が、Kruskal の同点とは違います。** Kruskal では、どちらを選んでも合計は変わりませんでした（[第6節](#ties)）。nearest neighbour では**値が変わります。** 選んだほうを答案に書いてください。
+
+**(c)** $P$ を消すと $Q$、$R$、$S$ が残ります。MST は軽いほうから $QR = 3$ と $RS = 5$ で $8$。$P$ に付いていた $4$、$4$、$12$ のうち、小さいほうから $2$ 本は $4$ と $4$ です（[第13節](#lb)）。
+
+$$
+8 + 4 + 4 = 16
+$$
+
+(b) の上界 $24$ と合わせて $16 \le L \le 24$ です。**一致しないので、はさんだ形のまま答えます。**
+
+（このグラフでは、実際の最短は $24$ です。ただし **$16 \le L \le 24$ と書けていれば、それが求められた答え**です。上界と下界だけからは、$24$ が最短だとは分かりません。）
 :::
 
 :::

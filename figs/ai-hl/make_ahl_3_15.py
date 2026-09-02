@@ -248,3 +248,116 @@ fig.tight_layout()
 save(fig, "ahl-3-15-ex8.svg")
 
 print("figures written to", os.path.normpath(OUT))
+
+# ══════════════ 7. 行列から graph をかきもどす ══════════════
+fig, axs = plt.subplots(1, 2, figsize=(10.8, 4.4))
+
+board(axs[0], (0, 5.2), (-0.9, 4.4))
+labelled_matrix(axs[0], 2.4, 2.0, ADJ, NM,
+                cell_color={(2, 0): ACC, (2, 1): ACC, (2, 3): ACC})
+axs[0].set_title("start from the matrix", fontsize=12.5, color=INK, pad=6)
+axs[0].text(2.4, -0.35, "row $C$ has $1$ in columns $A$, $B$ and $D$",
+            fontsize=11, ha="center", va="center", color=ACC)
+
+board(axs[1], (-0.7, 3.5), (-1.9, 3.6))
+for u, v in E4:
+    on = (u == "C" or v == "C")
+    edge(axs[1], P[u], P[v], color=(ACC if on else GREY),
+         lw=(3.0 if on else 2.0))
+for k, p in P.items():
+    node(axs[1], p, k)
+axs[1].set_title("draw one row at a time", fontsize=12.5, color=ACC, pad=6)
+note(axs[1], 1.4, -1.45, "so $C$ is joined to $A$, $B$ and $D$", ACC, 11)
+fig.tight_layout()
+save(fig, "ahl-3-15-frommatrix.svg")
+
+
+# ══════════════ transition matrix の向きを 1 成分で示す ══════════════
+DP = {"A": (0.4, 2.4), "B": (3.0, 2.4), "C": (1.7, 0.4)}
+DA = [("A", "B"), ("A", "C"), ("B", "A"), ("C", "A"), ("C", "B")]
+
+fig, axs = plt.subplots(1, 2, figsize=(11.2, 4.6))
+
+ax = axs[0]
+board(ax, (-0.9, 4.2), (-1.1, 3.4))
+for u, v in DA:
+    c = ACC if (u, v) == ("C", "B") else "#d6dbe0"
+    arc_edge(ax, DP[u], DP[v], rad=0.2, color=c,
+             lw=3.0 if c == ACC else 1.8)
+for k, p in DP.items():
+    node(ax, p, k, color=ACC if k in ("B", "C") else LINE)
+note(ax, 1.7, -0.55, "$C$ has out degree $2$", GREEN, 10.5)
+note(ax, 3.35, 1.15, r"from $C$ to $B$:  probability $\frac{1}{2}$",
+     ACC, 11, ha="left")
+ax.set_title("one arrow: $C \\rightarrow B$", fontsize=12.5, color=ACC, pad=6)
+
+ax = axs[1]
+board(ax, (-1.9, 5.4), (-1.3, 4.5))
+cen = labelled_matrix(ax, 2.5, 1.55,
+                      [["0", "1", r"$\frac{1}{2}$"],
+                       [r"$\frac{1}{2}$", "0", r"$\frac{1}{2}$"],
+                       [r"$\frac{1}{2}$", "0", "0"]],
+                      ["A", "B", "C"], cw=0.80, ch=0.70,
+                      cell_color={(1, 2): ACC})
+bx, by = cen[(1, 2)]
+ax.add_patch(plt.Rectangle((bx - 0.40, by - 0.35), 0.80, 0.70,
+                           fc="#fdeaea", ec="none", zorder=1))
+# 列 C を上から指す
+ax.annotate("", xy=(bx, 3.05), xytext=(bx, 3.72),
+            arrowprops=dict(arrowstyle="->", color=ACC, lw=1.8), zorder=14)
+note(ax, bx, 4.02, "column $C$  =  FROM $C$", ACC, 11)
+# 行 B を左から指す
+ax.annotate("", xy=(0.74, by), xytext=(0.02, by),
+            arrowprops=dict(arrowstyle="->", color=ACC, lw=1.8), zorder=14)
+note(ax, 0.18, by, "row $B$\n=  TO $B$", ACC, 11, ha="right")
+note(ax, 2.5, -0.85,
+     r"$T_{BC} = \frac{1}{2}$ :  row = where TO,  column = where FROM",
+     GOLD, 11.5)
+ax.set_title("transition matrix $T$", fontsize=12.5, color=ACC, pad=10)
+fig.tight_layout()
+save(fig, "ahl-3-15-tdirection.svg")
+
+
+# ══════════════ PageRank：重要度がリンクを流れる ══════════════
+GP = {"A": (0.4, 2.6), "B": (3.2, 2.6), "C": (1.8, 0.5)}
+GA = [("A", "B"), ("A", "C"), ("B", "C"), ("C", "A")]
+
+fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.6))
+
+ax = axs[0]
+board(ax, (-1.3, 5.0), (-1.5, 4.3))
+for u, v in GA:
+    arc_edge(ax, GP[u], GP[v], rad=0.18, color=GREY, lw=2.0)
+for k, p in GP.items():
+    node(ax, p, k, color=LINE)
+note(ax, 0.4, 3.35, "out degree $2$", GREEN, 10.5)
+note(ax, 3.2, 3.35, "out degree $1$", GREEN, 10.5)
+note(ax, 1.8, -0.35, "out degree $1$", GREEN, 10.5)
+note(ax, 1.85, 3.05, r"$\frac{1}{2}$ each", GOLD, 11)
+note(ax, 2.75, 1.35, r"all of $B$", GOLD, 10.5)
+note(ax, 0.55, 1.35, r"all of $C$", GOLD, 10.5)
+ax.set_title("each page splits what it has among its out-links",
+             fontsize=11.5, color=INK, pad=8)
+
+ax = axs[1]
+board(ax, (-1.3, 5.0), (-1.5, 4.3))
+for u, v in GA:
+    arc_edge(ax, GP[u], GP[v], rad=0.18, color=GREY, lw=2.0)
+IMP = {"A": "0.4", "B": "0.2", "C": "0.4"}
+for k, p in GP.items():
+    node(ax, p, k, color=ACC, r=0.34)
+    dy = 0.66 if k != "C" else -0.66
+    note(ax, p[0], p[1] + dy, IMP[k], ACC, 12.5)
+note(ax, 1.85, 2.98, "$0.2$", GOLD, 11)
+note(ax, 2.72, 1.32, "$0.2$", GOLD, 11)
+note(ax, 0.62, 1.55, "$0.4$", GOLD, 11)
+note(ax, 1.35, 1.05, "$0.2$", GOLD, 11)
+note(ax, 1.85, 3.95, "what each arrow carries", GOLD, 11)
+note(ax, 1.85, -1.15,
+     "$C$ receives $0.2 + 0.2 = 0.4$,   $A$ receives $0.4$,   $B$ receives $0.2$\n"
+     "$C$ has $2$ links in and $A$ only $1$, yet both end up at $0.4$",
+     INK, 10.5)
+ax.set_title("importance after it settles down",
+             fontsize=11.5, color=ACC, pad=8)
+fig.tight_layout()
+save(fig, "ahl-3-15-pagerank.svg")

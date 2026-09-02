@@ -161,3 +161,115 @@ eq("8  最小は A-D-C", min(8, 13), 8)
 
 print()
 print(f"══════════ OK {ok} / NG {ng} ══════════")
+
+print("══════════ 追加：行列から graph をかく例題（W, X, Y, Z） ══════════")
+FNM = ["W", "X", "Y", "Z"]
+FE = [("W", "X"), ("W", "Z"), ("X", "Y"), ("Y", "Z"), ("X", "Z")]
+FA = adj_from(FE, FNM)
+eq("行列は figure と一致",
+   [list(r) for r in FA],
+   [[0, 1, 0, 1], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]])
+eq("対称", M(FA).T == M(FA), True)
+eq("edge は 5 本", sum(sum(r) for r in FA) // 2, 5)
+degF = [sum(r) for r in FA]
+eq("degree は 2,3,2,3", degF, [2, 3, 2, 3])
+eq("degree の和 = 2E", sum(degF), 10)
+F2 = M(FA) ** 2
+eq("A^2 の (W,Y) = 2", F2[0, 2], 2)
+eq("素朴に数えても 2", count_walks(FA, 4, 0, 2, 2), 2)
+eq("A^2 の対角は degree", [F2[i, i] for i in range(4)], degF)
+eq("A^2 の (W,W) = 2", F2[0, 0], 2)
+F3 = M(FA) ** 3
+eq("A^3 の (W,Y) = 2", F3[0, 2], 2)
+eq("素朴に数えても 2", count_walks(FA, 4, 0, 2, 3), 2)
+eq("長さ 3 以下 (W,Y) = 0+2+2 = 4",
+   M(FA)[0, 2] + F2[0, 2] + F3[0, 2], 4)
+eq("A^3 の (W,W) = 2（W-X-Z-W と W-Z-X-W）", F3[0, 0], 2)
+eq("長さ 0 以上 3 以下 (W,W) = 1+0+2+2 = 5",
+   1 + M(FA)[0, 0] + F2[0, 0] + F3[0, 0], 5)
+
+print("══════════ 追加：A^2 の成分を、途中の vertex で分解する ══════════")
+# 本文で使う分解：(A^2)_{ij} = Σ_k A_ik A_kj
+for (i, j) in [(0, 2), (1, 3), (0, 0)]:
+    terms = [FA[i][k] * FA[k][j] for k in range(4)]
+    eq(f"({FNM[i]},{FNM[j]}) の分解の和 = A^2 の成分",
+       sum(terms), F2[i, j])
+eq("(W,Y) の途中の vertex は X と Z",
+   [FNM[k] for k in range(4) if FA[0][k] * FA[k][2]], ["X", "Z"])
+
+print("══════════ 追加：multiple edge があると成分が 2 以上 ══════════")
+ME = adj_from([("P", "Q"), ("P", "Q"), ("Q", "R")], ["P", "Q", "R"])
+eq("P-Q が 2 本なら成分は 2", ME[0][1], 2)
+eq("行の和はやはり degree", [sum(r) for r in ME], [2, 3, 1])
+eq("degree の和 = 2 x 3 edges", sum(sum(r) for r in ME), 6)
+
+print("══════════ 追加：weighted 表の 2 乗は walk の数ではない ══════════")
+WT = M([[0, 5, 3, 0], [5, 0, 6, 8], [3, 6, 0, 4], [0, 8, 4, 0]])
+BIN = M([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 1], [0, 1, 1, 0]])
+eq("weighted^2 の (A,D) は walk の数と違う",
+   (WT ** 2)[0, 3] != (BIN ** 2)[0, 3], True)
+eq("walk の数のほうは 2", (BIN ** 2)[0, 3], 2)
+eq("weighted^2 の (A,D) は 52", (WT ** 2)[0, 3], 52)
+eq("52 = 5*8 + 3*4", 5 * 8 + 3 * 4, 52)
+
+print("══════════ 追加：transition matrix の列和 ══════════")
+T3 = M([[0, 0, sp.Rational(1, 2)], [1, 0, sp.Rational(1, 2)], [0, 1, 0]])
+eq("列の和は全部 1", [sum(T3[:, c]) for c in range(3)], [1, 1, 1])
+eq("s1 = T s0（s0 は P にいる）",
+   list(T3 * M([1, 0, 0])), [0, 1, 0])
+eq("s2 = T^2 s0", list(T3 ** 2 * M([1, 0, 0])), [0, 0, 1])
+# absorbing state：出る矢印がない vertex は、自分に留まる列にできる
+TA = M([[0, sp.Rational(1, 2), 0], [1, 0, 0], [0, sp.Rational(1, 2), 1]])
+eq("absorbing state の列は (0,0,1)", list(TA[:, 2]), [0, 0, 1])
+eq("absorbing でも列和は 1", [sum(TA[:, c]) for c in range(3)], [1, 1, 1])
+
+print("══════════ 追加：例題（行列から graph をかく、R S T U） ══════════")
+RNM = ["R", "S", "T", "U"]
+RE = [("R", "S"), ("R", "T"), ("R", "U"), ("T", "U")]
+RA = adj_from(RE, RNM)
+eq("行列", [list(r) for r in RA],
+   [[0, 1, 1, 1], [1, 0, 0, 0], [1, 0, 0, 1], [1, 0, 1, 0]])
+eq("対称", M(RA).T == M(RA), True)
+degR = [sum(r) for r in RA]
+eq("degree は 3,1,2,2", degR, [3, 1, 2, 2])
+eq("edge は 4 本", sum(degR) // 2, 4)
+eq("degree の和 = 2E", sum(degR), 8)
+R2 = M(RA) ** 2
+eq("A^2 の (S,T) = 1", R2[1, 2], 1)
+eq("素朴に数えても 1", count_walks(RA, 4, 1, 2, 2), 1)
+eq("その walk は S-R-T",
+   [RNM[k] for k in range(4) if RA[1][k] * RA[k][2]], ["R"])
+eq("A^2 の対角は degree", [R2[i, i] for i in range(4)], degR)
+eq("A^2 の (S,S) = 1", R2[1, 1], 1)
+
+print("══════════ 追加：演習（有向グラフを行列から復元） ══════════")
+DNM = ["P", "Q", "R", "S"]
+DE = [("P", "Q"), ("Q", "R"), ("R", "P"), ("R", "S"), ("S", "Q")]
+DA = adj_from(DE, DNM, directed=True)
+eq("行列（行 = から）", [list(r) for r in DA],
+   [[0, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 1], [0, 1, 0, 0]])
+eq("対称ではない", M(DA).T == M(DA), False)
+eq("out degree は 1,1,2,1", [sum(r) for r in DA], [1, 1, 2, 1])
+eq("in degree は 1,2,1,1",
+   [sum(DA[i][j] for i in range(4)) for j in range(4)], [1, 2, 1, 1])
+eq("矢印は 5 本", sum(sum(r) for r in DA), 5)
+D2 = M(DA) ** 2
+eq("A^2 の (P,R) = 1", D2[0, 2], 1)
+eq("素朴に数えても 1（P-Q-R）", count_walks(DA, 4, 0, 2, 2), 1)
+eq("A^2 の (R,Q) = 2（R-P-Q と R-S-Q）", D2[2, 1], 2)
+eq("素朴に数えても 2", count_walks(DA, 4, 2, 1, 2), 2)
+
+print("══════════ 追加：演習（absorbing state） ══════════")
+TB = M([[0, 1, 0],
+        [sp.Rational(1, 2), 0, 0],
+        [sp.Rational(1, 2), 0, 1]])
+eq("列の和は全部 1", [sum(TB[:, c]) for c in range(3)], [1, 1, 1])
+eq("C の列は (0,0,1)", list(TB[:, 2]), [0, 0, 1])
+eq("C に入ったら出られない", list(TB * M([0, 0, 1])), [0, 0, 1])
+eq("A から出発して 1 歩後", list(TB * M([1, 0, 0])),
+   [0, sp.Rational(1, 2), sp.Rational(1, 2)])
+eq("2 歩後", list(TB ** 2 * M([1, 0, 0])),
+   [sp.Rational(1, 2), 0, sp.Rational(1, 2)])
+
+print()
+print(f"══════════ 合計 OK {ok} / NG {ng} ══════════")

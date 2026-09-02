@@ -1,0 +1,36 @@
+<!--
+  Cookie 同意バナーの本文を差しかえるスクリプト。
+
+  Quarto の cookie-consent は termsfeed のライブラリを使っていて、
+  lang: ja のおかげで表示は日本語になります。ただし既定の本文が
+
+    「…パーソナライズされたコンテンツやターゲット広告を表示するため…」
+
+  となっていて、広告を出さないこのサイトの実態と合いません。
+  ライブラリ側に文面を差しかえる設定が無いので、バナーが出たあとに
+  #cc-nb-text の中身だけを書きかえています。
+
+  ★ 文面を変えるときは、下の NB の中身だけを直してください。
+  ★ 読み込みは _quarto.yml の format.html.include-after-body です。
+-->
+<script>
+(function () {
+  var NB = "このサイトでは、どのページがどれくらい読まれているかを知るために、"
+         + "Google アナリティクスの Cookie を使っています。"
+         + "広告の配信や、個人を特定する目的には使いません。";
+
+  function fix() {
+    var el = document.getElementById("cc-nb-text");
+    if (!el) { return false; }
+    if (el.textContent !== NB) { el.textContent = NB; }
+    return true;
+  }
+
+  // バナーはページ読み込みのあとに差し込まれるので、出てくるまで待つ。
+  if (!fix()) {
+    var mo = new MutationObserver(function () { if (fix()) { mo.disconnect(); } });
+    mo.observe(document.body, { childList: true, subtree: true });
+    setTimeout(function () { mo.disconnect(); }, 10000);
+  }
+})();
+</script>

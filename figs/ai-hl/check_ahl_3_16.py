@@ -154,7 +154,7 @@ eq("A-C-B は 9", E[("A", "C")] + E[("B", "C")], 9)
 eq("A-D-B は 15", E[("A", "D")] + E[("B", "D")], 15)
 eq("Chinese postman の長さ", sum(E.values()) + dist, 48)
 
-print("══════════ 例題4（TSP：完全グラフ） ══════════")
+print("══════════ 第12・13節（TSP：完全グラフ） ══════════")
 TV = list("PQRS")
 W = {frozenset(("P", "Q")): 5, frozenset(("P", "R")): 9,
      frozenset(("P", "S")): 7, frozenset(("Q", "R")): 6,
@@ -184,8 +184,6 @@ eq("最短距離は 11", shortest(LV, LE, "L", "N")[0], 11)
 eq("その道", shortest(LV, LE, "L", "N")[1], ["L", "M", "N"])
 
 print("══════════ 演習 ══════════")
-# 1 用語
-eq("1  A-B-C-A は cycle（長さ 3）", 3, 3)
 # 2 Euler の判定
 X2 = list("ABCD")
 E2 = {("A", "B"): 1, ("A", "C"): 1, ("A", "D"): 1, ("B", "C"): 1,
@@ -204,6 +202,13 @@ eq("3  Kruskal の選ぶ順", [e for e, w in k3],
    [("D", "E"), ("A", "C"), ("B", "D"), ("B", "C")])
 eq("3  重み", [w for e, w in k3], [2, 3, 4, 5])
 eq("3  MST の重み", t3, 14)
+# 1 用語（同じグラフを使う）
+eq("1  A-C-B-D-E の辺がすべて存在する（path）",
+   [(("A", "C") in E3), (("B", "C") in E3), (("B", "D") in E3),
+    (("D", "E") in E3)], [True, True, True, True])
+eq("1  A-B-C-A は cycle（辺 3 本）",
+   [(("A", "B") in E3), (("B", "C") in E3), (("A", "C") in E3)],
+   [True, True, True])
 # 4 Prim（同じグラフ、A から）
 p4, t4 = prim(V3, E3, "A")
 eq("4  Prim（A から）の順", [e for e, w in p4],
@@ -312,6 +317,34 @@ eq("その長さ", [t for r, t in ad8], [15, 15, 20])
 print("══════════ 演習6 のグラフは、最短距離の表になっていない ══════════")
 eq("F-H は直接 19、F-K-H は 15", wt(W2, "F", "K") + wt(W2, "K", "H"), 15)
 
+print("══════════ 追加：演習10（nearest neighbour の同点） ══════════")
+W10 = {frozenset(("P", "Q")): 4, frozenset(("P", "R")): 4,
+       frozenset(("P", "S")): 12, frozenset(("Q", "R")): 3,
+       frozenset(("Q", "S")): 11, frozenset(("R", "S")): 5}
+V10 = list("PQRS")
+eq("P から見て Q と R はどちらも 4", wt(W10, "P", "Q"), wt(W10, "P", "R"))
+eq("P-S = 12 がいちばん遠い",
+   max(wt(W10, "P", x) for x in "QRS"), 12)
+a10 = 4 + wt(W10, "Q", "R") + wt(W10, "R", "S") + wt(W10, "S", "P")
+eq("P-Q-R-S-P = 4+3+5+12 = 24", a10, 24)
+b10 = 4 + wt(W10, "R", "Q") + wt(W10, "Q", "S") + wt(W10, "S", "P")
+eq("P-R-Q-S-P = 4+3+11+12 = 30", b10, 30)
+eq("同点の選び方で上界が変わる", a10 != b10, True)
+eq("よいほうは 24", min(a10, b10), 24)
+bt10, bc10 = best_cycle(V10, W10, "P")
+eq("実際の最短も 24", bt10, 24)
+eq("nearest neighbour（Q を先に）は正しい上界", a10 >= bt10, True)
+# 3 通りの cycle をすべて出して確かめる
+tot = sorted(set(
+    sum(wt(W10, c[i], c[i + 1]) for i in range(4))
+    for pmt in itertools.permutations("QRS")
+    for c in [("P",) + pmt + ("P",)]))
+eq("cycle の重みは 24 と 30 の 2 種類", tot, [24, 30])
+lb10 = deleted_vertex(V10, W10, "P")
+eq("P を消した下界の内訳（MST, 2 本）", (lb10[0], lb10[1]), (8, [4, 4]))
+eq("P を消した下界は 16", lb10[2], 16)
+eq("16 <= 24", lb10[2] <= bt10, True)
+
 print()
 print(f"══════════ 追加分を入れて OK {ok} / NG {ng} ══════════")
 
@@ -354,3 +387,103 @@ eq("9  Chinese postman の長さ", sum(E9.values()) + min(s9), 59)
 
 print()
 print(f"══════════ 最終 OK {ok} / NG {ng} ══════════")
+
+print("══════════ 追加：同じ重みが並ぶとき、MST は 1 つに決まらない ══════════")
+TV = list("PQRS")
+TE = {("P", "Q"): 2, ("P", "R"): 2, ("Q", "R"): 3, ("Q", "S"): 4,
+      ("R", "S"): 4}
+_, tk = kruskal(TV, TE)
+eq("Kruskal の合計は 8", tk, 8)
+for st in TV:
+    _, tp = prim(TV, TE, st)
+    eq(f"Prim（{st} から）も 8", tp, 8)
+# 全部の spanning tree を数え上げて、最小合計が 8、それを達成する木が 2 つ
+trees = []
+for comb in itertools.combinations(TE.items(), 3):
+    es = [c[0] for c in comb]
+    par = {v: v for v in TV}
+
+    def find(x, par=par):
+        while par[x] != x:
+            par[x] = par[par[x]]
+            x = par[x]
+        return x
+    okt = True
+    for u, v in es:
+        if find(u) == find(v):
+            okt = False
+            break
+        par[find(u)] = find(v)
+    if okt:
+        trees.append((sum(c[1] for c in comb), frozenset(es)))
+best = min(t[0] for t in trees)
+eq("最小の合計は 8", best, 8)
+mins = sorted(t[1] for t in trees if t[0] == best)
+eq("最小を達成する spanning tree は 2 つ", len(mins), 2)
+eq("その 2 つは QS を採るものと RS を採るもの",
+   sorted(sorted(m) for m in mins),
+   [[("P", "Q"), ("P", "R"), ("Q", "S")],
+    [("P", "Q"), ("P", "R"), ("R", "S")]])
+eq("どちらも 3 本 = 4 - 1", [len(m) for m in mins], [3, 3])
+
+print("══════════ 追加：TSP の cycle の数 (n-1)!/2 ══════════")
+for n in (4, 5, 6, 8):
+    eq(f"n = {n} なら {math.factorial(n - 1) // 2} 通り",
+       math.factorial(n - 1) // 2, {4: 3, 5: 12, 6: 60, 8: 2520}[n])
+# 4 点で、出発点を固定して逆回りを同一視すると本当に 3 通りか
+seen = set()
+for p in itertools.permutations("QRS"):
+    c = ("P",) + p
+    seen.add(min(tuple(c), tuple([c[0]] + list(reversed(c[1:])))))
+eq("4 点の実際の cycle は 3 通り", len(seen), 3)
+
+print("══════════ 追加：deleted vertex の下界の根拠 ══════════")
+# 完全グラフ（例題6の P,Q,R,S）で、どの Hamiltonian cycle も
+# 「v を除いた spanning path の重み + v に付く 2 本」に分解できる
+W6 = {frozenset(("P", "Q")): 5, frozenset(("P", "R")): 9,
+      frozenset(("P", "S")): 7, frozenset(("Q", "R")): 6,
+      frozenset(("Q", "S")): 8, frozenset(("R", "S")): 4}
+V6 = list("PQRS")
+for drop in V6:
+    rest = [v for v in V6 if v != drop]
+    E6 = {(a, b): wt(W6, a, b) for a, b in itertools.combinations(rest, 2)}
+    _, mstw = kruskal(rest, E6)
+    lb = deleted_vertex(V6, W6, drop)[2]
+    # すべての Hamiltonian cycle を回して、分解を確かめる
+    worst = math.inf
+    for p in itertools.permutations([v for v in V6 if v != "P"]):
+        c = ("P",) + p + ("P",)
+        tot = sum(wt(W6, c[i], c[i + 1]) for i in range(4))
+        # drop を取り除くと、残りは spanning path になる
+        i = list(c[:-1]).index(drop)
+        seq = list(c[:-1])[i + 1:] + list(c[:-1])[:i]
+        pathw = sum(wt(W6, seq[k], seq[k + 1]) for k in range(len(seq) - 1))
+        eq_pair = pathw + wt(W6, drop, seq[0]) + wt(W6, drop, seq[-1])
+        assert eq_pair == tot
+        worst = min(worst, tot)
+    eq(f"{drop} を消した残りの MST は spanning path 以下（下界 {lb} <= 最短 {worst}）",
+       lb <= worst, True)
+    eq(f"{drop} を消した MST は {mstw}", mstw >= 0, True)
+
+print("══════════ 追加：nearest neighbour で同点が出るグラフ ══════════")
+WT = {frozenset(("A", "B")): 3, frozenset(("A", "C")): 3,
+      frozenset(("A", "D")): 10, frozenset(("B", "C")): 2,
+      frozenset(("B", "D")): 9, frozenset(("C", "D")): 4}
+VT = list("ABCD")
+eq("A から見て B と C はどちらも 3", wt(WT, "A", "B"), wt(WT, "A", "C"))
+r1 = 3 + wt(WT, "B", "C") + wt(WT, "C", "D") + wt(WT, "D", "A")
+eq("A-B-C-D-A = 3+2+4+10 = 19", r1, 19)
+r2 = 3 + wt(WT, "C", "B") + wt(WT, "B", "D") + wt(WT, "D", "A")
+eq("A-C-B-D-A = 3+2+9+10 = 24", r2, 24)
+eq("同点の選び方で上界が変わる", r1 != r2, True)
+eq("よいほう（小さいほう）は 19", min(r1, r2), 19)
+bt, bc = best_cycle(VT, WT, "A")
+eq("実際の最短は 19", bt, 19)
+eq("上界 19 は最短以上", r1 >= bt, True)
+lbA = deleted_vertex(VT, WT, "A")
+eq("A を消した下界の内訳（MST, 2 本）", (lbA[0], lbA[1]), (6, [3, 3]))
+eq("A を消した下界は 12", lbA[2], 12)
+eq("12 <= 19", lbA[2] <= bt, True)
+
+print()
+print(f"══════════ 追加分を入れて OK {ok} / NG {ng} ══════════")

@@ -107,6 +107,21 @@ quarto publish gh-pages
 上の3行が「原稿の保存」、最後の1行が「サイトへの反映」です。
 `git push` を忘れても サイトは更新されますが、**原稿のバックアップが残らない**ので、両方やってください。
 
+### 書きかけのコースも GitHub には上がります（2026年9月に確認）
+
+`git add -A` は、**AI HL の書きかけページも GitHub に送ります。**
+
+- **サイトには出ません。** `_quarto.yml` の `render` に入っていないので、HTML すら作られません。
+- ただし **リポジトリは Public** なので、GitHub 上では `.qmd` のソースが誰でも読めます。
+
+**これでよい、と決めました。** 書きかけが人目に触れるより、**原稿が GitHub にバックアップされているほうが安全**だからです。
+
+もし将来、書きかけを隠したくなったら、`git add -A` のかわりに公開分だけを指定します。
+
+```bash
+git add ai-sl glossary-ai.qmd index.qmd _quarto.yml styles.scss PUBLISH.md .gitignore
+```
+
 ---
 
 ## D-2. 下書きを手元だけで見る

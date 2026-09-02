@@ -92,6 +92,14 @@ note(ax, 3.0, -0.45, "total weight $= 44$", INK, 11.5)
 fig.tight_layout()
 save(fig, "ahl-3-16-graph.svg")
 
+# 例題 1・2・4 の問題文に載せる図。
+# ★ degree と合計重みは書かない（例題 1(a) の答えそのものになるため）。
+fig, ax = plt.subplots(figsize=(7.0, 3.3))
+board(ax, (-0.35, 6.65), (0.25, 3.75))
+draw_G(ax)
+fig.tight_layout()
+save(fig, "ahl-3-16-graph-plain.svg")
+
 # ══════════════ 3. Eulerian の判定 ══════════════
 E3 = {"A": (0.3, 2.5), "B": (2.5, 2.5), "C": (0.3, 0.4), "D": (2.5, 0.4)}
 CASES = [
@@ -133,7 +141,8 @@ save(fig, "ahl-3-16-hamilton.svg")
 
 # ══════════════ 5. Kruskal ══════════════
 KR = [("D", "E", 2), ("B", "C", 3), ("A", "B", 4), ("C", "D", 5)]
-fig, axs = plt.subplots(1, 4, figsize=(13.6, 3.6))
+# ★ 横に並べると 1 枚あたりが小さくなりすぎるので、縦に積む。
+fig, axs = plt.subplots(4, 1, figsize=(6.0, 13.6))
 for i, ax in enumerate(axs):
     board(ax, (-0.9, 7.0), (-1.0, 4.1))
     chosen = [(u, v) for u, v, w in KR[:i + 1]]
@@ -150,7 +159,7 @@ save(fig, "ahl-3-16-kruskal.svg")
 
 # ══════════════ 6. Prim（A から） ══════════════
 PR = [("A", "B", 4), ("B", "C", 3), ("C", "D", 5), ("D", "E", 2)]
-fig, axs = plt.subplots(1, 4, figsize=(13.6, 3.6))
+fig, axs = plt.subplots(4, 1, figsize=(6.0, 13.6))
 for i, ax in enumerate(axs):
     board(ax, (-0.9, 7.0), (-1.0, 4.1))
     chosen = [(u, v) for u, v, w in PR[:i + 1]]
@@ -206,7 +215,7 @@ for i in range(6):
             lw=1.0, zorder=1)
     ax.plot([x0 + i * cw, x0 + i * cw], [y0, y0 + 5 * ch], color="#e0e4e8",
             lw=1.0, zorder=1)
-for c in range(4):
+for c in range(5):
     X = x0 + (c + 0.5) * cw
     ax.plot([X - 0.42, X + 0.42], [y0 + 5 * ch + 0.10, y0 + 5 * ch + 0.10],
             color=ACC, lw=2.2, zorder=8)
@@ -282,6 +291,13 @@ for k, p in TP.items():
 axs[2].set_title("delete $P$:  MST $= 10$", fontsize=12, color=GREEN, pad=6)
 fig.tight_layout()
 save(fig, "ahl-3-16-tsp.svg")
+
+# 例題 6 の問題文に載せる図（上界・下界を描きこんでいない、素のグラフ）
+fig, ax = plt.subplots(figsize=(5.4, 4.2))
+board(ax, (-0.8, 4.4), (-0.8, 3.7))
+draw_T(ax, TP, TW)
+fig.tight_layout()
+save(fig, "ahl-3-16-tsp-plain.svg")
 
 # ══════════════ 10. table of least distances ══════════════
 LP = {"L": (0.4, 0.5), "M": (2.2, 2.4), "N": (4.0, 0.5)}
@@ -399,3 +415,123 @@ fig.tight_layout(rect=(0, 0.04, 1, 1))
 save(fig, "ahl-3-16-cpp4.svg")
 
 print("figures written to", os.path.normpath(OUT))
+
+# ══════════════ 13. walk / trail / path の包含関係 ══════════════
+from matplotlib.patches import FancyBboxPatch
+
+fig, axs = plt.subplots(1, 2, figsize=(12.4, 3.8),
+                        gridspec_kw={"width_ratios": [1.15, 1.0]})
+
+ax = axs[0]
+ax.set_xlim(0, 10)
+ax.set_ylim(-1.0, 6.2)
+ax.axis("off")
+BOXES = [
+    (0.3, 0.3, 9.4, 5.6, GREY, "walk", "nothing is forbidden", 5.50),
+    (1.4, 0.8, 7.2, 3.9, LINE, "trail", "no edge repeated", 4.32),
+    (2.6, 1.3, 4.8, 2.2, GREEN, "path", "no vertex repeated", 3.12),
+]
+for x, y, w, h, col, name, sub, ty in BOXES:
+    ax.add_patch(FancyBboxPatch((x, y), w, h,
+                                boxstyle="round,pad=0.0,rounding_size=0.32",
+                                fc="none", ec=col, lw=2.2, zorder=3))
+    ax.text(x + w / 2, ty, name, fontsize=14, ha="center", va="center",
+            color=col, weight="bold", zorder=5)
+    ax.text(x + w / 2, ty - 0.46, sub, fontsize=10.5, ha="center",
+            va="center", color=col, zorder=5)
+ax.text(5.0, 1.85, "$A \\to B \\to C \\to D$", fontsize=13,
+        ha="center", va="center", color=GREEN, zorder=6)
+ax.text(5.0, -0.55, "every path is a trail, and every trail is a walk",
+        fontsize=11.5, ha="center", va="center", color=INK, zorder=6)
+
+ax = axs[1]
+ax.set_xlim(0, 10)
+ax.set_ylim(0, 6.2)
+ax.axis("off")
+ax.text(5.0, 5.55, "back to where it started",
+        fontsize=12.5, ha="center", va="center", color=INK, weight="bold")
+PAIRS = [(3.9, "trail", "circuit", LINE), (1.6, "path", "cycle", GREEN)]
+for y, a, b, col in PAIRS:
+    ax.add_patch(FancyBboxPatch((0.6, y - 0.55), 3.0, 1.1,
+                                boxstyle="round,pad=0.0,rounding_size=0.28",
+                                fc="none", ec=col, lw=2.0))
+    ax.text(2.1, y, a, fontsize=13, ha="center", va="center", color=col,
+            weight="bold")
+    ax.annotate("", xy=(6.2, y), xytext=(3.8, y),
+                arrowprops=dict(arrowstyle="-|>", color=col, lw=2.0,
+                                mutation_scale=15))
+    ax.text(5.0, y + 0.42, "returns to start", fontsize=10, ha="center",
+            va="bottom", color=col)
+    ax.add_patch(FancyBboxPatch((6.4, y - 0.55), 3.0, 1.1,
+                                boxstyle="round,pad=0.0,rounding_size=0.28",
+                                fc="none", ec=col, lw=2.0))
+    ax.text(7.9, y, b, fontsize=13, ha="center", va="center", color=col,
+            weight="bold")
+ax.text(5.0, 0.45, "a cycle repeats its starting vertex, and no other",
+        fontsize=10.5, ha="center", va="center", color=GREEN)
+fig.tight_layout()
+save(fig, "ahl-3-16-nested.svg")
+
+# ══════════════ 14. subgraph / spanning / tree / MST ══════════════
+SUB = [("A", "B"), ("B", "C"), ("A", "C")]
+SPAN_SUB = [("A", "B"), ("B", "C"), ("A", "C"), ("C", "D"), ("D", "E")]
+SPAN_TREE = [("A", "B"), ("A", "C"), ("C", "D"), ("D", "E")]
+MST = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "E")]
+PANELS = [
+    (None, "the graph $G$", INK, ""),
+    (SUB, "a subgraph", ACC, "some vertices, some edges"),
+    (SPAN_SUB, "a spanning subgraph", GOLD, "all $5$ vertices, still has a cycle"),
+    (SPAN_TREE, "a spanning tree", LINE, "all $5$ vertices, no cycle: $4$ edges"),
+    (MST, "a minimum spanning tree", GREEN, "the lightest spanning tree: $14$"),
+]
+fig, axs = plt.subplots(5, 1, figsize=(6.2, 17.5))
+for ax, (keep, title, col, sub) in zip(axs, PANELS):
+    board(ax, (-0.7, 6.9), (-1.4, 4.2))
+    draw_G(ax, hl=keep, hlc=col)
+    ax.set_title(title, fontsize=12, color=col, pad=6)
+    if sub:
+        note(ax, 3.1, -0.95, sub, col, 10.5)
+# subgraph のパネルでは、選ばれていない頂点を薄くする
+for k in ("D", "E"):
+    node(axs[1], P[k], k, color="#c8cdd3", tc="#c8cdd3")
+fig.tight_layout()
+save(fig, "ahl-3-16-spanning.svg")
+
+# ══════════════ 15. 同じ重みが並んだとき（MST が 2 つ） ══════════════
+TP = {"P": (0.3, 2.6), "Q": (2.7, 2.6), "R": (0.3, 0.3), "S": (2.7, 0.3)}
+TG = [("P", "Q", 2), ("P", "R", 2), ("Q", "R", 3), ("Q", "S", 4),
+      ("R", "S", 4)]
+TTPOS = {("Q", "R"): 0.36}
+
+
+def draw_T(ax, hl=None, hlc=ACC):
+    for u, v, w in TG:
+        on = hl is None or (u, v) in hl or (v, u) in hl
+        col = (hlc if hl is not None and on else
+               (GREY if hl is None else PALE))
+        edge(ax, TP[u], TP[v], color=col,
+             lw=(3.0 if hl is not None and on else 2.0))
+        wlabel(ax, TP[u], TP[v], f"${w}$",
+               color=(hlc if hl is not None and on else GOLD), fs=11,
+               t=TTPOS.get((u, v), 0.5))
+    for k, p in TP.items():
+        node(ax, p, k)
+
+
+fig, axs = plt.subplots(3, 1, figsize=(5.4, 12.6))
+PANE = [
+    (None, "two edges of weight $4$", INK, "which one does Kruskal take?"),
+    ([("P", "Q"), ("P", "R"), ("Q", "S")], "taking $QS$", LINE,
+     "$2 + 2 + 4 = 8$"),
+    ([("P", "Q"), ("P", "R"), ("R", "S")], "taking $RS$", GREEN,
+     "$2 + 2 + 4 = 8$"),
+]
+for ax, (hl, title, col, sub) in zip(axs, PANE):
+    board(ax, (-0.8, 3.8), (-1.3, 3.5))
+    draw_T(ax, hl=hl, hlc=col)
+    ax.set_title(title, fontsize=12.5, color=col, pad=6)
+    note(ax, 1.5, -0.85, sub, col, 11.5)
+fig.text(0.5, 0.004, "different trees, but the same minimum total weight",
+         fontsize=12, ha="center", color=INK)
+fig.tight_layout(rect=(0, 0.022, 1, 1))
+save(fig, "ahl-3-16-tie.svg")

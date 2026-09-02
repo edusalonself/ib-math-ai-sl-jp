@@ -354,3 +354,163 @@ fig.tight_layout()
 save(fig, "ahl-3-14-ex10.svg")
 
 print("exercise figures written")
+
+# ══════════════ 9. 交差は vertex ではない ══════════════
+fig, axs = plt.subplots(1, 2, figsize=(10.6, 3.9))
+
+# 左：交差して描いた図
+board(axs[0], (-0.7, 3.9), (-0.9, 3.5))
+X = {"A": (0.2, 2.6), "B": (2.6, 2.6), "C": (0.2, 0.3), "D": (2.6, 0.3)}
+for u, v in [("A", "D"), ("B", "C"), ("A", "B"), ("C", "D")]:
+    edge(axs[0], X[u], X[v])
+axs[0].plot([1.4], [1.45], "x", color=ACC, mew=2.6, ms=12, zorder=8)
+note(axs[0], 1.4, -0.55, "this crossing is NOT a vertex", ACC, 11)
+axs[0].annotate("", xy=(1.4, 1.15), xytext=(1.4, -0.28),
+                arrowprops=dict(arrowstyle="-|>", color=ACC, lw=1.6),
+                zorder=9)
+for k, p in X.items():
+    node(axs[0], p, k)
+axs[0].set_title("$4$ vertices, $4$ edges", fontsize=12, color=INK, pad=6)
+
+# 右：同じグラフを交差なしで描いた図
+board(axs[1], (-0.7, 3.9), (-0.9, 3.5))
+Y = {"A": (0.2, 2.6), "B": (2.6, 2.6), "D": (2.6, 0.3), "C": (0.2, 0.3)}
+for u, v in [("A", "B"), ("B", "D"), ("D", "C"), ("C", "A")]:
+    edge(axs[1], Y[u], Y[v])
+for k, p in Y.items():
+    node(axs[1], p, k)
+note(axs[1], 1.4, -0.55, "the same graph, drawn without a crossing",
+     GREEN, 11)
+axs[1].set_title("$4$ vertices, $4$ edges", fontsize=12, color=INK, pad=6)
+fig.tight_layout()
+save(fig, "ahl-3-14-crossing.svg")
+
+# ══════════════ 10. unweighted と weighted ══════════════
+fig, axs = plt.subplots(1, 2, figsize=(10.6, 3.8))
+U = {"P": (0.2, 0.4), "Q": (0.2, 2.6), "R": (2.4, 2.6), "T": (2.4, 0.4)}
+UE = [("P", "Q"), ("Q", "R"), ("R", "T"), ("P", "R")]
+
+board(axs[0], (-0.8, 4.4), (-1.0, 3.4))
+for u, v in UE:
+    edge(axs[0], U[u], U[v])
+for k, p in U.items():
+    node(axs[0], p, k)
+note(axs[0], 1.3, -0.65, "asks only: joined, or not?", GREY, 11)
+axs[0].set_title("unweighted graph", fontsize=12, color=INK, pad=6)
+
+board(axs[1], (-0.8, 4.4), (-1.0, 3.4))
+UW = [("P", "Q", "4"), ("Q", "R", "7"), ("R", "T", "5"), ("P", "R", "9")]
+for u, v, w in UW:
+    edge(axs[1], U[u], U[v])
+    wlabel(axs[1], U[u], U[v], w)
+for k, p in U.items():
+    node(axs[1], p, k)
+note(axs[1], 1.3, -0.65, "each edge also carries a number", GOLD, 11)
+axs[1].set_title("weighted graph", fontsize=12, color=INK, pad=6)
+fig.tight_layout()
+save(fig, "ahl-3-14-weighted.svg")
+
+# ══════════════ 11. adjacent と connected ══════════════
+fig, ax = plt.subplots(figsize=(9.4, 3.4))
+board(ax, (-0.8, 8.0), (-1.5, 2.2))
+Z = {"A": (0.2, 0.9), "B": (2.2, 0.9), "C": (4.2, 0.9), "D": (6.2, 0.9)}
+for u, v in [("A", "B"), ("B", "C"), ("C", "D")]:
+    edge(ax, Z[u], Z[v])
+edge(ax, Z["A"], Z["B"], color=GREEN, lw=3.4)
+for k, p in Z.items():
+    node(ax, p, k)
+note(ax, 1.2, 1.75, "$A$ and $B$: adjacent  ($1$ edge)", GREEN, 11.5)
+note(ax, 3.2, -0.85,
+     "$A$ and $D$: not adjacent, but connected  ($A \\to B \\to C \\to D$)",
+     LINE, 11.5)
+ax.annotate("", xy=(6.0, 0.55), xytext=(0.4, 0.55),
+            arrowprops=dict(arrowstyle="-|>", color=LINE, lw=1.5,
+                            connectionstyle="arc3,rad=0.22"), zorder=2)
+fig.tight_layout()
+save(fig, "ahl-3-14-adjacent.svg")
+
+# ══════════════ 12. 本数が合っていても tree とはかぎらない ══════════════
+fig, axs = plt.subplots(1, 2, figsize=(10.6, 3.8))
+
+board(axs[0], (-0.9, 4.6), (-1.2, 3.4))
+T1 = {"A": (0.3, 0.4), "B": (1.5, 2.5), "C": (2.7, 0.4), "D": (4.0, 1.4)}
+for u, v in [("A", "B"), ("B", "C"), ("C", "A")]:
+    edge(axs[0], T1[u], T1[v], color=ACC, lw=2.6)
+for k, p in T1.items():
+    node(axs[0], p, k, color=(ACC if k != "D" else GREY),
+         tc=(ACC if k != "D" else GREY))
+note(axs[0], 1.7, -0.75, "$4$ vertices, $3$ edges — but NOT a tree",
+     ACC, 11.5)
+note(axs[0], 1.5, 1.15, "cycle", ACC, 10.5)
+note(axs[0], 4.0, 0.55, "$D$ is cut off", GREY, 10.5)
+axs[0].set_title("counting is not enough", fontsize=12, color=ACC, pad=6)
+
+board(axs[1], (-0.9, 4.6), (-1.2, 3.4))
+for u, v in [("A", "B"), ("B", "C"), ("C", "D")]:
+    edge(axs[1], T1[u], T1[v], color=GREEN, lw=2.6)
+for k, p in T1.items():
+    node(axs[1], p, k, color=GREEN, tc=GREEN)
+note(axs[1], 1.7, -0.75, "$4$ vertices, $3$ edges — and it IS a tree",
+     GREEN, 11.5)
+note(axs[1], 2.0, 1.15, "connected, no cycle", GREEN, 10.5)
+axs[1].set_title("check connected, and no cycle", fontsize=12,
+                 color=GREEN, pad=6)
+fig.tight_layout()
+save(fig, "ahl-3-14-nottree.svg")
+
+
+# ══════════════ 13. loop（第5節の注意） ══════════════
+fig, axs = plt.subplots(1, 2, figsize=(11.0, 4.3))
+
+PL = {"P": (0.0, 0.0), "Q": (1.9, 1.05), "R": (1.9, -1.05)}
+
+for i, has_loop in enumerate((False, True)):
+    ax = axs[i]
+    board(ax, (-2.2, 3.4), (-2.3, 2.3))
+    for u, v in [("P", "Q"), ("P", "R")]:
+        edge(ax, PL[u], PL[v], color=GREY, lw=2.2)
+    if has_loop:
+        loop(ax, PL["P"], color=ACC, lw=2.4, size=0.5, angle=180)
+        # loop が節点にふれる 2 点に印を打つ
+        for a in (145, 215):
+            th = np.radians(a)
+            ax.plot([PL["P"][0] + R * np.cos(th)], [PL["P"][1] + R * np.sin(th)],
+                    "o", ms=7, mfc=ACC, mec="white", mew=1.4, zorder=15)
+    for k, q in PL.items():
+        node(ax, q, k, color=LINE)
+
+axs[0].set_title("no loop", fontsize=12, color=INK, pad=8)
+note(axs[0], 0.6, -1.75, r"$\deg(P) = 2$", color=INK, fs=13)
+note(axs[0], 0.6, 1.78, "$2$ edge ends at $P$", color=GREY, fs=11)
+
+axs[1].set_title("one loop at $P$", fontsize=12, color=ACC, pad=8)
+note(axs[1], 0.6, -1.75, r"$\deg(P) = 2 + 2 = 4$", color=ACC, fs=13)
+note(axs[1], 1.15, 1.78, "$2 + 2 = 4$ edge ends at $P$", color=ACC, fs=11)
+for _a in (145, 215):
+    _t = np.radians(_a)
+    axs[1].annotate("", xy=(R * np.cos(_t), R * np.sin(_t)),
+                    xytext=(-1.18, 1.05 * np.sign(np.sin(_t))),
+                    arrowprops=dict(arrowstyle="->", color=ACC, lw=1.5,
+                                    shrinkB=3,
+                                    connectionstyle="arc3,rad=0.15"),
+                    zorder=16)
+note(axs[1], -1.55, 1.28, "both ends", color=ACC, fs=10.5)
+note(axs[1], -1.55, -1.28, "of the loop", color=ACC, fs=10.5)
+fig.tight_layout()
+save(fig, "ahl-3-14-loop.svg")
+
+
+# ══════════════ 14. tree だけを大きく（第12節） ══════════════
+fig, ax = plt.subplots(figsize=(6.8, 3.8))
+board(ax, (-0.9, 5.7), (-0.5, 3.5))
+TREE2 = [("A", "B"), ("B", "C"), ("B", "D"), ("D", "E")]
+for u, v in TREE2:
+    edge(ax, P[u], P[v], color=GREEN, lw=2.6)
+for k in P:
+    node(ax, P[k], k, color=GREEN)
+note(ax, 2.4, -0.15,
+     "connected, and no cycle:  $5$ vertices, $4$ edges",
+     color=GREEN, fs=11.5)
+ax.set_title("a tree", fontsize=12.5, color=GREEN, pad=6)
+fig.tight_layout()
+save(fig, "ahl-3-14-treeonly.svg")
