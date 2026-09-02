@@ -194,6 +194,12 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../ai-hl/01-number-and-algebra/ahl-1-9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AHL 1.9 — Laws of logarithms</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../ai-hl/01-number-and-algebra/ahl-1-14.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">AHL 1.14 — Matrices</span></a>
   </div>
@@ -252,6 +258,18 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../ai-hl/04-statistics-and-probability/ahl-4-12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AHL 4.12 — Data collection and χ² categorisation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../ai-hl/04-statistics-and-probability/ahl-4-13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AHL 4.13 — Non-linear regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../ai-hl/04-statistics-and-probability/ahl-4-19.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">AHL 4.19 — Transition matrices</span></a>
   </div>
@@ -272,14 +290,18 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#the-idea" id="toc-the-idea" class="nav-link" data-scroll-target="#the-idea">The idea</a>
   <ul class="collapse">
-  <li><a href="#adjacency" id="toc-adjacency" class="nav-link" data-scroll-target="#adjacency">1. adjacency matrix は、つながりの表です</a></li>
-  <li><a href="#symmetric" id="toc-symmetric" class="nav-link" data-scroll-target="#symmetric">2. 無向グラフの adjacency matrix は対称です</a></li>
-  <li><a href="#walk" id="toc-walk" class="nav-link" data-scroll-target="#walk">3. walk は、edge をたどった道です</a></li>
-  <li><a href="#power" id="toc-power" class="nav-link" data-scroll-target="#power">4. <span class="math inline">\(A^{k}\)</span> が、長さ <span class="math inline">\(k\)</span> の walk を数えます</a></li>
-  <li><a href="#directed" id="toc-directed" class="nav-link" data-scroll-target="#directed">5. 有向グラフでも、同じように作れます</a></li>
-  <li><a href="#weighted" id="toc-weighted" class="nav-link" data-scroll-target="#weighted">6. weighted adjacency table</a></li>
-  <li><a href="#transition" id="toc-transition" class="nav-link" data-scroll-target="#transition">7. transition matrix は、向きが逆です</a></li>
-  <li><a href="#pagerank" id="toc-pagerank" class="nav-link" data-scroll-target="#pagerank">8. PageRank は、この形の応用です</a></li>
+  <li><a href="#idea" id="toc-idea" class="nav-link" data-scroll-target="#idea">1. graph を、計算できる表に変えます</a></li>
+  <li><a href="#order" id="toc-order" class="nav-link" data-scroll-target="#order">2. まず、vertex の順序を決めます</a></li>
+  <li><a href="#adjacency" id="toc-adjacency" class="nav-link" data-scroll-target="#adjacency">3. 行が「どこから」、列が「どこへ」です</a></li>
+  <li><a href="#symmetric" id="toc-symmetric" class="nav-link" data-scroll-target="#symmetric">4. undirected graph の adjacency matrix は対称です</a></li>
+  <li><a href="#draw" id="toc-draw" class="nav-link" data-scroll-target="#draw">5. 行列から graph をかきもどせます</a></li>
+  <li><a href="#walk" id="toc-walk" class="nav-link" data-scroll-target="#walk">6. walk は、edge をたどった道です</a></li>
+  <li><a href="#square" id="toc-square" class="nav-link" data-scroll-target="#square">7. <span class="math inline">\(A^{2}\)</span> の成分は、途中の vertex を数えています</a></li>
+  <li><a href="#power" id="toc-power" class="nav-link" data-scroll-target="#power">8. 同じ理由で、<span class="math inline">\(A^{k}\)</span> が長さ <span class="math inline">\(k\)</span> の walk を数えます</a></li>
+  <li><a href="#atmost" id="toc-atmost" class="nav-link" data-scroll-target="#atmost">9. 「ちょうど <span class="math inline">\(k\)</span>」「<span class="math inline">\(1\)</span> から <span class="math inline">\(k\)</span>」「<span class="math inline">\(0\)</span> から <span class="math inline">\(k\)</span>」を区別します</a></li>
+  <li><a href="#weighted" id="toc-weighted" class="nav-link" data-scroll-target="#weighted">10. weighted adjacency table</a></li>
+  <li><a href="#transition" id="toc-transition" class="nav-link" data-scroll-target="#transition">11. transition matrix</a></li>
+  <li><a href="#pagerank" id="toc-pagerank" class="nav-link" data-scroll-target="#pagerank">12. 長い目で見ると — Markov chain と PageRank</a></li>
   </ul></li>
   <li><a href="#why-it-works" id="toc-why-it-works" class="nav-link" data-scroll-target="#why-it-works">Why it works</a></li>
   <li><a href="#worked-examples" id="toc-worked-examples" class="nav-link" data-scroll-target="#worked-examples">Worked examples</a></li>
@@ -315,14 +337,12 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>graph から <strong>adjacency matrix</strong>（隣接行列）を作れる。逆に、行列から graph をかける。</li>
-<li>無向グラフの adjacency matrix が<strong>対称</strong>になる理由を言える。</li>
+<li>graph から <strong>adjacency matrix</strong>（隣接行列）を作れる。逆に、<strong>行列から graph をかきもどせる</strong>。</li>
+<li>undirected graph の adjacency matrix が<strong>対称</strong>になる理由を言える。</li>
 <li><strong>walk</strong>（歩道）が何かを言い、その <strong>length</strong>（長さ）を数えられる。</li>
-<li><span class="math inline">\(A^{k}\)</span> の <span class="math inline">\((i,\ j)\)</span> 成分が、<strong><span class="math inline">\(i\)</span> から <span class="math inline">\(j\)</span> への長さ <span class="math inline">\(k\)</span> の walk の数</strong>だと使える。</li>
-<li>「長さ <span class="math inline">\(k\)</span> <strong>以下</strong>」を、<span class="math inline">\(A + A^{2} + \cdots + A^{k}\)</span> で出せる。</li>
-<li><strong>weighted adjacency table</strong>（重み付き隣接表）を読み書きできる。</li>
-<li>有向グラフから <strong>transition matrix</strong>（推移行列）を作れる。<strong>列の和が <span class="math inline">\(1\)</span></strong> になる理由を言える。</li>
-<li>Google の <strong>PageRank</strong> が、この形の応用だと説明できる。</li>
+<li><span class="math inline">\(A^{k}\)</span> の <span class="math inline">\((i,\ j)\)</span> 成分が、<strong><span class="math inline">\(i\)</span> から <span class="math inline">\(j\)</span> への長さ <span class="math inline">\(k\)</span> の walk の数</strong>だと使える。「ちょうど <span class="math inline">\(k\)</span>」と「<span class="math inline">\(k\)</span> 以下」を区別できる。</li>
+<li><strong>weighted adjacency table</strong>（重み付き隣接表）を読み書きし、adjacency matrix との違いを言える。</li>
+<li>directed graph から <strong>transition matrix</strong>（推移行列）を作り、<strong>列の和が <span class="math inline">\(1\)</span></strong> になる理由を言える。</li>
 </ul>
 </div>
 </div>
@@ -332,37 +352,25 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ノート</span>AHL 1.14 と AHL 3.14 の続きです
+<span class="screen-reader-only">ノート</span><span class="math inline">\(3\)</span> つのページの真ん中です
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>この項目は、<span class="math inline">\(2\)</span> つのページの上に立っています。</p>
+<p><a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html">AHL 3.14</a> で、現実の構造を graph に直し、言葉を決めました。</p>
+<p>このページでやるのは、<strong>その graph を「計算できる表」に書き直すこと</strong>です。図を見て数える代わりに、行列のかけ算に仕事をさせます。</p>
+<p>道具は <span class="math inline">\(2\)</span> つのページから来ています。</p>
 <ul>
-<li><a href="../../ai-hl/01-number-and-algebra/ahl-1-14.html">AHL 1.14</a> … 行列の<strong>かけ算</strong>と<strong>累乗</strong>。ここが計算の道具です</li>
-<li><a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html">AHL 3.14</a> … vertex、edge、degree、directed、strongly connected。ここが言葉です</li>
+<li><a href="../../ai-hl/01-number-and-algebra/ahl-1-14.html">AHL 1.14</a> … 行列の<strong>かけ算</strong>と<strong>累乗</strong></li>
+<li><a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html">AHL 3.14</a> … vertex、edge、degree、directed、strongly connected</li>
 </ul>
-<p>新しいのは、<strong>その <span class="math inline">\(2\)</span> つを結びつける見方</strong>だけです。</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">重要</span>公式集には、この項目の欄がありません
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>AI HL の formula booklet に、adjacency matrix の欄はありません。関係するものとしては、<strong>AHL 4.19 の <span class="math inline">\(s_n = T^{n}s_0\)</span> が載っているだけ</strong>です。</p>
-<p>ですから、この項目の中心である「<span class="math inline">\(A^{k}\)</span> が <span class="math inline">\(k\)</span> 歩の walk の数を数える」は、<strong>自分で覚えることになります。</strong> 理由は <a href="#why-it-works">Why it works</a> で説明します。意味が分かっていれば、忘れても作り直せます。</p>
+<p>そして、ここで作った行列の使い道の続きは <a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-16.html">AHL 3.16</a> と AHL 4.19 にあります。</p>
+<p>なお、この項目にも公式集の欄はありません。ただ、中心にある「<span class="math inline">\(A^{k}\)</span> が <span class="math inline">\(k\)</span> 歩の walk の数を数える」は、<strong>行列のかけ算の定義から出てきます</strong>（<a href="#why-it-works">Why it works</a>）。意味が分かっていれば、忘れても作り直せます。</p>
 </div>
 </div>
 <section id="the-idea" class="level2">
 <h2 class="anchored" data-anchor-id="the-idea">The idea</h2>
-<p>この項目は、<strong>graph を「表」に書き直して、計算できるようにする</strong>項目です。</p>
-<section id="adjacency" class="level3">
-<h3 class="anchored" data-anchor-id="adjacency">1. adjacency matrix は、つながりの表です</h3>
+<section id="idea" class="level3">
+<h3 class="anchored" data-anchor-id="idea">1. graph を、計算できる表に変えます</h3>
 <p>vertex を縦にも横にも並べて、<strong>結ばれていれば <span class="math inline">\(1\)</span>、結ばれていなければ <span class="math inline">\(0\)</span></strong> と書きます。これが <strong>adjacency matrix</strong>（隣接行列）です。</p>
 <div id="fig-ahl315-idea" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -383,30 +391,85 @@ A = \begin{pmatrix}
 0 &amp; 0 &amp; 1 &amp; 0
 \end{pmatrix}
 \tag{1}\]</span></span></p>
+<p>図と行列は、<strong>同じ情報を持っています。</strong> 違うのは、行列なら<strong>電卓に入れて計算できる</strong>という一点だけです。それが、このページのねらいです。</p>
+</section>
+<section id="order" class="level3">
+<h3 class="anchored" data-anchor-id="order">2. まず、vertex の順序を決めます</h3>
+<p>行列を書き始める前に、<strong>必ずやることが <span class="math inline">\(1\)</span> つ</strong>あります。</p>
+<blockquote class="blockquote">
+<p><strong>vertex を並べる順序を決めて、それを書きとめる。</strong></p>
+</blockquote>
+<p><a href="#eq-ahl315-adj" class="quarto-xref">式&nbsp;1</a> は <span class="math inline">\(A\)</span>、<span class="math inline">\(B\)</span>、<span class="math inline">\(C\)</span>、<span class="math inline">\(D\)</span> の順で書いたものです。<span class="math inline">\(D\)</span>、<span class="math inline">\(C\)</span>、<span class="math inline">\(B\)</span>、<span class="math inline">\(A\)</span> の順で書けば、<strong>同じ graph から違う行列が出ます。</strong> どちらも正しく、どちらも同じ graph を表しています。</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">重要</span>行が「どこから」、列が「どこへ」です
+<span class="screen-reader-only">重要</span>行列のまわりに、vertex の名前を書いてください
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><span class="math inline">\((i,\ j)\)</span> 成分は、<strong><span class="math inline">\(i\)</span> から <span class="math inline">\(j\)</span> への edge の数</strong>です。この向きの約束を、最初に決めておいてください。</p>
-<p>無向グラフでは向きがないので気になりませんが、<a href="#directed">第5節</a>の有向グラフでは<strong>答えが変わります。</strong></p>
-<p>さらに、<a href="#transition">第7節</a>の transition matrix では<strong>この向きが逆になります。</strong> そこがこの項目でいちばん間違えるところなので、先に言っておきます。</p>
+<p><a href="#fig-ahl315-idea" class="quarto-xref">図&nbsp;1</a> のように、上と左に名前を書いておきます。<span class="math inline">\(30\)</span> 秒もかかりません。</p>
+<p>これをしないと、<span class="math inline">\(A^{2}\)</span> を読むときに「<span class="math inline">\(2\)</span> 行目は <span class="math inline">\(B\)</span> だったか <span class="math inline">\(C\)</span> だったか」で必ず迷います。<strong>この項目の失点の多くは、行列の中身ではなく、読み違いから出ます。</strong></p>
+<p>問題文が <code>using the order P, Q, R, S</code> と指定していたら、<strong>その順に従ってください。</strong> 指定がなければ、問題文に出てくる順（ふつうはアルファベット順）にします。</p>
 </div>
 </div>
+</section>
+<section id="adjacency" class="level3">
+<h3 class="anchored" data-anchor-id="adjacency">3. 行が「どこから」、列が「どこへ」です</h3>
+<p><span class="math inline">\((i,\ j)\)</span> 成分は、<strong><span class="math inline">\(i\)</span> から <span class="math inline">\(j\)</span> への edge の本数</strong>です。</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">重要</span>このサイトでは、いつも「行 <span class="math inline">\(=\)</span> from、列 <span class="math inline">\(=\)</span> to」で書きます
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>undirected graph では向きがないので、どちらで決めても同じ行列になります。しかし <a href="#transition">第11節</a>の directed graph では、<strong>取りちがえると答えが変わります。</strong></p>
+<p>本によっては逆の約束を使うこともあります。<strong>このサイトでは、行が「から」で統一します。</strong> 問題文に約束が書かれていれば、そちらに従ってください。</p>
+<p>さらに、<a href="#transition">第11節</a>の transition matrix では、シラバスの指定によって<strong>この向きが逆になります。</strong> そこがこの項目でいちばん間違えるところなので、先に言っておきます。</p>
+</div>
+</div>
+<section id="entries" class="level4">
+<h4 class="anchored" data-anchor-id="entries">成分は <span class="math inline">\(0\)</span> と <span class="math inline">\(1\)</span> とはかぎりません</h4>
+<p>成分は「edge の本数」なので、</p>
+<ul>
+<li><strong>simple graph</strong>（loop も multiple edge もない graph、<a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#kinds">AHL 3.14</a>）なら、成分は <strong><span class="math inline">\(0\)</span> か <span class="math inline">\(1\)</span></strong> だけです</li>
+<li>同じ <span class="math inline">\(2\)</span> 点を結ぶ edge が <span class="math inline">\(2\)</span> 本あれば、その成分は <strong><span class="math inline">\(2\)</span></strong> になります。<span class="math inline">\(3\)</span> 本なら <span class="math inline">\(3\)</span> です</li>
+</ul>
+<p>シラバスはこの項目について <code>Consideration of simple graphs</code> と書いているので、<strong>試験に出る行列の成分は、ふつう <span class="math inline">\(0\)</span> と <span class="math inline">\(1\)</span> だけ</strong>です。ただ、<span class="math inline">\(2\)</span> が出てきたときに「書き間違いだ」と決めつけないでください。<strong>multiple edge があるという意味</strong>です。</p>
+</section>
 <section id="rowsum" class="level4">
-<h4 class="anchored" data-anchor-id="rowsum">行の和は degree です</h4>
-<p><span class="math inline">\(1\)</span> 行を横に足すと、その vertex から出ている edge の本数、つまり <strong>degree</strong> になります。</p>
-<p><a href="#eq-ahl315-adj" class="quarto-xref">式&nbsp;1</a> の <span class="math inline">\(3\)</span> 行目は <span class="math inline">\(1 + 1 + 0 + 1 = 3\)</span> で、<span class="math inline">\(\deg(C) = 3\)</span> ✓（<a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#terms">AHL 3.14</a>）</p>
-<p><strong>書き写しの検算に使えます。</strong> degree を図から数えたものと、行の和が合っているかを見てください。</p>
+<h4 class="anchored" data-anchor-id="rowsum">行の和は degree です（条件付き）</h4>
+<p><span class="math inline">\(1\)</span> 行を横に足すと、その vertex の <strong>degree</strong> になります。</p>
+<p><a href="#eq-ahl315-adj" class="quarto-xref">式&nbsp;1</a> の <span class="math inline">\(3\)</span> 行目は <span class="math inline">\(1 + 1 + 0 + 1 = 3\)</span> で、<span class="math inline">\(\deg(C) = 3\)</span> ✓（<a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#degree">AHL 3.14</a>）</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>これが成り立つのは、loop のない undirected graph のときです
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(2\)</span> つ条件があります。</p>
+<ul>
+<li><strong>undirected</strong> であること。directed graph では、行の和は <strong>out degree</strong>、列の和は <strong>in degree</strong> になります</li>
+<li><strong>loop がない</strong>こと。loop は degree に <span class="math inline">\(2\)</span> を足しますが（<a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#degree">AHL 3.14</a>）、行列の対角成分には <span class="math inline">\(1\)</span> と書く流儀もあり、そのときは行の和が degree より <span class="math inline">\(1\)</span> 小さくなります</li>
+</ul>
+<p>試験に出る graph はほとんど loop のない simple graph なので、<strong>ふだんはそのまま使えます。</strong> loop が描いてある図でだけ、ここに戻ってきてください。</p>
+</div>
+</div>
+<p>条件がそろっていれば、<strong>書き写しの検算に使えます。</strong> degree を図から数えたものと、行の和が合っているかを見てください。</p>
 </section>
 </section>
 <section id="symmetric" class="level3">
-<h3 class="anchored" data-anchor-id="symmetric">2. 無向グラフの adjacency matrix は対称です</h3>
+<h3 class="anchored" data-anchor-id="symmetric">4. undirected graph の adjacency matrix は対称です</h3>
 <div id="fig-ahl315-symmetric" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ahl315-symmetric-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -417,8 +480,8 @@ A = \begin{pmatrix}
 </figcaption>
 </figure>
 </div>
-<p>無向グラフでは、<span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> が結ばれていれば <span class="math inline">\(B\)</span> と <span class="math inline">\(A\)</span> も結ばれています。ですから <span class="math inline">\((1,2)\)</span> 成分と <span class="math inline">\((2,1)\)</span> 成分は必ず同じで、<strong>対角線を折り目にして折り返すと重なります。</strong></p>
-<p>有向グラフでは、そうはなりません。<a href="#fig-ahl315-symmetric" class="quarto-xref">図&nbsp;2</a> の右では、<span class="math inline">\(A \to B\)</span> の矢印はありますが <span class="math inline">\(B \to A\)</span> はないので、<span class="math inline">\((1,2)\)</span> 成分は <span class="math inline">\(1\)</span>、<span class="math inline">\((2,1)\)</span> 成分は <span class="math inline">\(0\)</span> です。</p>
+<p>undirected graph では、<span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> が結ばれていれば <span class="math inline">\(B\)</span> と <span class="math inline">\(A\)</span> も結ばれています。ですから <span class="math inline">\((1,2)\)</span> 成分と <span class="math inline">\((2,1)\)</span> 成分は必ず同じで、<strong>対角線を折り目にして折り返すと重なります。</strong></p>
+<p>directed graph では、そうはなりません。<a href="#fig-ahl315-symmetric" class="quarto-xref">図&nbsp;2</a> の右では、<span class="math inline">\(A \to B\)</span> の矢印はありますが <span class="math inline">\(B \to A\)</span> はないので、<span class="math inline">\((1,2)\)</span> 成分は <span class="math inline">\(1\)</span>、<span class="math inline">\((2,1)\)</span> 成分は <span class="math inline">\(0\)</span> です。</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -429,7 +492,7 @@ A = \begin{pmatrix}
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>無向グラフの問題で、書いた行列が対称になっていなければ、<strong>どこかで書き間違えています。</strong></p>
+<p>undirected graph の問題で、書いた行列が対称になっていなければ、<strong>どこかで書き間違えています。</strong></p>
 <p>対角線をはさんで、<span class="math inline">\(1\)</span> 組ずつ見くらべてください。</p>
 </div>
 </div>
@@ -443,13 +506,47 @@ A = \begin{pmatrix}
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><span class="math inline">\((i,\ i)\)</span> 成分は「<span class="math inline">\(i\)</span> から <span class="math inline">\(i\)</span> への edge」、つまり <strong>loop</strong> の数です。simple graph には loop がないので、<strong>対角線は全部 <span class="math inline">\(0\)</span></strong> になります（<a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#kinds">AHL 3.14</a>）。</p>
-<p>対角線に <span class="math inline">\(1\)</span> が出てきたら、loop のある graph です。</p>
+<p><span class="math inline">\((i,\ i)\)</span> 成分は「<span class="math inline">\(i\)</span> から <span class="math inline">\(i\)</span> への edge」、つまり <strong>loop</strong> の数です。simple graph には loop がないので、<strong>対角線は全部 <span class="math inline">\(0\)</span></strong> になります。</p>
+<p>対角線に <span class="math inline">\(0\)</span> でない数が出てきたら、loop のある graph です。</p>
+</div>
+</div>
+</section>
+<section id="draw" class="level3">
+<h3 class="anchored" data-anchor-id="draw">5. 行列から graph をかきもどせます</h3>
+<p>同じ情報を持っているので、<strong>逆向きの作業もできます。</strong> 試験でも問われます。</p>
+<div id="fig-ahl315-frommatrix" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ahl315-frommatrix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/ahl-3-15-frommatrix.svg" class="img-fluid figure-img" style="width:98.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ahl315-frommatrix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;3: Reading the matrix back as a graph
+</figcaption>
+</figure>
+</div>
+<p>手順は <span class="math inline">\(1\)</span> つだけです。</p>
+<blockquote class="blockquote">
+<p><strong><span class="math inline">\(1\)</span> 行ずつ見て、<span class="math inline">\(1\)</span> が立っている列の vertex と結ぶ。</strong></p>
+</blockquote>
+<p><a href="#fig-ahl315-frommatrix" class="quarto-xref">図&nbsp;3</a> では、<span class="math inline">\(C\)</span> の行に <span class="math inline">\(A\)</span>、<span class="math inline">\(B\)</span>、<span class="math inline">\(D\)</span> の列で <span class="math inline">\(1\)</span> が立っています。ですから <span class="math inline">\(C\)</span> を <span class="math inline">\(A\)</span>、<span class="math inline">\(B\)</span>、<span class="math inline">\(D\)</span> と結びます。</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>対角線から下（または上）だけを見れば足ります
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>undirected graph では行列が対称なので、<span class="math inline">\(AB\)</span> と <span class="math inline">\(BA\)</span> は同じ <span class="math inline">\(1\)</span> 本の edge です。<strong>両方を見ると、同じ edge を <span class="math inline">\(2\)</span> 度描くことになります。</strong></p>
+<p>対角線より上の三角だけを見て、そこにある <span class="math inline">\(1\)</span> の数だけ edge を描いてください。<strong>その本数が、そのまま edge の数</strong>になります。</p>
+<p><strong>検算。</strong> 描いた図の degree と、行の和を見くらべます（<a href="#rowsum">第3節</a>）。</p>
 </div>
 </div>
 </section>
 <section id="walk" class="level3">
-<h3 class="anchored" data-anchor-id="walk">3. walk は、edge をたどった道です</h3>
+<h3 class="anchored" data-anchor-id="walk">6. walk は、edge をたどった道です</h3>
 <p><strong>walk</strong>（歩道）は、vertex から vertex へ、edge をたどって進んだ道のことです。<strong>通った edge の本数</strong>を、その walk の <strong>length</strong>（長さ）といいます。</p>
 <div id="fig-ahl315-walk" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -457,61 +554,224 @@ A = \begin{pmatrix}
 <img src="img/ahl-3-15-walk.svg" class="img-fluid figure-img" style="width:68.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ahl315-walk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;3: A walk of length 3
+図&nbsp;4: A walk of length 3
 </figcaption>
 </figure>
 </div>
-<p><a href="#fig-ahl315-walk" class="quarto-xref">図&nbsp;3</a> の <span class="math inline">\(A \to B \to C \to D\)</span> は、edge を <span class="math inline">\(3\)</span> 本通っているので <strong>length <span class="math inline">\(3\)</span> の walk</strong> です。</p>
+<p><a href="#fig-ahl315-walk" class="quarto-xref">図&nbsp;4</a> の <span class="math inline">\(A \to B \to C \to D\)</span> は、edge を <span class="math inline">\(3\)</span> 本通っているので <strong>length <span class="math inline">\(3\)</span> の walk</strong> です。</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">警告</span>walk では、同じ場所を何度通っても構いません
+<span class="screen-reader-only">警告</span>walk では、同じ vertex も同じ edge も、何度通っても構いません
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><span class="math inline">\(A \to B \to A \to C\)</span> も、立派な length <span class="math inline">\(3\)</span> の walk です。<strong><span class="math inline">\(A\)</span> を <span class="math inline">\(2\)</span> 回通っていますが、それでよい</strong>のです。</p>
-<p>「同じ vertex を <span class="math inline">\(2\)</span> 度通らない道」には <strong>path</strong> という別の名前があり、そちらは <strong>AHL 3.16</strong> で扱います。この項目で数えるのは <strong>walk</strong> です。<strong>制限のない、いちばんゆるい道</strong>だと思ってください。</p>
+<p><span class="math inline">\(A \to B \to A \to C\)</span> も、立派な length <span class="math inline">\(3\)</span> の walk です。<span class="math inline">\(A\)</span> を <span class="math inline">\(2\)</span> 回通り、edge <span class="math inline">\(AB\)</span> を <span class="math inline">\(2\)</span> 回通っていますが、<strong>それでよい</strong>のです。</p>
+<p>walk は、<strong>いちばんゆるいたどり方</strong>です。「もどっているから数えない」と考えると、答えが小さくなります。</p>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>制限の付いたたどり方には、<strong>trail</strong>、<strong>path</strong>、<strong>circuit</strong>、<strong>cycle</strong> という別の名前があります。それらは <a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-16.html#words">AHL 3.16 の第1節</a>でまとめて扱います。<strong>この項目で数えるのは walk だけ</strong>です。</p>
+</div>
 </div>
 </div>
 </section>
-<section id="power" class="level3">
-<h3 class="anchored" data-anchor-id="power">4. <span class="math inline">\(A^{k}\)</span> が、長さ <span class="math inline">\(k\)</span> の walk を数えます</h3>
-<p>ここがこの項目の中心です。</p>
-<p><span id="eq-ahl315-power"><span class="math display">\[
-\bigl(A^{k}\bigr)_{ij} = \text{（$i$ から $j$ への、長さ $k$ の walk の数）}
-\tag{2}\]</span></span></p>
+<section id="square" class="level3">
+<h3 class="anchored" data-anchor-id="square">7. <span class="math inline">\(A^{2}\)</span> の成分は、途中の vertex を数えています</h3>
+<p>ここがこの項目の中心です。まず <span class="math inline">\(2\)</span> 乗だけを、具体的に見ます。</p>
 <div id="fig-ahl315-power" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ahl315-power-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="img/ahl-3-15-power.svg" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ahl315-power-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;4: The (A, C) entry of <span class="math inline">\(A^2\)</span>
+図&nbsp;5: The (A, C) entry of <span class="math inline">\(A^2\)</span>
 </figcaption>
 </figure>
 </div>
-<p><a href="#fig-ahl315-power" class="quarto-xref">図&nbsp;4</a> で確かめます。<span class="math inline">\(A\)</span> から <span class="math inline">\(C\)</span> への <strong>length <span class="math inline">\(2\)</span></strong> の walk は、途中に <span class="math inline">\(1\)</span> 点だけはさむ道です。</p>
-<ul>
-<li><span class="math inline">\(A \to B \to C\)</span> … あります</li>
-<li><span class="math inline">\(A \to C \to C\)</span> … <span class="math inline">\(C\)</span> から <span class="math inline">\(C\)</span> への edge がないので、ありません</li>
-</ul>
-<p>ですから <span class="math inline">\(1\)</span> 本です。<span class="math inline">\(A^{2}\)</span> の <span class="math inline">\((A,\ C)\)</span> 成分も <span class="math inline">\(1\)</span> になっています ✓</p>
+<p><a href="#fig-ahl315-power" class="quarto-xref">図&nbsp;5</a> で、<span class="math inline">\(A\)</span> から <span class="math inline">\(C\)</span> への <strong>length <span class="math inline">\(2\)</span></strong> の walk を探します。length <span class="math inline">\(2\)</span> ということは、<strong>途中に vertex を <span class="math inline">\(1\)</span> つはさむ</strong>ということです。</p>
+<p>はさめる候補は <span class="math inline">\(A\)</span>、<span class="math inline">\(B\)</span>、<span class="math inline">\(C\)</span>、<span class="math inline">\(D\)</span> の <span class="math inline">\(4\)</span> つ。<span class="math inline">\(1\)</span> つずつ試します。</p>
+<div id="tbl-ahl315-mid" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ahl315-mid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;1: 途中の点を <span class="math inline">\(1\)</span> つずつ試す
+</figcaption>
+<div aria-describedby="tbl-ahl315-mid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>途中の点 <span class="math inline">\(k\)</span></th>
+<th><span class="math inline">\(A \to k\)</span></th>
+<th><span class="math inline">\(k \to C\)</span></th>
+<th>通れるか</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(A\)</span></td>
+<td>✗（loop なし）</td>
+<td>—</td>
+<td>✗</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(B\)</span></td>
+<td>○</td>
+<td>○</td>
+<td><strong>○</strong></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(C\)</span></td>
+<td>○</td>
+<td>✗（loop なし）</td>
+<td>✗</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(D\)</span></td>
+<td>✗</td>
+<td>○</td>
+<td>✗</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>通れるのは <span class="math inline">\(A \to B \to C\)</span> の <span class="math inline">\(1\)</span> 本だけです。そして <span class="math inline">\(A^{2}\)</span> の <span class="math inline">\((A,\ C)\)</span> 成分も <strong><span class="math inline">\(1\)</span></strong> になっています ✓</p>
 <p><strong>直接つながっている <span class="math inline">\(A \to C\)</span> は、length <span class="math inline">\(1\)</span> なので数えません。</strong> 聞かれているのは長さ <span class="math inline">\(2\)</span> の道だけです。</p>
-<section id="diagonal" class="level4">
-<h4 class="anchored" data-anchor-id="diagonal">対角成分は degree になります</h4>
-<p><span class="math inline">\(A^{2}\)</span> の <span class="math inline">\((i,\ i)\)</span> 成分は「<span class="math inline">\(i\)</span> を出て、<span class="math inline">\(1\)</span> 点はさんで <span class="math inline">\(i\)</span> にもどる道」の数です。</p>
-<p>これは「<span class="math inline">\(i\)</span> の隣に行って、そのまま引き返す」道なので、<strong>隣の数、つまり degree</strong> と同じになります。</p>
-<p><a href="#fig-ahl315-power" class="quarto-xref">図&nbsp;4</a> の <span class="math inline">\(A^{2}\)</span> の対角線は <span class="math inline">\(2,\ 2,\ 3,\ 1\)</span> で、<a href="#rowsum">第1節</a>の degree と一致します ✓</p>
+<section id="check-square" class="level4">
+<h4 class="anchored" data-anchor-id="check-square">電卓で <span class="math inline">\(A^{2}\)</span> を出して、見くらべてください</h4>
+<p>いま数えたのは <span class="math inline">\(1\)</span> か所だけです。ほかの成分も合っているかどうかは、<strong>電卓に <span class="math inline">\(A\)</span> を入れて <span class="math inline">\(2\)</span> 乗すれば</strong>分かります。</p>
+<p><span id="eq-ahl315-a2"><span class="math display">\[
+A =
+\begin{pmatrix}
+0 &amp; 1 &amp; 1 &amp; 0 \\
+1 &amp; 0 &amp; 1 &amp; 0 \\
+1 &amp; 1 &amp; 0 &amp; 1 \\
+0 &amp; 0 &amp; 1 &amp; 0
+\end{pmatrix}
+\qquad \Longrightarrow \qquad
+A^{2} =
+\begin{pmatrix}
+2 &amp; 1 &amp; 1 &amp; 1 \\
+1 &amp; 2 &amp; 1 &amp; 1 \\
+1 &amp; 1 &amp; 3 &amp; 0 \\
+1 &amp; 1 &amp; 0 &amp; 1
+\end{pmatrix}
+\tag{2}\]</span></span></p>
+<p><span class="math inline">\(4 \times 4\)</span> の行列を入れて <span class="math inline">\(2\)</span> 乗するだけです（<a href="#gdc-power">GDC 第2節</a>）。手で <span class="math inline">\(16\)</span> 個の成分を計算する必要はありません。</p>
+<p><strong><span class="math inline">\((A,\ C)\)</span> 成分は <span class="math inline">\(1\)</span>。</strong> <a href="#tbl-ahl315-mid" class="quarto-xref">表&nbsp;1</a> で数えた本数と一致しています ✓</p>
+<p>ほかの成分も、同じように確かめられます。たとえば <span class="math inline">\((C,\ D)\)</span> 成分は <span class="math inline">\(0\)</span> です。<span class="math inline">\(D\)</span> につながっているのは <span class="math inline">\(C\)</span> だけなので、<span class="math inline">\(C \to \square \to D\)</span> の <span class="math inline">\(\square\)</span> に入れる vertex がありません。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>表を数えることと、行列をかけることは、同じ作業です
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="#tbl-ahl315-mid" class="quarto-xref">表&nbsp;1</a> の <span class="math inline">\(4\)</span> 行は、<span class="math inline">\((A,\ C)\)</span> 成分を作るときに足す <span class="math inline">\(4\)</span> つの項に、そのまま対応しています（<a href="../../ai-hl/01-number-and-algebra/ahl-1-14.html#howto">AHL 1.14</a>）。<span class="math inline">\(A\)</span> の成分は <span class="math inline">\(0\)</span> か <span class="math inline">\(1\)</span> しかないので、<strong><span class="math inline">\(2\)</span> つとも <span class="math inline">\(1\)</span> のときだけ <span class="math inline">\(1\)</span> が足され、それ以外は <span class="math inline">\(0\)</span></strong> です。</p>
+<p><strong>試験で、この表を書く必要はありません。</strong> 電卓で <span class="math inline">\(A^{k}\)</span> を出して、その成分を読めば足ります。表は、なぜそれでよいのかを納得するためのものです。</p>
+</div>
+</div>
 </section>
-<section id="atmost" class="level4">
-<h4 class="anchored" data-anchor-id="atmost">「長さ <span class="math inline">\(k\)</span> 以下」は、足し算です</h4>
-<p><code>walks of length 3 or less</code> と聞かれたら、長さ <span class="math inline">\(1\)</span>、<span class="math inline">\(2\)</span>、<span class="math inline">\(3\)</span> を<strong>全部足します。</strong></p>
-<p><span id="eq-ahl315-atmost"><span class="math display">\[
-A + A^{2} + A^{3}
+</section>
+<section id="power" class="level3">
+<h3 class="anchored" data-anchor-id="power">8. 同じ理由で、<span class="math inline">\(A^{k}\)</span> が長さ <span class="math inline">\(k\)</span> の walk を数えます</h3>
+<p><span class="math inline">\(A^{3}\)</span> は <span class="math inline">\(A^{2}\)</span> に <span class="math inline">\(A\)</span> を掛けたものです。「<span class="math inline">\(2\)</span> 歩の道」に「もう <span class="math inline">\(1\)</span> 歩」を足しているだけなので、<a href="#square">第7節</a>とまったく同じ理屈が通ります。</p>
+<p><span id="eq-ahl315-power"><span class="math display">\[
+\bigl(A^{k}\bigr)_{ij} = \text{（$i$ から $j$ への、長さ $k$ の walk の数）}
 \tag{3}\]</span></span></p>
+<p>シラバスの書き方もこれです。</p>
+<blockquote class="blockquote">
+<p>Given an adjacency matrix <span class="math inline">\(A\)</span>, the <span class="math inline">\((i,\ j)\)</span>th entry of <span class="math inline">\(A^{k}\)</span> gives the number of <span class="math inline">\(k\)</span> length walks from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span>.</p>
+</blockquote>
+<p>directed graph でも、そのまま成り立ちます。<strong>ただし walk は、矢印の向きに逆らえません。</strong></p>
+<section id="diagonal" class="level4">
+<h4 class="anchored" data-anchor-id="diagonal"><span class="math inline">\(A^{2}\)</span> の対角成分（条件付き）</h4>
+<p><span class="math inline">\((A^{2})_{ii}\)</span> は「<span class="math inline">\(i\)</span> を出て、<span class="math inline">\(1\)</span> 点はさんで <span class="math inline">\(i\)</span> にもどる walk の数」です。</p>
+<p>隣へ行って、そのまま引き返すだけなので、これは<strong>隣の数</strong>、つまり degree と同じになります。</p>
+<p><a href="#fig-ahl315-power" class="quarto-xref">図&nbsp;5</a> の <span class="math inline">\(A^{2}\)</span> の対角線は <span class="math inline">\(2,\ 2,\ 3,\ 1\)</span> で、<a href="#rowsum">第3節</a>の degree と一致します ✓</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>これも、loop のない undirected な simple graph のときの話です
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>directed graph では成り立ちません。</strong> 行って帰れるとはかぎらないからです。<span class="math inline">\((A^{2})_{ii}\)</span> が数えるのは「往復できる隣の数」です</li>
+<li><strong>loop があるとずれます。</strong> loop <span class="math inline">\(1\)</span> 本だけでも、<span class="math inline">\(i \to i \to i\)</span> という長さ <span class="math inline">\(2\)</span> の walk が増えます</li>
+</ul>
+<p>undirected で loop がないときだけ、「<span class="math inline">\(A^{2}\)</span> の対角 <span class="math inline">\(=\)</span> degree」と書いてください。<strong>問題文に <code>simple graph</code> とあるかどうか</strong>を、先に確かめます。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="atmost" class="level3">
+<h3 class="anchored" data-anchor-id="atmost">9. 「ちょうど <span class="math inline">\(k\)</span>」「<span class="math inline">\(1\)</span> から <span class="math inline">\(k\)</span>」「<span class="math inline">\(0\)</span> から <span class="math inline">\(k\)</span>」を区別します</h3>
+<p>問題文の言い方で、足すものが変わります。</p>
+<div id="tbl-ahl315-atmost" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ahl315-atmost-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;2: 何を足すか
+</figcaption>
+<div aria-describedby="tbl-ahl315-atmost-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>問題文</th>
+<th>計算するもの</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>of length k</code>（ちょうど <span class="math inline">\(k\)</span>）</td>
+<td><span class="math inline">\(A^{k}\)</span> の成分だけ</td>
+</tr>
+<tr class="even">
+<td><code>of length k or less</code> / <code>at most k</code></td>
+<td><span class="math inline">\(A + A^{2} + \cdots + A^{k}\)</span></td>
+</tr>
+<tr class="odd">
+<td>長さ <span class="math inline">\(0\)</span> も数える場合</td>
+<td><span class="math inline">\(I + A + A^{2} + \cdots + A^{k}\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><span id="eq-ahl315-atmost"><span class="math display">\[
+A + A^{2} + \cdots + A^{k}
+\tag{4}\]</span></span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>長さ <span class="math inline">\(0\)</span> の walk とは、その場を動かないことです
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(I\)</span>（identity matrix）を足すのは、<strong>「<span class="math inline">\(1\)</span> 歩も動かない」を <span class="math inline">\(1\)</span> 通りと数えるとき</strong>です。<span class="math inline">\(I\)</span> の対角成分が <span class="math inline">\(1\)</span>、それ以外が <span class="math inline">\(0\)</span> なのは、まさに「自分から自分へは <span class="math inline">\(1\)</span> 通り、他へは <span class="math inline">\(0\)</span> 通り」だからです。</p>
+<p>試験でふつうに <code>length 3 or less</code> と言われたときは、<strong>長さ <span class="math inline">\(0\)</span> は数えません。</strong> <span class="math inline">\(A + A^{2} + A^{3}\)</span> です。</p>
+<p><code>including staying at the same vertex</code> のような但し書きが付いたときだけ、<span class="math inline">\(I\)</span> を足してください。<strong>問題文が決めます。</strong></p>
+</div>
+</div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -523,18 +783,12 @@ A + A^{2} + A^{3}
 </div>
 <div class="callout-body-container callout-body">
 <p>前者は <span class="math inline">\(A^{3}\)</span> の成分だけ、後者は <span class="math inline">\(A + A^{2} + A^{3}\)</span> の成分です。</p>
-<p><strong>問題文の <code>or less</code> / <code>at most</code> を見落とさないでください。</strong> ここだけで答えが変わります。</p>
+<p><strong>問題文の <code>or less</code> / <code>at most</code> に印を付けてから</strong>、計算を始めてください。ここだけで答えが変わります。</p>
 </div>
 </div>
-</section>
-</section>
-<section id="directed" class="level3">
-<h3 class="anchored" data-anchor-id="directed">5. 有向グラフでも、同じように作れます</h3>
-<p>矢印があるときは、<strong>矢印の向きにだけ <span class="math inline">\(1\)</span></strong> を書きます。<span class="math inline">\(X \to Y\)</span> の矢印があって <span class="math inline">\(Y \to X\)</span> がなければ、<span class="math inline">\((X,\ Y)\)</span> 成分は <span class="math inline">\(1\)</span>、<span class="math inline">\((Y,\ X)\)</span> 成分は <span class="math inline">\(0\)</span> です。</p>
-<p><a href="#eq-ahl315-power" class="quarto-xref">式&nbsp;2</a> は、有向グラフでもそのまま成り立ちます。<strong>ただし walk は、矢印の向きに逆らえません。</strong></p>
 </section>
 <section id="weighted" class="level3">
-<h3 class="anchored" data-anchor-id="weighted">6. weighted adjacency table</h3>
+<h3 class="anchored" data-anchor-id="weighted">10. weighted adjacency table</h3>
 <p>edge に重みが付いているときは、<span class="math inline">\(1\)</span> の代わりに<strong>重みそのもの</strong>を書きます。これを <strong>weighted adjacency table</strong>（重み付き隣接表）といいます。</p>
 <div id="fig-ahl315-weighted" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -542,11 +796,14 @@ A + A^{2} + A^{3}
 <img src="img/ahl-3-15-weighted.svg" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ahl315-weighted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;5: A weighted graph and its table
+図&nbsp;6: A weighted graph and its table
 </figcaption>
 </figure>
 </div>
-<p>edge がないところは、<span class="math inline">\(0\)</span> ではなく <strong>「<span class="math inline">\(-\)</span>」や「<span class="math inline">\(\infty\)</span>」</strong>と書きます。</p>
+<p>シラバスは、重みについて <code>Weights could be costs, distances, lengths of time for example</code> と書いています。距離とはかぎりません。</p>
+<section id="nocell" class="level4">
+<h4 class="anchored" data-anchor-id="nocell">edge がないところの書き方</h4>
+<p>edge がないマスには、<span class="math inline">\(0\)</span> ではなく <strong>「<span class="math inline">\(-\)</span>」や「<span class="math inline">\(\infty\)</span>」</strong>と書きます。</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -558,49 +815,90 @@ A + A^{2} + A^{3}
 </div>
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\(0\)</span> は「距離 <span class="math inline">\(0\)</span> でつながっている」と読めてしまいます。<strong>「つながっていない」と「距離が <span class="math inline">\(0\)</span>」は別のこと</strong>です。</p>
-<p>問題文の表に何が書いてあるかを、先に確かめてください。</p>
+<p>このサイトでは「<span class="math inline">\(-\)</span>」で統一します。ただし、<strong>問題文が別の記号を使っていたら、そちらに合わせてください。</strong> 表を読むときは、まず「edge がないマスに何が書いてあるか」を確かめます。</p>
 </div>
 </div>
-<p><strong>重みの表に、<a href="#eq-ahl315-power" class="quarto-xref">式&nbsp;2</a> は使えません。</strong> 累乗して意味があるのは、<span class="math inline">\(0\)</span> と <span class="math inline">\(1\)</span> でできた adjacency matrix だけです。重みの表は、<strong>AHL 3.16</strong> の経路の問題で使います。</p>
+</section>
+<section id="nopower" class="level4">
+<h4 class="anchored" data-anchor-id="nopower">累乗しても、walk の数にはなりません</h4>
+<p><a href="#eq-ahl315-power" class="quarto-xref">式&nbsp;3</a> が数えているのは、<strong>「edge の本数」を並べた行列を掛け合わせた結果</strong>です。<span class="math inline">\(1 \times 1 = 1\)</span>、<span class="math inline">\(1 \times 0 = 0\)</span> という掛け算が、「<span class="math inline">\(2\)</span> 本続けて通れるか」をそのまま表していました（<a href="#square">第7節</a>）。</p>
+<p>重みの表を（「<span class="math inline">\(-\)</span>」を <span class="math inline">\(0\)</span> とみなして）<span class="math inline">\(2\)</span> 乗すると、<span class="math inline">\(5 \times 8\)</span> のような<strong>重みどうしの積</strong>が出てきます。これは「<span class="math inline">\(2\)</span> 歩の道の数」ではありません。</p>
+<p><a href="#fig-ahl315-weighted" class="quarto-xref">図&nbsp;6</a> の表を <span class="math inline">\(2\)</span> 乗すると、<span class="math inline">\((A,\ D)\)</span> 成分は <span class="math inline">\(5 \times 8 + 3 \times 4 = 52\)</span> になります。いっぽう <span class="math inline">\(A\)</span> から <span class="math inline">\(D\)</span> への長さ <span class="math inline">\(2\)</span> の walk は <span class="math inline">\(A \to B \to D\)</span> と <span class="math inline">\(A \to C \to D\)</span> の <strong><span class="math inline">\(2\)</span> 本</strong>です。<strong><span class="math inline">\(52\)</span> と <span class="math inline">\(2\)</span> は、まったく別のもの</strong>です。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>「累乗の意味があるのは <span class="math inline">\(0\)</span> と <span class="math inline">\(1\)</span> の行列だけ」ではありません
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>multiple edge のある graph の adjacency matrix には <span class="math inline">\(2\)</span> 以上の成分が入りますが（<a href="#entries">第3節</a>）、そこでも <a href="#eq-ahl315-power" class="quarto-xref">式&nbsp;3</a> はそのまま成り立ちます。成分が「edge の本数」でありさえすればよいからです。</p>
+<p>区別するのは <strong><span class="math inline">\(0\)</span> と <span class="math inline">\(1\)</span> かどうか</strong>ではなく、<strong>成分が「本数」か「重み」か</strong>です。</p>
+</div>
+</div>
+<p>重みの表は、累乗するのではなく、<strong>表のまま読んで使います。</strong> <a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-16.html#prim-matrix">AHL 3.16</a> の Prim’s algorithm は、この表の上でそのまま実行できます。</p>
+</section>
 </section>
 <section id="transition" class="level3">
-<h3 class="anchored" data-anchor-id="transition">7. transition matrix は、向きが逆です</h3>
-<p><strong>transition matrix</strong>（推移行列）は、「いまここにいる人が、次にどこへ行くか」の確率を並べた行列です。有向グラフから作れます。</p>
+<h3 class="anchored" data-anchor-id="transition">11. transition matrix</h3>
+<p><strong>transition matrix</strong>（推移行列）は、「いまここにいる人が、次にどこへ行くか」の確率を並べた行列です。directed graph から作れます。</p>
 <div id="fig-ahl315-transition" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ahl315-transition-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="img/ahl-3-15-transition.svg" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ahl315-transition-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;6: From a directed graph to a transition matrix
+図&nbsp;7: From a directed graph to a transition matrix
 </figcaption>
 </figure>
 </div>
-<p>作り方は <span class="math inline">\(2\)</span> 段階です。</p>
-<ol type="1">
-<li>vertex <span class="math inline">\(j\)</span> の <strong>out degree</strong> を数える</li>
-<li><span class="math inline">\(j\)</span> から出る矢印それぞれに、<span class="math inline">\(\dfrac{1}{\text{out degree}}\)</span> を割りふる</li>
-</ol>
-<p><a href="#fig-ahl315-transition" class="quarto-xref">図&nbsp;6</a> の <span class="math inline">\(A\)</span> は out degree <span class="math inline">\(2\)</span> なので、<span class="math inline">\(B\)</span> へ <span class="math inline">\(\frac{1}{2}\)</span>、<span class="math inline">\(C\)</span> へ <span class="math inline">\(\frac{1}{2}\)</span> です。</p>
+<section id="assume" class="level4">
+<h4 class="anchored" data-anchor-id="assume">まず、仮定を書きます</h4>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">重要</span>adjacency matrix と、行と列が入れかわります
+<span class="screen-reader-only">重要</span>「出ていく矢印を、等しい確率で選ぶ」は仮定です
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<p>graph には確率が書かれていません。ですから、<strong>確率をどう割りふるかは、こちらが決める</strong>ことになります。</p>
+<p>この項目でずっと使うのは、次の仮定です。</p>
+<blockquote class="blockquote">
+<p><strong>いまいる vertex から出ている edge のうち、<span class="math inline">\(1\)</span> 本を等しい確率で選ぶ。</strong> directed graph なら、出ている矢印から選びます。</p>
+</blockquote>
+<p>出ている矢印が <span class="math inline">\(3\)</span> 本なら、それぞれ <span class="math inline">\(\frac{1}{3}\)</span> です。問題文には、<code>chooses each available path at random</code>（進める道を無作為に選ぶ）や <code>is equally likely to follow any link</code> のような一文が添えられているのがふつうです。</p>
+<p><strong>その一文を探してください。</strong> 確率が別のしかたで与えられていることもあります（「<span class="math inline">\(A\)</span> からは <span class="math inline">\(70\%\)</span> が <span class="math inline">\(B\)</span> へ」など）。そのときは、指示された確率をそのまま入れます。</p>
+</div>
+</div>
+<p>この仮定のもとでの作り方は <span class="math inline">\(2\)</span> 段階です。</p>
+<ol type="1">
+<li>vertex <span class="math inline">\(j\)</span> の <strong>out degree</strong> を数える</li>
+<li><span class="math inline">\(j\)</span> から出る矢印それぞれに、<span class="math inline">\(\dfrac{1}{\text{out degree}}\)</span> を割りふる</li>
+</ol>
+<p><a href="#fig-ahl315-transition" class="quarto-xref">図&nbsp;7</a> の <span class="math inline">\(A\)</span> は out degree <span class="math inline">\(2\)</span> なので、<span class="math inline">\(B\)</span> へ <span class="math inline">\(\frac{1}{2}\)</span>、<span class="math inline">\(C\)</span> へ <span class="math inline">\(\frac{1}{2}\)</span> です。</p>
+</section>
+<section id="undirected" class="level4">
+<h4 class="anchored" data-anchor-id="undirected">undirected graph のときは、degree で割ります</h4>
+<p>シラバスの文は <code>undirected or directed graph</code> です。<strong>undirected graph からも transition matrix は作れます。</strong></p>
+<p>undirected graph には向きがないので、<strong>どの edge も両方向に通れます。</strong> ですから、vertex <span class="math inline">\(j\)</span> から出る先は <span class="math inline">\(\deg(j)\)</span> 通りあり、それぞれの確率は <span class="math inline">\(\dfrac{1}{\deg(j)}\)</span> です。<strong>「out degree」を「degree」に読みかえるだけ</strong>で、あとは同じです。</p>
+<p><strong>検算。</strong> 列の和は、やはり <span class="math inline">\(1\)</span> になります。</p>
+</section>
+<section id="direction" class="level4">
+<h4 class="anchored" data-anchor-id="direction">行と列が、adjacency matrix と入れかわります</h4>
 <p>シラバスは、transition matrix について次のように書いています。</p>
 <blockquote class="blockquote">
-<p><span class="math inline">\(T_{ij}\)</span> representing the probability of moving from state <span class="math inline">\(j\)</span> to state <span class="math inline">\(i\)</span></p>
+<p><span class="math inline">\(s_n = T^{n}s_0\)</span>, where <span class="math inline">\(T\)</span> is the transition matrix, with <span class="math inline">\(T_{ij}\)</span> representing the probability of moving from state <span class="math inline">\(j\)</span> to state <span class="math inline">\(i\)</span></p>
 </blockquote>
-<p>つまり <strong>列が「どこから」、行が「どこへ」</strong>です。<a href="#adjacency">第1節</a>の adjacency matrix と<strong>ちょうど逆</strong>になっています。</p>
+<p>つまり <strong>transition matrix では、列が「どこから」、行が「どこへ」</strong>です。<a href="#adjacency">第3節</a>の adjacency matrix と<strong>ちょうど逆</strong>になっています。</p>
 <div id="tbl-ahl315-direction" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ahl315-direction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-表&nbsp;1: <span class="math inline">\(2\)</span> つの行列の向き
+表&nbsp;3: <span class="math inline">\(2\)</span> つの行列の向き
 </figcaption>
 <div aria-describedby="tbl-ahl315-direction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -627,53 +925,183 @@ A + A^{2} + A^{3}
 </div>
 </figure>
 </div>
-<p><strong>この <span class="math inline">\(1\)</span> 点が、この項目でいちばん失点するところ</strong>です。transition matrix を作ったら、必ず次の検算をしてください。</p>
+<p><strong>ここは、この項目でいちばん取りちがえやすいところです。</strong> 矢印 <span class="math inline">\(1\)</span> 本を追いかけて、行列のどこに入るかを見てください。</p>
+<div id="fig-ahl315-tdirection" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ahl315-tdirection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/ahl-3-15-tdirection.svg" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ahl315-tdirection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;8: Where one arrow lands in the transition matrix
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-ahl315-tdirection" class="quarto-xref">図&nbsp;8</a> の左で、<span class="math inline">\(C\)</span> から <span class="math inline">\(B\)</span> へ矢印が <span class="math inline">\(1\)</span> 本出ています。<span class="math inline">\(C\)</span> の out degree は <span class="math inline">\(2\)</span>（<span class="math inline">\(A\)</span> へと <span class="math inline">\(B\)</span> へ）なので、この矢印の確率は <span class="math inline">\(\dfrac{1}{2}\)</span> です。</p>
+<p>この <span class="math inline">\(\dfrac{1}{2}\)</span> が入るのは、<strong>行 <span class="math inline">\(B\)</span>、列 <span class="math inline">\(C\)</span></strong> です。</p>
+<ul>
+<li><strong>列</strong>を見る … 「<strong><span class="math inline">\(C\)</span> から</strong>」出発する話なので、列は <span class="math inline">\(C\)</span></li>
+<li><strong>行</strong>を見る … 「<strong><span class="math inline">\(B\)</span> へ</strong>」着く話なので、行は <span class="math inline">\(B\)</span></li>
+</ul>
+<p>adjacency matrix なら、<span class="math inline">\(C \to B\)</span> は<strong>行 <span class="math inline">\(C\)</span>、列 <span class="math inline">\(B\)</span></strong> に入りました。<strong>同じ矢印が、<span class="math inline">\(2\)</span> つの行列では反対の場所に入る</strong>わけです。</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>迷ったら、列を <span class="math inline">\(1\)</span> 本ずつ作ってください
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<p>transition matrix は、<strong>列ごとに作る</strong>と間違えません。</p>
+<p>「<span class="math inline">\(C\)</span> の列を作る」と決めたら、<span class="math inline">\(C\)</span> から出ている矢印だけを見ます。<span class="math inline">\(C\)</span> からは <span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> へ出ているので、その <span class="math inline">\(2\)</span> か所に <span class="math inline">\(\dfrac{1}{2}\)</span> を書き、残りは <span class="math inline">\(0\)</span>。<strong>書き終えたら、その列を縦に足して <span class="math inline">\(1\)</span> になるか</strong>を見ます（<a href="#columnsum">第11節</a>）。</p>
+<p>行ごとに作ろうとすると、<span class="math inline">\(1\)</span> になる保証がないので検算ができません。<strong>必ず列から。</strong></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>なぜ逆なのか — <span class="math inline">\(s_{n+1} = Ts_n\)</span> を書いてみると分かります
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>理由は、<strong>transition matrix が「掛け算される側」だから</strong>です。</p>
+<p>いまどこにいるかの確率を、<strong>縦に並べた</strong> state matrix <span class="math inline">\(s_n\)</span> で表します。<span class="math inline">\(1\)</span> 歩進んだあとは</p>
+<p><span id="eq-ahl315-step"><span class="math display">\[
+s_{n+1} = T s_n
+\tag{5}\]</span></span></p>
+<p>です。行列とベクトルのかけ算の決まり（<a href="../../ai-hl/01-number-and-algebra/ahl-1-14.html#howto">AHL 1.14</a>）から、この式の <span class="math inline">\(i\)</span> 番目の成分は</p>
+<p><span class="math display">\[
+(s_{n+1})_i = T_{i1}(s_n)_1 + T_{i2}(s_n)_2 + \cdots + T_{in}(s_n)_n
+\]</span></p>
+<p>になります。左辺は「次に <span class="math inline">\(i\)</span> にいる確率」です。右辺の <span class="math inline">\(T_{ij}(s_n)_j\)</span> は「いま <span class="math inline">\(j\)</span> にいて、次に <span class="math inline">\(i\)</span> へ移る」分です。</p>
+<p>ですから、<strong><span class="math inline">\(T_{ij}\)</span> は「<span class="math inline">\(j\)</span> から <span class="math inline">\(i\)</span> へ」でなければ、この式が成り立ちません。</strong> 縦ベクトルを左から掛けるという書き方が、向きを決めているのです。</p>
+<p>adjacency matrix には、この掛けられ方の約束がありません。ただの表として「行から、列へ」と読むだけです。<strong>約束が違うから、向きも違う</strong>——それだけのことです。</p>
+</div>
+</div>
+</section>
 <section id="columnsum" class="level4">
 <h4 class="anchored" data-anchor-id="columnsum">列の和は、必ず <span class="math inline">\(1\)</span> です</h4>
 <p><span class="math inline">\(1\)</span> つの vertex から出ていく確率を全部足せば <span class="math inline">\(1\)</span> になります。<strong>どこかへは必ず行く</strong>からです。</p>
-<p><a href="#fig-ahl315-transition" class="quarto-xref">図&nbsp;6</a> の各列は <span class="math inline">\(0 + \frac{1}{2} + \frac{1}{2} = 1\)</span>、<span class="math inline">\(1 + 0 + 0 = 1\)</span>、<span class="math inline">\(\frac{1}{2} + \frac{1}{2} + 0 = 1\)</span> ✓</p>
+<p><a href="#fig-ahl315-transition" class="quarto-xref">図&nbsp;7</a> の各列は <span class="math inline">\(0 + \frac{1}{2} + \frac{1}{2} = 1\)</span>、<span class="math inline">\(1 + 0 + 0 = 1\)</span>、<span class="math inline">\(\frac{1}{2} + \frac{1}{2} + 0 = 1\)</span> ✓</p>
 <p><strong>検算に使えるのは、列の和だけです。</strong> 行の和は <span class="math inline">\(1\)</span> になることもあれば、ならないこともあります。そこを見ても、正しく作れたかは分かりません。</p>
+</section>
+<section id="absorbing" class="level4">
+<h4 class="anchored" data-anchor-id="absorbing">出る矢印がない vertex — absorbing state</h4>
+<p>出る矢印が <span class="math inline">\(1\)</span> 本もない vertex があると、<a href="#assume">第11節の仮定</a>の「出ている矢印から <span class="math inline">\(1\)</span> 本選ぶ」が使えません。選ぶものがないからです。</p>
+<p>ただし、<strong>行き詰まりというわけではありません。</strong> モデルを作る側が、その vertex での動き方を決めればよいのです。よく使われるのは次の決め方です。</p>
+<blockquote class="blockquote">
+<p><strong>その vertex に入ったら、そのまま留まる。</strong></p>
+</blockquote>
+<p>こう決めると、その列は「自分の行だけ <span class="math inline">\(1\)</span>、あとは <span class="math inline">\(0\)</span>」になり、列の和も <span class="math inline">\(1\)</span> になります。このような state を <strong>absorbing state</strong>（吸収状態）といいます。シラバスでは、この語は AHL 4.19 の <strong>Connections（Other contexts）</strong> の欄に出てきます。試験に出る内容そのものではありませんが、名前を知っておくと、問題文の「入ったら留まる」という条件が読みやすくなります。</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ノート</span>出る矢印がない vertex があると、作れません
+<span class="screen-reader-only">ノート</span>シラバスが strongly connected と書いているわけ
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>出る矢印が <span class="math inline">\(1\)</span> 本もない vertex があると、その列に割りふる確率がありません。<strong>入ったら出られない場所</strong>があると、その列が作れないのです。</p>
-<p>シラバスは、扱う対象を <code>Construction of the transition matrix for a strongly-connected, undirected or directed graph</code> と書いています。<strong>strongly connected</strong>（<a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#connected">AHL 3.14</a>）なら、どの vertex からも必ずどこかへ出られるので、この心配がありません。</p>
+<p>この項目についてのシラバスの文は、次のようになっています。</p>
+<blockquote class="blockquote">
+<p>Construction of the transition matrix for a strongly-connected, undirected or directed graph</p>
+</blockquote>
+<p><strong>strongly connected</strong>（<a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#strong">AHL 3.14</a>）なら、どの vertex からも必ずどこかへ出られます。ですから、<a href="#assume">第11節の仮定</a>だけで、余分な決め事をせずに全部の列が埋まります。</p>
+<p><strong>この項目で作らされるのは、その形の graph</strong>だと思ってください。absorbing state を扱うときは、その vertex での動き方が問題文で与えられているかどうかを、先に確かめてください。</p>
 </div>
 </div>
-<p>この続き——<span class="math inline">\(T\)</span> を何乗すると何が分かるか、長い目で見るとどこに落ち着くか——は <strong>AHL 4.19</strong> の <strong>Markov chains</strong>（マルコフ連鎖）で扱います。公式集の <span class="math inline">\(s_n = T^{n}s_0\)</span> も、そちらの欄にあります。</p>
 </section>
 </section>
 <section id="pagerank" class="level3">
-<h3 class="anchored" data-anchor-id="pagerank">8. PageRank は、この形の応用です</h3>
-<p>シラバスは、この項目の応用として <strong>Google の PageRank algorithm</strong> を挙げています。</p>
-<p>考え方はこうです。<strong>ウェブページを vertex、リンクを有向の edge</strong> とします。「でたらめにリンクをたどり続ける人」が、長い目で見てどのページにいる割合が高いか——それがそのページの重要度だ、という発想です。</p>
-<p>つまり、<strong>リンクの構造から transition matrix を作って、その落ち着き先を調べる</strong>わけです。</p>
-<p>「たくさんリンクされているページは重要」というだけではありません。<strong>重要なページからリンクされているほど、重みが大きくなります。</strong> リンク元の out degree で割るのは、そのためです。</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
+<h3 class="anchored" data-anchor-id="pagerank">12. 長い目で見ると — Markov chain と PageRank</h3>
+<p><span class="math inline">\(T\)</span> を作ったら、次は「何歩か進んだあと、どこにいる確率が高いか」を知りたくなります。<a href="#eq-ahl315-step" class="quarto-xref">式&nbsp;5</a> をくり返せば</p>
+<p><span id="eq-ahl315-markov"><span class="math display">\[
+s_n = T^{n} s_0
+\tag{6}\]</span></span></p>
+<p>です。この式と、<span class="math inline">\(n\)</span> を大きくしたときの様子を調べるのが、<strong>AHL 4.19</strong> の <strong>Markov chains</strong>（マルコフ連鎖）です。公式集の <span class="math inline">\(s_n = T^{n}s_0\)</span> も、そちらの欄にあります。</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-body-container">
-<p>試験で PageRank の計算そのものを求められることはありません。<strong>「有向グラフ → transition matrix → 長い目で見た割合」という筋道</strong>が説明できれば十分です。</p>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>「必ず <span class="math inline">\(1\)</span> つの分布に落ち着く」とはかぎりません
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<p>strongly connected であっても、<strong><span class="math inline">\(s_n\)</span> が <span class="math inline">\(1\)</span> つの分布に近づくとはかぎりません。</strong></p>
+<p>たとえば、<span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> の <span class="math inline">\(2\)</span> 状態だけで、<span class="math inline">\(A \to B\)</span> と <span class="math inline">\(B \to A\)</span> しかないモデルを考えます。これは strongly connected です。<span class="math inline">\(A\)</span> から出発すると、<span class="math inline">\(s_n\)</span> は <span class="math inline">\(\begin{pmatrix} 1 \\ 0 \end{pmatrix}\)</span> と <span class="math inline">\(\begin{pmatrix} 0 \\ 1 \end{pmatrix}\)</span> を行ったり来たりするだけで、<strong><span class="math inline">\(1\)</span> つの分布に近づきません。</strong></p>
+<p>落ち着くかどうかは、strongly connected だけでは決まりません。シラバスは AHL 4.19 で、落ち着く場合の求め方を、<strong>eigenvalue</strong>（固有値）が <span class="math inline">\(1\)</span> の <strong>eigenvector</strong>（固有ベクトル）として扱います（<a href="../../ai-hl/01-number-and-algebra/ahl-1-15.html">AHL 1.15</a>）。</p>
+<blockquote class="blockquote">
+<p>Awareness that the solution is the eigenvector corresponding to the eigenvalue equal to <span class="math inline">\(1\)</span> and whose entries have been scaled to sum to <span class="math inline">\(1\)</span></p>
+</blockquote>
+<p>この項目では、<strong><span class="math inline">\(T\)</span> を正しく作れることと、<span class="math inline">\(T^{n}s_0\)</span> の意味が言えること</strong>までで十分です。</p>
 </div>
+</div>
+<section id="pr" class="level4">
+<h4 class="anchored" data-anchor-id="pr">PageRank</h4>
+<p>シラバスは、この項目の応用として <strong>Google の PageRank algorithm</strong> を挙げています。</p>
+<blockquote class="blockquote">
+<p>Consideration of simple graphs, including the Google PageRank algorithm as an example of this</p>
+</blockquote>
+<p>基本的な発想はこうです。<strong>ウェブページを vertex、リンクを directed edge</strong> とします。「でたらめにリンクをたどり続ける人」が、長い目で見てどのページにいる割合が高いか——それをそのページの重要度とみなす、という考え方です。</p>
+<p>つまり、<strong>リンクの構造から transition matrix を作って、その落ち着き先を調べる</strong>わけです。</p>
+<p>小さな例で見ます。ページが <span class="math inline">\(A\)</span>、<span class="math inline">\(B\)</span>、<span class="math inline">\(C\)</span> の <span class="math inline">\(3\)</span> つだけの世界です。</p>
+<div id="fig-ahl315-pagerank" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ahl315-pagerank-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/ahl-3-15-pagerank.svg" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ahl315-pagerank-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;9: How importance flows along links
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-ahl315-pagerank" class="quarto-xref">図&nbsp;9</a> の左が、リンクのつながりです。<span class="math inline">\(A\)</span> は <span class="math inline">\(B\)</span> と <span class="math inline">\(C\)</span> の <span class="math inline">\(2\)</span> か所へリンクしているので out degree は <span class="math inline">\(2\)</span>、<span class="math inline">\(B\)</span> は <span class="math inline">\(C\)</span> へ、<span class="math inline">\(C\)</span> は <span class="math inline">\(A\)</span> へ、それぞれ <span class="math inline">\(1\)</span> か所だけです。</p>
+<p>この <span class="math inline">\(3\)</span> ページの transition matrix は</p>
+<p><span id="eq-ahl315-pr"><span class="math display">\[
+T =
+\begin{pmatrix}
+0 &amp; 0 &amp; 1 \\
+\tfrac{1}{2} &amp; 0 &amp; 0 \\
+\tfrac{1}{2} &amp; 1 &amp; 0
+\end{pmatrix}
+\tag{7}\]</span></span></p>
+<p>で、落ち着き先は <span class="math inline">\(s = (0.4,\ 0.2,\ 0.4)\)</span> になります。<span class="math inline">\(Ts = s\)</span> を確かめてみてください。</p>
+<p><strong>ここから、<span class="math inline">\(2\)</span> つのことが読み取れます。</strong></p>
+<p><span class="math inline">\(1\)</span> つ目。<strong>重要度は、リンクをさかのぼって流れこみます。</strong> 落ち着き先は <span class="math inline">\(s = Ts\)</span> をみたすので、あるページの値は「そこへ入ってくるぶんの合計」です。<a href="#fig-ahl315-pagerank" class="quarto-xref">図&nbsp;9</a> の右で、<span class="math inline">\(C\)</span> には <span class="math inline">\(A\)</span> から <span class="math inline">\(0.2\)</span>、<span class="math inline">\(B\)</span> から <span class="math inline">\(0.2\)</span> が入って合計 <span class="math inline">\(0.4\)</span>。<span class="math inline">\(A\)</span> には <span class="math inline">\(C\)</span> から <span class="math inline">\(0.4\)</span> が入って <span class="math inline">\(0.4\)</span> です。ですから、<strong>リンクの本数だけでなく、リンク元がどれだけ重要か</strong>が効きます。</p>
+<p><span class="math inline">\(2\)</span> つ目。<strong>out degree で割るのは、これとは別の理由です。</strong> <span class="math inline">\(1\)</span> つのページは、自分の重要度を、出しているリンクに<strong>等分して</strong>渡します。<span class="math inline">\(A\)</span> は <span class="math inline">\(0.4\)</span> を <span class="math inline">\(2\)</span> 本に分けるので、<span class="math inline">\(1\)</span> 本あたり <span class="math inline">\(0.2\)</span>。<span class="math inline">\(C\)</span> は <span class="math inline">\(0.4\)</span> を <span class="math inline">\(1\)</span> 本にそのまま渡すので <span class="math inline">\(0.4\)</span> です。<strong>リンクをたくさん出しているページからの <span class="math inline">\(1\)</span> 本は、それだけ軽くなります。</strong></p>
+<p>この <span class="math inline">\(2\)</span> つが重なって、<strong><span class="math inline">\(C\)</span> はリンクを <span class="math inline">\(2\)</span> 本受けているのに、<span class="math inline">\(1\)</span> 本しか受けていない <span class="math inline">\(A\)</span> と同じ <span class="math inline">\(0.4\)</span></strong> になりました。「リンクの数を数えるだけ」では出てこない結果です。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>実際の PageRank には、もう <span class="math inline">\(1\)</span> 段の工夫があります
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>リンクだけをたどり続けると、<a href="#absorbing">absorbing state</a> のような「入ったら出られない」ページで止まってしまいます。実際のアルゴリズムでは、これを <strong>damping factor</strong>（減衰係数）と <strong>random jump</strong>（ランダムジャンプ）で避けます。</p>
+<blockquote class="blockquote">
+<p>一定の確率でリンクをたどり、残りの確率では、<strong>どこか別のページへ直接飛ぶ。</strong></p>
+</blockquote>
+<p>こうすると、どのページからもどのページへも行けるようになり、落ち着き先がちゃんと定まります。</p>
+<p><strong>この工夫は、PageRank を実際に動かすためのものです。</strong> ここでは「リンクをたどるだけでは足りない」という点だけ押さえておけば十分です。<a href="#pagerank">第12節</a>の注意と、そのままつながっています。</p>
+</div>
+</div>
+</section>
 </section>
 </section>
 <section id="why-it-works" class="level2">
 <h2 class="anchored" data-anchor-id="why-it-works">Why it works</h2>
 <div class="callout callout-style-simple callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -682,21 +1110,36 @@ A + A^{2} + A^{3}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>ここで説明するのは、<strong>なぜ <span class="math inline">\(A^{2}\)</span> の成分が「<span class="math inline">\(2\)</span> 歩の道の数」になるのか</strong>、その <span class="math inline">\(1\)</span> 点だけです。</p>
-<p>行列のかけ算の定義を思い出してください（<a href="../../ai-hl/01-number-and-algebra/ahl-1-14.html#howto">AHL 1.14</a>）。<span class="math inline">\(A^{2}\)</span> の <span class="math inline">\((i,\ j)\)</span> 成分は</p>
+<p><a href="#square">第7節</a>では、<span class="math inline">\(A^{2}\)</span> の <span class="math inline">\(1\)</span> つの成分を具体的に見ました。ここでは、それが<strong>どの成分でも、<span class="math inline">\(A^{k}\)</span> のどの <span class="math inline">\(k\)</span> でも</strong>成り立つことを書き下します。</p>
+<p>行列のかけ算の定義（<a href="../../ai-hl/01-number-and-algebra/ahl-1-14.html#howto">AHL 1.14</a>）から、<span class="math inline">\(A^{2}\)</span> の <span class="math inline">\((i,\ j)\)</span> 成分は</p>
 <p><span id="eq-ahl315-why"><span class="math display">\[
 \bigl(A^{2}\bigr)_{ij} = A_{i1}A_{1j} + A_{i2}A_{2j} + \cdots + A_{in}A_{nj}
-\tag{4}\]</span></span></p>
-<p>でした。<span class="math inline">\(1\)</span> つの項 <span class="math inline">\(A_{ik}A_{kj}\)</span> を見てください。</p>
+\tag{8}\]</span></span></p>
+<p>です。<span class="math inline">\(1\)</span> つの項 <span class="math inline">\(A_{ik}A_{kj}\)</span> を見てください。</p>
 <ul>
-<li><span class="math inline">\(A_{ik}\)</span> は「<span class="math inline">\(i\)</span> から <span class="math inline">\(k\)</span> へ行けるか」（行ければ <span class="math inline">\(1\)</span>）</li>
-<li><span class="math inline">\(A_{kj}\)</span> は「<span class="math inline">\(k\)</span> から <span class="math inline">\(j\)</span> へ行けるか」（行ければ <span class="math inline">\(1\)</span>）</li>
+<li><span class="math inline">\(A_{ik}\)</span> は「<span class="math inline">\(i\)</span> から <span class="math inline">\(k\)</span> への edge の本数」</li>
+<li><span class="math inline">\(A_{kj}\)</span> は「<span class="math inline">\(k\)</span> から <span class="math inline">\(j\)</span> への edge の本数」</li>
 </ul>
-<p><strong>掛けて <span class="math inline">\(1\)</span> になるのは、両方 <span class="math inline">\(1\)</span> のとき</strong>、つまり <strong><span class="math inline">\(i \to k \to j\)</span> と通り抜けられるとき</strong>だけです。片方でも <span class="math inline">\(0\)</span> なら、積は <span class="math inline">\(0\)</span> です。</p>
-<p><a href="#eq-ahl315-why" class="quarto-xref">式&nbsp;4</a> は、その積を<strong>途中の点 <span class="math inline">\(k\)</span> について全部足したもの</strong>です。ですから、<span class="math inline">\(i\)</span> から <span class="math inline">\(j\)</span> への <span class="math inline">\(2\)</span> 歩の道が何本あるかを数えていることになります。</p>
-<p><span class="math inline">\(A^{3}\)</span> も同じです。<span class="math inline">\(A^{2}\)</span> に <span class="math inline">\(A\)</span> を掛けるので、「<span class="math inline">\(2\)</span> 歩の道」に「もう <span class="math inline">\(1\)</span> 歩」を足しているだけです。<span class="math inline">\(A^{k}\)</span> まで、まったく同じ理由で成り立ちます。</p>
+<p><span class="math inline">\(i \to k \to j\)</span> という <span class="math inline">\(2\)</span> 歩の道の数は、<strong>この <span class="math inline">\(2\)</span> つの積</strong>です。<span class="math inline">\(i \to k\)</span> の選び方が <span class="math inline">\(A_{ik}\)</span> 通り、そのそれぞれについて <span class="math inline">\(k \to j\)</span> の選び方が <span class="math inline">\(A_{kj}\)</span> 通りだからです。片方でも <span class="math inline">\(0\)</span> なら、積は <span class="math inline">\(0\)</span> になります。</p>
+<p><a href="#eq-ahl315-why" class="quarto-xref">式&nbsp;8</a> は、その積を<strong>途中の点 <span class="math inline">\(k\)</span> について全部足したもの</strong>です。<span class="math inline">\(2\)</span> 歩の道は、途中の点がどれか <span class="math inline">\(1\)</span> つに決まっているので、<strong>重複も数え落としもなく</strong>数えられます。</p>
+<p><span class="math inline">\(A^{3}\)</span> も同じです。<span class="math inline">\(A^{3} = A^{2} \cdot A\)</span> なので</p>
+<p><span class="math display">\[
+\bigl(A^{3}\bigr)_{ij} = \sum_{k} \bigl(A^{2}\bigr)_{ik} A_{kj}
+\]</span></p>
+<p>となり、「<span class="math inline">\(i\)</span> から <span class="math inline">\(k\)</span> への <span class="math inline">\(2\)</span> 歩の道」と「<span class="math inline">\(k\)</span> から <span class="math inline">\(j\)</span> への <span class="math inline">\(1\)</span> 歩」を組み合わせて足しています。これは「<span class="math inline">\(i\)</span> から <span class="math inline">\(j\)</span> への <span class="math inline">\(3\)</span> 歩の道を、<strong>最後から <span class="math inline">\(1\)</span> つ手前の点で分類して</strong>数える」ということです。</p>
+<p>同じ議論を <span class="math inline">\(1\)</span> 段ずつ積み上げれば、<span class="math inline">\(A^{k}\)</span> まで成り立ちます。</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>この議論のどこにも「同じ点を通ってはいけない」という制限が入っていないことに注意してください。だから <span class="math inline">\(A^{k}\)</span> が数えるのは <strong>walk</strong> であって、path ではありません（<a href="#walk">第6節</a>）。</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -729,7 +1172,7 @@ A + A^{2} + A^{3}
 <p><strong>(c)</strong> <span class="math inline">\(P\)</span> から <span class="math inline">\(R\)</span> への長さ <span class="math inline">\(3\)</span> 以下の walk の数を求めなさい。</p>
 </details>
 <hr>
-<p><strong>(a)</strong> <span class="math inline">\(1\)</span> 行ずつ、その vertex の隣を拾います。</p>
+<p><strong>(a)</strong> <code>using the order P, Q, R, S</code> と指定されているので、<strong>その順に並べます</strong>（<a href="#order">第2節</a>）。<span class="math inline">\(1\)</span> 行ずつ、その vertex の隣を拾います。</p>
 <ul>
 <li><span class="math inline">\(P\)</span> は <span class="math inline">\(Q\)</span> と <span class="math inline">\(S\)</span> に結ばれています</li>
 <li><span class="math inline">\(Q\)</span> は <span class="math inline">\(P\)</span>、<span class="math inline">\(R\)</span>、<span class="math inline">\(S\)</span></li>
@@ -744,7 +1187,7 @@ A = \begin{pmatrix}
 1 &amp; 1 &amp; 1 &amp; 0
 \end{pmatrix}
 \]</span></p>
-<p><strong>検算。</strong> 対称になっています ✓（<a href="#symmetric">第2節</a>）行の和は <span class="math inline">\(2,\ 3,\ 2,\ 3\)</span> で、図の degree と一致します ✓</p>
+<p><strong>検算。</strong> 対称になっています ✓（<a href="#symmetric">第4節</a>）行の和は <span class="math inline">\(2,\ 3,\ 2,\ 3\)</span> で、図の degree と一致します ✓（<a href="#rowsum">第3節</a>）</p>
 <p><strong>(b)</strong> 電卓に入れて <span class="math inline">\(2\)</span> 乗します（<a href="#gdc-power">GDC 第2節</a>）。</p>
 <p><span class="math display">\[
 A^{2} = \begin{pmatrix}
@@ -756,7 +1199,7 @@ A^{2} = \begin{pmatrix}
 \]</span></p>
 <p><span class="math inline">\(P\)</span> の行、<span class="math inline">\(R\)</span> の列を見ます。<strong><span class="math inline">\(2\)</span></strong> です。</p>
 <p><strong>検算。</strong> <span class="math inline">\(P \to Q \to R\)</span> と <span class="math inline">\(P \to S \to R\)</span> の <span class="math inline">\(2\)</span> 本です ✓</p>
-<p><strong>(c)</strong> <code>or less</code> があるので、長さ <span class="math inline">\(1\)</span>、<span class="math inline">\(2\)</span>、<span class="math inline">\(3\)</span> を全部足します（<a href="#eq-ahl315-atmost" class="quarto-xref">式&nbsp;3</a>）。</p>
+<p><strong>(c)</strong> <code>or less</code> があるので、長さ <span class="math inline">\(1\)</span>、<span class="math inline">\(2\)</span>、<span class="math inline">\(3\)</span> を全部足します（<a href="#tbl-ahl315-atmost" class="quarto-xref">表&nbsp;2</a>）。</p>
 <p><span class="math display">\[
 A^{3} = \begin{pmatrix}
 2 &amp; 5 &amp; 2 &amp; 5 \\
@@ -769,6 +1212,7 @@ A^{3} = \begin{pmatrix}
 <p><span class="math display">\[
 0 + 2 + 2 = 4
 \]</span></p>
+<p>長さ <span class="math inline">\(0\)</span> は数えません（<a href="#atmost">第9節</a>）。問題文にその指示がないからです。</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -802,8 +1246,147 @@ A^{2} = \begin{pmatrix}
 </div>
 </div>
 </div>
+<div id="exm-ahl315-draw" class="theorem example">
+<p><span class="theorem-title"><strong>例題 2</strong></span> <span class="q-en">The matrix below is the adjacency matrix of a graph, using the order <span class="math inline">\(R\)</span>, <span class="math inline">\(S\)</span>, <span class="math inline">\(T\)</span>, <span class="math inline">\(U\)</span>.</span></p>
+<p><span class="math display">\[
+A = \begin{pmatrix}
+0 &amp; 1 &amp; 1 &amp; 1 \\
+1 &amp; 0 &amp; 0 &amp; 0 \\
+1 &amp; 0 &amp; 0 &amp; 1 \\
+1 &amp; 0 &amp; 1 &amp; 0
+\end{pmatrix}
+\]</span></p>
+<p><strong>(a)</strong> <span class="q-en">Draw the graph.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Write down the degree of each vertex, and the number of edges.</span></p>
+<p><strong>(c)</strong> <span class="q-en">Find the number of walks of length <span class="math inline">\(2\)</span> from <span class="math inline">\(S\)</span> to <span class="math inline">\(T\)</span>, and list them.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>下の行列は、<span class="math inline">\(R\)</span>、<span class="math inline">\(S\)</span>、<span class="math inline">\(T\)</span>、<span class="math inline">\(U\)</span> の順で書かれた、あるグラフの隣接行列です。</p>
+<p><strong>(a)</strong> そのグラフをかきなさい。</p>
+<p><strong>(b)</strong> 各頂点の次数と、辺の数を書きなさい。</p>
+<p><strong>(c)</strong> <span class="math inline">\(S\)</span> から <span class="math inline">\(T\)</span> への長さ <span class="math inline">\(2\)</span> の walk の数を求め、それらを書き出しなさい。</p>
+</details>
+<hr>
+<p><strong>(a)</strong> <a href="#draw">第5節</a>のとおり、<span class="math inline">\(1\)</span> 行ずつ読みます。対称なので、<strong>対角線より上だけ</strong>を見れば足ります。</p>
+<div id="tbl-ahl315-read" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ahl315-read-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;4: 行を <span class="math inline">\(1\)</span> つずつ読む
+</figcaption>
+<div aria-describedby="tbl-ahl315-read-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>行</th>
+<th><span class="math inline">\(1\)</span> が立っている列</th>
+<th>描く edge</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(R\)</span></td>
+<td><span class="math inline">\(S\)</span>、<span class="math inline">\(T\)</span>、<span class="math inline">\(U\)</span></td>
+<td><span class="math inline">\(RS\)</span>、<span class="math inline">\(RT\)</span>、<span class="math inline">\(RU\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(S\)</span></td>
+<td>（<span class="math inline">\(R\)</span> だけ。もう描いた）</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(T\)</span></td>
+<td><span class="math inline">\(U\)</span>（<span class="math inline">\(R\)</span> はもう描いた）</td>
+<td><span class="math inline">\(TU\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(U\)</span></td>
+<td>（もう全部描いた）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>edge は <span class="math inline">\(RS\)</span>、<span class="math inline">\(RT\)</span>、<span class="math inline">\(RU\)</span>、<span class="math inline">\(TU\)</span> の <span class="math inline">\(4\)</span> 本です。<span class="math inline">\(R\)</span> を真ん中に置き、<span class="math inline">\(S\)</span> を外に、<span class="math inline">\(T\)</span> と <span class="math inline">\(U\)</span> を <span class="math inline">\(R\)</span> とつないだうえで <span class="math inline">\(T\)</span> と <span class="math inline">\(U\)</span> どうしも結ぶと、<strong>三角形 <span class="math inline">\(RTU\)</span> に <span class="math inline">\(S\)</span> が <span class="math inline">\(1\)</span> 本ぶら下がった形</strong>になります。</p>
+<p><strong>(b)</strong> 行の和がそのまま degree です（<a href="#rowsum">第3節</a>）。この graph は undirected で loop がないので、条件がそろっています。</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>vertex</th>
+<th><span class="math inline">\(R\)</span></th>
+<th><span class="math inline">\(S\)</span></th>
+<th><span class="math inline">\(T\)</span></th>
+<th><span class="math inline">\(U\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\deg\)</span></td>
+<td><span class="math inline">\(3\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(2\)</span></td>
+<td><span class="math inline">\(2\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[
+3 + 1 + 2 + 2 = 8 = 2 \times 4
+\]</span></p>
+<p>edge は <strong><span class="math inline">\(4\)</span> 本</strong>です（<a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#handshake">AHL 3.14</a>）。(a) で数えた <span class="math inline">\(4\)</span> 本と合っています ✓</p>
+<p><strong>(c)</strong> <span class="math inline">\(S\)</span> から出ているのは <span class="math inline">\(SR\)</span> の <span class="math inline">\(1\)</span> 本だけなので、途中にはさめるのは <span class="math inline">\(R\)</span> しかありません。<span class="math inline">\(R\)</span> から <span class="math inline">\(T\)</span> へは行けるので、</p>
+<p><span class="math display">\[
+S \to R \to T
+\]</span></p>
+<p>の <strong><span class="math inline">\(1\)</span> 本</strong>です。</p>
+<p><strong>検算。</strong> <span class="math inline">\(A^{2}\)</span> の <span class="math inline">\((S,\ T)\)</span> 成分を見ると</p>
+<p><span class="math display">\[
+A^{2} = \begin{pmatrix}
+3 &amp; 0 &amp; 1 &amp; 1 \\
+0 &amp; 1 &amp; 1 &amp; 1 \\
+1 &amp; 1 &amp; 2 &amp; 1 \\
+1 &amp; 1 &amp; 1 &amp; 2
+\end{pmatrix}
+\]</span></p>
+<p><span class="math inline">\(2\)</span> 行目 <span class="math inline">\(3\)</span> 列目は <span class="math inline">\(1\)</span> ✓</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <em>Edges: <span class="math inline">\(RS\)</span>, <span class="math inline">\(RT\)</span>, <span class="math inline">\(RU\)</span>, <span class="math inline">\(TU\)</span>.</em> （図をかく）</p>
+<p><strong>(b)</strong> <span class="math display">\[
+\deg(R)=3,\quad \deg(S)=1,\quad \deg(T)=2,\quad \deg(U)=2
+\]</span> <span class="math display">\[
+3+1+2+2 = 8 = 2E \quad \Rightarrow \quad E = 4
+\]</span></p>
+<p><strong>(c)</strong> <em>There is <span class="math inline">\(1\)</span> walk: <span class="math inline">\(S \to R \to T\)</span>.</em></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>「かきなさい」でも、edge を書き出してください
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>図だけを提出すると、<span class="math inline">\(1\)</span> 本読み落としていたときに、どこで間違えたかが採点者に伝わりません。</p>
+<p><strong><span class="math inline">\(RS\)</span>、<span class="math inline">\(RT\)</span>、<span class="math inline">\(RU\)</span>、<span class="math inline">\(TU\)</span> と並べて書いてから、図をかいてください。</strong> 自分の検算にもなります。</p>
+</div>
+</div>
+</div>
 <div id="exm-ahl315-interpret" class="theorem example">
-<p><span class="theorem-title"><strong>例題 2</strong></span> <span class="q-en">The matrix <span class="math inline">\(A\)</span> is the adjacency matrix of a simple graph. The diagonal entries of <span class="math inline">\(A^{2}\)</span> are <span class="math inline">\(2\)</span>, <span class="math inline">\(3\)</span>, <span class="math inline">\(2\)</span> and <span class="math inline">\(3\)</span>.</span></p>
+<p><span class="theorem-title"><strong>例題 3</strong></span> <span class="q-en">The matrix <span class="math inline">\(A\)</span> is the adjacency matrix of a simple graph. The diagonal entries of <span class="math inline">\(A^{2}\)</span> are <span class="math inline">\(2\)</span>, <span class="math inline">\(3\)</span>, <span class="math inline">\(2\)</span> and <span class="math inline">\(3\)</span>.</span></p>
 <p><strong>(a)</strong> <span class="q-en">State what the diagonal entries of <span class="math inline">\(A^{2}\)</span> represent.</span></p>
 <p><strong>(b)</strong> <span class="q-en">Hence write down the number of edges of the graph.</span></p>
 <details class="jp-trans">
@@ -816,12 +1399,12 @@ A^{2} = \begin{pmatrix}
 </details>
 <hr>
 <p><strong>(a)</strong> <span class="math inline">\((A^{2})_{ii}\)</span> は「<span class="math inline">\(i\)</span> から出て、<span class="math inline">\(1\)</span> 点はさんで <span class="math inline">\(i\)</span> にもどる walk の数」です。</p>
-<p>隣へ行って引き返すだけなので、これは<strong>隣の数</strong>、つまり degree と同じです（<a href="#diagonal">第4節</a>）。</p>
+<p>隣へ行って引き返すだけなので、これは<strong>隣の数</strong>、つまり degree と同じです。問題文に <code>simple graph</code> とあるので、<a href="#diagonal">第8節の条件</a>がそろっています。</p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>The diagonal entry <span class="math inline">\((A^{2})_{ii}\)</span> is the number of walks of length <span class="math inline">\(2\)</span> from vertex <span class="math inline">\(i\)</span> back to itself, which is the degree of vertex <span class="math inline">\(i\)</span>.</em></p>
+<p><em>The diagonal entry <span class="math inline">\((A^{2})_{ii}\)</span> is the number of walks of length <span class="math inline">\(2\)</span> from vertex <span class="math inline">\(i\)</span> back to itself. In a simple undirected graph these are exactly the walks out to a neighbour and straight back, so the entry equals the degree of vertex <span class="math inline">\(i\)</span>.</em></p>
 </div>
-<p>（<span class="math inline">\(i\)</span> から <span class="math inline">\(i\)</span> への長さ <span class="math inline">\(2\)</span> の walk の数であり、それは <span class="math inline">\(i\)</span> の次数に等しい、という意味です。）</p>
+<p>（<span class="math inline">\(i\)</span> から <span class="math inline">\(i\)</span> への長さ <span class="math inline">\(2\)</span> の walk の数であり、undirected な simple graph では「隣へ行って引き返す」道だけなので <span class="math inline">\(i\)</span> の次数に等しい、という意味です。）</p>
 <p><strong>(b)</strong> degree が <span class="math inline">\(2,\ 3,\ 2,\ 3\)</span> と分かったので、<a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#handshake">AHL 3.14</a> の関係が使えます。</p>
 <p><span class="math display">\[
 2 + 3 + 2 + 3 = 10 = 2 \times (\text{number of edges})
@@ -839,7 +1422,7 @@ A^{2} = \begin{pmatrix}
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>(a)</strong> <em><span class="math inline">\((A^{2})_{ii}\)</span> counts the walks of length <span class="math inline">\(2\)</span> from vertex <span class="math inline">\(i\)</span> back to itself, so it equals the degree of vertex <span class="math inline">\(i\)</span>.</em></p>
+<p><strong>(a)</strong> <em><span class="math inline">\((A^{2})_{ii}\)</span> counts the walks of length <span class="math inline">\(2\)</span> from vertex <span class="math inline">\(i\)</span> back to itself. For a simple undirected graph this equals the degree of vertex <span class="math inline">\(i\)</span>.</em></p>
 <p><strong>(b)</strong> <span class="math display">\[
 \sum \deg = 2+3+2+3 = 10 = 2E \quad \Rightarrow \quad E = 5
 \]</span></p>
@@ -847,11 +1430,11 @@ A^{2} = \begin{pmatrix}
 </div>
 </div>
 <div id="exm-ahl315-transition" class="theorem example">
-<p><span class="theorem-title"><strong>例題 3</strong></span> <span class="q-en">The directed graph below shows the links between three web pages <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span>.</span></p>
+<p><span class="theorem-title"><strong>例題 4</strong></span> <span class="q-en">The directed graph below shows the links between three web pages <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span>.</span></p>
 <p><img src="img/ahl-3-15-we3.svg" class="img-fluid" style="width:46.0%"></p>
 <p><strong>(a)</strong> <span class="q-en">Write down the adjacency matrix, using the order <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span>, <span class="math inline">\(Z\)</span>.</span></p>
 <p><strong>(b)</strong> <span class="q-en">Find the number of walks of length <span class="math inline">\(2\)</span> from <span class="math inline">\(X\)</span> back to <span class="math inline">\(X\)</span>.</span></p>
-<p><strong>(c)</strong> <span class="q-en">A user clicks a link at random. Write down the transition matrix <span class="math inline">\(T\)</span>.</span></p>
+<p><strong>(c)</strong> <span class="q-en">A user clicks one of the available links at random, each link being equally likely. Write down the transition matrix <span class="math inline">\(T\)</span>.</span></p>
 <details class="jp-trans">
 <summary>
 日本語訳
@@ -859,10 +1442,10 @@ A^{2} = \begin{pmatrix}
 <p>下の有向グラフは、<span class="math inline">\(3\)</span> つのウェブページ <span class="math inline">\(X\)</span>、<span class="math inline">\(Y\)</span>、<span class="math inline">\(Z\)</span> のあいだのリンクを表しています。</p>
 <p><strong>(a)</strong> <span class="math inline">\(X\)</span>、<span class="math inline">\(Y\)</span>、<span class="math inline">\(Z\)</span> の順で隣接行列を書きなさい。</p>
 <p><strong>(b)</strong> <span class="math inline">\(X\)</span> から <span class="math inline">\(X\)</span> へもどる長さ <span class="math inline">\(2\)</span> の walk の数を求めなさい。</p>
-<p><strong>(c)</strong> 利用者がリンクを無作為に選ぶとします。推移行列 <span class="math inline">\(T\)</span> を書きなさい。</p>
+<p><strong>(c)</strong> 利用者は、進めるリンクのうち <span class="math inline">\(1\)</span> つを、どれも同じ確率で選んでクリックします。推移行列 <span class="math inline">\(T\)</span> を書きなさい。</p>
 </details>
 <hr>
-<p><strong>(a)</strong> 矢印は <span class="math inline">\(X \to Y\)</span>、<span class="math inline">\(X \to Z\)</span>、<span class="math inline">\(Y \to Z\)</span>、<span class="math inline">\(Z \to X\)</span> の <span class="math inline">\(4\)</span> 本です。<strong>行が「から」</strong>でした（<a href="#adjacency">第1節</a>）。</p>
+<p><strong>(a)</strong> 矢印は <span class="math inline">\(X \to Y\)</span>、<span class="math inline">\(X \to Z\)</span>、<span class="math inline">\(Y \to Z\)</span>、<span class="math inline">\(Z \to X\)</span> の <span class="math inline">\(4\)</span> 本です。<strong>行が「から」</strong>でした（<a href="#adjacency">第3節</a>）。</p>
 <p><span class="math display">\[
 A = \begin{pmatrix}
 0 &amp; 1 &amp; 1 \\
@@ -870,7 +1453,7 @@ A = \begin{pmatrix}
 1 &amp; 0 &amp; 0
 \end{pmatrix}
 \]</span></p>
-<p><strong>対称ではありません。</strong> 有向グラフなので、それでよいのです。</p>
+<p><strong>対称ではありません。</strong> directed graph なので、それでよいのです。</p>
 <p><strong>(b)</strong> <span class="math inline">\(A\)</span> を <span class="math inline">\(2\)</span> 乗して、<span class="math inline">\((X,\ X)\)</span> 成分を見ます。</p>
 <p><span class="math display">\[
 A^{2} = \begin{pmatrix}
@@ -880,7 +1463,8 @@ A^{2} = \begin{pmatrix}
 \end{pmatrix}
 \]</span></p>
 <p><span class="math inline">\((X,\ X)\)</span> 成分は <strong><span class="math inline">\(1\)</span></strong> です。<span class="math inline">\(X \to Z \to X\)</span> の <span class="math inline">\(1\)</span> 本だけです ✓</p>
-<p><strong>(c)</strong> ここで<strong>行と列が入れかわります</strong>（<a href="#transition">第7節</a>）。まず out degree を数えます。</p>
+<p><strong>対角成分が degree になる話は、ここでは使えません。</strong> directed graph だからです（<a href="#diagonal">第8節</a>）。</p>
+<p><strong>(c)</strong> 問題文に <code>each link being equally likely</code> とあります。これが<a href="#assume">第11節の仮定</a>です。まず out degree を数えます。</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -899,7 +1483,7 @@ A^{2} = \begin{pmatrix}
 </tr>
 </tbody>
 </table>
-<p><span class="math inline">\(X\)</span> の列には、<span class="math inline">\(Y\)</span> へ <span class="math inline">\(\frac{1}{2}\)</span>、<span class="math inline">\(Z\)</span> へ <span class="math inline">\(\frac{1}{2}\)</span> を入れます。<span class="math inline">\(Y\)</span> の列は <span class="math inline">\(Z\)</span> へ <span class="math inline">\(1\)</span>、<span class="math inline">\(Z\)</span> の列は <span class="math inline">\(X\)</span> へ <span class="math inline">\(1\)</span> です。</p>
+<p>ここで<strong>行と列が入れかわります</strong>（<a href="#direction">第11節</a>）。<span class="math inline">\(X\)</span> の<strong>列</strong>には、<span class="math inline">\(Y\)</span> へ <span class="math inline">\(\frac{1}{2}\)</span>、<span class="math inline">\(Z\)</span> へ <span class="math inline">\(\frac{1}{2}\)</span> を入れます。<span class="math inline">\(Y\)</span> の列は <span class="math inline">\(Z\)</span> へ <span class="math inline">\(1\)</span>、<span class="math inline">\(Z\)</span> の列は <span class="math inline">\(X\)</span> へ <span class="math inline">\(1\)</span> です。</p>
 <p><span class="math display">\[
 T = \begin{pmatrix}
 0 &amp; 0 &amp; 1 \\
@@ -907,7 +1491,7 @@ T = \begin{pmatrix}
 \frac{1}{2} &amp; 1 &amp; 0
 \end{pmatrix}
 \]</span></p>
-<p><strong>検算。</strong> 各列の和が <span class="math inline">\(1\)</span> になっています ✓（<a href="#columnsum">第7節</a>）</p>
+<p><strong>検算。</strong> 各列の和が <span class="math inline">\(1\)</span> になっています ✓（<a href="#columnsum">第11節</a>）</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -932,7 +1516,7 @@ T = \begin{pmatrix} 0 &amp; 0 &amp; 1 \\ \frac{1}{2} &amp; 0 &amp; 0 \\ \frac{1}
 </div>
 </div>
 <div id="exm-ahl315-weighted" class="theorem example">
-<p><span class="theorem-title"><strong>例題 4</strong></span> <span class="q-en">The weighted adjacency table below shows the distances, in kilometres, between four sites.</span></p>
+<p><span class="theorem-title"><strong>例題 5</strong></span> <span class="q-en">The weighted adjacency table below shows the distances, in kilometres, between four sites. A dash means that there is no direct road.</span></p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -981,18 +1565,18 @@ T = \begin{pmatrix} 0 &amp; 0 &amp; 1 \\ \frac{1}{2} &amp; 0 &amp; 0 \\ \frac{1}
 <summary>
 日本語訳
 </summary>
-<p>下の重み付き隣接表は、<span class="math inline">\(4\)</span> つの地点のあいだの距離（キロメートル）を表しています。表の見出しは地点の名前です。</p>
+<p>下の重み付き隣接表は、<span class="math inline">\(4\)</span> つの地点のあいだの距離（キロメートル）を表しています。ダッシュ（<span class="math inline">\(-\)</span>）は、直接の道路がないことを表します。表の見出しは地点の名前です。</p>
 <p><strong>(a)</strong> <span class="math inline">\(A\)</span> の行、<span class="math inline">\(D\)</span> の列にある「<span class="math inline">\(-\)</span>」が何を意味するかを説明しなさい。</p>
 <p><strong>(b)</strong> 経路 <span class="math inline">\(A \to C \to D\)</span> の距離の合計を求めなさい。</p>
 <p><strong>(c)</strong> <span class="math inline">\(A\)</span> から <span class="math inline">\(D\)</span> への最短経路を求め、その距離を書きなさい。</p>
 </details>
 <hr>
-<p><strong>(a)</strong> 表の <span class="math inline">\(A\)</span> の行と <span class="math inline">\(D\)</span> の列が交わるところが「<span class="math inline">\(-\)</span>」です。</p>
+<p><strong>(a)</strong> 表の <span class="math inline">\(A\)</span> の行と <span class="math inline">\(D\)</span> の列が交わるところが「<span class="math inline">\(-\)</span>」です。問題文が <code>A dash means that there is no direct road</code> と教えてくれています（<a href="#nocell">第10節</a>）。</p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>There is no direct edge between <span class="math inline">\(A\)</span> and <span class="math inline">\(D\)</span>: the two sites are not joined by a road.</em></p>
+<p><em>There is no direct edge between <span class="math inline">\(A\)</span> and <span class="math inline">\(D\)</span>: the two sites are not joined by a road. It does not mean that the distance is zero.</em></p>
 </div>
-<p>（<span class="math inline">\(A\)</span> と <span class="math inline">\(D\)</span> を直接つなぐ道路がない、という意味です。<strong>距離が <span class="math inline">\(0\)</span> という意味ではありません</strong>（<a href="#weighted">第6節</a>）。）</p>
+<p>（<span class="math inline">\(A\)</span> と <span class="math inline">\(D\)</span> を直接つなぐ道路がない、という意味です。<strong>距離が <span class="math inline">\(0\)</span> という意味ではありません。</strong>）</p>
 <p><strong>(b)</strong> 表から <span class="math inline">\(AC = 3\)</span>、<span class="math inline">\(CD = 4\)</span> を読みます。</p>
 <p><span class="math display">\[
 3 + 4 = 7 \ \text{km}
@@ -1035,7 +1619,7 @@ T = \begin{pmatrix} 0 &amp; 0 &amp; 1 \\ \frac{1}{2} &amp; 0 &amp; 0 \\ \frac{1}
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>(a)</strong> <em>There is no edge between <span class="math inline">\(A\)</span> and <span class="math inline">\(D\)</span>.</em></p>
+<p><strong>(a)</strong> <em>There is no edge between <span class="math inline">\(A\)</span> and <span class="math inline">\(D\)</span>; it does not mean a distance of zero.</em></p>
 <p><strong>(b)</strong> <span class="math display">\[
 3 + 4 = 7 \ \text{km}
 \]</span></p>
@@ -1045,6 +1629,20 @@ A \to C \to D = 7, \qquad A \to B \to D = 13
 A \to B \to C \to D = 15, \qquad A \to C \to B \to D = 17
 \]</span></p>
 <p><em>The shortest route is <span class="math inline">\(A \to C \to D\)</span>, of length <span class="math inline">\(7\)</span> km.</em></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>この表を <span class="math inline">\(2\)</span> 乗しないでください
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(A^{2}\)</span> を計算したくなりますが、これは重みの表です。<span class="math inline">\(2\)</span> 乗しても walk の数は出ません（<a href="#nopower">第10節</a>）。</p>
+<p><strong>この形の問題は、道を書き出して足すだけ</strong>です。<a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-16.html#least">AHL 3.16</a> では、この「<span class="math inline">\(2\)</span> 点のあいだの最短」を表にまとめる作業が出てきます。<strong>最短経路そのものを出す algorithm は、AI HL では扱いません。</strong></p>
 </div>
 </div>
 </div>
@@ -1062,8 +1660,22 @@ A \to B \to C \to D = 15, \qquad A \to C \to B \to D = 17
 </div>
 <div class="callout-body-container callout-body">
 <p><strong>この項目で、いちばん多い失点です。</strong></p>
-<p>adjacency matrix は「行 = から」、transition matrix は「<strong>列 = から</strong>」です（<a href="#tbl-ahl315-direction" class="quarto-xref">表&nbsp;1</a>）。</p>
+<p>adjacency matrix は「行 <span class="math inline">\(=\)</span> から」、transition matrix は「<strong>列 <span class="math inline">\(=\)</span> から</strong>」です（<a href="#tbl-ahl315-direction" class="quarto-xref">表&nbsp;3</a>）。理由は <span class="math inline">\(s_{n+1} = Ts_n\)</span> という書き方にあります（<a href="#direction">第11節</a>）。</p>
 <p>書き終えたら、<strong>列の和が <span class="math inline">\(1\)</span> になっているか</strong>を必ず見てください。<span class="math inline">\(1\)</span> にならない列があれば、向きを取りちがえています。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>vertex の順番を決めずに書き始める
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(P\)</span>、<span class="math inline">\(Q\)</span>、<span class="math inline">\(R\)</span>、<span class="math inline">\(S\)</span> の順で作った行列を、<span class="math inline">\(A^{2}\)</span> を読むときに別の順で見てしまう誤りです。</p>
+<p><strong>行列のまわりに、vertex の名前を書き込んでください</strong>（<a href="#order">第2節</a>）。表の見出しがあれば、読み間違えません。</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1076,7 +1688,7 @@ A \to B \to C \to D = 15, \qquad A \to C \to B \to D = 17
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>前者は <span class="math inline">\(A^{3}\)</span> の <span class="math inline">\(1\)</span> つの成分、後者は <span class="math inline">\(A + A^{2} + A^{3}\)</span> の成分です。</p>
+<p>前者は <span class="math inline">\(A^{3}\)</span> の <span class="math inline">\(1\)</span> つの成分、後者は <span class="math inline">\(A + A^{2} + A^{3}\)</span> の成分です（<a href="#tbl-ahl315-atmost" class="quarto-xref">表&nbsp;2</a>）。</p>
 <p><strong>問題文の <code>or less</code> / <code>at most</code> に印を付けてから</strong>、計算を始めてください。</p>
 </div>
 </div>
@@ -1086,12 +1698,12 @@ A \to B \to C \to D = 15, \qquad A \to C \to B \to D = 17
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">警告</span>vertex の順番を、途中で変えてしまう
+<span class="screen-reader-only">警告</span>何も言われていないのに <span class="math inline">\(I\)</span> を足す
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><span class="math inline">\(P\)</span>、<span class="math inline">\(Q\)</span>、<span class="math inline">\(R\)</span>、<span class="math inline">\(S\)</span> の順で作った行列を、<span class="math inline">\(A^{2}\)</span> を読むときに別の順で見てしまう誤りです。</p>
-<p><strong>行列のまわりに、vertex の名前を書き込んでください。</strong> 表の見出しがあれば、読み間違えません。</p>
+<p><span class="math inline">\(I\)</span> を足すのは、<strong>長さ <span class="math inline">\(0\)</span>（動かないこと）も数えるとき</strong>だけです（<a href="#atmost">第9節</a>）。</p>
+<p>ふつうの <code>length 3 or less</code> では、<span class="math inline">\(A + A^{2} + A^{3}\)</span> です。<span class="math inline">\(I\)</span> を足すと、対角成分だけが <span class="math inline">\(1\)</span> ずつ多くなります。</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1104,8 +1716,8 @@ A \to B \to C \to D = 15, \qquad A \to C \to B \to D = 17
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>weighted adjacency table を <span class="math inline">\(2\)</span> 乗しても、意味のある数は出てきません。</p>
-<p><a href="#eq-ahl315-power" class="quarto-xref">式&nbsp;2</a> が使えるのは、<strong><span class="math inline">\(0\)</span> と <span class="math inline">\(1\)</span> でできた adjacency matrix だけ</strong>です（<a href="#weighted">第6節</a>）。</p>
+<p>weighted adjacency table を <span class="math inline">\(2\)</span> 乗すると、重みどうしの積が出てきます。それは walk の本数ではありません（<a href="#nopower">第10節</a>）。</p>
+<p>区別するのは、成分が<strong>「本数」か「重み」か</strong>です。</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1132,7 +1744,7 @@ A \to B \to C \to D = 15, \qquad A \to C \to B \to D = 17
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>walk は、<strong>同じ vertex を何度通っても構いません</strong>（<a href="#walk">第3節</a>）。</p>
+<p>walk は、<strong>同じ vertex も同じ edge も、何度通っても構いません</strong>（<a href="#walk">第6節</a>）。</p>
 <p><span class="math inline">\(A \to B \to A\)</span> を「もどっているから数えない」と考えて、答えが小さくなる誤りが多いところです。<span class="math inline">\(A^{k}\)</span> が数えているのは、<strong>制限のない walk</strong> です。</p>
 </div>
 </div>
@@ -1142,12 +1754,26 @@ A \to B \to C \to D = 15, \qquad A \to C \to B \to D = 17
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">警告</span>有向グラフなのに、対称な行列を書く
+<span class="screen-reader-only">警告</span>directed graph なのに、対称な行列を書く
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>無向グラフの癖で、<span class="math inline">\(X \to Y\)</span> を書いたときに <span class="math inline">\((Y,\ X)\)</span> にも <span class="math inline">\(1\)</span> を入れてしまう誤りです。</p>
-<p><strong>矢印があるほうにだけ</strong>書いてください。有向グラフの行列は、対称にならないのがふつうです。</p>
+<p>undirected graph の癖で、<span class="math inline">\(X \to Y\)</span> を書いたときに <span class="math inline">\((Y,\ X)\)</span> にも <span class="math inline">\(1\)</span> を入れてしまう誤りです。</p>
+<p><strong>矢印があるほうにだけ</strong>書いてください。directed graph の行列は、対称にならないのがふつうです。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>directed graph で「<span class="math inline">\(A^{2}\)</span> の対角 <span class="math inline">\(=\)</span> degree」を使う
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>これは <strong>undirected で loop のない simple graph</strong> のときの話です（<a href="#diagonal">第8節</a>）。</p>
+<p>directed graph の <span class="math inline">\((A^{2})_{ii}\)</span> が数えるのは、「行って帰れる隣の数」です。degree とは違います。</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1161,7 +1787,7 @@ A \to B \to C \to D = 15, \qquad A \to C \to B \to D = 17
 </div>
 <div class="callout-body-container callout-body">
 <p>walk の数は<strong>整数</strong>です。電卓が <span class="math inline">\(2.\)</span> や <span class="math inline">\(1.99999\)</span> と表示したときは、表示の設定の問題です。</p>
-<p><code>ctrl + menu → Number → Round</code> や、Document Settings の <code>Display Digits</code> を確かめてください。<strong>答案には整数で書きます。</strong></p>
+<p>Document Settings の <code>Display Digits</code> を確かめてください。<strong>答案には整数で書きます。</strong></p>
 </div>
 </div>
 </section>
@@ -1171,7 +1797,7 @@ A \to B \to C \to D = 15, \qquad A \to C \to B \to D = 17
 <section id="gdc-enter" class="level3">
 <h3 class="anchored" data-anchor-id="gdc-enter">1. 行列を打ちこんで、名前を付ける</h3>
 <p><a href="../../ai-hl/01-number-and-algebra/ahl-1-14.html#gdc-enter">AHL 1.14</a> と同じ手順です。</p>
-<pre><code>menu → 7: Matrix &amp; Vector → 1: Create → 1: Matrix</code></pre>
+<pre><code>menu → Matrix &amp; Vector → Create → Matrix</code></pre>
 <p>行と列の数を入れて <code>OK</code>。<code>tab</code> で移動しながら <span class="math inline">\(0\)</span> と <span class="math inline">\(1\)</span> を入れ、最後に名前を付けます。</p>
 <pre><code>ctrl + sto→</code></pre>
 <p>に続けて <code>a</code> と打てば、以後は <code>a</code> で呼び出せます。</p>
@@ -1199,8 +1825,10 @@ a^3</code></pre>
 </section>
 <section id="gdc-sum" class="level3">
 <h3 class="anchored" data-anchor-id="gdc-sum">3. 「長さ <span class="math inline">\(k\)</span> 以下」を足す</h3>
-<p><a href="#eq-ahl315-atmost" class="quarto-xref">式&nbsp;3</a> は、そのまま打てます。</p>
+<p><a href="#eq-ahl315-atmost" class="quarto-xref">式&nbsp;4</a> は、そのまま打てます。</p>
 <pre><code>a + a^2 + a^3</code></pre>
+<p>長さ <span class="math inline">\(0\)</span> も数えるときだけ、単位行列を足します。</p>
+<pre><code>identity(4) + a + a^2 + a^3</code></pre>
 <p><strong><span class="math inline">\(1\)</span> つの成分だけが要るときも、行列全体を出してから読むほうが速い</strong>です。成分を取り出す書き方もありますが、覚えることが増えるだけです。</p>
 </section>
 <section id="gdc-fraction" class="level3">
@@ -1251,7 +1879,7 @@ a^3</code></pre>
 <p><strong>(b)</strong> 各頂点の次数を書き、行列と合っているか確かめなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1260,7 +1888,7 @@ a^3</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div id="callout-42" class="callout-42-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math display">\[
 A = \begin{pmatrix}
@@ -1276,7 +1904,7 @@ A = \begin{pmatrix}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-43-contents" aria-controls="callout-43" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1285,11 +1913,11 @@ A = \begin{pmatrix}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-28" class="callout-28-contents callout-collapse collapse">
+<div id="callout-43" class="callout-43-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>edge は <span class="math inline">\(AB\)</span>、<span class="math inline">\(AD\)</span>、<span class="math inline">\(BC\)</span>、<span class="math inline">\(BD\)</span>、<span class="math inline">\(CD\)</span> の <span class="math inline">\(5\)</span> 本です。</p>
-<p><strong>(b)</strong> 行の和は <span class="math inline">\(2,\ 3,\ 2,\ 3\)</span> で、図から数えた degree と一致します（<a href="#rowsum">第1節</a>）。合計 <span class="math inline">\(10\)</span> が <span class="math inline">\(2 \times 5\)</span> になっていることも確かめられます。</p>
-<p>書いた行列が<strong>対称</strong>になっているかも見てください。無向グラフなので、対称でなければ書き間違いです。</p>
+<p><strong>(b)</strong> 行の和は <span class="math inline">\(2,\ 3,\ 2,\ 3\)</span> で、図から数えた degree と一致します。この graph は undirected で loop がないので、<a href="#rowsum">第3節</a>の条件がそろっています。合計 <span class="math inline">\(10\)</span> が <span class="math inline">\(2 \times 5\)</span> になっていることも確かめられます。</p>
+<p>書いた行列が<strong>対称</strong>になっているかも見てください。undirected graph なので、対称でなければ書き間違いです。</p>
 </div>
 </div>
 </div>
@@ -1304,7 +1932,7 @@ A = \begin{pmatrix}
 <p>問題 1 のグラフについて、<span class="math inline">\(A^{2}\)</span> を求め、それを使って <span class="math inline">\(A\)</span> から <span class="math inline">\(C\)</span> への長さ <span class="math inline">\(2\)</span> の walk の数を書きなさい。その walk を書き出しなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-44-contents" aria-controls="callout-44" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1313,7 +1941,7 @@ A = \begin{pmatrix}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div id="callout-44" class="callout-44-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[
 A^{2} = \begin{pmatrix}
@@ -1328,7 +1956,7 @@ A^{2} = \begin{pmatrix}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-45-contents" aria-controls="callout-45" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1337,11 +1965,11 @@ A^{2} = \begin{pmatrix}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-30" class="callout-30-contents callout-collapse collapse">
+<div id="callout-45" class="callout-45-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\((A^{2})_{AC}\)</span>、つまり <span class="math inline">\(1\)</span> 行目 <span class="math inline">\(3\)</span> 列目を読みます。<span class="math inline">\(2\)</span> です。</p>
-<p><code>List these walks</code> と言われているので、<strong>実際に書き出す</strong>ところまでが解答です。<span class="math inline">\(A\)</span> の隣は <span class="math inline">\(B\)</span> と <span class="math inline">\(D\)</span>、そのどちらからも <span class="math inline">\(C\)</span> へ行けるので <span class="math inline">\(2\)</span> 本です。</p>
-<p><strong>行と列を取りちがえないでください。</strong> 行が「から」、列が「へ」でした（<a href="#adjacency">第1節</a>）。この graph は無向なので <span class="math inline">\((A^{2})_{CA}\)</span> でも同じ値ですが、有向グラフでは変わります。</p>
+<p><code>List these walks</code> と言われているので、<strong>実際に書き出す</strong>ところまでが解答です。<span class="math inline">\(A\)</span> の隣は <span class="math inline">\(B\)</span> と <span class="math inline">\(D\)</span>、そのどちらからも <span class="math inline">\(C\)</span> へ行けるので <span class="math inline">\(2\)</span> 本です（<a href="#square">第7節</a>）。</p>
+<p><strong>行と列を取りちがえないでください。</strong> 行が「から」、列が「へ」でした（<a href="#adjacency">第3節</a>）。この graph は undirected なので <span class="math inline">\((A^{2})_{CA}\)</span> でも同じ値ですが、directed graph では変わります。</p>
 </div>
 </div>
 </div>
@@ -1356,7 +1984,7 @@ A^{2} = \begin{pmatrix}
 <p>問題 1 のグラフについて、<span class="math inline">\(A\)</span> から <span class="math inline">\(B\)</span> への長さ <span class="math inline">\(3\)</span> 以下の walk の数を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-46-contents" aria-controls="callout-46" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1365,7 +1993,7 @@ A^{2} = \begin{pmatrix}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div id="callout-46" class="callout-46-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[
 (A)_{AB} + (A^{2})_{AB} + (A^{3})_{AB} = 1 + 1 + 5 = 7
@@ -1374,7 +2002,7 @@ A^{2} = \begin{pmatrix}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-47-contents" aria-controls="callout-47" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1383,11 +2011,12 @@ A^{2} = \begin{pmatrix}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-32" class="callout-32-contents callout-collapse collapse">
+<div id="callout-47" class="callout-47-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><code>or less</code> があるので、<span class="math inline">\(3\)</span> つ足します（<a href="#eq-ahl315-atmost" class="quarto-xref">式&nbsp;3</a>）。</p>
+<p><code>or less</code> があるので、<span class="math inline">\(3\)</span> つ足します（<a href="#tbl-ahl315-atmost" class="quarto-xref">表&nbsp;2</a>）。</p>
 <p>電卓なら <code>a + a^2 + a^3</code> と打って、<span class="math inline">\(1\)</span> 行目 <span class="math inline">\(2\)</span> 列目を読むだけです（<a href="#gdc-sum">GDC 第3節</a>）。</p>
 <p><span class="math inline">\(A^{3}\)</span> を単独で求めて <span class="math inline">\(5\)</span> と答えるのが、いちばん多い誤りです。<strong>問われているのは合計です。</strong></p>
+<p>なお、<span class="math inline">\(I\)</span> は足しません。長さ <span class="math inline">\(0\)</span> を数えよという指示がないからです（<a href="#atmost">第9節</a>）。足したとしても <span class="math inline">\((A,\ B)\)</span> 成分は対角ではないので、この問題の答えは変わりません。</p>
 </div>
 </div>
 </div>
@@ -1402,7 +2031,7 @@ A^{2} = \begin{pmatrix}
 <p>ある simple graph の隣接行列について、<span class="math inline">\(A^{2}\)</span> の対角成分が <span class="math inline">\(3\)</span>、<span class="math inline">\(3\)</span>、<span class="math inline">\(4\)</span>、<span class="math inline">\(2\)</span>、<span class="math inline">\(2\)</span> です。このグラフの辺の数を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-48-contents" aria-controls="callout-48" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1411,9 +2040,9 @@ A^{2} = \begin{pmatrix}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div id="callout-48" class="callout-48-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><em>The diagonal entries of <span class="math inline">\(A^{2}\)</span> are the degrees.</em></p>
+<p><em>The graph is simple and undirected, so the diagonal entries of <span class="math inline">\(A^{2}\)</span> are the degrees.</em></p>
 <p><span class="math display">\[
 3+3+4+2+2 = 14 = 2E \quad \Rightarrow \quad E = 7
 \]</span></p>
@@ -1421,7 +2050,7 @@ A^{2} = \begin{pmatrix}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-49-contents" aria-controls="callout-49" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1430,9 +2059,10 @@ A^{2} = \begin{pmatrix}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-34" class="callout-34-contents callout-collapse collapse">
+<div id="callout-49" class="callout-49-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><span class="math inline">\(A^{2}\)</span> の対角成分が degree であること（<a href="#diagonal">第4節</a>）に気づけば、あとは <a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#handshake">AHL 3.14</a> の関係だけです。</p>
+<p><span class="math inline">\(A^{2}\)</span> の対角成分が degree であること（<a href="#diagonal">第8節</a>）に気づけば、あとは <a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#handshake">AHL 3.14</a> の関係だけです。</p>
+<p><strong><code>simple graph</code> という条件が効いています。</strong> loop があると、この読み替えはできません。答案でも、その一言を添えてください。</p>
 <p><strong>graph をかく必要はありません。</strong> 合計 <span class="math inline">\(14\)</span> が偶数になっていることも、答えが正しい合図です。</p>
 </div>
 </div>
@@ -1443,17 +2073,17 @@ A^{2} = \begin{pmatrix}
 <p><span class="ex-no">5</span> <span class="q-en">The directed graph below shows the one-way paths between three points.</span></p>
 <p><img src="img/ahl-3-15-ex5.svg" class="img-fluid" style="width:44.0%"></p>
 <p><strong>(a)</strong> <span class="q-en">Write down the adjacency matrix, using the order <span class="math inline">\(P\)</span>, <span class="math inline">\(Q\)</span>, <span class="math inline">\(R\)</span>.</span></p>
-<p><strong>(b)</strong> <span class="q-en">Write down the transition matrix for a walker who chooses each available path at random.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Write down the transition matrix for a walker who chooses each available path at random, each path being equally likely.</span></p>
 <details class="jp-trans">
 <summary>
 日本語訳
 </summary>
 <p>下の有向グラフは、<span class="math inline">\(3\)</span> 地点のあいだの一方通行の道を表しています。</p>
 <p><strong>(a)</strong> <span class="math inline">\(P\)</span>、<span class="math inline">\(Q\)</span>、<span class="math inline">\(R\)</span> の順で隣接行列を書きなさい。</p>
-<p><strong>(b)</strong> 進める道を無作為に選ぶ人についての推移行列を書きなさい。</p>
+<p><strong>(b)</strong> 進める道を無作為に、どれも同じ確率で選ぶ人についての推移行列を書きなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-50-contents" aria-controls="callout-50" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1462,7 +2092,7 @@ A^{2} = \begin{pmatrix}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div id="callout-50" class="callout-50-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math display">\[
 A = \begin{pmatrix} 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 1 \\ 1 &amp; 1 &amp; 0 \end{pmatrix}
@@ -1474,7 +2104,7 @@ T = \begin{pmatrix} 0 &amp; 0 &amp; \frac{1}{2} \\ 1 &amp; 0 &amp; \frac{1}{2} \
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-51-contents" aria-controls="callout-51" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1483,11 +2113,11 @@ T = \begin{pmatrix} 0 &amp; 0 &amp; \frac{1}{2} \\ 1 &amp; 0 &amp; \frac{1}{2} \
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-36" class="callout-36-contents callout-collapse collapse">
+<div id="callout-51" class="callout-51-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>矢印は <span class="math inline">\(P \to Q\)</span>、<span class="math inline">\(Q \to R\)</span>、<span class="math inline">\(R \to P\)</span>、<span class="math inline">\(R \to Q\)</span> の <span class="math inline">\(4\)</span> 本です。</p>
 <p><strong>(a)</strong> 行が「から」です。<span class="math inline">\(R\)</span> の行だけ <span class="math inline">\(1\)</span> が <span class="math inline">\(2\)</span> つ入ります。<strong>対称にはなりません。</strong></p>
-<p><strong>(b)</strong> ここで<strong>行と列が入れかわります</strong>（<a href="#transition">第7節</a>）。out degree は <span class="math inline">\(P\)</span> が <span class="math inline">\(1\)</span>、<span class="math inline">\(Q\)</span> が <span class="math inline">\(1\)</span>、<span class="math inline">\(R\)</span> が <span class="math inline">\(2\)</span> です。</p>
+<p><strong>(b)</strong> ここで<strong>行と列が入れかわります</strong>（<a href="#direction">第11節</a>）。out degree は <span class="math inline">\(P\)</span> が <span class="math inline">\(1\)</span>、<span class="math inline">\(Q\)</span> が <span class="math inline">\(1\)</span>、<span class="math inline">\(R\)</span> が <span class="math inline">\(2\)</span> です。</p>
 <p><span class="math inline">\(R\)</span> の<strong>列</strong>に <span class="math inline">\(\frac{1}{2}\)</span> を <span class="math inline">\(2\)</span> つ入れるのが、この問題の山です。</p>
 <p><strong>検算。</strong> 列の和は <span class="math inline">\(0+1+0 = 1\)</span>、<span class="math inline">\(0+0+1 = 1\)</span>、<span class="math inline">\(\frac{1}{2}+\frac{1}{2}+0 = 1\)</span> ✓</p>
 </div>
@@ -1504,7 +2134,7 @@ T = \begin{pmatrix} 0 &amp; 0 &amp; \frac{1}{2} \\ 1 &amp; 0 &amp; \frac{1}{2} \
 <p>問題 5 の有向グラフについて、<span class="math inline">\(P\)</span> から <span class="math inline">\(R\)</span> への長さ <span class="math inline">\(2\)</span> の walk の数を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-52-contents" aria-controls="callout-52" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1513,7 +2143,7 @@ T = \begin{pmatrix} 0 &amp; 0 &amp; \frac{1}{2} \\ 1 &amp; 0 &amp; \frac{1}{2} \
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div id="callout-52" class="callout-52-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[
 A^{2} = \begin{pmatrix} 0 &amp; 0 &amp; 1 \\ 1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp; 1 \end{pmatrix}
@@ -1524,7 +2154,7 @@ A^{2} = \begin{pmatrix} 0 &amp; 0 &amp; 1 \\ 1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-53-contents" aria-controls="callout-53" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1533,11 +2163,11 @@ A^{2} = \begin{pmatrix} 0 &amp; 0 &amp; 1 \\ 1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-38" class="callout-38-contents callout-collapse collapse">
+<div id="callout-53" class="callout-53-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>使うのは <strong>(a) の隣接行列</strong>です。transition matrix を <span class="math inline">\(2\)</span> 乗しても、walk の数は出ません。</p>
+<p>使うのは <strong>(a) の隣接行列</strong>です。transition matrix を <span class="math inline">\(2\)</span> 乗しても、walk の数は出ません。<span class="math inline">\(T\)</span> の成分は確率であって、edge の本数ではないからです（<a href="#nopower">第10節</a>と同じ理由です）。</p>
 <p><span class="math inline">\(P\)</span> から出る矢印は <span class="math inline">\(Q\)</span> へ <span class="math inline">\(1\)</span> 本だけ。<span class="math inline">\(Q\)</span> からは <span class="math inline">\(R\)</span> へ行けるので、<span class="math inline">\(P \to Q \to R\)</span> の <span class="math inline">\(1\)</span> 本です ✓</p>
-<p><strong>有向グラフでは向きが効きます。</strong> <span class="math inline">\((A^{2})_{RP}\)</span> は別の値になります。</p>
+<p><strong>directed graph では向きが効きます。</strong> <span class="math inline">\((A^{2})_{RP}\)</span> は別の値になります。</p>
 </div>
 </div>
 </div>
@@ -1552,7 +2182,7 @@ A^{2} = \begin{pmatrix} 0 &amp; 0 &amp; 1 \\ 1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp
 <p>無向グラフの隣接行列がいつも対称になる理由を説明しなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-54-contents" aria-controls="callout-54" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1561,14 +2191,14 @@ A^{2} = \begin{pmatrix} 0 &amp; 0 &amp; 1 \\ 1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div id="callout-54" class="callout-54-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em>In an undirected graph, an edge between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> can be travelled in both directions. So the entry in row <span class="math inline">\(i\)</span>, column <span class="math inline">\(j\)</span> and the entry in row <span class="math inline">\(j\)</span>, column <span class="math inline">\(i\)</span> both count the same edge, and they are always equal. Hence <span class="math inline">\(A = A^{\mathrm{T}}\)</span>.</em></p>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-55-contents" aria-controls="callout-55" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1577,11 +2207,15 @@ A^{2} = \begin{pmatrix} 0 &amp; 0 &amp; 1 \\ 1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-40" class="callout-40-contents callout-collapse collapse">
+<div id="callout-55" class="callout-55-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><code>Explain why</code> は、<strong>言葉で理由を書く</strong>設問です。行列を <span class="math inline">\(1\)</span> つ書いて「対称だから」では点になりません。</p>
 <p>要点は「<strong>同じ <span class="math inline">\(1\)</span> 本の edge を、<span class="math inline">\(2\)</span> か所で数えている</strong>」ことです。向きがないので、どちらから見ても同じ edge です。</p>
-<p>有向グラフでこれが崩れる理由も、同じ文で説明できます。<strong>片方向にしか行けないので、片方だけが <span class="math inline">\(1\)</span> になる</strong>からです。</p>
+<p>directed graph でこれが崩れる理由も、同じ文で説明できます。<strong>片方向にしか行けないので、片方だけが <span class="math inline">\(1\)</span> になる</strong>からです。</p>
+<div class="model-answer">
+<p><strong>試験ではこう書く</strong></p>
+<p><em>In an undirected graph an edge joining <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> can be travelled in either direction, so the entry in row <span class="math inline">\(i\)</span>, column <span class="math inline">\(j\)</span> and the entry in row <span class="math inline">\(j\)</span>, column <span class="math inline">\(i\)</span> count the same edge. They are therefore always equal, and <span class="math inline">\(A = A^{\mathrm{T}}\)</span>.</em></p>
+</div>
 </div>
 </div>
 </div>
@@ -1601,7 +2235,7 @@ A^{2} = \begin{pmatrix} 0 &amp; 0 &amp; 1 \\ 1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp
 <p><strong>(b)</strong> <span class="math inline">\(A\)</span> から <span class="math inline">\(C\)</span> への最も安い経路を求め、その費用を書きなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-56-contents" aria-controls="callout-56" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1610,7 +2244,7 @@ A^{2} = \begin{pmatrix} 0 &amp; 0 &amp; 1 \\ 1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-41" class="callout-41-contents callout-collapse collapse">
+<div id="callout-56" class="callout-56-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong></p>
 <table class="caption-top table">
@@ -1666,7 +2300,7 @@ A \to D \to B \to C = 5 + 9 + 6 = 20
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-57-contents" aria-controls="callout-57" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1675,12 +2309,174 @@ A \to D \to B \to C = 5 + 9 + 6 = 20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-42" class="callout-42-contents callout-collapse collapse">
+<div id="callout-57" class="callout-57-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> 対角線は「自分から自分へ」なので「<span class="math inline">\(-\)</span>」です。<span class="math inline">\(A\)</span> と <span class="math inline">\(C\)</span> は直接つながっていないので、そこも「<span class="math inline">\(-\)</span>」になります。</p>
-<p><strong><span class="math inline">\(0\)</span> と書かないでください</strong>（<a href="#weighted">第6節</a>）。</p>
+<p><strong><span class="math inline">\(0\)</span> と書かないでください</strong>（<a href="#nocell">第10節</a>）。</p>
 <p><strong>(b)</strong> <span class="math inline">\(A\)</span> から出られるのは <span class="math inline">\(B\)</span> と <span class="math inline">\(D\)</span> の <span class="math inline">\(2\)</span> 方向です。そのあとの分かれ方まで考えると、同じ場所を <span class="math inline">\(2\)</span> 度通らない道は <span class="math inline">\(4\)</span> 通りあります。</p>
 <p><strong>重みが小さい edge から順に選べば最短になる、とはかぎりません。</strong> ここでは <span class="math inline">\(AD = 5\)</span> が最小で、たまたまそれが答えの一部になっていますが、必ず<strong>足して比べて</strong>ください。</p>
+</div>
+</div>
+</div>
+<div class="ex-sep">
+
+</div>
+<p><span class="ex-no">9</span> <span class="q-en">The matrix below is the adjacency matrix of a directed graph, using the order <span class="math inline">\(P\)</span>, <span class="math inline">\(Q\)</span>, <span class="math inline">\(R\)</span>, <span class="math inline">\(S\)</span>, with row <span class="math inline">\(=\)</span> from and column <span class="math inline">\(=\)</span> to.</span></p>
+<p><span class="math display">\[
+A = \begin{pmatrix}
+0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 1 &amp; 0 \\
+1 &amp; 0 &amp; 0 &amp; 1 \\
+0 &amp; 1 &amp; 0 &amp; 0
+\end{pmatrix}
+\]</span></p>
+<p><strong>(a)</strong> <span class="q-en">Draw the directed graph.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Write down the out degree and the in degree of each vertex.</span></p>
+<p><strong>(c)</strong> <span class="q-en">Explain why this matrix is not symmetric.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>下の行列は、<span class="math inline">\(P\)</span>、<span class="math inline">\(Q\)</span>、<span class="math inline">\(R\)</span>、<span class="math inline">\(S\)</span> の順で書かれた、ある有向グラフの隣接行列です。行が「から」、列が「へ」です。</p>
+<p><strong>(a)</strong> その有向グラフをかきなさい。</p>
+<p><strong>(b)</strong> 各頂点の out degree と in degree を書きなさい。</p>
+<p><strong>(c)</strong> この行列が対称でない理由を説明しなさい。</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-58-contents" aria-controls="callout-58" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-58" class="callout-58-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <em>Directed edges: <span class="math inline">\(P \to Q\)</span>, <span class="math inline">\(Q \to R\)</span>, <span class="math inline">\(R \to P\)</span>, <span class="math inline">\(R \to S\)</span>, <span class="math inline">\(S \to Q\)</span>.</em> （矢印を付けた図をかく）</p>
+<p><strong>(b)</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>vertex</th>
+<th><span class="math inline">\(P\)</span></th>
+<th><span class="math inline">\(Q\)</span></th>
+<th><span class="math inline">\(R\)</span></th>
+<th><span class="math inline">\(S\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>out</td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(2\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td>in</td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(2\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>(c)</strong> <em>The graph is directed. For example, there is an edge <span class="math inline">\(P \to Q\)</span> but no edge <span class="math inline">\(Q \to P\)</span>, so the <span class="math inline">\((P,\ Q)\)</span> entry is <span class="math inline">\(1\)</span> while the <span class="math inline">\((Q,\ P)\)</span> entry is <span class="math inline">\(0\)</span>.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-59-contents" aria-controls="callout-59" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-59" class="callout-59-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> 行が「から」なので、<span class="math inline">\(1\)</span> 行ずつ「この vertex から出る矢印」を読みます（<a href="#draw">第5節</a>）。</p>
+<p><strong>undirected graph のときと違って、対角線の片側だけを見るわけにはいきません。</strong> 対称でないので、<span class="math inline">\(16\)</span> 個すべてを見る必要があります。</p>
+<p><strong>(b)</strong> out degree は<strong>行</strong>の和、in degree は<strong>列</strong>の和です（<a href="#rowsum">第3節</a>）。</p>
+<p><strong>検算。</strong> 矢印は <span class="math inline">\(5\)</span> 本で、out の合計も in の合計も <span class="math inline">\(5\)</span> です ✓（<a href="../../ai-hl/03-geometry-and-trigonometry/ahl-3-14.html#directed">AHL 3.14</a>）</p>
+<p><strong>(c)</strong> <code>Explain why</code> なので、<strong>言葉で理由を書き、具体例を <span class="math inline">\(1\)</span> つ添えます。</strong> 「directed だから」だけでは足りません。どの成分が食い違っているかを示してください。</p>
+<div class="model-answer">
+<p><strong>試験ではこう書く</strong></p>
+<p><em>The graph is directed, so an edge can exist in one direction only. Here there is an edge <span class="math inline">\(P \to Q\)</span> but no edge <span class="math inline">\(Q \to P\)</span>, so the <span class="math inline">\((P,\ Q)\)</span> entry is <span class="math inline">\(1\)</span> while the <span class="math inline">\((Q,\ P)\)</span> entry is <span class="math inline">\(0\)</span>, and the matrix is not symmetric.</em></p>
+</div>
+</div>
+</div>
+</div>
+<div class="ex-sep">
+
+</div>
+<p><span class="ex-no">10</span> <span class="q-en">A model has three states <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> and <span class="math inline">\(C\)</span>. From <span class="math inline">\(A\)</span>, the system moves to <span class="math inline">\(B\)</span> or to <span class="math inline">\(C\)</span>, each being equally likely. From <span class="math inline">\(B\)</span>, it always moves to <span class="math inline">\(A\)</span>. There is no transition out of <span class="math inline">\(C\)</span>.</span></p>
+<p><strong>(a)</strong> <span class="q-en">Explain why the rule “choose each outgoing transition with equal probability” does not give a column for <span class="math inline">\(C\)</span>.</span></p>
+<p><strong>(b)</strong> <span class="q-en">The modeller decides that once the system reaches <span class="math inline">\(C\)</span> it stays at <span class="math inline">\(C\)</span>. Write down the transition matrix <span class="math inline">\(T\)</span>, using the order <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span>, <span class="math inline">\(C\)</span>.</span></p>
+<p><strong>(c)</strong> <span class="q-en">State the name given to a state such as <span class="math inline">\(C\)</span>.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>あるモデルは、<span class="math inline">\(A\)</span>、<span class="math inline">\(B\)</span>、<span class="math inline">\(C\)</span> の <span class="math inline">\(3\)</span> つの状態をもちます。<span class="math inline">\(A\)</span> からは <span class="math inline">\(B\)</span> または <span class="math inline">\(C\)</span> へ、どちらも同じ確率で移ります。<span class="math inline">\(B\)</span> からは必ず <span class="math inline">\(A\)</span> へ移ります。<span class="math inline">\(C\)</span> から出る移動はありません。</p>
+<p><strong>(a)</strong> 「出ていく移動をどれも同じ確率で選ぶ」という規則では、<span class="math inline">\(C\)</span> の列が決まらない理由を説明しなさい。</p>
+<p><strong>(b)</strong> モデルを作る人が、<span class="math inline">\(C\)</span> に達したらそのまま <span class="math inline">\(C\)</span> に留まると決めました。<span class="math inline">\(A\)</span>、<span class="math inline">\(B\)</span>、<span class="math inline">\(C\)</span> の順で推移行列 <span class="math inline">\(T\)</span> を書きなさい。</p>
+<p><strong>(c)</strong> <span class="math inline">\(C\)</span> のような状態に付けられている名前を述べなさい。</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-60-contents" aria-controls="callout-60" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-60" class="callout-60-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <em>There is no transition leaving <span class="math inline">\(C\)</span>, so there is nothing to share the probability between. The rule gives a column of zeros, whose sum is <span class="math inline">\(0\)</span> and not <span class="math inline">\(1\)</span>.</em></p>
+<p><strong>(b)</strong> <span class="math display">\[
+T = \begin{pmatrix}
+0 &amp; 1 &amp; 0 \\
+\frac{1}{2} &amp; 0 &amp; 0 \\
+\frac{1}{2} &amp; 0 &amp; 1
+\end{pmatrix}
+\]</span></p>
+<p><strong>(c)</strong> <em>An absorbing state.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-61-contents" aria-controls="callout-61" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-61" class="callout-61-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <a href="#assume">第11節の仮定</a>は「出ている矢印から <span class="math inline">\(1\)</span> 本を等しい確率で選ぶ」でした。<span class="math inline">\(C\)</span> には選ぶ矢印がありません。</p>
+<p>規則をそのまま当てはめると <span class="math inline">\(C\)</span> の列が全部 <span class="math inline">\(0\)</span> になり、<strong>列の和が <span class="math inline">\(1\)</span> になりません</strong>（<a href="#columnsum">第11節</a>）。確率としておかしい、というのが理由です。</p>
+<div class="model-answer">
+<p><strong>試験ではこう書く</strong></p>
+<p><em>There is no transition leaving <span class="math inline">\(C\)</span>, so the rule has nothing to share the probability between. It gives a column of zeros, and that column sums to <span class="math inline">\(0\)</span> rather than to <span class="math inline">\(1\)</span>, so it is not a valid transition matrix.</em></p>
+</div>
+<p><strong>(b)</strong> 「<span class="math inline">\(C\)</span> に留まる」と決めたので、<span class="math inline">\(C\)</span> の列は「<span class="math inline">\(C\)</span> の行だけ <span class="math inline">\(1\)</span>」になります。</p>
+<p><span class="math display">\[
+\text{$C$ の列} = \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}
+\]</span></p>
+<p><span class="math inline">\(A\)</span> の列は <span class="math inline">\(B\)</span> へ <span class="math inline">\(\frac{1}{2}\)</span>、<span class="math inline">\(C\)</span> へ <span class="math inline">\(\frac{1}{2}\)</span>。<span class="math inline">\(B\)</span> の列は <span class="math inline">\(A\)</span> へ <span class="math inline">\(1\)</span> です。</p>
+<p><strong>検算。</strong> 列の和は <span class="math inline">\(0+\frac{1}{2}+\frac{1}{2} = 1\)</span>、<span class="math inline">\(1+0+0 = 1\)</span>、<span class="math inline">\(0+0+1 = 1\)</span> ✓</p>
+<p><strong>(c)</strong> <strong>absorbing state</strong>（吸収状態）です（<a href="#absorbing">第11節</a>）。シラバスでは AHL 4.19 の Connections の欄に出てくる語です。</p>
+<p><span class="math inline">\(C\)</span> から出発した場合を計算すると、<span class="math inline">\(T\begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}\)</span> で、何歩進んでも <span class="math inline">\(C\)</span> のままです。「吸収」という名前は、ここから来ています。</p>
 </div>
 </div>
 </div>

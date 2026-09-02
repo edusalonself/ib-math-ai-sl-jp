@@ -38,6 +38,8 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="../../">
 <link href="../../ai-sl/02-functions/sl-2-3.html" rel="next">
 <link href="../../ai-sl/02-functions/sl-2-1.html" rel="prev">
+<script src="../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -74,6 +76,33 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "サーチ"
   }
 }</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LQBB7M9VZ0"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-LQBB7M9VZ0', { 'anonymize_ip': true});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"implied",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary","functionality","tracking","targeting"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"ja"
+  });
+});
+</script> 
+  
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
@@ -2204,6 +2233,42 @@ F(c) = 1.8c + 32
 </section>
 
 </main> <!-- /main -->
+<!--
+  Cookie 同意バナーの本文を差しかえるスクリプト。
+
+  Quarto の cookie-consent は termsfeed のライブラリを使っていて、
+  lang: ja のおかげで表示は日本語になります。ただし既定の本文が
+
+    「…パーソナライズされたコンテンツやターゲット広告を表示するため…」
+
+  となっていて、広告を出さないこのサイトの実態と合いません。
+  ライブラリ側に文面を差しかえる設定が無いので、バナーが出たあとに
+  #cc-nb-text の中身だけを書きかえています。
+
+  ★ 文面を変えるときは、下の NB の中身だけを直してください。
+  ★ 読み込みは _quarto.yml の format.html.include-after-body です。
+-->
+<script>
+(function () {
+  var NB = "このサイトでは、どのページがどれくらい読まれているかを知るために、"
+         + "Google アナリティクスの Cookie を使っています。"
+         + "広告の配信や、個人を特定する目的には使いません。";
+
+  function fix() {
+    var el = document.getElementById("cc-nb-text");
+    if (!el) { return false; }
+    if (el.textContent !== NB) { el.textContent = NB; }
+    return true;
+  }
+
+  // バナーはページ読み込みのあとに差し込まれるので、出てくるまで待つ。
+  if (!fix()) {
+    var mo = new MutationObserver(function () { if (fix()) { mo.disconnect(); } });
+    mo.observe(document.body, { childList: true, subtree: true });
+    setTimeout(function () { mo.disconnect(); }, 10000);
+  }
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -2635,7 +2700,7 @@ F(c) = 1.8c + 32
 </a>
   </li>  
 </ul>
-    </div>
+    <div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie の設定</a></div></div>
     <div class="nav-footer-right">
 <p>IB（国際バカロレア機構）とは関係のない独立した教材です</p>
 </div>
