@@ -469,6 +469,44 @@ in_text("シラバス Content", "Slope fields and their diagrams.")
 in_text("シラバス Guidance",
         "Students will be required to use and interpret slope fields.")
 
+
+# ══════════════════════════════════════════════════════════
+#  2026-08: 解の一意性を、このページで扱う方程式に限定した
+# ══════════════════════════════════════════════════════════
+in_text("第4節の前置き",
+        "**このページで扱うのは、initial condition（初期条件）から解が $1$ つに定まる微分方程式です。**")
+in_text("交差の見出し",
+        "## このページで扱う微分方程式では、異なる解曲線は交わりません")
+not_in_text("旧見出し", "## 解曲線どうしは、交わりません")
+in_text("交差しない理由",
+        "もし同じ点を $2$ 本の異なる解曲線が通ると、"
+        "**その点を initial condition とする解が複数あることになります。**")
+in_text("模範解答（英語）",
+        "*For the differential equations considered here, an initial condition "
+        "determines a unique solution. Therefore, two distinct solution curves "
+        "cannot pass through the same point.*")
+not_in_text("旧模範解答",
+            "Two curves crossing at that point would need two different slopes, "
+            "which is impossible.")
+not_in_text("「傾きが2通り」の理由", "$A$ での傾きが $2$ 通りあることになります")
+in_text("読みどころの表",
+        "| 曲線どうしが**交わらない** | initial condition が解を $1$ つに定めるから |")
+not_in_text("旧・読みどころの表", "| 曲線どうしが**交わらない** | $1$ 点の傾きは $1$ つしかないから |")
+in_text("Why it works も限定",
+        "**このページで扱うのは、この一意性が成り立つ微分方程式だけ**です。")
+in_text("演習の模範解答も差し替え",
+        "For the differential equations considered here, an initial condition "
+        "determines a unique solution, so that is impossible.")
+
+
+# レビューで追加: 図の脚注も一意性の言い方に直した
+_SRC = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         "make_ahl_5_15.py"), encoding="utf-8").read()
+in_text_ok = "(one starting point gives only ONE solution)" in _SRC
+eq("図(d)の副題を一意性の言い方に直した", in_text_ok, True)
+eq("図(d)から「ONE slope at each point」を外した",
+   "there is only ONE slope at each point" in _SRC, False)
+
 print()
 print("=" * 78)
 print("結果:  OK %d / NG %d" % (OK, NG))

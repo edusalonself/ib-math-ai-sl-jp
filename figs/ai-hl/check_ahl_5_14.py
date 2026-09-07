@@ -354,5 +354,51 @@ _nb = [i + 1 for i, l in enumerate(_L)
        and _L[i - 1].strip() != "" and not _L[i - 1].lstrip().startswith("#")]
 eq("開き fence の前に空行がある", _nb, [])
 
+
+print()
+print("══════════ 2026-08: y = Ae^{kx} の増減に A の符号を入れた ══════════")
+in_text("演習4 の問題文に A>0",
+        "[Given that the constant of integration $A$ satisfies $A > 0$, "
+        "describe the behaviour of $y$ as $x$ increases when (i) $k > 0$ "
+        "and (ii) $k < 0$.]{.q-en}")
+in_text("演習4 の日本語訳にも A>0",
+        "積分定数 $A$ が $A > 0$ を満たすとして、$x$ が増えるときの $y$ のふるまいを、")
+in_text("旧・無条件の問題文", "**(b)** [Describe the behaviour of $y$ as $x$ increases "
+        "when (i) $k > 0$ and (ii) $k < 0$.]{.q-en}", False)
+in_text("模範解答 (i) に Assuming A>0",
+        "*Assuming $A > 0$: when $k > 0$ the exponent $kx$ increases as $x$ "
+        "increases, so $y$ increases without limit. This is exponential growth.*")
+in_text("模範解答 (ii) に Assuming A>0",
+        "*Assuming $A > 0$: when $k < 0$ the exponent $kx$ decreases as $x$ "
+        "increases, so $y$ tends towards $0$ but never reaches it. "
+        "This is exponential decay.*")
+in_text("旧・模範解答 (i)", "*When $k > 0$ the exponent $kx$ increases as $x$ "
+        "increases, so $y$ increases without limit.", False)
+in_text("解説で A の 3 通りを示す", "- $A = 0$ … $y = 0$ が恒等的に成り立ちます"
+        "（increasing でも decreasing でもありません）")
+in_text("旧・注記だけの訂正", "$A$ の符号は聞かれていませんが、$A < 0$ なら曲線は "
+        "$x$ 軸の下側にあり、増減の向きが逆になります。", False)
+in_text("表の見出しに A>0", "## $k$ の符号が、増えるか減るかを決めます（$A > 0$ のとき）")
+in_text("表のキャプションに A>0",
+        ": $k$ の符号と解の形（$A > 0$ のとき） {#tbl-ahl514-ksign}")
+in_text("表の下に A の注意", "**$A$ の符号にも気をつけてください。** $A < 0$ なら曲線は "
+        "$x$ 軸の**下側**にあり、増減の向きが逆になります。")
+in_text("増え続けるの箇所にも A>0",
+        "$P = Ae^{kt}$ は、$A > 0$ かつ $k > 0$ ならどこまでも増えます"
+        "（個体数のモデルなので $A > 0$ です）。")
+in_text("旧・無条件", "$P = Ae^{kt}$ は、$k > 0$ ならどこまでも増えます。", False)
+
+# A の符号で増減が入れかわることを数値で確かめる
+import math as _m
+for _A, _k, _label in ((2.0, 0.5, "up"), (-2.0, 0.5, "down"),
+                       (2.0, -0.5, "down"), (-2.0, -0.5, "up")):
+    _y = [_A * _m.exp(_k * x) for x in (0, 1, 2, 3)]
+    _inc = all(a < b for a, b in zip(_y, _y[1:]))
+    eq("A=%g, k=%g は %s" % (_A, _k, _label), _inc, _label == "up")
+eq("A=0 なら恒等的に 0",
+   {round(0.0 * _m.exp(0.5 * x), 12) for x in range(6)}, {0.0})
+eq("A<0, k<0 は下から 0 に近づく",
+   -2.0 * _m.exp(-0.5 * 20) < 0 and abs(-2.0 * _m.exp(-0.5 * 20)) < 1e-4, True)
+
 print()
 print(f"══════════ OK {ok} / NG {ng} ══════════")

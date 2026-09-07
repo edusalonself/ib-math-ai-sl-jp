@@ -8,7 +8,6 @@ sys.path.insert(0, os.path.dirname(__file__))
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon
 from _graph import INK, GRID, LINE, ACC, GREEN, GREY, GOLD, BOX
 
 OUT = os.path.join(os.path.dirname(__file__), "..", "..", "ai-hl",
@@ -33,16 +32,13 @@ def curve_ax(ax):
     ax.spines["bottom"].set_color(GREY)
 
 
-# ══════════════ 1. 和の sd は、直角三角形の斜辺 ══════════════
-fig, axs = plt.subplots(1, 2, figsize=(12.2, 4.4))
-
-# 左：3 つの正規曲線（M、S、その和）— 右の三角形と同じ数を使う
-ax = axs[0]
+# ══════════════ 1. 独立な normal を足すと、やはり normal ══════════════
+fig, ax = plt.subplots(figsize=(9.6, 4.6))
 xs = np.linspace(150, 480, 1200)
 for mu, sd, col, ls, lab in (
         (250.0, 8.0, LINE, "-", "$M \\sim N(250,\\,8^{2})$"),
         (180.0, 6.0, GREEN, "-", "$S \\sim N(180,\\,6^{2})$"),
-        (430.0, 10.0, ACC, "-", "$M+S \\sim N(430,\\,100)$")):
+        (430.0, 10.0, ACC, "-", "$M+S \\sim N(430,\\,10^{2})$")):
     ax.plot(xs, pdf(xs, mu, sd), color=col, lw=2.5, ls=ls, label=lab)
     y = pdf(mu, mu, sd) * 0.42
     ax.annotate("", xy=(mu - sd, y), xytext=(mu + sd, y),
@@ -53,31 +49,10 @@ for mu, sd, col, ls, lab in (
 ax.set_xlim(150, 480)
 ax.set_ylim(0, 0.082)
 ax.set_xlabel("mass (g)")
-ax.legend(fontsize=10, loc="upper center", frameon=False)
-ax.set_title("adding two normals gives another normal",
-             fontsize=12, color=INK, pad=10)
+ax.legend(fontsize=10.5, loc="upper center", frameon=False)
+ax.set_title("adding two independent normals gives another normal",
+             fontsize=12.5, color=INK, pad=10)
 curve_ax(ax)
-
-# 右：sd はピタゴラスで合成される
-ax = axs[1]
-ax.set_xlim(-1.2, 13.0)
-ax.set_ylim(-2.6, 10.2)
-ax.set_aspect("equal")
-ax.axis("off")
-A, B, C = (0.0, 0.0), (8.0, 0.0), (8.0, 6.0)
-ax.add_patch(Polygon([A, B, C], closed=True, fc="#eaf2fb", ec=LINE, lw=2.4))
-ax.plot([7.3, 7.3, 8.0], [0.0, 0.7, 0.7], color=LINE, lw=1.4)
-ax.text(4.0, -0.75, "$\\sigma_{1} = 8$", fontsize=13, ha="center",
-        va="top", color=LINE)
-ax.text(8.45, 3.0, "$\\sigma_{2} = 6$", fontsize=13, ha="left",
-        va="center", color=GREEN)
-ax.text(3.2, 3.8, "$\\sigma = \\sqrt{8^{2}+6^{2}} = 10$", fontsize=13,
-        ha="center", va="center", color=ACC, rotation=36.87, bbox=BOX)
-ax.text(6.0, 9.2, "standard deviations combine like the sides\n"
-                  "of a right-angled triangle, NOT by adding",
-        fontsize=11.5, ha="center", va="center", color=INK)
-ax.text(6.0, -2.15, "$8 + 6 = 14$  is wrong.   $\\sqrt{8^{2}+6^{2}} = 10$  "
-                    "is right.", fontsize=11.5, ha="center", color=ACC)
 fig.tight_layout()
 save(fig, "ahl-4-15-sum.svg")
 

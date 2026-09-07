@@ -266,7 +266,7 @@ for y0, c in ((-1.2, LINE), (0.0, GREY), (0.5, GREEN), (1.5, GOLD)):
 ax.text(-3.0, 0.35, "$y = 0$ is a solution too", fontsize=10.5, color=GREY,
         bbox=BOX, zorder=8)
 ax.set_title("(d)  $\\dfrac{dy}{dx} = y$:  solution curves never CROSS\n"
-             "(there is only ONE slope at each point)", fontsize=12.5,
+             "(one starting point gives only ONE solution)", fontsize=12.5,
              color=INK, pad=10)
 
 fig.suptitle("What a slope field tells you at a glance", fontsize=15, y=0.995)

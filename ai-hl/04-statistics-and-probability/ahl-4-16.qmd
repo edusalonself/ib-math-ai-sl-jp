@@ -4,43 +4,50 @@ sidebar: ai-hl
 
 # AHL 4.16 — Confidence intervals for the mean of a normal population（正規母集団の平均の信頼区間） {#sec-ahl-4-16}
 
+標本平均 $\bar{x}$ は、標本を取り直すたびに少しずつ変わります。ですから、$\bar{x}$ だけを使って **population mean**（母平均）$\mu$ をぴったり当てることはできません。このページでは、$\mu$ が入りそうな範囲を **confidence interval**（信頼区間）として求めます。
+
+読む順番は、こうです。
+
+1. なぜ $1$ つの推定値だけでは足りないのか（[第1節](#idea)）
+2. $95\%$ confidence interval の意味（[第2節](#meaning)）
+3. 区間の形と、幅を決めるもの（[第3節](#form)・[第7節](#width)）
+4. $z$-interval と $t$-interval の使い分け（[第5節](#which)）
+5. 文脈に合わせた答え方（[第8節](#interpret)）
+
 ::: {.callout-note}
 ## What you should be able to do
 - **confidence interval**（信頼区間）が何を表しているかを、正しい言い方で説明できる。
-- **$\sigma$ が分かっているときは normal、分からないときは $t$ 分布**を使う、と判断できる。
+- **$\sigma$ が分かっているときは normal distribution、分からないときは $t$-distribution（$t$ 分布）**を使う、と判断できる。
 - 電卓の `z Interval` と `t Interval` に、データからでも統計量からでも入力でき、**母集団が normal であること**が前提だと言える。
-- 区間の**幅を決める $3$ つ**（信頼水準・$n$・ばらつき）を言える。
+- 区間の**幅を決める $3$ つ**（confidence level・$n$・ばらつき）を言える。
 - 求めた区間を、**問題の文脈の言葉で**解釈して書ける。
 - $2$ つの区間が**重なっているとき**、何が言えて何が言えないかを述べられる。
 :::
 
 ::: {.callout-important}
-## AHL 4.15 の $\bar{X}$ を、逆向きに使います
-[AHL 4.15](ahl-4-15.qmd#xbar) では、$\mu$ が**分かっている**ところから
+## AHL 4.15 で学んだこと／このページで新しく学ぶこと
+[AHL 4.15](ahl-4-15.qmd#xbar) で学んだのは、**$\mu$ が分かっているとき、標本平均 $\bar{X}$ がどのように変動するか**でした。
 
 $$
 \bar{X} \sim N\!\left(\mu,\ \frac{\sigma^{2}}{n}\right)
 $$
 
-を使って、$\bar{X}$ がどのあたりに来るかを調べました。
+**このページで新しく学ぶのは、その反対向きの読み方です。** 現実には、分からないのは $\mu$ のほうです。分かるのは、実際にとった標本から計算した $\bar{x}$ だけです。そこで
 
-**この項目は、その逆です。** 現実には $\mu$ のほうが分かりません。分かるのは、実際にとった標本の $\bar{x}$ です。そこから
+> **$\mu$ は、だいたいどのあたりにあると言えそうか。**
 
-> **$\mu$ は、だいたいどのあたりにあると言えるか。**
+を答えます。「標本平均は母平均の近くに出やすい」という AHL 4.15 の性質を逆に使い、**$\bar{x}$ のまわりに $\mu$ の候補となる範囲を作る**——これが confidence interval です。
 
-を答えるのが confidence interval です。**同じ関係を、反対向きに読む**わけです。
+::: {.callout-note appearance="simple"}
+**$\bar{X}$ と $\bar{x}$ は、別のものです。** $\bar{X}$ は標本を取る前の「変化する標本平均」を表し、$\bar{x}$ は実際の標本から得られた $1$ つの数値を表します。このページでは、$48.6$ のような**得られた数値**が $\bar{x}$ です。
+:::
 :::
 
 ::: {.callout-note}
-## 公式集に、この項目の欄はありません
-AI HL の公式集は **4.14 の次が 4.17** です。4.16 の欄は印刷されていません。
+## AHL 4.16 専用の新しい公式はありません
+AI HL の公式集は **4.14 の次が 4.17** で、4.16 の欄は印刷されていません。使うのは、AHL 4.14 と 4.15 で学んだ **standard error**（標準誤差）と、normal distribution・$t$-distribution の組み合わせです。
 
-**そして、手で計算する式も要りません。** 電卓に `z Interval` と `t Interval` という機能があり、それが区間を返します。
-
-**点になるのは、$2$ か所です。**
-
-- **どちらの機能を使うか**を決めること（[第5節](#which)）
-- 出てきた区間を、**文脈の言葉で説明する**こと（[第8節](#interpret)）
+試験では、区間そのものは主に GDC で計算します（`z Interval` と `t Interval` の $2$ つがあり、使い分けは[第5節](#which)で説明します）。**点になるのは、どちらを使うかを決めることと、出てきた区間を文脈に合わせて説明することです。**
 
 シラバスも、そこを名指ししています。
 
@@ -55,93 +62,148 @@ AI HL の公式集は **4.14 の次が 4.17** です。4.16 の欄は印刷さ�
 
 **では、$\mu$ は $48.6$ g なのでしょうか。** そうとはかぎりません。別の $20$ 枚を量れば、$48.2$ g かもしれないし $49.1$ g かもしれません（[AHL 4.15](ahl-4-15.qmd#xbar)）。
 
-$\bar{x} = 48.6$ という **$1$ つの数**（**point estimate**、点推定値）だけでは、**それがどれくらい当てになるのか**が分かりません。
+$\bar{x} = 48.6$ という **$1$ つの数**だけでは、**それがどれくらい当てになるのか**が分かりません。そこで、$\mu$ の推定のしかたを $2$ つ並べて考えます。
 
-そこで、**幅のある答え**にします。
+- **point estimate**（点推定値）… $\mu$ を $1$ つの数 $\bar{x}$ で推定する
+- **interval estimate**（区間推定）… $\mu$ が入りそうな**範囲**で推定する
+
+このページで作るのは、$2$ つ目のほうです。形は、いつもこうなります。
 
 $$
-\text{推定値} \ \pm \ \text{誤差の幅}
+\text{confidence interval} = \text{point estimate} \ \pm \ \text{margin of error}
 $$ {#eq-ahl416-form}
 
-これが **confidence interval**（信頼区間）です。$47.5 < \mu < 49.7$ のような形で答えます。
+**margin of error**（誤差の幅）は、点推定値の左右にとる幅のことです。これが **confidence interval**（信頼区間）で、$47.5 < \mu < 49.7$ のような形で答えます。
+
+この $2$ つの書き方が**同じ区間**であることは、計算で確かめられます。
+
+$$
+\text{中心} = \frac{47.5 + 49.7}{2} = 48.6, \qquad \text{margin of error} = 49.7 - 48.6 = 1.1
+$$
+
+ですから $47.5 < \mu < 49.7$ は、$48.6 \pm 1.1$ と**同じ区間**です。
 
 ::: {.callout-tip}
 ## 区間には、必ず $2$ つの情報が入っています
 $(47.5,\ 49.7)$ という区間は、**$2$ つのこと**を同時に言っています。
 
-- **どこか** … 中心が $48.6$。これは $\bar{x}$ そのものです
-- **どれくらい確かか** … 幅が $2.2$。狭いほど、はっきりしたことが言えています
+- **どこか** … 中心が $48.6$。これは $\bar{x}$ そのもの、つまり point estimate です
+- **どれくらい確かか** … margin of error が $1.1$（幅は $2.2$）。**同じ confidence level で比べたとき**、狭いほどはっきりしたことが言えています
 
-「平均は $48.6$ g です」だけでは、$2$ つ目が抜けます。**幅があること**が、点推定値との違いです。
+「平均は $48.6$ g です」だけでは、$2$ つ目が抜けます。**幅があること**が、point estimate との違いです。
 :::
 
 ### 2. 「$95\%$ の信頼区間」とは何か {#meaning}
 
-**答案でいちばん問われるのは、この意味のほうです。**
+**答案でいちばん問われるのは、この意味のほうです。** まず、言葉で押さえてください。
 
-$95\%$ confidence interval とは、**次のような作り方をした区間**のことです。
+> $95\%$ confidence interval は、**「同じ方法で標本を取り、同じ方法で区間を作ることを何度もくり返すと、長期的には約 $95\%$ の区間が真の母平均 $\mu$ を含む」**という意味です。
 
-> 同じやり方で標本をとって区間を作る、ということを何度もくり返すと、**そのうち約 $95\%$ の区間が $\mu$ を含む。**
+図で見ると、こうなります。
 
 ![What a 95% confidence interval means](img/ahl-4-16-meaning.svg){#fig-ahl416-meaning width=80%}
 
-@fig-ahl416-meaning は、$\mu = 50$ の母集団から $12$ 個ずつの標本を **$100$ 回**とって、そのたびに $95\%$ 区間を作ったものです。
+@fig-ahl416-meaning は、$\mu = 50$ の母集団から $12$ 個ずつの標本を **$100$ 回**とって、そのたびに $95\%$ 区間を作ったものです。次の順に見てください。
 
-- 区間は $100$ 本とも**別々の場所**にあります。標本が違うからです
-- そのうち **$95$ 本が $\mu = 50$ をまたいで**います
-- **$5$ 本は外して**います（赤）
+1. **横線 $1$ 本が、$1$ 回の標本から作った信頼区間**です
+2. 標本が変わるので、**区間の中心も両端も、毎回変わります**
+3. **オレンジ色の縦線**が、動かない真の母平均 $\mu = 50$ です
+4. **青い区間は $\mu$ を含み、赤い区間は含んでいません**
+5. $100$ 本すべてが含むのではなく、**長期的に約 $95\%$ が含みます**
 
-**$95\%$ とは、この $95$ 本のこと**です。
+::: {.callout-warning}
+## 「$100$ 回やれば、ちょうど $95$ 回成功する」ではありません
+$95\%$ は**長期的な割合**です。$100$ 回作ったときに $\mu$ を含む本数は、$93$ 本のことも $97$ 本のこともあります。
+
+@fig-ahl416-meaning はその一例で、たまたま $95$ 本が含んでいます。
+:::
 
 ::: {.callout-warning}
 ## 「$\mu$ がこの区間に入る確率が $95\%$」という言い方には、注意が要ります
-$\mu$ は**動きません。** 知らないだけで、$1$ つの決まった値です。
+**区間を計算した後は、$\mu$ は動かず、区間もすでに決まっています。**「変わる」のは、標本を取り直したときに作られる区間のほうです。
 
-いま手元にある $1$ つの区間を見たとき、それは $\mu$ を**含んでいるか、含んでいないか**のどちらかです。@fig-ahl416-meaning の赤い $5$ 本は、はじめから外しています。
+ですから、いま手元にある $1$ つの区間は、$\mu$ を**含んでいるか、含んでいないか**のどちらかです。@fig-ahl416-meaning の赤い区間は、はじめから外しています。$95\%$ は、その**作り方の成績**を表しています。
 
-**動くのは区間のほう**です。標本が変われば区間も変わります。$95\%$ は、**その作り方の成績**を表しています。
-
-**答案では、この違いに深入りする必要はありません。** 次の型で書けば十分です（[第8節](#interpret)）。
+**答案では、この違いに深入りする必要はありません。** 次の型で書けば、この論点に触れずに済みます（[第8節](#interpret)）。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*We are $95\%$ confident that the mean mass of a chocolate bar lies between $47.5$ g and $49.7$ g.*
+*We are $95\%$ confident that the population mean mass of a chocolate bar lies between $47.5$ g and $49.7$ g.*
 :::
+
+（チョコレートバーの母平均質量は $47.5$ g から $49.7$ g のあいだにあると、$95\%$ の信頼度で推定できる、という意味です。）
 
 **`We are 95% confident that ...`** という書き出しが、そのまま使えます。
 :::
 
-### 3. 区間は、いつも「中心 $\pm$ 誤差の幅」の形です {#form}
+### 3. 区間は、いつも「$\bar{x}$ $\pm$ margin of error」の形です {#form}
 
-電卓が返す区間は、必ずこの形をしています。
+confidence interval は、**分からない population mean（母平均）$\mu$ を、手元の sample mean（標本平均）$\bar{x}$ から推定する範囲**です。$\bar{x}$ を中心にして、その左右に margin of error を足し引きして作ります。
 
 $$
-\bar{x} \ \pm \ (\text{critical value}) \times \underbrace{\frac{\sigma \ \text{または} \ s}{\sqrt{n}}}_{\text{standard error}}
+\bar{x} \ \pm \ (\text{critical value}) \times (\text{standard error})
 $$ {#eq-ahl416-ci}
 
-$\dfrac{\sigma}{\sqrt{n}}$ は **standard error**（標準誤差）といいます。[AHL 4.15](ahl-4-15.qmd#narrower) で出てきた $\bar{X}$ の standard deviation と、同じものです。**$\sigma$ が分からないときは、代わりに $s$ を入れます。**
+- $\bar{x}$ … 区間の中心となる **sample mean**（標本平均）
+- **critical value**（臨界値）… **confidence level**（信頼水準）に合わせて、standard error **何個分**まで区間を広げるかを表す数
+- **standard error**（標準誤差）… sample mean が標本ごとに、どれくらいばらつくかを表す値
 
-**critical value**（臨界値）は、**confidence level**（信頼水準）で決まる数です。$95\%$ なら $1.96$ 前後になります。
+この $2$ つの中身は、$\sigma$ が分かっているかどうかで変わります。
+
+#### $\sigma$ が分かっている場合 {#form-z}
+
+$$
+\bar{x} \ \pm \ z^{*} \frac{\sigma}{\sqrt{n}}
+$$ {#eq-ahl416-z}
+
+- $\sigma$ … **population standard deviation**（母標準偏差）
+- $n$ … **sample size**（標本の大きさ）
+- $\dfrac{\sigma}{\sqrt{n}}$ … sample mean の standard error（[AHL 4.15](ahl-4-15.qmd#narrower) で出てきた $\bar{X}$ の standard deviation そのものです）
+- $z^{*}$ … normal distribution から決まる critical value
+
+$95\%$ confidence interval では、$z^{*} = 1.96$ です。
+
+#### $\sigma$ が分からない場合 {#form-t}
+
+$$
+\bar{x} \ \pm \ t^{*} \frac{s}{\sqrt{n}}
+$$ {#eq-ahl416-t}
+
+- $s$ … **sample standard deviation**（標本標準偏差）。ここでは、母標準偏差の不偏推定値 $s_{n-1}$（電卓の $s_x$）のことです
+- $\dfrac{s}{\sqrt{n}}$ … $\sigma$ を $s$ で置きかえて**推定した** standard error
+- $t^{*}$ … **$t$-distribution** から決まる critical value
+
+#### なぜ $z$ と $t$ を使い分けるのか {#z-vs-t}
+
+- $\sigma$ が分かっている場合は、standard error を**正確に**求められます。ですから normal distribution の $z^{*}$ を使います。
+- $\sigma$ が分からない場合は、標本から求めた $s$ で**推定します**。推定による不確かさが加わるので、そのぶんを見こんで、裾が少し広い $t$-distribution を使います（[第6節](#t-dist)）。
+- $t^{*}$ は、confidence level と **degrees of freedom**（自由度）$\text{df} = n - 1$ によって決まります。
+
+$$
+\boxed{\ \sigma \ \text{が既知} \ \Rightarrow \ z \qquad \sigma \ \text{が未知} \ \Rightarrow \ t\ }
+$$ {#eq-ahl416-rule}
+
+**この判断は、計算より先にします**（[第5節](#which)）。
 
 ::: {.callout-note appearance="simple"}
 **この式を手で計算する必要はありません。** 電卓が区間の両端を返します。
 
-ただ、**形を知っていると検算になります。** 電卓が返した $2$ 数の**まん中は、必ず $\bar{x}$** です。そこがずれていたら、入力を間違えています。
+ただ、**式の形を知っていると、電卓の選び方と入力を確かめられます。** $\sigma$ の欄があるのが `z Interval`、`sx` の欄があるのが `t Interval` です。そして返ってきた $2$ 数の**まん中は、必ず $\bar{x}$** になります。そこがずれていたら、入力を間違えています。
 :::
 
-### 4. 前提は「母集団が normal であること」です {#assumption}
+### 4. 母集団が normally distributed であることを確かめます {#assumption}
 
 シラバスの Content 欄は、こう書かれています。
 
 > Confidence intervals for the mean of **a normal population**.
 
-**もとの母集団が normal であること**が、この項目全体の前提です。問題文には `normally distributed` と書かれます。
+この項目では、基本的に**母集団が normally distributed（正規分布にしたがう）と仮定します。** 問題文には `normally distributed` と書かれます。**このページの問題は、すべてこの前提でできています。**
 
-書かれていないときは、$n$ が大きければ [AHL 4.15 の central limit theorem](ahl-4-15.qmd#clt) が $\bar{X}$ の形を保証してくれるので、区間はほぼ正しく働きます。**試験では、必要な条件は問題文に書かれます。**
+母集団が正規分布でない場合でも、標本が十分に大きければ、[AHL 4.15 の central limit theorem](ahl-4-15.qmd#clt)（中心極限定理）によって標本平均を近似的に正規分布として扱えることがあります。**どちらを使えるかは、問題文の条件を確かめてください。**
 
 ::: {.callout-note appearance="simple"}
-`State the assumption you have made`（おいた仮定を述べなさい）と聞かれることがあります。そのときは
+問題文に正規性が明記されていないのに、小さい標本でこの方法を使った場合は、その仮定を答案に書くよう求められることがあります。`State the assumption you have made`（おいた仮定を述べなさい）と聞かれたら
 
 ::: {.model-answer}
 **試験ではこう書く**
@@ -152,46 +214,51 @@ $\dfrac{\sigma}{\sqrt{n}}$ は **standard error**（標準誤差）といいま�
 と書きます。[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) の $t$ 検定でも、同じ仮定を書きました。
 :::
 
-### 5. $\sigma$ が分かるか分からないかで、使うものが変わります {#which}
+### 5. 計算の前に、$\sigma$ が分かっているか確認する {#which}
 
-**この項目でいちばん失点するのは、ここです。** シラバスが、はっきり指定しています。
+**この項目でいちばん失点するのは、ここです。** そして、計算を始める**前に**決めることです。シラバスの Guidance 欄が、はっきり指定しています。
 
 > Use of the **normal distribution when $\sigma$ is known** and the **$t$-distribution when $\sigma$ is unknown**, **regardless of sample size.**
 
-表にすると、こうです。
+判断のしかたは @eq-ahl416-rule のとおりで、$\sigma$ が既知なら `z Interval`、未知なら `t Interval` です（[第3節](#z-vs-t)）。ここで見るのは、**問題文からその $\sigma$ を読み取る**ところです。
 
-| 問題文にあるもの | 使う分布 | 電卓 |
-|---|---|---|
-| **母集団**の standard deviation $\sigma$ が与えられている | normal | `z Interval` |
-| $\sigma$ が与えられていない（標本から $s$ を出す） | **$t$** | `t Interval` |
+注意が $4$ つあります。
 
-: どちらを使うか {#tbl-ahl416-which}
+- **$n$ の大小だけで $z$ と $t$ を選ばないでください。** 見るのは、$\sigma$ が分かっているかどうかだけです。
+- 問題文に $s$ や `sample standard deviation` と書かれていても、**$\sigma$ が分かったことにはなりません。**
+- `regardless of sample size` は、「標本が大きければ、未知の $\sigma$ を既知としてよい」という意味では**ありません。**
+- このページの範囲では、**$\sigma$ が未知なら、標本が大きくても $t$-interval** を選びます。
 
-::: {.callout-important}
-## `regardless of sample size` — $n$ の大きさは関係ありません
-ここを取りちがえる答案が多いところです。
+問題文の書き方で読み分けます。
 
-**$n$ が大きければ $t$ ではなく normal でよい、ということはありません。** シラバスは `regardless of sample size` と書いています。
+| 問題文の表現 | 分かっているもの | 使う分布 | GDC |
+|---|---|---|---|
+| `the population standard deviation is ...` | $\sigma$ | normal | `z Interval` |
+| $\sigma = 2.5$ のように直接示される | $\sigma$ | normal | `z Interval` |
+| `the sample standard deviation is ...` | $s$ | **$t$** | `t Interval` |
+| データの列だけが与えられる | GDC が $s$ を計算する | **$t$** | `t Interval` |
 
-**$\sigma$ が分からないなら、$n = 200$ でも $t$ です。**
+: $z$ と $t$ の読み分け {#tbl-ahl416-which}
 
-[AHL 4.15](ahl-4-15.qmd#n30) の $n > 30$ という目安は、**中心極限定理の話**でした。**別の話です。** 混ぜないでください。
+::: {.callout-warning}
+## `sample variance` が与えられたときは、そのまま入れられません
+問題文が `the sample variance is 14.7` のように $s_n^{2}$ を与えてくることがあります。この値は $n$ で割ったものなので、**電卓の `sx` にそのまま入れてはいけません。** $s_{n-1}^{2} = \dfrac{n}{n-1}s_n^{2}$ に直してから使います（[AHL 4.18b](ahl-4-18b.qmd)）。
+
+`the unbiased estimate of the population standard deviation is 2.5` と書かれていれば、それが $s_{n-1}$ そのものです。
 :::
 
-#### 見分け方は「$\sigma$ が問題文にあるか」だけです {#spot}
-
-問題文の言葉で見分けます。
-
-| 問題文の書き方 | 意味 | 使うもの |
-|---|---|---|
-| `the population standard deviation is $\sigma = 2.5$` | $\sigma$ が与えられた | `z Interval` |
-| `it is known from experience that $\sigma = 2.5$` | $\sigma$ が与えられた | `z Interval` |
-| `the sample has standard deviation $2.5$` | これは $s$。$\sigma$ ではない | `t Interval` |
-| データの列だけが与えられている | $\sigma$ は分からない | `t Interval` |
-
-: 問題文の読み分け {#tbl-ahl416-spot}
+::: {.callout-note appearance="simple"}
+`it is known from experience that the standard deviation is 2.5` のような書き方もあります。このときは、**何が既知なのか**を読み取ってください。ここで既知なのは母集団の standard deviation、つまり $\sigma$ ですから `z Interval` です。
 
 **`population` と書いてあるか、`sample` と書いてあるか。** そこに丸を付けてから始めてください（[AHL 4.14](ahl-4-14.qmd#calculator)）。
+:::
+
+::: {.callout-important}
+## AHL 4.15 の $n > 30$ とは、別の話です
+[AHL 4.15](ahl-4-15.qmd#n30) の $n > 30$ という目安は、**central limit theorem が使えるかどうか**の話でした。
+
+こちらは、**$\sigma$ が分かっているかどうか**の話です。**混ぜないでください。**
+:::
 
 ::: {.callout-note}
 ## 試験で多いのは、$t$ のほうです
@@ -200,15 +267,15 @@ $\dfrac{\sigma}{\sqrt{n}}$ は **standard error**（標準誤差）といいま�
 `z Interval` が出るのは、「長年の記録から $\sigma$ が分かっている」という設定のときです。
 :::
 
-### 6. $t$-distribution は、正規分布より少しだけ広い {#t-dist}
+### 6. なぜ $t$-distribution を使うのか {#t-dist}
 
-**$t$-distribution**（$t$ 分布）は、[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) の $t$ 検定で一度出てきています。この項目でも、**電卓が使うだけ**なので、形を細かく知る必要はありません。
+[第3節](#z-vs-t)で見たとおり、$\sigma$ が未知のときは、$s$ で standard error を**推定する**ぶん不確かさが増えます。それを埋め合わせるのが **$t$-distribution**（$t$ 分布）です。ここでは、その中身を数で見ます。
 
-知っておくとよいのは、$2$ つです。
+$t$-distribution は、[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) の $t$ 検定で一度出てきています。この項目でも**電卓が使うだけ**なので、形を細かく知る必要はありません。知っておくとよいのは、$2$ つです。
 
-**$1$ つ目。$t$ 分布は、正規分布より裾が厚く、少しだけ広がっています。** ですから臨界値も大きくなります。
+**$1$ つ目。$t$-distribution は normal distribution より裾が広いので、同じ confidence level なら critical value が大きくなります。**
 
-| 信頼水準 | normal の臨界値 | $t$ の臨界値（$n = 8$） | $t$ の臨界値（$n = 20$） |
+| confidence level | normal の critical value | $t$ の critical value（$n = 8$、$\text{df} = 7$） | $t$ の critical value（$n = 20$、$\text{df} = 19$） |
 |---|---|---|---|
 | $90\%$ | $1.645$ | $1.895$ | $1.729$ |
 | $95\%$ | $1.960$ | $2.365$ | $2.093$ |
@@ -218,41 +285,49 @@ $\dfrac{\sigma}{\sqrt{n}}$ は **standard error**（標準誤差）といいま�
 
 **この表は、比べるためのものです。** 試験で critical value を表から引く必要はありません。電卓が区間そのものを返します。
 
-**$\sigma$ が分からないぶん、区間を広めにとって不確かさを埋め合わせている**——そう考えると納得できます。
-
-**$2$ つ目。$n$ が大きくなると、$t$ の臨界値は normal の値に近づきます。** @tbl-ahl416-critical で、$n = 8$ の $2.365$ より $n = 20$ の $2.093$ のほうが $1.960$ に近いことを見てください。
+**$2$ つ目。$n$ が大きくなると $s$ による推定が安定するので、$t$-distribution は normal distribution に近づきます。** @tbl-ahl416-critical で、$n = 8$ の $2.365$ より $n = 20$ の $2.093$ のほうが $1.960$ に近いことを見てください。
 
 ただし、**どこまでいっても normal より少し大きいまま**です。これが `regardless of sample size` の背景にある事実です。
 
 #### degrees of freedom は $n - 1$ です {#df}
 
-$t$ 分布は、**degrees of freedom**（自由度）によって形が変わります。信頼区間では
+$t$-distribution は、**degrees of freedom**（自由度）によって形が変わります。$1$ 標本の平均の $t$-interval では
 
 $$
 \text{degrees of freedom} = n - 1
 $$ {#eq-ahl416-df}
 
-です。$n - 1$ で割った $s_{n-1}$ を使うから、というのが理由です（[AHL 4.14](ahl-4-14.qmd#s2)）。
+です。理由は、**標本平均を決めてしまうと、$n$ 個の偏差のうち自由に決められるのは $n - 1$ 個になる**からです（$n-1$ で割った $s_{n-1}$ を使うのも、同じ事情です。[AHL 4.14](ahl-4-14.qmd#s2)）。
 
-**電卓は自動で計算します。** $n$ を入力すれば、自由度は勝手に決まります。
+たとえば $n = 8$ なら、$\text{df} = 8 - 1 = 7$ です。
+
+**電卓は自動で計算します。** $n$ を入力すれば自由度は勝手に決まるので、試験で複雑な理論を覚える必要はありません。
 
 ### 7. 区間の幅を決める $3$ つ {#width}
+
+**以下は、表に書かれている要素以外の条件が同じ場合の比較です。**
 
 ![What makes a confidence interval wider or narrower](img/ahl-4-16-width.svg){#fig-ahl416-width width=100%}
 
 | 変えるもの | 幅への影響 | なぜ |
 |---|---|---|
-| **信頼水準**を上げる（$95\% \to 99\%$） | **広くなる** | 外す割合を減らすには、広く網を張るしかない |
-| **$n$ を増やす** | **狭くなる** | standard error $\dfrac{s}{\sqrt{n}}$ が小さくなる |
-| データの**ばらつき**が大きい | **広くなる** | $s$ が大きいと standard error も大きい |
+| **confidence level** を上げる（$95\% \to 99\%$） | **広くなる** | critical value が大きくなる |
+| **$n$ を増やす** | **狭くなる** | standard error が小さくなる |
+| データの**ばらつき**が大きくなる | **広くなる** | standard error が大きくなる |
 
-: 幅を決める $3$ つ {#tbl-ahl416-width}
+: 幅を決める $3$ つ（ほかの条件は同じとして） {#tbl-ahl416-width}
+
+それぞれ、次のようにつながっています。
+
+- **confidence level を上げる** → より多くの場合に $\mu$ を含みたい → critical value が大きくなる → 区間が広くなる
+- **$n$ を増やす** → standard error $\dfrac{s}{\sqrt{n}}$ または $\dfrac{\sigma}{\sqrt{n}}$ が小さくなる → 区間が狭くなる
+- **データのばらつきが大きくなる** → $s$ または $\sigma$ が大きくなる → standard error が大きくなる → 区間が広くなる
 
 ::: {.callout-tip}
 ## 「確かさ」と「細かさ」は、取り引きの関係です
-$99\%$ の区間は $95\%$ より**広く**なります。@fig-ahl416-width の左で、$4.02 \to 4.87 \to 6.65$ と広がっているとおりです。
+**confidence level を高くすると、同じ方法をくり返したときに $\mu$ を含む割合は高くなります。その代わり、推定できる範囲は広くなり、精度は低くなります。**
 
-つまり、**外す危険を減らそうとすると、答えが大ざっぱになります。**
+@fig-ahl416-width の左で、$4.02 \to 4.87 \to 6.65$ と広がっているとおりです。
 
 「$\mu$ は $0$ から $1000$ のあいだ」と言えば、まず外しません。しかし、**何も言っていないのと同じ**です。
 
@@ -260,12 +335,12 @@ $95\%$ という水準は、この $2$ つの折り合いとして、よく使�
 :::
 
 ::: {.callout-note}
-## $t$ のときは、$n$ を $4$ 倍にしても幅はぴったり半分になりません
+## 「$n$ を $4$ 倍にすると幅が半分」は、critical value が変わらないときの話です
 standard error は $\dfrac{s}{\sqrt{n}}$ なので、$n$ を $4$ 倍にすると **standard error はちょうど半分**になります。
 
-ただし $t$ を使うときは、**臨界値も一緒に小さくなります**（[第6節](#t-dist)）。ですから幅は、半分より**もう少し縮みます。**
+**幅がちょうど半分になるのは、critical value と standard deviation が同じままのとき**です。$\sigma$ が既知で normal を使うときは、critical value が動かないので**ちょうど半分**です。
 
-$\sigma$ が既知で normal を使うときは、臨界値が動かないので**ちょうど半分**です。
+$t$ を使うときは、$n$ が増えると **critical value も一緒に小さくなります**（[第6節](#t-dist)）。ですから幅は、半分より**もう少し縮みます。**
 :::
 
 ### 8. 文脈の言葉で書く {#interpret}
@@ -277,32 +352,49 @@ $\sigma$ が既知で normal を使うときは、臨界値が動かないので
 書き方は、いつも同じ型です。
 
 ::: {.callout-important}
-## 答案の型
+## 答案の型（空欄に当てはめる）
 ::: {.model-answer}
 **試験ではこう書く**
 
-*We are $95\%$ confident that the mean mass of a chocolate bar lies between $47.5$ g and $49.7$ g.*
+*We are [confidence level]% confident that the population mean [quantity] lies between [lower bound] and [upper bound] [unit].*
 :::
 
-$3$ つの部品でできています。
+空欄に入れるものは、次のとおりです。
 
-1. **`We are 95% confident that`** … 信頼水準
-2. **`the mean mass of a chocolate bar`** … **何の平均か**を、その問題の言葉で
-3. **`lies between 47.5 g and 49.7 g`** … 区間と**単位**
+- **confidence level** … $90$、$95$、$99$ など
+- **population mean quantity** … **何の母平均か**を、その問題の言葉で
+- **lower and upper bounds** … GDC で得た区間の下限・上限
+- **unit** … g、hours、mg per litre など
 
-**$2$ 番目が抜けている答案が、いちばん多い**です。「平均」だけでは足りません。**何の**平均なのかを書いてください。
+チョコレートの例なら、こうなります。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*We are $95\%$ confident that the population mean mass of a chocolate bar lies between $47.5$ g and $49.7$ g.*
+:::
+
+**「何の母平均か」が抜けている答案が、いちばん多い**です。次の答案では足りません。
+
+*We are $95\%$ confident that $\mu$ is between $47.5$ and $49.7$.*
+
+足りない理由は $3$ つです。
+
+- $\mu$ が**何の平均か**が分からない
+- **単位**がない
+- **`population mean`** という意味が、文章に出ていない
+
+**`the population mean`** と書いておけば確実です。
 :::
 
 ::: {.callout-warning}
-## $\mu$ ではなく、$\bar{x}$ について書いてしまう
+## $1$ つ $1$ つの値について書いてしまう
 *"$95\%$ of the chocolate bars weigh between $47.5$ g and $49.7$ g"* は**誤り**です。
 
-信頼区間が言っているのは、**平均 $\mu$ がどこにあるか**であって、$1$ 枚ずつの重さの話ではありません。
-
-**`the mean ...`** という語を必ず入れてください。
+confidence interval が言っているのは、**population mean $\mu$ がどこにあるか**であって、$1$ 枚ずつの重さの話ではありません。
 :::
 
-### 9. $2$ つの区間が重なるとき {#compare}
+### 9. 区間が重なっているときに言えること {#compare}
 
 シラバスの Connections 欄に、こう書かれています。
 
@@ -310,21 +402,27 @@ $3$ つの部品でできています。
 
 ![Comparing two confidence intervals](img/ahl-4-16-overlap.svg){#fig-ahl416-overlap width=100%}
 
-@fig-ahl416-overlap の左では、$2$ つの区間が**重なっています。** brand B の $\bar{x}$ のほうが大きくても、**「B のほうが平均が大きい」とは言い切れません。**
+@fig-ahl416-overlap の左では、$2$ つの区間が**重なっています**（図のピンク色の部分です）。brand B の $\bar{x}$ のほうが大きくても、**「B のほうが母平均が大きい」とは言い切れません。**
 
-重なっている範囲には、**両方の $\mu$ が同時に入りうる**からです。$\mu_A = \mu_B = 55$ でも、この $2$ つの区間が出てくることがあります。
+ここで、**言えることと言えないこと**を分けてください。
 
-右のように**重なっていなければ**、話は変わります。**言えることが、ずっと強くなります。**
+- $2$ つの区間が重なっていることは、**$2$ つの母平均が等しいことの証明ではありません。**
+- ただし、**この $2$ つの区間だけを根拠として**、「一方の母平均がもう一方より大きい」と**断定することはできません。**
+- 差を正式に検討するには、[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) の $2$ 標本の $t$ 検定のような、別の推測統計の方法が必要になります。
+
+右のように**重なっていなければ**、話は変わります。**区間に含まれる値**については、A 側のどの値も B 側のどの値より小さくなっているので、**言えることがずっと強くなります。**
+
+ただし、信頼区間は「$\mu$ としてありうる値をすべて集めたもの」ではありません。**区間の外の値が不可能だと証明されたわけではない**ことは、頭に置いておいてください。
 
 ::: {.callout-important}
 ## 重なりを見て、答案に書けること
 ::: {.model-answer}
 **試験ではこう書く（重なっているとき）**
 
-*The two confidence intervals overlap between $54.1$ and $55.8$, so it is possible that the two means are equal. The data does not provide enough evidence to claim that brand B has the larger mean.*
+*The two confidence intervals overlap between $54.1$ and $55.8$ hundred hours, so these intervals do not provide sufficient evidence that the population mean lifetime for brand B is larger than that for brand A. The two population means could be equal.*
 :::
 
-（$2$ つの区間は $54.1$ から $55.8$ で重なっているので、$2$ つの平均が等しい可能性がある。B の平均のほうが大きいと言うだけの根拠はない、という意味です。）
+（$2$ つの区間は $54.1$ から $55.8$ で重なっているので、この $2$ つの区間だけでは、B の母平均のほうが大きいと言う根拠にならない、という意味です。$2$ つの母平均が等しい可能性も残ります。）
 
 **`overlap`（重なる）という語を使う**のが、この型の目印です。
 :::
@@ -333,7 +431,7 @@ $3$ つの部品でできています。
 
 :::: {.callout-note collapse="true" appearance="simple"}
 ## クリックすると開きます
-ここで説明するのは $1$ つです。**なぜ「中心 $\pm$ 誤差の幅」という形になるのか。**
+ここで説明するのは $1$ つです。**なぜ「$\bar{x}$ $\pm$ margin of error」という形になるのか。**
 
 [AHL 4.15](ahl-4-15.qmd#xbar) から、$\sigma$ が分かっているとき
 
@@ -341,7 +439,7 @@ $$
 \bar{X} \sim N\!\left(\mu,\ \frac{\sigma^{2}}{n}\right)
 $$
 
-でした。この分布で、**まん中の $95\%$** に入る範囲を考えます。臨界値を $1.96$ とすると
+でした。この分布で、**まん中の $95\%$** に入る範囲を考えます。critical value を $1.96$ とすると
 
 $$
 \mu - 1.96\frac{\sigma}{\sqrt{n}} \ < \ \bar{X} \ < \ \mu + 1.96\frac{\sigma}{\sqrt{n}}
@@ -368,7 +466,7 @@ $\bar{X}$ が**大文字**のあいだは、まだ標本をとっていません
 
 標本をとって $\bar{x} = 48.6$ と決まったあとは、$\mu$ もその区間も動きません。だから[第2節](#meaning)のような言い方になるのです。
 
-$\sigma$ が分からないときは、$\sigma$ の代わりに $s_{n-1}$ を入れます。**推定値で置きかえたぶん不確かさが増える**ので、$1.96$ ではなく $t$ の臨界値（もう少し大きい値）を使います。
+$\sigma$ が分からないときは、$\sigma$ の代わりに $s_{n-1}$ を入れます。**推定値で置きかえたぶん不確かさが増える**ので、$1.96$ ではなく $t$ の critical value（もう少し大きい値）を使います。
 :::
 ::::
 
@@ -376,6 +474,24 @@ $\sigma$ が分からないときは、$\sigma$ の代わりに $s_{n-1}$ を入
 
 ::: {.callout-note appearance="simple"}
 問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
+:::
+
+::: {.callout-important}
+## どの問題でも、この $4$ 段階で進みます
+1. **Parameter** … 求める母平均 $\mu$ が**何の平均か**と、その**単位**を確かめる
+2. **Conditions** … 母集団が normally distributed であることを確かめる（[第4節](#assumption)）
+3. **Method** … $\sigma$ が既知なら $z$-interval、未知なら $t$-interval（[第5節](#which)）
+4. **Interpret** … 区間を、**文脈と単位を含む文**で答える（[第8節](#interpret)）
+
+計算を始める前に、$3$ の判断を答案に $1$ 行で書いてください。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*Method: $\sigma$ is known, so a $z$-interval is used.*
+
+*Method: $\sigma$ is unknown and only $s$ is available, so a $t$-interval is used.*
+:::
 :::
 
 ::: {#exm-ahl416-z}
@@ -406,34 +522,52 @@ $\sigma$ が分からないときは、$\sigma$ の代わりに $s_{n-1}$ を入
 
 </details>
 
+---
+
+**Parameter.** 求めるのは、チョコレート $1$ 枚の**母平均の質量**（単位は g）です。
+
+**Conditions.** 問題文に `normally distributed` とあります ✓（[第4節](#assumption)）
+
 **(a)** 問題文に `population standard deviation is known to be 2.5` とあります。**$\sigma$ が与えられている**ので、normal です（[第5節](#which)）。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The population standard deviation $\sigma = 2.5$ is known, so the normal distribution should be used.*
+*The population standard deviation $\sigma = 2.5$ is known, so the normal distribution (a $z$-interval) should be used.*
 :::
 
-**(b)** `z Interval` に入れます（[GDC 第1節](#gdc-z)）。
+**(b)** *Method: $\sigma$ is known, so a $z$-interval is used.*
+
+`z Interval` に入れます（[GDC 第1節](#gdc-z)）。
 
 ```
 σ: 2.5      x̄: 48.6      n: 20      C Level: 0.95
 ```
 
 $$
-47.5 < \mu < 49.7
+47.5 < \mu < 49.7 \quad (\text{g})
 $$
 
 **検算。** 区間のまん中は $\dfrac{47.5 + 49.7}{2} = 48.6 = \bar{x}$ ✓（[第3節](#form)）
 
-手で確かめると、standard error は $\dfrac{2.5}{\sqrt{20}} = 0.559$、臨界値が $1.96$ なので誤差の幅は $1.96 \times 0.559 = 1.10$ です。$48.6 \pm 1.10$ で合っています。
+@eq-ahl416-z の形と対応させると、こうなります。
+
+$$
+\text{standard error} = \frac{2.5}{\sqrt{20}} = 0.559, \qquad \text{margin of error} = 1.96 \times 0.559 = 1.10
+$$
+
+$$
+48.6 \pm 1.10 \quad \Longrightarrow \quad 47.5 < \mu < 49.7
+$$
+
+**point estimate は $48.6$、margin of error は $1.10$** です。
 
 **(c)** [第8節](#interpret)の型で書きます。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*We are $95\%$ confident that the mean mass of a chocolate bar produced by this machine lies between $47.5$ g and $49.7$ g.*
+*We are $95\%$ confident that the population mean mass of a chocolate bar produced by this machine lies between $47.5$ g and $49.7$ g.*
 :::
 
 （この機械が作るチョコレート $1$ 枚の**平均**の重さは、$47.5$ g から $49.7$ g のあいだにあると $95\%$ の確信をもって言える、という意味です。）
@@ -447,7 +581,7 @@ $$
 47.5 < \mu < 49.7 \quad (\text{g})
 $$
 
-**(c)** *We are $95\%$ confident that the mean mass of a chocolate bar lies between $47.5$ g and $49.7$ g.*
+**(c)** *We are $95\%$ confident that the population mean mass of a chocolate bar lies between $47.5$ g and $49.7$ g.*
 :::
 :::
 
@@ -481,6 +615,12 @@ $$
 
 </details>
 
+---
+
+**Parameter.** 求めるのは、水中の化学物質の**母平均の濃度**（単位は mg per litre）です。
+
+**Conditions.** 問題文に `The concentration is normally distributed.` とあります ✓
+
 **(a)** データを電卓の列に入れて `One-Variable Statistics` を走らせます。
 
 $$
@@ -489,7 +629,9 @@ $$
 
 **読むのは $s_x$ のほうです**（[AHL 4.14](ahl-4-14.qmd#calculator)）。$\sigma_x = 0.265$ は不偏推定値ではありません。
 
-**(b)** $\sigma$ は与えられていません。データから $s$ を出したので、**$t$ を使います**（[第5節](#which)）。
+**(b)** *Method: $\sigma$ is unknown and only $s$ is available, so a $t$-interval is used.*
+
+$\sigma$ は与えられていません。データから $s$ を出したので、**$t$-interval** です（[第5節](#which)）。
 
 データがそのまま与えられているので、`t Interval` の `Data` を選べば、$\bar{x}$ も $s$ も電卓が計算します。
 
@@ -497,18 +639,30 @@ $$
 Data Input Method: Data      List: (データの列)      C Level: 0.95
 ```
 
+電卓が返すのは $(11.7635,\ 12.2365)$ です。**$3$ 桁**に丸めると、次のようになります（この問題では小数第1位までです）。
+
 $$
-11.8 < \mu < 12.2
+11.8 < \mu < 12.2 \quad (\text{mg per litre})
 $$
 
-**検算。** まん中は $12.0 = \bar{x}$ ✓
+@eq-ahl416-t の形と対応させると、$\text{df} = 8 - 1 = 7$、$t^{*} = 2.365$、standard error は $\dfrac{0.283}{\sqrt{8}} = 0.100$ なので
 
-**(c)** 主張の $12.5$ は、区間 $(11.8,\ 12.2)$ の**外**にあります。
+$$
+12.0 \pm 2.365 \times 0.100 = 12.0 \pm 0.237
+$$
+
+です。**検算。** まん中は $12.0 = \bar{x}$ ✓
+
+**(c)** 次の $3$ 段階で書きます。
+
+1. 得られた $95\%$ confidence interval は $11.8 < \mu < 12.2$ mg per litre
+2. 主張された $12.5$ mg per litre は、上限 $12.2$ より**大きい**
+3. したがって、この標本はその主張を**支持しない**
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The value $12.5$ lies outside the $95\%$ confidence interval $11.8 < \mu < 12.2$, so the data does not support the scientist's claim. A mean concentration of $12.5$ mg per litre is not consistent with this sample.*
+*The value $12.5$ lies outside the $95\%$ confidence interval $11.8 < \mu < 12.2$, so the data does not support the scientist's claim.*
 :::
 
 （$12.5$ は $95\%$ 信頼区間の外にあるので、このデータはその主張を支持しない、という意味です。）
@@ -520,7 +674,7 @@ $$
 \bar{x} = 12.0, \qquad s_{n-1} = 0.283
 $$
 
-**(b)** *$\sigma$ is unknown, so a $t$-interval is used.*
+**(b)** *Method: $\sigma$ is unknown, so a $t$-interval is used.*
 $$
 11.8 < \mu < 12.2 \quad (\text{mg per litre})
 $$
@@ -551,7 +705,15 @@ $$
 
 </details>
 
-**(a)** $\sigma$ ではなく**不偏推定値**が与えられています。ですから **$t$** です（[第5節](#which)）。
+---
+
+**Parameter.** 求めるのは、すべての生徒の**母平均の得点**です。
+
+**Conditions.** 問題文に `Test scores are normally distributed.` とあります ✓
+
+**(a)** *Method: $\sigma$ is unknown and only $s$ is available, so a $t$-interval is used.*
+
+$\sigma$ ではなく**不偏推定値**（$s$）が与えられています。ですから **$t$-interval** です（[第5節](#which)）。
 
 データの列はないので、`t Interval` の **`Stats`** を選びます（[GDC 第2節](#gdc-t)）。
 
@@ -577,17 +739,28 @@ $$
 \text{幅} \quad 4.02 \ \to \ 6.65
 $$
 
+数値だけで終わらせず、**理由**まで書きます。$99\%$ 区間は、より高い割合で母平均を含むように作るため、$90\%$ 区間より広くなります。**confidence level を上げると、母平均を含む確信は高まりますが、推定できる範囲は広くなります**（[第7節](#width)）。
+
+::: {.callout-note appearance="simple"}
+**`more confident` と `more precise` は、別のことです。**
+
+- **higher confidence** … confidence level が高い（$99\% > 90\%$）
+- **more precise** … 区間が狭い（$4.02 < 6.65$ なので、$90\%$ 区間のほうが precise）
+
+$99\%$ 区間は higher confidence ですが、more precise ではありません。
+:::
+
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The $99\%$ interval is wider than the $90\%$ interval ($6.65$ compared with $4.02$). To be more confident of capturing the population mean, a wider range of values must be included. The extra confidence is gained at the cost of a less precise answer.*
+*The $99\%$ interval is wider than the $90\%$ interval ($6.65$ compared with $4.02$). A higher confidence level means that a larger proportion of such intervals contain the population mean, so a wider range of values must be included. The $99\%$ interval therefore gives higher confidence but a less precise estimate.*
 :::
 
-（より高い確信をもって $\mu$ を捉えるには、より広い範囲を含めなければならない。確からしさが増すぶん、答えは大ざっぱになる、という意味です。）
+（confidence level が高いほど、$\mu$ を含む区間の割合は高くなるので、より広い範囲を含めなければならない。$99\%$ 区間は確信は高いが、precise ではない、という意味です。）
 
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
-**(a)** *$\sigma$ is unknown, so a $t$-interval is used.*
+**(a)** *Method: $\sigma$ is unknown, so a $t$-interval is used.*
 $$
 66.4 < \mu < 70.4
 $$
@@ -597,12 +770,12 @@ $$
 65.1 < \mu < 71.7
 $$
 
-**(c)** *The $99\%$ interval is wider. A higher confidence level requires a wider interval, so the estimate becomes less precise.*
+**(c)** *The $99\%$ interval is wider. A higher confidence level requires a wider interval, so the estimate has higher confidence but is less precise.*
 :::
 :::
 
 ::: {#exm-ahl416-overlap}
-[Two brands of light bulb are tested. For brand A, a $95\%$ confidence interval for the mean lifetime, in hours, is $51.2 < \mu_A < 55.8$. For brand B, a $95\%$ confidence interval is $54.1 < \mu_B < 58.9$.]{.q-en}
+[Two brands of light bulb are tested. For brand A, a $95\%$ confidence interval for the mean lifetime, in hundreds of hours, is $51.2 < \mu_A < 55.8$. For brand B, a $95\%$ confidence interval is $54.1 < \mu_B < 58.9$.]{.q-en}
 
 **(a)** [Write down the sample mean lifetime for each brand.]{.q-en}
 
@@ -611,15 +784,19 @@ $$
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-$2$ つのブランドの電球を調べました。ブランド A について、平均寿命（時間）の $95\%$ 信頼区間は $51.2 < \mu_A < 55.8$ です。ブランド B については $54.1 < \mu_B < 58.9$ です。
+$2$ つのブランドの電球を調べました。ブランド A について、平均寿命（$100$ 時間単位）の $95\%$ 信頼区間は $51.2 < \mu_A < 55.8$ です。ブランド B については $54.1 < \mu_B < 58.9$ です。
 
-`light bulb` は「電球」、`lifetime` は「寿命」、`advertises` は「宣伝する」という意味です。
+`light bulb` は「電球」、`lifetime` は「寿命」、`in hundreds of hours` は「$100$ 時間を単位として」、`advertises` は「宣伝する」という意味です。
 
 **(a)** 各ブランドの標本平均の寿命を書きなさい。
 
 **(b)** ある店が、ブランド B のほうが平均寿命が長いと宣伝しています。この主張について述べなさい。
 
 </details>
+
+---
+
+**Method.** この問題では、区間そのものが与えられています。ですから `z Interval` も `t Interval` も使いません。読み取るだけです。
 
 **(a)** 区間の**まん中が $\bar{x}$** です（[第3節](#form)）。
 
@@ -629,16 +806,12 @@ $$
 
 **(b)** $\bar{x}_B = 56.5$ のほうが大きいのは確かです。しかし、**$2$ つの区間は重なっています**（[第9節](#compare)）。
 
-$$
-54.1 \ \text{から} \ 55.8 \ \text{までが重なりです}
-$$
-
-この範囲の値は、**両方の $\mu$ になりえます。** ですから、$\mu_A = \mu_B$ という可能性が残ります。
+重なっているのは、$54.1$ から $55.8$ までです。この範囲の値は、**両方の $\mu$ になりえます。** ですから、**この $2$ つの区間だけを根拠に「B の母平均のほうが大きい」と断定することはできません。** $\mu_A = \mu_B$ という可能性も残ります。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Although the sample mean for brand B ($56.5$ hours) is larger than for brand A ($53.5$ hours), the two confidence intervals overlap between $54.1$ and $55.8$ hours. Both means could lie in this overlap, so the two population means could be equal. The data does not provide enough evidence to support the shop's claim.*
+*Although the sample mean for brand B ($56.5$) is larger than for brand A ($53.5$), the two confidence intervals overlap between $54.1$ and $55.8$ hundred hours. These intervals do not provide sufficient evidence that the population mean lifetime for brand B is larger than that for brand A; the two population means could be equal.*
 :::
 
 （B の標本平均のほうが大きいが、$2$ つの信頼区間は重なっており、両方の平均が重なりの中にある可能性がある。したがって主張を支持するだけの根拠はない、という意味です。）
@@ -647,81 +820,103 @@ $$
 ## 解答例（答案用紙にはこう書く）
 **(a)**
 $$
-\bar{x}_A = 53.5, \qquad \bar{x}_B = 56.5 \quad (\text{hours})
+\bar{x}_A = 53.5, \qquad \bar{x}_B = 56.5 \quad (\text{hundreds of hours})
 $$
 
-**(b)** *The intervals overlap between $54.1$ and $55.8$ hours, so the two population means could be equal. Although $\bar{x}_B > \bar{x}_A$, the data does not give enough evidence to claim that brand B lasts longer on average.*
+**(b)** *The intervals overlap between $54.1$ and $55.8$ hundred hours, so these intervals do not provide sufficient evidence that brand B has the larger population mean lifetime. The two population means could be equal.*
 :::
 :::
 
 ## Common errors
 
 ::: {.callout-warning}
-## $\sigma$ が分からないのに、normal を使う
-`sample standard deviation` や、データの列だけが与えられているときは **$t$** です（[第5節](#which)）。
+## $\sigma$ と $s$ を読みちがえる
+**誤り**：`the sample standard deviation is 2.5` を見て、$\sigma$ が与えられたと考える。
 
-**`population standard deviation` と書かれているときだけ** normal です。
+$\sigma$ と言えるのは、`population` か「長年の記録から分かっている」という言い方があるときだけです。
+
+**正しい判断**：`sample` としか書かれていなければ $s$。電卓でも $\sigma_x$ ではなく $s_x$ を読みます（[第5節](#which)・[AHL 4.14](ahl-4-14.qmd#calculator)）。
 :::
 
 ::: {.callout-warning}
-## $n$ が大きいから normal でよい、としてしまう
-シラバスは `regardless of sample size` と書いています。**$n = 200$ でも、$\sigma$ が分からなければ $t$** です（[第5節](#which)）。
+## $n$ の大きさで $z$ と $t$ を選ぶ
+**誤り**：$n = 200$ と大きいから $z$-interval でよい、とする。
 
-[AHL 4.15](ahl-4-15.qmd#n30) の $n > 30$ とは、**別の話**です。
+シラバスは `regardless of sample size` と書いています。$n$ の大きさは、選択に関係しません。
+
+**正しい判断**：$\sigma$ が未知なら、$n = 200$ でも $t$-interval です（[第5節](#which)）。
 :::
 
 ::: {.callout-warning}
-## $\sigma_x$ を入れてしまう
-電卓の `t Interval` に入れるのは **$s_x$**（$n-1$ で割ったもの）です（[AHL 4.14](ahl-4-14.qmd#calculator)）。
+## `df` を確かめない
+**誤り**：`t Interval` の結果に出た `df` を見ずに答えを写す。
 
-$\sigma_x$ を入れると、区間が**狭すぎる**値になります。狭くなる割合は $\sqrt{\dfrac{n-1}{n}}$ で、**$n$ が小さいほど大きく**なります（$n = 8$ で約 $6\%$、$n = 5$ なら約 $11\%$）。
-:::
+$1$ 標本の $t$-interval では $\text{df} = n - 1$ なので、ここが合っていなければ $n$ の入力が違っています。
 
-::: {.callout-warning}
-## 解釈で `the mean` を書き忘れる
-*"$95\%$ of the bars weigh between $47.5$ and $49.7$ g"* は誤りです（[第8節](#interpret)）。
-
-区間が言っているのは、**平均 $\mu$ の居場所**です。$1$ 枚ずつの重さではありません。
-:::
-
-::: {.callout-warning}
-## 解釈で、文脈の言葉を使わない
-*"We are $95\%$ confident that $\mu$ is between $47.5$ and $49.7$"* では足りません。
-
-**「何の平均か」**を、その問題の言葉で書いてください。**単位も**忘れずに。
-:::
-
-::: {.callout-warning}
-## 「$\mu$ が入る確率は $95\%$」と書く
-$\mu$ は動かない $1$ つの値です（[第2節](#meaning)）。
-
-**`We are 95% confident that ...`** という型を使えば、この論点に触れずに済みます。**その型で書いてください。**
-:::
-
-::: {.callout-warning}
-## 区間が重なっているのに、「こちらが大きい」と結論する
-標本平均に差があっても、**区間が重なっていれば $\mu$ が等しい可能性が残ります**（[第9節](#compare)）。
-
-答案では **`overlap`** という語を使って、そこを指摘してください。
-:::
-
-::: {.callout-warning}
-## 信頼水準を上げれば「よい」答えになると思う
-$99\%$ の区間は $95\%$ より**広い**——つまり**大ざっぱ**です（[第7節](#width)）。
-
-**確からしさと細かさは、取り引きの関係**にあります。どちらか一方だけがよくなることはありません。
+**正しい判断**：$n = 8$ なら `df` は $7$ だと、その場で確かめます（[第6節](#df)）。
 :::
 
 ::: {.callout-warning}
 ## `C Level` に $95$ と入れる
-TI-Nspire の `C Level` には、**小数で $0.95$** と入れます。$95$ と入れるとエラーになります。
+**誤り**：`C Level` の欄に $95$ と入力する。
+
+TI-Nspire の `C Level` は、**小数**で入れる欄です。
+
+**正しい判断**：$95\%$ なら $0.95$、$99\%$ なら $0.99$ と入れます。
+:::
+
+::: {.callout-warning}
+## 「$\mu$ がこの区間に入る確率は $95\%$」と書く
+**誤り**：*"There is a $95\%$ probability that $\mu$ lies between $47.5$ and $49.7$."*
+
+計算した後は $\mu$ も区間も動かず、変わるのは新しい標本から作られる区間のほうです（[第2節](#meaning)）。
+
+**正しい判断**：**`We are 95% confident that ...`** の型で書きます。
+:::
+
+::: {.callout-warning}
+## 母平均ではなく、$1$ つ $1$ つの値の区間だと解釈する
+**誤り**：*"$95\%$ of the chocolate bars weigh between $47.5$ g and $49.7$ g."*
+
+confidence interval は **population mean $\mu$ の居場所**についての区間で、$1$ 枚ずつの重さの散らばりではありません。
+
+**正しい判断**：**`the population mean ...`** という語を必ず入れます（[第8節](#interpret)）。
+:::
+
+::: {.callout-warning}
+## 文脈の言葉と単位を書かない
+**誤り**：*"We are $95\%$ confident that $\mu$ is between $47.5$ and $49.7$."*
+
+これでは、$\mu$ が**何の母平均か**が分からず、**単位**もありません。
+
+**正しい判断**：*the population mean mass of a chocolate bar* のように、問題の言葉と単位で書きます（[第8節](#interpret)）。
+:::
+
+::: {.callout-warning}
+## 区間が重なっているのに、「こちらが大きい」と結論する
+**誤り**：標本平均に差があるから、$\mu_B > \mu_A$ だと断定する。
+
+区間が重なっていれば、$\mu_A = \mu_B$ という可能性が残ります。
+
+**正しい判断**：**`overlap`** という語を使い、「これらの区間だけでは十分な根拠にならない」と書きます（[第9節](#compare)）。
+:::
+
+::: {.callout-warning}
+## confidence level を上げれば、よい答えになると思う
+**誤り**：$99\%$ の区間のほうが $95\%$ より狭く、精度が高いと考える。
+
+confidence level を上げると critical value が大きくなるので、区間は**広く**なります。
+
+**正しい判断**：higher confidence と more precise は別のことです（[第7節](#width)）。
 :::
 
 ::: {.callout-warning}
 ## 区間を、$1$ つの数で答える
-答えは**区間**です。$47.5 < \mu < 49.7$ のように、**両端を書いてください。**
+**誤り**：「margin of error は $1.10$」だけを書いて終わる。
 
-「誤差の幅は $1.10$」だけでは、答えになっていません。
+答えは**区間**で、両端の $2$ つの数が必要です。
+
+**正しい判断**：$47.5 < \mu < 49.7$ のように、**両端を書きます。**
 :::
 
 ## Using your GDC (TI-Nspire CX II)
@@ -734,20 +929,33 @@ menu → Statistics → Confidence Intervals
 
 ここに `z Interval` と `t Interval` が並んでいます。
 
+::: {.callout-important}
+## 電卓を開く前に、$2$ つ決めます
+**母標準偏差 $\sigma$ が与えられていますか。**
+
+- はい → **`z Interval`**
+- いいえ → **`t Interval`**
+
+**生データ（数値の列）が与えられていますか。**
+
+- はい → **`Data`** を選ぶ
+- いいえ → **`Stats`** を選ぶ
+:::
+
 ### 1. z Interval — $\sigma$ が分かっているとき {#gdc-z}
 
 ```
 menu → Statistics → Confidence Intervals → z Interval
 ```
 
-`Data Input Method` を **`Stats`** にすると、次の欄が出ます。
+`Data Input Method` には **`Data`** と **`Stats`** があります。$\bar{x}$ と $n$ が与えられている問題では **`Stats`** を選びます。次の欄が出ます。
 
-| 欄 | 入れるもの |
-|---|---|
-| `σ` | 問題文の**母標準偏差** |
-| `x̄` | 標本平均 |
-| `n` | 標本の大きさ |
-| `C Level` | **小数で。** $95\%$ なら $0.95$ |
+| 欄 | 意味 | 入力例（例題1） |
+|---|---|---|
+| `σ` | population standard deviation（母標準偏差） | $2.5$ |
+| `x̄` | 標本平均 | $48.6$ |
+| `n` | 標本の大きさ | $20$ |
+| `C Level` | confidence level（信頼水準）。**小数で** | $0.95$ |
 
 : z Interval の欄 {#tbl-ahl416-gdc-z}
 
@@ -759,7 +967,7 @@ menu → Statistics → Confidence Intervals → z Interval
 menu → Statistics → Confidence Intervals → t Interval
 ```
 
-**`Data Input Method` の選び方が $2$ 通り**あります。ここが `z Interval` との違いです。
+**`Data Input Method` は、`z Interval` と同じく `Data` と `Stats` の $2$ 通り**です。ただし、データの列がそのまま与えられる問題は `t Interval` のほうによく出ます。
 
 | 問題の与えられ方 | 選ぶもの | 入れるもの |
 |---|---|---|
@@ -770,7 +978,20 @@ menu → Statistics → Confidence Intervals → t Interval
 
 **データがあるなら `Data` を選んでください。** 電卓が $\bar{x}$ と $s$ を計算するので、書き写す手間も、丸め誤差も入りません。
 
-`Stats` を使うときは、`sx` の欄に入れるのは **$s_{n-1}$**（電卓の $s_x$）です。$\sigma_x$ ではありません。
+`Stats` を選んだときの欄は、こうです。
+
+| 欄 | 意味 | 入力例（例題3） |
+|---|---|---|
+| `x̄` | 標本平均 | $68.4$ |
+| `sx` | sample standard deviation（標本標準偏差）$s_{n-1}$ | $5.2$ |
+| `n` | 標本の大きさ | $20$ |
+| `C Level` | confidence level（信頼水準）。**小数で** | $0.90$ |
+
+: t Interval（Stats）の欄 {#tbl-ahl416-gdc-tstats}
+
+`sx` に入れるのは **$s_{n-1}$**（電卓の $s_x$）です。$\sigma_x$ ではありません。
+
+結果には **`df`** も表示されます。これは **degrees of freedom**（自由度）で、$1$ 標本の $t$-interval では $n - 1$ です。$n = 20$ なら `df` は $19$ になります（[第6節](#df)）。
 
 ### 3. 結果の読み方 {#gdc-read}
 
@@ -795,6 +1016,25 @@ $2$ つ、その場でできる確認があります。
 - **まん中が $\bar{x}$ か。** $\dfrac{\text{CLower} + \text{CUpper}}{2}$ が $\bar{x}$ になっていなければ、入力が違います
 - **`df` が $n - 1$ か。** `t Interval` で $n$ を入れ間違えると、ここに出ます
 
+### Exercises の前に — セルフチェック {#selfcheck}
+
+Exercises に進む前に、$3$ つだけ確かめてください。
+
+::: {.callout-tip collapse="true"}
+## 1. $\sigma$ が与えられているとき、$z$ と $t$ のどちらを使いますか
+**$z$-interval** です。$\sigma$ が既知なら normal distribution を使います。$n$ の大きさは関係しません（[第5節](#which)）。
+:::
+
+::: {.callout-tip collapse="true"}
+## 2. $95\%$ confidence interval は「$\mu$ が $95\%$ の確率で入る」という意味ですか
+**その意味ではありません。** 同じ方法でくり返し作った区間の約 $95\%$ が $\mu$ を含む、という意味です（[第2節](#meaning)）。
+:::
+
+::: {.callout-tip collapse="true"}
+## 3. $n$ を大きくすると、区間の幅はどうなりますか
+ほかの条件が同じなら、**狭くなります。** standard error $\dfrac{s}{\sqrt{n}}$ が小さくなるからです（[第7節](#width)）。
+:::
+
 ## Exercises
 
 ::: {.callout-note appearance="simple"}
@@ -816,7 +1056,7 @@ $2$ つ、その場でできる確認があります。
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
-*$\sigma$ is known, so a $z$-interval is used.*
+*Method: $\sigma$ is known, so a $z$-interval is used.*
 $$
 80.0 < \mu < 84.0
 $$
@@ -830,7 +1070,7 @@ $$
 z Interval → Stats:   σ: 6   x̄: 82   n: 36   C Level: 0.95
 ```
 
-**検算。** standard error は $\dfrac{6}{\sqrt{36}} = 1$。臨界値 $1.96$ なので誤差の幅は $1.96$。まん中の $82$ から $\pm 1.96$ で、$(80.04,\ 83.96)$ です ✓
+**検算。** standard error は $\dfrac{6}{\sqrt{36}} = 1$。critical value が $1.96$ なので margin of error は $1.96$。まん中の $82$ から $\pm 1.96$ で、$(80.04,\ 83.96)$ です ✓
 
 $3$ 桁に丸めて $80.0$ と $84.0$ ですが、**$0$ を落として $80$、$84$ と書かないでください。** 有効数字が変わります。
 :::
@@ -849,7 +1089,7 @@ $3$ 桁に丸めて $80.0$ と $84.0$ ですが、**$0$ を落として $80$、$
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
-*$\sigma$ is unknown, so a $t$-interval is used.*
+*Method: $\sigma$ is unknown, so a $t$-interval is used.*
 $$
 42.8 < \mu < 47.6
 $$
@@ -863,7 +1103,7 @@ $$
 t Interval → Stats:   x̄: 45.2   sx: 3.8   n: 12   C Level: 0.95
 ```
 
-`df` は $12 - 1 = 11$ で、臨界値は $2.20$ です。
+`df` は $12 - 1 = 11$ で、critical value は $2.20$ です。
 
 **検算。** まん中は $\dfrac{42.8 + 47.6}{2} = 45.2 = \bar{x}$ ✓
 :::
@@ -899,7 +1139,7 @@ $$
 \bar{x} = 201.5, \qquad s_{n-1} = 3.37
 $$
 
-**(b)** *$\sigma$ is unknown, so a $t$-interval is used.*
+**(b)** *Method: $\sigma$ is unknown, so a $t$-interval is used.*
 $$
 198 < \mu < 205 \quad (\text{g})
 $$
@@ -911,7 +1151,7 @@ $$
 
 **(b)** データの列があるので、`t Interval` の **`Data`** を選べます（[GDC 第2節](#gdc-t)）。$\bar{x}$ と $s$ を書き写す必要がありません。
 
-`df` $= 9$、臨界値は $3.25$ です。**$99\%$ なので、臨界値がかなり大きくなっています。**
+`df` $= 9$、critical value は $3.25$ です。**$99\%$ なので、critical value がかなり大きくなっています。**
 
 生の値は $(198.03,\ 204.97)$ で、$3$ 桁だと $198$ と $205$ です。
 
@@ -1006,7 +1246,7 @@ $$
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-**(a)** $\sigma$ が既知なので、臨界値は $1.96$ のまま**動きません。** 変わるのは standard error だけです。
+**(a)** $\sigma$ が既知なので、critical value は $1.96$ のまま**動きません。** 変わるのは standard error だけです。
 
 $$
 \frac{9}{\sqrt{16}} = 2.25 \qquad \to \qquad \frac{9}{\sqrt{64}} = 1.125
@@ -1014,7 +1254,7 @@ $$
 
 $n$ が $4$ 倍になると $\sqrt{n}$ は $2$ 倍なので、**ちょうど半分**です。
 
-**$t$ を使うときは、ちょうど半分にはなりません。** 臨界値も一緒に小さくなるので、半分より少し狭くなります（[第7節](#width)）。
+**$t$ を使うときは、ちょうど半分にはなりません。** critical value も一緒に小さくなるので、半分より少し狭くなります（[第7節](#width)）。
 
 **(b)** `Explain why` なので、**式と言葉の両方**を書きます。
 
@@ -1063,24 +1303,24 @@ $$
 \text{margin of error} = \frac{26.6 - 23.4}{2} = 1.6 \text{ minutes}
 $$
 
-**(c)** *We are $95\%$ confident that the mean time taken to complete the task lies between $23.4$ and $26.6$ minutes.*
+**(c)** *We are $95\%$ confident that the population mean time taken to complete the task lies between $23.4$ and $26.6$ minutes.*
 :::
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-**(a)(b)** 区間は「**中心 $\pm$ 誤差の幅**」の形でした（[第3節](#form)）。ですから中心は**まん中**、誤差の幅は**幅の半分**です。
+**(a)(b)** 区間は「**$\bar{x}$ $\pm$ margin of error**」の形でした（[第3節](#form)）。ですから中心は**まん中**、margin of error は**幅の半分**です。
 
-幅そのものは $3.2$ 分ですが、`margin of error` はその**半分**の $1.6$ 分です。ここを取りちがえないでください。
+幅そのものは $3.2$ 分ですが、margin of error はその**半分**の $1.6$ 分です。ここを取りちがえないでください。
 
 **(c)** `Interpret` なので、**文脈の言葉で**書きます（[第8節](#interpret)）。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*We are $95\%$ confident that the mean time taken to complete the task lies between $23.4$ and $26.6$ minutes.*
+*We are $95\%$ confident that the population mean time taken to complete the task lies between $23.4$ and $26.6$ minutes.*
 :::
 
-**`the mean time`** と書くこと、**`minutes`** という単位を入れることの $2$ つが、点になるところです。
+**`the population mean time`** と書くこと、**`minutes`** という単位を入れることの $2$ つが、点になるところです。
 :::
 
 ::: {.ex-sep}
@@ -1136,7 +1376,7 @@ $$
 
 **(a)** [Write down the sample mean score for each method.]{.q-en}
 
-**(b)** [A school decides to use method B. Comment on whether the data supports this decision. Compare your answer with @exm-ahl416-overlap.]{.q-en}
+**(b)** [A school decides to use method B. Comment on whether the data supports this decision.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
@@ -1145,7 +1385,7 @@ $2$ つの指導法を比べました。得点は正規分布にしたがいま�
 
 **(a)** 各指導法の標本平均の得点を書きなさい。
 
-**(b)** ある学校が指導法 B を使うことに決めました。データがこの決定を支持しているかどうかを述べなさい。例題4 と見くらべなさい。
+**(b)** ある学校が指導法 B を使うことに決めました。データがこの決定を支持しているかどうかを述べなさい。
 
 </details>
 
@@ -1156,7 +1396,7 @@ $$
 \bar{x}_A = 52.5, \qquad \bar{x}_B = 57.5
 $$
 
-**(b)** *The two confidence intervals do not overlap: the whole of the interval for method A lies below the whole of the interval for method B. Every plausible value of $\mu_A$ is smaller than every plausible value of $\mu_B$, so the data does support the claim that method B gives a higher mean score. This is a stronger conclusion than in the overlapping case, where the two means could have been equal.*
+**(b)** *The two confidence intervals do not overlap: the whole of the interval for method A lies below the whole of the interval for method B. Every value in the interval for $\mu_A$ is smaller than every value in the interval for $\mu_B$, so the data does support the claim that method B gives a higher mean score. This is a stronger conclusion than in the overlapping case, where the two means could have been equal.*
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -1167,12 +1407,14 @@ $$
 
 **(b)** 例題4 では「言えない」でしたが、ここでは**言えます。**
 
-$\mu_A$ としてありうるのは $54.0$ まで、$\mu_B$ としてありうるのは $56.0$ から。**この $2$ つが重ならない**ので、$\mu_A = \mu_B$ という可能性は残りません。
+区間に入っている値は、$\mu_A$ 側が $54.0$ まで、$\mu_B$ 側が $56.0$ から。**この $2$ つが重ならない**ので、$\mu_A = \mu_B$ は考えにくくなります。
+
+ただし、$2$ つの区間はどちらも「外すことがある」作り方で作ったものです（[第2節](#meaning)）。**$\mu_A = \mu_B$ があり得ないと証明された**わけではありません。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The intervals do not overlap, since $54.0 < 56.0$. Every value in the interval for $\mu_A$ is below every value in the interval for $\mu_B$, so the data supports the claim that method B has the higher mean score. In @exm-ahl416-overlap the intervals overlapped, so no such conclusion could be drawn there.*
+*The intervals do not overlap, since $54.0 < 56.0$. Every value in the interval for $\mu_A$ is below every value in the interval for $\mu_B$, so the data supports the claim that method B has the higher population mean score.*
 :::
 
 **重なっているかいないかで、書ける結論がまったく変わります**（[第9節](#compare)）。答案では、まず**重なりを確かめてから**書き始めてください。
@@ -1206,7 +1448,7 @@ $\mu_A$ としてありうるのは $54.0$ まで、$\mu_B$ としてありう�
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
-**(a)** *$\sigma$ is known, so a $z$-interval is used.*
+**(a)** *Method: $\sigma$ is known, so a $z$-interval is used.*
 $$
 495 < \mu < 505 \quad (\text{g})
 $$
@@ -1223,7 +1465,7 @@ $$
 ## 解説
 **(a)(b)** $\sigma$ が既知なので `z Interval` です。standard error は $\dfrac{15}{\sqrt{25}} = 3$。
 
-生の値は $(495.06,\ 504.94)$ と $(492.27,\ 507.73)$ です。$3$ 桁で $495$ と $505$、$492$ と $508$。
+生の値は $(495.07,\ 504.93)$ と $(492.27,\ 507.73)$ です。$3$ 桁で $495$ と $505$、$492$ と $508$。
 
 **(c)** `give a reason` なので理由が要ります。**どちらを選んでも、理由が通っていれば正解**になる問題です。
 
@@ -1275,3 +1517,13 @@ $1$ つ $1$ つの値は、$s$ くらいの幅で散らばっています。こ�
 :::
 
 :::
+
+::: {.callout-important}
+## このページの要点
+- confidence interval（信頼区間）は、母平均 $\mu$ を $1$ つの数ではなく**範囲**で推定する方法です。
+- **$\sigma$ が既知なら $z$-interval、未知なら $t$-interval** を使います。$n$ の大きさでは決めません。
+- 区間は、いつも **$\bar{x}$ $\pm$ margin of error** の形になります。
+- 答案では、**confidence level・何の母平均か・区間・単位**を文章で書きます。
+:::
+
+信頼区間で「もっともらしい母平均の範囲」を求められるようになりました。この考え方をさらに進めて、**特定の値についての主張がデータと矛盾しないか**を判断するのが、[AHL 4.18b](ahl-4-18b.qmd) の hypothesis testing（仮説検定）です。

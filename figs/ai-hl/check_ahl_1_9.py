@@ -187,5 +187,75 @@ eq("10 log(2x^3) = log2 + 3log x",
 eq("10 傾き 3、切片 log2 = 0.301",
    sf(math.log10(2)), 0.301)
 
+
+print()
+print("══════════ 本文の記述を見張る（2026-08 の修正） ══════════")
+import io as _io
+import os as _os
+_T = _io.open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                            "..", "..", "ai-hl", "01-number-and-algebra",
+                            "ahl-1-9.qmd"), encoding="utf-8").read()
+
+
+def has(label, sub):
+    eq(label, sub in _T, True)
+
+
+def hasnt(label, sub):
+    eq(label, sub in _T, False)
+
+
+# 1. 対数法則の条件は a>0, a≠1, x>0, y>0
+has("できること欄の条件",
+    "- 法則を使うための条件が $a > 0$、$a \\neq 1$、$x > 0$、$y > 0$ であると分かる。")
+hasnt("古い条件が残っていない",
+      "- 法則が使えるのは $a,\\ x,\\ y > 0$ のときだけだと分かる。")
+has("3 つの法則の直後に a≠1 の注意がある",
+    "## 底の条件は $a > 0$ と $a \\neq 1$ の $2$ つです")
+has("条件をその場で式にしている",
+    "a > 0, \\qquad a \\neq 1, \\qquad x > 0, \\qquad y > 0")
+has("条件の式にラベルがある", "$$ {#eq-ahl19-conditions}")
+has("第2節の見出しも 4 条件",
+    "### 2. 使える条件は $a > 0$、$a \\neq 1$、$x > 0$、$y > 0$ です {#conditions}")
+hasnt("第2節の古い見出しが残っていない",
+      "### 2. 使える条件は $a,\\ x,\\ y > 0$ です {#conditions}")
+has("a = 1 が箇条書きに入っている",
+    "- $a = 1$ … $1$ は何乗しても $1$ のままなので")
+hasnt("a≠1 を「後で読めば分かる」扱いにしていない",
+      "ただしこれは、公式集の AHL 1.9 の欄ではなく、**SL 1.5 の欄**に $a \\neq 1$ として書かれている条件です。")
+has("図の直後でも条件が 4 つだと分かる",
+    "（**条件は、下の囲みのとおり $a \\neq 1$ を入れて $4$ つ**です）")
+hasnt("図が「全部」だとは言っていない", "@fig-ahl19-three が全部です。")
+_SVG = _io.open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                              "..", "..", "ai-hl", "01-number-and-algebra",
+                              "img", "ahl-1-9-three-laws.svg"),
+                encoding="utf-8").read()
+eq("図の条件に a ≠ 1 が入っている", ("≠" in _SVG) or ("2260" in _SVG), True)
+
+# a = 1 は本当に底になれない（1^x は 1 しか返さない）
+eq("1 は何乗しても 1", {1.0 ** k for k in range(-5, 6)}, {1.0})
+
+# 2. exact value は「整数」ではない
+has("exact value の言い換え",
+    "`Find the exact value` なので、**電卓の小数近似ではなく、正確な値で答えます。**")
+hasnt("exact = 整数 と言っていない",
+      "`Find the exact value` と言われているので、**電卓の小数近似ではなく整数で答えます。**")
+hasnt("exact = 整数 と言っていない（旧文）",
+      "**電卓の小数ではなく整数で答えます。**")
+has("この例題だけ整数になる、と断っている",
+    "この例題では、$\\log$ をまとめると中身が $10$ の整数乗になるので、答えも整数になります。")
+has("exact でも整数とは限らない、と書いてある",
+    "`exact value` は「**小数近似にしない**」という意味であって、「整数になる」という意味ではありません。")
+has("残る形の例を挙げている",
+    "**問題によっては、分数・根号・$\\pi$・$\\log 12$ のような形が、そのまま正確な答えとして残ります。**")
+hasnt("「exact なら必ずきれい」が残っていない",
+      "`Find the exact value` と書かれているときだけ、きれいな数になると思ってください。")
+# 例題の中身は本当に 10 の整数乗
+eq("8 x 125 = 1000 = 10^3", 8 * 125, 10 ** 3)
+eq("200 / 2 = 100 = 10^2", 200 // 2, 10 ** 2)
+eq("2^3 x 125 = 1000", 2 ** 3 * 125, 10 ** 3)
+# exact だが整数にならない例（log 12 は無理数）
+eq("log 12 は整数ではない", abs(math.log10(12) - round(math.log10(12))) > 0.05, True)
+
 print()
 print(f"══════════ OK {ok} / NG {ng} ══════════")

@@ -59,7 +59,7 @@ for ax, (title, formula, col) in zip(axs, CARDS):
             color=col, zorder=3)
     ax.text(5.0, 1.6, formula, fontsize=15, ha="center", va="center",
             color=INK, zorder=3)
-fig.text(0.5, 0.015, "for  $a,\\ x,\\ y > 0$", fontsize=12,
+fig.text(0.5, 0.015, "for  $a > 0,\\ a \\neq 1,\\ x > 0,\\ y > 0$", fontsize=12,
          ha="center", color=GOLD)
 fig.tight_layout(rect=(0, 0.05, 1, 1))
 save(fig, "ahl-1-9-three-laws.svg")

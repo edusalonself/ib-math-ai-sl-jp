@@ -2,7 +2,7 @@
 sidebar: ai-hl
 ---
 
-# AHL 4.15 — Linear combinations of normal variables（正規分布の一次結合） {#sec-ahl-4-15}
+# AHL 4.15 — Linear combinations of normal variables（正規分布にしたがう確率変数の一次結合） {#sec-ahl-4-15}
 
 ::: {.callout-note}
 ## What you should be able to do
@@ -11,53 +11,16 @@ sidebar: ai-hl
 - そこから **normCdf で確率を求められる**。
 - **$\bar{X} \sim N\!\left(\mu,\ \dfrac{\sigma^{2}}{n}\right)$** を使い、標本平均の確率を求められる。
 - **central limit theorem**（中心極限定理）が何を言っているかを説明できる。
-- もとの分布が normal でないとき、**$n > 30$ なら $\bar{X}$ を normal として扱える**と分かる。
+- もとの分布が normal と分からないとき、標本数が十分に大きければ **$\bar{X}$ を近似的に normal として扱える**と分かる。
 :::
 
-::: {.callout-important}
-## AHL 4.14 で足りなかった「形」が、ここで手に入ります
-[AHL 4.14](ahl-4-14.qmd) で、$E$ と $\text{Var}$ の出し方を学びました。ただ、そこで止まると**確率が求められません。**
+[AHL 4.14](ahl-4-14.qmd) では、独立な確率変数の和について、平均と分散を求めました。しかし、平均と分散だけでは、その確率変数がどのような分布にしたがうかまでは分かりません。
 
-$X \sim N(250,\ 8^{2})$ を $2$ つ足して、$X_1 + X_2$ の平均が $500$、分散が $128$ と分かっても、$P(X_1 + X_2 > 510)$ は出せないのです。**分布の形が分からない**からです。
-
-このページが足すのは、その形です。
-
-> **独立な normal を足しても引いても、出てくるのは normal。**
-
-形が normal だと決まれば、[SL 4.9](../../ai-sl/04-statistics-and-probability/sl-4-9.qmd) の `normCdf` がそのまま使えます。**$E$ と $\text{Var}$ を出す（4.14）→ normal だと分かる（4.15）→ 確率を出す（SL 4.9）**、という $3$ 段構えです。
-:::
-
-::: {.callout-note}
-## 公式集に、この項目の欄はありません
-AI HL の公式集は **4.14 の次が 4.17** です。4.15 の欄は印刷されていません。
-
-ただし、**使う式はすべて 4.14 の欄にあります。**
-
-$$
-E(a_1X_1 \pm a_2X_2 \pm \cdots) = a_1E(X_1) \pm a_2E(X_2) \pm \cdots
-$$
-
-$$
-\text{Var}(a_1X_1 \pm a_2X_2 \pm \cdots) = a_1^{2}\text{Var}(X_1) + a_2^{2}\text{Var}(X_2) + \cdots
-$$
-
-このページが足すのは、**「その結果が normal になる」という一点**です。新しく覚える式はありません。
-:::
-
-::: {.callout-warning}
-## $z$ 値は使いません
-[SL 4.9](../../ai-sl/04-statistics-and-probability/sl-4-9.qmd) で見たとおり、シラバスにはっきり書かれています。
-
-> This does **not** involve transformation to the standardized normal variable $z$.
-
-$z = \dfrac{x-\mu}{\sigma}$ に直す必要はありません。**求めた $\mu$ と $\sigma$ を、そのまま `normCdf` に入れます。**
-
-このページで手を動かすのは、**$\sigma$ を正しく出すところ**です。そこから先は、電卓に入れて計算します。
-:::
+このページでは、もとの確率変数が **normal distribution**（正規分布）にしたがうとき、和・差・標本平均の分布まで求められることを学びます。
 
 ## The idea
 
-### 1. 形が分かってはじめて、確率が出せます {#idea}
+### 1. 平均と分散だけでは、確率は決まりません {#idea}
 
 [AHL 4.14](ahl-4-14.qmd#combinations) で、独立な確率変数の和について
 
@@ -67,63 +30,92 @@ $$
 
 を学びました。この $2$ つは、**どんな分布でも**成り立ちます。
 
-しかし、平均と分散だけでは確率は出せません。**同じ平均・同じ分散をもつ分布は、いくらでもあるから**です。
+ただし、**平均と分散だけでは、確率は一意に決まりません。** 同じ平均・同じ分散をもつ分布は、いくらでもあるからです。確率を計算するには、normal など、**分布の種類も分かっている**必要があります。
 
-このページが足すのは、次の $1$ 行です。
+たとえば $X \sim N(250,\ 8^{2})$ を $2$ つ足すと、$X_1 + X_2$ の平均は $500$、分散は $128$ です。この $2$ つの数だけでは、$P(X_1 + X_2 > 510)$ は決まりません。このページが足すのは、その**分布の種類**です。
+
+#### linear combination（一次結合）とは {#lincomb}
+
+$X + Y$、$2X - Y$、$\dfrac{X_1 + \cdots + X_n}{n}$ のように、確率変数に定数をかけて足し合わせたものを **linear combination**（一次結合）といいます。
+
+**「和」「差」「標本平均」は、すべて一次結合の例です。** ですからこのページの $3$ つの話題は、どれも $1$ つの考え方で扱えます。
 
 ::: {.callout-important}
-## 独立な normal の一次結合は、normal です
-$X_1,\ X_2,\ \ldots,\ X_n$ が**独立**で、**それぞれ normal** なら
+## 独立な normal random variables の linear combination も normal distribution にしたがう
+$X_1,\ \ldots,\ X_n$ が互いに**独立**で、
 
 $$
-a_1X_1 \pm a_2X_2 \pm \cdots \pm a_nX_n \quad \text{も normal}
+X_i \sim N(\mu_i,\ \sigma_i^{2})
+$$
+
+にしたがうとします。このとき
+
+$$
+Y = a_1X_1 + \cdots + a_nX_n
 $$ {#eq-ahl415-main}
 
-です。平均と分散は 4.14 のとおりに出します。
+とおきます。ここで $Y$ は、$X_1,\ \ldots,\ X_n$ にそれぞれ定数 $a_1,\ \ldots,\ a_n$ をかけて足し合わせて作った、**新しい確率変数**です。
+
+この $Y$ も normal distribution にしたがい、
+
+$$
+E(Y) = a_1\mu_1 + \cdots + a_n\mu_n
+$$ {#eq-ahl415-mean}
+
+$$
+\text{Var}(Y) = a_1^{2}\sigma_1^{2} + \cdots + a_n^{2}\sigma_n^{2}
+$$ {#eq-ahl415-var}
+
+となります。
 :::
+
+**平均では係数をそのまま使いますが、分散では係数を $2$ 乗します。** 引き算でも分散が足し算になるのは、この $2$ 乗によって負の符号が消えるためです。
 
 シラバスの書き方は、こうです。
 
 > A **linear combination of $n$ independent normal random variables is normally distributed.** In particular, $X \sim N(\mu,\ \sigma^{2}) \Rightarrow \bar{X} \sim N\!\left(\mu,\ \frac{\sigma^{2}}{n}\right)$.
 
-**「normal を入れれば、normal が出てくる」**——これだけです。ほかの分布ではこうなりません。
+**「normal を入れれば、normal が出てくる」**——これだけです。どんな分布でもこうなるわけではありません（独立な $2$ つの Poisson の和が Poisson になるのは、[AHL 4.17](ahl-4-17.qmd#sum) の別の規則です）。
 
-### 2. 和の standard deviation は、直角三角形の斜辺です {#sum}
+### 2. 分散を足して、最後に平方根をとります {#sum}
 
-$M \sim N(250,\ 8^{2})$ と $S \sim N(180,\ 6^{2})$ が独立なとき、$M + S$ を考えます。
+独立な確率変数を足すときは、**standard deviation（標準偏差）を直接足すのではなく、まず variance（分散）を足します。** 最後に平方根を取って標準偏差へ戻します。
 
-![Adding two normals, and how the standard deviations combine](img/ahl-4-15-sum.svg){#fig-ahl415-sum width=100%}
+$M \sim N(250,\ 8^{2})$ と $S \sim N(180,\ 6^{2})$ が独立なとき、$2$ つの値の合計を表す**新しい確率変数** $M + S$ を考えます。
 
-平均は足すだけです。
+![Adding two independent normals gives another normal](img/ahl-4-15-sum.svg){#fig-ahl415-sum width=100%}
+
+**平均（expected value）**は、係数がどちらも $1$ なので足すだけです。
 
 $$
 E(M + S) = 250 + 180 = 430
 $$
 
-分散も足します。**standard deviation ではなく、分散を足す**ところが要点です。
+次に、**分散（variance）**を求めます。$M$ と $S$ は独立なので、それぞれの分散を足します。
 
 $$
-\text{Var}(M + S) = 8^{2} + 6^{2} = 64 + 36 = 100 \quad \Longrightarrow \quad \sigma = \sqrt{100} = 10
+\text{Var}(M + S) = 8^{2} + 6^{2} = 100
 $$
 
-ですから $M + S \sim N(430,\ 100)$ です。
-
-#### $8 + 6 = 14$ ではありません {#pythagoras}
-
-$\sigma$ は $10$ であって、$14$ ではありません。**$2$ 乗して足して、平方根をとる**——@fig-ahl415-sum の右のとおり、**直角三角形の斜辺と同じ計算**です。
+**標準偏差（standard deviation）**は、分散の正の平方根です。
 
 $$
-\sigma = \sqrt{\sigma_1^{2} + \sigma_2^{2}}
-$$ {#eq-ahl415-sd}
+\sigma_{M+S} = \sqrt{100} = 10
+$$
 
-三角形の $2$ 辺が $8$ と $6$ なら、斜辺は $14$ ではなく $10$ でした。**ここが、この項目でいちばん多い失点です。**
+したがって、$M + S$ がしたがう**分布（distribution）**は
 
-::: {.callout-tip}
-## 分散のまま計算して、最後に平方根をとってください
-$\sigma$ を直接いじろうとすると、足したくなります。
+$$
+M + S \sim N(430,\ 10^{2})
+$$
 
-**分散で計算する** → **最後に $\sqrt{\ }$** の順にすれば、迷いません。[AHL 4.14](ahl-4-14.qmd#sd) と同じ進め方です。
-:::
+です。ここで、$E$ は平均、$\text{Var}$ は分散、$\sigma$ は標準偏差を表します。
+
+**$N(\mu,\ \sigma^{2})$ のカッコの $2$ 番目は、分散です。** $10^{2} = 100$ なので $N(430,\ 100)$ と書いても同じ分布ですが、標準偏差の $10$ をそのまま書くのではありません。
+
+@fig-ahl415-sum のとおり、$M$ と $S$ を足して出てくるのも normal distribution です。
+
+平均と分散の求め方は、すでに学習した [AHL 4.14](ahl-4-14.qmd#combinations) の内容です。また、normal distribution を使った確率の計算は、[SL 4.9](../../ai-sl/04-statistics-and-probability/sl-4-9.qmd) で学習した内容です。**このページで新しく学ぶのは、それらをつなぐ部分**、つまり「独立な normal random variables の linear combination も normal distribution にしたがう」という性質です。
 
 ### 3. $3$ ステップの型 {#steps}
 
@@ -131,13 +123,20 @@ $\sigma$ を直接いじろうとすると、足したくなります。
 
 | 手順 | やること | 使うもの |
 |---|---|---|
-| **1** | 平均を出す | [AHL 4.14](ahl-4-14.qmd#combinations) |
-| **2** | 分散を出して、平方根で $\sigma$ にする | [AHL 4.14](ahl-4-14.qmd#varcomb) |
-| **3** | $N(\mu,\ \sigma^{2})$ を `normCdf` に入れる | [SL 4.9](../../ai-sl/04-statistics-and-probability/sl-4-9.qmd#normcdf) |
+| **1** | $E(Y)$ を求める（係数はそのまま使う） | [AHL 4.14](ahl-4-14.qmd#combinations) |
+| **2** | $\text{Var}(Y)$ を求める（係数は $2$ 乗する） | [AHL 4.14](ahl-4-14.qmd#varcomb) |
+| **3** | $X_i$ が独立な normal であることを確かめて $Y \sim N(\mu,\ \sigma^{2})$ と書き、$\sigma$ を GDC に入れる（もとが normal でない場合は[第8節](#when)） | [SL 4.9](../../ai-sl/04-statistics-and-probability/sl-4-9.qmd#normcdf) |
 
 : $3$ ステップ {#tbl-ahl415-steps}
 
-**$1$ と $2$ は AHL 4.14、$3$ は SL 4.9 です。** このページが新しく足しているのは、$2$ と $3$ のあいだの「normal だと言ってよい」という一歩だけです。
+::: {.callout-warning}
+## `normCdf` に入れるのは、標準偏差です
+GDC の `normCdf` に入力するのは mean（平均）と standard deviation（標準偏差）です。**分散を求めた後、平方根を取るのを忘れないでください。**
+:::
+
+$M + S$ の例なら、$E = 430$ → $\text{Var} = 100$ → $M + S \sim N(430,\ 100)$ と書いて、$\sigma = 10$ を `normCdf` へ、という流れです。
+
+**$1$ と $2$ は AHL 4.14、$3$ の後半は SL 4.9 です。** このページが新しく足しているのは、手順 $3$ の前半、「normal だと言ってよい」という一歩だけです。
 
 ::: {.callout-important}
 ## 答案には、$N(\mu,\ \sigma^{2})$ の行を必ず書いてください
@@ -150,33 +149,147 @@ $\sigma$ を直接いじろうとすると、足したくなります。
 
 ### 4. 差のときは、平均は引いて、分散は足します {#diff}
 
-ここは [AHL 4.14](ahl-4-14.qmd#minus) と同じですが、大事なのでもう一度書きます。
+$X$ と $Y$ が**独立**であるとします。ここで
 
 $$
-E(X - Y) = E(X) - E(Y) \qquad \text{ですが} \qquad \text{Var}(X - Y) = \text{Var}(X) + \text{Var}(Y)
+D = X - Y
+$$
+
+とおきます。$D$ は、$X$ の値から $Y$ の値を引いて作る、**差を表す新しい確率変数**です。たとえば $X$ が $1$ 回目の測定値、$Y$ が $2$ 回目の測定値なら、$D$ は「$1$ 回目の測定値と $2$ 回目の測定値の差」を表します。
+
+$D = X - Y$ は、$Y$ の係数を $-1$ とする linear combination（一次結合）として
+
+$$
+D = X + (-1)Y
+$$
+
+と書けます。
+
+平均（expected value）は、係数をそのまま使うので
+
+$$
+E(D) = E(X) - E(Y)
+$$
+
+となります。一方、分散（variance）は係数を $2$ 乗して使います。$X$ と $Y$ は独立なので
+
+$$
+\text{Var}(D) = \text{Var}(X) + (-1)^{2}\text{Var}(Y) = \text{Var}(X) + \text{Var}(Y)
 $$ {#eq-ahl415-diff}
 
-**平均は引き、分散は足します。** $Y$ の係数は $-1$ で、$(-1)^{2} = 1$ になるからです。
+となります。
+
+**したがって、差の平均は引き算ですが、差の分散は足し算です。** 分散が足し算になるのは、係数 $-1$ が $2$ 乗されて $(-1)^{2} = 1$ となり、負の符号が消えるためです。この式は、**$X$ と $Y$ が独立である場合**に使えます（[AHL 4.14](ahl-4-14.qmd#minus)）。
 
 #### 「$A$ のほうが大きい確率」は、差で考えます {#which-bigger}
 
-「$A$ が $B$ より大きい確率を求めなさい」（`Find the probability that A is greater than B`）と聞かれたら、$2$ つを別々に扱うのではなく、**差を $1$ つの確率変数にします。**
+「$A$ が $B$ より大きい確率を求めなさい」（`Find the probability that A is greater than B`）と聞かれたときは、$A$ と $B$ の差を表す**新しい確率変数**
 
 $$
-D = A - B \quad \text{とおくと} \quad P(A > B) = P(D > 0)
+D = A - B
+$$
+
+を考えます。なぜ差を考えるのかというと、次の言いかえができるからです。
+
+$$
+A > B \iff A - B > 0 \iff D > 0
+$$
+
+**$A$ のほうが大きい**という出来事と、**$D$ が正である**という出来事は、まったく同じものです。ですから、確率も
+
+$$
+P(A > B) = P(A - B > 0) = P(D > 0)
 $$ {#eq-ahl415-dgt0}
 
-$D$ も normal なので、$P(D > 0)$ は `normCdf` で出せます。**$2$ つの分布を見くらべるのではなく、$1$ つの分布の面積を見る**——これがこの型の考え方です。
+と書きかえられます。
 
-### 5. 標本平均 $\bar{X}$ の分布 {#xbar}
+$A$ と $B$ が独立な normal random variables なら、[第1節](#lincomb)より $D = A - B$ も normal distribution にしたがいます。ですから、あとは $1$ つの normal distribution の問題です。
+
+1. $D$ の平均を求める … $E(D) = E(A) - E(B)$
+2. $D$ の分散と標準偏差を求める … $\text{Var}(D) = \text{Var}(A) + \text{Var}(B)$、$\sigma_D = \sqrt{\text{Var}(D)}$
+3. `normCdf` で $P(D > 0)$ を求める
+
+**$A$ と $B$ の $2$ つの分布を直接見くらべるのではなく、「$A - B$ は $0$ より大きいか」という $1$ つの normal distribution の問題に変える**——これがこの型の考え方です。
+
+### 5. sample mean（標本平均）$\bar{X}$ の分布 {#xbar}
 
 シラバスが `In particular` と名指ししている、この項目のもう $1$ つの中心です。
 
+**sample mean**（標本平均）を $\bar{X}$ と表します。$\bar{X}$ は「エックス・バー」と読みます。
+
+**population**（母集団）から、同じ条件で独立に $n$ 個の値を取り出すとします。
+
 $$
-X \sim N(\mu,\ \sigma^{2}) \quad \Longrightarrow \quad \bar{X} \sim N\!\left(\mu,\ \frac{\sigma^{2}}{n}\right)
+X_1,\ X_2,\ \ldots,\ X_n
+$$
+
+は、$1$ 回目、$2$ 回目、……、$n$ 回目の抽出で得られる値を表す **random variables**（確率変数）です。
+
+たとえば身長を調べる場合、$X_1$ は「$1$ 人目としてランダムに選ばれる人の身長」です。選ぶ前は値が決まっていないので、$X_1$ は $1$ つの数値ではなく random variable であり、実際に測って得られた $168$ cm などの値は $X_1$ の **observed value**（観測値）です。
+
+population が normal distribution $N(\mu,\ \sigma^{2})$ にしたがうなら、各 $X_i$ も同じ分布にしたがいます。
+
+$$
+X_i \sim N(\mu,\ \sigma^{2})
+$$
+
+この $n$ 個の値の平均を表す新しい確率変数が、sample mean $\bar{X}$ です。
+
+$$
+\bar{X} = \frac{X_1 + \cdots + X_n}{n} = \frac{1}{n}X_1 + \cdots + \frac{1}{n}X_n
+$$
+
+したがって、$\bar{X}$ は**各 $X_i$ の係数が $\dfrac{1}{n}$ である linear combination**（一次結合）です。
+
+$\bar{X}$ の平均（mean）は
+
+$$
+\begin{aligned}
+E(\bar{X}) &= \frac{1}{n}\mu + \cdots + \frac{1}{n}\mu \\
+&= n\left(\frac{1}{n}\right)\mu \\
+&= \mu
+\end{aligned}
+$$
+
+となります。つまり、sample mean $\bar{X}$ の平均は、**population mean**（母平均）$\mu$ と同じです。
+
+次に、分散（variance）では係数を $2$ 乗します。各 $X_i$ は独立で、分散はすべて $\sigma^{2}$ なので
+
+$$
+\begin{aligned}
+\text{Var}(\bar{X}) &= \left(\frac{1}{n}\right)^{2}\text{Var}(X_1) + \cdots + \left(\frac{1}{n}\right)^{2}\text{Var}(X_n) \\
+&= \left(\frac{1}{n}\right)^{2}\sigma^{2} + \cdots + \left(\frac{1}{n}\right)^{2}\sigma^{2} \\
+&= n\left(\frac{1}{n}\right)^{2}\sigma^{2} \\
+&= n \cdot \frac{1}{n^{2}}\sigma^{2} \\
+&= \frac{\sigma^{2}}{n}
+\end{aligned}
+$$
+
+となります。**ここで大事なのは、分散では係数 $\dfrac{1}{n}$ を $2$ 乗することです。** ですから分散は $\dfrac{1}{n}$ 倍ではなく
+
+$$
+\boxed{\ \text{Var}(\bar{X}) = \frac{\sigma^{2}}{n}\ }
+$$
+
+です。したがって、$\bar{X}$ の標準偏差（standard deviation）は
+
+$$
+\sigma_{\bar{X}} = \sqrt{\frac{\sigma^{2}}{n}} = \frac{\sigma}{\sqrt{n}}
+$$ {#eq-ahl415-sdxbar}
+
+となります。
+
+また、独立な normal random variables の linear combination も normal distribution にしたがうため
+
+$$
+\boxed{\ \bar{X} \sim N\!\left(\mu,\ \frac{\sigma^{2}}{n}\right)\ }
 $$ {#eq-ahl415-xbar}
 
-$\bar{X}$ は、**大きさ $n$ の標本の平均**です。
+となります。
+
+$\bar{X}$ の標準偏差 $\dfrac{\sigma}{\sqrt{n}}$ を **standard error**（標準誤差）といいます。$n$ が大きいほど standard error は小さくなり、$\bar{X}$ は population mean $\mu$ の近くに集まりやすくなります。**これは、$\bar{X}$ の分布の「広がり」についての性質です。**
+
+一方、次に学ぶ **central limit theorem**（中心極限定理）は、$n$ が大きくなると $\bar{X}$ の分布の「**形**」が normal distribution に近づくことを説明します。
 
 ![The distribution of the sample mean for different $n$](img/ahl-4-15-xbar.svg){#fig-ahl415-xbar width=92%}
 
@@ -184,9 +297,7 @@ $\bar{X}$ は、**大きさ $n$ の標本の平均**です。
 
 @fig-ahl415-xbar を見てください。$4$ つの曲線は、**すべて $\mu = 1000$ を中心**にしています。違うのは幅だけです。
 
-$$
-\sigma_{\bar{X}} = \frac{\sigma}{\sqrt{n}}
-$$ {#eq-ahl415-sdxbar}
+標本の数が増えると、偶然によるばらつきが平均の中で打ち消し合うため、$\bar{X}$ は母平均 $\mu$ の近くに集まりやすくなります（[AHL 4.14](ahl-4-14.qmd#cancel)）。
 
 **$\sigma / n$ ではありません。** 分散が $\sigma^{2}/n$ なので、平方根をとると分母は $\sqrt{n}$ になります。
 
@@ -194,11 +305,9 @@ $\sigma = 12$、$n = 9$ なら $\sigma_{\bar{X}} = \dfrac{12}{3} = 4$ です。$
 
 ::: {.callout-note}
 ## 意味は「平均のほうが、当てにできる」ということです
-$1$ 袋の質量は $1000$ g から $20$ g ずれることもあります。しかし **$9$ 袋の平均**が $20$ g もずれることは、めったにありません。
+$1$ 袋の質量は $1000$ g から $20$ g ずれることもあります。しかし **$9$ 袋の平均**が $20$ g もずれることは、めったにありません。重い袋と軽い袋が打ち消し合うからです。
 
-重い袋と軽い袋が打ち消し合うからです（[AHL 4.14](ahl-4-14.qmd#cancel)）。
-
-**$n$ を大きくすれば、$\bar{X}$ は $\mu$ に近いところに集まります。** これが、標本をたくさんとる理由です。
+これが、標本をたくさんとる理由です。
 :::
 
 ::: {.callout-warning}
@@ -216,98 +325,261 @@ $1$ 袋の質量は $1000$ g から $20$ g ずれることもあります。し�
 `one` なのか `mean` なのか `total` なのか——**そこを丸で囲んでから**計算を始めてください。
 :::
 
-### 6. 合計で解いても、平均で解いても同じです {#total}
+### 6. Central limit theorem（中心極限定理） {#clt}
 
-「$n$ 個の合計」と「$n$ 個の平均」は、$n$ 倍の違いしかありません。ですから、**どちらで解いても同じ答え**になります。
+これまでは、**population（母集団）が normal distribution にしたがう場合**を考えてきました。
 
-$40$ 人の待ち時間で、$1$ 人あたり平均 $4.2$ 分、標準偏差 $2.5$ 分としましょう（この $2$ つから、$\dfrac{2.5^{2}}{40} = 0.15625$ と $40 \times 2.5^{2} = 250$ が出ます）。
+しかし、実際のデータの分布は、いつも normal になるとはかぎりません。たとえば待ち時間の分布は、短い値が多く、右側に長く伸びた形になることがあります。
 
-| 聞き方 | 分布 | 求める確率 |
-|---|---|---|
-| 平均が $4.5$ 分を超える | $\bar{X} \sim N(4.2,\ 0.15625)$ | $P(\bar{X} > 4.5)$ |
-| 合計が $180$ 分を超える | $\sum X \sim N(168,\ 250)$ | $P(\sum X > 180)$ |
+では、もとの分布が normal でない場合、sample mean $\bar{X}$ はどのような分布になるのでしょうか。
 
-: 同じことを $2$ 通りに聞く {#tbl-ahl415-total}
+#### $1$ 回の測定値と sample mean は、別のものです {#one-vs-mean}
 
-$180 = 40 \times 4.5$ なので、この $2$ つは**まったく同じ出来事**です。答えも一致します。
+同じ population から独立に取り出した $n$ 個の値を
 
-**問題文がどちらで聞いているかに、素直に合わせてください。** わざわざ変換する必要はありません。
+$$
+X_1,\ X_2,\ \ldots,\ X_n
+$$
 
-### 7. Central limit theorem {#clt}
+とします。$X_i$ は、$i$ 回目の抽出で得られる値を表す random variable（確率変数）です。その sample mean は
 
-ここまでは、**もとの分布が normal**であることを前提にしてきました。normal でなければ、和も平均も normal にはなりません。
+$$
+\bar{X} = \frac{X_1 + \cdots + X_n}{n}
+$$
 
-ところが、**$\bar{X}$ だけは、$n$ が大きいと正規に近づいていきます。** ぴったり正規になるわけではありません。
+です。
+
+もとの population が normal でなければ、$1$ 回の測定値 $X_i$ の分布も normal ではありません。**しかし、$n$ 個の値から作った sample mean $\bar{X}$ の分布は、$n$ が大きくなるにつれて normal distribution に近づいていきます。**
 
 ![The central limit theorem in action](img/ahl-4-15-clt.svg){#fig-ahl415-clt width=100%}
 
-@fig-ahl415-clt のいちばん左は、**まったく normal でない**母集団です。右に大きく尾を引いています。
-
-そこから $n$ 個をとって平均する、ということをくり返して、$\bar{X}$ の分布を描いたのが右の $3$ つです。
+@fig-ahl415-clt のいちばん左は、**normal ではない** population です。右に大きく尾を引いています。その右の $3$ つは、そこから $n$ 個を取り出して平均する、ということをくり返して描いた $\bar{X}$ の分布です。
 
 - $n = 2$ … まだ歪んでいます
-- $n = 10$ … かなり正規に近づいてきました
-- $n = 40$ … **赤い正規曲線にほぼ重なっています**
+- $n = 10$ … かなり normal に近づいてきました
+- $n = 40$ … **赤い normal の曲線にほぼ重なっています**
 
-これが **central limit theorem**（中心極限定理）です。
+これが **central limit theorem**（中心極限定理、CLT）です。
 
-> **同じ母集団から独立にとった観測値の平均 $\bar{X}$ は、母集団が正規分布でなくても、$n$ が大きくなると正規分布に近づく。**
+> 同じ population から独立に取り出した標本の sample mean $\bar{X}$ は、sample size $n$ が十分に大きいとき、もとの population が normal でなくても、**approximately normal distribution**（近似的な正規分布）にしたがいます。
 
-#### 試験では $n > 30$ が目安です {#n30}
+population の平均を $\mu$、分散を $\sigma^{2}$ とすると
 
-シラバスは、こう書いています。
+$$
+\boxed{\ \bar{X} \approx N\!\left(\mu,\ \frac{\sigma^{2}}{n}\right)\ }
+$$ {#eq-ahl415-clt}
 
-> In general, $\bar{X}$ approaches normality for large $n$, **how large depends upon the distribution from which the sample is taken.** In examinations, **$n > 30$ will be considered sufficient.**
+となります。したがって、$\bar{X}$ の平均、分散、標準偏差は
 
-**どれくらい大きければよいかは、もとの分布による**——それが正直なところです。ただし試験では、**$n > 30$ なら十分**と決められています。
+$$
+E(\bar{X}) = \mu
+$$
 
-$n > 30$ のときは、もとの分布が normal でなくても、$\bar{X}$ を normal として扱ってよい、ということです。
+$$
+\text{Var}(\bar{X}) = \frac{\sigma^{2}}{n}
+$$
 
-**平均 $\mu$ と分散 $\dfrac{\sigma^{2}}{n}$ は、もとが normal でなくてもそのまま**です（[AHL 4.14](ahl-4-14.qmd#varcomb) から出るので、形は関係ありません）。CLT が足してくれるのは、**形が normal に近い**という一点だけです。
+$$
+\sigma_{\bar{X}} = \frac{\sigma}{\sqrt{n}}
+$$
 
-::: {.callout-important}
-## 使う前に、$n$ を確かめて、答案に書いてください
-CLT を使うときは、**理由を $1$ 行書きます。**
+です。この $\dfrac{\sigma}{\sqrt{n}}$ が、[第5節](#xbar)で出てきた **standard error**（標準誤差）です。
 
-::: {.model-answer}
-**試験ではこう書く**
+**平均と分散は、もとが normal でなくてもそのまま**です（[AHL 4.14](ahl-4-14.qmd#varcomb) から出るので、分布の形は関係ありません）。CLT が足してくれるのは、**形が normal に近い**という一点だけです。
 
-*Since $n = 40 > 30$, by the central limit theorem $\bar{X}$ is approximately normal.*
-:::
+#### $n$ が大きくなると、何が起こるのか {#bigger-n}
 
-（$n = 40 > 30$ なので、中心極限定理により $\bar{X}$ はおよそ正規分布にしたがう、という意味です。）
+$n$ が大きくなると
 
-**`approximately`（およそ）という語を入れてください。** ぴったり normal になるわけではありません。
-:::
+$$
+\frac{\sigma}{\sqrt{n}}
+$$
 
-### 8. いつ normal と言ってよいのか {#when}
-
-**答案で書き分けが問われるところです。** $2$ つの場合を、はっきり分けてください。
-
-| もとの分布 | 何を求めるか | normal と言えるか |
-|---|---|---|
-| **normal** | 和・差・$\bar{X}$ のどれでも | **言える。** $n$ はいくつでもよい |
-| **normal でない** | $\bar{X}$（または同じ母集団からの独立な $n$ 個の合計 $X_1 + \cdots + X_n$） | **$n > 30$ なら**、およそ normal（CLT） |
-| **normal でない** | $\bar{X}$ で、$n$ が小さい | **言えない。** この課程では扱いません |
-| **normal でない** | $1$ つの値 $X$ そのもの | **言えない。** CLT は平均の話です |
-
-: normal と言ってよい場合 {#tbl-ahl415-when}
-
-$2$ つ、注意があります。
-
-#### もとが normal なら、$n$ は小さくてよい {#small-n}
-
-$X \sim N(1000,\ 12^{2})$ から $n = 4$ の標本をとるなら、**$4 < 30$ でも $\bar{X}$ は正確に normal** です。CLT は要りません。@eq-ahl415-xbar がそのまま使えます。
-
-**$n > 30$ が必要になるのは、もとが normal でないときだけ**です。
+は小さくなります。そのため、sample mean $\bar{X}$ は population mean $\mu$ の近くに集まりやすくなります。また、$\bar{X}$ の分布の**形**は、しだいに normal distribution に近づきます。
 
 #### CLT は「データが normal になる」とは言っていません {#not-data}
 
 ここを取りちがえる答案がよくあります。
 
-CLT が言っているのは、**$\bar{X}$ の分布**が正規に近づくということです。**$1$ つ $1$ つのデータの分布は、いくら $n$ を増やしても歪んだままです。**
+**CLT は、もとのデータ $X_i$ の分布が normal になるという定理ではありません。** normal に近づくのは、何度も標本を取って作った sample mean $\bar{X}$ の分布です。
 
 @fig-ahl415-clt のいちばん左の形は、$n$ をどれだけ大きくしても変わりません。変わるのは、その右の $3$ つのほうです。
+
+#### どのくらいの $n$ が必要ですか {#n30}
+
+シラバスは、こう書いています。
+
+> In general, $\bar{X}$ approaches normality for large $n$, **how large depends upon the distribution from which the sample is taken.** In examinations, **$n > 30$ will be considered sufficient.**
+
+試験では、通常
+
+$$
+n > 30
+$$
+
+を「十分に大きい」とする目安が使われます。**ただし、これは数学的な境界ではありません。** 実際に必要な sample size は、もとの分布の形によって変わります。分布の偏りが強い場合や外れ値が多い場合は、より大きな $n$ が必要になることがあります。
+
+::: {.callout-important}
+## 答案での書き方
+CLT を使うときは、**normal distribution で近似している理由を $1$ 行書きます。**
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*Since $n = 40 > 30$, by the central limit theorem, $\bar{X}$ is approximately normal.*
+:::
+
+（$n = 40 > 30$ なので、中心極限定理により $\bar{X}$ は近似的に正規分布にしたがう、という意味です。）
+
+ここでは、**`approximately`（近似的に）**と書くことが大事です。もとの population が normal だと分かっている場合を除き、exactly normal とは言えません。
+:::
+
+### 7. 平均で解いても、合計で解いても同じです {#total}
+
+$40$ 人の待ち時間を調べます。$i$ 人目の待ち時間を $X_i$ とし、$1$ 人あたりの待ち時間について
+
+$$
+\mu = 4.2, \qquad \sigma = 2.5
+$$
+
+とします。$1$ 人分の待ち時間が normal distribution にしたがうとは分かっていません。ここでは、次の確率を求めます。
+
+> $40$ 人の平均待ち時間が $4.5$ 分を超える確率
+
+#### 方法1：平均で考える {#by-mean}
+
+$40$ 人の sample mean を
+
+$$
+\bar{X} = \frac{X_1 + \cdots + X_{40}}{40}
+$$
+
+とします。$n = 40 > 30$ なので、CLT により
+
+$$
+\bar{X} \approx N\!\left(4.2,\ \frac{2.5^{2}}{40}\right) = N(4.2,\ 0.15625)
+$$
+
+です。したがって、求める確率は $P(\bar{X} > 4.5)$ です。
+
+#### 方法2：合計で考える {#by-total}
+
+$40$ 人の合計待ち時間を表す新しい確率変数を
+
+$$
+T = X_1 + \cdots + X_{40}
+$$
+
+とします（$\sum X_i$ と書くこともあります）。合計 $T$ の平均は
+
+$$
+E(T) = 40 \times 4.2 = 168
+$$
+
+です。各 $X_i$ は独立なので、合計の分散は
+
+$$
+\text{Var}(T) = 40 \times 2.5^{2} = 250
+$$
+
+となります。また、$T = 40\bar{X}$ なので、$\bar{X}$ が approximately normal なら $T$ も approximately normal です。
+
+$$
+T \approx N(168,\ 250)
+$$
+
+この方法では、$40$ 人の合計が $40 \times 4.5 = 180$ 分を超える確率 $P(T > 180)$ を求めます。
+
+#### なぜ $2$ つの確率は同じなのか {#same-event}
+
+$T = 40\bar{X}$ なので
+
+$$
+\begin{aligned}
+\bar{X} > 4.5 &\iff 40\bar{X} > 40 \times 4.5 \\
+&\iff T > 180
+\end{aligned}
+$$ {#eq-ahl415-same}
+
+です。つまり、**「平均待ち時間が $4.5$ 分を超える」ことと「合計待ち時間が $180$ 分を超える」ことは、同じ出来事**です。したがって
+
+$$
+\boxed{\ P(\bar{X} > 4.5) = P(T > 180)\ }
+$$
+
+となります。
+
+平均と合計では数値の尺度が違いますが、表している出来事は同じです。ですから、どちらの分布を使っても同じ確率が得られます。
+
+| 考え方 | 使う分布 | 求める確率 |
+|---|---|---|
+| 平均で考える | $\bar{X} \approx N\!\left(4.2,\ \dfrac{2.5^{2}}{40}\right)$ | $P(\bar{X} > 4.5)$ |
+| 合計で考える | $T \approx N(168,\ 250)$ | $P(T > 180)$ |
+
+: 同じことを $2$ 通りに聞く {#tbl-ahl415-total}
+
+**問題が平均について聞いているなら平均を使い、合計について聞いているなら合計を使う**のが自然です。わざわざ一方から他方へ変換する必要はありません。
+
+### 8. exactly normal と approximately normal {#when}
+
+sample mean $\bar{X}$ が exactly normal になるか approximately normal になるかは、**population の分布**によって決まります。
+
+| population の分布 | sample mean $\bar{X}$ の分布 | sample size |
+|---|---|---|
+| normal distribution（観測は独立） | **exactly normal** | $n$ の大きさに関係なく使える |
+| normal とは限らない（観測は独立） | **approximately normal** | $n$ が十分に大きいとき、CLT を使う |
+
+: exactly か approximately か {#tbl-ahl415-when}
+
+#### population が normal の場合 {#small-n}
+
+各 $X_i$ が独立で
+
+$$
+X_i \sim N(\mu,\ \sigma^{2})
+$$
+
+なら、独立な normal random variables の linear combination も normal なので
+
+$$
+\boxed{\ \bar{X} \sim N\!\left(\mu,\ \frac{\sigma^{2}}{n}\right)\ }
+$$
+
+です。この場合、$\bar{X}$ は **exactly normal**（正確に正規分布）です。**$n$ が小さくても構いません。** $X \sim N(1000,\ 12^{2})$ から $n = 4$ の標本をとるなら、$4 < 30$ でも $\bar{X}$ は exactly normal で、CLT は要りません。
+
+#### population が normal とは限らない場合 {#approx-case}
+
+もとの population が normal でなくても、$n$ が十分に大きければ、CLT により
+
+$$
+\boxed{\ \bar{X} \approx N\!\left(\mu,\ \frac{\sigma^{2}}{n}\right)\ }
+$$
+
+として扱えます。この場合は **approximately normal**（近似的に正規分布）です。
+
+#### 最後に確認 {#flow}
+
+どちらの場合でも、$\bar{X}$ の平均と分散は
+
+$$
+E(\bar{X}) = \mu, \qquad \text{Var}(\bar{X}) = \frac{\sigma^{2}}{n}
+$$
+
+です。違うのは**分布の形**についてで、
+
+- population が normal なら、$\bar{X}$ は **exactly normal**
+- population が normal とは限らなければ、十分に大きな $n$ に対して **approximately normal**
+
+となります。そして、**$n$ が小さく、もとの分布も normal と分からない場合**は、normal と仮定しません。**normal approximation（正規近似）を正当化できない**からです。
+
+なお、CLT は**平均と合計**についての定理です。もとが normal でないとき、$n$ をどれだけ大きくしても、**CLT が $1$ つの値 $X$ を normal にしてくれることはありません**（[上](#not-data)）。
+
+::: {.callout-warning}
+## 「分布が不明」と「normal ではない」は違います
+問題文に「この分布は正規分布ではない」と書いてあれば、normal ではないと分かっています。一方、平均と標準偏差だけが与えられている場合は、**分布が不明**なだけです。normal かもしれませんし、そうでないかもしれません。
+
+上の判断はどちらの場合も同じように使えます。ただし答案では、**問題文に書かれていること以上を断定しない**でください。
+:::
 
 ## Why it works
 
@@ -347,7 +619,7 @@ $\bar{X}$ を作るとき、$n$ 個の値を足しています。歪んだ分布
 
 @fig-ahl415-clt の左の分布では、たまに $4$ や $5$ が出ます。$n = 1$ ならそれがそのまま出ますが、$n = 40$ の平均では、$1$ 個の $5$ は $\dfrac{5}{40}$ ぶんしか効きません。**$1$ 個の極端な値では、平均を動かせなくなる**のです。
 
-その結果、$\bar{X}$ は「たくさんの小さなずれが積み重なったもの」になります。**そういうものは、平均と標準偏差がきちんと決まる分布からとったかぎり、正規分布の形になる**——これが中心極限定理の内容です。
+その結果、$\bar{X}$ は「たくさんの小さなずれが積み重なったもの」になります。**そういうものの分布は、平均と標準偏差がきちんと決まる分布からとったかぎり、$n$ が大きくなるにつれて正規分布に近づいていきます**——これが中心極限定理の内容です。
 
 ::: {.callout-note appearance="simple"}
 シラバスは、この定理について
@@ -390,37 +662,41 @@ $1$ 食は、主菜 $1$ つと副菜 $1$ つからなります。$1$ 食の合�
 
 </details>
 
-**(a)** [第3節](#steps)の $3$ ステップのうち、$1$ と $2$ です。
+---
 
-平均は足します。
+**(a)** [第3節](#steps)の $3$ ステップのうち、$1$ と $2$ です。$1$ 食の合計質量を $T = M + S$ とおきます。
+
+平均は、係数をそのまま使います。
 
 $$
 E(T) = 250 + 180 = 430
 $$
 
-分散も足します。**standard deviation ではなく、分散**です。
+分散は、係数を $2$ 乗して足します。ここでは係数がどちらも $1$ なので、$8^{2}$ と $6^{2}$ をそのまま足します。**standard deviation ではなく、variance を足す**ところが要点です。
 
 $$
 \text{Var}(T) = 8^{2} + 6^{2} = 64 + 36 = 100
 $$
 
-$M$ も $S$ も normal で、独立なので、$T$ も normal です（@eq-ahl415-main）。
+$M$ も $S$ も normal で、独立なので、$T$ は **exactly normal** です（[第1節](#lincomb)）。
 
 $$
 T \sim N(430,\ 100)
 $$
 
-**検算。** $\sigma = \sqrt{100} = 10$ です。$8 + 6 = 14$ ではありません（[第2節](#pythagoras)）。
+**検算。** $\sigma = \sqrt{100} = 10$ です。$8 + 6 = 14$ ではありません（[第2節](#sum)）。
 
 **(b)** $\sigma = 10$ を `normCdf` に入れます。**$100$ ではありません。**
 
 ```
-normCdf(445, 1E99, 430, 10)
+normCdf(445, ∞, 430, 10)
 ```
 
 $$
 P(T > 445) = 0.0668
 $$
+
+$1$ 食の合計質量が $445$ g を超えるのは、およそ $100$ 食のうち $7$ 食です。
 
 **(c)** 両端があるので、`normCdf` の $2$ か所を埋めるだけです。
 
@@ -431,6 +707,8 @@ normCdf(420, 445, 430, 10)
 $$
 P(420 < T < 445) = 0.775
 $$
+
+$1$ 食のおよそ $77\%$ が、$420$ g から $445$ g のあいだに入ります。
 
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
@@ -457,8 +735,8 @@ $$
 :::
 
 ::: {.callout-tip}
-## $2$ 杯のコーヒーなら、こうなります
-同じ考え方で、**同じ分布のものを $2$ つ**足すこともできます。
+## 補足：$2$ 杯のコーヒーなら、こうなります
+ここからは、この問題の解答ではなく、**同じ考え方を別の場面に使う話**です。同じ分布のものを $2$ つ足すこともできます。
 
 $X \sim N(250,\ 8^{2})$ のコーヒーを $2$ 杯なら
 
@@ -506,21 +784,25 @@ $2$ 杯あるのか、$1$ 杯を $2$ 倍するのか。**問題文で数えて�
 
 </details>
 
-**(a)** 平均は引きます。分散は**足します**（@eq-ahl415-diff）。
+---
+
+**(a)** $D = X - Y = X + (-1)Y$ とおきます。平均は係数をそのまま使い、分散は係数を $2$ 乗します（@eq-ahl415-diff）。
 
 $$
 E(D) = 30 - 27 = 3
 $$
 
 $$
-\text{Var}(D) = 4^{2} + 3^{2} = 16 + 9 = 25
+\text{Var}(D) = 4^{2} + (-1)^{2} \times 3^{2} = 16 + 9 = 25
 $$
+
+$X$ も $Y$ も normal で、独立なので、$D$ は **exactly normal** です。
 
 $$
 D \sim N(3,\ 25)
 $$
 
-$\sigma = \sqrt{25} = 5$ です。
+$N(3,\ 25)$ の $25$ は分散なので、標準偏差は $\sigma = \sqrt{25} = 5$ です。`normCdf` には $5$ を入れます。
 
 **(b)** 「A のほうが長い」は「$D$ が正」ということです（@eq-ahl415-dgt0）。
 
@@ -529,40 +811,42 @@ P(X > Y) = P(D > 0)
 $$
 
 ```
-normCdf(0, 1E99, 3, 5)
+normCdf(0, ∞, 3, 5)
 ```
 
 $$
 P(D > 0) = 0.726
 $$
 
+ブランド A のほうが長持ちするのは、およそ $73\%$ です。
+
 **検算。** $E(D) = 3 > 0$ なので、確率は $0.5$ より大きくなるはずです ✓
 
 **(c)** `at least 5 hours longer` は $D \geq 5$ です。
 
 ```
-normCdf(5, 1E99, 3, 5)
+normCdf(5, ∞, 3, 5)
 ```
 
 $$
 P(D \geq 5) = 0.345
 $$
 
-**(d)** $Y$ を引いても、$Y$ のばらつきは消えません。
+$5$ 時間以上長持ちするのは、およそ $34\%$ です。
+
+**(d)** 足すのは標準偏差ではなく分散で、しかも**差のときも足します**。$Y$ の係数 $-1$ が $2$ 乗されて $+1$ になるからです。$Y$ を引いても $Y$ のばらつきは消えず、$Y$ がぶれれば $X - Y$ もぶれるので、$2$ つのばらつきは打ち消し合わずに重なります。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Variances add, not standard deviations, and they add even for a difference: $\text{Var}(D) = 4^{2} + 3^{2} = 25$, so the standard deviation is $\sqrt{25} = 5$. Subtracting $Y$ does not remove the variability of $Y$ — if $Y$ varies, so does $X - Y$ — so the two sources of variability combine rather than cancel.*
+*Variances add, not standard deviations, and they add for a difference as well: $\text{Var}(D) = 4^{2} + (-1)^{2} \times 3^{2} = 25$, so the standard deviation is $\sqrt{25} = 5$. Subtracting $Y$ does not remove the variability of $Y$.*
 :::
-
-（分散が足されるのであって標準偏差ではなく、しかも差でも足される。$Y$ を引いても $Y$ のばらつきは消えず、$Y$ がぶれれば $X-Y$ もぶれるので、$2$ つのばらつきは打ち消し合わずに重なる、という意味です。）
 
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
 **(a)**
 $$
-E(D) = 30 - 27 = 3, \qquad \text{Var}(D) = 4^{2} + 3^{2} = 25
+E(D) = 30 - 27 = 3, \qquad \text{Var}(D) = 4^{2} + (-1)^{2} \times 3^{2} = 25
 $$
 $$
 D \sim N(3,\ 25)
@@ -578,7 +862,7 @@ $$
 P(D \geq 5) = 0.345
 $$
 
-**(d)** *Variances add rather than standard deviations, and they add for a difference as well as for a sum: $\text{Var}(D) = 16 + 9 = 25$, so $\sigma = 5$. Subtracting $Y$ does not remove the variability of $Y$.*
+**(d)** *Variances add rather than standard deviations, and they add for a difference as well as for a sum: $\text{Var}(D) = 4^{2} + (-1)^{2} \times 3^{2} = 25$, so $\sigma = 5$. Subtracting $Y$ does not remove the variability of $Y$.*
 :::
 :::
 
@@ -604,17 +888,21 @@ $$
 
 </details>
 
-**(a)** $1$ 袋なので、$X \sim N(1000,\ 12^{2})$ をそのまま使います。
+---
+
+$1$ 袋の質量を $X$、$9$ 袋の標本平均を $\bar{X}$ とします。**この $2$ つを、記号でも区別してください。**
+
+**(a)** $1$ 袋を選ぶ場合なので、$X \sim N(1000,\ 12^{2}) = N(1000,\ 144)$ をそのまま使います。標準偏差は $\sigma = 12$ です。
 
 ```
-normCdf(-1E99, 995, 1000, 12)
+normCdf(-∞, 995, 1000, 12)
 ```
 
 $$
 P(X < 995) = 0.338
 $$
 
-**(b)** $9$ 袋の**平均**なので $\bar{X}$ です（@eq-ahl415-xbar）。
+**(b)** $9$ 袋の**平均**を調べる場合なので $\bar{X}$ です。$9$ 袋は独立で、もとの $X$ が normal なので、$n = 9$ でも $\bar{X}$ は **exactly normal** です（@eq-ahl415-xbar）。
 
 $$
 \bar{X} \sim N\!\left(1000,\ \frac{144}{9}\right) = N(1000,\ 16)
@@ -625,7 +913,7 @@ $$
 $$
 
 ```
-normCdf(-1E99, 995, 1000, 4)
+normCdf(-∞, 995, 1000, 4)
 ```
 
 $$
@@ -639,10 +927,10 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The probability drops from $0.338$ to $0.106$. For a single bag, one light bag is enough to fall below $995$ g. For the mean of nine bags, all the light bags would have to fail to be offset by heavier ones, which is much less likely. The standard deviation of the mean is $12/\sqrt{9} = 4$, only a third of the standard deviation of a single bag.*
+*The probability drops from $0.338$ to $0.106$. For a single bag, one light bag is enough to fall below $995$ g. For the mean of nine bags, a light bag tends to be offset by a heavier one, so the mean falls below $995$ g only if the nine bags are light on average, which is much less likely. The standard deviation of the mean is $12/\sqrt{9} = 4$, only a third of the standard deviation of a single bag.*
 :::
 
-（確率は $0.338$ から $0.106$ に下がる。$1$ 袋なら軽い袋 $1$ つで $995$ g を下回るが、$9$ 袋の平均では軽い袋が重い袋で打ち消されない必要があり、はるかに起こりにくい、という意味です。）
+（確率は $0.338$ から $0.106$ に下がる。$1$ 袋なら軽い袋 $1$ つで $995$ g を下回るが、$9$ 袋の平均では軽い袋が重い袋で打ち消されるので、$9$ 袋そろって軽いときにしか下回らず、はるかに起こりにくい、という意味です。）
 
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
@@ -691,7 +979,9 @@ $$
 
 </details>
 
-**(a)** もとの分布は normal ではありません。ですから @eq-ahl415-main は使えません。使うのは **central limit theorem** です（[第7節](#clt)）。
+---
+
+**(a)** もとの分布は normal ではないと書かれています。ですから「独立な normal の一次結合は normal」という結果（[第1節](#lincomb)）は使えません。使うのは **central limit theorem** です（[第6節](#clt)）。$n = 40$ は十分大きいため、CLT により $\bar{X}$ は **approximately normal** です。「normal である」と断定しないでください。
 
 ::: {.model-answer}
 **試験ではこう書く**
@@ -699,29 +989,34 @@ $$
 *The sample size is $n = 40$, which is greater than $30$, so by the central limit theorem the mean serving time $\bar{X}$ is approximately normally distributed, even though the distribution of individual times is not normal.*
 :::
 
-（$n = 40 > 30$ なので、個々の時間の分布が正規でなくても、中心極限定理により平均 $\bar{X}$ はおよそ正規分布にしたがう、という意味です。）
+（$n = 40 > 30$ なので、個々の時間の分布が normal でなくても、中心極限定理により平均 $\bar{X}$ は近似的に正規分布にしたがう、という意味です。）
 
-**(b)**
+**(b)** 平均と分散は、もとの分布の形によりません（[AHL 4.14](ahl-4-14.qmd#varcomb)）。
 
 $$
-\text{Var}(\bar{X}) = \frac{2.5^{2}}{40} = \frac{6.25}{40} = 0.15625
+E(\bar{X}) = 4.2, \qquad \text{Var}(\bar{X}) = \frac{2.5^{2}}{40} = \frac{6.25}{40} = 0.15625
 $$
+
+$\bar{X}$ は approximately normal なので、$\bar{X} \sim N(4.2,\ 0.15625)$ と書けます。標準偏差は分散の平方根です。
 
 $$
 \sigma_{\bar{X}} = \sqrt{0.15625} = 0.395
 $$
 
 ```
-normCdf(4.5, 1E99, 4.2, 0.39528)
+√(2.5^2/40)  →  ans
+normCdf(4.5, ∞, 4.2, ans)
 ```
 
 $$
 P(\bar{X} > 4.5) = 0.224
 $$
 
-**丸める前の $\sigma$ を使ってください。** $0.395$ で計算しても $3$ 桁目までは同じですが、電卓の値をそのまま使うほうが確実です。
+$40$ 人の平均対応時間が $4.5$ 分を超える日は、およそ $22\%$ です。
 
-**(c)** 合計 $\sum X$ で考えます。
+**丸める前の $\sigma$ を使ってください。** $0.395$ で計算しても $3$ 桁目までは同じですが、`ans` で前の行の値をそのまま呼び出すほうが確実です（[GDC 第2節](#gdc-unrounded)）。
+
+**(c)** 合計 $\sum X$ で考えます。CLT は平均と合計の両方についての定理なので、合計も **approximately normal** です（[第8節](#flow)）。
 
 $$
 E\left(\sum X\right) = 40 \times 4.2 = 168, \qquad \text{Var}\left(\sum X\right) = 40 \times 2.5^{2} = 250
@@ -732,14 +1027,15 @@ $$
 $$
 
 ```
-normCdf(180, 1E99, 168, 15.811)
+√250  →  ans
+normCdf(180, ∞, 168, ans)
 ```
 
 $$
 P\left(\sum X > 180\right) = 0.224
 $$
 
-**同じ値になりました。** $180 = 40 \times 4.5$ だからです。「合計が $180$ を超える」と「平均が $4.5$ を超える」は、**言い方が違うだけの同じ出来事**です（[第6節](#total)）。
+**同じ値になりました。** $180 = 40 \times 4.5$ だからです。「合計が $180$ を超える」と「平均が $4.5$ を超える」は、**言い方が違うだけの同じ出来事**です（[第7節](#total)）。
 
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
@@ -753,7 +1049,7 @@ $$
 P(\bar{X} > 4.5) = 0.224
 $$
 
-**(c)**
+**(c)** *By the central limit theorem the total is also approximately normal.*
 $$
 \textstyle\sum X \sim N(168,\ 250), \qquad \sigma = 15.8
 $$
@@ -767,85 +1063,69 @@ $$
 ## Common errors
 
 ::: {.callout-warning}
-## standard deviation を足してしまう
-$8$ と $6$ から $14$ としてしまう誤りです。**足すのは分散**で、$\sigma = \sqrt{8^{2}+6^{2}} = 10$ です（[第2節](#pythagoras)）。
+## 標準偏差を直接足してしまう
+**誤り**：$\sigma_{M+S} = 8 + 6 = 14$
 
-**分散で計算して、最後に平方根**——この順にしてください。
+足せるのは variance（分散）であって、standard deviation（標準偏差）ではありません（[第2節](#sum)）。
+
+**正しくは**：$\text{Var}(M+S) = 8^{2} + 6^{2} = 100$、$\sigma = \sqrt{100} = 10$。
 :::
 
 ::: {.callout-warning}
-## 差のときに、分散を引いてしまう
-$16 - 9 = 7$ としてしまう誤りです。**差でも分散は足します**（[第4節](#diff)）。
+## 差を取るときに、分散まで引いてしまう
+**誤り**：$\text{Var}(X - Y) = 4^{2} - 3^{2} = 7$
 
-$Y$ の係数 $-1$ は $2$ 乗されて $+1$ になるからです。
+$Y$ の係数 $-1$ は $2$ 乗されて $+1$ になるので、独立なら分散は**足されます**（[第4節](#diff)）。
+
+**正しくは**：$\text{Var}(X - Y) = 4^{2} + (-1)^{2} \times 3^{2} = 25$、$\sigma = 5$。
 :::
 
 ::: {.callout-warning}
-## `normCdf` に分散を入れてしまう
-$N(430,\ 100)$ の $100$ は**分散**です。`normCdf` に入れるのは **$\sigma = 10$** です（[SL 4.9](../../ai-sl/04-statistics-and-probability/sl-4-9.qmd)）。
+## $N(\mu,\ \sigma^{2})$ と、GDC の標準偏差を混同する
+**誤り**：`normCdf(445, ∞, 430, 100)`
 
-$100$ を入れると $P(T > 445) = 0.440$ となり、正しい $0.0668$ とはまったく違う答えになります。
+$N(430,\ 100)$ の $100$ は**分散**で、`normCdf` に入れるのは**標準偏差**です（[GDC 第1節](#gdc-normcdf)）。
+
+**正しくは**：`normCdf(445, ∞, 430, 10)`。分散を入れると $0.440$ となり、正しい $0.0668$ とはまったく違う答えになります。
 :::
 
 ::: {.callout-warning}
-## $\bar{X}$ の standard deviation を $\dfrac{\sigma}{n}$ にする
-$\dfrac{12}{9}$ ではなく $\dfrac{12}{\sqrt{9}} = 4$ です（[第5節](#narrower)）。
+## exactly normal と、CLT による approximately normal を混同する
+**誤り**：もとが normal なのに「$n > 30$ でないので normal として扱えない」／ CLT を使ったのに「$\bar{X}$ は normal である」と書く
 
-**分散が $\dfrac{\sigma^{2}}{n}$** なので、平方根をとると分母は $\sqrt{n}$ になります。
+もとが normal なら $n$ によらず exactly normal、CLT から言えるのは approximately normal です（[第8節](#when)）。
+
+**正しくは**：*Since $X$ is normal, $\bar{X}$ is exactly normal for any $n$.* ／ *Since $n = 40 > 30$, by the central limit theorem $\bar{X}$ is approximately normal.*
 :::
 
-::: {.callout-warning}
-## $X_1 + X_2$ を $2X$ として計算する
-$2$ つのものを足すのか、$1$ つのものを $2$ 倍するのかで、分散が $2$ 倍と $4$ 倍に分かれます（[AHL 4.14](ahl-4-14.qmd#two-x)）。
+::: {.callout-important}
+## このページの判断手順
+① 求めたい量を、和・差・標本平均として式にする。
 
-**平均は同じになる**ので、平均だけ見ていても気づけません。**問題文で、いくつあるかを数えてください。**
+② 平均は、係数をそのまま使って計算する。
+
+③ 分散は、係数を $2$ 乗して足す。
+
+④ もとの変数が normal なら **exactly normal**。そうでなくても、標本数が十分大きければ CLT により **approximately normal**。
+
+⑤ 分散の平方根を取り、標準偏差を GDC に入れる。
 :::
 
-::: {.callout-warning}
-## `one` / `mean` / `total` を読み分けない
-同じ $9$ 袋でも、$\sigma$ は $12$、$4$、$36$ と $3$ 通りになります（[第5節](#xbar)）。
-
-**問題文のその語を丸で囲んでから**、計算を始めてください。
-:::
-
-::: {.callout-warning}
-## もとが normal でないのに、$n$ を確かめずに使う
-CLT が使えるのは、試験では **$n > 30$** のときです（[第7節](#n30)）。
-
-$n = 10$ で、もとが normal でないなら、**この課程では答えを出せません。** シラバスが $n > 30$ を目安と決めているので、そういう設定は出題されません。
-:::
-
-::: {.callout-warning}
-## もとが normal なのに、$n > 30$ を要求してしまう
-逆向きの誤りです。**もとが normal なら、$n$ がいくつでも $\bar{X}$ は正確に normal** です（[第8節](#small-n)）。
-
-$n = 4$ でも構いません。CLT を持ち出す必要はありません。
-:::
-
-::: {.callout-warning}
-## CLT を「データが normal に近づく」と説明する
-CLT が言っているのは、**$\bar{X}$ の分布**についてです。$1$ つ $1$ つのデータの分布は、$n$ をどれだけ増やしても変わりません（[第8節](#not-data)）。
-
-答案では、**何が normal に近づくのか**をはっきり書いてください。
-:::
-
-::: {.callout-warning}
-## CLT を使ったのに、理由を書かない
-`Explain why` でなくても、CLT を使ったら **$n > 30$ である**ことを $1$ 行書いておきます（[第7節](#n30)）。
-
-`approximately` という語も入れてください。ぴったり normal になるわけではありません。
-:::
-
-::: {.callout-warning}
-## `independent` と書かれていないのに、分散を足す
-分散を足せるのは、**独立なとき**です（[AHL 4.14](ahl-4-14.qmd#varcomb)）。
-
-試験では問題文に `independent` と書かれます。**そこを先に読んでください。**
-:::
+[第3節の $3$ ステップ](#steps)は**計算の手順**、こちらは**normal と言ってよいかを確かめる手順**です。②③⑤ で計算し、④ で根拠を確かめる、と役割を分けて使ってください。
 
 ## Using your GDC (TI-Nspire CX II)
 
 この項目の電卓操作は、**SL 4.9 とまったく同じ**です。新しい機能は使いません。
+
+::: {.callout-note appearance="simple"}
+AI HL の公式集は **4.14 の次が 4.17** で、4.15 の欄はありません。$E$ と $\text{Var}$ の式は 4.14 の欄にありますが、**「独立な normal の一次結合は normal」と $\bar{X} \sim N\!\left(\mu,\ \dfrac{\sigma^{2}}{n}\right)$ は印刷されていません。この $2$ つは覚える必要があります。**
+
+また、[SL 4.9](../../ai-sl/04-statistics-and-probability/sl-4-9.qmd) で見たとおり、シラバスは
+
+> This does **not** involve transformation to the standardized normal variable $z$.
+
+と書いています。$z = \dfrac{x-\mu}{\sigma}$ に直す必要はありません。**求めた $\mu$ と $\sigma$ を、そのまま `normCdf` に入れます。**
+:::
 
 ### 1. Normal Cdf に入れるのは $\sigma$ です {#gdc-normcdf}
 
@@ -857,14 +1137,23 @@ menu → Statistics → Distributions → Normal Cdf
 
 | 欄 | 入れるもの |
 |---|---|
-| `Lower Bound` | 下の端。なければ $-1E99$ |
-| `Upper Bound` | 上の端。なければ $1E99$ |
+| `Lower Bound` | 下の端。なければ $-\infty$ |
+| `Upper Bound` | 上の端。なければ $\infty$ |
 | `μ` | 求めた平均 |
 | `σ` | 求めた**標準偏差**。分散ではありません |
 
 : Normal Cdf の $4$ 欄 {#tbl-ahl415-gdc}
 
 **$N(430,\ 100)$ の $100$ をそのまま $\sigma$ の欄に入れないでください。** 入れるのは $\sqrt{100} = 10$ です。
+
+::: {.callout-note appearance="simple"}
+## $\infty$ の入れ方と、$1E99$ という書き方
+$\infty$ は**記号パレット**から選びます。TI 公式のガイドでは、handheld で `ctrl` と `k` を押すとパレットが開く、と書かれています。$-\infty$ は、負号 `(-)` を打ってから $\infty$ を選びます。
+
+**$1E99$ と入れても同じです。** $1E99$ は $1 \times 10^{99}$ という意味で、「事実上の無限大」として使う書き方です（$E$ は電卓の `EE` キーで出します）。古い教材や TI-84 の解説では、こちらをよく見かけます。
+
+**この本では $\infty$ で書きます**（[SL 4.9](../../ai-sl/04-statistics-and-probability/sl-4-9.qmd#infinity)）。
+:::
 
 ### 2. $\sigma$ は、丸める前の値を使う {#gdc-unrounded}
 
@@ -874,7 +1163,7 @@ $\sigma = \sqrt{0.15625} = 0.39528\ldots$ のように**割り切れない**こ�
 
 ```
 √(2.5^2/40)  →  ans
-normCdf(4.5, 1E99, 4.2, ans)
+normCdf(4.5, ∞, 4.2, ans)
 ```
 
 ### 3. 「$A$ が $B$ より大きい」は $1$ 回で済ませる {#gdc-diff}
@@ -882,7 +1171,7 @@ normCdf(4.5, 1E99, 4.2, ans)
 $P(X > Y)$ を、$2$ つの分布を見くらべて出そうとしないでください。**$D = X - Y$ を作れば、`normCdf` $1$ 回**で終わります（[第4節](#which-bigger)）。
 
 ```
-normCdf(0, 1E99, 3, 5)
+normCdf(0, ∞, 3, 5)
 ```
 
 ### 4. 逆向きに使うときは Inverse Normal {#gdc-invnorm}
@@ -892,10 +1181,10 @@ normCdf(0, 1E99, 3, 5)
 **入れるのは左からの面積**です。右が $0.05$ なら、$0.95$ を入れます。
 
 ```
-invNorm(0.90, 60, 2.5)
+invNorm(0.95, 60, 2.5)
 ```
 
-たとえばこれは、$N(60,\ 2.5^{2})$ で「上から $10\%$ に入る境目」を求めています。返るのは $63.2$ です。
+たとえばこれは、$N(60,\ 2.5^{2})$ で「上から $5\%$ に入る境目」を求めています。右の面積が $0.05$ なので、入れるのは $0.95$ です。返るのは $64.1$ です。
 
 ## Exercises
 
@@ -930,9 +1219,7 @@ $$
 ## 解説
 分散は $5^{2} + 12^{2} = 25 + 144 = 169$ です。**和でも差でも同じ**になります（[第4節](#diff)）。
 
-$\sigma = \sqrt{169} = 13$。$5 + 12 = 17$ でも $12 - 5 = 7$ でもありません。
-
-**$5$、$12$、$13$ は直角三角形の $3$ 辺です**（[第2節](#pythagoras)）。
+$\sigma = \sqrt{169} = 13$。$5 + 12 = 17$ でも $12 - 5 = 7$ でもありません（[第2節](#sum)）。
 
 平均だけが $80$ と $20$ で違います。
 :::
@@ -964,7 +1251,7 @@ $$
 問題 1 で出した分布を、そのまま `normCdf` に入れます。
 
 ```
-normCdf(95, 1E99, 80, 13)
+normCdf(95, ∞, 80, 13)
 ```
 
 **入れるのは $13$ で、$169$ ではありません**（[GDC 第1節](#gdc-normcdf)）。$169$ を入れると $0.465$ という別の答えになります。
@@ -996,12 +1283,12 @@ $$
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-$X$ が normal なので、$n = 16$ でも $\bar{X}$ は**正確に** normal です（[第8節](#small-n)）。$n > 30$ は要りません。
+$X$ が normal なので、$n = 16$ でも $\bar{X}$ は **exactly normal** です（[第8節](#small-n)）。$n$ の大きさは関係ありません。
 
 $\sigma_{\bar{X}} = \dfrac{5}{\sqrt{16}} = \dfrac{5}{4} = 1.25$。**$\dfrac{5}{16}$ ではありません**（[第5節](#narrower)）。
 
 ```
-normCdf(21.5, 1E99, 20, 1.25)
+normCdf(21.5, ∞, 20, 1.25)
 ```
 
 **$1$ つの $X$ なら** $\sigma = 5$ で、$P(X > 21.5)$ は $0.382$ です。標本平均のほうが、ずっと起こりにくくなっています。
@@ -1055,16 +1342,16 @@ $$
 ## 解説
 **(a)** 小数の $2$ 乗になるので、桁に気をつけてください。$0.05^{2} = 0.0025$ です。$0.025$ ではありません。
 
-$0.05 + 0.2 = 0.25$ としてしまうと誤りです（[第2節](#pythagoras)）。正しくは $0.206$。
+$0.05 + 0.2 = 0.25$ としてしまうと誤りです（[第2節](#sum)）。正しくは $0.206$。
 
 **(b)** $\sigma$ は $\sqrt{0.0425} = 0.20615\ldots$ です。**丸める前の値**を `normCdf` に入れてください（[GDC 第2節](#gdc-unrounded)）。
 
 ```
 √(0.0425)  →  ans
-normCdf(3, 1E99, 2.9, ans)
+normCdf(3, ∞, 2.9, ans)
 ```
 
-**箱のばらつきは、ほとんど効いていません。** $0.05$ に対して中身が $0.2$ なので、$2$ 乗すると $0.0025$ と $0.04$ で $16$ 倍の差があります。**小さいほうのばらつきは、$2$ 乗するとさらに小さくなる**——これが $2$ 乗して足すことの効き方です。
+**箱のばらつきは、ほとんど効いていません。** $0.05$ に対して中身が $0.2$ なので、$2$ 乗すると $0.0025$ と $0.04$ で $16$ 倍の差があります。**ばらつきの差は、$2$ 乗すると広がります**——$4$ 倍の差が $16$ 倍の差になります。だから小さいほうは、和の中でほとんど効かなくなります。
 :::
 
 ::: {.ex-sep}
@@ -1108,7 +1395,7 @@ $$
 
 $\dfrac{n\sigma^{2}}{n^{2}} = \dfrac{\sigma^{2}}{n}$ で、**$n$ が $1$ つ約分されて残ります。**
 
-最後に平方根をとるので、分母は $\sqrt{n}$ です（[Why it works](#why-xbar)）。
+最後に平方根をとるので、分母は $\sqrt{n}$ です（途中式は「Why it works」を開くと出てきます）。
 
 ::: {.model-answer}
 **試験ではこう書く**
@@ -1156,7 +1443,7 @@ $$
 ## 解説
 **(a)** `with a reason` なので、**$n > 30$ を必ず書いてください。** 「中心極限定理より」だけでは、根拠になりません。
 
-`approximately` も忘れずに（[第7節](#n30)）。
+`approximately` も忘れずに（[第6節](#n30)）。
 
 ::: {.model-answer}
 **試験ではこう書く**
@@ -1168,7 +1455,7 @@ $$
 
 ```
 √(3.6^2/50)  →  ans
-normCdf(-1E99, 8, 8.4, ans)
+normCdf(-∞, 8, 8.4, ans)
 ```
 
 **もとの分布が正規でなくても、平均と標準偏差はそのまま使えます。** CLT が保証してくれるのは**形**だけで、平均と分散は [AHL 4.14](ahl-4-14.qmd) のとおりです。
@@ -1181,9 +1468,9 @@ normCdf(-1E99, 8, 8.4, ans)
 
 **(a)** [The sum of $3$ independent observations from a normal distribution.]{.q-en}
 
-**(b)** [The mean of $8$ observations from a distribution that is strongly skewed.]{.q-en}
+**(b)** [The mean of $8$ independent observations from a distribution that is strongly skewed.]{.q-en}
 
-**(c)** [The mean of $60$ observations from a distribution that is strongly skewed.]{.q-en}
+**(c)** [The mean of $60$ independent observations from a distribution that is strongly skewed.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
@@ -1192,9 +1479,9 @@ normCdf(-1E99, 8, 8.4, ans)
 
 **(a)** 正規分布からの、独立な $3$ 個の観測値の合計。
 
-**(b)** 大きく歪んだ分布からの、$8$ 個の観測値の平均。
+**(b)** 大きく歪んだ分布からの、独立な $8$ 個の観測値の平均。
 
-**(c)** 大きく歪んだ分布からの、$60$ 個の観測値の平均。
+**(c)** 大きく歪んだ分布からの、独立な $60$ 個の観測値の平均。
 
 </details>
 
@@ -1202,7 +1489,7 @@ normCdf(-1E99, 8, 8.4, ans)
 ## 解答例（答案用紙に書くこと）
 **(a)** *Yes. A linear combination of independent normal variables is itself normal, whatever the sample size, so the sum of $3$ observations is exactly normal.*
 
-**(b)** *No. The underlying distribution is not normal, and $n = 8$ is not greater than $30$, so the central limit theorem cannot be applied.*
+**(b)** *No. The distribution is strongly skewed and $n = 8$ is not greater than $30$, so a normal approximation for the mean cannot be justified.*
 
 **(c)** *Yes, approximately. Although the underlying distribution is not normal, $n = 60 > 30$, so by the central limit theorem the mean is approximately normally distributed.*
 :::
@@ -1211,23 +1498,23 @@ normCdf(-1E99, 8, 8.4, ans)
 ## 解説
 [第8節の表](#when)が、そのまま答えになる問題です。
 
-**(a)** もとが normal なら、$n$ は関係ありません（[第8節](#small-n)）。$3$ 個でも $100$ 個でも normal です。しかも**およそ**ではなく**正確に** normal です。
+**(a)** もとが normal なら、$n$ は関係ありません（[第8節](#small-n)）。$3$ 個でも $100$ 個でも normal です。しかも approximately ではなく **exactly normal** です。
 
-**(b)** もとが normal でなく、$n$ も小さい。**この課程では、正規として扱えません。**
+**(b)** もとが normal でなく、$n$ も小さい。**normal approximation（正規近似）を正当化できません**（[第8節](#flow)）。
 
-**(c)** もとは normal でないので、CLT に頼ります。$60 > 30$ なので使えます。ただし**およそ**です。
+**(c)** もとは normal でないので、CLT に頼ります。$60 > 30$ なので使えます。ただし **approximately normal** です。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
 *(a) Yes — a linear combination of independent normal variables is normal for any $n$.*
 
-*(b) No — the distribution is not normal and $n = 8$ is not greater than $30$, so the central limit theorem does not apply.*
+*(b) No — the distribution is strongly skewed and $n = 8$ is not greater than $30$, so a normal approximation for the mean cannot be justified.*
 
 *(c) Yes, approximately — the distribution is not normal, but $n = 60 > 30$, so the central limit theorem applies to the mean.*
 :::
 
-**(a) と (c) で、`exactly` と `approximately` を書き分けている**ところを見てください。ここが読まれます。
+**(a) と (c) で、`exactly` と `approximately` を書き分けている**ところを見てください。ここが読まれます（[第8節](#when)）。
 :::
 
 ::: {.ex-sep}
@@ -1389,14 +1676,14 @@ $\sigma = \sqrt{800} = 28.284\ldots$
 
 ```
 √800  →  ans
-normCdf(620, 1E99, 576, ans)
+normCdf(620, ∞, 576, ans)
 ```
 
 $$
 P = 0.0599
 $$
 
-**約 $6\%$** です。$100$ 回に $6$ 回ほど、この $8$ 人で積載量を超えることになります。
+**約 $6\%$** です。$8$ 人が乗るたびに、$100$ 回に $6$ 回ほど積載量を超えることになります。
 
 **(b)** `Explain why` なので、**何が違うのかと、結果がどう変わるか**の両方を書きます。
 

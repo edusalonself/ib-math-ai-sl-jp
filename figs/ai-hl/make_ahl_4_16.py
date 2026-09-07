@@ -138,10 +138,10 @@ fig, axs = plt.subplots(1, 2, figsize=(12.0, 3.6), sharex=True)
 CASES = [
     ("the intervals overlap", [(51.2, 55.8, "brand A", LINE),
                                (54.1, 58.9, "brand B", GREEN)],
-     "you cannot claim one mean is larger", ACC),
+     "these intervals are not enough to claim\none mean is larger", ACC),
     ("the intervals do not overlap", [(51.0, 54.0, "brand A", LINE),
                                       (56.0, 59.0, "brand B", GREEN)],
-     "here the evidence is much stronger", GREEN),
+     "every value for A is below every value for B", GREEN),
 ]
 for ax, (title, bars, note, ncol) in zip(axs, CASES):
     for i, (a, b, lab, col) in enumerate(bars):
@@ -156,7 +156,8 @@ for ax, (title, bars, note, ncol) in zip(axs, CASES):
     ov_lo, ov_hi = max(bars[0][0], bars[1][0]), min(bars[0][1], bars[1][1])
     if ov_lo < ov_hi:
         ax.axvspan(ov_lo, ov_hi, color="#fdeaea", zorder=1)
-        ax.text((ov_lo + ov_hi) / 2, -0.62, "overlap", fontsize=10.5,
+        ax.text((ov_lo + ov_hi) / 2, -0.62,
+                "overlap $(%.1f,\\ %.1f)$" % (ov_lo, ov_hi), fontsize=10.5,
                 ha="center", va="center", color=ACC)
     ax.set_title(title, fontsize=12.5, color=INK, pad=10)
     ax.text(54.8, -1.12, note, fontsize=11.5, ha="center", va="center",

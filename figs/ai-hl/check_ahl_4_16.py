@@ -399,7 +399,7 @@ for lab, needle in [
 eq("例題4 の overlap は 54.1 から 55.8",
    (max(51.2, 54.1), min(55.8, 58.9)), (54.1, 55.8))
 in_text("例題4 の model answer が正しい overlap を書いている",
-        "overlap between $54.1$ and $55.8$ hours")
+        "overlap between $54.1$ and $55.8$ hundred hours")
 in_text("  誤った overlap（58.9）が残っていない",
         "overlap between $54.1$ and $58.9$", want=False)
 
@@ -422,6 +422,357 @@ in_text("TOK の overlap の引用がある",
 for v in ("1.645", "1.960", "2.576", "1.895", "2.365", "3.499",
           "1.729", "2.093", "2.861"):
     in_text(f"臨界値の表に {v} がある", "$" + v + "$")
+
+
+
+# ══════════════════════════════════════════════════════════════
+#  改稿（読む順の整理）で入れた表現が、あとで戻っていないか
+# ══════════════════════════════════════════════════════════════
+import re as _re
+
+# 1. 冒頭の導入と、読む順の提示
+in_text("冒頭に導入がある",
+        "標本平均 $\\bar{x}$ は、標本を取り直すたびに少しずつ変わります。")
+in_text("読む順が示されている", "1. なぜ $1$ つの推定値だけでは足りないのか（[第1節](#idea)）")
+_i_intro = TXT.index("標本を取り直すたびに")
+_i_wysb = TXT.index("## What you should be able to do")
+eq("導入は What you should be able to do より前", _i_intro < _i_wysb, True)
+
+# 2. AHL 4.15 との関係 ／ X-bar と x-bar の区別
+in_text("4.15 で学んだことが書かれている",
+        "**$\\mu$ が分かっているとき、標本平均 $\\bar{X}$ がどのように変動するか**")
+in_text("このページで新しく学ぶことが書かれている",
+        "**このページで新しく学ぶのは、その反対向きの読み方です。**")
+in_text("Xbar と xbar の違いが書かれている",
+        "$\\bar{X}$ は標本を取る前の「変化する標本平均」を表し、"
+        "$\\bar{x}$ は実際の標本から得られた $1$ つの数値を表します")
+in_text("「逆向きに使います」という説明だけの見出しは残っていない",
+        "## AHL 4.15 の $\\bar{X}$ を、逆向きに使います", want=False)
+
+# 3. 公式集の説明を短くした
+in_text("専用の公式が無いことを短く書いている",
+        "AHL 4.16 専用の新しい公式はありません")
+in_text("手で計算する式も要りません、は残っていない",
+        "**そして、手で計算する式も要りません。**", want=False)
+
+# 4. 点推定と区間推定の対比、margin of error
+in_text("point estimate の対比", "- **point estimate**（点推定値）… $\\mu$ を $1$ つの数 $\\bar{x}$ で推定する")
+in_text("interval estimate の対比", "- **interval estimate**（区間推定）… $\\mu$ が入りそうな**範囲**で推定する")
+in_text("margin of error の定義", "**margin of error**（誤差の幅）は、点推定値の左右にとる幅のことです")
+in_text("中心と margin of error の計算",
+        "\\text{中心} = \\frac{47.5 + 49.7}{2} = 48.6, \\qquad "
+        "\\text{margin of error} = 49.7 - 48.6 = 1.1")
+eq("中心の計算が正しい", (47.5 + 49.7) / 2, 48.6)
+eq("margin of error の計算が正しい", 49.7 - 48.6, 1.1, tol=1e-9)
+in_text("2 つの書き方が同じ区間だと書いてある", "$48.6 \\pm 1.1$ と**同じ区間**です")
+
+# 5. 95% の意味を段階化
+in_text("直感的な言い方が先にある",
+        "長期的には約 $95\\%$ の区間が真の母平均 $\\mu$ を含む")
+for _s in ("1. **横線 $1$ 本が、$1$ 回の標本から作った信頼区間**です",
+           "3. **オレンジ色の縦線**が、動かない真の母平均 $\\mu = 50$ です",
+           "4. **青い区間は $\\mu$ を含み、赤い区間は含んでいません**",
+           "5. $100$ 本すべてが含むのではなく、**長期的に約 $95\\%$ が含みます**"):
+    in_text("図の読み方 " + _s[:12], _s)
+in_text("ちょうど 95 回ではない、という注意",
+        "## 「$100$ 回やれば、ちょうど $95$ 回成功する」ではありません")
+
+# 6. 確率 95% の注意
+in_text("計算後は mu も区間も動かない",
+        "**区間を計算した後は、$\\mu$ は動かず、区間もすでに決まっています。**")
+in_text("日本語の言いかえがある",
+        "チョコレートバーの母平均質量は $47.5$ g から $49.7$ g のあいだにあると、"
+        "$95\\%$ の信頼度で推定できる")
+
+# 7. 記号の意味は、その記号が出てくる式の直後に置く
+_i_lead = TXT.index("分からない population mean（母平均）$\\mu$ を、手元の sample mean（標本平均）$\\bar{x}$ から推定する範囲")
+_i_ci = TXT.index("{#eq-ahl416-ci}")
+eq("何をする区間かの一文が基本形より前", _i_lead < _i_ci, True)
+in_text("基本形", "\\bar{x} \\ \\pm \\ (\\text{critical value}) \\times (\\text{standard error})")
+in_text("sigma 既知の式", "\\bar{x} \\ \\pm \\ z^{*} \\frac{\\sigma}{\\sqrt{n}}")
+in_text("sigma 未知の式", "\\bar{x} \\ \\pm \\ t^{*} \\frac{s}{\\sqrt{n}}")
+# 基本形の直後の 3 つ
+_i_z = TXT.index("{#eq-ahl416-z}")
+_i_t = TXT.index("{#eq-ahl416-t}")
+for _s in ("- $\\bar{x}$ … 区間の中心となる **sample mean**（標本平均）",
+           "- **critical value**（臨界値）… **confidence level**（信頼水準）に合わせて、standard error **何個分**",
+           "- **standard error**（標準誤差）… sample mean が標本ごとに、どれくらいばらつくか"):
+    in_text("基本形の直後に " + _s[2:22], _s)
+    eq("  それが基本形と sigma 既知の式のあいだにある",
+       _i_ci < TXT.index(_s) < _i_z, True)
+# sigma 既知の式の直後
+for _s in ("- $\\sigma$ … **population standard deviation**（母標準偏差）",
+           "- $n$ … **sample size**（標本の大きさ）",
+           "- $z^{*}$ … normal distribution から決まる critical value"):
+    in_text("z の式の直後に " + _s[2:20], _s)
+    eq("  それが z の式と t の式のあいだにある", _i_z < TXT.index(_s) < _i_t, True)
+in_text("95% の z* の値", "$95\\%$ confidence interval では、$z^{*} = 1.96$ です。")
+# sigma 未知の式の直後
+for _s in ("- $s$ … **sample standard deviation**（標本標準偏差）",
+           "- $\\dfrac{s}{\\sqrt{n}}$ … $\\sigma$ を $s$ で置きかえて**推定した** standard error",
+           "- $t^{*}$ … **$t$-distribution** から決まる critical value"):
+    in_text("t の式の直後に " + _s[2:20], _s)
+    eq("  それが t の式より後ろにある", _i_t < TXT.index(_s), True)
+# 記号の意味を一覧にまとめる書き方は残っていない
+in_text("記号を一覧でまとめる書き方は残っていない", "記号は、それぞれ次のものです。", want=False)
+# z と t の使い分けの理由
+in_text("z を使う理由", "$\\sigma$ が分かっている場合は、standard error を**正確に**求められます")
+in_text("t を使う理由", "推定による不確かさが加わるので、そのぶんを見こんで、裾が少し広い $t$-distribution を使います")
+in_text("t* は df で決まる",
+        "$t^{*}$ は、confidence level と **degrees of freedom**（自由度）$\\text{df} = n - 1$ によって決まります")
+# 判断ルールの箱は 1 か所だけ
+in_text("判断ルールの箱",
+        "\\boxed{\\ \\sigma \\ \\text{が既知} \\ \\Rightarrow \\ z \\qquad \\sigma \\ \\text{が未知} \\ \\Rightarrow \\ t\\ }")
+eq("判断ルールの箱は 1 つだけ", TXT.count("\\boxed{\\ \\sigma"), 1)
+in_text("第5節に重複する箱が無い", "{#eq-ahl416-rule-z}", want=False)
+in_text("第5節に重複する箱が無い（t）", "{#eq-ahl416-rule-t}", want=False)
+in_text("第5節は第3節の箱を参照している",
+        "判断のしかたは @eq-ahl416-rule のとおりで、$\\sigma$ が既知なら `z Interval`、未知なら `t Interval` です")
+in_text("第5節は問題文の読み取りに絞っている",
+        "ここで見るのは、**問題文からその $\\sigma$ を読み取る**ところです。")
+# GDC で計算するが、形を知っていると確かめられる
+in_text("手計算は要らない", "**この式を手で計算する必要はありません。** 電卓が区間の両端を返します。")
+in_text("形を知ると GDC の選択と入力を確かめられる",
+        "**式の形を知っていると、電卓の選び方と入力を確かめられます。**")
+
+# 8. 正規性の前提
+in_text("基本的に normal と仮定する、という書き方",
+        "基本的に**母集団が normally distributed（正規分布にしたがう）と仮定します。**")
+in_text("このページの問題は normal population が前提",
+        "**このページの問題は、すべてこの前提でできています。**")
+in_text("CLT で扱えることがある、という書き方",
+        "標本平均を近似的に正規分布として扱えることがあります")
+in_text("正規性が明記されていない場合の注意",
+        "問題文に正規性が明記されていないのに、小さい標本でこの方法を使った場合は、"
+        "その仮定を答案に書くよう求められることがあります")
+
+# 9. sigma の確認を最初の判断に
+in_text("第5節の見出し", "### 5. 計算の前に、$\\sigma$ が分かっているか確認する {#which}")
+for _s in ("**$n$ の大小だけで $z$ と $t$ を選ばないでください。**",
+           "**$\\sigma$ が分かったことにはなりません。**",
+           "「標本が大きければ、未知の $\\sigma$ を既知としてよい」という意味では**ありません。**",
+           "**$\\sigma$ が未知なら、標本が大きくても $t$-interval** を選びます"):
+    in_text("第5節の注意に " + _s[:16], _s)
+eq("第5節の表は 1 つに統合されている", TXT.count("{#tbl-ahl416-spot}"), 0)
+in_text("統合した表の見出し行",
+        "| 問題文の表現 | 分かっているもの | 使う分布 | GDC |")
+in_text("it is known from experience は表の下の補足",
+        "`it is known from experience that the standard deviation is 2.5` のような書き方もあります")
+
+# 10. t 分布は理由 → 特徴の順
+_i_why = TXT.index("$s$ で standard error を**推定する**ぶん不確かさが増えます")
+_i_feat = TXT.index("**$1$ つ目。$t$-distribution は normal distribution より裾が広い")
+eq("理由が特徴より前", _i_why < _i_feat, True)
+in_text("第6節は第3節の理由を繰り返さない",
+        "この推定にも不確かさがあります。そのぶんを埋め合わせるために", want=False)
+in_text("第6節は第3節を参照する", "[第3節](#z-vs-t)で見たとおり")
+in_text("2 つ目の特徴の言い方",
+        "**$2$ つ目。$n$ が大きくなると $s$ による推定が安定するので、"
+        "$t$-distribution は normal distribution に近づきます。**")
+in_text("df の理由", "**標本平均を決めてしまうと、$n$ 個の偏差のうち自由に決められるのは $n - 1$ 個になる**")
+in_text("n=8 のときの df", "たとえば $n = 8$ なら、$\\text{df} = 8 - 1 = 7$ です")
+eq("n=8 の df", 8 - 1, 7)
+
+# 11. 幅の比較は「ほかの条件が同じなら」
+in_text("他の条件が同じ、という前置き",
+        "**以下は、表に書かれている要素以外の条件が同じ場合の比較です。**")
+for _s in ("- **confidence level を上げる** → より多くの場合に $\\mu$ を含みたい → "
+           "critical value が大きくなる → 区間が広くなる",
+           "- **$n$ を増やす** → standard error",
+           "- **データのばらつきが大きくなる** → $s$ または $\\sigma$ が大きくなる"):
+    in_text("因果のつながりに " + _s[:20], _s)
+in_text("4 倍で半分は条件つき",
+        "**幅がちょうど半分になるのは、critical value と standard deviation が同じままのとき**です")
+in_text("99% の説明が割合の言葉になっている",
+        "**confidence level を高くすると、同じ方法をくり返したときに $\\mu$ を含む割合は高くなります。"
+        "その代わり、推定できる範囲は広くなり、精度は低くなります。**")
+
+# 12. 答案テンプレート
+in_text("空欄付きのテンプレート",
+        "*We are [confidence level]% confident that the population mean [quantity] "
+        "lies between [lower bound] and [upper bound] [unit].*")
+for _s in ("- **confidence level** … $90$、$95$、$99$ など",
+           "- **population mean quantity** … **何の母平均か**",
+           "- **lower and upper bounds** … GDC で得た区間の下限・上限",
+           "- **unit** … g、hours、mg per litre など"):
+    in_text("テンプレートの対応に " + _s[:18], _s)
+in_text("不十分な答案の例",
+        "*We are $95\\%$ confident that $\\mu$ is between $47.5$ and $49.7$.*")
+in_text("不十分な理由 1", "- $\\mu$ が**何の平均か**が分からない")
+in_text("不十分な理由 2", "- **単位**がない")
+in_text("population mean と書く指示", "**`the population mean`** と書いておけば確実です")
+
+# 13. 第9節の見出し
+in_text("第9節の見出し", "### 9. 区間が重なっているときに言えること {#compare}")
+in_text("9.2 と読める見出しは残っていない", "### 9. $2$ つの区間が重なるとき", want=False)
+
+# 14. 重なりから言えること／言えないこと
+in_text("等しいことの証明ではない",
+        "**$2$ つの母平均が等しいことの証明ではありません。**")
+in_text("この 2 つの区間だけを根拠に断定できない",
+        "**この $2$ つの区間だけを根拠として**、「一方の母平均がもう一方より大きい」と"
+        "**断定することはできません。**")
+in_text("正式な検討には別の方法が要る",
+        "$2$ 標本の $t$ 検定のような、別の推測統計の方法が必要になります")
+eq("do not provide sufficient evidence の言い方",
+   TXT.count("do not provide sufficient evidence"), 3)
+
+# 15. Worked examples の共通手順
+for _s in ("1. **Parameter** … 求める母平均 $\\mu$ が**何の平均か**と、その**単位**を確かめる",
+           "2. **Conditions** … 母集団が normally distributed であることを確かめる",
+           "3. **Method** … $\\sigma$ が既知なら $z$-interval、未知なら $t$-interval",
+           "4. **Interpret** … 区間を、**文脈と単位を含む文**で答える"):
+    in_text("4 段階に " + _s[:16], _s)
+eq("Method の 1 行が各例題にある", TXT.count("*Method: $\\sigma$ is"), 11)
+in_text("例題1 の margin of error の対応",
+        "\\text{standard error} = \\frac{2.5}{\\sqrt{20}} = 0.559, \\qquad "
+        "\\text{margin of error} = 1.96 \\times 0.559 = 1.10")
+in_text("例題2 の margin of error の対応", "12.0 \\pm 2.365 \\times 0.100 = 12.0 \\pm 0.237")
+
+# 16. 例題2 の丸め方と 3 段階
+in_text("例題2 の丸め方",
+        "電卓が返すのは $(11.7635,\\ 12.2365)$ です。**$3$ 桁**に丸めると、"
+        "次のようになります（この問題では小数第1位までです）。")
+in_text("例題2 (c) の 3 段階 1",
+        "1. 得られた $95\\%$ confidence interval は $11.8 < \\mu < 12.2$ mg per litre")
+in_text("例題2 (c) の 3 段階 2", "2. 主張された $12.5$ mg per litre は、上限 $12.2$ より**大きい**")
+in_text("例題2 (c) の 3 段階 3", "3. したがって、この標本はその主張を**支持しない**")
+in_text("not consistent with this sample は落とした",
+        "is not consistent with this sample", want=False)
+
+# 17. confidence と precision の使い分け
+in_text("higher confidence の説明", "- **higher confidence** … confidence level が高い")
+in_text("more precise の説明", "- **more precise** … 区間が狭い")
+in_text("99% は higher confidence だが more precise ではない",
+        "$99\\%$ 区間は higher confidence ですが、more precise ではありません")
+
+# 18. Common errors の並び
+_ce = TXT[TXT.index("## Common errors"):TXT.index("## Using your GDC")]
+eq("Common errors は 10 項目", _ce.count("::: {.callout-warning}"), 10)
+_order = [t for t in _re.findall(r"^## (.+)$", _ce, _re.M) if t != "Common errors"]
+eq("Common errors の並び", _order == [
+    "$\\sigma$ と $s$ を読みちがえる",
+    "$n$ の大きさで $z$ と $t$ を選ぶ",
+    "`df` を確かめない",
+    "`C Level` に $95$ と入れる",
+    "「$\\mu$ がこの区間に入る確率は $95\\%$」と書く",
+    "母平均ではなく、$1$ つ $1$ つの値の区間だと解釈する",
+    "文脈の言葉と単位を書かない",
+    "区間が重なっているのに、「こちらが大きい」と結論する",
+    "confidence level を上げれば、よい答えになると思う",
+    "区間を、$1$ つの数で答える",
+], True)
+eq("各項目に「誤り」がある", _ce.count("**誤り**"), 10)
+eq("各項目に「正しい判断」がある", _ce.count("**正しい判断**"), 10)
+
+# 19. GDC の前の判断フローと 3 列の表
+in_text("GDC 前の判断フロー", "## 電卓を開く前に、$2$ つ決めます")
+in_text("Data か Stats かのフロー", "**生データ（数値の列）が与えられていますか。**")
+in_text("z Interval の表が 3 列", "| 欄 | 意味 | 入力例（例題1） |")
+in_text("t Interval Stats の表が 3 列", "| 欄 | 意味 | 入力例（例題3） |")
+in_text("df の説明が GDC にもある",
+        "これは **degrees of freedom**（自由度）で、$1$ 標本の $t$-interval では $n - 1$ です")
+
+# 20. セルフチェック
+in_text("セルフチェックの見出し", "### Exercises の前に — セルフチェック {#selfcheck}")
+in_text("セルフチェック 1", "## 1. $\\sigma$ が与えられているとき、$z$ と $t$ のどちらを使いますか")
+in_text("セルフチェック 2", "## 2. $95\\%$ confidence interval は「$\\mu$ が $95\\%$ の確率で入る」という意味ですか")
+in_text("セルフチェック 3", "## 3. $n$ を大きくすると、区間の幅はどうなりますか")
+_i_self = TXT.index("### Exercises の前に — セルフチェック")
+_i_ex = TXT.index("## Exercises")
+eq("セルフチェックは Exercises の直前", _i_self < _i_ex, True)
+
+# 22. 要点のまとめと、次への一文
+in_text("要点のまとめ", "## このページの要点")
+in_text("次のページへの一文",
+        "[AHL 4.18b](ahl-4-18b.qmd) の hypothesis testing（仮説検定）です")
+
+# ── 表記の統一 ────────────────────────────────────────
+for _t in ("**confidence interval**（信頼区間）", "**point estimate**（点推定値）",
+           "**margin of error**（誤差の幅）", "**standard error**（標準誤差）",
+           "**critical value**（臨界値）", "**confidence level**（信頼水準）",
+           "**population standard deviation**（母標準偏差）",
+           "**sample standard deviation**（標本標準偏差）",
+           "**degrees of freedom**（自由度）", "**population mean**（母平均）"):
+    in_text("用語の併記 " + _t[2:20], _t)
+in_text("「臨界値」の単独使用が残っていない", "臨界値は", want=False)
+in_text("「信頼水準」の単独使用が残っていない", "| 信頼水準 |", want=False)
+
+# ── 構造の不変条件 ──────────────────────────────────────
+_bad = [m for m in _re.findall(r"`[^`\n]+`", TXT) if "$" in m or "**" in m]
+eq("code span の中に数式・markdown が無い", _bad, [])
+_L = TXT.split("\n")
+_nb = [i + 1 for i, l in enumerate(_L)
+       if _re.match(r"^:{3,} *\{", l) and i > 0
+       and _L[i - 1].strip() != "" and not _L[i - 1].lstrip().startswith("#")]
+eq("開き fence の前に空行がある", _nb, [])
+eq("演習は 10 問", TXT.count("]{.ex-no}"), 10)
+eq("区切りは 9 個", TXT.count("::: {.ex-sep}"), 9)
+eq("exercise-block は 1 つ", TXT.count("::: {.exercise-block}"), 1)
+_chapters = [l[3:] for i, l in enumerate(_L)
+             if l.startswith("## ") and not (i and _L[i - 1].lstrip().startswith(":::"))]
+eq("章見出しは _TEMPLATE の順どおり", _chapters == [
+    "The idea", "Why it works", "Worked examples", "Common errors",
+    "Using your GDC (TI-Nspire CX II)", "Exercises"], True)
+_anchors = set(_re.findall(r"\{#([A-Za-z0-9\-]+)\}", TXT))
+_links = set(_re.findall(r"\]\(#([A-Za-z0-9\-]+)\)", TXT))
+eq("ページ内リンクの行き先がすべてある", sorted(_links - _anchors), [])
+for _w in ("誰でもできる", "簡単です", "当然", "明らか", "もちろん", "当たり前"):
+    in_text("禁止語 " + _w + " が無い", _w, want=False)
+
+
+
+
+# ══════════════════════════════════════════════════════════════
+#  レビューで直した点（元に戻っていないか）
+# ══════════════════════════════════════════════════════════════
+in_text("重ならなくても等しさは否定されない",
+        "**$\\mu_A = \\mu_B$ があり得ないと証明された**わけではありません")
+in_text("「可能性は残りません」は残っていない",
+        "$\\mu_A = \\mu_B$ という可能性は残りません", want=False)
+in_text("plausible value の言い方は残っていない",
+        "Every plausible value of $\\mu_A$", want=False)
+in_text("区間の外の値が不可能ではない",
+        "**区間の外の値が不可能だと証明されたわけではない**")
+in_text("sigma/sqrt(n) は standard deviation そのもの",
+        "$\\dfrac{\\sigma}{\\sqrt{n}}$ … sample mean の standard error"
+        "（[AHL 4.15](ahl-4-15.qmd#narrower) で出てきた $\\bar{X}$ の standard deviation そのものです）")
+in_text("s/sqrt(n) は推定した standard error",
+        "$\\sigma$ を $s$ で置きかえて**推定した** standard error")
+in_text("population とだけ書いてある、という誤ったルールは残っていない",
+        "`population` と書いてあるときだけ $\\sigma$ です", want=False)
+in_text("sample variance の注意がある", "## `sample variance` が与えられたときは、そのまま入れられません")
+eq("s_(n-1)^2 = n/(n-1) s_n^2 の変換が書いてある",
+   "s_{n-1}^{2} = \\dfrac{n}{n-1}s_n^{2}" in TXT, True)
+in_text("演習9 の生の値", "生の値は $(495.07,\\ 504.93)$ と $(492.27,\\ 507.73)$ です。")
+approx("演習9 90% 区間の下端", 500 - float(stats.norm.ppf(0.95)) * 3, 495.0654, 5e-4)
+approx("演習9 90% 区間の上端", 500 + float(stats.norm.ppf(0.95)) * 3, 504.9346, 5e-4)
+in_text("誤って丸めた値は残っていない", "(495.06,\\ 504.94)", want=False)
+in_text("幅の比較に confidence level の条件がある",
+        "**同じ confidence level で比べたとき**、狭いほどはっきりしたことが言えています")
+eq("model answer に population mean が入っている",
+   TXT.count("the population mean mass of a chocolate bar"), 5)
+in_text("小数第1位に丸める、という独自ルールは残っていない",
+        "区間も**小数第1位に丸めて**答えます", want=False)
+in_text("z Interval にも Data / Stats がある",
+        "**`Data Input Method` は、`z Interval` と同じく `Data` と `Stats` の $2$ 通り**です")
+in_text("2 標本の比較は SL 4.11 へ",
+        "[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) の $2$ 標本の $t$ 検定")
+in_text("電球は 100 時間単位", "in hundreds of hours")
+in_text("日本語を display math に置いていない",
+        "54.1 \\ \\text{から} \\ 55.8 \\ \\text{までが重なりです}", want=False)
+in_text("シラバスの引用元を書いている", "シラバスの Guidance 欄が、はっきり指定しています")
+in_text("例題1 に Parameter がある", "**Parameter.** 求めるのは、チョコレート $1$ 枚の**母平均の質量**")
+eq("Parameter の行が 3 つある", TXT.count("**Parameter.**"), 3)
+eq("Conditions の行が 3 つある", TXT.count("**Conditions.**"), 3)
+in_text("WYSBATD が英語優先", "**$\\sigma$ が分かっているときは normal distribution、"
+        "分からないときは $t$-distribution（$t$ 分布）**を使う")
+in_text("問題文から crossref を外した",
+        "Compare your answer with @exm-ahl416-overlap", want=False)
+in_text("model answer から crossref を外した",
+        "In @exm-ahl416-overlap the intervals overlapped", want=False)
+in_text("critical value の表に df がある",
+        "$t$ の critical value（$n = 8$、$\\text{df} = 7$）")
 
 print()
 print(f"══════════ OK {ok} / NG {ng} ══════════")
