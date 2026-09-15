@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""AHL 1.13a / 1.13b（polar・exponential form と正弦波の合成）の検算。
+"""AHL 1.13（polar・exponential form と正弦波の合成）の検算。
    1. すべての変換・積・商・べき乗・合成を sympy で第一原理から出す
    2. 恒等式は t の 8 点で数値照合し、図形（三角形・平行四辺形）とも突き合わせる
    3. .qmd の本文が、その式・数値どおりに書かれているかを確かめる
@@ -19,11 +19,9 @@ import sympy as sp
 
 HERE = os.path.dirname(__file__)
 A = os.path.join(HERE, "..", "..", "ai-hl", "01-number-and-algebra",
-                 "ahl-1-13a.qmd")
-B = os.path.join(HERE, "..", "..", "ai-hl", "01-number-and-algebra",
-                 "ahl-1-13b.qmd")
-TA = io.open(A, encoding="utf-8").read()
-TB = io.open(B, encoding="utf-8").read()
+                 "ahl-1-13.qmd")
+# 2026-09: 1.13a と 1.13b を 1 ページに統合した。TA と TB は同じ本文を指す
+TA = TB = io.open(A, encoding="utf-8").read()
 
 OK = NG = 0
 I = sp.I
@@ -71,8 +69,8 @@ def _not_in(txt, tag):
     return f
 
 
-inA, notA = _in(TA, "1.13a"), _not_in(TA, "1.13a")
-inB, notB = _in(TB, "1.13b"), _not_in(TB, "1.13b")
+inA, notA = _in(TA, "1.13"), _not_in(TA, "1.13")
+inB, notB = inA, notA
 
 
 def identity(name, f, g, tol=1e-9):
@@ -92,7 +90,7 @@ eq("2cos(pi/3)", 2 * sp.cos(sp.pi / 3), 1)
 eq("2sin(pi/3)", 2 * sp.sin(sp.pi / 3), sp.sqrt(3))
 inA("r = \\sqrt{1^{2}+(\\sqrt{3})^{2}} = \\sqrt{4} = 2")
 inA("z = 2\\left(\\cos\\frac{\\pi}{3} + i\\sin\\frac{\\pi}{3}\\right) = 2\\operatorname{cis}\\frac{\\pi}{3}")
-inA("z = 2e^{i\\pi/3}")
+inA("z = 2e^{i\\frac{\\pi}{3}}")
 
 w = 4 * (sp.cos(2 * sp.pi / 3) + I * sp.sin(2 * sp.pi / 3))
 eq("4cis(2pi/3)", sp.expand(w), -2 + 2 * sp.sqrt(3) * I)
@@ -121,7 +119,7 @@ eq("arg(1+i)", sp.arg(1 + I), sp.pi / 4)
 eq("(sqrt2)^8", sp.sqrt(2) ** 8, 16)
 eq("(1+i)^8", sp.expand((1 + I) ** 8), 16)
 inA("z^{6} = 2^{6}\\operatorname{cis}\\left(6 \\times \\frac{\\pi}{3}\\right) = 64\\operatorname{cis}(2\\pi) = 64")
-inA("z^{8} = \\left(\\sqrt{2}\\right)^{8}e^{i(8)(\\pi/4)} = 16e^{2\\pi i} = 16")
+inA("z^{8} = \\left(\\sqrt{2}\\right)^{8}e^{i(8)\\left(\\frac{\\pi}{4}\\right)} = 16e^{2\\pi i} = 16")
 
 # 範囲の直し
 eq("3pi/4+pi/2", sp.nsimplify(3 * sp.pi / 4 + sp.pi / 2), 5 * sp.pi / 4)
@@ -201,7 +199,8 @@ identity("W2 恒等式", cos_wave([(5, PI / 3), (5, -PI / 3)], 40),
          lambda t: 5 * math.cos(40 * t))
 close("5cos(pi/3)", 5 * math.cos(PI / 3), 2.5, 1e-12)
 close("5sin(pi/3)", 5 * math.sin(PI / 3), 4.3301, 5e-5)
-inB("y_1 + y_2 = 5\\cos 40t")
+# 2026-09: 打ち消し合う例題は落とし、第11節の本文に 1 行で残した
+inB("中の複素数は $2.5 + 4.33i$ と $2.5 - 4.33i$ で、足すと **imaginary part が打ち消し合って** $5$ になります。")
 
 # 例題 3（sin でそろえる）
 s, Aa, Bb = phasor_sum([(4, 0), (3, PI / 2)])
@@ -222,7 +221,7 @@ eq("8cis(2pi/3)",
    -4 + 4 * sp.sqrt(3) * I)
 eq("|4+4sqrt3 i|", sp.Abs(4 + 4 * sp.sqrt(3) * I), 8)
 eq("arctan(sqrt3)", sp.atan(sp.sqrt(3)), sp.pi / 3)
-inB("y_1 + y_2 = 8\\sin\\left(3t + \\frac{\\pi}{3}\\right)")
+# 2026-09: 機械の振動の例題は、統合の際に落とした（計算は上で検証済み）
 
 # 演習 1
 eq("6cis(pi/4)", sp.expand(6 * (sp.cos(sp.pi / 4) + I * sp.sin(sp.pi / 4))),
@@ -243,7 +242,7 @@ eq("10cos(5pi/6)", sp.expand(10 * sp.cos(5 * sp.pi / 6)), -5 * sp.sqrt(3))
 eq("10sin(5pi/6)", sp.expand(10 * sp.sin(5 * sp.pi / 6)), 5)
 inB("$$B = -1.08 + \\pi = 2.06$$")
 inB("V_1 + V_2 = 5.66\\cos(40t + 2.06)")
-inB("**この問題が、このページで唯一 $\\arctan$ の直しが要る問題です。**")
+inB("**この問題が、$\\arctan$ の直しが要る唯一の演習です。**")
 close("E2 検算 t=0 左辺", 6 + 10 * math.cos(5 * PI / 6), -2.66025, 5e-5)
 close("E2 検算 t=0 右辺", 5.66 * math.cos(2.06), -2.66, 5e-3)
 
@@ -309,9 +308,10 @@ inB("\\sin\\theta = \\cos\\left(\\theta - \\frac{\\pi}{2}\\right), \\qquad "
 
 # B の向き（leading / lagging）
 close("B>0 なら山は t<0", -0.927295 / 50, -0.018546, 5e-6)
-inB("-\\frac{0.927}{50} = -0.0185 \\ \\text{秒}")
-inB("で、**左へ $0.0185$ 秒移動します。**")
-notB("$t = -\\dfrac{0.927}{50} = -0.0185$ 秒です。")
+# 2026-09: 第13節は第10節の注記に格下げした（試験には出ないため）
+inB("$B = 0.927$、$\\omega = 50$ なら $-0.0185$ 秒")
+inB("::: {#interpret .callout-note}")
+notB("### 13. $B$ の読み方")
 # 三角不等式の等号条件
 s1, A1, _ = phasor_sum([(3, 0.4), (4, 0.4)])
 close("同じ向きなら A = A1+A2", A1, 7, 1e-12)
@@ -359,7 +359,7 @@ for T, tag in ((TA, "1.13a"), (TB, "1.13b")):
        "ctrl + doc → Document Settings" in T, False)
 inA("doc → Settings → Document Settings")
 inB("doc → Settings → Document Settings")
-inB("ctrl + doc → 2: Add Graphs")
+inB("ctrl + doc → Add Graphs")
 inA("| `Real`（初期値） | 複素数の答えは出ず、`Error: Non-real result` のようになります |")
 
 # ══════════════════════════════════════════════════════════════
@@ -389,14 +389,13 @@ inA("ここでは $z_2 \\neq 0$、つまり $r_2 \\neq 0$ とします。")
 inA("ここでは $z_2 \\neq 0$、つまり $r_2 \\neq 0$ とします。")
 # 4: Guidance の行数
 notA("Guidance 欄には、次の $2$ 行があります。")
-inA("Guidance 欄のうち、このページに関わるのは次の $2$ 行です。")
-inA("Guidance 欄には、図の上での読み方を書いた $2$ 行")
-# 5: AHL 3.8 は公式集の話
+inA("Guidance 欄には、次の行があります。")
+inA("> Multiplication of complex numbers can be represented as a rotation and a stretch in the Argand diagram.")
+# 5: AHL 3.8 は公式集の話（1.13a からは Why it works ごと落とした。同じ話は 1.13b にある）
 notA("（AHL 3.8 にあるのは $\\cos^{2}\\theta + \\sin^{2}\\theta = 1$ と "
      "$\\tan\\theta = \\dfrac{\\sin\\theta}{\\cos\\theta}$ だけです）")
-inA("公式集の $3.8$ の欄に印刷されている identity も")
 notB("**AI HL のシラバスに、加法定理はありません。** AHL 3.8 にあるのは")
-inB("公式集の $3.8$ の欄に印刷されている identity も")
+# 2026-09: 公式集 3.8 の identity の説明は、読みにくいので落とした
 # 6: 回転と拡大の条件
 notA("一般に $w$ をかけることは、**$\\arg w$ だけ回して、$\\lvert w \\rvert$ 倍に伸ばす**ことです。")
 inA("$\\lvert w \\rvert < 1$ なら**縮み**")
@@ -406,11 +405,11 @@ notA("です。$n$ は整数なら、負でも構いません。")
 inA("**$z \\neq 0$ なら $n$ は負の整数でも構いません。**")
 # 8: GDC は小数で返す
 notA("を `Polar` で打つと $2e^{(\\pi/3)i}$ のように返り")
-inA("$2e^{1.05i}$ のように**小数の角**で返ります。")
+inA("$2e^{1.0471976\\,i}$ のように**小数の角**で返ります。")
 notA("$2$ と $\\dfrac{\\pi}{3}$ が返ります。使い方は")
-inA("$2$ と $1.05$ が返ります。$1.05 = \\dfrac{\\pi}{3}$ です。")
+inA("$2$ と $1.0471976$ が返ります。$1.0471976 = \\dfrac{\\pi}{3}$ です。")
 # 9: 三角不等式を本文に置いた
-inA("$\\lvert z_1+z_2 \\rvert \\leq \\lvert z_1 \\rvert + \\lvert z_2 \\rvert$ です（@fig-ahl113a-mult の (b) の注記）")
+inA("$\\lvert z_1+z_2 \\rvert \\leq \\lvert z_1 \\rvert + \\lvert z_2 \\rvert$ です（@fig-ahl113-mult の (b) の注記）")
 # 10: 2pi の言い方
 notA("**$2\\pi$ 足しても引いても同じ点**なので、値そのものは変わりません。")
 inA("**$2\\pi$ 足しても引いても、指している点は同じ**です。")
@@ -427,47 +426,49 @@ notA("**AI HL のシラバスには、この名前は出てきません。**")
 inA("**AI HL のシラバスにも公式集にも、de Moivre's theorem という定理名は出てきません。**")
 
 # 1.13b — 1: 0 になる場合
-notB("### 1. 同じ周期の波を足すと、また同じ周期の波になります {#idea}")
-inB("### 1. 同じ周期の波を足すと、同じ周期の波か、$0$ になります {#idea}")
+inB("### 10. 同じ frequency の正弦波を足す {#addsine}")
+notB("phasor")
 notB("つまり、答えはいつも次の形に書けます。")
 # ★ 2026-08: A = 0 のときは「書けない」ではなく「B が一意に決まらない」
-inB("このとき $0\\cos(\\omega t + B)$ は**どの $B$ でも同じ $0$** になるので、**$B$ が $1$ つに決まりません。**")
-inB("@eq-ahl113b-goal の右辺は、ふつう **$A > 0$** として求められるものなので、**その形では表せません。**")
+# 2026-09: A = 0 の場合の詳しい説明は落とし、1 行にした
 notB("$A = 0$ で、$B$ は決まりません。")
-notB("@eq-ahl113b-goal の形には書けないので、答えは $0$ とだけ書きます")
-inB("足した複素数が $0$ になったときは、argument が決まりません。")
+notB("@eq-ahl113-goal の形には書けないので、答えは $0$ とだけ書きます")
+inB("ちょうど打ち消し合って **$0$ になる**ときは $A = 0$ で、答えは $0$ とします。")
 # 3: 「真ん中」の条件
 notB("振幅が同じ $2$ つを足すと、合成の向きは**ちょうど真ん中**になります。")
-inB("**いつでも真ん中、ではありません。**")
+# 2026-09: 統合で落とした演習（三相電源・スピーカー）に付いていた注記
 # 4: Guidance の Example と Content の行数
 notB("Content 欄の $1$ 行です。")
-inB("AHL 1.13 の Content 欄は $6$ 行あり")
-inB("**この Example が、IB がこの項目について示している唯一の具体例**です。")
+inB("AHL 1.13 の Content 欄は $6$ 行です。")
+inB("**この Example が、IB が正弦波の合成について示している唯一の具体例**です。")
 # 5: B は角
 notB("$B$ は、合成した波が**もとの $\\cos\\omega t$ からどれだけ横にずれたか**を表します。")
 # ★ 2026-08: phase の B と、時間軸の符号付き移動量 -B/ω を区別する
-inB("これは **phase**（位相）であって、時間そのものではありません。")
+inB("$B = 0.927$ は「$0.927$ 秒ずれる」という意味ではありません。")
 inB("-\\frac{B}{\\omega} \\ \\text{秒}")
-inB("ずれの**大きさ**だけを言うなら $\\dfrac{\\lvert B \\rvert}{\\omega}$ 秒です。")
-inB("- $B > 0$ … $-\\dfrac{B}{\\omega} < 0$ なので**左**へ移動する（波が先に来る、**leading**）")
-inB("- $B < 0$ … $-\\dfrac{B}{\\omega} > 0$ なので**右**へ移動する（波が遅れて来る、**lagging**）")
+# 2026-09: |B|/omega の言い換えは、注記への格下げの際に落とした
+# 2026-09: leading / lagging は出題語彙ではないので落とした
+notB("leading")
+notB("lagging")
 notB("時間でいうと $\\dfrac{B}{\\omega}$ 秒のずれです。")
 notB("波は**左**にずれる（早く山が来る、**leading**）")
 notB("波は**右**にずれる（遅れて山が来る、**lagging**）")
-inB("**$0.927$ 秒ずれるのではありません。**")
+inB("山が来るのは $t = 0$ ではなく $t = -0.0185$ 秒です。")
 # 6: sin 版の Why it works
 inB("$\\sin\\theta = \\operatorname{Im}\\left(e^{i\\theta}\\right)$ から出発して")
 # 7: exact values は問われない
 inB("## 三角比の値そのものは、試験では聞かれません")
 # 8: 図の描き方
-inB("$3$ の矢印の先から $4i$ の矢印を**つないで**描いてあります。")
+# 2026-09: phasor 三角形の図は、phasor という用語ごと落とした
 notB("矢印を足すと $3+4i$ になり、その modulus が $5$")
 # 9: 三相の言い方
 notB("これが三相交流で、家庭に届く電気の作り方そのものです。")
-inB("発電所から送電線までの電気は、この $3$ 本の形で運ばれています。")
+# 2026-09: 三相電源の演習は、統合の際に落とした
 # 10: GDC の細部
 inB("**$y$ の範囲も $-6 \\leq y \\leq 6$ にしてください。**")
-inB("非CAS の CX II は数値で計算するので、どちらの表示でも**小数**で返ります。")
+# 2026-09: 生徒は全員 TI-Nspire CX II なので、CAS／非CAS の区別には触れない
+inB("CX II は数値で計算するので、どちらの表示でも**小数**で返ります。")
+notB("非CAS")
 
 # ══════════════════════════════════════════════════════════════
 # 6. 構造の不変条件
@@ -475,14 +476,14 @@ inB("非CAS の CX II は数値で計算するので、どちらの表示でも*
 HEADS = ["What you should be able to do", "The idea", "Why it works",
          "Worked examples", "Common errors",
          "Using your GDC (TI-Nspire CX II)", "Exercises"]
-for tag, TXT, pref in (("1.13a", TA, "ahl113a"), ("1.13b", TB, "ahl113b")):
+for tag, TXT, pref, want in (("1.13", TA, "ahl113", HEADS),):
     h2 = [h for h in re.findall(r"^## (.+)$", TXT, re.M) if h in HEADS]
-    eq(tag + " 7 見出し", h2, HEADS)
-    eq(tag + " 例題 4 つ", len(re.findall(r"::: \{#exm-", TXT)), 4)
-    eq(tag + " 演習 10 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 10)
-    eq(tag + " ex-sep 9 個", TXT.count(".ex-sep"), 9)
-    eq(tag + " --- は 6 個", len(re.findall(r"^---$", TXT, re.M)), 6)
-    eq(tag + " 日本語訳 14 個", TXT.count('<details class="jp-trans">'), 14)
+    eq(tag + " 見出しの並び", h2, want)
+    eq(tag + " 例題 6 つ", len(re.findall(r"::: \{#exm-", TXT)), 6)
+    eq(tag + " 演習 14 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 14)
+    eq(tag + " ex-sep 13 個", TXT.count(".ex-sep"), 13)
+    eq(tag + " --- は 8 個", len(re.findall(r"^---$", TXT, re.M)), 8)
+    eq(tag + " 日本語訳 20 個", TXT.count('<details class="jp-trans">'), 20)
     # 節番号が飛んでいない
     nums = [int(n) for n in re.findall(r"^### (\d+)\.", TXT, re.M)]
     idea = nums[:nums.index(1, 1)] if 1 in nums[1:] else nums
@@ -513,12 +514,11 @@ for tag, TXT, pref in (("1.13a", TA, "ahl113a"), ("1.13b", TB, "ahl113b")):
     eq(tag + " 他ページの crossref なし",
        [k for k in xref if not k.startswith(pref)], [])
 
-eq("1.13a の model-answer 4 個", TA.count(".model-answer"), 4)
-eq("1.13b の model-answer 5 個", TB.count(".model-answer"), 5)
+eq("1.13 の model-answer 4 個", TA.count(".model-answer"), 4)
 
 IMG = os.path.join(HERE, "..", "..", "ai-hl", "01-number-and-algebra", "img")
-for f in ("ahl-1-13a-forms.svg", "ahl-1-13a-mult.svg",
-          "ahl-1-13b-add.svg", "ahl-1-13b-cancel.svg"):
+for f in ("ahl-1-13-forms.svg", "ahl-1-13-back.svg", "ahl-1-13-mult.svg",
+          "ahl-1-13-add.svg", "ahl-1-13-cancel.svg"):
     eq("図 " + f, os.path.exists(os.path.join(IMG, f)), True)
 eq("png を残していない",
    [f for f in os.listdir(IMG) if f.startswith("ahl-1-13")
@@ -531,14 +531,15 @@ IX = io.open(os.path.join(HERE, "..", "..", "ai-hl", "index.qmd"),
              encoding="utf-8").read()
 GL = io.open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
              encoding="utf-8").read()
-for s in ("ai-hl/01-number-and-algebra/ahl-1-13a.qmd",
-          "ai-hl/01-number-and-algebra/ahl-1-13b.qmd",
-          "AHL 1.13a — Polar and exponential form",
-          "AHL 1.13b — Adding sinusoidal functions"):
+for s in ("ai-hl/01-number-and-algebra/ahl-1-13.qmd",
+          "AHL 1.13 — Polar and exponential form",
+          ):
     eq("_quarto-draft.yml に " + s[:44], s in QY, True)
-for s in ("01-number-and-algebra/ahl-1-13a.qmd",
-          "01-number-and-algebra/ahl-1-13b.qmd"):
+for s in ("01-number-and-algebra/ahl-1-13.qmd",):
     eq("index.qmd に " + s[:44], s in IX, True)
+for s in ("ahl-1-13a", "ahl-1-13b"):
+    eq("旧ページ " + s + " への参照が残っていない",
+       (s in QY) or (s in IX) or (s in TA), False)
 # 「残りの N 項目」が、✅ の付いていない項目表の行数と合っているか
 _rows = re.findall(r"^\| (?:\*\*)?AHL [0-9.]+(?:\*\*)? \|(.*)\|$", IX, re.M)
 _left_rows = [r for r in _rows if "\u2705" not in r]
@@ -550,9 +551,9 @@ if _left:
        len(_left_rows), int(_left.group(1)))
 for s in ("| polar form | 極形式 |", "| exponential form | 指数形式 |",
           "| Euler form | オイラー形式 |", "| cis | シス |",
-          "| phasor | フェーザ |", "| frequency | 周波数 |",
+          "| frequency | 周波数 |",
           "| phase shift | 位相のずれ |", "| out of phase | 位相がずれている |",
-          "| leading / lagging | 進み／遅れ |", "| rotation | 回転 |",
+          "| rotation | 回転 |",
           "| stretch | 拡大・縮小 |",
           "| alternating current (AC) | 交流 |"):
     eq("glossary に " + s[:34], s in GL, True)

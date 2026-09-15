@@ -220,22 +220,20 @@ eq("f''>0 は minimum", classify(x ** 2, 0), "min")
 # ══════════════════════════════════════════════════════════════
 # 7. シラバス・公式集から確かめた事実
 # ══════════════════════════════════════════════════════════════
-in_text("公式集の Topic 5（HL）には、$5.3$、$5.9$、$5.5$、$5.8$、$5.11$、$5.12$、"
-        "$5.13$、$5.16$、$5.17$ の欄がありますが、**$5.10$ の欄はありません。**")
+# （「公式集に 5.10 の欄はありません」の囲みは削除しました）
 in_text("> Both forms of notation, $\\dfrac{d^{2}y}{dx^{2}}$ and $f''(x)$ "
         "for the second derivative.")
 in_text('> Use of the terms "concave-up" for $f\'\'(x) > 0$, and "concave-down" '
         'for $f\'\'(x) < 0$.')
 in_text("> Awareness that a point of inflexion is a point at which the "
         "concavity changes and interpretation of this in context.")
-in_text("> Link to: kinematics (AHL5.13) and second order differential "
-        "equations (AHL5.18).")
+# （kinematics とのつながりの節は AHL 5.13 に移したので削除しました）
 
 # ══════════════════════════════════════════════════════════════
 # 8. レビューで直した点の見張り
 # ══════════════════════════════════════════════════════════════
 # 1: test には f'(a)=0 の前提が要る
-in_text("f'(a) = 0 \\ \\text{のとき} \\qquad f''(a) < 0")
+# REMOVED in_text("f'(a) = 0 \\ \\text{のとき} \\qquad f''(a) < 0")
 in_text("**$f'(a) = 0$ が前提です。**")
 not_in_text("f''(a) < 0 \\ \\Rightarrow \\ \\text{maximum} \\qquad\\qquad "
             "f''(a) > 0")
@@ -247,15 +245,18 @@ in_text("$s(4) = 4$、$s(5) = 20$ です。")
 in_text("| concave-down → concave-up | 増え方（勢い）が**いちばん弱かった**瞬間 |")
 not_in_text("意味は「**増え方（または減り方）が、いちばん強かった瞬間**」です。")
 # 5: Why it works の向き
-in_text("いま $f'(a) = 0$ で、$f''(a) < 0$ だとします。")
+in_text("[第2節](#meaning)で見たとおり、$f''(a) < 0$ は「$a$ のところで $f'$ が減っている」という意味です。")
 not_in_text("ですから、その付近で $f'' < 0$ です。")
 # 6: GDC のフォールバックが本物の検算
 in_text("**自分の $f''(x)$ に代入するだけでは検算になりません。**")
 not_in_text("確かめとしては同じことです。")
-# 9: point of inflexion の前振り
-in_text("（**point of inflexion**（変曲点）そのものについては、[第5節](#inflexion)で説明します。）")
+# 9: point of inflexion は「f'' の符号が変わるところ」（第6節）
+in_text("ですから point of inflexion は、**$f''(x)$ の符号が変わるところ**です。")
+in_text("## $f'' = 0$ というだけでは足りません")
+# 「f''(a) = 0 のときは決まりません」の小節は削除し、test の節に一文だけ残した
+not_in_text("**これがいちばん大事な注意です。**")
+in_text("**$f''(a) = 0$ が出たときは、この test では決まりません。**")
 # 10: 5.13 は後のページ
-in_text("**この節は、[AHL 5.13](ahl-5-13.qmd) を読む前でも後でも構いません。**")
 not_in_text("[AHL 5.13](ahl-5-13.qmd#dot) で出てきたものと同じです")
 # 13: local の注意
 in_text("**local maximum・local minimum**（極大・極小）です。")
@@ -328,7 +329,7 @@ for m in re.finditer(r"\[@(exm|eq|fig|tbl)-", TXT):
 else:
     OK += 1
 # 図が存在する
-for svg in ("ahl-5-10-test.svg", "ahl-5-10-four.svg"):
+for svg in ("ahl-5-10-graph.svg", "ahl-5-10-shape.svg", "ahl-5-10-four.svg"):
     if os.path.exists(os.path.join(BASE, "img", svg)):
         OK += 1
     else:

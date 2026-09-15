@@ -98,11 +98,8 @@ fig.tight_layout(w_pad=2.4)
 save(fig, "ahl-3-12b-idea.svg")
 
 
-# ══════════ fig 2: projectile と circular が特別な場合 ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.6))
-
-# ── (a) projectile
-ax = axs[0]
+# ══════════ fig 2a: projectile motion ══════════
+fig, ax = plt.subplots(figsize=(6.4, 4.6))
 tt = np.linspace(0, 4.0, 400)
 X, Y = 15 * tt, 20 * tt - 5 * tt ** 2
 ax.plot(X, Y, color=LINE, lw=2.6, zorder=5)
@@ -119,10 +116,13 @@ ax.text(30.0, -8.5, "$\\mathbf{v} = \\binom{15}{20-10t}$:  "
                     "$\\mathbf{a} = \\binom{0}{-10}$ is constant",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 blank(ax, (-6.0, 68.0), (-13.0, 30.0), step=5)
-ax.set_title("(a)  projectile motion", fontsize=12.5, color=INK, pad=6)
+ax.set_title("projectile motion", fontsize=12.5, color=INK, pad=6)
+fig.tight_layout()
+save(fig, "ahl-3-12b-projectile.svg")
 
-# ── (b) circular
-ax = axs[1]
+
+# ══════════ fig 2b: circular motion ══════════
+fig, ax = plt.subplots(figsize=(6.0, 4.6))
 th = np.linspace(0, 2 * np.pi, 400)
 ax.plot(5 * np.cos(th), 5 * np.sin(th), color=GREY, lw=2.0, ls="--", zorder=2)
 for a, lab, lx, ly, lha, lva, leader in [
@@ -149,10 +149,9 @@ ax.text(1.5, -8.6, "$\\mathbf{r} = \\binom{5\\cos 2t}{5\\sin 2t}$:  "
                    "but $\\mathbf{v}$ keeps turning",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 blank(ax, (-8.0, 11.5), (-10.5, 10.5), step=2)
-ax.set_title("(b)  circular motion", fontsize=12.5, color=INK, pad=6)
-
-fig.tight_layout(w_pad=1.8)
-save(fig, "ahl-3-12b-special.svg")
+ax.set_title("circular motion", fontsize=12.5, color=INK, pad=6)
+fig.tight_layout()
+save(fig, "ahl-3-12b-circular.svg")
 
 
 # ══════════ fig 3: 時間のずらし f(t-a) ══════════

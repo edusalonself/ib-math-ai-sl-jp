@@ -244,8 +244,8 @@ in_text("| $k = 1$ | $\\mathbf{a}$ と同じ | 変わらない |", "表に k=1 �
 in_text("| $k = 0$ | 向きがなくなる | $0$ になる", "k=0 の行の「長さ」は数の 0")
 not_in_text("| $k = 0$ | 向きがなくなる | $\\mathbf{0}$ になる",
             "長さの欄にベクトルを書いた古い行")
-in_text("## 平行の判定は、$0$ の成分がなければ「比が同じか」で見ます",
-        "見出しに条件が付いている")
+# 2026-09: 比で平行を判定する callout は削除（式 5 だけで足りる）
+not_in_text("## 平行の判定は、$0$ の成分がなければ「比が同じか」で見ます")
 not_in_text("## 平行の判定は「成分の比が同じか」で見ます", "無条件の古い見出し")
 in_text("**平行の判定も同じ**です。$3$ つの比がそろえば平行——ただし $0$ の成分があるときは",
         "3 次元でも 0 成分の但し書きがある")
@@ -314,8 +314,12 @@ in_text("各問題に、折りたたみが $3$ つ付いています。", "数�
 # ══════════════════════════════════════════════════════════
 # 8. GDC（TI-Nspire CX II、非 CAS）
 # ══════════════════════════════════════════════════════════
-for claim in ["[3;-1]", "`ctrl`", "`var`", "menu → Actions → Clear a-z"]:
+# 2026-09: ベクトルは Matrix テンプレートで入れる（角かっこ入力はやめた）
+for claim in ["menu → Matrix & Vector → Create → Matrix...",
+              "`Number of rows` に $2$、`Number of columns` に $1$ を入れて `OK`",
+              "`ctrl`", "`var`", "menu → Actions → Clear a-z"]:
     in_text(claim, "GDC の記述")
+not_in_text("[3;-1]", "旧: 角かっこ入力")
 for cas_only in ["unitV(", "norm(", "solve("]:
     chk(cas_only not in TEXT, "非 CAS で確認できていない関数を使っていない: " + cas_only)
 in_text("`sto` というキーはありません", "存在しない sto キーがないことを書いている")
@@ -336,15 +340,16 @@ ideas = re.findall(r"(?m)^### (\d+)\.", TEXT)
 chk(ideas == [str(i) for i in range(1, 10)] + [str(i) for i in range(1, 6)],
     "The idea 1..9 と GDC 1..5 の連番: " + ",".join(ideas))
 heads = re.findall(r"(?m)^## (.*)", TEXT)
+# 2026-09: Why it works は本文と重複していたので見出しごと削除
 order = [h for h in heads if h in ("What you should be able to do", "The idea",
                                    "Why it works", "Worked examples",
                                    "Common errors",
                                    "Using your GDC (TI-Nspire CX II)",
                                    "Exercises")]
-chk(order == ["What you should be able to do", "The idea", "Why it works",
+chk(order == ["What you should be able to do", "The idea",
               "Worked examples", "Common errors",
               "Using your GDC (TI-Nspire CX II)", "Exercises"],
-    "7 つの見出しの順序")
+    "見出しの順序")
 chk(TEXT.count("**検算。**") == 13, "検算が 13 か所: %d" % TEXT.count("**検算。**"))
 chk("確かめます。" not in TEXT, "「確かめます。」を使っていない")
 for w in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん", "当たり前", "そのとおり"]:
@@ -372,8 +377,9 @@ unused = sorted(d for d in defined
 chk(not unused, "使われていない番号: %s" % unused)
 # 図が 3 枚あり、ファイルが存在する
 IMG = os.path.join(HERE, "..", "..", "ai-hl", "03-geometry-and-trigonometry", "img")
-for name in ["ahl-3-10a-components.svg", "ahl-3-10a-addsub.svg",
-             "ahl-3-10a-scalar.svg"]:
+# 2026-09: 足し算・引き算の 2 面図を 2 枚に分け、説明のすぐ近くへ移動
+for name in ["ahl-3-10a-components.svg", "ahl-3-10a-add.svg",
+             "ahl-3-10a-sub.svg", "ahl-3-10a-scalar.svg"]:
     chk(os.path.exists(os.path.join(IMG, name)), "図がある: " + name)
     chk("img/" + name in TEXT, "図を本文で使っている: " + name)
 

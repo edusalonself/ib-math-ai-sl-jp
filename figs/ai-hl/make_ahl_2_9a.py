@@ -29,11 +29,8 @@ def tidy(ax):
         ax.spines[sp].set_color(GREY)
 
 
-# ══════════ fig 1: 半減期 と 自然対数モデル ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
-
-# ── (a) 半減期は毎回おなじ長さ
-ax = axs[0]
+# ══════════ fig 1a: 半減期は毎回おなじ長さ ══════════
+fig, ax = plt.subplots(figsize=(6.6, 4.6))
 T = np.log(2) / 0.12                       # 5.7762...
 X = np.linspace(0, 24, 600)
 ax.plot(X, 500 * np.exp(-0.12 * X), color=LINE, lw=2.8,
@@ -59,12 +56,15 @@ ax.set_xlabel("$t$ (years)")
 ax.set_xticks([0, T, 2 * T, 3 * T])
 ax.set_xticklabels(["$0$", "$5.78$", "$11.6$", "$17.3$"])
 ax.legend(fontsize=11, frameon=False, loc="upper right")
-ax.set_title("(a)  half-life: equal steps, equal halving", fontsize=12,
+ax.set_title("half-life: equal steps, equal halving", fontsize=12,
              color=INK, pad=9)
 tidy(ax)
+fig.tight_layout()
+save(fig, "ahl-2-9a-halflife.svg")
 
-# ── (b) 自然対数モデル
-ax = axs[1]
+
+# ══════════ fig 1b: 自然対数モデル ══════════
+fig, ax = plt.subplots(figsize=(6.6, 4.6))
 XL = np.linspace(0.06, 22, 900)
 bb = 6 / np.log(4)
 aa = 7 - bb * np.log(2)
@@ -86,11 +86,47 @@ ax.set_xlim(-1.6, 22.5)
 ax.set_ylim(-11, 20)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=11, frameon=False, loc="upper left")
-ax.set_title("(b)  a natural logarithmic model", fontsize=12, color=INK, pad=9)
+ax.set_title("a natural logarithmic model", fontsize=12, color=INK, pad=9)
 tidy(ax)
+fig.tight_layout()
+save(fig, "ahl-2-9a-log.svg")
 
-fig.tight_layout(w_pad=2.4)
-save(fig, "ahl-2-9a-decay.svg")
+
+# ══════════ fig 1c: period は「となり合う」最大と最小から ══════════
+fig, ax = plt.subplots(figsize=(7.6, 4.6))
+TP = np.linspace(-0.4, 26.4, 1100)
+ax.plot(TP, 8 * np.sin(np.pi / 6 * (TP - 2)) + 12, color=LINE, lw=2.8)
+ax.axhline(12, color=GOLD, lw=1.6, ls="--")
+for t_, h_ in ((5, 20), (11, 4), (17, 20), (23, 4)):
+    ax.plot([t_], [h_], "o", color=ACC, ms=8, zorder=7)
+    ax.plot([t_, t_], [h_, 23.2 if h_ > 12 else 4], color=GREY, lw=1.0,
+            ls=":", zorder=3)
+# となり合う最大と最小 → 半周期
+ax.annotate("", xy=(11, 23.2), xytext=(5, 23.2),
+            arrowprops=dict(arrowstyle="<->", color=GREEN, lw=1.8))
+ax.text(8, 23.8, "adjacent: half a period, so period $= 2 \\times 6 = 12$",
+        fontsize=10.5, color=GREEN, ha="center", va="bottom", bbox=BOX,
+        zorder=8)
+# となり合わない最大と最小 → 使えない
+ax.annotate("", xy=(23, 1.4), xytext=(5, 1.4),
+            arrowprops=dict(arrowstyle="<->", color=ACC, lw=1.8))
+ax.text(14, 0.8, "not adjacent: $2 \\times 18 = 36$ is not the period",
+        fontsize=10.5, color=ACC, ha="center", va="top", bbox=BOX, zorder=8)
+ax.annotate("another maximum in between", xy=(17, 20), xytext=(18.4, 15.0),
+            fontsize=10.5, color=ACC, ha="left", va="center", bbox=BOX,
+            zorder=8,
+            arrowprops=dict(arrowstyle="->", color=ACC, lw=1.4,
+                            shrinkA=2, shrinkB=5))
+ax.set_xlim(-0.6, 26.6)
+ax.set_ylim(-1.6, 27.0)
+ax.set_xlabel("$t$")
+ax.set_xticks([0, 5, 11, 17, 23])
+ax.set_title("the rule needs neighbouring turning points\n"
+             "$h = 8\\sin\\!\\left(\\frac{\\pi}{6}(t-2)\\right)+12$",
+             fontsize=12, color=INK, pad=9)
+tidy(ax)
+fig.tight_layout()
+save(fig, "ahl-2-9a-period.svg")
 
 
 # ══════════ fig 2: 正弦モデルの 4 文字 と c の位置 ══════════

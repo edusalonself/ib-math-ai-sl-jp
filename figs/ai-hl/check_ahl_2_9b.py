@@ -59,7 +59,8 @@ chk(sp.solve(sp.Eq(d2, 0), x) == [sp.log(C) / k], "f'' = 0 は x0 だけ（い�
 chk(float(sp.log(sp.Rational(1, 2)) / sp.Rational(1, 2)) < 0,
     "C < 1 なら lnC/k は負（S の曲がり角が x<0）")
 in_text("S の曲がり角が $x > 0$ に来るのは **$C > 1$**", "レビュー10")
-in_text("$\\dfrac{\\ln C}{k}$ が正になるのは **$C > 1$** のときです", "レビュー10")
+# 2026-09: 第4節を短くし、C < 1 の場合は Why it works（折りたたみ）へ移した
+in_text("**いちばん急な時刻 $\\dfrac{\\ln C}{k}$ が正になるのは $C > 1$ のときです**", "レビュー10")
 in_text("$L > 0$、$C > 0$、$k > 0$ なので（公式集の条件です）", "レビュー18")
 not_in_text("$k > 0$、$C > 0$ なので、$Ce^{-kx}$ は**正の数**で", "レビュー18")
 in_text("**$L$ と $C$ が同じなら、上限に速く近づく**", "レビュー7")
@@ -176,7 +177,9 @@ not_in_text("どちらにも入っていない値があったりする式は、�
 in_text("**計算できない式**（分母が $0$、根号の中が負など）が混じっているときだけは",
         "レビュー6")
 # ★ レビュー1: piecewise の条件は and
-in_text("f1(x)=piecewise(1+x,x≥0 and x<2,x^2/4+x,x≥2)", "レビュー1")
+# 2026-09: GDC の入力例は画面どおりの表示（x^2/4 は分数）に変更
+in_text(r"f1(x) = \texttt{piecewise}\left(1+x,\ x \geq 0 \ \texttt{and}\ x < 2,\ \dfrac{x^{2}}{4} + x,\ x \geq 2\right)", "レビュー1")
+not_in_text("f1(x)=piecewise(1+x,x≥0 and x<2,x^2/4+x,x≥2)", "旧: 直線入力の表記")
 in_text("**条件を $0 \\leq x < 2$ のようにつなげて書くことはできません。**", "レビュー1")
 not_in_text("f1(x)=piecewise(1+x,0≤x<2,x^2/4+x,x≥2)", "レビュー1: 通らない構文")
 # ★ レビュー13: 演習6 の警告
@@ -212,12 +215,18 @@ in_text("C = \\dfrac{L}{P_0}-1", "Enrichment の C")
 # 5. 構造
 # ══════════════════════════════════════════════════════════
 heads = re.findall(r"(?m)^## (.+)$", TEXT)
-need = ["What you should be able to do", "The idea", "Why it works",
+# 2026-09: Why it works は内容を減らし、折りたたんでページ末尾へ移した
+need = ["What you should be able to do", "The idea",
         "Worked examples", "Common errors",
         "Using your GDC (TI-Nspire CX II)", "Exercises"]
 for hh in need:
     chk(hh in heads, "見出しがない: " + hh)
-chk([hh for hh in heads if hh in need] == need, "7 つの見出しの順序")
+chk([hh for hh in heads if hh in need] == need, "見出しの順序")
+chk("Why it works" in heads, "見出しがない: Why it works")
+chk(heads.index("Why it works") > heads.index("Exercises"),
+    "Why it works は Exercises より後ろ")
+chk(TEXT.count('## Why it works\n\n::: {.callout-note collapse="true"') == 1,
+    "Why it works は折りたたんである")
 chk(len(re.findall(r"(?m)^---$", TEXT)) == 6, "--- は 6 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳は 14 個")
 chk(TEXT.count("::: {.ex-sep}") == 9, ".ex-sep は 9 個")
@@ -240,9 +249,14 @@ for term in ["**logistic model**（ロジスティックモデル）",
              "**point of inflexion**（変曲点）",
              "smooth（なめらか）"]:
     in_text(term, "英語→日本語の順")
-in_text("![Reading a logistic model, and comparing it with an exponential](img/ahl-2-9b-logistic.svg)")
-in_text("![Continuity, and a piecewise model in context](img/ahl-2-9b-piecewise.svg)")
-for svg in ["ahl-2-9b-logistic.svg", "ahl-2-9b-piecewise.svg"]:
+# 2026-09: 2 枚の 2 面図を 4 枚に分け、説明のすぐ近くへ移動
+in_text("![Reading a logistic model](img/ahl-2-9b-logistic.svg)")
+in_text("![A ceiling, or no ceiling](img/ahl-2-9b-vs-exp.svg)")
+in_text("![A piecewise model in context](img/ahl-2-9b-tariff.svg)")
+in_text("![Choosing $a$ so the graph joins up](img/ahl-2-9b-continuity.svg)")
+not_in_text("ahl-2-9b-piecewise.svg")
+for svg in ["ahl-2-9b-logistic.svg", "ahl-2-9b-vs-exp.svg",
+            "ahl-2-9b-tariff.svg", "ahl-2-9b-continuity.svg"]:
     chk(os.path.exists(os.path.join(HERE, "..", "..", "ai-hl", "02-functions",
                                     "img", svg)), "図がある: " + svg)
 anchors = set(re.findall(r"\{#([a-z0-9-]+)\}", TEXT)) | {"common-errors", "why-it-works"}

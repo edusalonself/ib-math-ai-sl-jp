@@ -129,11 +129,12 @@ CASES = [
      "oscillates for ever: the swings keep the same size", GOLD, 6.5),
 ]
 
-fig, axs = plt.subplots(3, 2, figsize=(11.4, 12.4))
+# --- 左の列：時間に対する x ---
+fig, axs = plt.subplots(1, 3, figsize=(15.0, 4.6))
 for row, (a, b, eqn, lam, note, col, tmax) in enumerate(CASES):
     ts, xs, ys = rk4(a, b, 1.0, 0.0, tmax)
 
-    ax = axs[row, 0]
+    ax = axs[row]
     ax.plot(ts, xs, color=col, lw=2.6)
     ax.axhline(0, color=GREY, lw=1.0, alpha=0.7)
     ylo = -1.48 if a == 0 else -1.15
@@ -146,7 +147,18 @@ for row, (a, b, eqn, lam, note, col, tmax) in enumerate(CASES):
             va="bottom", color=col, bbox=BOX)
     tidy(ax)
 
-    ax = axs[row, 1]
+fig.suptitle("The eigenvalues decide what the motion looks like",
+             fontsize=14.5, y=1.0)
+fig.text(0.5, -0.06, "The displacement $x$ against time $t$.",
+         fontsize=12, ha="center", color=INK)
+fig.tight_layout(rect=(0, 0, 1, 0.93))
+save(fig, "ahl-5-18-motion.svg")
+
+
+# --- 右の列：phase portrait ---
+fig, axs = plt.subplots(1, 3, figsize=(15.0, 5.0))
+for row, (a, b, eqn, lam, note, col, tmax) in enumerate(CASES):
+    ax = axs[row]
     for x0, y0, c in ((1.0, 0.0, col), (0.0, 1.2, GREY), (-0.8, -0.6, GREY)):
         _, px, py = rk4(a, b, x0, y0, tmax * 1.6)
         ax.plot(px, py, color=c, lw=2.4 if c is col else 1.6,
@@ -162,17 +174,15 @@ for row, (a, b, eqn, lam, note, col, tmax) in enumerate(CASES):
     ax.set_ylim(-2.6, 2.6)
     ax.set_xlabel("$x$")
     ax.set_ylabel("$y = \\dfrac{dx}{dt}$")
-    ax.set_title("phase portrait", fontsize=12, color=INK, pad=10)
+    ax.set_title("%s" % lam, fontsize=12, color=INK, pad=10)
     tidy(ax)
 
-fig.suptitle("The eigenvalues decide what the motion looks like",
-             fontsize=14.5, y=0.997)
-fig.text(0.5, -0.012,
-         "Left: the displacement $x$ against time.   "
-         "Right: the same motion in the $(x,\\ y)$ plane, where "
-         "$y = \\dfrac{dx}{dt}$ is the velocity.",
+fig.suptitle("The same three motions in the $(x,\\ y)$ plane",
+             fontsize=14.5, y=1.0)
+fig.text(0.5, -0.06,
+         "The vertical axis is $y = \\dfrac{dx}{dt}$, the VELOCITY.",
          fontsize=12, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0, 1, 0.985))
-save(fig, "ahl-5-18-cases.svg")
+fig.tight_layout(rect=(0, 0, 1, 0.93))
+save(fig, "ahl-5-18-phase.svg")
 
 print("figures written to", os.path.normpath(OUT))

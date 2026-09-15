@@ -29,11 +29,9 @@ def tidy(ax):
         ax.spines[sp].set_color(GREY)
 
 
-# ══════════ 5.10-1  second derivative test ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
-
-# (a) f, f', f'' を重ねる
-ax = axs[0]
+# ══════════ 5.10-1a  f, f', f'' を重ねたグラフ ══════════
+#  本文の「second derivative test」の節に置く図。
+fig, ax = plt.subplots(figsize=(6.4, 5.2))
 X = np.linspace(-2.6, 4.6, 700)
 F = X ** 3 - 3 * X ** 2 - 9 * X + 5
 D1 = 3 * X ** 2 - 6 * X - 9
@@ -58,12 +56,17 @@ ax.set_xlim(-2.6, 4.6)
 ax.set_ylim(-38, 36)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=9.5, frameon=False, loc="lower left")
-ax.set_title("(a)  the sign of $f''$ at a stationary point",
+ax.set_title("the sign of $f''$ at a stationary point",
              fontsize=12, color=INK, pad=10)
 tidy(ax)
 
-# (b) 山と谷の形
-ax = axs[1]
+fig.tight_layout()
+save(fig, "ahl-5-10-graph.svg")
+
+
+# ══════════ 5.10-1b  山と谷の形 ══════════
+#  本文の「f'' は f' の変化を表す」の節に置く図。
+fig, ax = plt.subplots(figsize=(6.2, 4.6))
 XL = np.linspace(-2.9, -0.1, 300)
 XR = np.linspace(0.1, 2.9, 300)
 ax.plot(XL, -(XL + 1.5) ** 2 + 2.2, color=LINE, lw=3.0)
@@ -85,11 +88,11 @@ ax.text(0, 4.35, "at both points the tangent is flat:  $f' = 0$",
 ax.set_xlim(-3.1, 3.1)
 ax.set_ylim(-4.5, 4.9)
 ax.axis("off")
-ax.set_title("(b)  what the sign of $f''$ means", fontsize=12, color=INK,
+ax.set_title("what the sign of $f''$ means", fontsize=12, color=INK,
              pad=10)
 
 fig.tight_layout()
-save(fig, "ahl-5-10-test.svg")
+save(fig, "ahl-5-10-shape.svg")
 
 
 # ══════════ 5.10-2  f' と f'' の 4 つの組み合わせ ══════════

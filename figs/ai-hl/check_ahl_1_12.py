@@ -367,8 +367,8 @@ inA("doc → Settings → Document Settings")
 inB("doc → Settings → Document Settings → Angle: Radian")
 inB("ctrl + doc → Add Lists & Spreadsheet")
 inA("`Real or Complex` を **`Rectangular`** にしてください。")
-inA("TI 公式のガイドでは、handheld で `ctrl` と `k` を押すとパレットが開く、と書かれています。")
-inB("TI 公式のガイドでは、handheld で `ctrl` と `k` を押すとパレットが開く、と書かれています。")
+inA("キーボードのいちばん下、左端の **`\u03c0` のキー**を押すとパレットが開きます。")
+inB("キーボードのいちばん下、左端の **`\u03c0` のキー**を押すとパレットが開きます。")
 inA("`conj(3+2i)`")
 inA("`real(3+2i)`")
 inA("`imag(3+2i)`")
@@ -381,9 +381,11 @@ inB("angle(-3+2i)")
 # 1.12a — 1: sqrt の法則に条件を付けた
 inA("$\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}$ という法則が使えるのは、**$a \\geq 0$ かつ $b \\geq 0$ のとき**だけ")
 notA("\\sqrt{-36} = \\sqrt{36 \\times (-1)} = 6i")
-# 2: 非CAS の挙動
+# 2: CX II の挙動
 notA("そのときは、答えが計算されずに式のまま返ってきます。")
-inA("非CAS の CX II は値の入っていない変数を計算できないので、そこで止まってエラーの表示が出ます。")
+# 2026-09: 生徒は全員 TI-Nspire CX II なので、CAS／非CAS の区別には触れない
+inA("CX II は値の入っていない変数を計算できないので、そこで止まってエラーの表示が出ます。")
+notA("非CAS")
 inA("`i^2` と打つのがいちばん速い確かめ方です。")
 # 3: 検算は代入に変えた
 notA("$2$ つの解の積は $\\left(-\\tfrac{1}{2}\\right)^{2} + \\left(\\tfrac{3}{2}\\right)^{2}")

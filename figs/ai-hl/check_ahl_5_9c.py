@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """AHL 5.9c（related rates of change）の検算。
+   ※ 5.9c は 5.9b に統合されたので、読むのは ahl-5-9b.qmd です。
    1. すべての rate を第一原理から出す（公式を微分して chain rule に入れる）
    2. 微小変化の差分で、独立に突き合わせる（本文の検算と同じやり方）
    3. .qmd の本文が、その数値どおりに書かれているかを確かめる
@@ -16,7 +17,7 @@ import sys
 import sympy as sp
 
 QMD = os.path.join(os.path.dirname(__file__), "..", "..", "ai-hl",
-                   "05-calculus", "ahl-5-9c.qmd")
+                   "05-calculus", "ahl-5-9b.qmd")
 TXT = io.open(QMD, encoding="utf-8").read()
 
 OK = NG = 0
@@ -175,19 +176,14 @@ close("E10 ×10", (2 * 3.05 ** 2 - 18) * 10, 6.05, 1e-8)
 # ══════════════════════════════════════════════════════════════
 # 6. 公式集のどの欄にあるか（Prior learning と 3.1 は別）
 # ══════════════════════════════════════════════════════════════
-in_text("円の面積 $A = \\pi r^{2}$、円柱の体積 $V = \\pi r^{2}h$ は "
-        "**Prior learning** の欄に")
-in_text("**3.1** の欄にあります")
+# 2026-09: 公式集の callout は削除
+not_in_text("## 公式集に「related rates」という欄はありません")
 in_text("**(a)** 円の面積の公式です（公式集の Prior learning の欄）。")
 not_in_text("**(a)** 円の面積の公式です（公式集の $3.1$ の欄）。")
-# 載っていないものは自分で作る
-in_text("正方形の面積 $A = x^{2}$ や、立方体の表面積 $A = 6x^{2}$ は印刷されていません。")
 not_in_text("**ですから、この項目で覚えるものはありません。**")
 in_text("**これは公式集にありません。**")
-# 公式集 5.9 の chain rule をそのまま
-in_text(r"y = g(u), \ \text{where} \ u = f(x) \ \Rightarrow \ "
-        r"\frac{dy}{dx} = \frac{dy}{du} \times \frac{du}{dx}")
-in_text("## 公式集に「related rates」という欄はありません")
+# chain rule は AHL 5.9b を参照する
+in_text("[第2節](#chain)")
 
 # ══════════════════════════════════════════════════════════════
 # 7. レビューで直した点の見張り
@@ -207,8 +203,8 @@ not_in_text("`ctrl` + キーボードの記号パレット")
 # 11: 表示桁
 in_text("返るのは $314.159$")
 not_in_text("返るのは $314.16$")
-# 12: 表を参照する / ドルの行
-in_text("残りの $1$ つが出ます**（@tbl-ahl59c-two）")
+# 12: ドルの行（2026-09: 3 つのうち 2 つの表は削除）
+not_in_text("tbl-ahl59c-two")
 in_text("| $\\dfrac{dC}{dt}$ | ドル／日 | $1$ 日あたり何ドル |")
 in_text("\\approx \\ 30 \\ \\text{cm}^{3}")
 
@@ -224,12 +220,12 @@ eq("テンプレートの 7 見出しが順に並ぶ", top,
    ["What you should be able to do", "The idea", "Why it works",
     "Worked examples", "Common errors",
     "Using your GDC (TI-Nspire CX II)", "Exercises"])
-eq("例題は 4 つ", len(re.findall(r"::: \{#exm-", TXT)), 4)
-eq("演習は 10 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 10)
-eq("ex-sep は 9 個", TXT.count(".ex-sep"), 9)
-eq("例題の下の区切り線は 4 本（+ YAML の 1 本）", TXT.count("\n---\n"), 5)
+# （統合後の構造チェックは check_ahl_5_9b.py 側にまとめました）
+
+
+
 # 記述問題には model-answer
-eq("model-answer は 3 つ", TXT.count("::: {.model-answer}"), 3)
+
 for w in ("誰でもできる", "簡単です", "当然", "明らか", "もちろん", "当たり前",
           "そのとおり", "ご指摘", "確かめ。"):
     not_in_text(w)

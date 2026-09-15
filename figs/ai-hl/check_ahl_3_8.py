@@ -221,9 +221,12 @@ in_text("（$k = 1$ なら $B = 90^{\\circ}$ の $1$ つだけ）")
 in_text("a value of $\\sin B$ less than $1$ comes from two different angles")
 in_text("a value of $\\sin B$ below $1$ corresponds to two angles")
 # ★ レビュー8: arcsin(sin B) をやめて arcsin k に
-in_text("| $1$ | sine rule で、$\\sin B$ の**値** $k$ を出す |")
-in_text("| $2$ | $k > 1$ なら、**三角形は存在しません**。そこで終わり |")
-in_text("| $3$ | $B_1 = \\arcsin k$ と $B_2 = 180^{\\circ} - B_1$ の $2$ つを書く")
+# 2026-09: 手順は表ではなく箇条書きにした
+in_text("1. sine rule で、$\\sin B$ の**値** $k$ を出す")
+in_text("2. $k > 1$ なら、**三角形は存在しません**。そこで終わり")
+in_text("3. $B_1 = \\arcsin k$ と $B_2 = 180^{\\circ} - B_1$ の $2$ つを書く")
+in_text("4. それぞれについて **$A + B < 180^{\\circ}$** を確かめる")
+not_in_text("| 段 | やること |")
 not_in_text("$B_1 = \\arcsin(\\sin B)$", "レビュー8")
 # ★ レビュー3: a<b は必要条件であって十分条件ではない
 in_text("**検算。** $a < b$ は、$2$ つ出るための**必要条件**にすぎません")
@@ -422,7 +425,9 @@ chk(sf(math.pi / 6, 3) == 0.524 and sf(5 * math.pi / 6, 3) == 2.62, "ex10 の 3 
 # ══════════════════════════════════════════════════════════
 in_text("doc → Settings → Document Settings")
 in_text("`Angle` を **Radian** にしておきます。")
-in_text("`ctrl` と `k` を押すとパレットが開く")
+# 2026-09: 記号パレットは π キー（∞・°）／ctrl + = （≤ ≥）に訂正
+in_text("**`π` のキー**を押すと開く**記号パレット**")
+not_in_text("`ctrl` と `k` を押すとパレットが開く")
 near(math.cos(2), -0.4161468, msg="GDC cos(2)")
 near(math.sin(2), 0.9092974, msg="GDC sin(2)")
 near(math.sin(R(32)), 0.5299193, msg="sin32°")
@@ -432,10 +437,12 @@ chk(abs(math.sin(R(32)) - math.sin(32)) > 0.01, "度とラジアンで別の数�
 near(math.asin(0.7949), 0.9188427, msg="asin(0.7949) rad")
 near(0.9188 * 180 / math.pi, 52.6434, tol=5e-3, msg="0.9188×180/π = 52.6")
 in_text("Radian 設定のままなら、$0.9188$ **radians** が返ります。")
-in_text("0.9188*180/π")
+# 2026-09: GDC の入力例は画面どおりの表示に変更
+in_text(r"0.9188 \times \dfrac{180}{\pi}")
+not_in_text("0.9188*180/π")
 not_in_text("$52.6^{\\circ}$（Degree 設定のとき）が返ります。", "レビュー4")
-# ★ レビュー5: cos²+sin² は答えの検算にならない
-in_text("## $\\cos^{2}\\theta+\\sin^{2}\\theta$ は、答えの検算になりません")
+# 2026-09: cos²+sin² の検算についての注意は削除（レビュー5 の callout）
+not_in_text("$\\cos^{2}\\theta+\\sin^{2}\\theta$ は、答えの検算になりません")
 in_text("- **出た値を、もとの式に戻す。** $h(1.39) = 8.00$ ✓ のように。これがいちばん強い検算です")
 not_in_text("$1$ つ目が、いちばん手早い検算です。**$1$ にならなければ、その先は全部ずれます。**",
             "レビュー5")
@@ -490,11 +497,13 @@ for w in ["誰でもできる", "簡単です", "当然", "明らか", "もち�
     not_in_text(w, "禁止表現")
 in_text("**unit circle**（単位円）", "英語→日本語の順")
 in_text("**quadrant**（象限）", "英語→日本語の順")
-in_text("![What $\\cos\\theta$ and $\\sin\\theta$ mean, and the signs in each quadrant](img/ahl-3-8-unit-circle.svg)")
+# 2026-09: 定義と象限の 2 面図を 2 枚に分け、説明のすぐ近くへ移動
+in_text("![What $\\cos\\theta$ and $\\sin\\theta$ mean](img/ahl-3-8-unit-circle.svg)")
+in_text("![The signs in each quadrant](img/ahl-3-8-quadrants.svg)")
 in_text("![From one lap of the circle to one period of the graph](img/ahl-3-8-graphs.svg)")
 in_text("![Why two triangles can fit the same information](img/ahl-3-8-ambiguous.svg)")
-for svg in ["ahl-3-8-unit-circle.svg", "ahl-3-8-graphs.svg",
-            "ahl-3-8-ambiguous.svg"]:
+for svg in ["ahl-3-8-unit-circle.svg", "ahl-3-8-quadrants.svg",
+            "ahl-3-8-graphs.svg", "ahl-3-8-ambiguous.svg"]:
     chk(os.path.exists(os.path.join(HERE, "..", "..", "ai-hl",
                                     "03-geometry-and-trigonometry", "img", svg)),
         "図がある: " + svg)

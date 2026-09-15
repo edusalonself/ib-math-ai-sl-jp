@@ -229,13 +229,15 @@ eq("pi 落とし 6.4 も 2 乗落とし 8pi/3 も円柱より小さい",
 # ══════════════════════════════════════════════════════════════
 inA("A = \\int_{a}^{b} |y|\\,dx")
 inA("A = \\int_{a}^{b} |x|\\,dy")
-inA("見出しは「**Area of region enclosed by a curve and $x$ or $y$-axes**」です。")
+inA("見出しは「**Area of region enclosed by a curve and $x$ or $y$-axes**」で、")
 inA("> Including negative integrals.")
 inA("シラバスの Guidance 欄も、一言だけ書いています。")
 inB("V = \\int_{a}^{b}\\pi y^{2}\\,dx")
 inB("V = \\int_{a}^{b}\\pi x^{2}\\,dy")
-inB("見出しは「**Volume of revolution about $x$ or $y$-axes**」です。")
-inB("シラバスの Guidance 欄も、この $2$ 式をそのまま書いています。")
+# 冒頭の 2 つの囲みは削除し、第1節に一文でまとめた
+notB("## 公式集の 5.12 の欄（体積）")
+inB("見出しは「**Volume of revolution about $x$ or $y$-axes**」で、")
+inB("**公式集の $5.12$ の欄にあります。配られるので、覚える必要はありません。**")
 # 円柱・円の面積は Prior learning、円錐は 3.1
 inB("（公式集の Prior learning の欄）", 2)
 inB("円錐の公式（公式集の $3.1$ の欄）")
@@ -259,13 +261,12 @@ notA("折り返せば高さが $+\\dfrac{16}{3}$ 分として数えられます"
 # 6: 短ざくの向き
 notA("$x$ 軸のときは縦の短ざく（幅 $y$、厚み $dx$）でしたが")
 # 8+9: modulus と「覚える必要はありません」
-inA("**配られるので、覚える必要はありません。**")
-inA("**modulus**（絶対値）")
+inA("**公式集の $5.12$ の欄にあります。配られるので、覚える必要はありません。**")
+inA("**違うのは modulus（絶対値）だけ**です。")
 # 10: ± の枝を表の前に
 inA("**$2$ 乗のように偶数乗の式は、$x$ について解くと $2$ つになります。**")
-# 11: 部分点
-inA("**`Show that` や、部分点のある問題**")
-notA("途中に点がある問題")
+# 11: 「答えだけでよいとき…」の囲みは削除した
+notA("## 答えだけでよいときと、区切って書くべきときがあります")
 # 12a: タイトル
 inA("# AHL 5.12a — Area of a region enclosed by a curve and the $x$ or $y$-axes")
 # 12d: 訳語
@@ -293,13 +294,13 @@ notB("$32\\pi = 100$")
 inB("$32\\pi \\approx 101$", 2)
 # 8: Common errors から移した
 notB("## 面積のときの絶対値を、体積にも付ける")
-inB("$V = \\displaystyle\\int_{a}^{b}\\pi\\lvert y \\rvert^{2}\\,dx$ と書いても、"
-    "値は同じなので点は引かれません。")
+notB("$V = \\displaystyle\\int_{a}^{b}\\pi\\lvert y \\rvert^{2}\\,dx$ と書いても、"
+     "値は同じなので点は引かれません。")
 # 9: 英語ファースト
 inB("**disc**（円板）")
 inB("**cylinder**（円柱）")
 inB("**cone**（円錐）")
-inB("**modulus**（絶対値）")
+inB("面積の式には modulus（絶対値）が付いていましたが")
 # 13: 表示桁と 6.4 の扱い
 inB("$\\pi$ を入れたつもりなのに $6.4$ のような値が出たら")
 # 「$6.4$ が出たら疑え」は、$\pi$ を入れたつもりのときに限ってしか書かない
@@ -378,7 +379,8 @@ for tag, TXT, path in (("5.12a", TA, A), ("5.12b", TB, B)):
     else:
         OK += 1
 
-for svg in ("ahl-5-12a-area.svg", "ahl-5-12b-vol.svg"):
+for svg in ("ahl-5-12a-below.svg", "ahl-5-12a-yaxis.svg",
+            "ahl-5-12b-disc.svg", "ahl-5-12b-cone.svg"):
     if os.path.exists(os.path.join(os.path.dirname(A), "img", svg)):
         OK += 1
     else:

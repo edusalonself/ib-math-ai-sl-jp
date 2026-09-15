@@ -80,11 +80,8 @@ def right_angle(ax, corner, u, w, s=0.42, color=GREY, lw=1.4, z=7):
             zorder=z)
 
 
-# ══════════ fig 1: 角と、v·w の符号 ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.8))
-
-# ── (a) 2 本のベクトルと、そのあいだの角
-ax = axs[0]
+# ══════════ fig 1a: 2 本のベクトルと、そのあいだの角 ══════════
+fig, ax = plt.subplots(figsize=(6.0, 4.8))
 v = np.array([3.0, 4.0])
 w = np.array([2.0, -5.0])
 arrow(ax, (0, 0), v, color=LINE, lw=2.8)
@@ -102,12 +99,15 @@ ax.text(0.0, -7.4, r"$\mathbf{v}\cdot\mathbf{w} = 3(2)+4(-5) = -14$"
                    r"$\cos\theta = \frac{-14}{5\sqrt{29}}$",
         fontsize=12.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 blank(ax, (-6.0, 6.0), (-9.4, 6.2), step=2)
-ax.set_title("(a)  the angle is measured between the two arrows,\n"
+ax.set_title("the angle is measured between the two arrows,\n"
              "both drawn from the same point",
              fontsize=12.5, color=INK, pad=6)
+fig.tight_layout()
+save(fig, "ahl-3-13a-idea.svg")
 
-# ── (b) 符号が語ること（3 組を横に並べる）
-ax = axs[1]
+
+# ══════════ fig 1b: 符号が語ること（3 組を横に並べる） ══════════
+fig, ax = plt.subplots(figsize=(6.4, 4.4))
 cases = [
     (-3.9, [1.0, 0.0], [0.85, 0.95], ACC, r"$\mathbf{v}\cdot\mathbf{w} > 0$",
      "acute"),
@@ -133,10 +133,9 @@ ax.text(0.0, 2.85, r"the sign of $\mathbf{v}\cdot\mathbf{w}$ tells you"
                   r"(both vectors non-zero)",
         fontsize=12.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 blank(ax, (-5.9, 5.9), (-3.9, 3.9), step=1, axes=False, grid=False)
-ax.set_title("(b)  reading the sign", fontsize=12.5, color=INK, pad=6)
-
-fig.tight_layout(w_pad=2.2)
-save(fig, "ahl-3-13a-idea.svg")
+ax.set_title("reading the sign", fontsize=12.5, color=INK, pad=6)
+fig.tight_layout()
+save(fig, "ahl-3-13a-sign.svg")
 
 
 # ══════════ fig 2: 2 直線のあいだの acute angle ══════════

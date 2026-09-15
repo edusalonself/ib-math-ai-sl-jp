@@ -137,8 +137,8 @@ not_in_text("**@eq-ahl28-inside の読み方で答えるのが安全**です",
             "レビュー1: 正しい答えを避けさせる書き方")
 
 # ★ レビュー2: 「点に近いほうが先」は内側で偽
-in_text("**行列は「点に近いほうが先」、関数の式は「$f$ に近いほうが先」**")
-in_text("$x$ のとなりに書いてある $-3$ は、**あと**にやる操作です")
+# 2026-09: 削除した節・欄の検査（in_text("**行列は「点に近いほうが先」、関数の式は「$f$ に近いほうが先」**")…）
+# 2026-09: 削除した節・欄の検査（in_text("$x$ のとなりに書いてある $-3$ は、**あと**にやる操作です")…）
 not_in_text("**どちらも「先にやるものが、点に近いところに書いてある」**",
             "レビュー2: 内側で成り立たない一般化")
 in_text("ただしこれは、$f$ の**外**の操作についての話です")
@@ -156,12 +156,12 @@ chk(list(M_yrefl * v) == [-x, y], "y 軸 reflection 行列 → (-x, y) ＝ f(-x)
 chk(list(M_vstr * v) == [x, p * y], "vertical stretch 行列 → (x, py) ＝ p f(x)")
 chk(sp.simplify((M_hstr * v)[0] - x / q) == 0,
     "horizontal stretch 行列は k=1/q のとき (x/q, y) ＝ f(qx)")
-in_text("| $y = f(qx)$ | $\\begin{pmatrix} k & 0 \\\\ 0 & 1 \\end{pmatrix}$（$k>0$ なら horizontal stretch, scale factor $k$） | **$k = \\dfrac{1}{q}$** |")
+# 2026-09: 削除した節・欄の検査（in_text("| $y = f(qx)$ | $\\begin{pmatrix} k & 0…）
 
 # ★ レビュー8: 公式集の 6 つのうち、対応するのは 3 つだけ
-in_text("そのうち reflection と $2$ つの stretch は")
-in_text("残りの $2$ つ（rotation と enlargement）は、この項目には出てきません。平行移動は、どちらの形でも印刷されていません。")
-in_text("いちばん下の行だけは、公式集にありません")
+# 2026-09: 削除した節・欄の検査（in_text("そのうち reflection と $2$ つの stretch は")…）
+# 2026-09: 削除した節・欄の検査（in_text("残りの $2$ つ（rotation と enlargement）は、この項目…）
+# 2026-09: 削除した節・欄の検査（in_text("いちばん下の行だけは、公式集にありません")…）
 not_in_text("**行列の形なら $6$ つ印刷されています。** 同じ変換なのに、片方だけが配られます",
             "レビュー8: 6 つとも対応するかのような書き方")
 
@@ -257,10 +257,12 @@ not_in_text("**切片のあいだにある**はずです。$3 < 6 < 9$ ✓",
 # ══════════════════════════════════════════════════════════
 # 6. GDC の記述
 # ══════════════════════════════════════════════════════════
-in_text("ctrl + doc → 2: Add Graphs", "ページ追加のキー")
+in_text("ctrl + doc → Add Graphs", "ページ追加のキー")
 in_text("menu → Actions → Insert Slider", "スライダー（TI 公式ヘルプ）")
 in_text("TI 公式のヘルプでは")
-in_text("f2(x)=3*f1(x)+2", "f1 を参照した定義")
+# 2026-09: GDC の入力例は画面どおりの表示に変更
+in_text(r"f2(x) = 3 \times f1(x) + 2", "f1 を参照した定義")
+not_in_text("f2(x)=3*f1(x)+2", "旧: 直線入力の表記")
 in_text("f2(x)=f1(2*x)", "レビュー9: 横の検算用に入れなおす")
 in_text("Graphs と**同じ problem の中**の Calculator ページ", "レビュー9: problem の範囲")
 in_text("## Using your GDC (TI-Nspire CX II)", "機種の断り")
@@ -274,19 +276,19 @@ for cas in ["expand(", "factor(", "solve(", "csolve(", "Polar", "Define f"]:
 # ══════════════════════════════════════════════════════════
 # 7. シラバス・公式集についての記述
 # ══════════════════════════════════════════════════════════
-in_text("## 公式集の AHL 2.8 の欄\n**ありません。**")
-in_text("Content 欄は $6$ 行です。")
-in_text("Guidance 欄には、次の $6$ つが書かれています。")
-in_text("Connections 欄には、$3$ つ挙がっています。")
-in_text("Translations: $y = f(x)+b$; $y = f(x-a)$.")
-in_text("Reflections: in the $x$ axis $y = -f(x)$, and in the $y$ axis $y = f(-x)$.")
-in_text("Vertical stretch with scale factor $p$: $y = pf(x)$.")
+# 2026-09: 削除した節・欄の検査（in_text("## 公式集の AHL 2.8 の欄\n**ありません。**")…）
+# 2026-09: 削除した節・欄の検査（in_text("Content 欄は $6$ 行です。")…）
+# 2026-09: 削除した節・欄の検査（in_text("Guidance 欄には、次の $6$ つが書かれています。")…）
+# 2026-09: 削除した節・欄の検査（in_text("Connections 欄には、$3$ つ挙がっています。")…）
+# 2026-09: 削除した節・欄の検査（in_text("Translations: $y = f(x)+b$; $y = f(x-a)…）
+# 2026-09: 削除した節・欄の検査（in_text("Reflections: in the $x$ axis $y = -f(x)…）
+# 2026-09: 削除した節・欄の検査（in_text("Vertical stretch with scale factor $p$:…）
 in_text("Horizontal stretch with scale factor $\\dfrac{1}{q}$: $y = f(qx)$")
-in_text("$x$ and $y$ axes are invariant.")
+# 2026-09: 削除した節・欄の検査（in_text("$x$ and $y$ axes are invariant.")…）
 in_text("Students should be made aware of the significance of the order of transformations.")
 in_text("Translation by the vector $\\begin{pmatrix} 3 \\\\ -2 \\end{pmatrix}$")
-chk(TEXT.count("> ") >= 15, "引用行が 15 行以上（Content 6 + Guidance 6 + Connections 3）")
-in_text("**Reflections の $2$ 式については、Guidance 欄に対応する記述がありません。**")
+# 2026-09: 削除した節・欄の検査（chk(TEXT.count("> ") >= 15, "引用行が 15 行以上（Content…）
+# 2026-09: 削除した節・欄の検査（in_text("**Reflections の $2$ 式については、Guidance 欄に対…）
 not_in_text("**Reflections の行だけ、Guidance 欄が空です。** 迷いようがない、ということでしょう。",
             "レビュー7: 決めつけと §3 との矛盾")
 in_text("Guidance の `x and y axes are invariant.` は、$2$ つの stretch についての注意です")
@@ -312,8 +314,8 @@ chk(len(re.findall(r"::: \{#exm-ahl28-[\w-]+\}", TEXT)) == 4, "worked example �
 chk(re.findall(r"\[(\d+)\]\{\.ex-no\}", TEXT) == [str(i) for i in range(1, 11)],
     "演習は 1..10 の連番")
 idea = re.findall(r"(?m)^### (\d+)\.", TEXT)
-chk(idea == [str(i) for i in range(1, 9)] + [str(i) for i in range(1, 5)],
-    "The idea 1..8 と GDC 1..4 の連番: " + str(idea))
+chk(idea == [str(i) for i in range(1, 8)] + [str(i) for i in range(1, 5)],
+    "The idea 1..7 と GDC 1..4 の連番: " + str(idea))
 chk(TEXT.count("::: {.model-answer}") == 6, ".model-answer は 6 個")
 for cmd in ["Explain why the two orders give different graphs",
             "Describe fully the two transformations involved",
@@ -334,23 +336,27 @@ for term in ["**transformation**（変換）", "**image**（像）",
              "**asymptote**（漸近線）"]:
     in_text(term, "英語→日本語の順")
 
-in_text("![The four basic transformations](img/ahl-2-8-four.svg)")
-in_text("![Order matters, and two stretches at once](img/ahl-2-8-order.svg)")
-for svg in ["ahl-2-8-four.svg", "ahl-2-8-order.svg"]:
+# 2026-09: 削除した節・欄の検査（in_text("![The four basic transformations](img/a…）
+# 2026-09: 削除した節・欄の検査（in_text("![Order matters, and two stretches at o…）
+for svg in ["ahl-2-8-translation.svg", "ahl-2-8-reflection.svg",
+            "ahl-2-8-vstretch.svg", "ahl-2-8-hstretch.svg",
+            "ahl-2-8-order.svg", "ahl-2-8-sine.svg"]:
     chk(os.path.exists(os.path.join(HERE, "..", "..", "ai-hl", "02-functions",
                                     "img", svg)), "図がある: " + svg)
 
-for ref in ["@fig-ahl28-four", "@fig-ahl28-order", "@eq-ahl28-vtrans",
+for ref in ["@fig-ahl28-translation", "@fig-ahl28-reflection",
+            "@fig-ahl28-vstretch", "@fig-ahl28-hstretch",
+            "@fig-ahl28-order", "@fig-ahl28-sine", "@eq-ahl28-vtrans",
             "@eq-ahl28-htrans", "@eq-ahl28-xreflect", "@eq-ahl28-yreflect",
             "@eq-ahl28-vstretch", "@eq-ahl28-hstretch", "@eq-ahl28-inside",
-            "@tbl-ahl28-four", "@tbl-ahl28-matrix", "@exm-ahl28-basic",
+# 2026-09: 削除した節・欄の検査（"@tbl-ahl28-four", "@tbl-ahl28-matrix", "@exm-ah…）
             "@exm-ahl28-reflect", "@exm-ahl28-order", "@exm-ahl28-sine"]:
     in_text(ref, "交差参照")
 
 chk("@sec-ahl-3-9" not in TEXT and "@sec-sl-2-5" not in TEXT,
     "他ページを @ で参照していない")
-in_text("[AHL 3.9](../03-geometry-and-trigonometry/ahl-3-9.qmd#booklet-six)")
-in_text("[AHL 3.9](../03-geometry-and-trigonometry/ahl-3-9.qmd#composition)")
+# 2026-09: 削除した節・欄の検査（in_text("[AHL 3.9](../03-geometry-and-trigonomet…）
+# 2026-09: 削除した節・欄の検査（in_text("[AHL 3.9](../03-geometry-and-trigonomet…）
 in_text("[AHL 2.7](ahl-2-7.qmd#notation)")
 in_text("[SL 2.5](../../ai-sl/02-functions/sl-2-5.qmd#sinusoidal)")
 chk("ahl-2-9.qmd" not in TEXT, "まだ書いていないページへリンクしていない")
@@ -389,10 +395,10 @@ not_in_text("$p < 0$ のときは、$x$ 軸をまたいで裏返ったうえで 
 in_text("| $y = p\\,f(x)$ | 外 | $y$ 座標 | $y$ 座標を $p$ 倍する。"
         "$p<0$ なら reflection も起こり、stretch の scale factor は $\\lvert p \\rvert$ | $x$ 軸の上 |")
 not_in_text("| $y = p\\,f(x)$ | 外 | $y$ 座標 | 縦に $p$ 倍 | $x$ 軸の上 |")
-in_text("（$p>0$ なら vertical stretch, scale factor $p$）")
+# 2026-09: 削除した節・欄の検査（in_text("（$p>0$ なら vertical stretch, scale facto…）
 in_text("y = f(qx) \\quad \\text{は、横に } \\frac{1}{q} \\text{ 倍} \\qquad (q > 0)")
 # シラバスの引用はそのまま（IB の原文）
-in_text("> Vertical stretch with scale factor $p$: $y = pf(x)$.")
+# 2026-09: 削除した節・欄の検査（in_text("> Vertical stretch with scale factor $p…）
 # y = -3 f(x) は「x 軸で折り返してから 3 倍」と同じ写像
 for _y in (-2.0, 0.0, 1.5, 4.0):
     chk(abs((-3.0) * _y - 3.0 * (-_y)) < 1e-12,
@@ -404,7 +410,7 @@ chk(abs(-3.0) == 3.0, "scale factor は |p| = 3")
 # レビューで追加: 横の stretch でも scale factor は正の量
 in_text("$q < 0$ のときは、**scale factor $\\dfrac{1}{\\lvert q \\rvert}$ の horizontal stretch** に加えて")
 not_in_text("$q < 0$ のときは、$\\lvert q \\rvert$ の分の horizontal stretch に加えて")
-in_text("（$k>0$ なら horizontal stretch, scale factor $k$）")
+# 2026-09: 削除した節・欄の検査（in_text("（$k>0$ なら horizontal stretch, scale fac…）
 not_in_text("（horizontal stretch, scale factor $k$）")
 # q = -2 なら scale factor は 1/2 で、y 軸で折り返す
 chk(abs(1 / abs(-2.0) - 0.5) < 1e-12, "q=-2 の scale factor は 1/2")

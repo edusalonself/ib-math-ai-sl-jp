@@ -43,11 +43,8 @@ def axes_box(ax, lim=1.45):
         sp.set_visible(False)
 
 
-# ══════════ fig 1: 定義と象限 ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 5.4))
-
-# ── (a) cos, sin は点の座標
-ax = axs[0]
+# ══════════ fig 1a: cos, sin は点の座標 ══════════
+fig, ax = plt.subplots(figsize=(5.9, 5.4))
 TH = 2.2
 CX, CY = np.cos(TH), np.sin(TH)
 circle(ax, color=GREY, lw=1.8)
@@ -80,11 +77,14 @@ ax.text(0, -1.36, "the angle is measured from the positive $x$-axis,\n"
                   "coordinates of $P$",
         fontsize=11.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 axes_box(ax, 1.58)
-ax.set_title("(a)  what $\\cos\\theta$ and $\\sin\\theta$ mean", fontsize=12.5,
+ax.set_title("what $\\cos\\theta$ and $\\sin\\theta$ mean", fontsize=12.5,
              color=INK, pad=6)
+fig.tight_layout()
+save(fig, "ahl-3-8-unit-circle.svg")
 
-# ── (b) 象限ごとの符号
-ax = axs[1]
+
+# ══════════ fig 1b: 象限ごとの符号 ══════════
+fig, ax = plt.subplots(figsize=(5.9, 5.4))
 circle(ax, color=GREY, lw=1.8)
 QUAD = [(np.pi / 4, "I", "$\\cos +$\n$\\sin +$\n$\\tan +$", GREEN),
         (3 * np.pi / 4, "II", "$\\cos -$\n$\\sin +$\n$\\tan -$", ACC),
@@ -101,11 +101,10 @@ ax.text(0, -1.34, "$\\tan\\theta = \\dfrac{\\sin\\theta}{\\cos\\theta}$, so its 
                   "sign is\nthe two signs divided",
         fontsize=11.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 axes_box(ax, 1.52)
-ax.set_title("(b)  the signs in each quadrant", fontsize=12.5, color=INK,
+ax.set_title("the signs in each quadrant", fontsize=12.5, color=INK,
              pad=6)
-
-fig.tight_layout(w_pad=1.6)
-save(fig, "ahl-3-8-unit-circle.svg")
+fig.tight_layout()
+save(fig, "ahl-3-8-quadrants.svg")
 
 
 # ══════════ fig 2: 単位円からグラフへ ══════════

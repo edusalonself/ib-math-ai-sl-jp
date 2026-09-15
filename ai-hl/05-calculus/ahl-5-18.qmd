@@ -9,46 +9,16 @@ sidebar: ai-hl
 - $\dfrac{d^{2}x}{dt^{2}} = f\!\left(x,\ \dfrac{dx}{dt},\ t\right)$ を、$y = \dfrac{dx}{dt}$ とおいて**連立1階**に書きかえられる。
 - 書きかえた系に **Euler 法**を使い、表を作って進められる（[AHL 5.16b](ahl-5-16b.qmd)）。
 - $\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ を**行列の形**に書き、eigenvalue（固有値）を求められる。
-- 実で異なる固有値のとき、**厳密解**を書き、初期条件から定数を決められる（[AHL 5.17a](ahl-5-17a.qmd)）。
+- 異なる $2$ つの実数の固有値のとき、**厳密解**を書き、初期条件から定数を決められる（[AHL 5.17a](ahl-5-17a.qmd)）。
 - 固有値の型から、**振動するかどうか**と**おさまるかどうか**を言える。
 - phase portrait（相図）の縦軸が**速度**であることを説明できる。
-:::
-
-::: {.callout-important}
-## 新しいのは「書きかえ」の一手だけです
-これまでのページで扱ってきたのは、**1階**の微分方程式でした。
-
-- [AHL 5.16b](ahl-5-16b.qmd) … 連立1階を **Euler 法**で数値的に追う
-- [AHL 5.17a](ahl-5-17a.qmd) … 連立1階の**厳密解**と phase portrait
-
-このページで出てくるのは、$\dfrac{d^{2}x}{dt^{2}}$ という**2階**の式です。そのままでは、どちらの方法も使えません。
-
-**そこで、$y = \dfrac{dx}{dt}$ とおきます。** これだけで、2階の式が**連立1階**に変わり、上の $2$ つがそのまま使えるようになります。
-
-シラバスも、この書きかえを名指ししています。
-
-> Write as coupled first order equations $\dfrac{dx}{dt} = y$ and $\dfrac{dy}{dt} = f(x,\ y,\ t)$.
-
-**新しい公式も、新しい電卓機能もありません。** 覚えることは、この一手だけです。
-:::
-
-::: {.callout-note}
-## AHL 5.18 専用の欄は、公式集にありません
-AI HL の公式集は **5.17 で終わっています。** 5.18 の欄は印刷されていません。
-
-使うのは、すでにある $2$ つです。
-
-- **5.16 の欄**（$2$ つ目）… 連立系の Euler 法
-- **5.17 の欄** … 連立系の厳密解 $\mathbf{x} = A\mathbf{p}_1 e^{\lambda_1 t} + B\mathbf{p}_2 e^{\lambda_2 t}$
-
-**書きかえたあとは、いつもの $2$ つ**というわけです。
-
-**ただし、$\det(M - \lambda I) = 0$ は公式集に載っていません**（[AHL 5.17b](ahl-5-17b.qmd)）。**これは覚えておく必要があります。**
 :::
 
 ## The idea
 
 ### 1. 2階の式は、そのままでは進められません {#idea}
+
+これまでのページで扱ってきたのは、**1階**（**first order**）の微分方程式でした（[AHL 5.16b](ahl-5-16b.qmd) の Euler 法、[AHL 5.17a](ahl-5-17a.qmd) の厳密解と phase portrait）。$\dfrac{dx}{dt}$ までしか出てこない式のことです。このページで出てくるのは、$\dfrac{d^{2}x}{dt^{2}}$ が入った**2階**（**second order**）の式です。
 
 たとえば、ばねにつるしたおもりの動きは
 
@@ -70,7 +40,13 @@ $$
 x_{n+1} = x_n + h \times f(x_n,\ t_n)
 $$
 
-右辺に要るのは $\dfrac{dx}{dt}$ です。ところが上の式が教えてくれるのは $\dfrac{d^{2}x}{dt^{2}}$ のほうで、**$\dfrac{dx}{dt}$ そのものは書かれていません。**
+ここで $f$ は、**微分方程式の右辺**です（[AHL 5.16a](ahl-5-16a.qmd#formula)）。つまり $f(x_n,\ t_n)$ が $\dfrac{dx}{dt}$ の値です。
+
+$$
+\frac{dx}{dt} = f(x,\ t)
+$$
+
+**Euler 法は、この形に書けて初めて使えます。** ところが @eq-ahl518-spring が教えてくれるのは $\dfrac{d^{2}x}{dt^{2}}$ のほうで、**$\dfrac{dx}{dt} = (\text{$x$ と $t$ の式})$ の形には書けません。**
 
 そこで、**$\dfrac{dx}{dt}$ にも名前を付けて、いっしょに追いかけます。**
 
@@ -90,7 +66,7 @@ $$
 \frac{dx}{dt} = y
 $$
 
-**$2$ 本目**は、もとの2階の式です。$\dfrac{d^{2}x}{dt^{2}}$ は「$\dfrac{dx}{dt}$ の微分」、つまり $\dfrac{dy}{dt}$ ですから
+**$2$ 本目**は、もとの2階の式です。$\dfrac{d^{2}x}{dt^{2}}$ は「$\dfrac{dx}{dt}$ の微分」、つまり **$y$ の微分 $\dfrac{dy}{dt}$** ですから
 
 $$
 \frac{d^{2}x}{dt^{2}} = \frac{d}{dt}\!\left(\frac{dx}{dt}\right) = \frac{dy}{dt}
@@ -102,11 +78,17 @@ $$
 \boxed{\ \frac{d^{2}x}{dt^{2}} = f\!\left(x,\ \frac{dx}{dt},\ t\right) \quad \Longrightarrow \quad \frac{dx}{dt} = y, \qquad \frac{dy}{dt} = f(x,\ y,\ t)\ }
 $$ {#eq-ahl518-convert}
 
-**これで、$x$ と $y$ の連立1階になりました。** ここから先は [AHL 5.16b](ahl-5-16b.qmd) と [AHL 5.17a](ahl-5-17a.qmd) の内容です。
+左の $f\!\left(x,\ \dfrac{dx}{dt},\ t\right)$ は、**$\dfrac{d^{2}x}{dt^{2}} = \ldots$ と直したときの右辺**という意味です。$x$ と $\dfrac{dx}{dt}$ と $t$ が入っていてよい、ということを表しているだけで、特別な関数ではありません。@eq-ahl518-spring なら $-2x - 3\dfrac{dx}{dt}$ がその中身です。
+
+**これで、$x$ と $y$ の連立1階になりました。** ここでの **$t$ は時刻**で、$x$（位置）も $y$（速度）も $t$ の関数です——[AHL 5.16b](ahl-5-16b.qmd) や [AHL 5.17a](ahl-5-17a.qmd) の連立系と、まったく同じ形です。ここから先は、その $2$ ページの内容です。シラバスも、この書きかえを名指ししています。
+
+> Write as coupled first order equations $\dfrac{dx}{dt} = y$ and $\dfrac{dy}{dt} = f(x,\ y,\ t)$.
+
+**新しい公式はありません。** 公式集に 5.18 の欄は無く、使うのは**5.16 の欄**（連立系の Euler 法）と**5.17 の欄**（連立系の厳密解）です。ただし、$\det(M - \lambda I) = 0$ は**公式集に載っていない**ので、覚えておいてください（[AHL 5.17b](ahl-5-17b.qmd)）。
 
 #### 書きかえの手順は $3$ つです {#steps}
 
-1. $y = \dfrac{dx}{dt}$ とおき、**$1$ 本目**に $\dfrac{dx}{dt} = y$ と書く
+1. $\dfrac{dx}{dt}$ に **$y$ という名前を付ける**。その約束をそのまま、**$1$ 本目の式** $\dfrac{dx}{dt} = y$ として書く
 2. もとの式を $\dfrac{d^{2}x}{dt^{2}} = \ldots$ の形に直す
 3. 右辺の $\dfrac{dx}{dt}$ をすべて $y$ に書きかえ、左辺を $\dfrac{dy}{dt}$ にする
 
@@ -191,13 +173,31 @@ $$
 \frac{dx}{dt} = y, \qquad \frac{dy}{dt} = -bx - ay
 $$
 
-です。右辺が **$ax + by$ の形**（$x$ と $y$ の項だけで、定数項も $t$ もありません）なので、[AHL 5.17a](ahl-5-17a.qmd) の方法がそのまま使えます。行列に書くと
+です（$\dfrac{d^{2}x}{dt^{2}} = -bx - a\dfrac{dx}{dt}$ と直して、$\dfrac{dx}{dt}$ を $y$ にしただけです）。
+
+右辺はどちらも **$x$ と $y$ の一次式だけ**で、定数項も $t$ もありません。これは [AHL 5.17a](ahl-5-17a.qmd#idea) が扱った形そのものです。ですから、そのまま行列に書けます。
 
 $$
-\frac{d\mathbf{x}}{dt} = M\mathbf{x}, \qquad M = \begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}
+\frac{d\mathbf{X}}{dt} = M\mathbf{X}, \qquad
+\mathbf{X} = \begin{pmatrix} x \\ y \end{pmatrix}, \qquad
+M = \begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}
 $$ {#eq-ahl518-matrix}
 
-となります。
+**なぜこの $M$ でよいのか**は、右辺をかけ算してみると分かります。
+
+$$
+M\mathbf{X} = \begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}\begin{pmatrix} x \\ y \end{pmatrix}
+= \begin{pmatrix} 0 \cdot x + 1 \cdot y \\ (-b) \cdot x + (-a) \cdot y \end{pmatrix}
+= \begin{pmatrix} y \\ -bx - ay \end{pmatrix}
+$$
+
+左辺は $\dfrac{d\mathbf{X}}{dt} = \begin{pmatrix} \frac{dx}{dt} \\[1mm] \frac{dy}{dt} \end{pmatrix}$ です。**上どうし、下どうしをくらべる**と
+
+$$
+\frac{dx}{dt} = y, \qquad \frac{dy}{dt} = -bx - ay
+$$
+
+となって、書きかえた $2$ 本の式に戻りました ✓
 
 ::: {.callout-important}
 ## $1$ 行目は、いつも $(0,\ 1)$ です
@@ -212,15 +212,39 @@ $$
 $-2$ が $x$ の係数、$-3$ が $\dfrac{dx}{dt}$ の係数から来ています。**順番が入れかわる**ので、気をつけてください。
 :::
 
-### 5. 実で異なる固有値のときは、厳密解が書けます {#exact}
+### 5. 固有値が異なる $2$ つの実数なら、厳密解が書けます {#exact}
 
-あとは [AHL 5.17a](ahl-5-17a.qmd#general) のとおりです。$\det(M - \lambda I) = 0$ から固有値を出し、公式集の式にあてはめます。
+**この節ですること：行列にしたあとを、[AHL 5.17a](ahl-5-17a.qmd) の手順どおりに解きます。**
+
+@eq-ahl518-spring の $\dfrac{d^{2}x}{dt^{2}} + 3\dfrac{dx}{dt} + 2x = 0$ で、順にやってみます。おもりは $x = 1$ の位置から、静かに手をはなすとします。
+
+#### 手順1. 行列にする
+
+$a = 3$、$b = 2$ なので（[第4節](#matrix)）
 
 $$
-\mathbf{x} = A\mathbf{p}_1 e^{\lambda_1 t} + B\mathbf{p}_2 e^{\lambda_2 t}
+M = \begin{pmatrix} 0 & 1 \\ -2 & -3 \end{pmatrix}
 $$
 
-この形の $M$ には、うれしい性質があります。
+#### 手順2. 固有値を求める
+
+$$
+\det(M - \lambda I) = \begin{vmatrix} -\lambda & 1 \\ -2 & -3 - \lambda \end{vmatrix} = \lambda^{2} + 3\lambda + 2 = 0
+$$
+
+$$
+(\lambda + 1)(\lambda + 2) = 0 \quad \Longrightarrow \quad \lambda_1 = -1, \qquad \lambda_2 = -2
+$$
+
+**異なる $2$ つの実数**になりました。ですから、厳密解が書けます。
+
+#### 手順3. 固有ベクトルを求める
+
+この形の $M$ では、$\mathbf{p} = \binom{1}{\lambda}$ と決まっています（下のヒント）。
+
+$$
+\mathbf{p}_1 = \binom{1}{-1}, \qquad \mathbf{p}_2 = \binom{1}{-2}
+$$
 
 ::: {.callout-tip}
 ## eigenvector は、いつも $\binom{1}{\lambda}$ です
@@ -232,25 +256,59 @@ $$ {#eq-ahl518-vec}
 
 です。$(M - \lambda I)\mathbf{p} = \mathbf{0}$ の $1$ 行目が $-\lambda p_1 + p_2 = 0$、つまり $p_2 = \lambda p_1$ になるからです。
 
-**$\lambda$ を求めたら、eigenvector はもう書けています。** 検算にも使えます。
+**$\lambda$ を求めたら、eigenvector はもう書けています。**
 :::
 
-したがって
+#### 手順4. 一般解を書く
+
+[AHL 5.17a](ahl-5-17a.qmd#general) の公式に入れるだけです。
+
+$$
+\mathbf{X} = A\binom{1}{-1}e^{-t} + B\binom{1}{-2}e^{-2t}
+$$
+
+成分で書くと、こうなります。
+
+$$
+x = Ae^{-t} + Be^{-2t}, \qquad y = -Ae^{-t} - 2Be^{-2t}
+$$
+
+**$y$ は $x$ を微分したもの**になっています ✓ ここが検算です（@eq-ahl518-sub）。
+
+#### 手順5. 初期条件で $A$ と $B$ を決める
+
+初期条件は **$2$ つ**要ります（[第2節](#convert)）。$x = 1$ から静かに手をはなすので、$x(0) = 1$、$y(0) = 0$ です。
+
+$$
+A + B = 1, \qquad -A - 2B = 0
+$$
+
+$2$ 本目から $A = -2B$。$1$ 本目に入れて $-2B + B = 1$、つまり $B = -1$、$A = 2$ です。
+
+$$
+x = 2e^{-t} - e^{-2t}
+$$
+
+**$t$ が大きくなると $x \to 0$** です。おもりは、行き過ぎずにつりあいの位置へ戻ります。
+
+この $5$ 段階を**答案としてどう書くか**は、@exm-ahl518-exact を見てください。
+
+::: {.callout-note appearance="simple"}
+一般に書けば、こうなります。
 
 $$
 x = Ae^{\lambda_1 t} + Be^{\lambda_2 t}, \qquad y = A\lambda_1 e^{\lambda_1 t} + B\lambda_2 e^{\lambda_2 t}
 $$ {#eq-ahl518-exact}
 
-です。**$y$ は $x$ を微分したものになっています。** @eq-ahl518-sub のとおりで、これが検算になります。
-
-$A$ と $B$ は、$t = 0$ の $2$ つの条件から決めます。
+$A$ と $B$ は、$t = 0$ の $2$ つの条件から決まります。
 
 $$
 x(0) = A + B, \qquad y(0) = A\lambda_1 + B\lambda_2
 $$
+:::
 
 ::: {.callout-warning}
-## この課程で厳密解を求めるのは、実で異なる固有値のときだけです
+## この課程で厳密解を求めるのは、固有値が異なる $2$ つの実数のときだけです
 複素数の固有値でも、解の式そのものは存在します。ただし、**この課程では求められていません。** シラバスは、[AHL 5.17a](ahl-5-17a.qmd) でこう限定しています。
 
 > Calculation of exact solutions is only required for the case of **real distinct eigenvalues**.
@@ -284,15 +342,15 @@ $$ {#eq-ahl518-lambda}
 
 ですから、**$\Delta < 0$ のとき、$2$ つの固有値の実部はどちらも $-\dfrac{a}{2}$** です。
 
-![What the eigenvalues say about the motion](img/ahl-5-18-cases.svg){#fig-ahl518-cases width=100%}
+![What the eigenvalues say about the motion](img/ahl-5-18-motion.svg){#fig-ahl518-motion width=100%}
 
 | $a$ と $b$ | 固有値 | 動き方 | 図 |
 |---|---|---|---|
-| $a > 0$、$b > 0$、$\Delta > 0$ | 実で異なる、**両方負** | **振動せずに** $0$ へ戻る | 上の行 |
-| $a > 0$、$b > 0$、$\Delta < 0$ | 複素数、**実部が負** | **振動しながら** $0$ へ戻る | 中の行（[AHL 5.17b](ahl-5-17b.qmd)） |
-| $a = 0$、$b > 0$ | **純虚数** | **振動が続く**（大きさが変わらない） | 下の行（[AHL 5.17b](ahl-5-17b.qmd)） |
+| $a > 0$、$b > 0$、$\Delta > 0$ | 異なる $2$ つの実数、**両方負** | **振動せずに** $0$ へ戻る | 左 |
+| $a > 0$、$b > 0$、$\Delta < 0$ | 複素数、**実部が負** | **振動しながら** $0$ へ戻る | 中（[AHL 5.17b](ahl-5-17b.qmd)） |
+| $a = 0$、$b > 0$ | **純虚数** | **振動が続く**（大きさが変わらない） | 右（[AHL 5.17b](ahl-5-17b.qmd)） |
 | $a < 0$、$b > 0$、$\Delta < 0$ | 複素数、**実部が正** | **振動しながら大きくなる** | [AHL 5.17b](ahl-5-17b.qmd) |
-| $b < 0$ | 実で異なる、**異符号** | ほとんどの出発点で**離れていく**（saddle point） | [AHL 5.17a](ahl-5-17a.qmd#saddle) |
+| $b < 0$ | 異なる $2$ つの実数、**異符号** | ほとんどの出発点で**離れていく**（saddle point） | [AHL 5.17a](ahl-5-17a.qmd#saddle) |
 
 : 固有値と動き方 {#tbl-ahl518-cases}
 
@@ -302,9 +360,9 @@ $$ {#eq-ahl518-lambda}
 
 境目は $\Delta = a^{2} - 4b = 0$、つまり $a = 2\sqrt{b}$ です（$b > 0$ のとき）。
 
-- $a = 0$ … じゃまがないので、**いつまでも揺れ続けます**（@fig-ahl518-cases の下の行）
-- $0 < a < 2\sqrt{b}$（$\Delta < 0$）… **揺れながら、だんだんおさまります**（中の行）
-- $a > 2\sqrt{b}$（$\Delta > 0$）… **揺れる前におさまります**（上の行）
+- $a = 0$ … じゃまがないので、**いつまでも揺れ続けます**（@fig-ahl518-motion の右）
+- $0 < a < 2\sqrt{b}$（$\Delta < 0$）… **揺れながら、だんだんおさまります**（中）
+- $a > 2\sqrt{b}$（$\Delta > 0$）… **揺れる前におさまります**（左）
 
 **$2$ 階の式を、自分で立てる必要はありません**（$1$ 階の式をことばから立てる問題は [AHL 5.14](ahl-5-14.qmd) で出ます）。シラバスにこう書かれています。
 
@@ -330,7 +388,9 @@ $$ {#eq-ahl518-lambda}
 
 ### 7. phase portrait の縦軸は「速度」です {#sketch}
 
-@fig-ahl518-cases の右の列が phase portrait です。上の行が [AHL 5.17a](ahl-5-17a.qmd#sketch)、中と下の行が [AHL 5.17b](ahl-5-17b.qmd) と同じ絵ですが、**この項目では縦軸に意味があります。**
+![The same three motions in the $(x, y)$ plane](img/ahl-5-18-phase.svg){#fig-ahl518-phase width=100%}
+
+@fig-ahl518-phase は、@fig-ahl518-motion と同じ $3$ つの動きを $(x,\ y)$ 平面に描いたものです。左が [AHL 5.17a](ahl-5-17a.qmd#sketch)、中と右が [AHL 5.17b](ahl-5-17b.qmd) と同じ絵ですが、**この項目では縦軸に意味があります。**
 
 - **横軸 $x$** … いまの位置
 - **縦軸 $y = \dfrac{dx}{dt}$** … いまの速度
@@ -531,7 +591,7 @@ $$
 
 [with $x = 1$ and $\dfrac{dx}{dt} = 0$ when $t = 0$:]{.q-en}
 
-**(a)** [Write the coupled system in the form $\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$ and find the eigenvalues of $M$.]{.q-en}
+**(a)** [Write the coupled system in the form $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ and find the eigenvalues of $M$.]{.q-en}
 
 **(b)** [Hence find an exact expression for $x$ in terms of $t$.]{.q-en}
 
@@ -544,7 +604,7 @@ $$
 
 `Hence` は「これを使って」、`an exact expression` は「厳密な式」という意味です。
 
-**(a)** 連立系を $\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$ の形に書き、$M$ の固有値を求めなさい。
+**(a)** 連立系を $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ の形に書き、$M$ の固有値を求めなさい。
 
 **(b)** これを使って、$x$ を $t$ の式で厳密に表しなさい。
 
@@ -568,7 +628,7 @@ $$
 (\lambda + 1)(\lambda + 2) = 0 \quad \Longrightarrow \quad \lambda_1 = -1, \qquad \lambda_2 = -2
 $$
 
-**実で異なる**ので、厳密解が書けます（[第5節](#exact)）。
+**異なる $2$ つの実数**なので、厳密解が書けます（[第5節](#exact)）。
 
 **(b)** eigenvector は $\binom{1}{\lambda}$ です（@eq-ahl518-vec）。
 
@@ -697,7 +757,7 @@ $$
 *No. Exact solutions are only required when the eigenvalues are real and distinct. Here they are complex, so only a qualitative description of the motion is required.*
 :::
 
-（不要である。厳密解が求められるのは固有値が実で異なるときだけで、ここでは複素数なので、運動の定性的な説明だけでよい、という意味です。）
+（不要である。厳密解が求められるのは固有値が異なる $2$ つの実数のときだけで、ここでは複素数なので、運動の定性的な説明だけでよい、という意味です。）
 
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
@@ -784,10 +844,10 @@ $t = 0.2$ のとき $x \approx 0.195$、$\dfrac{dx}{dt} \approx 0.902$ です。
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The eigenvalue method applies to a system of the form $\dfrac{dx}{dt} = ax + by$, $\dfrac{dy}{dt} = cx + dy$, in which the right hand sides contain only $x$ and $y$. Here $\dfrac{dy}{dt}$ contains the term $\sin t$, which depends on $t$, so the system cannot be written as $\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$ and Euler's method must be used instead.*
+*The eigenvalue method applies to a system of the form $\dfrac{dx}{dt} = ax + by$, $\dfrac{dy}{dt} = cx + dy$, in which the right hand sides contain only $x$ and $y$. Here $\dfrac{dy}{dt}$ contains the term $\sin t$, which depends on $t$, so the system cannot be written as $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ and Euler's method must be used instead.*
 :::
 
-（固有値の方法は、右辺が $x$ と $y$ だけでできている系に使える。ここでは $\dfrac{dy}{dt}$ に $t$ による項 $\sin t$ があるので、$\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$ の形に書けず、Euler 法を使うことになる、という意味です。）
+（固有値の方法は、右辺が $x$ と $y$ だけでできている系に使える。ここでは $\dfrac{dy}{dt}$ に $t$ による項 $\sin t$ があるので、$\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ の形に書けず、Euler 法を使うことになる、という意味です。）
 
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
@@ -807,7 +867,7 @@ $$
 x \approx 0.195, \qquad \frac{dx}{dt} \approx 0.902 \quad (t = 0.2)
 $$
 
-**(c)** *The right hand side contains $\sin t$, so the system is not of the form $\dfrac{dx}{dt} = ax + by$, $\dfrac{dy}{dt} = cx + dy$. It cannot be written as $\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$, so eigenvalues cannot be used and Euler's method is needed.*
+**(c)** *The right hand side contains $\sin t$, so the system is not of the form $\dfrac{dx}{dt} = ax + by$, $\dfrac{dy}{dt} = cx + dy$. It cannot be written as $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$, so eigenvalues cannot be used and Euler's method is needed.*
 :::
 :::
 
@@ -942,7 +1002,7 @@ C2:  =c1+0.1*(sin(a1)-0.5*c1-b1)
 ### 固有値で場合分けを確かめる {#gdc-eig}
 
 ```
-menu → 7: Matrix & Vector → B: Advanced → 4: Eigenvalues
+menu → Matrix & Vector → Advanced → Eigenvalues
 ```
 
 $\begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}$ を入れます。実数が $2$ つ返れば厳密解が書け、複素数（`i` が付いた形）で返れば言葉で説明する問題です（[第6節](#damping)）。
@@ -956,7 +1016,7 @@ $\begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}$ を入れます。実数が $2$
 
 $3$ つあります。
 
-1. **$y$ が $x$ の導関数になっているか。** 出した $x$ を微分して、$y$ と一致するか見ます（[AHL 5.14](ahl-5-14.qmd#gdc-check)）
+1. **$y$ が $x$ の導関数になっているか。** 出した $x$ を微分して、$y$ と一致するか見ます（[AHL 5.9a](ahl-5-9a.qmd#gdc-deriv)）
 2. **$t = 0$ で初期条件に合うか。** $x(0)$ と $\dfrac{dx}{dt}(0)$ の $2$ つとも確かめます
 3. **$h$ を半分**にして、Euler 法の答えが大きく変わらないか
 
@@ -1072,12 +1132,12 @@ $$
 ::: {.ex-sep}
 :::
 
-[4]{.ex-no} [Write $\dfrac{d^{2}x}{dt^{2}} + 5\dfrac{dx}{dt} + 6x = 0$ in the form $\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$ and find the eigenvalues of $M$.]{.q-en}
+[4]{.ex-no} [Write $\dfrac{d^{2}x}{dt^{2}} + 5\dfrac{dx}{dt} + 6x = 0$ in the form $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ and find the eigenvalues of $M$.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-$\dfrac{d^{2}x}{dt^{2}} + 5\dfrac{dx}{dt} + 6x = 0$ を $\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$ の形に書き、$M$ の固有値を求めなさい。
+$\dfrac{d^{2}x}{dt^{2}} + 5\dfrac{dx}{dt} + 6x = 0$ を $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ の形に書き、$M$ の固有値を求めなさい。
 
 </details>
 
@@ -1326,12 +1386,12 @@ $\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ が表す運動を決める�
 ::: {.ex-sep}
 :::
 
-[10]{.ex-no} [A student writes $\dfrac{d^{2}x}{dt^{2}} + 7\dfrac{dx}{dt} + 12x = 0$ as $\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$ with $M = \begin{pmatrix} 0 & 1 \\ 7 & 12 \end{pmatrix}$. Identify the two errors and write down the correct matrix.]{.q-en}
+[10]{.ex-no} [A student writes $\dfrac{d^{2}x}{dt^{2}} + 7\dfrac{dx}{dt} + 12x = 0$ as $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ with $M = \begin{pmatrix} 0 & 1 \\ 7 & 12 \end{pmatrix}$. Identify the two errors and write down the correct matrix.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-ある生徒が、$\dfrac{d^{2}x}{dt^{2}} + 7\dfrac{dx}{dt} + 12x = 0$ を $M = \begin{pmatrix} 0 & 1 \\ 7 & 12 \end{pmatrix}$ として $\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$ の形に書きました。$2$ つの誤りを指摘し、正しい行列を書きなさい。
+ある生徒が、$\dfrac{d^{2}x}{dt^{2}} + 7\dfrac{dx}{dt} + 12x = 0$ を $M = \begin{pmatrix} 0 & 1 \\ 7 & 12 \end{pmatrix}$ として $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ の形に書きました。$2$ つの誤りを指摘し、正しい行列を書きなさい。
 
 </details>
 

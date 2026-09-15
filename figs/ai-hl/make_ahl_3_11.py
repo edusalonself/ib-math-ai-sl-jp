@@ -49,14 +49,11 @@ def full_line(ax, a, b, lo, hi, color=GREY, lw=1.8, ls="-", z=2):
     ax.plot([p[0], q[0]], [p[1], q[1]], color=color, lw=lw, ls=ls, zorder=z)
 
 
-# ══════════ fig 1: r = a + λb と、書き方が 1 通りでないこと ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 5.2))
-
+# ══════════ fig 1a: r = a + λb ══════════
 A0 = np.array([1.0, 2.0])
 B0 = np.array([3.0, -1.0])
 
-# ── (a) a で乗って、b で進む
-ax = axs[0]
+fig, ax = plt.subplots(figsize=(6.2, 5.2))
 full_line(ax, A0, B0, -1.6, 3.0, color=GREY, lw=1.8, ls="--")
 arrow(ax, (0, 0), tuple(A0), color=GREEN, lw=3.0)
 arrow(ax, tuple(A0), tuple(A0 + B0), color=ACC, lw=3.0)
@@ -79,11 +76,14 @@ ax.text(3.6, -3.4, "$\\mathbf{r} = \\binom{1}{2} + \\lambda\\binom{3}{-1}$\n"
                    "$\\mathbf{b}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 grid(ax, (-4.4, 8.6), (-4.6, 5.0))
-ax.set_title("(a)  one point on the line, and one direction", fontsize=12.5,
+ax.set_title("one point on the line, and one direction", fontsize=12.5,
              color=INK, pad=6)
+fig.tight_layout()
+save(fig, "ahl-3-11-idea.svg")
 
-# ── (b) 同じ直線を、別の a と別の b で
-ax = axs[1]
+
+# ══════════ fig 1b: 同じ直線を、別の a と別の b で ══════════
+fig, ax = plt.subplots(figsize=(6.2, 5.2))
 full_line(ax, A0, B0, -1.6, 3.0, color=GREY, lw=1.8, ls="--")
 A1 = np.array([7.0, 0.0])
 B1 = np.array([-6.0, 2.0])
@@ -104,11 +104,10 @@ ax.text(3.6, -3.4, "$\\mathbf{r} = \\binom{7}{0} + \\mu\\binom{-6}{2}$\n"
                    "SAME line",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 grid(ax, (-4.4, 8.6), (-4.6, 5.0))
-ax.set_title("(b)  the equation of a line is not unique", fontsize=12.5,
+ax.set_title("the equation of a line is not unique", fontsize=12.5,
              color=INK, pad=6)
-
-fig.tight_layout(w_pad=1.8)
-save(fig, "ahl-3-11-idea.svg")
+fig.tight_layout()
+save(fig, "ahl-3-11-notunique.svg")
 
 
 # ══════════ fig 2: 2 点から作る／線上かどうかを調べる ══════════

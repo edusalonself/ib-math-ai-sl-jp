@@ -42,10 +42,8 @@ def plane(ax, xlim, ylim, xlab="Re", ylab="Im"):
     tidy(ax)
 
 
-# ══════════ 1.12a (a) 判別式と放物線 / (b) i の 4 周期 ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
-
-ax = axs[0]
+# ══════════ 1.12a  判別式と放物線 ══════════
+fig, ax = plt.subplots(figsize=(6.6, 4.7))
 X = np.linspace(-0.4, 4.4, 400)
 specs = [(3, GREEN, "$\\Delta = 4 > 0$:  two real roots", "-"),
          (4, GOLD, "$\\Delta = 0$:  one repeated root", "-"),
@@ -61,38 +59,9 @@ ax.set_xlim(-0.4, 4.4)
 ax.set_ylim(-1.9, 7.4)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("(a)  the same parabola moved up: what $\\Delta$ tells you",
+ax.set_title("the same parabola moved up: what $\\Delta$ tells you",
              fontsize=12, color=INK, pad=10)
 tidy(ax)
-
-ax = axs[1]
-ax.set_xlim(-2.35, 2.35)
-ax.set_ylim(-3.05, 2.55)
-ax.set_aspect("equal")
-ax.axis("off")
-pts = [("$1$", 0.0), ("$i$", 90.0), ("$-1$", 180.0), ("$-i$", 270.0)]
-for name, deg in pts:
-    a = np.radians(deg)
-    p = (1.15 * np.cos(a), 1.15 * np.sin(a))
-    ax.add_patch(Circle(p, 0.34, fc="white", ec=LINE, lw=2.2, zorder=6))
-    ax.text(p[0], p[1], name, fontsize=14, ha="center", va="center",
-            color=LINE, weight="bold", zorder=7)
-RA = 1.72
-for k in range(4):
-    a0 = np.radians(pts[k][1] + 16)
-    a1 = np.radians(pts[k][1] + 74)
-    ax.add_patch(FancyArrowPatch(
-        (RA * np.cos(a0), RA * np.sin(a0)),
-        (RA * np.cos(a1), RA * np.sin(a1)),
-        connectionstyle="arc3,rad=0.22", arrowstyle="-|>",
-        mutation_scale=17, color=ACC, lw=2.0, zorder=4))
-    am = np.radians(pts[k][1] + 45)
-    ax.text(2.12 * np.cos(am), 2.12 * np.sin(am), "$\\times\\, i$",
-            fontsize=11.5, color=ACC, ha="center", va="center", zorder=8)
-ax.text(0, -2.35, "back to the start after $4$ steps", fontsize=11.5,
-        color=GREY, ha="center", va="center", zorder=5)
-ax.set_title("(b)  multiplying by $i$ four times returns you to $1$",
-             fontsize=12, color=INK, pad=10)
 
 fig.tight_layout()
 save(fig, "ahl-1-12a-disc.svg")

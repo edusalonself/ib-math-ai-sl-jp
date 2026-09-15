@@ -14,15 +14,11 @@ sidebar: ai-hl
 - $6$ 通りの場合を、すべて見分けられる。
 :::
 
-::: {.callout-note}
-## [AHL 5.17a](ahl-5-17a.qmd) の続きです
-同じ形の連立系を扱います。
+## The idea
 
-$$
-\frac{dx}{dt} = ax + by, \qquad \frac{dy}{dt} = cx + dy
-$$
+### 1. 実数解が無いとき {#complex}
 
-違うのは、**characteristic equation の解が実数にならない**場合です。
+扱う連立系は [AHL 5.17a](ahl-5-17a.qmd) と同じ形で、**固有値の出し方も同じ**です。違うのは、**$\lambda$ が虚数になる**場合（characteristic equation の解が実数にならない場合）を見ることです。
 
 | 判別式 | 固有値 | 絵 | ページ |
 |---|---|---|---|
@@ -31,62 +27,50 @@ $$
 
 : 判別式で分かれます {#tbl-ahl517b-split}
 
-先に [AHL 5.17a](ahl-5-17a.qmd) を読んでください。**固有値の出し方は同じ**です。
-:::
+**このページでは、厳密解を求めません。** シラバスが `exact solutions` を、固有値が異なる $2$ つの実数の場合に限定しているからです。求められるのは **qualitative analysis**（定性的な分析）——**固有値を出して、絵の形を答える**ことだけです。同じ理由で、**複素数の固有ベクトルを求めることもありません。**
 
-::: {.callout-important}
-## このページでは、厳密解を求めません
-シラバスが、はっきり限定しています。
+固有値は、[AHL 5.17a](ahl-5-17a.qmd#step1) と同じく $\det(M - \lambda I) = 0$ から出します。この式は**公式集に載っていません**（[AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd#char)）。**このページでも使うので、覚えてください。**
 
-> Calculation of exact solutions is only required for the case of **real distinct eigenvalues**.
-
-つまり、複素数の固有値では **$\mathbf{x} = A\mathbf{p}_1 e^{\lambda_1 t} + B\mathbf{p}_2 e^{\lambda_2 t}$ を書く必要がありません。**
-
-求められるのは **qualitative analysis**（定性的な分析）だけです。
-
-> **Guidance:** Qualitative analysis of future paths for distinct, real, complex and imaginary eigenvalues.
-
-**固有値を出して、絵の形を答える。** それがこのページの仕事です。
-
-公式集の **5.17** の欄には $\mathbf{x} = A\mathbf{p}_1 e^{\lambda_1 t} + B\mathbf{p}_2 e^{\lambda_2 t}$ が載っていますが、**使うのは [AHL 5.17a](ahl-5-17a.qmd) だけ**です。
-
-いっぽう $\det(M - \lambda I) = 0$ は**公式集に載っていません**（[AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd#char)）。**このページでも使うので、覚えてください。**
-:::
-
-::: {.callout-warning}
-## [AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd) との違いに注意してください
-[AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd) では、**対角化（diagonalization）**を扱うので、シラバスが「実数で異なる固有値」に限定していました。ですから、あのページでは複素数の固有値は出てきません。
-
-**この項目では出てきます。** ただし、**固有値を求めるところまで**です。固有ベクトルを複素数で求めることは、AI HL では求められません。
+たとえば $M = \begin{pmatrix} -1 & -2 \\ 2 & -1 \end{pmatrix}$ でやってみます。
 
 $$
-\text{複素数の固有値を出す} \ \bigcirc \qquad \text{複素数の固有ベクトルを出す} \ \times
-$$
-:::
-
-## The idea
-
-### 1. 実数解が無いとき {#complex}
-
-$$
-\lambda^{2} - (\text{対角の和})\lambda + \det M = 0
+\det(M - \lambda I) = \begin{vmatrix} -1 - \lambda & -2 \\ 2 & -1 - \lambda \end{vmatrix} = (-1 - \lambda)^{2} + 4 = 0
 $$
 
-これは $\lambda$ の $2$ 次方程式です。**判別式が負なら、解は複素数**になります（[AHL 1.12a](../01-number-and-algebra/ahl-1-12a.qmd#quadratic)）。
-
-$$
-\Delta = (\text{対角の和})^{2} - 4\det M < 0
-$$
-
-たとえば $M = \begin{pmatrix} -1 & -2 \\ 2 & -1 \end{pmatrix}$ なら、対角の和は $-2$、$\det M = 1 + 4 = 5$ です。
+展開して整理します。
 
 $$
 \lambda^{2} + 2\lambda + 5 = 0
 $$
 
+これは $\lambda$ の $2$ 次方程式です。**判別式が負なら、解は複素数**になります（[AHL 1.12a](../01-number-and-algebra/ahl-1-12a.qmd#quadratic)）。
+
+$$
+\Delta = 2^{2} - 4(5) = 4 - 20 = -16 < 0
+$$
+
+ですから、解は複素数です。
+
 $$
 \lambda = \frac{-2 \pm \sqrt{4 - 20}}{2} = \frac{-2 \pm \sqrt{-16}}{2} = \frac{-2 \pm 4i}{2} = -1 \pm 2i
 $$
+
+::: {.callout-tip}
+## 行列から直接書く方法もあります
+対角に並ぶ $2$ つの数の和（**対角の和、trace**）と $\det M$ を使えば、行列式を展開せずに書けます（[AHL 5.17a](ahl-5-17a.qmd#step1)）。
+
+$$
+\lambda^{2} - (\text{対角の和})\lambda + \det M = 0
+$$
+
+この例なら対角の和が $-2$、$\det M = 1 + 4 = 5$ なので、同じ $\lambda^{2} + 2\lambda + 5 = 0$ になります。判別式も
+
+$$
+\Delta = (\text{対角の和})^{2} - 4\det M
+$$
+
+で出せます。
+:::
 
 ::: {.callout-tip}
 ## $2$ つの固有値は、必ずセットで出てきます
@@ -114,15 +98,15 @@ $$
 
 ### 2. 実部が、近づくか離れるかを決めます {#real-part}
 
-![Four pictures for complex eigenvalues](img/ahl-5-17b-cases.svg){#fig-ahl517b-cases width=100%}
+![Spirals in and spirals out](img/ahl-5-17b-spiral.svg){#fig-ahl517b-spiral width=100%}
 
-@fig-ahl517b-cases の (a) と (b) を見くらべてください。**どちらも回っています**が、片方は内へ、もう片方は外へ向かっています。
+@fig-ahl517b-spiral の (a) と (b) を見くらべてください。**どちらも回っています**が、片方は内へ、もう片方は外へ向かっています。
 
-| 実部 | 動き |
-|---|---|
-| **負**（$a < 0$） | 原点へ**近づく**（spiral in） |
-| **正**（$a > 0$） | 原点から**離れる**（spiral out） |
-| **$0$**（純虚数） | どちらでもない。**閉じた曲線** |
+| 実部 | 動き | 図 |
+|---|---|---|
+| **負**（$a < 0$） | 原点へ**近づく**（spiral in） | @fig-ahl517b-spiral (a) |
+| **正**（$a > 0$） | 原点から**離れる**（spiral out） | @fig-ahl517b-spiral (b) |
+| **$0$**（純虚数） | どちらでもない。**閉じた曲線** | @fig-ahl517b-closed（[第3節](#imaginary)） |
 
 : 実部で決まる {#tbl-ahl517b-real}
 
@@ -165,11 +149,13 @@ $$
 
 実部が $0$ のとき、$\lambda = \pm bi$ です。大きさが変わらないので、**同じところを回り続けます。**
 
-@fig-ahl517b-cases の (c) と (d) が、その $2$ つです。
+![Closed curves: circles and ellipses](img/ahl-5-17b-closed.svg){#fig-ahl517b-closed width=100%}
+
+@fig-ahl517b-closed の (a) と (b) が、その $2$ つです。
 
 ::: {.callout-important}
 ## 円になるとはかぎりません
-(c) と (d) は、**固有値が同じ $\pm 2i$** です。それでも、片方は円、もう片方は楕円です。
+@fig-ahl517b-closed の (a) と (b) は、**固有値が同じ $\pm 2i$** です。それでも、片方は円、もう片方は楕円です。
 
 シラバスも `a circle or ellipse` と、**両方**書いています。
 
@@ -257,9 +243,9 @@ $(1,\ 0)$ か $(0,\ 1)$ が便利です。**$(0,\ 1)$ を使うなら、$\dfrac{
 
 ::: {.callout-tip}
 ## 判定の順番
-1. **判別式**を見る（$(\text{対角の和})^2 - 4\det M$）
-   - 正なら実数 → [AHL 5.17a](ahl-5-17a.qmd) の $3$ つ
-   - 負なら複素数 → このページ
+1. $\det(M - \lambda I) = 0$ から **$\lambda$ を求める**（または characteristic equation の**判別式**だけを見る）
+   - 実数なら → [AHL 5.17a](ahl-5-17a.qmd) の $3$ つ
+   - 複素数なら → このページ
 2. 複素数なら、**実部の符号**を見る
 3. 回る向きが要るなら、**$(1,\ 0)$ を代入**する
 
@@ -481,7 +467,7 @@ $$
 
 積は $(-1)^{2} - (2i)^{2} = 1 + 4 = 5$ で、$\det M = 5$ と一致 ✓
 
-@fig-ahl517b-cases の (a) が、この系の絵です。
+@fig-ahl517b-spiral の (a) が、この系の絵です。
 
 ::: {.callout-warning}
 ## (b) では $2$ つ書いてください
@@ -563,7 +549,7 @@ $$
 
 微分が $0$ なので、**$x^{2} + y^{2}$ は一定**です。
 
-**検算。** $x^{2} + y^{2}$ が一定ということは、原点からの距離が変わらないということです。**この系では、軌道は円**になります ✓ @fig-ahl517b-cases の (c) と一致します。
+**検算。** $x^{2} + y^{2}$ が一定ということは、原点からの距離が変わらないということです。**この系では、軌道は円**になります ✓ @fig-ahl517b-closed の (a) と一致します。
 
 対角の和が $0$ なので、[第3節](#imaginary)のとおり実部は $0$ です ✓ 計算する前に分かります。
 
@@ -571,7 +557,7 @@ $$
 ## (b) では「円または楕円」と書いてください
 (c) でこの系が**円**だと分かりますが、**(b) の時点では固有値しか使っていません。**
 
-固有値が $\pm 2i$ の系には、円になるものも楕円になるものもあります（@fig-ahl517b-cases の (c) と (d)）。ですから、(b) の答えは `circles or ellipses` です。
+固有値が $\pm 2i$ の系には、円になるものも楕円になるものもあります（@fig-ahl517b-closed の (a) と (b)）。ですから、(b) の答えは `circles or ellipses` です。
 :::
 
 ::: {.callout-warning}
@@ -848,7 +834,7 @@ $2x \cdot \dfrac{dx}{dt}$ です（@exm-ahl517b-circle）。
 [AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd#gdc-eigval) と同じコマンドです。
 
 ```
-menu → 7: Matrix & Vector → B: Advanced → 4: Eigenvalues
+menu → Matrix & Vector → Advanced → Eigenvalues
 ```
 
 $\{-1 - 2 \cdot i,\ -1 + 2 \cdot i\}$ のように、**`i` の付いた形**で返ります。
@@ -875,14 +861,12 @@ doc → Settings → Document Settings
 
 固有値まで出さなくても、**判別式の符号**が分かれば場合分けはできます（[第5節](#five)）。
 
-```
-(対角の和)^2 - 4·(det)
-```
+$(\text{対角の和})^{2} - 4 \times (\texttt{det})$
 
 `det()` は次のところにあります。
 
 ```
-menu → 7: Matrix & Vector
+menu → Matrix & Vector
 ```
 
 の中の `Determinant` から入れられます（[AHL 1.14](../01-number-and-algebra/ahl-1-14.qmd#gdc-det) と同じです）。
@@ -1001,7 +985,7 @@ $$
 
 **(b) は $2$ つ書きます**（[第2節](#real-part)）。「渦」と「内向き」です。
 
-**(c)** 向きは $(1,\ 0)$ の代入で決めます（[第4節](#direction)）。左下の数が $+3$ なので反時計回りです。@fig-ahl517b-cases の (a) と同じ形の絵になります。
+**(c)** 向きは $(1,\ 0)$ の代入で決めます（[第4節](#direction)）。左下の数が $+3$ なので反時計回りです。@fig-ahl517b-spiral の (a) と同じ形の絵になります。
 
 **検算。** 和 $-4$ ✓、積 $4 + 9 = 13$ ✓
 :::
@@ -1270,7 +1254,7 @@ $$
 ::: {.ex-sep}
 :::
 
-[8]{.ex-no} [@fig-ahl517b-cases parts (c) and (d) both come from systems with eigenvalues $\pm 2i$, yet the pictures are different.]{.q-en}
+[8]{.ex-no} [@fig-ahl517b-closed parts (a) and (b) both come from systems with eigenvalues $\pm 2i$, yet the pictures are different.]{.q-en}
 
 **(a)** [State what the two pictures have in common.]{.q-en}
 
@@ -1279,7 +1263,7 @@ $$
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-@fig-ahl517b-cases の (c) と (d) は、どちらも固有値が $\pm 2i$ の系から来ていますが、絵は違います。
+@fig-ahl517b-closed の (a) と (b) は、どちらも固有値が $\pm 2i$ の系から来ていますが、絵は違います。
 
 **(a)** $2$ つの絵に共通することを述べなさい。
 

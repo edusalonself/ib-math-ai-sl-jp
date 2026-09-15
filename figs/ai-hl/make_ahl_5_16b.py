@@ -66,10 +66,10 @@ TC, XC, YC = ceuler(1.0, 20)               # t = 0 .. 20（粗い）
 
 
 # ═════════════ 1. 連立系を Euler で解く（2×2） ═════════════
-fig, axs = plt.subplots(2, 2, figsize=(11.4, 9.2))
+fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
 
 # (a) 粗い h の折れ線
-ax = axs[0, 0]
+ax = axs[0]
 ax.plot(TC, XC, "-o", color=ACC, lw=2.4, ms=5, label="$x$  (prey)")
 ax.plot(TC, YC, "-o", color=LINE, lw=2.4, ms=5, label="$y$  (predator)")
 tidy(ax, "$t$", "population")
@@ -79,7 +79,7 @@ ax.set_title("(a)  $h = 1$  —  a chain of straight pieces",
              fontsize=12.5, color=INK, pad=10)
 
 # (b) 細かい h
-ax = axs[0, 1]
+ax = axs[1]
 m = TF <= 40
 ax.plot(TF[m], XF[m], color=ACC, lw=2.6, label="$x$  (prey)")
 ax.plot(TF[m], YF[m], color=LINE, lw=2.6, label="$y$  (predator)")
@@ -91,8 +91,19 @@ ax.legend(fontsize=10.5, loc="upper right")
 ax.set_title("(b)  $h = 0.005$  —  the cycle appears",
              fontsize=12.5, color=INK, pad=10)
 
-# (c) 位相図
-ax = axs[1, 0]
+fig.suptitle("$\\dfrac{dx}{dt} = 0.4x - 0.002xy$,   "
+             "$\\dfrac{dy}{dt} = -0.3y + 0.001xy$", fontsize=15, y=1.0)
+fig.text(0.5, -0.05,
+         "Two quantities that feed into each other.   Each Euler step uses the "
+         "OLD $x$ and the OLD $y$ to work out both new values, then updates "
+         "them together.",
+         fontsize=12.5, ha="center", color=INK)
+fig.tight_layout(rect=(0, 0, 1, 0.94))
+save(fig, "ahl-5-16b-time.svg")
+
+
+# ═════════════ 1b. 位相図 ═════════════
+fig, ax = plt.subplots(figsize=(6.0, 4.9))
 ax.plot(XF[m], YF[m], color=GREEN, lw=2.6, zorder=5)
 ax.plot([400], [100], "o", color=GOLD, ms=10, zorder=7)
 ax.text(408, 92, "start $(400,\\ 100)$", fontsize=11, color=GOLD, zorder=8)
@@ -100,29 +111,26 @@ ax.plot([EQX], [EQY], "o", color=ACC, ms=10, zorder=7)
 ax.text(EQX + 10, EQY + 14, "equilibrium\n$(300,\\ 200)$", fontsize=11,
         color=ACC, bbox=BOX, zorder=8)
 tidy(ax, "$x$  (prey)", "$y$  (predator)")
-ax.set_title("(c)  the same run, plotted as $(x,\\ y)$", fontsize=12.5,
+ax.set_title("the same run, plotted as $(x,\\ y)$", fontsize=12.5,
              color=GREEN, pad=10)
 
-# (d) h が大きいと外へずれる
-ax = axs[1, 1]
+fig.tight_layout()
+save(fig, "ahl-5-16b-phase.svg")
+
+
+# ═════════════ 1c. h が大きいと外へずれる ═════════════
+fig, ax = plt.subplots(figsize=(6.0, 4.9))
 ax.plot(XF[m], YF[m], color=GREEN, lw=2.6, zorder=5, label="$h = 0.005$")
 _, XB, YB = ceuler(0.5, 80)
 ax.plot(XB, YB, "-", color=ACC, lw=2.2, zorder=6, label="$h = 0.5$")
 ax.plot([EQX], [EQY], "o", color=INK, ms=8, zorder=7)
 tidy(ax, "$x$  (prey)", "$y$  (predator)")
 ax.legend(fontsize=10.5, loc="upper right")
-ax.set_title("(d)  a big $h$ spirals OUTWARDS\n(the method adds energy)",
+ax.set_title("a big $h$ spirals OUTWARDS\n(the method adds energy)",
              fontsize=12.5, color=ACC, pad=10)
 
-fig.suptitle("$\\dfrac{dx}{dt} = 0.4x - 0.002xy$,   "
-             "$\\dfrac{dy}{dt} = -0.3y + 0.001xy$", fontsize=15, y=0.995)
-fig.text(0.5, -0.02,
-         "Two quantities that feed into each other.   Each Euler step uses the "
-         "OLD $x$ and the OLD $y$ to work out both new values, then updates "
-         "them together.",
-         fontsize=12.5, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0, 1, 0.968))
-save(fig, "ahl-5-16b-system.svg")
+fig.tight_layout()
+save(fig, "ahl-5-16b-spiral.svg")
 
 
 # ═════════════ 2. どちらが先にピークを迎えるか ═════════════

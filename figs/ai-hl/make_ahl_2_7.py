@@ -30,10 +30,8 @@ def tidy(ax):
         ax.spines[sp].set_color(GREY)
 
 
-# ══════════ fig 1: 機械の直列つなぎ / 順を変えると別の関数 ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
-
-ax = axs[0]
+# ══════════ fig 1a: 機械の直列つなぎ ══════════
+fig, ax = plt.subplots(figsize=(6.8, 4.5))
 ax.set_xlim(0, 10.6)
 ax.set_ylim(-0.4, 6.4)
 ax.axis("off")
@@ -77,10 +75,15 @@ ax.text(5.3, 0.20, "same two machines, different order — different answer",
         fontsize=11.5, color=GREY, ha="center", va="center")
 ax.text(0.1, 3.35, "$f(x) = 2x+1$,   $g(x) = x^{2}$", fontsize=12.5,
         color=INK, ha="left", va="center")
-ax.set_title("(a)  a composite is two machines in a row", fontsize=12,
+ax.set_title("a composite is two machines in a row", fontsize=12,
              color=INK, pad=10)
 
-ax = axs[1]
+fig.tight_layout()
+save(fig, "ahl-2-7-composite.svg")
+
+
+# ══════════ fig 1b: 順を変えると別の関数 ══════════
+fig, ax = plt.subplots(figsize=(6.4, 4.9))
 X = np.linspace(-2.2, 2.2, 500)
 ax.plot(X, 2 * X ** 2 + 1, color=GREEN, lw=2.8,
         label="$(f \\circ g)(x) = 2x^{2}+1$")
@@ -104,12 +107,12 @@ ax.set_xlim(-2.3, 2.6)
 ax.set_ylim(-1.4, 12.6)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=11, frameon=False, loc="upper center")
-ax.set_title("(b)  the two composites are different functions",
+ax.set_title("the two composites are different functions",
              fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()
-save(fig, "ahl-2-7-composite.svg")
+save(fig, "ahl-2-7-order.svg")
 
 
 # ══════════ fig 2: なぜ domain restriction が要るか / 制限したあと ══════════

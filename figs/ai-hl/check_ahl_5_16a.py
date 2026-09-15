@@ -313,7 +313,7 @@ for e in ("basic", "smaller", "cooling", "over"):
     in_text("例題 %s" % e, "{#exm-ahl516a-%s}" % e)
 
 for a in ("idea", "formula", "table", "h", "error", "field", "tech", "why",
-          "why-error", "why-accumulate", "gdc-sheet", "gdc-home", "gdc-check"):
+          "why-error", "why-accumulate", "gdc-sheet", "gdc-home"):
     in_text("アンカー #%s" % a, "{#%s}" % a)
 
 anchors = set(re.findall(r"\{#([a-z0-9-]+)\}", TXT))
@@ -358,10 +358,8 @@ in_text("GDC の見出し", "## Using your GDC (TI-Nspire CX II)")
 
 # 公式集・シラバス
 in_text("公式集の式", "y_{n+1} = y_n + h \\times f(x_n,\\ y_n), \\qquad x_{n+1} = x_n + h")
-in_text("公式集に載っている旨", "## 公式集に載っています（5.16 の欄）")
-in_text("シラバス Content",
-        "Euler's method for finding the approximate solution to first order "
-        "differential equations.")
+in_text("公式集に載っている旨", "使う式は**公式集に載っています（5.16 の欄）。覚える必要はありません。**")
+in_text("シラバス語 approximate", "シラバスも **`approximate`**（近似）と書いています。")
 in_text("シラバス Guidance",
         "Spreadsheets should be used to find approximate solutions to "
         "differential equations.")
@@ -379,7 +377,7 @@ not_in_text("enter を押すだけで進む、と書いていない",
 in_text("履歴から呼び出す手順", "`\u25b2` で $1$ つ前の入力を選び")
 not_in_text("SL 5.3 を store 矢印の出典にしていない",
             "（[SL 5.3](../../ai-sl/05-calculus/sl-5-3.qmd)）")
-in_text("store 矢印の出典は AHL 5.14", "（[AHL 5.14](ahl-5-14.qmd#gdc-value)）")
+in_text("store 矢印の書き方", "矢印は `ctrl` + `var` です。")
 in_text("Document Settings の道すじ", "doc \u2192 Settings \u2192 Document Settings")
 in_text("列の数が表と合っている", "列は、$n$ を入れて $5$ つです。")
 not_in_text("解答例に日本語が混ざっていない", "\\text{ のとき、}")

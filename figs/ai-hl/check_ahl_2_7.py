@@ -78,9 +78,8 @@ in_text("(g \\circ f)(x) = g(2x+1) = (2x+1)^{2} = 4x^{2}+4x+1")
 eq(sp.expand(f * g), 2 * x ** 3 + x ** 2, "f(x)g(x) = 2x^3+x^2")
 in_text("f(x) \\times g(x) = (2x+1)\\left(x^{2}\\right) = 2x^{3}+x^{2}")
 
-# GDC 検算に使っている値
+# (f∘g)(4) = 33（GDC の節を削ったあとも、数値そのものは見張っておく）
 chk(fg.subs(x, 4) == 33, "(f∘g)(4) = 33")
-in_text("どちらも $33$ になれば")
 
 # 次数の主張（レビュー 7）: 合成は次数の積、かけ算は和
 chk(sp.degree(fg, x) == 2 and sp.degree(sp.expand(f * g), x) == 3,
@@ -158,7 +157,12 @@ chk(sp.simplify(back - (3 + sp.Abs(x - 3))) == 0,
 chk(back.subs(x, 1) == 5 and back.subs(x, 1) != 1,
     "x=1（x<=3 側）では x に戻らない → 検出できる")
 in_text("f\\left(3+\\sqrt{x+2}\\right) = \\left(\\left(3+\\sqrt{x+2}\\right)-3\\right)^{2}-2 = (x+2)-2 = x")
-in_text("**この向きの検算は、枝の取りちがえを見つけられません。**")
+in_text("**この向きの検算は、根号の前の符号の取りちがえを見つけられません。**")
+# 「枝」は、初出の文で定義してある（定義文より前に使っていない）
+in_text("この**片側ずつを「枝」**と呼びます")
+chk(TEXT.find("放物線を頂点で切ると") >= 0
+    and TEXT.find("枝") > TEXT.find("放物線を頂点で切ると"),
+    "「枝」の初出は、それを定義する文の中にある")
 in_text("f^{-1}(f(x)) = 3+\\lvert x-3 \\rvert")
 not_in_text("**逆関数を求めたあとの検算にそのまま使えます。** 求めた $f^{-1}$ を $f$ に入れて $x$ に戻れば、合っています。",
             "レビュー1: 枝の誤りを見逃す検算を万能と書いていた")
@@ -292,33 +296,31 @@ not_in_text("The domain of $f$ must be restricted, for example to $x \\geq 3$",
 # ══════════════════════════════════════════════════════════
 # 7. GDC の記述
 # ══════════════════════════════════════════════════════════
-in_text("menu → 1: Actions → 1: Define", "Define のメニュー位置")
-in_text("ctrl + doc → 2: Add Graphs", "ページ追加のキー")
+# 2026-09: GDC の節は「y = x と一緒にかいて折り返しを見る」だけに絞った
+in_text("ctrl + doc → Add Graphs", "ページ追加のキー")
 in_text("menu → Window/Zoom → Zoom - Square", "レビュー5: 目盛りをそろえる")
-in_text("piecewise((x-3)^2-2,x≥3)", "レビュー3: 制限つきのグラフ")
-in_text("TI 公式のヘルプでは、グラフの入力欄に `piecewise(3,x>-2 and x<2)` のように書く")
-in_text("を選ぶと、入力欄に `Define` の文字が出ます", "レビュー13: Define の二重打ちを防ぐ")
-in_text("合っている見込みが高いといえます。 画面に映っているのは".replace(" ", "")
-        if False else "式が合っている見込みが高いといえます", "レビュー4: 断定しない")
-in_text("Calculator ページの $x$ は「まだ何も入っていない文字」ですが", "レビュー12")
+in_text("逆関数の式が合っている見込みが高いといえます", "レビュー4: 断定しない")
+in_text("## 制限は、電卓には映りません", "レビュー3: 制限は描けない、とは書かない")
+in_text("制限した範囲の中の数を $1$ つ選んで往復させるほうが確実です",
+        "制限つきはグラフでは足りない")
 not_in_text("**$2$ 本が完全に重なれば、式が合っています。**", "レビュー4: 断定していた")
-not_in_text("## 制限した domain は、電卓には映りません", "レビュー3: 制限は描けないという誤り")
+not_in_text("ctrl` と `k`", "記号パレットの開き方の誤りが残っていない")
+not_in_text("Define f(x)", "非 CAS では式を作れないので、Define の節は置かない")
 not_in_text("$x \\geq 3$ の部分だけをかいてはくれません", "レビュー3: 同上")
 # 非 CAS であることの断り
-in_text("**TI-Nspire CX II は Numeric（非 CAS）です。**")
+# 2026-09: 非 CAS の説明は GDC の節ごと落とした（not_in_text("Define f(x)") で担保）
 for cas in ["expand(", "factor(", "solve(", "csolve(", "Polar"]:
     not_in_text("`" + cas, "非 CAS では使えない命令 " + cas)
 
 # ══════════════════════════════════════════════════════════
 # 8. シラバス・公式集についての記述
 # ══════════════════════════════════════════════════════════
-in_text("Content 欄は $4$ 行です。")
-in_text("Guidance 欄には $2$ 行あります。")
-in_text("Connections 欄には、何も挙がっていません。")
-in_text("Recommended teaching hours は $11$ 時間です。")
-in_text("(f \\circ f^{-1})(x) = (f^{-1} \\circ f)(x) = x$.")
+# 2026-09: シラバス欄は短くした（引用は Guidance の Example 1 行だけ）
+in_text("Content 欄の $4$ 行は、")
+in_text("(f \\circ f^{-1})(x) = (f^{-1} \\circ f)(x) = x$ と、$1$ つの例が挙がっています。")
 in_text("has an inverse if the domain is restricted to $x \\geq 3$ or to $x \\leq 3$")
-chk(TEXT.count("> ") >= 6, "引用行が 6 行以上ある（Content 4 + Guidance 2）")
+in_text("**シラバスが名指しした関数**なので、@exm-ahl27-restrict でそのまま扱います。")
+not_in_text("Recommended teaching hours", "授業時間数のような、生徒に関係のない情報は載せない")
 # 公式集にない、と言い切っている
 in_text("## 公式集の AHL 2.7 の欄\n**ありません。**")
 not_in_text("公式集に載っているので覚える必要はありません", "公式集にない項目で誤った安心を与えない")
@@ -342,8 +344,8 @@ nums = re.findall(r"\[(\d+)\]\{\.ex-no\}", TEXT)
 chk(nums == [str(i) for i in range(1, 11)], "演習は 1..10 の連番")
 
 idea = re.findall(r"(?m)^### (\d+)\.", TEXT)
-chk(idea == [str(i) for i in range(1, 9)] + [str(i) for i in range(1, 5)],
-    "The idea 1..8 と GDC 1..4 の連番: " + str(idea))
+chk(idea == [str(i) for i in range(1, 9)] + ["1"],
+    "The idea 1..8 と GDC 1 の連番: " + str(idea))
 
 # .model-answer が要る設問（Explain why / Interpret / Identify the error）
 chk(TEXT.count("::: {.model-answer}") == 5, ".model-answer は 5 個")
@@ -368,14 +370,16 @@ for term in ["**composite function**（合成関数）",
     in_text(term, "英語→日本語の順")
 
 # 図
-in_text("![Two machines in a row, and the two orders](img/ahl-2-7-composite.svg)")
+in_text("![Two machines in a row](img/ahl-2-7-composite.svg)")
+in_text("![The two composites are different functions](img/ahl-2-7-order.svg)")
 in_text("![Why a restriction is needed, and what it fixes](img/ahl-2-7-inverse.svg)")
-for svg in ["ahl-2-7-composite.svg", "ahl-2-7-inverse.svg"]:
+for svg in ["ahl-2-7-composite.svg", "ahl-2-7-order.svg", "ahl-2-7-inverse.svg"]:
     chk(os.path.exists(os.path.join(HERE, "..", "..", "ai-hl", "02-functions",
                                     "img", svg)), "図がある: " + svg)
 
 # 交差参照（同一ページ内なので @ が使える）
-for ref in ["@fig-ahl27-composite", "@fig-ahl27-inverse", "@eq-ahl27-notation",
+for ref in ["@fig-ahl27-composite", "@fig-ahl27-order",
+            "@fig-ahl27-inverse", "@eq-ahl27-notation",
             "@eq-ahl27-undo", "@eq-ahl27-example", "@tbl-ahl27-notation",
             "@tbl-ahl27-shop", "@tbl-ahl27-branch", "@exm-ahl27-basic",
             "@exm-ahl27-photo", "@exm-ahl27-find", "@exm-ahl27-restrict"]:

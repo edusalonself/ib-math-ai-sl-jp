@@ -284,14 +284,14 @@ in_text("> Convert to parametric form: $x = x_0 + \\lambda l$, $y = y_0 + \\lamb
 in_text("**`a direction vector` の `a` に注目してください。**", "a と the の違い")
 in_text("**$2$ 行あります。どちらも与えられます。**", "公式集は 2 行")
 in_text("暗記は問われません", "暗記させていない")
-in_text("**AHL 3.12（運動）の欄**", "交点が 3.12 の欄にあると書いている")
-in_text("シラバスの Content 欄にはありません", "skew line の距離は Content にない")
+# 2026-09: 「交点は 3.12 の欄」callout は削除（交点はこのページで扱う）
+not_in_text("**AHL 3.12（運動）の欄**", "削除した 3.12 の欄の callout が残っていない")
 chk("Mathematics and the knower" in TEXT, "TOK の逐語引用")
 
 # ══════════════════════════════════════════════════════════
 # 7. GDC（TI-Nspire CX II、非 CAS）
 # ══════════════════════════════════════════════════════════
-for claim in ["linSolve", "menu → 3: Algebra", "Solve System of Linear Equations",
+for claim in ["linSolve", "menu → Algebra", "Solve System of Linear Equations",
               "`ctrl` を押してから `var`", "menu → Actions → Clear a-z",
               "menu → Graph Entry/Edit → Parametric",
               "menu → Geometry → Points & Lines → Intersection Point(s)"]:
@@ -314,7 +314,7 @@ in_text("**電卓の parameter は $t$ です。**", "電卓の文字が t で�
 chk("A0 = np.array([1.0, 2.0])" in FIG and "B0 = np.array([3.0, -1.0])" in FIG,
     "図1 の直線が本文と同じ")
 chk("A1 = np.array([7.0, 0.0])" in FIG and "B1 = np.array([-6.0, 2.0])" in FIG,
-    "図1(b) の別表現が本文と同じ")
+    "図1b の別表現が本文と同じ")
 chk("PA = np.array([2.0, -1.0])" in FIG and "PB = np.array([6.0, 1.0])" in FIG,
     "図2 の 2 点が本文と同じ")
 chk("OFFP = np.array([8.0, 3.0])" in FIG, "図2(b) の D(8,3)")
@@ -393,7 +393,8 @@ unused = sorted(d for d in defined
                 and d not in atrefs and d not in links)
 chk(not unused, "使われていない番号: %s" % unused)
 IMG = os.path.join(BASE, "img")
-for name in ["ahl-3-11-idea.svg", "ahl-3-11-point.svg", "ahl-3-11-intersect.svg"]:
+for name in ["ahl-3-11-idea.svg", "ahl-3-11-notunique.svg",
+             "ahl-3-11-point.svg", "ahl-3-11-intersect.svg"]:
     chk(os.path.exists(os.path.join(IMG, name)), "図がある: " + name)
     chk("img/" + name in TEXT, "図を本文で使っている: " + name)
 for fn, an in re.findall(r"\]\((ahl-3-[0-9a-z]+)\.qmd#([a-z0-9-]+)\)", TEXT):

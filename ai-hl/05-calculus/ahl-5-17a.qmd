@@ -2,11 +2,11 @@
 sidebar: ai-hl
 ---
 
-# AHL 5.17a — Phase portraits: real eigenvalues（実固有値の相図） {#sec-ahl-5-17a}
+# AHL 5.17a — Phase portraits: real eigenvalues（異なる実固有値の相図） {#sec-ahl-5-17a}
 
 ::: {.callout-note}
 ## What you should be able to do
-- 連立微分方程式を**行列の形**に書ける。
+- 連立微分方程式を**行列の形** $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ に書ける。
 - **eigenvalue**（固有値）と **eigenvector**（固有ベクトル）を求められる（[AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd)）。
 - 公式集の**厳密解**を書き、初期条件から $A$ と $B$ を決められる。
 - $\lambda$ の**符号**から、原点から離れるか近づくかを言える。
@@ -15,106 +15,198 @@ sidebar: ai-hl
 :::
 
 ::: {.callout-note}
-## [AHL 5.16b](ahl-5-16b.qmd) の続きです
-[AHL 5.16b](ahl-5-16b.qmd) では、連立系を **Euler 法で数値的に**追いました。$1$ 歩ずつ計算するので、**どんな式でも扱えるかわり**に、答えは近似でした。
-
-このページでは、**右辺が $x$ と $y$ の一次式だけ**という特別な場合を扱います。この形なら、**厳密な解の式**が書けます。
-
-$$
-\frac{dx}{dt} = ax + by, \qquad \frac{dy}{dt} = cx + dy
-$$
-
-シラバスは、この形を名指ししています。
-
-> **Content:** Phase portrait for the solutions of coupled differential equations of the form $\dfrac{dx}{dt} = ax + by$, $\dfrac{dy}{dt} = cx + dy$.
-
-**$xy$ の項がありません。** [AHL 5.16b](ahl-5-16b.qmd#predator) の predator–prey モデルには $xy$ があったので、この方法は使えません。**そちらは Euler 法の仕事です。**
-:::
-
-::: {.callout-important}
-## この項目は $2$ ページに分かれています
+## このページで扱う範囲
 | 固有値 | 絵の形 | ページ |
 |---|---|---|
-| **実で、異なる** | 直線・node・**saddle point** | このページ |
+| **異なる $2$ つの実数** | 直線・node・**saddle point** | このページ |
 | **複素数・純虚数** | **spiral**・円・楕円 | [AHL 5.17b](ahl-5-17b.qmd) |
 
 : AHL 5.17 の $2$ つの部分 {#tbl-ahl517a-two}
 
-**厳密解を求めるのは、実で異なる固有値のときだけ**です。シラバスがそう限定しています。
-
-> Calculation of exact solutions is only required for the case of **real distinct eigenvalues**.
-
-ですから、**式を書くのはこのページ、絵だけ読むのが [AHL 5.17b](ahl-5-17b.qmd)** です。
-:::
-
-::: {.callout-important}
-## 公式集に載っています（5.17 の欄）
-$$
-\mathbf{x} = A\mathbf{p}_1 e^{\lambda_1 t} + B\mathbf{p}_2 e^{\lambda_2 t}
-$$ {#eq-ahl517a-exact}
-
-$\lambda_1,\ \lambda_2$ が eigenvalue、$\mathbf{p}_1,\ \mathbf{p}_2$ がそれぞれの eigenvector です。$A$ と $B$ は、初期条件から決まる定数です。
-
-**覚える必要はありません。** ただし、**$\det(M - \lambda I) = 0$ は公式集に載っていません**（[AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd#char)）。そちらは覚えてください。
+このページでは、シラバスで**式による解法が求められている、異なる $2$ つの実固有値**の場合を扱います。[AHL 5.17b](ahl-5-17b.qmd) では式を書かず、**絵の形だけ**を読みます。
 :::
 
 ## The idea
 
-### 1. 行列の形に書きます {#idea}
+このページでは、次の連立微分方程式を例に使います。
 
 $$
 \frac{dx}{dt} = 3x + 2y, \qquad \frac{dy}{dt} = 2x + 3y
 $$
 
-これを、$1$ 本にまとめます。
+この $2$ 本の式は、**点 $(x,\ y)$ が、その場所から次にどちらへ動くか**を表しています。動いた跡が **trajectory**（軌道）、軌道を何本もかいた絵が **phase portrait**（相図）です。
+
+相図は、次の順で作ります。
+
+::: {.callout-note appearance="simple"}
+1. $2$ 本の微分方程式を、**行列**でまとめる（[第1節](#idea)）
+2. 解が**まっすぐ進む方向**があることを知る（[第2節](#straight)）
+3. **固有値**と**固有ベクトル**を求めて、**一般解**を作る（[第3節](#general)）
+4. **初期条件**から、定数 $A$ と $B$ を決める（[第4節](#initial)）
+5. 固有値の**符号**で矢印の向きを決め、絵をかく（[第5節](#signs)〜[第8節](#sketch)）
+:::
+
+**固有ベクトルが相図の基本となる方向を示し、固有値がその方向で増えるか減るかを示します。** このページは、この $1$ 行を $8$ つの節に分けたものです。
+
+### 1. 行列の形に書きます {#idea}
+
+**この節ですること：$2$ 本の式を、$1$ 本の行列の式にまとめます。**
+
+[AHL 5.16b](ahl-5-16b.qmd) では、連立系を Euler 法で**数値的に**追いました。このページで扱うのは、**右辺が $x$ と $y$ の一次式だけ**という特別な場合です。この形なら、**厳密な解の式**が書けます。
 
 $$
-\frac{d}{dt}\begin{pmatrix} x \\ y \end{pmatrix}
-= \begin{pmatrix} 3 & 2 \\ 2 & 3 \end{pmatrix}
-\begin{pmatrix} x \\ y \end{pmatrix}
+\frac{dx}{dt} = ax + by, \qquad \frac{dy}{dt} = cx + dy
 $$
 
-短く $\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$ と書きます。
+**$xy$ の項がありません。** [AHL 5.16b](ahl-5-16b.qmd#predator) の predator–prey モデルには $xy$ があったので、この方法は使えません。**そちらは Euler 法で扱います。**
+
+まず、$2$ つの成分を縦に並べたものに、名前を付けます。
+
+$$
+\mathbf{X}(t) = \begin{pmatrix} x(t) \\ y(t) \end{pmatrix}
+$$
+
+$\mathbf{X}(t)$ は、**時刻 $t$ に点がいる場所**です。これを微分するときは、**成分ごとに**微分します。
+
+$$
+\frac{d\mathbf{X}}{dt} = \begin{pmatrix} \dfrac{dx}{dt} \\[2mm] \dfrac{dy}{dt} \end{pmatrix}
+$$
+
+ここに、例の $2$ 本の式
+
+$$
+\frac{dx}{dt} = 3x + 2y, \qquad \frac{dy}{dt} = 2x + 3y
+$$
+
+を入れます。右辺は、行列とベクトルの積で書けます。
+
+$$
+\frac{d\mathbf{X}}{dt} = \begin{pmatrix} 3 & 2 \\ 2 & 3 \end{pmatrix} \mathbf{X}
+$$
+
+この行列に $M$ という名前を付ければ、
+
+$$
+M = \begin{pmatrix} 3 & 2 \\ 2 & 3 \end{pmatrix}
+\qquad \Longrightarrow \qquad
+\frac{d\mathbf{X}}{dt} = M\mathbf{X}
+$$
+
+です。**$2$ 本の式が、$1$ 本になりました。**
+
+| 記号 | 意味 |
+|---|---|
+| $\mathbf{X}(t)$ | 時刻 $t$ における**点の位置** |
+| $\dfrac{d\mathbf{X}}{dt}$ | その点の**速度**。つまり、次に進む向き |
+| $M$ | 動き方を決める**係数行列** |
+| $M\mathbf{X}$ | 位置 $\mathbf{X}$ にいるときの**速度ベクトル** |
+
+: $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ の記号 {#tbl-ahl517a-symbols}
+
+**大文字の $\mathbf{X}$ は点そのもの、小文字の $x$ はその横の成分**です。このページでは、ずっとこの書き分けを使います。
 
 ::: {.callout-tip}
 ## 係数を、そのまま並べるだけです
-$1$ 行目の係数が $M$ の $1$ 行目、$2$ 行目の係数が $2$ 行目です。
+**$1$ 行目の式の係数が $M$ の $1$ 行目、$2$ 行目の式の係数が $M$ の $2$ 行目**です。
 
 $$
-\frac{dx}{dt} = \mathbf{3}x + \mathbf{2}y \ \longrightarrow \ (\,3 \ \ 2\,)
+\begin{aligned}
+\frac{dx}{dt} &= 3x + 2y && \longrightarrow \quad M \text{ の } 1 \text{ 行目 } (\,3 \ \ 2\,) \\[2mm]
+\frac{dy}{dt} &= 2x + 3y && \longrightarrow \quad M \text{ の } 2 \text{ 行目 } (\,2 \ \ 3\,)
+\end{aligned}
 $$
+
+左の列が $x$ の係数、右の列が $y$ の係数です。
 
 **$y$ の項が無いときは $0$ を書いてください。** $\dfrac{dx}{dt} = 4x$ なら $(\,4 \ \ 0\,)$ です。
 :::
 
 ::: {.callout-warning}
 ## 定数項があると、この形になりません
-$\dfrac{dx}{dt} = 3x + 2y + 5$ のように**定数が付いている**と、$M\mathbf{x}$ の形には書けません。
+$\dfrac{dx}{dt} = 3x + 2y + 5$ のように**定数が付いている**と、$M\mathbf{X}$ の形には書けません。$xy$ の項も同じです。
 
-シラバスの形は $ax + by$ **だけ**です。定数項や $xy$ の項があるものは、この項目では出ません。
+シラバスの形は $ax + by$ **だけ**です。
 :::
 
-### 2. eigenvector の方向は、まっすぐ進みます {#straight}
+### 2. eigenvector から、直線上を進む方向が分かります {#straight}
 
-![The eigenvector directions are the skeleton](img/ahl-5-17a-cases.svg){#fig-ahl517a-cases width=100%}
+**この節ですること：なぜ相図に $2$ 本の直線が現れるのかを、見ておきます。**
 
-@fig-ahl517a-cases の (a) を見てください。
+$\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ でしたから、**$M\mathbf{X}$ は、点 $\mathbf{X}$ にいるときの速度ベクトル**です。
 
-**なぜ直線になるのでしょうか。** eigenvector $\mathbf{p}$ の定義は、
+ふつう、$\mathbf{X}$ と $M\mathbf{X}$ は**別の向き**を向いています。進むたびに向きが変わるので、軌道は**曲線**になります。
+
+ところが、ある特別なベクトル $\mathbf{p}$ については、
 
 $$
 M\mathbf{p} = \lambda \mathbf{p}
 $$
 
-でした（[AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd#idea)）。**同じ直線の上にとどまり、長さが $\lambda$ 倍になるベクトル**です（$\lambda < 0$ なら、向きは逆になります）。
+となることがあります。この $\mathbf{p}$ が **eigenvector**（固有ベクトル）、$\lambda$ が **eigenvalue**（固有値）です（[AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd#idea)）。
 
-いま $\mathbf{x}$ が $\mathbf{p}$ の向きにあれば、
+右辺の $\lambda\mathbf{p}$ は、$\mathbf{p}$ の**定数倍**です。ですから $M\mathbf{p}$ は、$\mathbf{p}$ と**同じ直線の上**にあります。
+
+点が固有ベクトルの直線の上にあれば、**速度もその直線に沿います。** 直線から横へ外れる速度が無いので、**軌道はその直線から出られません。**
+
+::: {.callout-tip}
+## 固有ベクトルは、位置ベクトルと速度ベクトルが平行になる特別な方向です
+$$
+\mathbf{X} \text{ の向き} \ = \ M\mathbf{X} \text{ の向き} \quad \Longrightarrow \quad \text{その直線の上を、まっすぐ進む}
+$$
+
+この $2$ 本の直線が、相図の**骨組み**になります。
+:::
+
+この例では、あとで計算するように、$2$ つの固有ベクトルの方向は $\begin{pmatrix} 1 \\ 1 \end{pmatrix}$ と $\begin{pmatrix} 1 \\ -1 \end{pmatrix}$ です。まずは、この $2$ 方向が相図の骨組みになることを見てみましょう。
+
+![固有ベクトルの方向が、相図の骨組みになります](img/ahl-5-17a-eigen.svg){#fig-ahl517a-eigen width=58%}
+
+@fig-ahl517a-eigen の**赤い直線**が $\mathbf{p}_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$（$\lambda_1 = 5$）、**緑の直線**が $\mathbf{p}_2 = \begin{pmatrix} 1 \\ -1 \end{pmatrix}$（$\lambda_2 = 1$）の向きです。
+
+この $2$ 本の上では、軌道は曲がらずにまっすぐ進みます。**どちらの固有値も正**なので、矢印はどちらも原点から**離れる**向きです。
+
+固有ベクトルの直線の上の解は、次の形になります。
 
 $$
-\frac{d\mathbf{x}}{dt} = M\mathbf{x} = \lambda \mathbf{x}
+\mathbf{X}(t) = C e^{\lambda t}\mathbf{p}
 $$
 
-つまり**進む向きが、今いる向きと同じ直線の上**にあります。$\lambda > 0$ なら同じ向き、$\lambda < 0$ なら逆向きです。**どちらにしても、その直線から外れません。**
+**なぜこの形になるのでしょうか。** 点がこの直線から出られないのなら、位置はいつも「$\mathbf{p}$ の何倍か」で書けます。その倍率を $c(t)$ とします。
+
+$$
+\mathbf{X}(t) = c(t)\,\mathbf{p}
+$$
+
+**左辺**を計算します。$\mathbf{p}$ は動かないベクトルなので、微分するのは $c(t)$ だけです。
+
+$$
+\frac{d\mathbf{X}}{dt} = c'(t)\,\mathbf{p}
+$$
+
+**右辺**も計算します。$c(t)$ はただの数なので、行列の外に出せます。そして $M\mathbf{p} = \lambda\mathbf{p}$ でした。
+
+$$
+M\mathbf{X} = M\bigl(c(t)\,\mathbf{p}\bigr) = c(t)\,M\mathbf{p} = c(t)\,\lambda\mathbf{p} = \lambda c(t)\,\mathbf{p}
+$$
+
+もとの微分方程式が $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ でしたから、この $2$ つは等しくなります。
+
+$$
+c'(t)\,\mathbf{p} = \lambda c(t)\,\mathbf{p}
+$$
+
+**どちらも「$\mathbf{p}$ の何倍か」という形**です。$\mathbf{p}$ は $\mathbf{0}$ ではないので、$2$ つが同じベクトルになるには**倍率どうしが等しい**しかありません。
+
+$$
+c'(t) = \lambda\, c(t)
+$$
+
+これは**倍率 $c(t)$ についての、見慣れた微分方程式**です（[AHL 5.14](ahl-5-14.qmd#exponential)）。答えは $c(t) = C e^{\lambda t}$ ですから、$\mathbf{X}(t) = C e^{\lambda t}\mathbf{p}$ になります。
+
+- $\lambda > 0$ なら、$e^{\lambda t}$ は時間とともに**大きくなる**
+- $\lambda < 0$ なら、$e^{\lambda t}$ は時間とともに **$0$ へ近づく**
+
+ですから、**固有値の符号だけで、その直線の上の矢印の向きが決まります。**
 
 | $\lambda$ | その直線の上での動き |
 |---|---|
@@ -125,22 +217,42 @@ $$
 
 ::: {.callout-tip}
 ## $\dfrac{dx}{dt} = \lambda x$ と同じ形です
-$\dfrac{d\mathbf{x}}{dt} = \lambda \mathbf{x}$ は、[AHL 5.14](ahl-5-14.qmd#exponential) の $\dfrac{dy}{dx} = ky$ とまったく同じ形です。
+点が固有ベクトルの直線の上にあるとき、$M\mathbf{X} = \lambda\mathbf{X}$ なので
 
-答えも同じで、**$e^{\lambda t}$ 倍**になります。$\lambda > 0$ なら増え、$\lambda < 0$ なら $0$ に近づきます。
+$$
+\frac{d\mathbf{X}}{dt} = \lambda \mathbf{X}
+$$
+
+です。これは [AHL 5.14](ahl-5-14.qmd#exponential) の $\dfrac{dy}{dx} = ky$ とまったく同じ形で、答えも同じく **$e^{\lambda t}$ 倍**になります。
 
 **@eq-ahl517a-exact の $e^{\lambda t}$ は、ここから来ています。**
 :::
 
 ### 3. 一般解 {#general}
 
+**この節ですること：$2$ 本の直線の動きを足して、解の式を作ります。**
+
+[第2節](#straight)で見たように、固有ベクトル $\mathbf{p}$ の方向では
+
 $$
-\mathbf{x} = A\mathbf{p}_1 e^{\lambda_1 t} + B\mathbf{p}_2 e^{\lambda_2 t}
+\mathbf{X}(t) = C e^{\lambda t}\mathbf{p}
 $$
 
-**$2$ 本の直線の動きを、足し合わせただけ**です。
+が解になります。
 
-手順は $3$ つです。
+固有値が $2$ つあれば、この特別な解も $2$ つできます。**その $2$ つを足したものも、また解です**（[Why it works](#why)）。これが **general solution**（一般解）です。
+
+$$
+\mathbf{X} = A\mathbf{p}_1 e^{\lambda_1 t} + B\mathbf{p}_2 e^{\lambda_2 t}
+$$ {#eq-ahl517a-exact}
+
+この式は**公式集に載っています（5.17 の欄）。覚える必要はありません。**
+
+$\lambda_1,\ \lambda_2$ が eigenvalue、$\mathbf{p}_1,\ \mathbf{p}_2$ がそれぞれの eigenvector、$A$ と $B$ は初期条件から決まる定数です。**$2$ 本の直線の動きを、足し合わせただけ**です。
+
+ただし、**$\det(M - \lambda I) = 0$ は公式集に載っていません**（[AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd#char)）。そちらは覚えてください。
+
+**この式に入れる $\lambda$ と $\mathbf{p}$ は、自分で求めます。** 手順は $3$ つです。
 
 ::: {.callout-note appearance="simple"}
 **手順1.** $\det(M - \lambda I) = 0$ から $\lambda_1,\ \lambda_2$ を出す。
@@ -152,88 +264,147 @@ $$
 
 **手順1と2は [AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd) そのもの**です。新しいのは手順3だけです。
 
-::: {.callout-tip}
-## characteristic equation は、行列から直接書けます
-対角に並ぶ $2$ つの数の和を **trace**（対角の和）といいます。
+では、このページの例
 
 $$
-\lambda^{2} - (\text{trace})\lambda + \det M = 0
+M = \begin{pmatrix} 3 & 2 \\ 2 & 3 \end{pmatrix}
 $$
 
-この本では、日本語のほうを使って「対角の和」と書きます。**答案では `trace` と書いて構いません。**
+で、実際にやってみます。
 
-$M = \begin{pmatrix} 3 & 2 \\ 2 & 3 \end{pmatrix}$ なら、対角の和が $6$、$\det M = 9 - 4 = 5$ です。
+#### 手順1：固有値を求める {#step1}
+
+$$
+\det(M - \lambda I) = \begin{vmatrix} 3 - \lambda & 2 \\ 2 & 3 - \lambda \end{vmatrix} = (3 - \lambda)^{2} - 4 = 0
+$$
+
+展開して整理します。
 
 $$
 \lambda^{2} - 6\lambda + 5 = 0 \ \Longrightarrow \ (\lambda - 5)(\lambda - 1) = 0
 $$
 
-$\lambda = 5$ または $1$ です（[AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd#expand)）。
+$$
+\lambda_1 = 5, \qquad \lambda_2 = 1
+$$
+
+**異なる $2$ つの実数**になりました。ですから、このページの方法が使えます。
+
+::: {.callout-tip}
+## characteristic equation は、行列から直接書けます
+いま解いた $\lambda^{2} - 6\lambda + 5 = 0$ を **characteristic equation**（特性方程式）といいます。
+
+対角に並ぶ $2$ つの数の和（**trace**）と $\det M$ を使えば、行列式を展開せずに書けます（[AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd#expand)）。
+
+$$
+\lambda^{2} - (\text{trace})\lambda + \det M = 0
+$$
+
+この例なら trace $= 3 + 3 = 6$、$\det M = 9 - 4 = 5$ です。
 :::
 
+#### 手順2：固有ベクトルを求める {#step2}
+
+$\lambda_1 = 5$ のほうからです。$\mathbf{p} = \begin{pmatrix} a \\ b \end{pmatrix}$ とおいて、$(M - 5I)\mathbf{p} = \mathbf{0}$ を解きます。
+
+$$
+\begin{pmatrix} -2 & 2 \\ 2 & -2 \end{pmatrix}\begin{pmatrix} a \\ b \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix}
+\quad \Longrightarrow \quad -2a + 2b = 0 \quad \Longrightarrow \quad b = a
+$$
+
+$a = 1$ を選べば、$\mathbf{p}_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$ です。
+
+$\lambda_2 = 1$ も同じようにします。
+
+$$
+\begin{pmatrix} 2 & 2 \\ 2 & 2 \end{pmatrix}\begin{pmatrix} a \\ b \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix}
+\quad \Longrightarrow \quad 2a + 2b = 0 \quad \Longrightarrow \quad b = -a
+$$
+
+$a = 1$ を選べば、$\mathbf{p}_2 = \begin{pmatrix} 1 \\ -1 \end{pmatrix}$ です。
+
+#### 手順3：一般解を書く {#step3}
+
+@eq-ahl517a-exact に、出した $\lambda$ と $\mathbf{p}$ を入れるだけです。
+
+$$
+\mathbf{X} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{5t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
+$$
+
+成分で書けば、こうなります。
+
+$$
+x = Ae^{5t} + Be^{t}, \qquad y = Ae^{5t} - Be^{t}
+$$
+
+**$A$ と $B$ は、まだ決まりません。** 決めるには、出発点が $1$ つ要ります。それが次の節です。
+
 ### 4. 初期条件で $A$ と $B$ を決めます {#initial}
+
+**この節ですること：与えられた出発点から、$A$ と $B$ を決めます。**
 
 $t = 0$ を入れると $e^{0} = 1$ なので、
 
 $$
-\mathbf{x}(0) = A\mathbf{p}_1 + B\mathbf{p}_2
+\mathbf{X}(0) = A\mathbf{p}_1 + B\mathbf{p}_2
 $$
 
 **これは連立方程式です。** $A$ と $B$ について解きます。
 
-$\mathbf{p}_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$、$\mathbf{p}_2 = \begin{pmatrix} 1 \\ -1 \end{pmatrix}$、$\mathbf{x}(0) = \begin{pmatrix} 1 \\ 3 \end{pmatrix}$ なら
+続きをやってみます。[第3節](#step3)の一般解に、出発点 $\mathbf{X}(0) = \begin{pmatrix} 1 \\ 3 \end{pmatrix}$ を入れます。
+
+$$
+\begin{pmatrix} 1 \\ 3 \end{pmatrix} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}
+$$
+
+上の成分と下の成分で、$1$ 本ずつ式ができます。
 
 $$
 A + B = 1, \qquad A - B = 3
 $$
 
+足せば $2A = 4$ なので
+
 $$
 A = 2, \qquad B = -1
+$$
+
+です。これで、出発点 $(1,\ 3)$ から出る軌道の式が決まりました。
+
+$$
+\mathbf{X} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{5t} - \begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
 $$
 
 ::: {.callout-warning}
 ## $\mathbf{p}$ を何倍かして使うと、$A$ と $B$ も変わります
 eigenvector は[何倍しても正解](../01-number-and-algebra/ahl-1-15.qmd#notunique)ですが、**$\mathbf{p}$ を $2$ 倍にすれば、$A$ は半分**になります。
 
-**最終的な $\mathbf{x}$ は同じ**です。ですから、$A$ と $B$ の値だけを見て「違う」と思わないでください。
+**最終的な $\mathbf{X}$ は同じ**です。ですから、$A$ と $B$ の値だけを見て「違う」と思わないでください。
 
 答案では、**自分が使った $\mathbf{p}$ を必ず書いて**ください。
 :::
 
 ### 5. $\lambda$ の符号で、絵が決まります {#signs}
 
-@fig-ahl517a-cases の (b)(c)(d) が、$3$ つの場合です。
+**この節ですること：固有値の符号で、原点のまわりの絵を $3$ つに分けます。**
 
-| $\lambda_1,\ \lambda_2$ | 原点の呼び名 | 動き |
-|---|---|---|
-| **両方とも正** | **unstable node**（不安定な結節点） | 原点以外のすべての軌道が原点から**離れる** |
-| **両方とも負** | **stable node**（安定な結節点） | 原点以外のすべての軌道が原点に**近づく** |
-| **符号が違う** | **saddle point**（鞍点） | 固有ベクトルの向きによって、**近づく**ものと**離れる**ものがある |
+![Both eigenvalues have the same sign](img/ahl-5-17a-nodes.svg){#fig-ahl517a-nodes width=100%}
 
-: 実で異なる固有値の $3$ つの場合 {#tbl-ahl517a-signs}
+@fig-ahl517a-nodes の (a) と (b)、そして[第6節](#saddle)の @fig-ahl517a-saddle が、$3$ つの場合です。
 
-saddle の行を、もう少しくわしく書いておきます。**負の固有値に対応する固有ベクトル上**では、軌道は原点に近づきます。**正の固有値に対応する固有ベクトル上**では、原点から離れます。それ以外の一般の軌道は、最後には**正の固有値の固有ベクトルの向きへ離れていきます**（出発点によっては、いったん原点に近づいてから向きを変えます）。くわしくは[第6節](#saddle)を見てください。
+| $\lambda_1,\ \lambda_2$ | 原点の呼び名 | 動き（答案の言い方） | 図 |
+|---|---|---|---|
+| **両方とも正** | **unstable node**（不安定な結節点） | 原点以外のすべての軌道が原点から**離れる**。`all solutions move away from the origin` | @fig-ahl517a-nodes (a) |
+| **両方とも負** | **stable node**（安定な結節点） | 原点以外のすべての軌道が原点に**近づく**。`all solutions move towards the origin` | @fig-ahl517a-nodes (b) |
+| **符号が違う** | **saddle point**（鞍点） | 固有ベクトルの向きによって、**近づく**ものと**離れる**ものがある。`the origin is a saddle point` | @fig-ahl517a-saddle（[第6節](#saddle)） |
 
-::: {.callout-important}
-## シラバスの言い方に合わせてください
-シラバスは、こう書いています。
+: 異なる $2$ つの実固有値の $3$ つの場合 {#tbl-ahl517a-signs}
 
-> If the eigenvalues are:
->
-> - **Positive** or complex with positive real part, all solutions move away from the origin
-> - **Negative** or complex with negative real part, all solutions move towards the origin
-> - **Real with different signs** (one positive, one negative) the origin is a **saddle point**
-
-（`complex` の部分は [AHL 5.17b](ahl-5-17b.qmd) で扱います。）
-
-*Describe the long-term behaviour* と問われたら、**この言い方をそのまま使う**のがいちばん安全です。
-
-`move away from the origin` / `move towards the origin` / `the origin is a saddle point` です。
-:::
+*Describe the long-term behaviour* と問われたら、**表の英語をそのまま使う**のがいちばん安全です。シラバスの言い方だからです。
 
 ::: {.callout-tip}
 ## 原点は、いつも平衡点です
-$\mathbf{x} = \mathbf{0}$ を入れると $M\mathbf{0} = \mathbf{0}$ です。
+$\mathbf{X} = \mathbf{0}$ を入れると $M\mathbf{0} = \mathbf{0}$ です。
 
 つまり **$(0,\ 0)$ では、どちらの変化率も $0$** です（[AHL 5.16b](ahl-5-16b.qmd#equilibrium)）。
 
@@ -242,7 +413,11 @@ $\mathbf{x} = \mathbf{0}$ を入れると $M\mathbf{0} = \mathbf{0}$ です。
 
 ### 6. saddle point {#saddle}
 
-@fig-ahl517a-cases の (d) が saddle です。**$2$ 本の直線が、逆のことをしています。**
+**この節ですること：符号が違うときの軌道を、くわしく見ます。**
+
+![The origin is a saddle point](img/ahl-5-17a-saddle.svg){#fig-ahl517a-saddle width=58%}
+
+@fig-ahl517a-saddle が saddle です。**$2$ 本の直線が、逆のことをしています。**
 
 - $\lambda = 3$（正）の固有ベクトルの直線上 … 軌道は原点から**出ていく**
 - $\lambda = -1$（負）の固有ベクトルの直線上 … 軌道は原点に**入ってくる**
@@ -275,16 +450,18 @@ $\det M < 0$ なら、$\lambda$ の積が負、つまり**符号が違う**の�
 
 ### 7. 長い目で見ると {#longrun}
 
+**この節ですること：一般解の $2$ つの項をくらべて、最後にどちらの向きが勝つかを見ます。**
+
 ![Which direction wins in the long run](img/ahl-5-17a-longrun.svg){#fig-ahl517a-longrun width=100%}
 
 $$
-\mathbf{x} = A\mathbf{p}_1 e^{5t} + B\mathbf{p}_2 e^{t}
+\mathbf{X} = A\mathbf{p}_1 e^{5t} + B\mathbf{p}_2 e^{t}
 $$
 
 $t$ が大きくなると、**$e^{5t}$ のほうがずっと速く育ちます。** ですから、$A \neq 0$ であれば $2$ つ目の項は相対的に小さくなり、
 
 $$
-\mathbf{x} \approx A\mathbf{p}_1 e^{5t} \qquad (A \neq 0 \text{ で、} t \text{ が大きいとき})
+\mathbf{X} \approx A\mathbf{p}_1 e^{5t} \qquad (A \neq 0 \text{ で、} t \text{ が大きいとき})
 $$
 
 **軌道は $\mathbf{p}_1$ の向きに近づいていきます。** @fig-ahl517a-longrun の左が、その様子です。
@@ -317,6 +494,8 @@ $$
 
 ### 8. 軌道のかき方 {#sketch}
 
+**この節ですること：ここまでを使って、実際に相図をかきます。**
+
 **手順は $4$ つです。**
 
 ::: {.callout-note appearance="simple"}
@@ -347,19 +526,19 @@ phase portrait では、**曲線だけでは足りません。** どちら向き
 
 ### なぜ足し合わせてよいのか {#why}
 
-$\mathbf{x}_1 = \mathbf{p}_1 e^{\lambda_1 t}$ が解であることは、直接確かめられます。
+$\mathbf{X}_1 = \mathbf{p}_1 e^{\lambda_1 t}$ が解であることは、直接確かめられます。
 
 $$
-\frac{d\mathbf{x}_1}{dt} = \lambda_1 \mathbf{p}_1 e^{\lambda_1 t}, \qquad
-M\mathbf{x}_1 = (M\mathbf{p}_1) e^{\lambda_1 t} = \lambda_1 \mathbf{p}_1 e^{\lambda_1 t}
+\frac{d\mathbf{X}_1}{dt} = \lambda_1 \mathbf{p}_1 e^{\lambda_1 t}, \qquad
+M\mathbf{X}_1 = (M\mathbf{p}_1) e^{\lambda_1 t} = \lambda_1 \mathbf{p}_1 e^{\lambda_1 t}
 $$
 
-**両方とも同じです** ✓ 同じく $\mathbf{x}_2 = \mathbf{p}_2 e^{\lambda_2 t}$ も解です。
+**両方とも同じです** ✓ 同じく $\mathbf{X}_2 = \mathbf{p}_2 e^{\lambda_2 t}$ も解です。
 
-では $A\mathbf{x}_1 + B\mathbf{x}_2$ はどうでしょうか。
+では $A\mathbf{X}_1 + B\mathbf{X}_2$ はどうでしょうか。
 
 $$
-\frac{d}{dt}(A\mathbf{x}_1 + B\mathbf{x}_2) = A\frac{d\mathbf{x}_1}{dt} + B\frac{d\mathbf{x}_2}{dt} = AM\mathbf{x}_1 + BM\mathbf{x}_2 = M(A\mathbf{x}_1 + B\mathbf{x}_2)
+\frac{d}{dt}(A\mathbf{X}_1 + B\mathbf{X}_2) = A\frac{d\mathbf{X}_1}{dt} + B\frac{d\mathbf{X}_2}{dt} = AM\mathbf{X}_1 + BM\mathbf{X}_2 = M(A\mathbf{X}_1 + B\mathbf{X}_2)
 $$
 
 **これも解です。** 微分も行列も、足し算と定数倍をそのまま通すからです。
@@ -379,7 +558,7 @@ $\lambda$ が重解のときは、この形では足りません。**AI HL で�
 ### saddle の分かれ目 {#why-saddle}
 
 $$
-\mathbf{x} = A\mathbf{p}_1 e^{3t} + B\mathbf{p}_2 e^{-t}
+\mathbf{X} = A\mathbf{p}_1 e^{3t} + B\mathbf{p}_2 e^{-t}
 $$
 
 $t$ が大きいとき、$e^{-t} \to 0$ なので $2$ つ目は消えます。残るのは $A\mathbf{p}_1 e^{3t}$ です。
@@ -468,7 +647,7 @@ $$
 **(b)**
 
 $$
-\mathbf{x} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{5t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
+\mathbf{X} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{5t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
 $$
 
 **(c)** $t = 0$ を入れます。
@@ -486,7 +665,7 @@ A = 2, \qquad B = -1
 $$
 
 $$
-\mathbf{x} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{5t} - \begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
+\mathbf{X} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{5t} - \begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
 $$
 
 成分で書けば $x = 2e^{5t} - e^{t}$、$y = 2e^{5t} + e^{t}$ です。
@@ -529,12 +708,12 @@ $$
 
 **(b)**
 $$
-\mathbf{x} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{5t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
+\mathbf{X} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{5t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
 $$
 
 **(c)** *When $t = 0$:* $\ A + B = 1$, $\ A - B = 3$, *so* $A = 2$, $B = -1$.
 $$
-\mathbf{x} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{5t} - \begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
+\mathbf{X} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{5t} - \begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
 $$
 
 **(d)**
@@ -597,7 +776,7 @@ $\lambda = 3$ または $-1$ ✓
 
 （固有値 $3$ と $-1$ は実数で符号が異なるので、原点は鞍点である、という意味です。）
 
-**(c)** @fig-ahl517a-cases の (d) が、この系の相図です。
+**(c)** @fig-ahl517a-saddle が、この系の相図です。
 
 **かき方**（[第8節](#sketch)）。
 
@@ -690,13 +869,13 @@ $$
 **$\lambda = -5$：** $2p_1 + 2p_2 = 0$ より $\begin{pmatrix} 1 \\ -1 \end{pmatrix}$
 
 $$
-\mathbf{x} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
+\mathbf{X} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
 $$
 
 $t = 0$ で $\begin{pmatrix} 4 \\ 0 \end{pmatrix}$ なので $A + B = 4$、$A - B = 0$、つまり $A = B = 2$。
 
 $$
-\mathbf{x} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + 2\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
+\mathbf{X} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + 2\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
 $$
 
 **(c)**
@@ -732,11 +911,11 @@ $$
 \lambda = -1: \begin{pmatrix} 1 \\ 1 \end{pmatrix}, \qquad \lambda = -5: \begin{pmatrix} 1 \\ -1 \end{pmatrix}
 $$
 $$
-\mathbf{x} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
+\mathbf{X} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
 $$
 *When $t = 0$:* $\ A + B = 4$, $\ A - B = 0$, *so* $A = B = 2$.
 $$
-\mathbf{x} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + 2\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
+\mathbf{X} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + 2\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
 $$
 
 **(c)**
@@ -844,7 +1023,7 @@ $e^{t}$ ではなく $e^{5t}$ です。**指数に $\lambda$ が入ります**�
 
 ::: {.callout-warning}
 ## 初期条件を $t = 0$ で使わない
-$e^{0} = 1$ なので、$\mathbf{x}(0) = A\mathbf{p}_1 + B\mathbf{p}_2$ です（[第4節](#initial)）。**$e$ を残したまま連立方程式にしないでください。**
+$e^{0} = 1$ なので、$\mathbf{X}(0) = A\mathbf{p}_1 + B\mathbf{p}_2$ です（[第4節](#initial)）。**$e$ を残したまま連立方程式にしないでください。**
 :::
 
 ::: {.callout-warning}
@@ -889,7 +1068,7 @@ $-1$ と $-5$ なら、**大きいのは $-1$** です。符号こみで比べ�
 ### 固有値を出して、場合分けを確かめる {#gdc-eig}
 
 ```
-menu → 7: Matrix & Vector → B: Advanced → 4: Eigenvalues
+menu → Matrix & Vector → Advanced → Eigenvalues
 ```
 
 $\lambda$ が $2$ つとも実数で返れば、このページの内容です。**複素数（`i` が付いた形）で返れば、[AHL 5.17b](ahl-5-17b.qmd)** に進んでください。
@@ -899,28 +1078,6 @@ $\lambda$ が $2$ つとも実数で返れば、このページの内容です�
 `Find the eigenvalues` と問われたら、**characteristic equation を書いて解く過程**が要ります。
 
 電卓は**検算**に使ってください。
-:::
-
-### 解を微分して確かめる {#gdc-check}
-
-出した $\mathbf{x}$ が本当に解かどうかは、**$1$ 点で確かめられます**（[AHL 5.14](ahl-5-14.qmd#gdc-check)）。
-
-@exm-ahl517a-node なら $x = 2e^{5t} - e^{t}$ です。$t = 0.2$ を選びます。
-
-| 手順 | 出るもの |
-|---|---|
-| $x = 2e^{5t} - e^{t}$ の $t = 0.2$ での微分係数を電卓で出す | $25.96\ldots$ |
-| もとの右辺 $3x + 2y$ に $t = 0.2$ の値を入れる | $25.96\ldots$ |
-
-: $1$ 点で突き合わせる {#tbl-ahl517a-gdc}
-
-**$2$ つが一致すれば、解はまず合っています。**
-
-::: {.callout-tip}
-## 初期条件だけなら、$t = 0$ を入れるほうが速いです
-$\mathbf{x}(0)$ が問題文の値と合うかは、**$e^{0} = 1$ を使って暗算で**確かめられます。
-
-$2(1,1) - (1,-1) = (1,\ 3)$ ✓ **$10$ 秒です。**
 :::
 
 ### 軌道を描いてみる {#gdc-plot}
@@ -948,12 +1105,12 @@ Graphs → menu → Graph Entry/Edit → Parametric
 
 ::: {.exercise-block}
 
-[1]{.ex-no} [Write the system $\dfrac{dx}{dt} = 3x + 4y$, $\ \dfrac{dy}{dt} = x$ in the form $\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$, and find the eigenvalues.]{.q-en}
+[1]{.ex-no} [Write the system $\dfrac{dx}{dt} = 3x + 4y$, $\ \dfrac{dy}{dt} = x$ in the form $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$, and find the eigenvalues.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-連立系 $\dfrac{dx}{dt} = 3x + 4y$、$\dfrac{dy}{dt} = x$ を $\dfrac{d\mathbf{x}}{dt} = M\mathbf{x}$ の形に書き、固有値を求めなさい。
+連立系 $\dfrac{dx}{dt} = 3x + 4y$、$\dfrac{dy}{dt} = x$ を $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ の形に書き、固有値を求めなさい。
 
 </details>
 
@@ -1024,7 +1181,7 @@ $$
 
 **(b)**
 $$
-\mathbf{x} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{3t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
+\mathbf{X} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{3t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{t}
 $$
 
 **(c)** *Both eigenvalues are positive, so the origin is an unstable node: all solutions move away from the origin.*
@@ -1102,7 +1259,7 @@ $$
 
 **(c)** かき方は [第8節](#sketch) のとおりです。**矢印の向きが、$\lambda$ の符号で決まる**ところが要点です。
 
-@fig-ahl517a-cases の (d) と、同じ形の絵になります。
+@fig-ahl517a-saddle と、同じ形の絵になります。
 
 **検算。** $\Delta = (-2)^{2} - 4(-8) = 4 + 32 = 36 > 0$ で実数、$\det M = -8 < 0$ なので saddle ✓（@tbl-ahl517a-quick）。$2 + (-4) = -2$ ✓、$2 \times (-4) = -8$ ✓
 :::
@@ -1140,7 +1297,7 @@ $$
 
 **(b)**
 $$
-\mathbf{x} = A\begin{pmatrix} 2 \\ -1 \end{pmatrix}e^{6t} + B\begin{pmatrix} 1 \\ 2 \end{pmatrix}e^{t}
+\mathbf{X} = A\begin{pmatrix} 2 \\ -1 \end{pmatrix}e^{6t} + B\begin{pmatrix} 1 \\ 2 \end{pmatrix}e^{t}
 $$
 :::
 
@@ -1161,7 +1318,7 @@ $\lambda = 6$ のとき、$1$ 行目は $-p_1 - 2p_2 = 0$ です。$p_2 = 1$ と
 [5]{.ex-no} [A system has general solution]{.q-en}
 
 $$
-\mathbf{x} = A\begin{pmatrix} 1 \\ 2 \end{pmatrix}e^{4t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-2t}.
+\mathbf{X} = A\begin{pmatrix} 1 \\ 2 \end{pmatrix}e^{4t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-2t}.
 $$
 
 **(a)** [Find $A$ and $B$ given that $x = 5$ and $y = 4$ when $t = 0$.]{.q-en}
@@ -1286,7 +1443,7 @@ $$
 $$
 *When $t = 0$:* $\ A + B = 6$, $\ A - B = 2$, *so* $A = 4$, $B = 2$.
 $$
-\mathbf{x} = 4\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + 2\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-3t}
+\mathbf{X} = 4\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + 2\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-3t}
 $$
 
 **(b)**
@@ -1370,7 +1527,7 @@ $$
 ::: {.ex-sep}
 :::
 
-[9]{.ex-no} [@fig-ahl517a-cases part (d) shows a phase portrait with a saddle point at the origin. The eigenvector for the positive eigenvalue is $\begin{pmatrix} 1 \\ 1 \end{pmatrix}$ and for the negative eigenvalue is $\begin{pmatrix} 1 \\ -1 \end{pmatrix}$.]{.q-en}
+[9]{.ex-no} [@fig-ahl517a-saddle shows a phase portrait with a saddle point at the origin. The eigenvector for the positive eigenvalue is $\begin{pmatrix} 1 \\ 1 \end{pmatrix}$ and for the negative eigenvalue is $\begin{pmatrix} 1 \\ -1 \end{pmatrix}$.]{.q-en}
 
 **(a)** [A trajectory starts at $(2,\ -1)$. Determine the direction in which it eventually leaves, giving a reason.]{.q-en}
 
@@ -1379,7 +1536,7 @@ $$
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-@fig-ahl517a-cases の (d) は、原点に鞍点がある相図です。正の固有値の固有ベクトルは $\begin{pmatrix} 1 \\ 1 \end{pmatrix}$、負のほうは $\begin{pmatrix} 1 \\ -1 \end{pmatrix}$ です。
+@fig-ahl517a-saddle は、原点に鞍点がある相図です。正の固有値の固有ベクトルは $\begin{pmatrix} 1 \\ 1 \end{pmatrix}$、負のほうは $\begin{pmatrix} 1 \\ -1 \end{pmatrix}$ です。
 
 `eventually` は「最終的に」という意味です。
 
@@ -1471,7 +1628,7 @@ $$
 $$
 *When $t = 0$:* $\ A + B = 10$, $\ A - B = 0$, *so* $A = B = 5$.
 $$
-\mathbf{x} = 5\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-2t} + 5\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-8t}
+\mathbf{X} = 5\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-2t} + 5\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-8t}
 $$
 
 **(c)** $x = y$ *when* $5e^{-2t} + 5e^{-8t} = 5e^{-2t} - 5e^{-8t}$:

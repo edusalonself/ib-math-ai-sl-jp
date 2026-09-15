@@ -241,9 +241,8 @@ in_text("> Understanding the occurrence of simple second order differential equa
         "will be given.**")
 in_text("> Use of spreadsheets to generate values.")
 # 4-2 公式集に 5.18 の欄は無い
-in_text("## AHL 5.18 専用の欄は、公式集にありません")
-in_text("AI HL の公式集は **5.17 で終わっています。**")
-# 4-3 厳密解は実で異なる固有値のときだけ
+in_text("公式集に 5.18 の欄は無く")
+# 4-3 厳密解は固有値が異なる 2 つの実数のときだけ
 in_text("Calculation of exact solutions is only required for the case of "
         "**real distinct eigenvalues**.")
 in_text("固有値が**重解**（$\\lambda_1 = \\lambda_2$）になる場合は、**この課程では出題されません。**")
@@ -310,16 +309,17 @@ for w in ("誰でもできる", "簡単です", "当然", "明らか", "もち�
 eq("検算が書かれている", TXT.count("**検算。**") >= 5, True)
 eq("model-answer がある", TXT.count("::: {.model-answer}") >= 8, True)
 in_text("![Euler's method and the exact solution for the same equation](img/ahl-5-18-euler.svg)")
-in_text("![What the eigenvalues say about the motion](img/ahl-5-18-cases.svg)")
+in_text("![What the eigenvalues say about the motion](img/ahl-5-18-motion.svg)")
 
 
 
 # ══════════════════════════════════════════════════════════════
 # 6. レビューで直した点（元に戻っていないか）
 # ══════════════════════════════════════════════════════════════
-in_text("## この課程で厳密解を求めるのは、実で異なる固有値のときだけです")
+in_text("## この課程で厳密解を求めるのは、固有値が異なる $2$ つの実数のときだけです")
 in_text("複素数の固有値でも、解の式そのものは存在します。ただし、**この課程では求められていません。**")
 not_in_text("## 厳密解を書けるのは、実で異なる固有値のときだけです")
+not_in_text("実で異なる")
 in_text("> Systems will have **distinct, non-zero, eigenvalues**.")
 close("誤差の百分率", round(100 * (0.98 - (2 * math.exp(-0.2) - math.exp(-0.4)))
                         / (2 * math.exp(-0.2) - math.exp(-0.4)), 1), 1.3)
@@ -329,7 +329,7 @@ in_text("境目は $\\Delta = a^{2} - 4b = 0$、つまり $a = 2\\sqrt{b}$ で�
 in_text("- $0 < a < 2\\sqrt{b}$（$\\Delta < 0$）")
 in_text("- $a > 2\\sqrt{b}$（$\\Delta > 0$）")
 not_in_text("- $a$ が小さい … **揺れながら")
-in_text("右辺が **$ax + by$ の形**（$x$ と $y$ の項だけで、定数項も $t$ もありません）")
+in_text("右辺はどちらも **$x$ と $y$ の一次式だけ**で、定数項も $t$ もありません。")
 not_in_text("右辺が **$x$ と $y$ の一次式だけ**なので")
 in_text("| $a < 0$、$b > 0$、$\\Delta < 0$ | 複素数、**実部が正** |")
 in_text("\\lambda = \\frac{-a \\pm \\sqrt{\\Delta}}{2}")
@@ -339,7 +339,7 @@ in_text("y_{n+1} = y_n + h \\times f(x_n,\\ y_n)")
 in_text("ですから文字を $y \\to x$、$x \\to t$ と読みかえます")
 in_text("y_{n+1} = y_n + h \\times f_2(x_n,\\ y_n,\\ t_n)")
 in_text("$f_2$ のほうは、**もとの $2$ 階の式の右辺 $f$ そのもの**です")
-in_text("**ただし、$\\det(M - \\lambda I) = 0$ は公式集に載っていません**")
+in_text("$\\det(M - \\lambda I) = 0$ は**公式集に載っていない**")
 in_text("**$2$ 階の式を、自分で立てる必要はありません**")
 not_in_text("**式の立て方は、試験では問われません。**")
 in_text("速さに比例する抵抗")
@@ -347,7 +347,7 @@ not_in_text("（空気の抵抗や摩擦）")
 in_text("**検算。** 対角の和は $-5$、$\\det M$ は $6$ です")
 not_in_text("**検算。** trace は $-5$")
 in_text("**$e$ は `e^x` のキーで入れてください。**")
-in_text("上の行が [AHL 5.17a](ahl-5-17a.qmd#sketch)、中と下の行が [AHL 5.17b](ahl-5-17b.qmd) と同じ絵ですが")
+in_text("左が [AHL 5.17a](ahl-5-17a.qmd#sketch)、中と右が [AHL 5.17b](ahl-5-17b.qmd) と同じ絵ですが")
 in_text("右は、そのうち $h = 0.4$ の計算を $(x,\\ y)$ 平面に描いたものです")
 in_text(": $h = 0.1$ の Euler 法 {#tbl-ahl518-table}")
 in_text("\\binom{x}{y} = A\\binom{1}{-2}e^{-2t} + B\\binom{1}{-3}e^{-3t}")
@@ -367,7 +367,7 @@ _T18 = open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
                           "..", "..", "ai-hl", "05-calculus", "ahl-5-18.qmd"),
             encoding="utf-8").read()
 eq("5.18 の saddle 行",
-   "| $b < 0$ | 実で異なる、**異符号** | ほとんどの出発点で**離れていく**"
+   "| $b < 0$ | 異なる $2$ つの実数、**異符号** | ほとんどの出発点で**離れていく**"
    "（saddle point） | [AHL 5.17a](ahl-5-17a.qmd#saddle) |" in _T18, True)
 eq("5.18 から無条件の「離れていく」を外した",
    "| $b < 0$ | 実で異なる、**異符号** | **離れていく**（saddle point） |" in _T18,

@@ -73,7 +73,8 @@ m2, c2 = np.polyfit(L(XP), L(YP), 1)
 near(m2, 3, msg="log-log の傾きは 3")
 near(c2, L(2), msg="log-log の切片は log 2")
 in_text("- 傾き $= \\log 2 = 0.301$")
-in_text("(d) の傾きは $3$、切片は $\\log 2 = 0.301$ です。")
+# 2026-09: 4 面図を 2 枚に分け、説明のすぐ近くへ移動
+in_text("**傾きは $3$、切片は $\\log 2 = 0.301$** です。")
 # ★ レビュー8: 条件
 in_text("指数の関係 $y = ka^{x}$（$k > 0$、$a > 0$）の両辺の $\\log$ をとります。", "レビュー8")
 in_text("累乗の関係 $y = ax^{n}$（$a > 0$、$x > 0$）の両辺の $\\log$ をとります。", "レビュー8")
@@ -219,11 +220,13 @@ not_in_text("the points lie on a straight line, the growth is exponential", "レ
 # ══════════════════════════════════════════════════════════
 # 7. GDC
 # ══════════════════════════════════════════════════════════
-in_text("ctrl + doc → 4: Add Lists & Spreadsheet")
+in_text("ctrl + doc → Add Lists & Spreadsheet")
 in_text("menu → Statistics → Stat Calculations → Linear Regression (mx+b)")
 in_text("=log(b[])")
 in_text("=log(a[])")
-in_text("10^(stat.b)")
+# 2026-09: GDC の入力例は画面どおりの表示に変更
+in_text(r"10^{\texttt{stat.b}}")
+not_in_text("10^(stat.b)")
 in_text("## `stat.m` と `stat.b` は、上書きされます", "レビュー16")
 in_text("`Display Digits` の設定で決まります。", "レビュー15")
 not_in_text("**表示された値をそのまま**写します。列の値は丸められていません。", "レビュー15")
@@ -237,7 +240,9 @@ for cas in ["expand(", "factor(", "solve(", "csolve("]:
 # ══════════════════════════════════════════════════════════
 # 8. シラバス・公式集
 # ══════════════════════════════════════════════════════════
-in_text("## 公式集の AHL 2.10 の欄\n**ありません。**")
+# 2026-09: 公式が無い欄なので callout ごと削除し、要点を 1 文にして The idea の前へ
+not_in_text("## 公式集の AHL 2.10 の欄")
+in_text("**このページに、新しい公式はありません。**", "公式が無いことは 1 文で書く")
 in_text("Content 欄は $3$ 行です。")
 in_text("Guidance 欄には $3$ つあります。")
 in_text("Connections 欄には $4$ つ挙がっています。")
@@ -245,7 +250,7 @@ in_text("Scaling very large or small numbers using logarithms.")
 in_text("In examinations, students will not be expected to draw or sketch these graphs.")
 in_text("**対数目盛りのグラフを、自分で描くことは求められません。**")
 in_text("**Links to websites:** Gapminder makes use of log-log graphs: www.gapminder.org")
-in_text("**この $2$ つで、$\\log$ を取ると直線になる理由がすべて説明できます**", "レビュー14")
+in_text("$10^{\\log x} = x$", "レビュー14: 元に戻すには対数の定義も使う")
 not_in_text("**この $2$ つがあれば、このページの中身はすべて出てきます**", "レビュー14")
 not_in_text("これが $2$ 番目に多い誤りです", "レビュー22")
 not_in_text("ここが試験でいちばん問われるところです", "レビュー22")
@@ -283,8 +288,13 @@ for term in ["**semi-log**（片対数）", "**log-log**（両対数）",
              "**linearize**（線形化）", "growth factor（増加倍率）"]:
     in_text(term, "英語→日本語の順")
 in_text("![Why a logarithmic scale helps](img/ahl-2-10-scale.svg)")
-in_text("![Which graph comes out straight](img/ahl-2-10-which.svg)")
-for svg in ["ahl-2-10-which.svg", "ahl-2-10-scale.svg"]:
+# 2026-09: 4 面図を 2 枚に分け、説明のすぐ近くへ移動
+in_text("![Exponential data comes out straight on a semi-log graph]"
+        "(img/ahl-2-10-semilog.svg)")
+in_text("![Power data comes out straight on a log-log graph]"
+        "(img/ahl-2-10-loglog.svg)")
+not_in_text("ahl-2-10-which.svg")
+for svg in ["ahl-2-10-semilog.svg", "ahl-2-10-loglog.svg", "ahl-2-10-scale.svg"]:
     chk(os.path.exists(os.path.join(HERE, "..", "..", "ai-hl", "02-functions",
                                     "img", svg)), "図がある: " + svg)
 anchors = set(re.findall(r"\{#([a-z0-9-]+)\}", TEXT)) | {"common-errors", "why-it-works"}

@@ -319,19 +319,19 @@ in_text("覚える必要があると書いてある", "覚える必要があり�
 in_text("「差に比例」はカッコと書いてある", "カッコで囲みます")
 in_text("減るときはマイナスと書いてある", "マイナス")
 in_text("解を微分して確かめると書いてある", "微分すれば確かめられます")
-in_text("deSolve は非 CAS に無いと書いてある", "`deSolve` はありません")
 in_text("y = Ae^{kx} がある", "y = Ae^{kx}")
-# ★ GDC のメニュー
-in_text("メニューは Numerical Derivative at a Point",
-        "menu → 4: Calculus → 1: Numerical Derivative at a Point")
-in_text("  CAS 用の Calculus → Derivative が残っていない",
-        "menu → Calculus → Derivative", want=False)
-# ★ 本の他ページ（SL 5.3 / _TEMPLATE）を真として突き合わせる
+# ★ GDC は「手で解くのが基本」だけを残し、操作は AHL 5.9a に集約した
+in_text("GDC は検算だけと書いてある", "この項目は、手で解くのが基本です")
+in_text("微分の確かめ方は AHL 5.9a を指している",
+        "[AHL 5.9a](ahl-5-9a.qmd#gdc-deriv) と同じです")
+in_text("  旧名 Numerical Derivative が残っていない",
+        "Numerical Derivative", want=False)
+# ★ 本の他ページ（SL 5.3 / _TEMPLATE）のメニュー名が新しいこと
 for src in ("../../ai-sl/05-calculus/sl-5-3.qmd", "../../_TEMPLATE.qmd"):
     _p = os.path.join(os.path.dirname(__file__), src)
     _t = open(_p, encoding="utf-8").read()
     eq(f"  {os.path.basename(src)} も同じメニューを書いている",
-       "Calculus → 1: Numerical Derivative at a Point" in _t, True)
+       "Calculus → Derivative at a Point" in _t, True)
 # ★ 公式集の欄の帰属（x^n は 5.5、1/x と e^x が 5.11）
 in_text("x^n は 5.5 の欄と書いてある", "べき乗のほうは **5.5** の欄です")
 in_text("1/x と e^x は 5.11 と書いてある", "**5.11 の Standard integrals** の欄")

@@ -449,8 +449,13 @@ not_in_text("\\text{Var}(D) = 16 + 9 = 25")
 # 7-11 例題4 は ans を使う（丸めた値を打ち込まない）
 not_in_text("normCdf(4.5, ∞, 4.2, 0.39528)")
 not_in_text("normCdf(180, ∞, 168, 15.811)")
-in_text("√(2.5^2/40)  →  ans\nnormCdf(4.5, ∞, 4.2, ans)")
-in_text("√250  →  ans\nnormCdf(180, ∞, 168, ans)")
+# 2026-09: GDC の入力例は画面どおりの表示（根号・分数テンプレート）に変更
+in_text(r"\sqrt{\dfrac{2.5^{2}}{40}} \ \to \ \texttt{ans}")
+in_text(r"\texttt{normCdf}\left(4.5,\ \infty,\ 4.2,\ \texttt{ans}\right)")
+in_text(r"\sqrt{250} \ \to \ \texttt{ans}")
+in_text(r"\texttt{normCdf}\left(180,\ \infty,\ 168,\ \texttt{ans}\right)")
+not_in_text("√(2.5^2/40)  →  ans")
+not_in_text("√250  →  ans")
 
 # 7-12 3 ステップの説明と表が食い違わない
 not_in_text("$2$ と $3$ のあいだの「normal だと言ってよい」という一歩")
@@ -498,7 +503,8 @@ in_text("## このページの判断手順")
 in_text("# AHL 4.15 — Linear combinations of normal variables（正規分布にしたがう確率変数の一次結合）")
 
 # 7-22 Inverse Normal の例が 5% の説明と合っている
-in_text("invNorm(0.95, 60, 2.5)")
+# 2026-09: GDC の入力例は画面どおりの表示に変更
+in_text(r"\texttt{invNorm}\left(0.95,\ 60,\ 2.5\right)")
 not_in_text("invNorm(0.90, 60, 2.5)")
 close("invNorm(0.95, 60, 2.5)", round(float(norm.ppf(0.95, 60, 2.5)), 1), 64.1)
 in_text("「上から $5\\%$ に入る境目」を求めています")
@@ -634,11 +640,16 @@ eq("演習には区切り線を入れない", TXT[i_ce:].count("\n---\n"), 0)
 
 # normCdf の端は ∞ / -∞ で書く（1E99 は注記のみ）
 eq("code の中に 1E99 が残っていない",
-   [l for l in TXT.split("\n") if "1E99" in l and l.lstrip().startswith("normCdf")], [])
-eq("∞ を使った normCdf がある", TXT.count("normCdf(") >= 10, True)
+   [l for l in TXT.split("\n")
+    if "1E99" in l and (l.lstrip().startswith("normCdf")
+                        or l.lstrip().startswith(r"$\texttt{normCdf}"))], [])
+eq("∞ を使った normCdf がある",
+   TXT.count("normCdf(") + TXT.count(r"\texttt{normCdf}") >= 10, True)
 in_text("## $\infty$ の入れ方と、$1E99$ という書き方")
 in_text("記号パレット")
-in_text("`ctrl` と `k` を押すとパレットが開く")
+# 2026-09: 記号パレットは π キー（∞・°）／ctrl + = （≤ ≥）に訂正
+in_text("**`π` のキー**を押すと開く**記号パレット**")
+not_in_text("`ctrl` と `k` を押すとパレットが開く")
 in_text("| `Lower Bound` | 下の端。なければ $-\infty$ |")
 in_text("| `Upper Bound` | 上の端。なければ $\infty$ |")
 

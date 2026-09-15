@@ -88,15 +88,12 @@ fig.tight_layout(w_pad=1.8)
 save(fig, "ahl-3-10a-components.svg")
 
 
-# ══════════ fig 2: 足し算と引き算 ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
-
 A = np.array([3.0, 1.0])
 B = np.array([1.0, 3.0])
 O = np.array([0.0, 0.0])
 
-# ── (a) 三角形の法則
-ax = axs[0]
+# ══════════ fig 2a: 足し算（三角形の法則）══════════
+fig, ax = plt.subplots(figsize=(5.9, 4.9))
 arrow(ax, O, A, color=LINE, lw=3.0)
 arrow(ax, A, A + B, color=GREEN, lw=3.0)
 arrow(ax, O, A + B, color=ACC, lw=3.4)
@@ -112,11 +109,14 @@ ax.text(2.0, -1.35, "nose to tail: $\\mathbf{a}$ then $\\mathbf{b}$\n"
                     "$\\binom{3}{1} + \\binom{1}{3} = \\binom{4}{4}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 grid(ax, (-1.4, 5.4), (-2.6, 4.8))
-ax.set_title("(a)  adding: join them nose to tail", fontsize=12.5, color=INK,
+ax.set_title("adding: join them nose to tail", fontsize=12.5, color=INK,
              pad=6)
+fig.tight_layout()
+save(fig, "ahl-3-10a-add.svg")
 
-# ── (b) 引き算
-ax = axs[1]
+
+# ══════════ fig 2b: 引き算 ══════════
+fig, ax = plt.subplots(figsize=(5.9, 4.9))
 arrow(ax, O, A, color=LINE, lw=3.0)
 arrow(ax, O, B, color=GREEN, lw=3.0)
 OFF = np.array([0.28, 0.28])
@@ -136,11 +136,10 @@ ax.text(2.0, -1.35, "$\\mathbf{a}-\\mathbf{b}$ points FROM the tip of "
                     "(drawn slightly to the side, so both can be seen)",
         fontsize=11.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 grid(ax, (-1.4, 5.4), (-2.6, 4.8))
-ax.set_title("(b)  subtracting: same length, opposite way round",
+ax.set_title("subtracting: same length, opposite way round",
              fontsize=12.5, color=INK, pad=6)
-
-fig.tight_layout(w_pad=1.8)
-save(fig, "ahl-3-10a-addsub.svg")
+fig.tight_layout()
+save(fig, "ahl-3-10a-sub.svg")
 
 
 # ══════════ fig 3: スカラー倍と平行 ══════════

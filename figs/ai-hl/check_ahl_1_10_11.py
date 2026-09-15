@@ -114,27 +114,27 @@ eq("(-8)^(2/6) の実 6 乗根は 2", sp.real_root(64, 6), 2)
 eq("(-3)^2 = 9", sp.Integer(-3) ** 2, 9)
 
 # 文字式
-eq("x^{3/2}sqrt x / x^{-1/2}",
+eq("x^{\\frac{3}{2}}sqrt x / x^{-\\frac{1}{2}}",
    sp.simplify(x ** R(3, 2) * sp.sqrt(x) / x ** R(-1, 2)), x ** R(5, 2))
-eq("(8y^6)^{2/3}", sp.simplify((8 * y ** 6) ** R(2, 3)), 4 * y ** 4)
+eq("(8y^6)^{\\frac{2}{3}}", sp.simplify((8 * y ** 6) ** R(2, 3)), 4 * y ** 4)
 eq("3/cbrt(x^2)", sp.simplify(3 / (x ** 2) ** R(1, 3)), 3 * x ** R(-2, 3))
-eq("(16x^8)^{3/4}", sp.simplify((16 * x ** 8) ** R(3, 4)), 8 * x ** 6)
-eq("(x^2)^{3/2}/(x^{1/2}sqrt x)",
+eq("(16x^8)^{\\frac{3}{4}}", sp.simplify((16 * x ** 8) ** R(3, 4)), 8 * x ** 6)
+eq("(x^2)^{\\frac{3}{2}}/(x^{\\frac{1}{2}}sqrt x)",
    sp.simplify((x ** 2) ** R(3, 2) / (x ** R(1, 2) * sp.sqrt(x))), x ** 2)
-eq("x^{3/2}=27 の解", sp.solve(sp.Eq(x ** R(3, 2), 27), x), [9])
-eq("9^{3/2} で戻る", sp.Integer(9) ** R(3, 2), 27)
+eq("x^{\\frac{3}{2}}=27 の解", sp.solve(sp.Eq(x ** R(3, 2), 27), x), [9])
+eq("9^{\\frac{3}{2}} で戻る", sp.Integer(9) ** R(3, 2), 27)
 # 本文の検算（x = 4 を入れる）
 eq("x=4 での左辺",
    sp.simplify((4 ** R(3, 2) * sp.sqrt(4)) / 4 ** R(-1, 2)), 32)
 eq("x=4 での右辺", sp.Integer(4) ** R(5, 2), 32)
-inA("\\frac{4^{3/2}\\sqrt{4}}{4^{-1/2}} = \\frac{8 \\times 2}{0.5} = 32, \\qquad 4^{5/2} = 32")
+inA("\\frac{4^{\\frac{3}{2}}\\sqrt{4}}{4^{-\\frac{1}{2}}} = \\frac{8 \\times 2}{0.5} = 32, \\qquad 4^{\\frac{5}{2}} = 32")
 # 演習 7 の検算
 eq("x=4 で分子", sp.Integer(4) ** 3, 64)
 eq("x=4 で答え", sp.Integer(4) ** 2, 16)
 
 # モデル
-eq("E = 290*16^{3/4}", 290 * sp.Integer(16) ** R(3, 4), 2320)
-eq("S = 4.8*125^{2/3}", sp.Rational(48, 10) * sp.Integer(125) ** R(2, 3), 120)
+eq("E = 290*16^{\\frac{3}{4}}", 290 * sp.Integer(16) ** R(3, 4), 2320)
+eq("S = 4.8*125^{\\frac{2}{3}}", sp.Rational(48, 10) * sp.Integer(125) ** R(2, 3), 120)
 inA("E = 290 \\times 8 = 2320")
 inA("S = 4.8 \\times 25 = 120 \\text{ cm}^{2}")
 
@@ -249,27 +249,31 @@ inB("S_n = \\frac{u_1\\left(1-r^{n}\\right)}{1-r}, \\quad r \\neq 1")
 for T, tag in ((TA, "1.10"), (TB, "1.11")):
     eq(tag + " ctrl+doc は Document Settings に使わない",
        "ctrl + doc → Document Settings" in T, False)
-inA("TI-Nspire CX II（非CAS）は Numeric なので")
+# 2026-09: 生徒は全員 TI-Nspire CX II なので、CAS／非CAS の区別には触れない
+inA("TI-Nspire CX II は Numeric なので")
+notA("非CAS")
 inA("**$9$ キーの右にあるテンプレートのパレット**")
 inB("$\\Sigma$ のテンプレート（$9$ キーの右のパレット）")
-inB("sum(seq(12×(1/3)^(n-1), n, 1, 10))")
-inB("ctrl + doc → 4: Add Lists & Spreadsheet")
+# 2026-09: GDC の入力例は画面どおりの表示（分数・指数テンプレート）に変更
+inB(r"\texttt{sum}\left(\texttt{seq}\left(12 \times \left(\dfrac{1}{3}\right)^{n - 1},\ n,\ 1,\ 10\right)\right)")
+notB("sum(seq(12×(1/3)^(n-1), n, 1, 10))")
+inB("ctrl + doc → Add Lists & Spreadsheet")
 
 # ══════════════════════════════════════════════════════════════
 # 5. レビューで直した点の見張り
 # ══════════════════════════════════════════════════════════════
-# 1.10 — 1・3: 非CAS は根号を残さない
+# 1.10 — 1・3: CX II は根号を残さない
 notA("`enter` なら $2\\sqrt{3}$、`ctrl + enter` なら $3.4641\\ldots$ です。")
 notA("| `81^3/4` | $\\dfrac{81^{3}}{4} = 132860.25$ |")
 inA("は `enter` でも $3.4641\\ldots$ と小数で返ります")
 # 2: 図の説明
-notA("$y = x^{1/2}$ と $y = x^{3/2}$ は、$y = x^{1}$ と $y = x^{2}$ の**間に入る**曲線です。")
-inA("$y = x^{1/2}$ のほうは $y = x^{1}$ より**下**です。")
+notA("$y = x^{\\frac{1}{2}}$ と $y = x^{\\frac{3}{2}}$ は、$y = x^{1}$ と $y = x^{2}$ の**間に入る**曲線です。")
+inA("$y = x^{\\frac{1}{2}}$ のほうは $y = x^{1}$ より**下**です。")
 # 4: 根を先に、の条件
 notA("手で計算するときは、いつも根を先にとってください。")
-inA("そういうときは、電卓に `5^(2/3)` とそのまま入れます。")
+inA("そういうときは、電卓に $5^{\\frac{2}{3}}$ を**見た目のまま**入れます")
 # 5: half-life の参照
-notA("$2^{-t/T}$ のような形が出ます")
+notA("$2^{-\\frac{t}{T}}$ のような形が出ます")
 inA("[AHL 1.9](ahl-1-9.qmd) では $M = 200e^{-0.03t}$ のような形で扱います。")
 # 6: n 乗根のパレットの場所
 notA("$n$ 乗根は、その右のパレットにある")
@@ -277,7 +281,7 @@ notA("$n$ 乗根は、その右のパレットにある")
 inA("$n$ が偶数のときは、$(-3)^{2} = 9$ のように**負の数を $n$ 乗しても $a$ になります。**")
 # 8: The idea と Why it works の重複を解消
 eq("1.10 で導出は 1 回だけ",
-   TA.count("\\left(a^{1/n}\\right)^{n} = a^{\\frac{1}{n} \\times n} = a^{1} = a"), 1)
+   TA.count("\\left(a^{\\frac{1}{n}}\\right)^{n} = a^{\\frac{1}{n} \\times n} = a^{1} = a"), 1)
 inA("[Why it works](#why-it-works) にあります")
 # 小さい点
 notA("$3$ 行も $4$ 行も続く変形は出てきません。")
@@ -368,7 +372,7 @@ eq("1.10 の model-answer 3 個", TA.count(".model-answer"), 3)
 eq("1.11 の model-answer 5 個", TB.count(".model-answer"), 5)
 
 IMG = os.path.join(HERE, "..", "..", "ai-hl", "01-number-and-algebra", "img")
-for f in ("ahl-1-10-powers.svg", "ahl-1-11-sum.svg"):
+for f in ("ahl-1-10-powers.svg", "ahl-1-10-routes.svg", "ahl-1-11-sum.svg"):
     eq("図 " + f, os.path.exists(os.path.join(IMG, f)), True)
 eq("png を残していない",
    [f for f in os.listdir(IMG)

@@ -37,9 +37,7 @@ def f(x):
     return 3.0 * np.exp(-(x - 1.0) ** 2) + 1.5 * np.exp(-4.0 * (x - 3.2) ** 2)
 
 
-# ══════════ fig 1: 4 つの基本変換 ══════════
-fig, axs = plt.subplots(2, 2, figsize=(11.4, 8.2))
-
+# ══════════ 4 つの基本変換（1 枚ずつ）══════════
 XS = np.linspace(-4.5, 7.0, 900)
 BASE = dict(color=GREY, lw=2.0, ls="--", label="$y = f(x)$")
 
@@ -51,8 +49,8 @@ def frame(ax, xlim, ylim):
     tidy(ax)
 
 
-# ── (a) translation
-ax = axs[0][0]
+# ── translation
+fig, ax = plt.subplots(figsize=(6.4, 4.6))
 ax.plot(XS, f(XS), **BASE)
 ax.plot(XS, f(XS - 2) + 1, color=LINE, lw=2.8, label="$y = f(x-2)+1$")
 ax.add_patch(FancyArrowPatch((1.0, 3.0), (3.0, 4.0), arrowstyle="-|>",
@@ -63,10 +61,12 @@ ax.text(2.05, 4.35, "right $2$, up $1$", fontsize=11.5, color=ACC,
         ha="center", va="bottom", bbox=BOX, zorder=8)
 frame(ax, (-2.6, 6.6), (-0.7, 5.6))
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("(a)  translation  $\\binom{2}{1}$", fontsize=12, color=INK, pad=9)
+ax.set_title("translation  $\\binom{2}{1}$", fontsize=12, color=INK, pad=9)
+fig.tight_layout()
+save(fig, "ahl-2-8-translation.svg")
 
-# ── (b) reflections
-ax = axs[0][1]
+# ── reflections
+fig, ax = plt.subplots(figsize=(6.4, 4.6))
 ax.plot(XS, f(XS), **BASE)
 ax.plot(XS, -f(XS), color=ACC, lw=2.8, label="$y = -f(x)$")
 ax.plot(XS, f(-XS), color=GREEN, lw=2.8, ls=":", label="$y = f(-x)$")
@@ -76,10 +76,12 @@ ax.text(-4.7, 3.9, "in the $y$ axis", fontsize=11, color=GREEN, ha="left",
         va="top", bbox=BOX, zorder=8)
 frame(ax, (-5.0, 5.0), (-4.4, 4.5))
 ax.legend(fontsize=10.5, frameon=False, loc="lower right")
-ax.set_title("(b)  reflections", fontsize=12, color=INK, pad=9)
+ax.set_title("reflections", fontsize=12, color=INK, pad=9)
+fig.tight_layout()
+save(fig, "ahl-2-8-reflection.svg")
 
-# ── (c) vertical stretch
-ax = axs[1][0]
+# ── vertical stretch
+fig, ax = plt.subplots(figsize=(6.4, 4.6))
 ax.plot(XS, f(XS), **BASE)
 ax.plot(XS, 2 * f(XS), color=LINE, lw=2.8, label="$y = 2f(x)$")
 ax.add_patch(FancyArrowPatch((1.0, 3.0), (1.0, 6.0), arrowstyle="-|>",
@@ -92,11 +94,13 @@ ax.text(4.6, -0.55, "the $x$ axis does not move", fontsize=10.5, color=GOLD,
         ha="right", va="top")
 frame(ax, (-2.6, 6.6), (-1.4, 7.0))
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("(c)  vertical stretch, scale factor $2$", fontsize=12,
+ax.set_title("vertical stretch, scale factor $2$", fontsize=12,
              color=INK, pad=9)
+fig.tight_layout()
+save(fig, "ahl-2-8-vstretch.svg")
 
-# ── (d) horizontal stretch
-ax = axs[1][1]
+# ── horizontal stretch
+fig, ax = plt.subplots(figsize=(6.4, 4.6))
 ax.plot(XS, f(XS), **BASE)
 ax.plot(XS, f(2 * XS), color=LINE, lw=2.8, label="$y = f(2x)$")
 ax.add_patch(FancyArrowPatch((1.0, 3.15), (0.5, 3.15), arrowstyle="-|>",
@@ -110,37 +114,41 @@ ax.text(-3.3, -0.5, "the $y$ axis does not move", fontsize=10.5, color=GOLD,
         ha="left", va="center")
 frame(ax, (-3.5, 6.8), (-1.0, 4.7))
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("(d)  horizontal stretch, scale factor $\\frac{1}{2}$",
+ax.set_title("horizontal stretch, scale factor $\\frac{1}{2}$",
              fontsize=12, color=INK, pad=9)
+fig.tight_layout()
+save(fig, "ahl-2-8-hstretch.svg")
 
-fig.tight_layout(h_pad=2.4, w_pad=2.0)
-save(fig, "ahl-2-8-four.svg")
 
-
-# ══════════ fig 2: 順序 / 2 つの stretch ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
-
-ax = axs[0]
+# ══════════ 順序 / 2 つの stretch（1 枚ずつ）══════════
+fig, ax = plt.subplots(figsize=(6.6, 4.9))
 X = np.linspace(-2.4, 2.4, 500)
 ax.plot(X, X ** 2, color=GREY, lw=2.0, ls="--", label="$y = x^{2}$")
 ax.plot(X, 3 * X ** 2 + 2, color=GREEN, lw=2.8,
         label="stretch, then translate:  $y = 3x^{2}+2$")
 ax.plot(X, 3 * X ** 2 + 6, color=ACC, lw=2.8, ls="-.",
         label="translate, then stretch:  $y = 3x^{2}+6$")
-ax.plot([0, 0], [2, 6], "o", color=INK, ms=7, zorder=7)
-ax.annotate("", xy=(0, 6), xytext=(0, 2),
-            arrowprops=dict(arrowstyle="<->", color=INK, lw=1.6))
-ax.text(0.22, 4.0, "$4$ apart", fontsize=11.5, color=INK, ha="left",
-        va="center", bbox=BOX, zorder=8)
+# 縦の差は x によらず 4 —— 2 か所で示す
+for _x in (0.0, 1.5):
+    _lo, _hi = 3 * _x ** 2 + 2, 3 * _x ** 2 + 6
+    ax.plot([_x, _x], [_lo, _hi], "o", color=INK, ms=6, zorder=7)
+    ax.annotate("", xy=(_x, _hi), xytext=(_x, _lo),
+                arrowprops=dict(arrowstyle="<->", color=INK, lw=1.6))
+    ax.text(_x + 0.16, (_lo + _hi) / 2, "$4$", fontsize=11.5, color=INK,
+            ha="left", va="center", bbox=BOX, zorder=8)
+ax.text(2.4, 0.4, "vertical gap $= 4$ at every $x$",
+        fontsize=10.5, color=INK, ha="right", va="bottom", bbox=BOX, zorder=8)
 ax.set_xlim(-2.5, 2.5)
 ax.set_ylim(-1.2, 16.5)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=9.8, frameon=False, loc="upper center")
-ax.set_title("(a)  the same two transformations, two orders",
+ax.set_title("the same two transformations, two orders",
              fontsize=12, color=INK, pad=9)
 tidy(ax)
+fig.tight_layout()
+save(fig, "ahl-2-8-order.svg")
 
-ax = axs[1]
+fig, ax = plt.subplots(figsize=(6.6, 4.9))
 T = np.linspace(-0.35, 2 * np.pi + 0.35, 700)
 ax.plot(T, np.sin(T), color=GREY, lw=2.0, ls="--", label="$y = \\sin x$")
 ax.plot(T, 4 * np.sin(2 * T), color=LINE, lw=2.8, label="$y = 4\\sin 2x$")
@@ -159,10 +167,10 @@ ax.set_xticklabels(["$0$", "$\\frac{\\pi}{2}$", "$\\pi$",
                     "$\\frac{3\\pi}{2}$", "$2\\pi$"])
 ax.set_xlabel("$x$")
 ax.legend(fontsize=10.5, frameon=False, loc="upper right")
-ax.set_title("(b)  two stretches at once", fontsize=12, color=INK, pad=9)
+ax.set_title("two stretches at once", fontsize=12, color=INK, pad=9)
 tidy(ax)
 
-fig.tight_layout(w_pad=2.0)
-save(fig, "ahl-2-8-order.svg")
+fig.tight_layout()
+save(fig, "ahl-2-8-sine.svg")
 
 print("figures written to", os.path.normpath(OUT))

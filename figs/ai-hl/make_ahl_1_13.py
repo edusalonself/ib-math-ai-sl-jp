@@ -46,10 +46,8 @@ def vec(ax, p, q, color, lw=2.6, z=5, ls="-"):
                                  color=color, lw=lw, zorder=z, ls=ls))
 
 
-# ══════════ 1.13a fig 1: 3 つの form / polar → Cartesian ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 5.0))
-
-ax = axs[0]
+# ══════════ 1.13 fig 1: 3 つの form ══════════
+fig, ax = plt.subplots(figsize=(5.8, 5.9))
 z = (1.0, np.sqrt(3))
 vec(ax, (0, 0), z, LINE)
 ax.plot([z[0]], [z[1]], "o", color=LINE, ms=9, zorder=6)
@@ -68,13 +66,18 @@ ax.text(1.10, 1.80, "$z = 1 + \\sqrt{3}\\,i$", fontsize=12.5, color=LINE,
         ha="left", va="bottom")
 ax.text(-2.05, -1.35, "$z = 1 + \\sqrt{3}\\,i$\n"
         "$z = 2\\left(\\cos\\dfrac{\\pi}{3} + i\\sin\\dfrac{\\pi}{3}\\right)$\n"
-        "$z = 2\\,\\mathrm{cis}\\,\\dfrac{\\pi}{3} = 2e^{i\\pi/3}$",
+        "$z = 2\\,\\mathrm{cis}\\,\\dfrac{\\pi}{3} = 2e^{i\\frac{\\pi}{3}}$",
         fontsize=11.5, color=INK, ha="left", va="top", bbox=BOX, zorder=8)
 plane(ax, (-2.2, 3.0), (-2.9, 2.6))
-ax.set_title("(a)  one point, three ways of writing it",
+ax.set_title("one point, three ways of writing it",
              fontsize=12, color=INK, pad=10)
 
-ax = axs[1]
+fig.tight_layout()
+save(fig, "ahl-1-13-forms.svg")
+
+
+# ══════════ 1.13 fig 2: polar → Cartesian ══════════
+fig, ax = plt.subplots(figsize=(6.6, 5.6))
 w = (-2.0, 2 * np.sqrt(3))
 vec(ax, (0, 0), w, ACC)
 ax.plot([w[0]], [w[1]], "o", color=ACC, ms=9, zorder=6)
@@ -92,14 +95,14 @@ ax.text(-2.15, 3.75, "$4\\,\\mathrm{cis}\\,\\dfrac{2\\pi}{3}"
         " = -2 + 2\\sqrt{3}\\,i$", fontsize=12.5, color=ACC, ha="left",
         va="bottom", bbox=BOX, zorder=8)
 plane(ax, (-4.6, 4.0), (-2.2, 5.0))
-ax.set_title("(b)  going back: $a = r\\cos\\theta$,  $b = r\\sin\\theta$",
+ax.set_title("going back: $a = r\\cos\\theta$,  $b = r\\sin\\theta$",
              fontsize=12, color=INK, pad=10)
 
 fig.tight_layout()
-save(fig, "ahl-1-13a-forms.svg")
+save(fig, "ahl-1-13-back.svg")
 
 
-# ══════════ 1.13a fig 2: かけ算＝回転と拡大 / 足し算＝ベクトル ══════════
+# ══════════ 1.13 fig 3: かけ算＝回転と拡大 / 足し算＝ベクトル ══════════
 fig, axs = plt.subplots(1, 2, figsize=(11.4, 5.0))
 
 ax = axs[0]
@@ -154,13 +157,11 @@ ax.set_title("(b)  adding follows the parallelogram", fontsize=12,
              color=INK, pad=10)
 
 fig.tight_layout()
-save(fig, "ahl-1-13a-mult.svg")
+save(fig, "ahl-1-13-mult.svg")
 
 
-# ══════════ 1.13b fig 1: 合成波と phasor 三角形 ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
-
-ax = axs[0]
+# ══════════ 1.13 fig 4: 合成波 ══════════
+fig, ax = plt.subplots(figsize=(6.6, 4.9))
 T = np.linspace(0, 0.26, 900)
 w = 50.0
 ax.plot(T, 3 * np.cos(w * T), color=LINE, lw=2.0,
@@ -178,41 +179,15 @@ ax.set_xlim(0, 0.275)
 ax.set_ylim(-6.4, 8.6)
 ax.set_xlabel("$t$")
 ax.legend(fontsize=10, frameon=False, loc="upper right", ncol=1)
-ax.set_title("(a)  the sum is a sine wave of the same period",
+ax.set_title("the sum is a sine wave of the same period",
              fontsize=12, color=INK, pad=10)
 tidy(ax)
 
-ax = axs[1]
-p1 = np.array([3.0, 0.0])
-p2 = np.array([0.0, 4.0])
-s = p1 + p2
-ax.add_patch(Polygon([(0, 0), tuple(p1), tuple(s)], closed=True, fc=FILL,
-                     ec="none", zorder=1))
-vec(ax, (0, 0), p1, LINE)
-vec(ax, p1, s, ACC)
-vec(ax, (0, 0), s, GREEN, lw=3.0)
-ax.plot([s[0]], [s[1]], "o", color=GREEN, ms=9, zorder=6)
-ax.add_patch(Arc((0, 0), 2.2, 2.2, theta1=0, theta2=np.degrees(B),
-                 color=GOLD, lw=2.0, zorder=5))
-ax.text(1.32, 0.52, "$B = 0.927$", fontsize=12, color=GOLD, zorder=7,
-        bbox=BOX)
-ax.text(1.5, -0.42, "$3$", fontsize=12.5, color=LINE, ha="center")
-ax.text(3.16, 2.0, "$4$", fontsize=12.5, color=ACC, ha="left")
-ax.text(1.05, 2.75, "$A = 5$", fontsize=13, color=GREEN, ha="center",
-        bbox=BOX, zorder=7)
-ax.text(-1.85, -1.30, "phasors:  $3\\,\\mathrm{cis}\\,0 = 3$\n"
-        "$4\\,\\mathrm{cis}\\,\\dfrac{\\pi}{2} = 4i$\n"
-        "sum $= 3 + 4i$", fontsize=11.5, color=INK, ha="left", va="top",
-        bbox=BOX, zorder=8)
-plane(ax, (-2.0, 5.6), (-3.4, 5.2))
-ax.set_title("(b)  the same sum, drawn as phasors", fontsize=12,
-             color=INK, pad=10)
-
 fig.tight_layout()
-save(fig, "ahl-1-13b-add.svg")
+save(fig, "ahl-1-13-add.svg")
 
 
-# ══════════ 1.13b fig 2: 振幅は足し算ではない ══════════
+# ══════════ 1.13 fig 5: 振幅は足し算ではない ══════════
 fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
 
 ax = axs[0]
@@ -260,6 +235,6 @@ ax.set_title("(b)  the sum never reaches $10$", fontsize=12, color=INK,
 tidy(ax)
 
 fig.tight_layout()
-save(fig, "ahl-1-13b-cancel.svg")
+save(fig, "ahl-1-13-cancel.svg")
 
 print("figures written to", os.path.normpath(OUT))

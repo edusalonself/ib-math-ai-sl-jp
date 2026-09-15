@@ -263,7 +263,7 @@ eq("演習の番号", nos, [str(i) for i in range(1, 11)])
 eq("ex-sep は 9 個", TXT.count("::: {.ex-sep}"), 9)
 eq("exercise-block は 1 個", TXT.count("::: {.exercise-block}"), 1)
 
-for fid in ("system", "cycle"):
+for fid in ("time", "phase", "spiral", "cycle"):
     in_text("図 %s の定義" % fid, "{#fig-ahl516b-%s" % fid)
     eq("図 %s が参照されている" % fid, TXT.count("@fig-ahl516b-%s" % fid) >= 1,
        True)
@@ -319,9 +319,8 @@ in_text("GDC の見出し", "## Using your GDC (TI-Nspire CX II)")
 in_text("公式集の x の式", "x_{n+1} &= x_n + h \\times f_1(x_n,\\ y_n,\\ t_n)")
 in_text("公式集の y の式", "y_{n+1} &= y_n + h \\times f_2(x_n,\\ y_n,\\ t_n)")
 in_text("公式集の t の式", "t_{n+1} &= t_n + h")
-in_text("公式集に載っている旨", "## 公式集に載っています（5.16 の欄、$2$ つ目）")
-in_text("シラバス Content",
-        "Numerical solution of the coupled system")
+in_text("公式集に載っている旨", "この $3$ 本の式も**公式集に載っています（5.16 の欄、$2$ つ目）。覚える必要はありません。**")
+in_text("5.16 の 2 つの部分の表", ": AHL 5.16 の $2$ つの部分 {#tbl-ahl516b-two}")
 in_text("シラバス Guidance", "Contexts could include predator-prey models.")
 in_text("Runge-Kutta は試験に出ない", "**試験には出ません。**")
 
@@ -343,7 +342,7 @@ in_text("equilibrium point は 5.17 の語だと断っている",
 in_text("入れ替わりは predator–prey に限定", "**この predator–prey の形では**")
 in_text("ほかの形では違うと書いている", "演習8 では $\\dfrac{da}{dt} = 0$ から $b = 2a$")
 in_text("列は 3 つ", "列は $3$ つ（$t$、$x$、$y$）で足ります。")
-in_text("周期は system(b) で測る", "@fig-ahl516b-system の (b) には山が $2$ つ見えています。")
+in_text("周期は time(b) で測る", "@fig-ahl516b-time の (b) には山が $2$ つ見えています。")
 in_text("cycle の左では測れないと断っている", "周期はこちらでは測れません。")
 in_text("演習8 の正しい検算", "\\frac{d}{dt}(a + b) = (-0.2a + 0.1b) + (0.2a - 0.3b) = -0.2b")
 in_text("演習8 の 0.2b", "**残りの $0.2b$ が系の外へ出ていきます。**")

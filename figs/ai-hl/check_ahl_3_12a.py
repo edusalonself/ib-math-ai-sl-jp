@@ -296,8 +296,8 @@ in_text("**$d^2$ ではなく $d$ を答える**", "答えるのは d")
 # ══════════════════════════════════════════════════════════
 # 5. シラバス・公式集
 # ══════════════════════════════════════════════════════════
-in_text("**ありません。$1$ 行もありません。**", "公式集に AHL 3.12 の欄がない")
-in_text("シラバスの **Guidance 欄**に書かれているだけです", "r=r0+vt は Guidance")
+# 2026-09: 公式集 callout は削除
+not_in_text("## 公式集の AHL 3.12 の欄", "公式集 callout が残っていない")
 in_text("> Vector applications to kinematics.\n> Modelling linear motion with constant velocity "
         "in two and three dimensions.", "Content 1 行目は 2 文（1 つの引用にまとめてある）")
 in_text("**$1$ 行目に対応する Guidance は、次の $3$ 行**です。", "Guidance の数え方が限定的")
@@ -307,7 +307,8 @@ for g in ["> Finding positions, intersections, describing paths, finding times a
           "> $\\boldsymbol{r} = \\boldsymbol{r}_0 + \\boldsymbol{v}t$.",
           "> Relative position of B from A is $\\overrightarrow{\\text{AB}}$."]:
     in_text(g, "Guidance の逐語引用")
-in_text("**AHL 3.12 の Connections 欄は、空です。**", "Connections が空")
+# 2026-09: Connections が空である旨の 1 文は削除
+not_in_text("Connections 欄は、空です", "Connections の 1 文が残っていない")
 in_text("[AHL 3.12b](ahl-3-12b.qmd) です。", "2 行目は次のページ")
 in_text("衝突の判定**（[第4節](#cross-vs-collide)〜[第6節](#collide-test)）を加えて扱います。",
         "5 つに衝突を足していると書いている")
@@ -316,7 +317,7 @@ not_in_text("このページは、この $5$ つを順に扱います。", "衝�
 # ══════════════════════════════════════════════════════════
 # 6. GDC
 # ══════════════════════════════════════════════════════════
-for claim in ["menu → 3: Algebra", "Solve System of Linear Equations",
+for claim in ["menu → Algebra", "Solve System of Linear Equations",
               "`ctrl` を押してから `var`", "menu → Actions → Clear a-z",
               "menu → Analyze Graph → Minimum", "ctrl + doc", "ctrl + T"]:
     in_text(claim, "GDC の記述")
@@ -375,10 +376,10 @@ heads = [h for h in re.findall(r"(?m)^## (.*)", TEXT)
          if h in ("What you should be able to do", "The idea", "Why it works",
                   "Worked examples", "Common errors",
                   "Using your GDC (TI-Nspire CX II)", "Exercises")]
-chk(heads == ["What you should be able to do", "The idea", "Why it works",
+chk(heads == ["What you should be able to do", "The idea",
               "Worked examples", "Common errors",
               "Using your GDC (TI-Nspire CX II)", "Exercises"],
-    "7 つの見出しの順序")
+    "見出しの順序（Why it works は 2026-09 に削除）")
 chk(TEXT.count("**検算") >= 14, "検算が 14 か所以上: %d" % TEXT.count("**検算"))
 chk("**確かめ" not in TEXT and "確かめます。" not in TEXT,
     "検算のラベルに「確かめ」を使っていない")
@@ -420,7 +421,8 @@ for fn, an in re.findall(r"\]\((ahl-3-[0-9a-z]+)\.qmd#([a-z0-9-]+)\)", TEXT):
     f = os.path.join(BASE, fn + ".qmd")
     if os.path.exists(f):
         src = open(f, encoding="utf-8").read()
-        chk("{#" + an + "}" in src or an in ("why-it-works", "common-errors"),
+        chk(re.search(r"\{#" + re.escape(an) + r"[ }]", src) is not None
+            or an in ("why-it-works", "common-errors"),
             "リンク先のアンカーがある: %s#%s" % (fn, an))
 
 # ══════════════════════════════════════════════════════════

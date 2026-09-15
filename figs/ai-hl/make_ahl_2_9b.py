@@ -33,11 +33,8 @@ def logistic(t, L=2000.0, C=9.0, k=0.3):
     return L / (1 + C * np.exp(-k * t))
 
 
-# ══════════ fig 1: logistic ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
-
-# ── (a) L, C, k の読み方
-ax = axs[0]
+# ══════════ fig 1a: L, C, k の読み方 ══════════
+fig, ax = plt.subplots(figsize=(6.8, 4.7))
 T = np.linspace(0, 30, 700)
 ax.plot(T, logistic(T), color=LINE, lw=2.8,
         label="$P = \\dfrac{2000}{1+9e^{-0.3t}}$")
@@ -63,11 +60,14 @@ ax.set_xlim(-1.2, 30.5)
 ax.set_ylim(-120, 2320)
 ax.set_xlabel("$t$")
 ax.legend(fontsize=11, frameon=False, loc="center right")
-ax.set_title("(a)  reading $L$, $C$ and $k$", fontsize=12, color=INK, pad=9)
+ax.set_title("reading $L$, $C$ and $k$", fontsize=12, color=INK, pad=9)
 tidy(ax)
+fig.tight_layout()
+save(fig, "ahl-2-9b-logistic.svg")
 
-# ── (b) logistic と exponential のちがい
-ax = axs[1]
+
+# ══════════ fig 1b: logistic と exponential のちがい ══════════
+fig, ax = plt.subplots(figsize=(6.8, 4.7))
 T2 = np.linspace(0, 12, 600)
 ax.plot(T2, logistic(T2), color=LINE, lw=2.8, label="logistic")
 ax.plot(T2, 200 * np.exp(0.3 * T2), color=ACC, lw=2.8, ls="-.",
@@ -89,47 +89,14 @@ ax.set_xlim(-0.5, 12.5)
 ax.set_ylim(-160, 3400)
 ax.set_xlabel("$t$")
 ax.legend(fontsize=11, frameon=False, loc="upper left")
-ax.set_title("(b)  a ceiling, or no ceiling", fontsize=12, color=INK, pad=9)
+ax.set_title("a ceiling, or no ceiling", fontsize=12, color=INK, pad=9)
 tidy(ax)
+fig.tight_layout()
+save(fig, "ahl-2-9b-vs-exp.svg")
 
-fig.tight_layout(w_pad=2.4)
-save(fig, "ahl-2-9b-logistic.svg")
 
-
-# ══════════ fig 2: piecewise ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
-
-# ── (a) continuity: a を選ぶ
-ax = axs[0]
-X1 = np.linspace(0, 2, 200)   # 区間は 0 <= x < 2。端の x=2 は白丸で示す
-ax.plot(X1, 1 + X1, color=LINE, lw=2.8, label="$y = 1+x$,  $0 \\leq x < 2$")
-X2 = np.linspace(2, 6, 300)
-ax.plot(X2, X2 ** 2 / 4 + X2, color=GREEN, lw=2.8,
-        label="$y = \\frac{1}{4}x^{2}+x$,  $x \\geq 2$")
-X3 = np.linspace(2, 3.5, 200)
-ax.plot(X3, X3 ** 2 + X3, color=ACC, lw=2.6, ls="-.",
-        label="$y = x^{2}+x$  (wrong $a$)")
-ax.plot([2], [3], "o", mfc="white", mec=LINE, mew=2.2, ms=13, zorder=6)
-ax.plot([2], [3], "o", color=GREEN, ms=8, zorder=7)
-ax.plot([2], [6], "o", color=ACC, ms=9, zorder=7)
-ax.annotate("", xy=(2, 6), xytext=(2, 3),
-            arrowprops=dict(arrowstyle="<->", color=ACC, lw=1.6))
-ax.text(2.2, 4.5, "a jump of $3$", fontsize=11, color=ACC, ha="left",
-        va="center", bbox=BOX, zorder=8)
-ax.text(0.25, 12.4, "$a = \\dfrac{1}{4}$ makes the two pieces\nmeet at $(2,\\ 3)$",
-        fontsize=11, color=GREEN, ha="left", va="top", bbox=BOX, zorder=8)
-ax.axhline(0, color=GREY, lw=1.2)
-ax.axvline(0, color=GREY, lw=1.2)
-ax.set_xlim(-0.4, 6.4)
-ax.set_ylim(-1.2, 16.5)
-ax.set_xlabel("$x$")
-ax.legend(fontsize=10, frameon=False, loc="lower right")
-ax.set_title("(a)  choosing $a$ so the graph joins up", fontsize=12,
-             color=INK, pad=9)
-tidy(ax)
-
-# ── (b) 文脈の piecewise
-ax = axs[1]
+# ══════════ fig 2a: 文脈の piecewise（本文で先に出る）══════════
+fig, ax = plt.subplots(figsize=(6.8, 4.7))
 Y1 = np.linspace(0, 5, 120)
 ax.plot(Y1, np.full_like(Y1, 20), color=LINE, lw=3.0,
         label="$C = 20$,  $0 \\leq x \\leq 5$")
@@ -153,11 +120,41 @@ ax.set_ylim(-2.5, 46)
 ax.set_xlabel("$x$ (GB of data)")
 ax.set_ylabel("cost")
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("(b)  a piecewise model in context", fontsize=12, color=INK,
-             pad=9)
+ax.set_title("a piecewise model in context", fontsize=12, color=INK, pad=9)
 tidy(ax)
+fig.tight_layout()
+save(fig, "ahl-2-9b-tariff.svg")
 
-fig.tight_layout(w_pad=2.6)
-save(fig, "ahl-2-9b-piecewise.svg")
+
+# ══════════ fig 2b: continuity —— a を選ぶ ══════════
+fig, ax = plt.subplots(figsize=(6.8, 4.7))
+X1 = np.linspace(0, 2, 200)   # 区間は 0 <= x < 2。端の x=2 は白丸で示す
+ax.plot(X1, 1 + X1, color=LINE, lw=2.8, label="$y = 1+x$,  $0 \\leq x < 2$")
+X2 = np.linspace(2, 6, 300)
+ax.plot(X2, X2 ** 2 / 4 + X2, color=GREEN, lw=2.8,
+        label="$y = \\frac{1}{4}x^{2}+x$,  $x \\geq 2$")
+X3 = np.linspace(2, 3.5, 200)
+ax.plot(X3, X3 ** 2 + X3, color=ACC, lw=2.6, ls="-.",
+        label="$y = x^{2}+x$  (wrong $a$)")
+ax.plot([2], [3], "o", mfc="white", mec=LINE, mew=2.2, ms=13, zorder=6)
+ax.plot([2], [3], "o", color=GREEN, ms=8, zorder=7)
+ax.plot([2], [6], "o", color=ACC, ms=9, zorder=7)
+ax.annotate("", xy=(2, 6), xytext=(2, 3),
+            arrowprops=dict(arrowstyle="<->", color=ACC, lw=1.6))
+ax.text(2.2, 4.5, "a jump of $3$", fontsize=11, color=ACC, ha="left",
+        va="center", bbox=BOX, zorder=8)
+ax.text(0.25, 12.4, "$a = \\dfrac{1}{4}$ makes the two pieces\nmeet at $(2,\\ 3)$",
+        fontsize=11, color=GREEN, ha="left", va="top", bbox=BOX, zorder=8)
+ax.axhline(0, color=GREY, lw=1.2)
+ax.axvline(0, color=GREY, lw=1.2)
+ax.set_xlim(-0.4, 6.4)
+ax.set_ylim(-1.2, 16.5)
+ax.set_xlabel("$x$")
+ax.legend(fontsize=10, frameon=False, loc="lower right")
+ax.set_title("choosing $a$ so the graph joins up", fontsize=12,
+             color=INK, pad=9)
+tidy(ax)
+fig.tight_layout()
+save(fig, "ahl-2-9b-continuity.svg")
 
 print("figures written to", os.path.normpath(OUT))

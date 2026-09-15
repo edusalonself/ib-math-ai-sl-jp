@@ -2,40 +2,16 @@
 sidebar: ai-hl
 ---
 
-# AHL 5.11b — Integration by inspection and substitution（見て積分する方法・置換積分） {#sec-ahl-5-11b}
+# AHL 5.11b — Integration by inspection and substitution（微分の逆から予想する積分・置換積分） {#sec-ahl-5-11b}
 
 ::: {.callout-note}
 ## What you should be able to do
-- 中身が $ax + b$ の形なら、**inspection**（見て積分する方法）で積分できる。
+- 中身が $ax + b$ の形なら、**inspection**（微分の逆から予想する積分）で積分できる。
 - 中身が $ax + b$ でないときは、**substitution**（$u$ を置く）で積分できる。
 - $\displaystyle\int f(g(x))\,g'(x)\,dx$ の形を見分けられる。
 - $\displaystyle\int \frac{f'(x)}{f(x)}\,dx = \ln|f(x)| + C$ の形に気づける。
 - 定積分では、**上端と下端も $u$ に直せる**。
 - 答えを微分して、もとに戻るか確かめられる。
-:::
-
-::: {.callout-important}
-## 公式集の 5.11 の欄に、この方法の公式はありません
-使うのは、$5.9$ の欄に印刷されている **chain rule** です。
-
-$$
-y = g(u), \ \text{where} \ u = f(x) \ \Rightarrow \ \frac{dy}{dx} = \frac{dy}{du} \times \frac{du}{dx}
-$$ {#eq-ahl511b-chain}
-
-**これを逆から読むのが、このページの中身**です。公式集の $5.11$ の欄にあるのは、[AHL 5.11a](ahl-5-11a.qmd) で見た $5$ つの積分だけで、**inspection や substitution のやり方は印刷されていません。**
-
-シラバスの Content 欄は、こう書いています。
-
-> Integration by inspection, or substitution of the form $\displaystyle\int f(g(x))g'(x)\,dx$.
-
-**$2$ つの方法が挙げられています。** どちらで書いても正解です。このページでは、**式の形で使い分ける**やり方を示します。
-:::
-
-::: {.callout-note}
-## [AHL 5.11a](ahl-5-11a.qmd) の $5$ つを、先に見ておいてください
-このページで積分するのは、$\sin$、$\cos$、$\dfrac{1}{\cos^{2}x}$、$e^{x}$、$\dfrac{1}{x}$、$x^{n}$ を**組み合わせた**式です。ひとつひとつの積分は [AHL 5.11a](ahl-5-11a.qmd#idea) にあります。
-
-**電卓は Radian にしてください**（[AHL 5.11a](ahl-5-11a.qmd#radian)）。
 :::
 
 ## The idea
@@ -46,15 +22,21 @@ $\sin(2x+5)$ を積分したいとします。公式集にあるのは $\display
 
 そこで、**答えを予想して、微分して確かめる**という進め方をします。
 
-![Two ways to undo the chain rule](img/ahl-5-11b-sub.svg){#fig-ahl511b-sub width=100%}
+![Inspection: guess, differentiate, fix the constant](img/ahl-5-11b-inspect.svg){#fig-ahl511b-inspect width=66%}
 
-@fig-ahl511b-sub の (a) がその流れです。
+@fig-ahl511b-inspect がその流れです。
 
 1. まず $-\cos(2x+5)$ だろう、と**予想する**
 2. それを微分すると、chain rule で $2\sin(2x+5)$。**$2$ 倍だけ大きい**
 3. だから $\dfrac{1}{2}$ を掛けて、$-\dfrac{1}{2}\cos(2x+5) + C$
 
-**微分すると余分な数が出てくるので、その数で割っておく。** これがこのページの中心です。
+**微分すると余分な数が出てくるので、その数で合わせておく。** これが **integration by inspection** です。
+
+シラバスの Content 欄は、この項目をこう書いています。
+
+> Integration by inspection, or substitution of the form $\displaystyle\int f(g(x))g'(x)\,dx$.
+
+**$2$ つの方法が挙げられています。** どちらで書いても正解です。このページでは、この $2$ つの方法を学びます。
 
 ### 2. 中身が $ax + b$ のとき — inspection {#linear}
 
@@ -63,12 +45,6 @@ $\sin(2x+5)$ を積分したいとします。公式集にあるのは $\display
 $$
 \int \sin(2x+5)\,dx = -\frac{1}{2}\cos(2x+5) + C
 $$
-
-シラバスの Guidance 欄が挙げている例の $1$ つです。
-
-> Examples: $\displaystyle\int\sin(2x+5)\,dx$, $\displaystyle\int\frac{1}{3x+2}\,dx$, $\displaystyle\int 4x\sin x^{2}\,dx$, $\displaystyle\int\frac{\sin x}{\cos x}\,dx$.
-
-**はじめの $2$ つがこの節、後ろの $2$ つは[第3節](#sub)と[第4節](#log-form)で扱います。** $\displaystyle\int 4x\sin x^{2}\,dx$ の $4x$ は係数であって、中身ではありません。
 
 #### 手順は $3$ つです {#linear-steps}
 
@@ -100,20 +76,78 @@ $$
 
 **どれも「$\dfrac{1}{a}$ を掛ける」だけ**です。表を覚えるのではなく、[手順](#linear-steps)のほうを身につけてください。
 
+### 3. 中身の微分が掛けられているとき — inspection {#inspection2}
+
+中身が $1$ 次式でなくても、**中身を微分したものが式の中にある**なら、同じやり方で進められます。
+
+$\displaystyle\int 4x\sin(x^{2})\,dx$ を見てください。中身は $x^{2}$ で $1$ 次式ではありませんが、その微分 $2x$ が式の中にあります。
+
+1. まず $-\cos(x^{2})$ だろう、と**予想する**
+2. 微分すると、chain rule で $2x\sin(x^{2})$
+3. ほしいのは $4x\sin(x^{2})$ なので、**$2$ 倍**する
+
+$$
+\int 4x\sin(x^{2})\,dx = -2\cos(x^{2}) + C
+$$
+
+[第2節](#linear)との違いは、**掛ける（割る）数をどこから読むか**だけです。第2節では中身の係数、ここでは式の中にある「中身の微分」と見くらべます。**予想して、微分して、定数で合わせる**という流れは同じです。
+
 ::: {.callout-warning}
-## 中身が $1$ 次式でなければ、この方法は使えません
-$\displaystyle\int \sin(x^{2})\,dx$ に「$\dfrac{1}{2x}$ を掛ける」ことはできません。$2x$ は**定数ではない**からです。
+## 中身の微分が式の中にないと、進めません
+$\displaystyle\int \sin(x^{2})\,dx$ には $2x$ がありません。ここで「$\dfrac{1}{2x}$ を掛ける」ことはできません。$2x$ は**定数ではない**からです。
 
-$\dfrac{1}{2x}\cos(x^{2})$ を微分しても、$\sin(x^{2})$ には戻りません。**定数でしか割れません。**
+$\dfrac{1}{2x}\cos(x^{2})$ を微分しても、$\sin(x^{2})$ には戻りません。**定数でしか合わせられません。**
 
-中身が $1$ 次式でないときは、次の節へ進んでください。
+じつは $\displaystyle\int \sin(x^{2})\,dx$ は、AI HL で習う方法では積分できません。**試験に出るのは、必ず中身の微分が（定数倍を除いて）そろっている形**です。
 :::
 
-### 3. 中身が $1$ 次式でないとき — substitution {#sub}
+#### $\displaystyle\int \frac{f'(x)}{f(x)}\,dx$ の形 {#log-form}
 
-$\displaystyle\int 4x\sin(x^{2})\,dx$ を考えます。中身は $x^{2}$ で、$1$ 次式ではありません。
+分数の形も、同じ見方で進みます。**分子が、分母を微分したもの**になっているときです。
 
-けれども、**中身 $x^{2}$ の微分である $2x$ が、式の中にすでにある**ことに注目してください。$4x = 2 \times 2x$ です。
+$$
+\int \frac{f'(x)}{f(x)}\,dx = \ln|f(x)| + C
+$$ {#eq-ahl511b-log}
+
+$\displaystyle\int\dfrac{\sin x}{\cos x}\,dx$ で見ます。分母 $\cos x$ を微分すると $-\sin x$ で、分子と**符号だけ**違います。
+
+1. $\ln|\cos x|$ だろう、と**予想する**
+2. 微分すると $\dfrac{-\sin x}{\cos x}$。**符号が逆**
+3. $-1$ を掛ける
+
+$$
+\int \frac{\sin x}{\cos x}\,dx = -\ln|\cos x| + C
+$$
+
+**ここでの $f$ は「分母」のことです。** [第4節](#sub)で $f$ と書くのは合成関数の外側です。**同じ文字ですが、役割が違います。**
+
+::: {.callout-warning}
+## 分母が $0$ になる点をまたぐ区間では使えません
+$-\ln|\cos x|$ は $x = \dfrac{\pi}{2}$ で定義されていません。$\dfrac{1}{x}$ で $x = 0$ をまたげないのと同じ理由です（[AHL 5.11a](ahl-5-11a.qmd#why-abs)）。
+
+**定積分のときは、区間の中に $f(x) = 0$ が入っていないかを先に確かめてください。**
+:::
+
+::: {.callout-tip}
+## 分母を微分して、分子と見くらべてください
+$\displaystyle\int \dfrac{2x}{x^{2}+4}\,dx$ なら、分母 $x^{2}+4$ を微分すると $2x$。**分子とぴったり同じ**です。ですから
+
+$$
+\int \frac{2x}{x^{2}+4}\,dx = \ln(x^{2}+4) + C
+$$
+
+$x^{2}+4$ はつねに正なので、この場合は絶対値を書かなくても構いません。
+
+**定数倍だけ違うときは、その定数で調整します。** $\displaystyle\int \dfrac{x}{x^{2}+4}\,dx$ なら分子が半分なので、答えも $\dfrac{1}{2}\ln(x^{2}+4) + C$ です。
+:::
+
+### 4. substitution — 置きかえて進めます {#sub}
+
+inspection は「予想して、合わせる」やり方でした。**substitution（置換積分）は、$u$ に置きかえて機械的に進める**やり方です。
+
+**inspection で解ける形は、すべて substitution でも解けます。** **substitution のほうが途中式が増える**ので、予想が立てにくいときや、式が込み入っているときに使ってください。
+
+[第3節](#inspection2)と同じ $\displaystyle\int 4x\sin(x^{2})\,dx$ を、今度は置換でやります。中身 $x^{2}$ の微分 $2x$ が式の中にあることが、ここでも出発点です。$4x = 2 \times 2x$ です。
 
 $$
 \int 4x\sin(x^{2})\,dx = \int 2\sin(\underbrace{x^{2}}_{u}) \cdot \underbrace{2x\,dx}_{du}
@@ -137,7 +171,7 @@ $$
 
 **置いたあと、$\dfrac{du}{dx}$ が式の残りに（定数倍を除いて）現れているかを確かめてください。** 現れていなければ、その置き方では進めません。
 
-**$2$ 行目だけは「中身」ではなく、分母を置いています。** 分数の形はこのあと[第4節](#log-form)で別に扱います。
+**$2$ 行目だけは「中身」ではなく、分母を置いています。** この形は[第3節](#log-form)で見ましたが、置換でも同じ答えになります。
 
 #### 手順は $4$ つです {#sub-steps}
 
@@ -149,23 +183,29 @@ $$
 u = x^{2}
 $$
 
-2. **$du$ を作る**
+2. **$du$ を作って、$dx$ について解く**
 
 $$
-\frac{du}{dx} = 2x \quad \Longrightarrow \quad du = 2x\,dx
+\frac{du}{dx} = 2x \quad \Longrightarrow \quad du = 2x\,dx \quad \Longrightarrow \quad dx = \frac{du}{2x}
 $$
 
-3. **式を $u$ だけに書きかえる**。$4x\,dx = 2 \times 2x\,dx = 2\,du$ です。
+3. **$dx$ を置きかえる。** すると、**$x$ の付いているところがきれいに消える**はずです。
 
 $$
-\int 4x\sin(x^{2})\,dx = \int 2\sin u\,du = -2\cos u + C
+\int 4x\sin(x^{2})\,dx = \int 4x\sin u \cdot \frac{du}{2x} = \int 2\sin u\,du = -2\cos u + C
 $$
+
+**消えなければ、$u$ の置き方が違います。** そこで気づけます。
 
 4. **$u$ を $x$ に戻す**
 
 $$
 = -2\cos(x^{2}) + C
 $$
+
+**[第3節](#inspection2)で inspection で出した答えと同じ**です。どちらで書いても正解です。
+
+**どちらもできるようにするのが理想です。**
 
 **最後に戻すのを忘れないでください。** 答えに $u$ が残っていると点になりません。
 
@@ -174,55 +214,17 @@ $$
 $\dfrac{du}{dx}$ は分数ではありませんが、**置換積分ではこう書いて計算してよい**ことになっています。
 
 $$
-\frac{du}{dx} = 2x \quad \Longrightarrow \quad du = 2x\,dx
+\frac{du}{dx} = 2x \quad \Longrightarrow \quad du = 2x\,dx \quad \Longrightarrow \quad dx = \frac{du}{2x}
 $$
 
 「$dx$ を右辺に移した」と思って構いません。答案でもこの形で書けます。
-:::
-
-### 4. $\displaystyle\int \frac{f'(x)}{f(x)}\,dx$ の形 {#log-form}
-
-シラバスの $4$ つ目の例は $\displaystyle\int\dfrac{\sin x}{\cos x}\,dx$ です。$u = \cos x$ と置くと $du = -\sin x\,dx$、つまり $\sin x\,dx = -du$ です。
-
-$$
-\int \frac{\sin x}{\cos x}\,dx = \int \frac{-du}{u} = -\ln|u| + C = -\ln|\cos x| + C
-$$
-
-これは、次の形の $1$ つの例です。
-
-$$
-\int \frac{f'(x)}{f(x)}\,dx = \ln|f(x)| + C
-$$ {#eq-ahl511b-log}
-
-**分子が、分母を微分したものになっている**とき、答えは $\ln$ の形になります。
-
-::: {.callout-warning}
-## 分母が $0$ になる点をまたぐ区間では使えません
-$-\ln|\cos x|$ は $x = \dfrac{\pi}{2}$ で定義されていません。$\dfrac{1}{x}$ で $x = 0$ をまたげないのと同じ理由です（[AHL 5.11a](ahl-5-11a.qmd#why-abs)）。
-
-**定積分のときは、区間の中に $f(x) = 0$ が入っていないかを先に確かめてください。**
-:::
-
-**ここでの $f$ は「分母」のことです。** [第3節](#sub)で $f$ と書いたのは合成関数の外側でした。**同じ文字ですが、役が違います。**
-
-::: {.callout-tip}
-## 分母を微分して、分子と見くらべてください
-$\displaystyle\int \dfrac{2x}{x^{2}+4}\,dx$ なら、分母 $x^{2}+4$ を微分すると $2x$。**分子とぴったり同じ**です。ですから
-
-$$
-\int \frac{2x}{x^{2}+4}\,dx = \ln(x^{2}+4) + C
-$$
-
-$x^{2}+4$ はつねに正なので、この場合は絶対値を書かなくても構いません。
-
-**定数倍だけ違うときは、その定数で調整します。** $\displaystyle\int \dfrac{x}{x^{2}+4}\,dx$ なら分子が半分なので、答えも $\dfrac{1}{2}\ln(x^{2}+4) + C$ です。
 :::
 
 ### 5. 定積分では、上端と下端も $u$ に直します {#definite}
 
 定積分を置換で解くときは、**$x$ の端を $u$ の端に直します。** 直したあとは、$x$ に戻す必要がありません。
 
-$\displaystyle\int_{0}^{1} 2xe^{x^{2}}\,dx$ でやってみます。$u = x^{2}$、$du = 2x\,dx$ です。
+$\displaystyle\int_{0}^{1} 2xe^{x^{2}}\,dx$ でやってみます。$u = x^{2}$、$du = 2x\,dx$、つまり $dx = \dfrac{du}{2x}$ です。
 
 | $x$ | $u = x^{2}$ |
 |---|---|
@@ -235,7 +237,9 @@ $$
 \int_{0}^{1} 2xe^{x^{2}}\,dx = \int_{0}^{1} e^{u}\,du = \bigl[e^{u}\bigr]_{0}^{1} = e - 1
 $$
 
-@fig-ahl511b-sub の (b) が、この $2$ つの積分です。**曲線の形は違うのに、面積が同じ**になっています。それが置換の意味です。
+![Substitution does not change the area](img/ahl-5-11b-sub.svg){#fig-ahl511b-sub width=70%}
+
+@fig-ahl511b-sub が、この $2$ つの積分です。**曲線の形は違うのに、面積が同じ**になっています。それが置換の意味です。
 
 ::: {.callout-warning}
 ## 端を直したら、$x$ に戻してはいけません
@@ -247,26 +251,7 @@ $u$ の端に直したあとで $x$ に戻すと、**同じ置きかえを $2$ �
 **どちらか一方**です。混ぜないでください。
 :::
 
-### 6. どちらを使うか {#choose}
-
-式を見たら、この順で問いかけてください。
-
-| 式の形 | 使う方法 |
-|---|---|
-| 中身が $ax+b$（$1$ 次式） | **inspection**。定数で割る（[第2節](#linear)） |
-| 中身が $1$ 次式でなく、**その微分が式の中にある** | **substitution**。$u$ を置く（[第3節](#sub)） |
-| 分子が分母の微分になっている | **$\ln\lvert f(x) \rvert$**（[第4節](#log-form)） |
-| 中身がなく、そのまま公式に入る | [AHL 5.11a](ahl-5-11a.qmd#idea) の公式 |
-
-: 形で選びます {#tbl-ahl511b-which}
-
-::: {.callout-note appearance="simple"}
-**inspection で解ける形は、substitution でも解けます。** $u = 2x+5$ と置いても、$\displaystyle\int\sin(2x+5)\,dx$ は同じ答えになります。
-
-書く量が少ないので inspection のほうが速い、というだけです。**どちらで書いても正解です。**
-:::
-
-### 7. 検算は、微分するだけです {#check}
+### 6. 検算は、微分するだけです {#check}
 
 不定積分には、**必ず使える検算**があります。**答えを微分して、もとの式に戻るか見る**だけです。
 
@@ -343,7 +328,7 @@ $$
 \int_{g(a)}^{g(b)} f(u)\,du = \bigl[F(u)\bigr]_{g(a)}^{g(b)} = F(g(b)) - F(g(a))
 $$
 
-**まったく同じ値**になりました。@fig-ahl511b-sub の (b) で、形の違う $2$ つの図形の面積が同じなのは、このためです。
+**まったく同じ値**になりました。@fig-ahl511b-sub で、形の違う $2$ つの図形の面積が同じなのは、このためです。
 :::
 
 ## Worked examples
@@ -376,7 +361,7 @@ $$
 
 ---
 
-どれも中身が $1$ 次式なので **inspection** です（@tbl-ahl511b-which）。
+どれも中身が $1$ 次式なので **inspection** です（[第2節](#linear)）。
 
 **(a)** 中身を $x$ だと思うと $-\cos(2x+5)$。微分すると $2\sin(2x+5)$ で $2$ 倍なので、$2$ で割ります（[第2節](#linear-steps)）。
 
@@ -396,7 +381,7 @@ $$
 \int e^{4x}\,dx = \frac{1}{4}e^{4x} + C
 $$
 
-**検算。** (a) を微分します（[第7節](#check)）。
+**検算。** (a) を微分します（[第6節](#check)）。
 
 $$
 -\frac{1}{2} \times \bigl(-\sin(2x+5)\bigr) \times 2 = \sin(2x+5) \ ✓
@@ -446,10 +431,10 @@ $$
 **2. $du$ を作る。**
 
 $$
-\frac{du}{dx} = 2x \quad \Longrightarrow \quad du = 2x\,dx
+\frac{du}{dx} = 2x \quad \Longrightarrow \quad du = 2x\,dx \quad \Longrightarrow \quad dx = \frac{du}{2x}
 $$
 
-**3. 式を $u$ だけにする。** もとの式には $6x\,dx$ があります。$6x\,dx = 3 \times 2x\,dx = 3\,du$ です。
+**3. $dx$ を置きかえる。** $6x \cdot \dfrac{du}{2x} = 3\,du$ で、**$x$ が消えます。**
 
 $$
 \int 6x\cos(x^{2})\,dx = \int 3\cos u\,du = 3\sin u + C
@@ -470,7 +455,7 @@ $$
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
 $$
-u = x^{2}, \qquad \frac{du}{dx} = 2x, \qquad du = 2x\,dx
+u = x^{2}, \qquad \frac{du}{dx} = 2x, \qquad du = 2x\,dx, \qquad dx = \frac{du}{2x}
 $$
 $$
 \int 6x\cos(x^{2})\,dx = \int 3\cos u\,du = 3\sin u + C
@@ -493,12 +478,12 @@ $\displaystyle\int \dfrac{\sin x}{\cos x}\,dx$ を求めなさい。
 
 ---
 
-分母 $\cos x$ を微分すると $-\sin x$ で、**分子と符号だけ違います。** ですから $\ln$ の形になります（[第4節](#log-form)）。
+分母 $\cos x$ を微分すると $-\sin x$ で、**分子と符号だけ違います。** ですから $\ln$ の形になります（[第3節](#log-form)）。
 
 置換で書きます。
 
 $$
-u = \cos x, \qquad \frac{du}{dx} = -\sin x \quad \Longrightarrow \quad \sin x\,dx = -du
+u = \cos x, \qquad \frac{du}{dx} = -\sin x \quad \Longrightarrow \quad dx = \frac{du}{-\sin x} \quad \Longrightarrow \quad \sin x\,dx = -du
 $$
 
 $$
@@ -550,7 +535,7 @@ $$
 **(a)** `Show that` なので、途中をすべて書きます。
 
 $$
-u = x^{2}, \qquad \frac{du}{dx} = 2x \quad \Longrightarrow \quad du = 2x\,dx
+u = x^{2}, \qquad \frac{du}{dx} = 2x \quad \Longrightarrow \quad du = 2x\,dx \quad \Longrightarrow \quad dx = \frac{du}{2x}
 $$
 
 **端も $u$ に直します**（[第5節](#definite)）。
@@ -573,9 +558,9 @@ $$
 
 **`exact value` と言われているので、$1.72$ ではなく $e - 1$ と書きます**（[AHL 5.11a](ahl-5-11a.qmd#by-gdc)）。
 
-**検算。** 電卓の Numerical Integral で $\displaystyle\int_{0}^{1} 2xe^{x^{2}}\,dx$ を計算すると $1.7183$。$e - 1 = 1.7183$ ✓（[GDC 第2節](#gdc-integral)）
+**検算。** 電卓の `Integral` で $\displaystyle\int_{0}^{1} 2xe^{x^{2}}\,dx$ を計算すると $1.7183$。$e - 1 = 1.7183$ ✓（[GDC 第2節](#gdc-integral)）
 
-@fig-ahl511b-sub の (b) が、この $2$ つの積分の絵です。**曲線の形は違うのに、面積は同じ**になっています。
+@fig-ahl511b-sub が、この $2$ つの積分の絵です。**曲線の形は違うのに、面積は同じ**になっています。
 
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
@@ -607,7 +592,7 @@ $$
 
 **正しくは**：$-\dfrac{1}{2}\cos(2x+5) + C$ です（[第2節](#linear-steps)）。
 
-**この項目でいちばん多い失点です。** 微分して確かめれば必ず見つかります（[第7節](#check)）。
+**この項目でいちばん多い失点です。** 微分して確かめれば必ず見つかります（[第6節](#check)）。
 :::
 
 ::: {.callout-warning}
@@ -616,7 +601,7 @@ $$
 
 $2x$ は定数ではないので、微分の外に出せません（[Why it works](#why-linear)）。
 
-**正しくは**：この式は、そのままでは積分できません。$2x$ が式の中にある $\displaystyle\int 2x\sin(x^{2})\,dx$ なら置換で解けます（[第3節](#sub)）。
+**正しくは**：この式は、そのままでは積分できません。$2x$ が式の中にある $\displaystyle\int 2x\sin(x^{2})\,dx$ なら置換で解けます（[第4節](#sub)）。
 
 **「中身の微分が式の中にあるか」を先に見てください。**
 :::
@@ -650,7 +635,7 @@ $\cos x$ は負にもなるので、$\ln$ の中身が負になってしまい�
 
 **正しくは**：$-\ln|\cos x| + C$ です（@eq-ahl511b-log）。
 
-$x^{2}+4$ のように**つねに正**だと分かっている場合だけ、絶対値なしで書けます（[第4節](#log-form)）。
+$x^{2}+4$ のように**つねに正**だと分かっている場合だけ、絶対値なしで書けます（[第3節](#log-form)）。
 :::
 
 ::: {.callout-warning}
@@ -688,14 +673,14 @@ $\sin$ や $\cos$ が入った積分では必須です（[AHL 5.11a](ahl-5-11a.q
 ### 2. 定積分で確かめる {#gdc-integral}
 
 ```
-menu → Calculus → Numerical Integral
+menu → Calculus → Integral
 ```
 
 **自分で出した原始関数に端を入れた値**と、電卓の値を比べます。
 
 | 比べるもの | @exm-ahl511b-definite の場合 |
 |---|---|
-| 電卓の Numerical Integral | $1.7183$ |
+| 電卓の `Integral` | $1.7183$ |
 | 自分の答え $e - 1$ | $1.7183$ ✓ |
 
 : $2$ つの値を比べる {#tbl-ahl511b-check}
@@ -704,13 +689,19 @@ menu → Calculus → Numerical Integral
 
 ### 3. 不定積分は、微分で確かめる {#gdc-deriv}
 
-不定積分には端がないので、Numerical Integral では確かめられません。**自分の答えを微分**してください。
+不定積分には端がないので、`Integral` では確かめられません。**自分の答えを微分**してください。
 
 ```
-menu → 4: Calculus → 1: Numerical Derivative at a Point
+menu → Calculus → Derivative at a Point
 ```
 
-$-\dfrac{1}{2}\cos(2x+5)$ を $x = 1$ で微分すると $0.657$。もとの式 $\sin(2 \times 1 + 5) = \sin 7 = 0.657$ ✓
+微分のテンプレートに、**画面に出てくる形のまま**入れます。
+
+$$
+\left. \frac{d}{dx}\left(-\frac{1}{2}\cos(2x+5)\right) \right|_{x=1}
+$$
+
+返るのは $0.657$。もとの式 $\sin(2 \times 1 + 5) = \sin 7 = 0.657$ ✓
 
 **$1$ 点で合えば、まず合っています。**
 
@@ -718,7 +709,7 @@ $-\dfrac{1}{2}\cos(2x+5)$ を $x = 1$ で微分すると $0.657$。もとの式 
 
 $4$ つあります。
 
-1. **答えを微分して**もとに戻るか（[第7節](#check)）
+1. **答えを微分して**もとに戻るか（[第6節](#check)）
 2. **$+C$** を書いたか（定積分なら書いていないか）
 3. **$u$ を $x$ に戻した**か（端を直した定積分は除く）
 4. **`Angle` が `Radian`** か
@@ -864,7 +855,7 @@ $\dfrac{1}{ax+b}$ は $\dfrac{1}{a}\ln|ax+b|$ です（@tbl-ahl511b-linear）。
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 $$
-u = x^{2}+1, \qquad \frac{du}{dx} = 2x, \qquad du = 2x\,dx
+u = x^{2}+1, \qquad \frac{du}{dx} = 2x, \qquad du = 2x\,dx, \qquad dx = \frac{du}{2x}
 $$
 $$
 \int 6x(x^{2}+1)^{3}\,dx = \int 3u^{3}\,du = \frac{3u^{4}}{4} + C
@@ -916,7 +907,7 @@ $$
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-分母 $x^{2}+9$ を微分すると $2x$ で、**分子はその $2$ 倍**です（[第4節](#log-form)）。ですから
+分母 $x^{2}+9$ を微分すると $2x$ で、**分子はその $2$ 倍**です（[第3節](#log-form)）。ですから
 
 $$
 \int \frac{4x}{x^{2}+9}\,dx = 2\int \frac{2x}{x^{2}+9}\,dx = 2\ln|x^{2}+9| + C
@@ -968,12 +959,12 @@ $u = \sin x$ と置くと $du = \cos x\,dx$ なので、式全体が $\displayst
 ::: {.ex-sep}
 :::
 
-[8]{.ex-no} [Use the substitution $u = \sin x$ to find the exact value of $\displaystyle\int_{0}^{\pi/2} \sin x\cos x\,dx$.]{.q-en}
+[8]{.ex-no} [Use the substitution $u = \sin x$ to find the exact value of $\displaystyle\int_{0}^{\frac{\pi}{2}} \sin x\cos x\,dx$.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-置換 $u = \sin x$ を使って、$\displaystyle\int_{0}^{\pi/2} \sin x\cos x\,dx$ の正確な値を求めなさい。
+置換 $u = \sin x$ を使って、$\displaystyle\int_{0}^{\frac{\pi}{2}} \sin x\cos x\,dx$ の正確な値を求めなさい。
 
 </details>
 
@@ -986,7 +977,7 @@ $$
 x = 0 \ \Rightarrow \ u = 0, \qquad x = \frac{\pi}{2} \ \Rightarrow \ u = 1
 $$
 $$
-\int_{0}^{\pi/2} \sin x\cos x\,dx = \int_{0}^{1} u\,du = \left[\frac{u^{2}}{2}\right]_{0}^{1} = \frac{1}{2}
+\int_{0}^{\frac{\pi}{2}} \sin x\cos x\,dx = \int_{0}^{1} u\,du = \left[\frac{u^{2}}{2}\right]_{0}^{1} = \frac{1}{2}
 $$
 :::
 
@@ -1002,7 +993,7 @@ $$
 
 **直したら、$x$ に戻す必要はありません。** $u$ のまま $0$ から $1$ で計算します。
 
-**検算。** Numerical Integral（Radian）で $\displaystyle\int_{0}^{\pi/2}\sin x\cos x\,dx$ を計算すると $0.5$ ✓
+**検算。** `Integral`（Radian）で $\displaystyle\int_{0}^{\frac{\pi}{2}}\sin x\cos x\,dx$ を計算すると $0.5$ ✓
 :::
 
 ::: {.ex-sep}
@@ -1020,7 +1011,7 @@ $x > 0$ について $\displaystyle\int \dfrac{\ln x}{x}\,dx$ を求めなさい
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 $$
-u = \ln x, \qquad \frac{du}{dx} = \frac{1}{x}, \qquad du = \frac{1}{x}\,dx
+u = \ln x, \qquad \frac{du}{dx} = \frac{1}{x}, \qquad du = \frac{1}{x}\,dx, \qquad dx = x\,du
 $$
 $$
 \int \frac{\ln x}{x}\,dx = \int u\,du = \frac{u^{2}}{2} + C
@@ -1038,7 +1029,7 @@ $$
 \int \frac{\ln x}{x}\,dx = \int \ln x \cdot \frac{1}{x}\,dx = \int u\,du
 $$
 
-**$\ln(\ln x)$ ではありません。** $\displaystyle\int\dfrac{f'}{f}$ の形（[第4節](#log-form)）と混同しないでください。$f = \ln x$ とすると $f' = \dfrac{1}{x}$ なので、この式は**分子が $f$、掛かっているのが $f'$**、つまり $f \times f'$ の形です。
+**$\ln(\ln x)$ ではありません。** $\displaystyle\int\dfrac{f'}{f}$ の形（[第3節](#log-form)）と混同しないでください。$f = \ln x$ とすると $f' = \dfrac{1}{x}$ なので、この式は**分子が $f$、掛かっているのが $f'$**、つまり $f \times f'$ の形です。
 
 $\ln(\ln x)$ になるのは $\displaystyle\int\dfrac{1}{x\ln x}\,dx$ のほうです。**そちらは分子が $\dfrac{1}{x}$、分母が $\ln x$** で、$\dfrac{f'}{f}$ の形になっています。
 
@@ -1091,7 +1082,7 @@ $$
 *The student has not divided by the coefficient of $x$ inside the function. Differentiating $-\cos(2x+5)$ gives $2\sin(2x+5)$, which is $2$ times too large, so the correct answer is $-\dfrac{1}{2}\cos(2x+5) + C$.*
 :::
 
-**答えを微分するだけで見つかる誤りです**（[第7節](#check)）。
+**答えを微分するだけで見つかる誤りです**（[第6節](#check)）。
 :::
 
 :::

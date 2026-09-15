@@ -198,16 +198,18 @@ inA("> Definite and indefinite integration of $x^{n}$ where $n \\in \\mathbb{Q}$
     "including $n = -1$, $\\sin x$, $\\cos x$, $\\dfrac{1}{\\cos^{2}x}$ and $e^{x}$.")
 inB("> Integration by inspection, or substitution of the form "
     "$\\displaystyle\\int f(g(x))g'(x)\\,dx$.")
-inB("> Examples: $\\displaystyle\\int\\sin(2x+5)\\,dx$")
+# Examples のブロックは削除した
+notB("> Examples: $\\displaystyle\\int\\sin(2x+5)\\,dx$")
 # 公式集: 5.11 の欄は 5 つ、power rule は 5.5 の欄
-inA("## 公式集の 5.11 の欄")
-inA("べき乗の公式は、$5.5$ の欄にあります。")
+# 冒頭の「公式集の 5.11 の欄」の囲みは削除し、第1節の表の下に一文で残した
+notA("## 公式集の 5.11 の欄")
+inA("**この $5$ つは、公式集の $5.11$ の欄にそのまま印刷されています。**")
+inA("べき乗の公式は、公式集では $5.5$ の欄のほうに印刷されています。")
 inA("\\int x^{n}\\,dx = \\frac{x^{\\,n+1}}{n+1} + C, \\qquad n \\neq -1")
-# 5.11b には印刷された公式が無い
-inB("## 公式集の 5.11 の欄に、この方法の公式はありません")
-notB("## 公式集に、この項目の欄はありません")
-inB("y = g(u), \\ \\text{where} \\ u = f(x) \\ \\Rightarrow \\ "
-    "\\frac{dy}{dx} = \\frac{dy}{du} \\times \\frac{du}{dx}")
+# 5.11b の冒頭の 2 つの囲みは削除し、シラバスの Content 欄だけ第1節に残した
+notB("## 公式集の 5.11 の欄に、この方法の公式はありません")
+notB("## [AHL 5.11a](ahl-5-11a.qmd) の $5$ つを、先に見ておいてください")
+inB("これが **integration by inspection** です。")
 
 # ══════════════════════════════════════════════════════════════
 # 7. レビューで直した点の見張り（5.11a）
@@ -232,7 +234,7 @@ inA("| $\\ln x \\ \\to \\ \\dfrac{1}{x}$（$x > 0$） |")
 # 9: 覚えるべきものの言い方
 notA("覚えるべきなのは、**$\\sin$ の積分にマイナスが付くこと**")
 # 11: Why it works は例題と別の端
-inA("\\int_{0}^{\\pi/3}\\frac{1}{\\cos^{2}x}\\,dx = \\bigl[\\tan x\\bigr]_{0}^{\\pi/3}")
+inA("\\int_{0}^{\\frac{\\pi}{3}}\\frac{1}{\\cos^{2}x}\\,dx = \\bigl[\\tan x\\bigr]_{0}^{\\frac{\\pi}{3}}")
 # 12: 丸め
 notA("6 \\times 1.6094 = 9.6566")
 inA("6 \\times 1.60944 = 9.6566")
@@ -240,7 +242,11 @@ inA("6 \\times 1.60944 = 9.6566")
 inA("\\ln 3 = 1.10 \\ (3 \\text{ s.f.})")
 # 14: 英語ファースト
 inA("#### **modulus**（絶対値）が付く理由 {#abs}")
-inA("**integrand**（被積分関数）")
+inA("**被積分関数**（integrand）")
+inA("**定積分**（**definite integral**）")
+inA("**積分定数**（**constant of integration**）")
+# GDC の入力は「画面で見たままの形」で書く
+notA("`5+4cos(x)`")
 inA("**anti-derivative**（原始関数）")
 # 16: Interpret を足した
 inA("[Interpret the value of $\\displaystyle\\int_{0}^{3}\\left(5 + 4\\cos t\\right)dt$")
@@ -285,7 +291,10 @@ notB("$u = g(x)$ は $g(a)$ から $g(b)$ まで動きます")
 # 14: ln(ln x) の対比
 inB("$\\ln(\\ln x)$ になるのは $\\displaystyle\\int\\dfrac{1}{x\\ln x}\\,dx$ のほうです。")
 # 15: Guidance の 4 例の振り分け
-inB("**はじめの $2$ つがこの節、後ろの $2$ つは[第3節](#sub)と[第4節](#log-form)で扱います。**")
+notB("はじめの $2$ つがこの節、後ろの $2$ つは")
+inB("### 3. 中身の微分が掛けられているとき — inspection {#inspection2}")
+inB("### 4. substitution — 置きかえて進めます {#sub}")
+inB("#### $\\displaystyle\\int \\frac{f'(x)}{f(x)}\\,dx$ の形 {#log-form}")
 
 # ══════════════════════════════════════════════════════════════
 # 9. 構造の不変条件
@@ -356,7 +365,8 @@ for tag, TXT, path in (("5.11a", TA, A), ("5.11b", TB, B)):
     else:
         OK += 1
 
-for svg in ("ahl-5-11a-lnabs.svg", "ahl-5-11b-sub.svg"):
+for svg in ("ahl-5-11a-lnabs.svg", "ahl-5-11a-area.svg",
+            "ahl-5-11b-inspect.svg", "ahl-5-11b-sub.svg"):
     if os.path.exists(os.path.join(os.path.dirname(A), "img", svg)):
         OK += 1
     else:

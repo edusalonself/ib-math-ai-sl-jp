@@ -1,4 +1,4 @@
-"""AHL 5.17a（実で異なる固有値の phase portrait）の図を作る。ラベルは英語。
+"""AHL 5.17a（異なる 2 つの実固有値の phase portrait）の図を作る。ラベルは英語。
    ★ 4 枚組は 2 行 2 列（AHL 5.15 / 5.16 と同じ理由）。
    出力先: ai-hl/05-calculus/img/*.svg
    再生成: python3 figs/ai-hl/make_ahl_5_17a.py
@@ -101,22 +101,28 @@ V1 = (1, 1)
 V2 = (1, -1)
 
 
-# ═════════════ 1. 三つの場合（2×2） ═════════════
-fig, axs = plt.subplots(2, 2, figsize=(11.0, 10.4))
-
-# (a) eigenvector の方向だけ
-ax = axs[0, 0]
+# ═════════════ 1a. eigenvector の方向 ═════════════
+fig, ax = plt.subplots(figsize=(5.8, 5.4))
 frame(ax)
-eigline(ax, V1, ACC, "$\\lambda = 5$\n$\\mathbf{p} = \\binom{1}{1}$",
+eigline(ax, V1, ACC, "$\\lambda_1 = 5$\n$\\mathbf{p}_1 = \\binom{1}{1}$",
         outward=True, labxy=(2.55, 3.35))
-eigline(ax, V2, GREEN, "$\\lambda = 1$\n$\\mathbf{p} = \\binom{1}{-1}$",
+eigline(ax, V2, GREEN, "$\\lambda_2 = 1$\n$\\mathbf{p}_2 = \\binom{1}{-1}$",
         outward=True, labxy=(2.75, -3.35))
 ax.plot([0], [0], "o", color=INK, ms=9, zorder=9)
-ax.set_title("(a)  along an eigenvector the path is a\nSTRAIGHT line through the origin",
+ax.set_title("along an eigenvector the path is a\nSTRAIGHT line through the origin",
              fontsize=12.5, color=INK, pad=10)
+fig.text(0.5, -0.03,
+         "Both $\\lambda > 0$, so both arrows point AWAY from the origin.",
+         fontsize=11, ha="center", color=INK)
+fig.tight_layout()
+save(fig, "ahl-5-17a-eigen.svg")
 
-# (b) 両方正
-ax = axs[0, 1]
+
+# ═════════════ 1b. node の 2 つ（1×2） ═════════════
+fig, axs = plt.subplots(1, 2, figsize=(11.0, 5.4))
+
+# (a) 両方正
+ax = axs[0]
 frame(ax)
 eigline(ax, V1, ACC, outward=True, lw=2.0)
 eigline(ax, V2, GREEN, outward=True, lw=2.0)
@@ -124,11 +130,11 @@ for p in [(0.60, -0.50), (0.50, -0.60), (-0.60, 0.50), (-0.50, 0.60),
           (0.55, 0.05), (-0.55, -0.05)]:
     traj(ax, M_OUT, p, col=LINE, lw=2.0, tmax=3.0, both=False)
 ax.plot([0], [0], "o", color=INK, ms=9, zorder=9)
-ax.set_title("(b)  $\\lambda = 5,\\ 1$  (both POSITIVE)\nall paths move AWAY from the origin",
+ax.set_title("(a)  $\\lambda = 5,\\ 1$  (both POSITIVE)\nall paths move AWAY from the origin",
              fontsize=12.5, color=LINE, pad=10)
 
-# (c) 両方負
-ax = axs[1, 0]
+# (b) 両方負
+ax = axs[1]
 frame(ax)
 eigline(ax, V1, ACC, outward=False, lw=2.0)
 eigline(ax, V2, GREEN, outward=False, lw=2.0)
@@ -136,11 +142,21 @@ for p in [(3.7, 1.0), (-3.7, -1.0), (1.0, 3.7), (-1.0, -3.7),
           (3.6, -2.2), (-3.6, 2.2)]:
     traj(ax, M_IN, p, col=LINE, lw=2.0, tmax=5.0, both=False)
 ax.plot([0], [0], "o", color=INK, ms=9, zorder=9)
-ax.set_title("(c)  $\\lambda = -1,\\ -5$  (both NEGATIVE)\nall paths move TOWARDS the origin",
+ax.set_title("(b)  $\\lambda = -1,\\ -5$  (both NEGATIVE)\nall paths move TOWARDS the origin",
              fontsize=12.5, color=LINE, pad=10)
 
-# (d) saddle
-ax = axs[1, 1]
+fig.text(0.5, -0.07,
+         "The two eigenvector directions are the SKELETON of the picture.\n"
+         "A positive $\\lambda$ pushes outwards along its own direction,\n"
+         "a negative $\\lambda$ pulls inwards along its own direction.",
+         fontsize=12.5, ha="center", va="top", color=INK,
+         linespacing=1.5)
+fig.tight_layout()
+save(fig, "ahl-5-17a-nodes.svg")
+
+
+# ═════════════ 1c. saddle ═════════════
+fig, ax = plt.subplots(figsize=(5.8, 5.4))
 frame(ax)
 eigline(ax, V1, ACC, "$\\lambda = 3$\nOUT", outward=True, lw=2.2,
         labxy=(2.6, 3.4))
@@ -150,18 +166,11 @@ for p in [(1.4, -1.15), (-1.4, 1.15), (1.15, -1.4), (-1.15, 1.4),
           (2.6, -3.4), (-2.6, 3.4)]:
     traj(ax, M_SAD, p, col=LINE, lw=2.0, tmax=3.2, both=False)
 ax.plot([0], [0], "o", color=INK, ms=9, zorder=9)
-ax.set_title("(d)  $\\lambda = 3,\\ -1$  (OPPOSITE signs)\nthe origin is a SADDLE POINT",
+ax.set_title("$\\lambda = 3,\\ -1$  (OPPOSITE signs)\nthe origin is a SADDLE POINT",
              fontsize=12.5, color=GOLD, pad=10)
 
-fig.suptitle("Real, distinct eigenvalues: three pictures", fontsize=15,
-             y=0.995)
-fig.text(0.5, -0.015,
-         "The two eigenvector directions are the SKELETON of the picture.   "
-         "A positive $\\lambda$ pushes outwards along its own direction, a "
-         "negative $\\lambda$ pulls inwards along its own direction.",
-         fontsize=12.5, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0, 1, 0.972))
-save(fig, "ahl-5-17a-cases.svg")
+fig.tight_layout()
+save(fig, "ahl-5-17a-saddle.svg")
 
 
 # ═════════════ 2. 長い目で見るとどうなるか（1×2） ═════════════
@@ -201,13 +210,14 @@ ax.plot([0], [0], "o", color=INK, ms=8, zorder=9)
 ax.set_title("at a saddle, which SIDE you start on\ndecides where you end up",
              fontsize=12.5, color=GOLD, pad=10)
 
-fig.text(0.5, -0.06,
-         "The term with the biggest $\\lambda$ grows fastest, so it takes over "
-         "whenever its coefficient is not zero — the further out you go, the "
-         "closer the path gets to that direction.   At a saddle the $\\lambda < 0$ "
-         "line is the dividing line: paths that are not on it eventually leave "
-         "along the $\\lambda > 0$ line.",
-         fontsize=12.5, ha="center", color=INK)
+fig.text(0.5, -0.13,
+         "The term with the biggest $\\lambda$ grows fastest, so it takes over\n"
+         "whenever its coefficient is not zero: the further out you go,\n"
+         "the closer the path gets to that direction.\n"
+         "At a saddle, the $\\lambda < 0$ line is the dividing line — paths that\n"
+         "are not on it eventually leave along the $\\lambda > 0$ line.",
+         fontsize=12.5, ha="center", va="top", color=INK,
+         linespacing=1.5)
 fig.tight_layout()
 save(fig, "ahl-5-17a-longrun.svg")
 

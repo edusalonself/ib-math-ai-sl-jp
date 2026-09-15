@@ -29,16 +29,16 @@ def tidy(ax):
         ax.spines[sp].set_color(GREY)
 
 
-# ══════════ fig 1: どちらが直線になるか ══════════
-fig, axs = plt.subplots(2, 2, figsize=(11.4, 8.2))
-
 XE = np.arange(0, 5.0)
 YE = 5 * 2.0 ** XE                       # 指数
 XP = np.array([1.0, 2, 3, 4, 5])
 YP = 2 * XP ** 3                         # 累乗
 
+# ══════════ fig 1a: 指数のデータ —— semi-log で直線になる ══════════
+fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
+
 # ── (a) 指数のデータ、ふつうの軸
-ax = axs[0][0]
+ax = axs[0]
 XS = np.linspace(0, 4.3, 300)
 ax.plot(XS, 5 * 2.0 ** XS, color=GREY, lw=1.8, ls="--")
 ax.plot(XE, YE, "o", color=LINE, ms=9, zorder=6)
@@ -52,7 +52,7 @@ ax.set_title("(a)  exponential data: a curve", fontsize=12, color=INK, pad=9)
 tidy(ax)
 
 # ── (b) 指数のデータ、semi-log
-ax = axs[0][1]
+ax = axs[1]
 LY = np.log10(YE)
 ax.plot([-0.3, 4.4], [np.log10(5) + np.log10(2) * (-0.3),
                       np.log10(5) + np.log10(2) * 4.4],
@@ -74,8 +74,15 @@ ax.set_ylabel("$\\log y$")
 ax.set_title("(b)  semi-log: a straight line", fontsize=12, color=INK, pad=9)
 tidy(ax)
 
-# ── (c) 累乗のデータ、ふつうの軸
-ax = axs[1][0]
+fig.tight_layout(w_pad=2.6)
+save(fig, "ahl-2-10-semilog.svg")
+
+
+# ══════════ fig 1b: 累乗のデータ —— log-log で直線になる ══════════
+fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
+
+# ── (a) 累乗のデータ、ふつうの軸
+ax = axs[0]
 XS2 = np.linspace(0.6, 5.3, 300)
 ax.plot(XS2, 2 * XS2 ** 3, color=GREY, lw=1.8, ls="--")
 ax.plot(XP, YP, "o", color=LINE, ms=9, zorder=6)
@@ -85,11 +92,11 @@ ax.set_xlabel("$x$")
 ax.set_ylabel("$y$")
 ax.text(0.6, 265, "$y = 2x^{3}$", fontsize=12.5, color=LINE, ha="left",
         va="top", bbox=BOX, zorder=8)
-ax.set_title("(c)  power data: also a curve", fontsize=12, color=INK, pad=9)
+ax.set_title("(a)  power data: also a curve", fontsize=12, color=INK, pad=9)
 tidy(ax)
 
-# ── (d) 累乗のデータ、log-log
-ax = axs[1][1]
+# ── (b) 累乗のデータ、log-log
+ax = axs[1]
 LX, LYP = np.log10(XP), np.log10(YP)
 ax.plot([-0.08, 0.78], [np.log10(2) + 3 * (-0.08), np.log10(2) + 3 * 0.78],
         color=GREEN, lw=2.4)
@@ -108,11 +115,11 @@ ax.set_xlim(-0.09, 0.94)
 ax.set_ylim(-0.05, 2.75)
 ax.set_xlabel("$\\log x$")
 ax.set_ylabel("$\\log y$")
-ax.set_title("(d)  log-log: a straight line", fontsize=12, color=INK, pad=9)
+ax.set_title("(b)  log-log: a straight line", fontsize=12, color=INK, pad=9)
 tidy(ax)
 
-fig.tight_layout(h_pad=2.4, w_pad=2.6)
-save(fig, "ahl-2-10-which.svg")
+fig.tight_layout(w_pad=2.6)
+save(fig, "ahl-2-10-loglog.svg")
 
 
 # ══════════ fig 2: 目盛りの取り方 ══════════

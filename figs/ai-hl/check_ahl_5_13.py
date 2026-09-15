@@ -191,7 +191,7 @@ in_text("\\text{total distance} = \\frac{4}{3} + \\frac{4}{3} + \\frac{4}{3} = 4
 in_text("v(2) = 4 - 8 + 3 = -1")
 in_text("a = v\\frac{dv}{ds} = (2s + 3) \\times 2 = 4s + 6")
 in_text("t = 4.02 \\ \\text{s}")
-in_text("\\int_{0}^{6} v\\,dt = 4.94 \\ \\text{m}")
+in_text("\\int_{0}^{6} \\left(5 - e^{0.4t}\\right) dt = 4.94 \\ \\text{m}")
 in_text("\\int_{0}^{6} |v|\\,dt = 15.3 \\ \\text{m}")
 in_text("前半が $+10.12$、後半が $-5.176$ です")
 in_text("a = v\\frac{dv}{ds} = 5 \\times 0.4 = 2 \\ \\text{m s}^{-2}")
@@ -208,11 +208,12 @@ in_text("\\text{total distance} = 9 + 4 = 13 \\ \\text{m}")
 # ══════════════════════════════════════════════════════════════
 in_text("> **Speed is the magnitude of velocity.**")
 in_text("> Use of $\\dot{x} = \\dfrac{dx}{dt}$ and $\\ddot{x} = \\dfrac{d^{2}x}{dt^{2}}$.")
-in_text("> **Links to other subjects:** Kinematics (physics).")
+# 冒頭の 3 つの囲みは削除し、要点だけ第1節に折り込んだ
+not_in_text("## 公式集の 5.13 の欄")
 in_text("a = \\frac{dv}{dt} = \\frac{d^{2}s}{dt^{2}} = v\\frac{dv}{ds}")
 in_text("\\text{distance travelled from } t_1 \\text{ to } t_2 = \\int_{t_1}^{t_2} |v(t)|\\,dt")
 in_text("\\text{displacement from } t_1 \\text{ to } t_2 = \\int_{t_1}^{t_2} v(t)\\,dt")
-in_text("**ただし、$v = \\dfrac{ds}{dt}$ は印刷されていません。**")
+in_text("**ただし $v = \\dfrac{ds}{dt}$ は印刷されていません。**")
 in_text("**この式は AI の公式集にもありません。** 検算に使うだけにしてください。")
 # at rest / changes direction
 in_text("## `at rest`（静止している）は $v = 0$ です。$a = 0$ ではありません")
@@ -310,13 +311,13 @@ in_text("doc → Settings → Document Settings → Angle: Radian")
 in_text("**この項目が終わったら Degree に戻してください。**")
 # シラバスの位置づけ
 not_in_text("シラバスは、この項目を「物理の運動学と同じ内容」と位置づけています")
-in_text("シラバスは、この項目に次の注記を付けています。")
+in_text("**新しい微分の公式も、新しい積分の公式も出てきません。**")
 # 公式集の行の呼び方
-in_text("公式集の $1$ 行目にある、$3$ 番目の書き方です（@eq-ahl513-acc）")
+in_text("公式集の $1$ 行目にある、$3$ 番目の書き方です（@eq-ahl513-chain）")
 in_text("公式集の $3$ 行目です（@eq-ahl513-disp）")
 not_in_text("公式集の $3$ つ目の形です")
 # 覚える式が 1 つある、という予告
-in_text("**新しい計算のやり方は出てきません。**（覚える式が $1$ つだけあります。次の欄で見ます。）")
+in_text("公式集の $5.13$ の欄には、この $a$ の式と、次の $2$ つが印刷されています。")
 # displacement の二義性
 in_text("## `displacement` は、$2$ つの意味で使われます")
 in_text("そこから**位置がどれだけ変わったか**を表します")
@@ -354,7 +355,7 @@ not_in_text("Kinematics（運動の記述）")
 # ══════════════════════════════════════════════════════════
 #  2026-08: v=0 / a=0 の読み方
 # ══════════════════════════════════════════════════════════
-in_text("| $v = 0$ | **一瞬静止する。** 前後で $v$ の**符号が変われば**、向きも変わる | $t = 1$、$t = 3$ |")
+in_text("| $v = 0$ | **一瞬静止する**（**instantaneously at rest**）。前後で $v$ の**符号が変われば**、向きも変わる | $t = 1$、$t = 3$ |")
 in_text("| $a = 0$ | **velocity（速度）が極大・極小になる候補。** 前後で $a$ の符号が変わるかを確かめる | $t = 2$ |")
 not_in_text("| $v = 0$ | **一瞬止まる。** 向きが変わる瞬間 | $t = 1$、$t = 3$ |")
 not_in_text("| $a = 0$ | 速度が**増えるか減るかの境目** | $t = 2$ |")

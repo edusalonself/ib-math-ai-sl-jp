@@ -32,6 +32,10 @@ node tools/mathcheck.js ai-hl/03-geometry-and-trigonometry/ahl-3-13b.qmd
 - `✓` `✗` `①` `②` に KaTeX のメトリクスがない → **数式の外に出す**
 - `\lvert` `\rvert` は使えます（matplotlib では使えません。下記）
 
+★ 2026-09: **通貨の `\$`**（`$\$2000$` のような書き方）が数式の区切りと
+取りちがえられ、誤検出になっていました。いまは `mathcheck.js` と `mathwidth.js` の
+両方で、先に別の文字へ置き換えてから数式を取り出しています。
+
 ### 2. mathwidth.js — 表示数式が読める幅に収まっているか
 
 ```bash

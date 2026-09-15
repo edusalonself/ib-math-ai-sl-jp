@@ -440,11 +440,13 @@ chk(TEXT.count("ahl-3-13b.qmd") >= 3, "3.13b への前方リンクがある")
 # ══════════════════════════════════════════════════════════
 # 8. GDC の記述
 # ══════════════════════════════════════════════════════════
-in_text("menu → 7: Matrix & Vector → C: Vector", "dotP の場所")
+in_text("menu → Matrix & Vector → Vector", "dotP の場所")
 in_text("`ctrl` を押してから `var`", "ストアの押し方")
 in_text("menu → Actions → Clear a-z", "変数を消す")
 in_text("doc → Settings → Document Settings", "角度設定")
-in_text("dotP([3;4],[2;-5])", "dotP の例")
+# 2026-09: GDC の入力例は画面どおりの表示に変更
+in_text(r"\texttt{dotP}\left(\begin{bmatrix}3\\4\end{bmatrix},\ \begin{bmatrix}2\\-5\end{bmatrix}\right)", "dotP の例")
+not_in_text("dotP([3;4],[2;-5])", "旧: 直線入力の表記")
 in_text("- **Radian** なら $2.118$", "radian の値（レビュー10）")
 not_in_text("$2.117$", "切り捨てていた radian の値")
 near(sp.acos(sp.Rational(-14, 1) / (5 * sp.sqrt(29))), 2.1175852,
@@ -477,7 +479,7 @@ chk([h for h in _h2 if h in _want] == _want, "7 つの見出しが所定の順")
 _idea = [int(m) for m in re.findall(r"^### (\d+)\. .*\{#(?!gdc-)", TEXT, re.M)]
 chk(_idea == list(range(1, 10)), f"The idea が 1..9 で連番: {_idea}")
 _gdc = [int(m) for m in re.findall(r"^### (\d+)\. .*\{#gdc-", TEXT, re.M)]
-chk(_gdc == list(range(1, 7)), f"GDC が 1..6 で連番: {_gdc}")
+chk(_gdc == list(range(1, 6)), f"GDC が 1..5 で連番: {_gdc}")
 chk(TEXT.count("**検算") >= 14, "検算が十分ある")
 chk("**確かめ。**" not in TEXT and "**確かめます。**" not in TEXT,
     "検算の見出しに「確かめ。」を使っていない")
@@ -501,7 +503,7 @@ for _r in set(re.findall(r"@(?:exm|eq|fig|tbl)-([a-z0-9]+)-", TEXT)):
 # ══════════════════════════════════════════════════════════
 # 10. 図
 # ══════════════════════════════════════════════════════════
-for name in ["ahl-3-13a-idea.svg", "ahl-3-13a-lines.svg",
+for name in ["ahl-3-13a-idea.svg", "ahl-3-13a-sign.svg", "ahl-3-13a-lines.svg",
              "ahl-3-13a-component.svg"]:
     chk(os.path.exists(os.path.join(BASE, "img", name)), "図がある: " + name)
     chk("](img/" + name + ")" in TEXT, "本文が図を貼っている: " + name)

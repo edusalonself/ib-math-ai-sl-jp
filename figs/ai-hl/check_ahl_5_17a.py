@@ -298,7 +298,7 @@ dx = sp.diff(sol1[0], t)
 eq("t=0.2 での dx/dt（2桁）", round(float(dx.subs(t, 0.2)), 2), 25.96, 1e-2)
 val = 3 * float(sol1[0].subs(t, 0.2)) + 2 * float(sol1[1].subs(t, 0.2))
 eq("t=0.2 での 3x+2y（2桁）", round(val, 2), 25.96, 1e-2)
-in_text("GDC の 25.96", "$25.96\\ldots$")
+# GDC の「1 点で確かめる」節は 2026-09 に削除（AHL 5.9a に集約）
 
 print()
 print("=" * 78)
@@ -312,8 +312,8 @@ eq("図の M_IN が [[-3,2],[2,-3]]",
    "M_IN = [[-3, 2], [2, -3]]" in MK, True)
 eq("図の M_SAD が [[1,2],[2,1]]",
    "M_SAD = [[1, 2], [2, 1]]" in MK, True)
-for lab in ("(a)  along an eigenvector", "(b)  $\\\\lambda = 5,\\\\ 1$",
-            "(c)  $\\\\lambda = -1,\\\\ -5$", "(d)  $\\\\lambda = 3,\\\\ -1$"):
+for lab in ("along an eigenvector", "(a)  $\\\\lambda = 5,\\\\ 1$",
+            "(b)  $\\\\lambda = -1,\\\\ -5$", "$\\\\lambda = 3,\\\\ -1$"):
     eq("図のパネル %s" % lab[:12], lab in MK, True)
 # 鞍点図のラベルが取りちがえられていないか
 eq("saddle 図：上から出発 → 右上（青）",
@@ -332,7 +332,7 @@ eq("演習の番号", nos, [str(i) for i in range(1, 11)])
 eq("ex-sep は 9 個", TXT.count("::: {.ex-sep}"), 9)
 eq("exercise-block は 1 個", TXT.count("::: {.exercise-block}"), 1)
 
-for fid in ("cases", "longrun"):
+for fid in ("eigen", "nodes", "saddle", "longrun"):
     in_text("図 %s の定義" % fid, "{#fig-ahl517a-%s" % fid)
     eq("図 %s が参照されている" % fid, TXT.count("@fig-ahl517a-%s" % fid) >= 1,
        True)
@@ -341,9 +341,10 @@ for fid in ("cases", "longrun"):
 
 for e in ("node", "saddle", "stable", "classify"):
     in_text("例題 %s" % e, "{#exm-ahl517a-%s}" % e)
-for a in ("idea", "straight", "general", "initial", "signs", "saddle",
+for a in ("idea", "straight", "general", "step1", "step2", "step3",
+          "initial", "signs", "saddle",
           "longrun", "sketch", "why", "why-two", "why-saddle", "gdc-eig",
-          "gdc-check", "gdc-plot"):
+          "gdc-plot"):
     in_text("アンカー #%s" % a, "{#%s}" % a)
 
 anchors = set(re.findall(r"\{#([a-z0-9-]+)\}", TXT)) | {"common-errors"}
@@ -364,13 +365,17 @@ for m in set(re.findall(r"\]\((\.\./[^)#]+\.qmd)", TXT)):
 
 # レビュー修正の固定（回帰防止）
 not_in_text("λ<0 で「同じ向き」と書いていない", "**進む向きが、今いる向きと同じ**です")
-in_text("λ<0 は逆向きと断っている", "$\\lambda > 0$ なら同じ向き、$\\lambda < 0$ なら逆向きです。")
-in_text("trace を English first で導入", "**trace**（対角の和）といいます。")
+in_text("λ の符号は e^{λt} で説明している",
+        "- $\\lambda < 0$ なら、$e^{\\lambda t}$ は時間とともに **$0$ へ近づく**")
+in_text("trace の別解を AHL 1.15 に送っている",
+        "対角に並ぶ $2$ つの数の和（**trace**）と $\\det M$ を使えば")
 in_text("node の訳", "**node**（結節点）と **saddle point**（鞍点）")
 in_text("unstable node の訳", "**unstable node**（不安定な結節点）")
 in_text("早見表に判別式が入っている", "| $\\Delta < 0$ | **複素数** → [AHL 5.17b](ahl-5-17b.qmd) |")
-in_text("シラバス引用が省略されていない",
-        "- **Positive** or complex with positive real part, all solutions move away from the origin")
+in_text("答案の言い方が表に入っている",
+        "`all solutions move away from the origin`")
+in_text("答案の言い方2", "`all solutions move towards the origin`")
+in_text("答案の言い方3", "`the origin is a saddle point`")
 in_text("演習7 の等式が正しい", "1.4715 - 0.0996 = 1.3719 = 1.37 \\ (3 \\text{ s.f.})")
 in_text("演習3 に sketch がある",
         "**(c)** [Sketch a phase portrait, showing the two straight lines, "
@@ -402,14 +407,14 @@ in_text("Worked examples の定型 callout",
 in_text("例題の解答例の見出し", "## 解答例（答案用紙にはこう書く）")
 in_text("演習の解答例の見出し", "## 解答例（答案用紙に書くこと）")
 in_text("GDC の見出し", "## Using your GDC (TI-Nspire CX II)")
-in_text("公式集の式", "\\mathbf{x} = A\\mathbf{p}_1 e^{\\lambda_1 t} + B\\mathbf{p}_2 e^{\\lambda_2 t}")
-in_text("公式集に載っている旨", "## 公式集に載っています（5.17 の欄）")
+in_text("公式集の式", "\\mathbf{X} = A\\mathbf{p}_1 e^{\\lambda_1 t} + B\\mathbf{p}_2 e^{\\lambda_2 t}")
+not_in_text("状態ベクトルに小文字 x を使っていない", "\\mathbf{x}")
+in_text("公式集に載っている旨", "この式は**公式集に載っています（5.17 の欄）。覚える必要はありません。**")
 in_text("char eq は覚える", "**$\\det(M - \\lambda I) = 0$ は公式集に載っていません**")
-in_text("シラバス Content",
-        "Phase portrait for the solutions of coupled differential equations")
-in_text("シラバス 厳密解の限定",
-        "Calculation of exact solutions is only required for the case of "
-        "**real distinct eigenvalues**.")
+in_text("扱う形", "**右辺が $x$ と $y$ の一次式だけ**という特別な場合")
+in_text("厳密解の限定",
+        "シラバスで**式による解法が求められている、異なる $2$ つの実固有値**の場合を扱います")
+not_in_text("旧・実で異なる", "**実で、異なる**")
 in_text("シラバス distinct non-zero",
         'Systems will have **distinct, non-zero**, eigenvalues')
 
@@ -419,30 +424,30 @@ in_text("シラバス distinct non-zero",
 # ══════════════════════════════════════════════════════════
 in_text("unstable node の行",
         "| **両方とも正** | **unstable node**（不安定な結節点） | "
-        "原点以外のすべての軌道が原点から**離れる** |")
+        "原点以外のすべての軌道が原点から**離れる**。")
 in_text("stable node の行",
         "| **両方とも負** | **stable node**（安定な結節点） | "
-        "原点以外のすべての軌道が原点に**近づく** |")
+        "原点以外のすべての軌道が原点に**近づく**。")
 in_text("saddle の行",
         "| **符号が違う** | **saddle point**（鞍点） | "
-        "固有ベクトルの向きによって、**近づく**ものと**離れる**ものがある |")
+        "固有ベクトルの向きによって、**近づく**ものと**離れる**ものがある。")
+in_text("表が図を指している", "| @fig-ahl517a-nodes (a) |")
 not_in_text("旧 unstable node", "| **両方とも正** | **unstable node**（不安定な結節点） | すべての軌道が原点から**離れる** |")
 not_in_text("旧 stable node", "| **両方とも負** | **stable node**（安定な結節点） | すべての軌道が原点に**近づく** |")
 not_in_text("旧 saddle", "| **符号が違う** | **saddle point**（鞍点） | 近づいてから、**離れる** |")
-in_text("saddle の補足",
-        "**負の固有値に対応する固有ベクトル上**では、軌道は原点に近づきます。")
-in_text("saddle の補足2",
-        "それ以外の一般の軌道は、最後には**正の固有値の固有ベクトルの向きへ"
-        "離れていきます**（出発点によっては、いったん原点に近づいてから向きを変えます）")
+in_text("saddle は第6節でくわしく",
+        "@fig-ahl517a-saddle（[第6節](#saddle)）")
+in_text("答案の言い方を使うよう促している",
+        "**表の英語をそのまま使う**のがいちばん安全です")
 in_text("第6節の但し書き",
         "**「すべての軌道が、近づいてから離れる」わけではありません。**")
 not_in_text("旧・第6節", "そのあいだの軌道は、**いったん近づいてから、向きを変えて離れていきます。**")
 # dominant eigenvalue
 in_text("A≠0 の条件",
-        "\\mathbf{x} \\approx A\\mathbf{p}_1 e^{5t} \\qquad "
+        "\\mathbf{X} \\approx A\\mathbf{p}_1 e^{5t} \\qquad "
         "(A \\neq 0 \\text{ で、} t \\text{ が大きいとき})")
 not_in_text("旧・無条件の近似",
-            "\\mathbf{x} \\approx A\\mathbf{p}_1 e^{5t} \\qquad (t \\text{ が大きいとき})")
+            "\\mathbf{X} \\approx A\\mathbf{p}_1 e^{5t} \\qquad (t \\text{ が大きいとき})")
 in_text("支配的の言い換え",
         "\\text{係数が } 0 \\text{ でなければ、大きいほうの } \\lambda \\text{ の項が支配的になる}")
 not_in_text("旧・いつも勝つ", "\\text{生き残るのは、いつも } \\lambda \\text{ が大きいほう}")

@@ -286,7 +286,8 @@ in_text("計算のしかた自体は $3$ 次元でも同じですが、シラバ
 # ══════════════════════════════════════════════════════════
 # 6. シラバス・公式集
 # ══════════════════════════════════════════════════════════
-in_text("**ありません。$1$ 行もありません。**", "公式集に AHL 3.12 の欄がない")
+# 2026-09: 公式集 callout は削除
+not_in_text("## 公式集の AHL 3.12 の欄", "公式集 callout が残っていない")
 in_text("> Motion with variable velocity in two dimensions.", "Content 2 行目の逐語引用")
 for g in ["$\\begin{pmatrix} v_x \\\\ v_y \\end{pmatrix} = "
           "\\begin{pmatrix} 7 \\\\ 6-4t \\end{pmatrix}$.",
@@ -302,16 +303,16 @@ chk("弧長" not in TEXT and "arc length" not in TEXT, "2 次元の弧長を持�
 # ══════════════════════════════════════════════════════════
 # 7. GDC
 # ══════════════════════════════════════════════════════════
-for claim in ["menu → 4: Calculus", "Numerical Derivative at a Point",
-              "Numerical Integral", "nInt(", "menu → Analyze Graph → Minimum",
+for claim in ["menu → Calculus", "Derivative at a Point",
+              "Integral", "menu → Analyze Graph → Minimum",
               "menu → Graph Entry/Edit → Parametric", "ctrl + T",
               "doc → Settings → Document Settings"]:
     in_text(claim, "GDC の記述")
 for absent in ["unitV(", "norm(", "solve(", "nDeriv(", "nDerivative("]:
     chk(absent not in TEXT, "非 CAS で確認できていない関数を使っていない: " + absent)
-eq(sp.integrate(6 - 4 * t, (t, 0, 2)), 4, "nInt(6-4x,x,0,2) = 4")
+eq(sp.integrate(6 - 4 * t, (t, 0, 2)), 4, "積分テンプレートの値 4")
 eq(sp.diff(6 * t - 2 * t**2, t).subs(t, 1), 2, "微分テンプレートの値 2")
-in_text("これは $y(2)-y(0)$、つまり**縦の変位**です。", "nInt が変位であることを書いている")
+in_text("これは $y(2)-y(0)$、つまり**縦の変位**です。", "積分が変位であることを書いている")
 not_in_text("$4$ が返ります。これは @exm-ahl312b-position の $y(2)$ です。",
             "位置そのものと書いた古い言い方")
 for T, val in [(0, 6), (1, 2), (2, -2), (3, -6)]:
@@ -385,7 +386,8 @@ unused = sorted(d for d in defined
                 and d not in atrefs and d not in links)
 chk(not unused, "使われていない番号: %s" % unused)
 IMG = os.path.join(BASE, "img")
-for name in ["ahl-3-12b-idea.svg", "ahl-3-12b-special.svg", "ahl-3-12b-shift.svg"]:
+for name in ["ahl-3-12b-idea.svg", "ahl-3-12b-projectile.svg",
+             "ahl-3-12b-circular.svg", "ahl-3-12b-shift.svg"]:
     chk(os.path.exists(os.path.join(IMG, name)), "図がある: " + name)
     chk("img/" + name in TEXT, "図を本文で使っている: " + name)
 # 他ページへのリンクが実在するアンカーを指している
@@ -394,7 +396,8 @@ for rel, an in re.findall(r"\]\((\.\./[a-z0-9-]+/[a-z0-9-]+\.qmd|ahl-3-[0-9a-z]+
     f = os.path.join(BASE, rel)
     if os.path.exists(f):
         src = open(f, encoding="utf-8").read()
-        chk("{#" + an + "}" in src or an in ("why-it-works", "common-errors"),
+        chk(re.search(r"\{#" + re.escape(an) + r"[ }]", src) is not None
+            or an in ("why-it-works", "common-errors"),
             "リンク先のアンカーがある: %s#%s" % (rel, an))
 
 # ══════════════════════════════════════════════════════════

@@ -85,11 +85,11 @@ FINE = np.linspace(0, XEND, 400)
 
 
 # ═════════════ 1. Euler の 1 歩 → 折れ線（2×2） ═════════════
-fig, axs = plt.subplots(2, 2, figsize=(11.4, 9.2))
+fig, axs = plt.subplots(1, 3, figsize=(15.6, 5.1))
 H = 0.3
 
 # (a) 出発点と、そこでの傾き
-ax = axs[0, 0]
+ax = axs[0]
 frame(ax, XR, YR, xticks=XT)
 ax.plot(FINE, EXACT(FINE), color=GREY, lw=2.0, alpha=0.45, zorder=3)
 ax.plot([0], [1], "o", color=ACC, ms=9, zorder=6)
@@ -101,7 +101,7 @@ ax.set_title("(a)  start at the given point,\nread the slope off the equation",
              fontsize=12.5, color=ACC, pad=10)
 
 # (b) 1 歩進む
-ax = axs[0, 1]
+ax = axs[1]
 frame(ax, XR, YR, xticks=XT)
 ax.plot(FINE, EXACT(FINE), color=GREY, lw=2.0, alpha=0.45, zorder=3)
 xe, ye = euler(F, 0.0, 1.0, H, 1)
@@ -118,7 +118,7 @@ ax.set_title("(b)  step along that slope by $h$", fontsize=12.5, color=ACC,
              pad=10)
 
 # (c) 4 歩
-ax = axs[1, 0]
+ax = axs[2]
 frame(ax, XR, YR, xticks=XT)
 ax.plot(FINE, EXACT(FINE), color=GREY, lw=2.0, alpha=0.45, zorder=3)
 xe, ye = euler(F, 0.0, 1.0, H, 3)
@@ -128,8 +128,18 @@ for xx, yy in zip(xe, ye):
 ax.set_title("(c)  repeat — the answer is a POLYGON,\nnot a curve",
              fontsize=12.5, color=ACC, pad=10)
 
-# (d) 厳密解と重ねる
-ax = axs[1, 1]
+fig.suptitle("$\\dfrac{dy}{dx} = x + y$,   $y(0) = 1$", fontsize=16, y=0.995)
+fig.text(0.5, -0.04,
+         "Euler's method walks along the TANGENT for a short distance $h$, "
+         "then reads a new slope and turns.   The result is a chain of "
+         "straight pieces, so it is an APPROXIMATION.",
+         fontsize=12.5, ha="center", color=INK)
+fig.tight_layout(rect=(0, 0, 1, 0.955))
+save(fig, "ahl-5-16a-step.svg")
+
+
+# ═════════════ 1b. 折れ線は角を切る（誤差） ═════════════
+fig, ax = plt.subplots(figsize=(6.2, 5.0))
 frame(ax, XR, YR, xticks=XT)
 ax.plot(FINE, EXACT(FINE), color=LINE, lw=2.8, zorder=5,
         label="exact  $y = 2e^{x} - x - 1$")
@@ -143,17 +153,11 @@ ax.annotate("the gap is the ERROR", xy=(XEND, (ye[-1] + EXACT(XEND)) / 2),
 # ★ 凡例は右下へ。左上は注記の場所なので、重ねると凡例の1行目が
 #    注記に置きかわったように見える。
 ax.legend(loc="lower right", fontsize=10.5, framealpha=0.92)
-ax.set_title("(d)  the polygon always cuts the CORNERS",
+ax.set_title("the polygon always cuts the CORNERS",
              fontsize=12.5, color=INK, pad=10)
 
-fig.suptitle("$\\dfrac{dy}{dx} = x + y$,   $y(0) = 1$", fontsize=16, y=0.995)
-fig.text(0.5, -0.02,
-         "Euler's method walks along the TANGENT for a short distance $h$, "
-         "then reads a new slope and turns.   The result is a chain of "
-         "straight pieces, so it is an APPROXIMATION.",
-         fontsize=12.5, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0, 1, 0.972))
-save(fig, "ahl-5-16a-step.svg")
+fig.tight_layout()
+save(fig, "ahl-5-16a-gap.svg")
 
 
 # ═════════════ 2. 歩幅 h を小さくすると（2×2） ═════════════

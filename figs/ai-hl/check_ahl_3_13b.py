@@ -437,8 +437,10 @@ for banned in ["\\cos\\theta = \\frac{v_1w_1", "acute angle between two lines"]:
 # ══════════════════════════════════════════════════════════
 # 7. GDC の記述
 # ══════════════════════════════════════════════════════════
-in_text("menu → 7: Matrix & Vector → C: Vector", "crossP の場所")
-in_text("crossP([2;-1;2],[4;3;0])", "crossP の例")
+in_text("menu → Matrix & Vector → Vector", "crossP の場所")
+# 2026-09: GDC の入力例は画面どおりの表示に変更
+in_text(r"\texttt{crossP}\left(\begin{bmatrix}2\\-1\\2\end{bmatrix},\ \begin{bmatrix}4\\3\\0\end{bmatrix}\right)", "crossP の例")
+not_in_text("crossP([2;-1;2],[4;3;0])", "旧: 直線入力の表記")
 in_text("`ctrl` を押してから `var`", "ストアの押し方")
 in_text("menu → Actions → Clear a-z", "変数を消す")
 in_text("doc → Settings → Document Settings", "角度設定")

@@ -201,8 +201,9 @@ close("sin 1 deg", float(sp.sin(sp.pi / 180)), 0.0175, 1e-4)
 for deg, rad in ((30, sp.pi / 6), (45, sp.pi / 4), (60, sp.pi / 3),
                  (90, sp.pi / 2), (180, sp.pi), (360, 2 * sp.pi)):
     eq("変換 %d 度" % deg, sp.simplify(sp.rad(deg) - rad), 0)
-# ★レビュー 2: 「360 倍」は誤り。57.3 倍
-in_text("横に $57.3$ 倍引き伸ばされます")
+# 2026-09: degree/radian の図と説明は削除
+not_in_text("横に $57.3$ 倍引き伸ばされます")
+not_in_text("ahl-5-9a-radian.svg")
 not_in_text("横に $360$ 倍に引き伸ばされた絵")
 # 2 radian は 115 度ほど
 close("2 rad in degrees", float(sp.deg(2)), 114.59, 1e-2)
@@ -211,20 +212,21 @@ close("2 rad in degrees", float(sp.deg(2)), 114.59, 1e-2)
 # 9. シラバス・公式集から確かめた事実
 # ══════════════════════════════════════════════════════════════
 # 公式集 5.9 の 5 行（tan は 1/cos^2 x で印刷されている）
-in_text(r"f(x) = \tan x \ \Rightarrow \ f'(x) = \frac{1}{\cos^{2} x}")
+# 冒頭の「公式集の 5.9 の欄」の囲みは削除し、第3節の表に一文で残した
+in_text("**この $5$ つは、公式集の $5.9$ の欄にそのまま印刷されています。**")
+in_text(r"| $\tan x$ | $\dfrac{1}{\cos^{2} x}$ |")
 in_text("**AI の公式集は $\\dfrac{1}{\\cos^{2}x}$ の形で印刷しています。**")
-# 公式集 5.3 は係数なし（★レビュー 8）
-in_text("**この公式も、公式集の 5.3 の欄にあります。**")
-in_text("**係数 $a$ が付いていません。**")
-# シラバス AHL 5.9 Content の引用
-in_text("> The derivatives of $\\sin x$, $\\cos x$, $\\tan x$, $e^{x}$, $\\ln x$, "
-        "$x^{n}$ where $n \\in \\mathbb{Q}$.")
+# 2026-09: 公式集 5.3 の注記と Content の逐語引用は削除
+not_in_text("**この公式も、公式集の 5.3 の欄にあります。**")
+not_in_text("> The derivatives of $\\sin x$, $\\cos x$, $\\tan x$, $e^{x}$, $\\ln x$, "
+            "$x^{n}$ where $n \\in \\mathbb{Q}$.")
+in_text("**rational number**（有理数、つまり分数で書ける数）")
 # シラバス AHL Topic 3 冒頭
 in_text("> On HL examination papers radian measure should be assumed unless "
         "otherwise indicated.")
 in_text("シラバスの AHL Topic 3 の冒頭に")
-# ★レビュー 13: degree symbol の一文は AHL 2.9 の Guidance
-in_text("シラバスの **AHL 2.9** の Guidance 欄にも")
+# 2026-09: degree symbol の一文（AHL 2.9 Guidance）は削除
+not_in_text("シラバスの **AHL 2.9** の Guidance 欄にも")
 not_in_text("シラバスも、そう決めています。")
 # Link to SL5.6 / SL5.7
 in_text("> Link to: maximum and minimum points (SL5.6) and optimisation (SL5.7).")
@@ -234,16 +236,13 @@ in_text("> Link to: maximum and minimum points (SL5.6) and optimisation (SL5.7).
 # ══════════════════════════════════════════════════════════════
 # 1: 存在しない丸め誤差の主張
 not_in_text("$-1.5452$ ではなく $-1.5457$ になり")
-# 3: 図が示す確かめ方は (a) だけ
-in_text("@fig-ahl59a-derivs の (a) が、その例です。")
+# 2026-09: 図 1（4 つの導関数のグラフ）は削除
+not_in_text("@fig-ahl59a-derivs")
 not_in_text("この確かめ方を $4$ つの関数でやったものです")
-# 4: 図のキャプションは「3 つ」
-in_text("![Three of the new derivatives")
-not_in_text("![The five new derivatives")
+not_in_text("ahl-5-9a-derivs.svg")
 # 5: このページは 5.9 の一部
 in_text("この **5.9a** で増えるのは、次の $2$ つです。")
 in_text("[AHL 5.9b](ahl-5-9b.qmd)")
-in_text("[AHL 5.9c](ahl-5-9c.qmd)")
 not_in_text("**新しい解き方は出てきません。** 微分できる関数が増えるだけです。")
 # 6: 設定を切り替えるよう言わない
 in_text("そのときも、**設定は Radian のままで構いません。**")
@@ -328,14 +327,11 @@ else:
 # ══════════════════════════════════════════════════════════
 #  2026-08: 有理数指数の定義域・微分可能性
 # ══════════════════════════════════════════════════════════
-in_text("## 公式が使えるのは、微分できて、導関数の式も定義される範囲です")
-in_text("**もとの関数が微分可能で、導関数の式も定義される範囲**で使います。")
-in_text("$\\sqrt{x} = x^{\\frac{1}{2}}$ の導関数 $\\dfrac{1}{2\\sqrt{x}}$ は、**$x > 0$** で使う式です。")
-in_text("$x^{\\frac{2}{3}}$ は $x = 0$ でも**値はあります**（$0$ です）が、そこでは**微分できません**。")
-in_text("導関数 $\\dfrac{2}{3}x^{-\\frac{1}{3}}$ の式は **$x \\neq 0$** で使います")
+# 2026-09: 定義域・微分可能性の callout は削除（数値の確認だけ残す）
+not_in_text("## 公式が使えるのは、微分できて、導関数の式も定義される範囲です")
 # x^{2/3} は x=0 で微分できない: 差分商が発散する
 _q = [((h ** (2 / 3)) - 0) / h for h in (1e-3, 1e-6, 1e-9, 1e-12, 1e-15)]
-eq("x^{2/3} の x=0 での差分商は発散する（h^(-1/3)）",
+eq("x^{\\frac{2}{3}} の x=0 での差分商は発散する（h^(-1/3)）",
    all(a < b for a, b in zip(_q, _q[1:])) and _q[-1] > 1e4, True)
 # 1/(2 sqrt x) は x=0 で定義されない
 eq("1/(2√x) は x=0 で定義されない", 0.0 == 0.0, True)

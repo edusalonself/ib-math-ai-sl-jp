@@ -29,10 +29,9 @@ def tidy(ax):
         ax.spines[sp].set_color(GREY)
 
 
-# ══════════ 5.11a  1/x と ln|x| ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.7))
-
-ax = axs[0]
+# ══════════ 5.11a-1  1/x と ln|x|（modulus の理由）══════════
+#  本文の「modulus が付く理由」の節に置く図。
+fig, ax = plt.subplots(figsize=(6.3, 4.9))
 XR = np.linspace(0.16, 4.0, 500)
 XL = np.linspace(-4.0, -0.16, 500)
 ax.plot(XR, 1 / XR, color=ACC, lw=2.4, ls="--",
@@ -51,11 +50,17 @@ ax.set_xlim(-4.0, 4.0)
 ax.set_ylim(-3.4, 3.4)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=11, frameon=False, loc="lower right")
-ax.set_title("(a)  why $\\int \\frac{1}{x}\\,dx = \\ln|x| + C$",
+ax.set_title("why $\\int \\frac{1}{x}\\,dx = \\ln|x| + C$",
              fontsize=12, color=INK, pad=10)
 tidy(ax)
 
-ax = axs[1]
+fig.tight_layout()
+save(fig, "ahl-5-11a-lnabs.svg")
+
+
+# ══════════ 5.11a-2  定積分＝面積 ══════════
+#  本文の「定積分」の節に置く図。
+fig, ax = plt.subplots(figsize=(6.3, 4.5))
 X = np.linspace(0.35, 4.2, 500)
 ax.plot(X, 1 / X, color=LINE, lw=2.8, label="$y = \\dfrac{1}{x}$")
 XS = np.linspace(1, 3, 300)
@@ -72,19 +77,17 @@ ax.set_ylim(-0.42, 2.6)
 ax.set_xticks([0, 1, 2, 3, 4])
 ax.set_xlabel("$x$")
 ax.legend(fontsize=11, frameon=False, loc="upper right")
-ax.set_title("(b)  $\\int_{1}^{3}\\frac{1}{x}\\,dx = "
+ax.set_title("$\\int_{1}^{3}\\frac{1}{x}\\,dx = "
              "[\\ln|x|]_{1}^{3} = \\ln 3$", fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()
-save(fig, "ahl-5-11a-lnabs.svg")
+save(fig, "ahl-5-11a-area.svg")
 
 
-# ══════════ 5.11b  inspection と substitution ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
-
-# (a) 「微分して、定数で割る」の流れ図
-ax = axs[0]
+# ══════════ 5.11b-1  inspection の流れ図 ══════════
+#  本文の「chain rule を逆から読みます」の節に置く図。
+fig, ax = plt.subplots(figsize=(6.2, 4.4))
 ax.set_xlim(0, 10)
 ax.set_ylim(0, 7.4)
 ax.axis("off")
@@ -110,11 +113,16 @@ ax.text(5.15, 2.73, "  so divide by $2$", fontsize=11, color=GREEN,
         va="center", ha="left")
 ax.text(5.0, 7.0, "to integrate $\\sin(2x+5)$", fontsize=12.5, ha="center",
         color=GREY)
-ax.set_title("(a)  inspection:  guess, differentiate, fix the constant",
+ax.set_title("inspection:  guess, differentiate, fix the constant",
              fontsize=12, color=INK, pad=10)
 
-# (b) 置換で面積は変わらない
-ax = axs[1]
+fig.tight_layout()
+save(fig, "ahl-5-11b-inspect.svg")
+
+
+# ══════════ 5.11b-2  置換で面積は変わらない ══════════
+#  本文の「定積分では端も u に直します」の節に置く図。
+fig, ax = plt.subplots(figsize=(6.4, 4.9))
 X = np.linspace(0, 1, 400)
 ax.plot(X, 2 * X * np.exp(X ** 2), color=LINE, lw=2.8,
         label="$y = 2x\\,e^{x^{2}}$   (in $x$)")
@@ -135,7 +143,7 @@ ax.set_xlim(0, 1.05)
 ax.set_ylim(-0.12, 6.6)
 ax.set_xlabel("$x$   or   $u$")
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("(b)  substitution: the area does not change",
+ax.set_title("substitution: the area does not change",
              fontsize=12, color=INK, pad=10)
 tidy(ax)
 

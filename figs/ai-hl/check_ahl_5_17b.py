@@ -296,8 +296,8 @@ eq("図の M_ELL", "M_ELL = [[0, -1], [4, 0]]" in MK, True)
 eq("図の M_CW", "M_CW = [[0, 2], [-2, 0]]" in MK, True)
 eq("図に \\u2192 のエスケープが残っていない", "\\u2192" in MK, False)
 for lab in ("(a)  $\\\\lambda = -1 \\\\pm 2i$", "(b)  $\\\\lambda = 1 \\\\pm 2i$",
-            "(c)  $\\\\lambda = \\\\pm 2i$", "(d)  $\\\\lambda = \\\\pm 2i$"):
-    eq("図のパネル %s" % lab[:8], lab in MK, True)
+            "(a)  $\\\\lambda = \\\\pm 2i$", "(b)  $\\\\lambda = \\\\pm 2i$"):
+    eq("図のパネル %s" % lab[:16], lab in MK, True)
 eq("図の M_CW は時計回り", turn([[0, 2], [-2, 0]]), "clockwise")
 eq("図の M_CIR は反時計回り", turn([[0, -2], [2, 0]]), "anticlockwise")
 eq("図の M_OUT の実部は正",
@@ -312,7 +312,7 @@ eq("演習の番号", nos, [str(i) for i in range(1, 11)])
 eq("ex-sep は 9 個", TXT.count("::: {.ex-sep}"), 9)
 eq("exercise-block は 1 個", TXT.count("::: {.exercise-block}"), 1)
 
-for fid in ("cases", "direction"):
+for fid in ("spiral", "closed", "direction"):
     in_text("図 %s の定義" % fid, "{#fig-ahl517b-%s" % fid)
     eq("図 %s が参照されている" % fid, TXT.count("@fig-ahl517b-%s" % fid) >= 1,
        True)
@@ -367,19 +367,18 @@ in_text("Worked examples の定型 callout",
 in_text("例題の解答例の見出し", "## 解答例（答案用紙にはこう書く）")
 in_text("演習の解答例の見出し", "## 解答例（答案用紙に書くこと）")
 in_text("GDC の見出し", "## Using your GDC (TI-Nspire CX II)")
-in_text("厳密解は要らない旨", "## このページでは、厳密解を求めません")
-in_text("AHL 1.15 との違い",
-        "## [AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd) との違いに注意してください")
-in_text("シラバス Guidance",
-        "Qualitative analysis of future paths for distinct, real, complex "
-        "and imaginary eigenvalues.")
+in_text("厳密解は要らない旨", "**このページでは、厳密解を求めません。**")
+in_text("複素固有ベクトルは求めない",
+        "**複素数の固有ベクトルを求めることもありません。**")
+in_text("qualitative analysis の語", "**qualitative analysis**（定性的な分析）")
 in_text("シラバス 5 つの場合", "the solutions form a circle or ellipse")
 in_text("シラバス key features",
         "**equilibrium points**, **stable populations** and **saddle points**")
 in_text("node と centre はシラバス語でない旨",
         "## `node` と `centre` は、シラバスには出てこない語です")
 # レビュー修正の固定（回帰防止）
-in_text("公式集の説明がある", "公式集の **5.17** の欄には")
+in_text("char eq は公式集に無い", "この式は**公式集に載っていません**")
+in_text("固有値は det(M-λI)=0 から出す", "\\det(M - \\lambda I) = \\begin{vmatrix} -1 - \\lambda & -2 \\\\ 2 & -1 - \\lambda \\end{vmatrix}")
 in_text("6 通りと書いている", "- $6$ 通りの場合を、すべて見分けられる。")
 not_in_text("5 つの表という誤った枠組みが無い", "シラバスが挙げている $5$ つを、$1$ つの表にします。")
 not_in_text("text{} の中に markdown 斜体が無い", "\\text{— *")

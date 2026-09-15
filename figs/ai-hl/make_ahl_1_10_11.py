@@ -30,32 +30,35 @@ def tidy(ax):
         ax.spines[sp].set_color(GREY)
 
 
-# ══════════ 1.10  (a) 整数の間を埋める / (b) 2 通りの道 ══════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.9))
-
-ax = axs[0]
+# ══════════ 1.10 (a)  整数の指数の間を埋める ══════════
+fig, ax = plt.subplots(figsize=(6.6, 4.6))
 X = np.linspace(0, 4, 500)
-specs = [(0.5, GREEN, "$y = x^{1/2} = \\sqrt{x}$", "-"),
+specs = [(0.5, GREEN, "$y = x^{\\frac{1}{2}} = \\sqrt{x}$", "-"),
          (1.0, GREY, "$y = x^{1}$", "--"),
-         (1.5, ACC, "$y = x^{3/2}$", "-"),
+         (1.5, ACC, "$y = x^{\\frac{3}{2}}$", "-"),
          (2.0, GOLD, "$y = x^{2}$", "--")]
 for p, col, lab, ls in specs:
     ax.plot(X, X ** p, color=col, lw=2.6, ls=ls, label=lab)
 ax.plot([4], [2], "o", color=GREEN, ms=8, zorder=6)
 ax.plot([4], [8], "o", color=ACC, ms=8, zorder=6)
-ax.text(4.12, 2.0, "$4^{1/2} = 2$", fontsize=11.5, color=GREEN, ha="left",
-        va="center", zorder=8)
-ax.text(4.12, 8.0, "$4^{3/2} = 8$", fontsize=11.5, color=ACC, ha="left",
-        va="center", zorder=8)
+ax.text(4.12, 2.0, "$4^{\\frac{1}{2}} = 2$", fontsize=11.5, color=GREEN,
+        ha="left", va="center", zorder=8)
+ax.text(4.12, 8.0, "$4^{\\frac{3}{2}} = 8$", fontsize=11.5, color=ACC,
+        ha="left", va="center", zorder=8)
 ax.set_xlim(0, 6.3)
 ax.set_ylim(0, 17.5)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("(a)  a rational exponent is still just a power",
+ax.set_title("a rational exponent is still just a power",
              fontsize=12, color=INK, pad=10)
 tidy(ax)
 
-ax = axs[1]
+fig.tight_layout()
+save(fig, "ahl-1-10-powers.svg")
+
+
+# ══════════ 1.10 (b)  2 通りの道 ══════════
+fig, ax = plt.subplots(figsize=(6.6, 4.6))
 ax.set_xlim(0, 10)
 ax.set_ylim(-0.9, 7.2)
 ax.axis("off")
@@ -76,13 +79,13 @@ def arrow(p, q, col, lab):
             color=col, ha="left", va="center", zorder=6)
 
 
-box(2.0, 6.0, 2.4, 0.95, "$32^{3/5}$", INK, 14)
+box(2.0, 6.0, 2.4, 0.95, "$32^{\\frac{3}{5}}$", INK, 14)
 box(2.0, 3.6, 2.6, 0.95, "$\\sqrt[5]{32} = 2$", GREEN)
 box(2.0, 1.2, 2.4, 0.95, "$2^{3} = 8$", GREEN, 14)
 arrow((2.0, 5.5), (2.0, 4.15), GREEN, "root first")
 arrow((2.0, 3.1), (2.0, 1.75), GREEN, "then cube")
 
-box(7.4, 6.0, 2.4, 0.95, "$32^{3/5}$", INK, 14)
+box(7.4, 6.0, 2.4, 0.95, "$32^{\\frac{3}{5}}$", INK, 14)
 box(7.4, 3.6, 3.1, 0.95, "$32^{3} = 32768$", ACC)
 box(7.4, 1.2, 3.3, 0.95, "$\\sqrt[5]{32768} = 8$", ACC)
 arrow((7.4, 5.5), (7.4, 4.15), ACC, "cube first")
@@ -90,10 +93,11 @@ arrow((7.4, 3.1), (7.4, 1.75), ACC, "then root")
 
 ax.text(4.7, -0.35, "same answer — but the left route keeps the numbers small",
         fontsize=11.5, color=GREY, ha="center", va="center", zorder=6)
-ax.set_title("(b)  two routes to $32^{3/5}$", fontsize=12, color=INK, pad=10)
+ax.set_title("two routes to $32^{\\frac{3}{5}}$", fontsize=12, color=INK,
+             pad=10)
 
 fig.tight_layout()
-save(fig, "ahl-1-10-powers.svg")
+save(fig, "ahl-1-10-routes.svg")
 
 
 # ══════════ 1.11  (a) 部分和が近づく / (b) 弾むボール ══════════

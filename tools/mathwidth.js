@@ -7,13 +7,14 @@ const KDIR = '/home/claude/.npm-global/lib/node_modules/katex/dist';
   const file = process.argv[2];
   const width = parseInt(process.argv[3] || '700', 10);
   let s = fs.readFileSync(file, 'utf8').replace(/```[\s\S]*?```/g, '');
+  s = s.replace(/\\\$/g, '\uE000');  // 通貨の \$ を、数式の区切りと取りちがえない
   const disp = [];
   s.replace(/\$\$([\s\S]*?)\$\$/g, (m, g) => { disp.push(g); return ''; });
   const html = ['<meta charset="utf-8"><link rel="stylesheet" href="katex.min.css">',
     `<style>body{margin:0;font-size:16px} .box{width:${width}px;overflow:auto;border:0;margin:4px 0}</style>`];
   disp.forEach((d, i) => {
     let r;
-    try { r = katex.renderToString(d, { displayMode: true, throwOnError: false, strict: false }); }
+    try { r = katex.renderToString(d.replace(/\uE000/g, '\\$'), { displayMode: true, throwOnError: false, strict: false }); }
     catch (e) { r = '<span>ERR</span>'; }
     html.push(`<div class="box" data-i="${i}">${r}</div>`);
   });

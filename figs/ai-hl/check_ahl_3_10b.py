@@ -77,7 +77,8 @@ chk(sp.sqrt(sp.Integer(-2)**2) == 2, "√(k²) は |k| であって k ではな�
 # v/|v| の長さは 1
 u = vec(3, 4) / mag(vec(3, 4))
 eq(mag(u), 1, "単位ベクトルの長さは 1")
-in_text("\\sqrt{k^2} = \\lvert k \\rvert", "√(k²)=|k| を Why it works に書いている")
+# 2026-09: Why it works は削除し、√(k²)=|k| は第8節（rescale）に置いた
+in_text("\\sqrt{k^2} = \\lvert k \\rvert", "√(k²)=|k| を第8節に書いている")
 in_text("**$k$ ではありません。**", "k ではないと明記している")
 
 # ══════════════════════════════════════════════════════════
@@ -277,17 +278,14 @@ in_text("$\\mathbf{v}$ に垂直ではありません", "垂直ではないと�
 # ══════════════════════════════════════════════════════════
 # 7. GDC（TI-Nspire CX II、非 CAS）
 # ══════════════════════════════════════════════════════════
+# 2026-09: dotP はこのページでは未導入なので、GDC 第2節ごと削除
 for claim in ["`ctrl` を押してから `x²`", "`ctrl` を押してから `var`",
               "`sto` というキーはありません",
-              "menu → 7: Matrix & Vector → C: Vector",
               "doc → Settings → Document Settings",
-              "menu → Actions → Clear a-z",
-              "dotP("]:
+              "menu → Actions → Clear a-z"]:
     in_text(claim, "GDC の記述")
-chk("unitV(" in TEXT and "`unitV(` や `norm(` は載っていません" in TEXT,
-    "unitV / norm は「載っていない」と書く 1 か所だけ")
-chk(TEXT.count("unitV(") == 1 and TEXT.count("norm(") == 1,
-    "unitV / norm を使ってはいない")
+for later in ["dotP(", "unitV(", "norm("]:
+    not_in_text(later, "このページでは使わない関数")
 chk("nSolve" not in TEXT and "solve(" not in TEXT, "solve 系を使っていない")
 in_text("設定が **Radian** のままでよいときは、$\\dfrac{180}{\\pi}$ を掛けます。"
         "**Degree 設定のまま", "×180/π が Radian 設定のときだと書いている")
@@ -299,11 +297,10 @@ near(float(D(sp.atan(sp.Rational(5, 2) / 6))) * 180 / float(sp.pi),
      1296.02, tol=0.5, msg="Degree 設定で ×180/π をやったときの値")
 in_text("$1296$ になります。", "Degree 設定での誤った値を書いている")
 # dotP を使った大きさが正しい
-eq(sp.sqrt(vec(2, -3, 6).dot(vec(2, -3, 6))), 7, "√(dotP(v,v)) = 7")
 eq(sp.Rational(1, 5) * 3, sp.Rational(3, 5), "1/5*[3;4] の 1 つ目")
 # GDC 節への参照だと分かる書き方
-in_text("[GDC 第5節](#gdc-angle)", "GDC 節への参照 1")
-in_text("[GDC 第4節](#gdc-unit)", "GDC 節への参照 2")
+in_text("[GDC 第4節](#gdc-angle)", "GDC 節への参照 1")
+in_text("[GDC 第3節](#gdc-unit)", "GDC 節への参照 2")
 in_text("[AHL 3.10a の GDC 第2節](ahl-3-10a.qmd#gdc-store)", "GDC 節への参照 3")
 not_in_text("（[第5節](#gdc-angle)）", "本文の節番号と紛れる古い書き方")
 
@@ -368,16 +365,17 @@ chk(re.findall(r"\[(\d+)\]\{\.ex-no\}", TEXT) == [str(i) for i in range(1, 11)],
     "演習の番号が 1..10")
 chk(len(re.findall(r"(?m)^::: \{#exm-ahl310b-", TEXT)) == 4, "例題が 4 つ")
 ideas = re.findall(r"(?m)^### (\d+)\.", TEXT)
-chk(ideas == [str(i) for i in range(1, 10)] + [str(i) for i in range(1, 7)],
-    "The idea 1..9 と GDC 1..6 の連番: " + ",".join(ideas))
+# 2026-09: 3 次元の大きさを第1節に統合し、GDC の dotP 節を削除
+chk(ideas == [str(i) for i in range(1, 9)] + [str(i) for i in range(1, 6)],
+    "The idea 1..8 と GDC 1..5 の連番: " + ",".join(ideas))
 heads = [h for h in re.findall(r"(?m)^## (.*)", TEXT)
          if h in ("What you should be able to do", "The idea", "Why it works",
                   "Worked examples", "Common errors",
                   "Using your GDC (TI-Nspire CX II)", "Exercises")]
-chk(heads == ["What you should be able to do", "The idea", "Why it works",
+chk(heads == ["What you should be able to do", "The idea",
               "Worked examples", "Common errors",
               "Using your GDC (TI-Nspire CX II)", "Exercises"],
-    "7 つの見出しの順序")
+    "見出しの順序（Why it works は 2026-09 に削除）")
 chk(TEXT.count("**検算") >= 12, "検算が 12 か所以上: %d" % TEXT.count("**検算"))
 for m in re.finditer(r"`[^`\n]*`", TEXT):
     chk("$" not in m.group(0), "コードスパンの中の数式 :: " + m.group(0)[:60])

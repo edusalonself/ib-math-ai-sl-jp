@@ -29,47 +29,6 @@ piecewise model のほうは、公式集にありません。**式そのもの�
 $L$、$C$、$k$ がすべて正である、という条件も一緒に印刷されています。この条件のおかげで、グラフは $x$ 全体で見れば必ず**右上がりの S 字**になります（[第2節](#L)）。ただし、S の曲がり角が $x > 0$ に来るのは **$C > 1$**、つまり**はじめの値が $\dfrac{L}{2}$ より小さい**ときです（[第4節](#k)）。
 :::
 
-::: {.callout-note}
-## シラバスが、この項目に求めていること
-Content 欄のうち、このページが扱うのは最後の $2$ 行です。
-
-> Logistic models: $f(x) = \dfrac{L}{1+Ce^{-kx}}$; $L$, $C$, $k > 0$
-
-> Piecewise models.
-
-残りの $3$ つ（half-life・natural logarithmic・sinusoidal）は [AHL 2.9a](ahl-2-9a.qmd) です。
-
-Guidance 欄で、logistic に付いているのは $2$ つです。
-
-> The logistic function is used in situations where there is a restriction on the growth. For example population on an island, bacteria in a petri dish or the increase in height of a person or seedling.
-
-> Horizontal asymptote at $f(x) = L$ is often referred to as the carrying capacity.
-
-piecewise に付いているのは $3$ つです。
-
-> In some cases, parameters may need to be found that ensure continuity of the function, for example find $a$ to make $f(x) = \begin{cases} 1+x, & 0 \leq x < 2 \\ ax^{2}+x, & x \geq 2 \end{cases}$ continuous.
-
-> The formal definition of continuity is not required.
-
-> In examinations, students may be expected to interpret and use other models that are introduced in the question.
-
-このほかに、項目全体にかかる `Link to: modelling skills (SL2.6)` があります（[AHL 2.9a](ahl-2-9a.qmd)）。モデルの立て方は [SL 2.6](../../ai-sl/02-functions/sl-2-6.qmd) と同じ手順です。
-
-**$2$ つ目が、この項目のいちばんありがたい $1$ 行**です。連続の厳密な定義は要りません。**「$2$ つの式が、境目で同じ値になる」**——それだけです（[第7節](#continuity)）。
-
-Guidance の Example は、そのまま @exm-ahl29b-continuity で扱います。
-
-Connections 欄の `Other contexts` が、piecewise の文脈を並べています。
-
-> **Piecewise models:** Income taxes and taxi fares, friction, mobile phone plans, depth of pool as function of distance from the deep end (piecewise linear), postage rates for letters, stock prices, parachuting before and after the chute opens, Hooke's law, shapes of buildings, horizontal distance from a wall to a curved object.
-
-`Enrichment` 欄には、logistic の式がどこから来るかが書かれています。
-
-> **Enrichment:** For the population equation $\dfrac{dP}{dt} = kP\left(1-\dfrac{P}{L}\right)$ with $P = P_0$ when $t = 0$, the solution is the logistic equation: $P = \dfrac{L}{1+Ce^{-kt}}$, with $C = \dfrac{L}{P_0}-1$.
-
-**Enrichment は、試験に出る内容ではありません。** ただし、この式が「増え方が $P$ にも $\left(1-\dfrac{P}{L}\right)$ にも比例する」という考え方から来ていることは、[第5節](#vs-exp) で図として見ておく価値があります。微分方程式そのものは [AHL 5.14](../05-calculus/ahl-5-14.qmd) です。
-:::
-
 ## The idea
 
 ### 1. logistic model は「上限のある増え方」です {#idea}
@@ -86,9 +45,9 @@ Guidance が挙げているのは、まさにこの $3$ つです。
 
 そういう場面に使うのが @eq-ahl29b-logistic です。**はじめは指数関数のように増え、途中から伸びが鈍り、ある高さで止まります。** グラフは横に寝た **S 字**になります。
 
-![Reading a logistic model, and comparing it with an exponential](img/ahl-2-9b-logistic.svg){#fig-ahl29b-logistic width=100%}
+![Reading a logistic model](img/ahl-2-9b-logistic.svg){#fig-ahl29b-logistic width=74%}
 
-@fig-ahl29b-logistic の (a) が
+@fig-ahl29b-logistic が
 
 $$
 P = \frac{2000}{1+9e^{-0.3t}}
@@ -104,11 +63,9 @@ $$
 f(x) = \frac{L}{1+Ce^{-kx}} \ \longrightarrow \ \frac{L}{1+0} = L
 $$
 
-です。**$y = L$ が horizontal asymptote** で、Guidance がその名前を書いています。
+です。**$y = L$ が horizontal asymptote** で、これを **carrying capacity** と呼びます。
 
-> Horizontal asymptote at $f(x) = L$ is often referred to as the carrying capacity.
-
-**carrying capacity**（環境収容力）は、「その環境が支えられる上限」という意味です。@fig-ahl29b-logistic の (a) では $L = 2000$ です。
+**carrying capacity**（環境収容力）は、「その環境が支えられる上限」という意味です。@fig-ahl29b-logistic では $L = 2000$ です。
 
 ::: {.callout-warning}
 ## $L$ に「届く」ことはありません
@@ -152,7 +109,7 @@ $$
 C = \frac{L}{f(0)} - 1
 $$ {#eq-ahl29b-C}
 
-@fig-ahl29b-logistic の (a) では $L = 2000$、$f(0) = 200$ なので
+@fig-ahl29b-logistic では $L = 2000$、$f(0) = 200$ なので
 
 $$
 C = \frac{2000}{200} - 1 = 10 - 1 = 9
@@ -164,36 +121,25 @@ $$
 
 ### 4. $k$ は、増え方の速さです {#k}
 
-$k$ が大きいほど、S 字が立ちます。**$L$ と $C$ が同じなら、上限に速く近づく**、ということです。$\dfrac{L}{2}$ に達する時刻 $\dfrac{\ln C}{k}$ が、$k$ に反比例して小さくなります。**「上限に達する」わけではありません**（[第2節](#L)）。
+$k$ が大きいほど、S 字が立ちます。**$L$ と $C$ が同じなら、上限に速く近づく**ということです。
 
 $k$ は、途中の点を $1$ つ与えられて求めます。$L$ と $C$ が先に分かっていれば、あとは方程式を $1$ つ解くだけです（@exm-ahl29b-fit）。
 
-いちばん急なのは、**ちょうど $\dfrac{L}{2}$ のところ**です。@fig-ahl29b-logistic の (a) では $P = 1000$、$t = 7.32$ の点です。
+いちばん急なのは、**ちょうど $\dfrac{L}{2}$ のところ**です。
 
 $$
 \frac{L}{1+Ce^{-kx}} = \frac{L}{2} \ \Longrightarrow \ Ce^{-kx} = 1 \ \Longrightarrow \ x = \frac{\ln C}{k}
 $$ {#eq-ahl29b-half}
 
-$L = 2000$、$C = 9$、$k = 0.3$ なら $\dfrac{\ln 9}{0.3} = 7.324\ldots$ です。
+@fig-ahl29b-logistic なら $L = 2000$、$C = 9$、$k = 0.3$ なので、$\dfrac{\ln 9}{0.3} = 7.32$ の点（$P = 1000$）です。**$k$ が大きいほど、この時刻は早く来ます。**
 
-$\dfrac{\ln C}{k}$ が正になるのは **$C > 1$** のときです。$C < 1$ なら、はじめの値がもう $\dfrac{L}{2}$ を超えていて、**いちばん急なところは $x = 0$ より前**にあります。文脈の問題では、その場合「いちばん急なのは最初」と答えます。
-
-::: {.callout-tip}
-## S 字は、まん中の点について点対称です
-$x_0 = \dfrac{\ln C}{k}$ とすると、どんな $h$ についても
-
-$$
-f(x_0+h) + f(x_0-h) = L
-$$
-
-が成り立ちます。**まん中の点 $\left(x_0,\ \dfrac{L}{2}\right)$ を中心に、$180^{\circ}$ 回すと重なる**ということです。
-
-だから、上半分と下半分は同じ形をしています。この点を **point of inflexion**（変曲点）と呼びます。名前と求め方は [AHL 5.10](../05-calculus/ahl-5-10.qmd) です。
-:::
+この点を **point of inflexion**（変曲点）と呼びます。S 字はこの点について**点対称**で、上半分と下半分は同じ形です。求め方は [AHL 5.10](../05-calculus/ahl-5-10.qmd) です。
 
 ### 5. logistic と exponential のちがい {#vs-exp}
 
-@fig-ahl29b-logistic の (b) が、$P = \dfrac{2000}{1+9e^{-0.3t}}$ と $P = 200e^{0.3t}$ を重ねたものです。
+![A ceiling, or no ceiling](img/ahl-2-9b-vs-exp.svg){#fig-ahl29b-vsexp width=74%}
+
+@fig-ahl29b-vsexp が、$P = \dfrac{2000}{1+9e^{-0.3t}}$ と $P = 200e^{0.3t}$ を重ねたものです。
 
 **はじめのうちは、近い形**です。$t = 1$ で $261$ と $270$、$t = 2$ で $337$ と $364$——$P$ が $L$ にくらべて小さいうちは、増える余地がほとんど減らないからです。
 
@@ -239,9 +185,9 @@ $$ {#eq-ahl29b-piece}
 - 所得税 … 所得の段階で税率が変わります
 - プールの深さ … 浅い側は一定、そこから斜めに深くなります
 
-![Continuity, and a piecewise model in context](img/ahl-2-9b-piecewise.svg){#fig-ahl29b-piece width=100%}
+![A piecewise model in context](img/ahl-2-9b-tariff.svg){#fig-ahl29b-tariff width=74%}
 
-@fig-ahl29b-piece の (b) が、携帯の料金です。$5$ GB までは $20$、そこからは $1$ GB ごとに $3$ ずつ増えます。式に書くと、次のようになります。
+@fig-ahl29b-tariff が、携帯の料金です。$5$ GB までは $20$、そこからは $1$ GB ごとに $3$ ずつ増えます。式に書くと、次のようになります。
 
 $$
 C(x) = \begin{cases}
@@ -278,16 +224,14 @@ $$
 3 = 4a+2 \ \Longrightarrow \ a = \frac{1}{4}
 $$
 
-@fig-ahl29b-piece の (a) が、その結果です。緑の線（$a = \dfrac{1}{4}$）は $(2,\ 3)$ でぴったりつながります。赤い線（$a = 1$）は $(2,\ 6)$ から始まってしまい、**$3$ だけとびます。**
+![Choosing $a$ so the graph joins up](img/ahl-2-9b-continuity.svg){#fig-ahl29b-continuity width=74%}
+
+@fig-ahl29b-continuity が、その結果です。緑の線（$a = \dfrac{1}{4}$）は $(2,\ 3)$ でぴったりつながります。赤い線（$a = 1$）は $(2,\ 6)$ から始まってしまい、**$3$ だけとびます。**
 
 $(2,\ 3)$ の**白い輪**は、$1$ つ目の式の区間が $x < 2$ で、**$x = 2$ を含まない**ことを表しています。その値を埋めているのが、輪の中の緑の点——$2$ つ目の式です。
 
 ::: {.callout-important}
 ## 厳密な定義は要りません
-Guidance が、はっきり書いています。
-
-> The formal definition of continuity is not required.
-
 **「境目で $2$ つの式の値が等しい」**——答案に書くのは、これだけで足ります。極限の記号は使わなくて構いません。
 
 手順も $3$ 行です。
@@ -301,10 +245,6 @@ Guidance が、はっきり書いています。
 
 ### 8. その場で出てくるモデルも読みます {#other-models}
 
-Guidance の最後の $1$ 行が、大事な予告をしています。
-
-> In examinations, students may be expected to interpret and use other models that are introduced in the question.
-
 **シラバスに載っていない形の関数が、問題文の中で定義されることがあります。** そのときは、その場で読んで使います。
 
 慌てる必要はありません。聞かれることは、いつも同じです。
@@ -315,42 +255,6 @@ Guidance の最後の $1$ 行が、大事な予告をしています。
 - 文脈の言葉で解釈する
 
 **このページと [AHL 2.9a](ahl-2-9a.qmd) でやってきたことが、そのまま使えます。** 新しい形が出てきても、やることは変わりません。
-
-## Why it works
-
-**なぜ $L$ が上限になるのか。** @eq-ahl29b-logistic の分母だけを見ます。
-
-$$
-1 + Ce^{-kx}
-$$
-
-$L > 0$、$C > 0$、$k > 0$ なので（公式集の条件です）、$Ce^{-kx}$ は**正の数**で、$x$ が増えるにつれて $0$ に近づきます。ですから分母は
-
-$$
-1 + (\text{正の数}) \ \longrightarrow \ 1
-$$
-
-と、**$1$ より大きいところから $1$ に近づきます。** 分母が $1$ より大きいということは、$\dfrac{L}{\text{分母}}$ は $L$ より小さい、ということです。
-
-$$
-0 < \frac{L}{1+Ce^{-kx}} < L
-$$
-
-**分母が $1$ ちょうどになることはない**ので、値が $L$ に届くこともありません。これが「近づくが達しない」の中身です。
-
-$x$ を負の方向に大きくすると、逆に $e^{-kx}$ がいくらでも大きくなり、分母もいくらでも大きくなります。ですから $f(x)$ は $0$ に近づきます。**$y = 0$ も horizontal asymptote** です。
-
-$$
-0 \ \xleftarrow{\ x \to -\infty\ } \ f(x) \ \xrightarrow{\ x \to +\infty\ } \ L
-$$
-
-ただし $y = 0$ のほうは、**$x$ を負にできる「関数として見たとき」の話**です。文脈の問題では $t \geq 0$ しか意味を持たないので、答案に書く漸近線は $y = L$ のほうです。
-
-**$2$ 本の漸近線にはさまれて、そのあいだを $1$ 度だけ上がる**——これが S 字の正体です。
-
-**continuity のほうも、$1$ 行で説明できます。** 境目の $x = p$ で、上の式が $A$、下の式が $B$ という値を出すとします。$A \neq B$ なら、グラフは $x = p$ のところで $\lvert A - B \rvert$ だけとびます。**とばないための条件は $A = B$ の $1$ つだけ**です。ですから、**境目が $1$ つ・未知の定数が $1$ つ・その定数が片方の式にだけ入っている**とき、方程式 $1$ つで定数が決まります。この $3$ つがそろっているのが、シラバスの Example の形です。
-
-そろわないこともあります。$\begin{cases} ax+1, & x<1 \\ ax+2, & x\geq1 \end{cases}$ は $a$ が両方に入っているので $a+1 = a+2$ となり、**どんな $a$ でもつながりません。** 境目が $2$ つあれば、方程式も $2$ つできます。**「定数の数だけ方程式ができる」とはかぎりません。**
 
 ## Worked examples
 
@@ -616,7 +520,7 @@ $$
 \text{下の式} : 20+3(5-5) = 20+0 = 20
 $$
 
-同じ $20$ になります。だから @fig-ahl29b-piece の (b) のように、**グラフはとばずにつながります。**
+同じ $20$ になります。だから @fig-ahl29b-tariff のように、**グラフはとばずにつながります。**
 
 ::: {.callout-tip}
 ## $x = 5$ は、上の式の区間に入っています
@@ -695,7 +599,7 @@ $$
 
 (b) のほうは、**$4 \geq 2$ なので下の式を使った**ことを確かめます。$\dfrac{1}{4}(16)+4 = 8$ ✓
 
-**(c)** `Explain` なので、英語で書きます。@fig-ahl29b-piece の (a) の赤い線がその様子です。
+**(c)** `Explain` なので、英語で書きます。@fig-ahl29b-continuity の赤い線がその様子です。
 
 $a$ が大きいと、$x = 2$ での下の式の値 $4a+2$ が $3$ より大きくなります。左からは $3$ に近づいているのに、$x = 2$ でいきなり大きい値に飛びます。
 
@@ -788,12 +692,10 @@ $x = 2$ での連続を調べるのに、下の式だけに $2$ を入れて $4a
 ### 1. logistic はグラフにして、形と $L$ を確かめます {#gdc-logistic}
 
 ```
-ctrl + doc → 2: Add Graphs
+ctrl + doc → Add Graphs
 ```
 
-```
-f1(x)=2000/(1+9*e^(-0.3*x))
-```
+$f1(x) = \dfrac{2000}{1 + 9 \times e^{-0.3 \times x}}$
 
 $e$ は `e^x` キーから入れます。**`2.718` と打たないでください。**
 
@@ -803,9 +705,7 @@ $x$ を $-10$ まで広げると、左側が $0$ に貼りつくのも見えま�
 
 ### 2. 「いつ○○になるか」は交点で {#gdc-solve}
 
-```
-f2(x)=1800
-```
+$f2(x) = 1800$
 
 を足して、`menu → Analyze Graph → Intersection` で交点を読みます（[SL 2.4](../../ai-sl/02-functions/sl-2-4.qmd#intersection) と同じ操作です）。$14.6$ が出れば、@exm-ahl29b-read の (d) と合っています。
 
@@ -813,10 +713,8 @@ f2(x)=1800
 
 $k$ を求める問題も、同じやり方でできます。$x$ を $k$ だと思って
 
-```
-f1(x)=1200/(1+7*e^(-4*x))
-f2(x)=400
-```
+- $f1(x) = \dfrac{1200}{1 + 7 \times e^{-4 \times x}}$
+- $f2(x) = 400$
 
 の交点を読むと $0.313$ が出ます（@exm-ahl29b-fit）。window は $x$: $0$ から $1$、$y$: $0$ から $1300$ にしてください。**既定の window のままだと $f1$ も $f2$ も画面の外**で、交点が見つかりません。
 
@@ -830,13 +728,11 @@ piecewise(3,x>-2 and x<2)
 
 のように書く、と説明されています。**式と条件を交互に並べる**形です。@eq-ahl29b-piece なら
 
+$f1(x) = \texttt{piecewise}\left(1+x,\ x \geq 0 \ \texttt{and}\ x < 2,\ \dfrac{x^{2}}{4} + x,\ x \geq 2\right)$
+
 と入れます。**条件を $0 \leq x < 2$ のようにつなげて書くことはできません。** `and` で $2$ つに分けます。TI 公式の例が `x>-2 and x<2` と書いているのは、このためです。
 
-```
-f1(x)=piecewise(1+x,x≥0 and x<2,x^2/4+x,x≥2)
-```
-
-$\leq$ と $\geq$ は記号パレットから選べます（TI 公式のガイドでは、handheld で `ctrl` と `k` を押すとパレットが開く、と書かれています）。
+$\leq$ と $\geq$ は、`ctrl` + `=` を押すと開く記号パレットから選べます（`>`、`<`、`≠`、`≥`、`≤`、`|` が並んでいます）。
 
 **入れたあとにグラフを見て、境目でとんでいないかを確かめてください。** これが continuity の視覚的な検算になります。
 
@@ -846,10 +742,8 @@ $\leq$ と $\geq$ は記号パレットから選べます（TI 公式のガイ�
 
 Calculator ページで、**境目の $x$ を $2$ つの式それぞれに**入れます。
 
-```
-1+2
-0.25*2^2+2
-```
+- $1 + 2$
+- $0.25 \times 2^{2} + 2$
 
 どちらも $3$ です ✓ **同じ数がぴったり出るかどうか**が判定です。「近い」ではなく「同じ」を見てください。$a$ が違っていれば、ここで値が食い違います。
 
@@ -1046,7 +940,7 @@ $$e^{-0.25t} = \frac{1}{45}$$
 
 **現実の側の理由**（えさと場所に限りがある）まで書くと、しっかりした答案になります。Guidance が `bacteria in a petri dish` を例に挙げているのは、このためです。
 
-@fig-ahl29b-logistic の (b) が、まさにこの比較です。**はじめのうちは $2$ つがほとんど同じ**である点にも触れられると、なお良い答案になります（[第5節](#vs-exp)）。
+@fig-ahl29b-vsexp が、まさにこの比較です。**はじめのうちは $2$ つがほとんど同じ**である点にも触れられると、なお良い答案になります（[第5節](#vs-exp)）。
 
 ::: {.model-answer}
 **試験ではこう書く**
@@ -1288,3 +1182,73 @@ $500$ と $3000$ では $6$ 倍違います。**分母が $1+Ce^{-kt}$ の形に
 :::
 
 :::
+
+## Why it works
+
+::: {.callout-note collapse="true" appearance="simple"}
+## クリックすると開きます
+**分母を見ると、$L$ に届かない理由が見えます。** $L > 0$、$C > 0$、$k > 0$ なので（公式集の条件です）、$Ce^{-kx}$ は正の数です。分母 $1 + Ce^{-kx}$ は**つねに $1$ より大きい**まま $1$ に近づくので
+
+$$
+0 < \frac{L}{1+Ce^{-kx}} < L
+$$
+
+です。**分母が $1$ ちょうどになることはない**ので、値が $L$ に届くこともありません（[第2節](#L)）。
+
+**逆に $x$ を負の方向に大きくすると**、$e^{-kx}$ がいくらでも大きくなり、$f(x)$ は $0$ に近づきます。**$y = 0$ も horizontal asymptote** です。
+
+$$
+0 \ \xleftarrow{\ x \to -\infty\ } \ f(x) \ \xrightarrow{\ x \to +\infty\ } \ L
+$$
+
+ただし $y = 0$ のほうは、**$x$ を負にできる「関数として見たとき」の話**です。文脈の問題では $t \geq 0$ しか意味を持たないので、答案に書く漸近線は $y = L$ のほうです。**$2$ 本の漸近線にはさまれて、そのあいだを $1$ 度だけ上がる**——これが S 字の正体です。
+
+**いちばん急な時刻 $\dfrac{\ln C}{k}$ が正になるのは $C > 1$ のときです**（[第4節](#k)）。$C < 1$ なら、はじめの値がもう $\dfrac{L}{2}$ を超えていて、いちばん急なところは $x = 0$ より前にあります。文脈の問題では、その場合「いちばん急なのは最初」と答えます。
+
+**continuity のほうも、$1$ 行で説明できます。** 境目の $x = p$ で、上の式が $A$、下の式が $B$ という値を出すとします。$A \neq B$ なら、グラフは $x = p$ のところで $\lvert A - B \rvert$ だけとびます。**とばないための条件は $A = B$ の $1$ つだけ**です。ですから、**境目が $1$ つ・未知の定数が $1$ つ・その定数が片方の式にだけ入っている**とき、方程式 $1$ つで定数が決まります。この $3$ つがそろっているのが、シラバスの Example の形です。
+
+そろわないこともあります。$\begin{cases} ax+1, & x<1 \\ ax+2, & x\geq1 \end{cases}$ は $a$ が両方に入っているので $a+1 = a+2$ となり、**どんな $a$ でもつながりません。** 境目が $2$ つあれば、方程式も $2$ つできます。**「定数の数だけ方程式ができる」とはかぎりません。**
+:::
+
+## 参考：シラバスの原文 {#syllabus}
+
+:::: {.callout-note collapse="true" appearance="simple"}
+## クリックすると開きます
+Content 欄のうち、このページが扱うのは最後の $2$ 行です。
+
+> Logistic models: $f(x) = \dfrac{L}{1+Ce^{-kx}}$; $L$, $C$, $k > 0$
+
+> Piecewise models.
+
+残りの $3$ つ（half-life・natural logarithmic・sinusoidal）は [AHL 2.9a](ahl-2-9a.qmd) です。
+
+Guidance 欄で、logistic に付いているのは $2$ つです。
+
+> The logistic function is used in situations where there is a restriction on the growth. For example population on an island, bacteria in a petri dish or the increase in height of a person or seedling.
+
+> Horizontal asymptote at $f(x) = L$ is often referred to as the carrying capacity.
+
+piecewise に付いているのは $3$ つです。
+
+> In some cases, parameters may need to be found that ensure continuity of the function, for example find $a$ to make $f(x) = \begin{cases} 1+x, & 0 \leq x < 2 \\ ax^{2}+x, & x \geq 2 \end{cases}$ continuous.
+
+> The formal definition of continuity is not required.
+
+> In examinations, students may be expected to interpret and use other models that are introduced in the question.
+
+このほかに、項目全体にかかる `Link to: modelling skills (SL2.6)` があります（[AHL 2.9a](ahl-2-9a.qmd)）。モデルの立て方は [SL 2.6](../../ai-sl/02-functions/sl-2-6.qmd) と同じ手順です。
+
+**$2$ つ目が、この項目のいちばんありがたい $1$ 行**です。連続の厳密な定義は要りません。**「$2$ つの式が、境目で同じ値になる」**——それだけです（[第7節](#continuity)）。
+
+Guidance の Example は、そのまま @exm-ahl29b-continuity で扱います。
+
+Connections 欄の `Other contexts` が、piecewise の文脈を並べています。
+
+> **Piecewise models:** Income taxes and taxi fares, friction, mobile phone plans, depth of pool as function of distance from the deep end (piecewise linear), postage rates for letters, stock prices, parachuting before and after the chute opens, Hooke's law, shapes of buildings, horizontal distance from a wall to a curved object.
+
+`Enrichment` 欄には、logistic の式がどこから来るかが書かれています。
+
+> **Enrichment:** For the population equation $\dfrac{dP}{dt} = kP\left(1-\dfrac{P}{L}\right)$ with $P = P_0$ when $t = 0$, the solution is the logistic equation: $P = \dfrac{L}{1+Ce^{-kt}}$, with $C = \dfrac{L}{P_0}-1$.
+
+**Enrichment は、試験に出る内容ではありません。** ただし、この式が「増え方が $P$ にも $\left(1-\dfrac{P}{L}\right)$ にも比例する」という考え方から来ていることは、[第5節](#vs-exp) で図として見ておく価値があります。微分方程式そのものは [AHL 5.14](../05-calculus/ahl-5-14.qmd) です。
+::::

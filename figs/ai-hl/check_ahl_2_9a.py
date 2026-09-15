@@ -86,9 +86,9 @@ near(kc, 0.1386294361, msg="k = ln2/5")
 chk(round(float(kc), 3) == 0.139, "k は 3 s.f. で 0.139")
 A12 = 200 * sp.exp(-kc * 12)
 near(A12, 37.89291416, msg="A(12) = 37.89")
-near(200 * 2 ** sp.Rational(-12, 5), 37.89291416, msg="(1/2)^{t/T} でも同じ")
+near(200 * 2 ** sp.Rational(-12, 5), 37.89291416, msg="(1/2)^{\\frac{t}{T}} でも同じ")
 chk(sp.simplify(sp.exp(-sp.log(2) / TT * t) - (sp.Rational(1, 2)) ** (t / TT)) == 0,
-    "e の形と (1/2)^{t/T} は同じ式（独立な検算ではない）")
+    "e の形と (1/2)^{\\frac{t}{T}} は同じ式（独立な検算ではない）")
 in_text("$T$ そのものを問題文から読みまちがえていると、**両方とも同じだけずれます。**",
         "レビュー12: 2 つの道は独立でない")
 not_in_text("**$2$ つの道で同じ数が出れば、まず間違っていません。**",
@@ -141,7 +141,9 @@ chk(sp.log(1) == 0, "ln 1 = 0")
 # domain
 chk(sp.limit(sp.log(x), x, 0, "+") == -sp.oo, "x→0+ で ln x → -∞")
 # ★ 2026-08: b の符号で増減を分け、b=0 も関数として認める
-in_text("@fig-ahl29a-decay の (b) は **$b > 0$ の場合**です。")
+# 2026-09: 図 1 を (a)(b) に分割し、説明のすぐ近くへ移動
+in_text("@fig-ahl29a-log は **$b > 0$ の場合**です。")
+not_in_text("@fig-ahl29a-decay")
 in_text("**$b < 0$ ならグラフの上下が反転します。** はじめは急に下がり、そのあと下がり方が緩やかになります。")
 in_text("$b = 0$ なら $f(x) = a$ という **constant function**（定数関数）になり、$x$ による変化を表さないモデルになります。")
 not_in_text("（$b = 0$ なら定数で、モデルになりません）", "b=0 を「モデルでない」と言わない")
@@ -192,8 +194,10 @@ near(alt.subs(t, 5), 20, msg="a<0 の別表現でも最大 20 は t=5")
 near(alt.subs(t, 11), 4, msg="a<0 の別表現でも最小 4 は t=11")
 in_text("**以下、$a > 0$、$b > 0$ にとります。**", "レビュー7")
 in_text("\\lvert a \\rvert = \\frac{\\text{最大} - \\text{最小}}{2}", "レビュー7")
-in_text("$-8\\sin\\left(\\dfrac{\\pi}{6}(t-8)\\right)+12$ は、同じグラフです", "レビュー7")
-in_text("$a > 0$、$b > 0$ のとき、$c$ は", "レビュー7")
+# 2026-09: $a<0$ の言いかえと「$c$ は中心線を上向きに横切る時刻」は、
+#          読者を混乱させるため削除（$a>0$ に固定して読む方針）
+not_in_text("$-8\\sin\\left(\\dfrac{\\pi}{6}(t-8)\\right)+12$ は、同じグラフです")
+not_in_text("$a > 0$、$b > 0$ のとき、$c$ は")
 # ★ レビュー16: c < 0 なら左
 in_text("$c > 0$ なら右に $c$、$c < 0$ なら左に $\\lvert c \\rvert$ です", "レビュー16")
 # 演習 8, 9, 10
@@ -227,13 +231,15 @@ chk("^{\\circ}\\text{C}" in TEXT, "演習9 は摂氏を使っている")
 # 4. GDC
 # ══════════════════════════════════════════════════════════
 in_text("doc → Settings → Document Settings", "角の設定")
-in_text("ctrl + doc → 2: Add Graphs", "ページ追加")
+in_text("ctrl + doc → Add Graphs", "ページ追加")
 in_text("menu → Analyze Graph → Intersection", "交点")
 in_text("`ctrl` を押してから `var` キーで入ります", "レビュー9: sto キー")
 not_in_text("**sto** キー（`ctrl` の下あたりの矢印キー）", "レビュー9")
 in_text("## `e` と `π` は、キーで入れてください", "レビュー18")
 in_text("### 3. 方程式は、graph の交点で解くのが確実です", "レビュー17")
-in_text("CAS ではない CX II に `solve(` はありません", "レビュー17")
+# 2026-09: 生徒は全員 TI-Nspire CX II なので、CAS／非CAS の区別には触れない
+in_text("CX II に `solve(` はありません", "レビュー17")
+not_in_text("CAS")
 not_in_text("### 3. 方程式は Solve より graph の交点が確実です", "レビュー17")
 in_text("`Zoom - Fit` は、**いまの $x$ の範囲に合わせて $y$ の範囲だけを合わせます。**",
         "レビュー10")
@@ -275,7 +281,8 @@ chk(len(re.findall(r"::: \{#exm-ahl29a-[\w-]+\}", TEXT)) == 4, "worked example �
 chk(re.findall(r"\[(\d+)\]\{\.ex-no\}", TEXT) == [str(i) for i in range(1, 11)],
     "演習は 1..10 の連番")
 idea = re.findall(r"(?m)^### (\d+)\.", TEXT)
-chk(idea == [str(i) for i in range(1, 9)] + [str(i) for i in range(1, 6)],
+# 2026-09: 第8節を第7節に統合（The idea は 1..7）
+chk(idea == [str(i) for i in range(1, 8)] + [str(i) for i in range(1, 6)],
     "The idea 1..8 と GDC 1..5 の連番: " + str(idea))
 chk(TEXT.count("::: {.model-answer}") == 6, "model-answer は 6 個")
 for w in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん", "当たり前",
@@ -288,9 +295,12 @@ for term in ["**half-life**（半減期）", "**natural logarithmic model**（�
              "**vertical asymptote**（垂直漸近線）", "period（周期）",
              "domain（定義域）"]:
     in_text(term, "英語→日本語の順")
-in_text("![Half-life, and a natural logarithmic model](img/ahl-2-9a-decay.svg)")
+in_text("![Half-life: equal steps, equal halving](img/ahl-2-9a-halflife.svg)")
+in_text("![A natural logarithmic model](img/ahl-2-9a-log.svg)")
+in_text("![The rule needs neighbouring turning points](img/ahl-2-9a-period.svg)")
 in_text("![The four letters of a sinusoidal model](img/ahl-2-9a-sine.svg)")
-for svg in ["ahl-2-9a-decay.svg", "ahl-2-9a-sine.svg"]:
+for svg in ["ahl-2-9a-halflife.svg", "ahl-2-9a-log.svg",
+            "ahl-2-9a-period.svg", "ahl-2-9a-sine.svg"]:
     chk(os.path.exists(os.path.join(HERE, "..", "..", "ai-hl", "02-functions",
                                     "img", svg)), "図がある: " + svg)
 anchors = set(re.findall(r"\{#([a-z0-9-]+)\}", TEXT)) | {"common-errors", "why-it-works"}

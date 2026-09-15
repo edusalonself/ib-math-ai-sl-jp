@@ -263,12 +263,11 @@ chk(sp.limit((R ** 2 * sp.sin(t) / 2) / (R ** 2 * t / 2), t, 0) == 1,
 in_text("**これは覚え方であって、証明ではありません。**")
 
 # ══════════════════════════════════════════════════════════
-# 10. 逆向きの表
+# 10. 逆向きの使い方
 # ══════════════════════════════════════════════════════════
-in_text("| $l$ と $r$ | $\\theta$ | $\\theta = \\dfrac{l}{r}$ |")
-in_text("| $l$ と $\\theta$ | $r$ | $r = \\dfrac{l}{\\theta}$ |")
-in_text("| $A$ と $r$ | $\\theta$ | $\\theta = \\dfrac{2A}{r^{2}}$ |")
-in_text("| $A$ と $\\theta$ | $r$ | $r = \\sqrt{\\dfrac{2A}{\\theta}}$ |")
+# 2026-09: 式を移項するだけの「逆向きの表」（第8節）は削除した
+not_in_text("| $l$ と $r$ | $\\theta$ | $\\theta = \\dfrac{l}{r}$ |")
+not_in_text("### 8. 逆向きにも使えます")
 chk(sp.solve(sp.Eq(R ** 2 * t / 2, sp.Symbol("A", positive=True)), t)[0]
     == 2 * sp.Symbol("A", positive=True) / R ** 2, "θ = 2A/r²")
 
@@ -298,8 +297,12 @@ in_text("`Angle` を **Radian** にします。")
 in_text("（かけ算と割り算だけなので、Radian か Degree かの設定には左右されません）",
         "レビュー2")
 not_in_text("と打つと、Radian 設定なら", "レビュー2")
-in_text("**Numeric（非 CAS）**", "CX II は記号のままでは返さない")
-in_text("`ctrl` と `k` を押すとパレットが開く")
+# 2026-09: 生徒は全員 TI-Nspire CX II なので、CAS／非CAS の区別には触れない
+in_text("TI-Nspire CX II は **Numeric** です", "CX II は記号のままでは返さない")
+not_in_text("CAS")
+# 2026-09: 記号パレットは π キー（∞・°）／ctrl + = （≤ ≥）に訂正
+in_text("**`π` のキー**を押すと開く**記号パレット**")
+not_in_text("`ctrl` と `k` を押すとパレットが開く")
 near(0.5 * 6 ** 2 * float(D2R(50)), 15.70796, tol=5e-4, msg="0.5*6^2*(50*π/180)")
 in_text("$15.708$ が返ります。")
 chk("solve(" not in TEXT.replace("nSolve(", ""), "CAS 専用の solve( を使っていない")
@@ -315,7 +318,8 @@ chk(len(re.findall(r"\{#exm-", TEXT)) == 4, "worked example は 4 個")
 chk(re.findall(r"\[(\d+)\]\{\.ex-no\}", TEXT) == [str(i) for i in range(1, 11)],
     "演習は 1..10 の連番")
 idea = re.findall(r"(?m)^### (\d+)\.", TEXT)
-chk(idea == [str(i) for i in range(1, 9)] + [str(i) for i in range(1, 6)],
+# 2026-09: 第8節を削除（The idea は 1..7）
+chk(idea == [str(i) for i in range(1, 8)] + [str(i) for i in range(1, 6)],
     "The idea 1..8 と GDC 1..5 の連番: " + str(idea))
 chk(TEXT.count("::: {.model-answer}") == 4, "model-answer は 4 個")
 for h in ["## What you should be able to do", "## The idea", "## Why it works",
@@ -329,7 +333,7 @@ for w in ["誰でもできる", "簡単です", "当然", "明らか", "もち�
           "確かめ。", "そのとおり"]:
     not_in_text(w, "禁止表現")
 chk(TEXT.count("**検算。**") == 11, "検算。の個数: " + str(TEXT.count("**検算。**")))
-for term in ["**radian**（ラジアン）", "**perimeter**", "扇形の**周**（perimeter）"]:
+for term in ["**radian**（ラジアン）", "扇形の**周**（perimeter）"]:
     pass
 in_text("**radian**（ラジアン）", "英語→日本語の順")
 in_text("![What a radian is, and why a full turn is $2\\pi$](img/ahl-3-7-radian.svg)")

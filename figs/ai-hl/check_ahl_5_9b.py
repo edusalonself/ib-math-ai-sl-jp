@@ -197,7 +197,7 @@ in_text("**試験中に配られるので、覚える必要はありません。
 # 8. レビューで直した点の見張り
 # ══════════════════════════════════════════════════════════════
 # 1: 書き直しで済むのは「分子も分母も」べき乗のときだけ
-in_text("**分子も分母も $x$ のべき乗だけ**なら")
+in_text("**分子も分母も $x^{n}$ の形だけ**なら")
 not_in_text("**分母が $x$ のべき乗だけ**なら、書き直したほうが早いです")
 not_in_text("**分母に $x$ 以外のものが混じっているとき**（$x^{2}+1$、$e^{x}+1$ など）"
             "だけ、quotient rule が必要です。")
@@ -208,7 +208,9 @@ not_in_text("| 自分の $f'(x)$ | $10(2x+1)^{4}$、$x = 1$ | $810$ ✓ |")
 in_text("## $\\sin$、$\\cos$、$\\tan$ が入っているときは Radian に")
 not_in_text("## $\\sin$、$\\cos$、$\\tan$、$e^{x}$ が入っているときは Radian に")
 # 4: nSolve は範囲を分けた 2 回
-in_text("nSolve(x*e^(x)*(x+2)=0, x, -3, -1)")
+# 2026-09: GDC の入力例は画面どおりの表示に変更
+in_text(r"\texttt{nSolve}\left(x \times e^{x} \times \left(x + 2\right) = 0,\ x,\ -3,\ -1\right)")
+not_in_text("nSolve(x*e^(x)*(x+2)=0, x, -3, -1)")
 not_in_text("nSolve(x*e^(x)*(x+2)=0, x, -5, 5)")
 # 5: 先に割ってから角を落とす
 in_text(r"v\frac{\delta u}{\delta x} \ + \ u\frac{\delta v}{\delta x} \ + \ "
@@ -223,8 +225,8 @@ not_in_text("$-\\sin x \\times 2x$ と書くつもりが")
 # 10: 「1 増える」を避ける
 in_text("$x$ が**少し**増えると、$u$ はその $\\dfrac{du}{dx}$ 倍だけ増える")
 not_in_text("$x$ が $1$ 増えると、$u$ は $\\dfrac{du}{dx}$ だけ増える")
-# 11: 箇条書きの順を公式に合わせる
-in_text("- $v$ を微分して $u$ を掛ける\n- $u$ を微分して $v$ を掛ける")
+# 11: 説明の順を公式に合わせる（2026-09: 箇条書きを文章にした）
+in_text("**$v$ を微分して $u$ を掛けたもの**と、**$u$ を微分して $v$ を掛けたもの**を足します。")
 # 12: (d) を付ける
 in_text("**(d)** [Hence find the gradient of the curve in part (a) when $x = 1$.]")
 # 13: 文脈のある例題と Interpret
@@ -247,10 +249,11 @@ eq("テンプレートの 7 見出しが順に並ぶ", top,
    ["What you should be able to do", "The idea", "Why it works",
     "Worked examples", "Common errors",
     "Using your GDC (TI-Nspire CX II)", "Exercises"])
-eq("例題は 5 つ", len(re.findall(r"::: \{#exm-", TXT)), 5)
-eq("演習は 10 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 10)
-eq("ex-sep は 9 個", TXT.count(".ex-sep"), 9)
-eq("例題の下の区切り線は 5 本（+ YAML の 1 本）", TXT.count("\n---\n"), 6)
+eq("例題は 9 つ（5.9b 5 つ + 統合した related rates 4 つ）", len(re.findall(r"::: \{#exm-", TXT)), 9)
+eq("演習は 20 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 20)
+eq("model-answer は 5 つ", TXT.count("::: {.model-answer}"), 5)
+eq("ex-sep は 19 個", TXT.count(".ex-sep"), 19)
+eq("例題の下の区切り線は 9 本（+ YAML の 1 本）", TXT.count("\n---\n"), 10)
 for w in ("誰でもできる", "簡単です", "当然", "明らか", "もちろん", "当たり前",
           "そのとおり", "ご指摘", "確かめ。"):
     not_in_text(w)
