@@ -3,8 +3,13 @@
     python3 figs/aa-sl/make_aasl_2_2.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_2_2.py  … 目視用の PNG も
 
-出力: aa-sl/02-functions/img/aasl-2-2-idea.svg
+出力: aa-sl/02-functions/img/aasl-2-2-vlt.svg
+      aa-sl/02-functions/img/aasl-2-2-hlt.svg
+      aa-sl/02-functions/img/aasl-2-2-idea-a.svg
+      aa-sl/02-functions/img/aasl-2-2-idea-b.svg
 
+(vlt) vertical line test。左は関数、右は円（関数でない）。
+(hlt) horizontal line test。左は one-to-one、右は y = x^2。
 (a) domain は x 軸に、range は y 軸に落とした範囲。
 (b) 逆関数のグラフは、y = x について対称。
 
@@ -33,12 +38,91 @@ GREY = "#6b7280"
 WARM = "#b45309"
 FAINT = "#e5e7eb"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.8, 4.4))
+fig0, (ax0L, ax0R) = plt.subplots(1, 2, figsize=(6.8, 3.1))
+figH, (axHL, axHR) = plt.subplots(1, 2, figsize=(6.8, 3.1))
+fig1, ax1 = plt.subplots(figsize=(5.3, 4.4))
+fig2, ax2 = plt.subplots(figsize=(5.3, 4.4))
+# ══════════════════════════════════════════════════════════
+# (vlt) vertical line test
+# ══════════════════════════════════════════════════════════
+for _ax in (ax0L, ax0R):
+    _ax.set_xlim(-1.75, 1.75)
+    _ax.set_ylim(-1.75, 1.75)
+    _ax.set_aspect("equal")
+    _ax.axis("off")
+    _ax.plot([-1.6, 1.6], [0, 0], color=FAINT, linewidth=1.0)
+    _ax.plot([0, 0], [-1.6, 1.6], color=FAINT, linewidth=1.0)
+
+# 左：関数（縦線と 1 か所で交わる）
+ax0L.set_title("a function", fontsize=11, color=INK, loc="left", pad=8)
+XL = np.linspace(-1.45, 1.45, 300)
+YL = 1.35 * XL ** 3 - 1.15 * XL
+ax0L.plot(XL, YL, color=ACCENT, linewidth=2.0)
+VL = 0.95
+ax0L.plot([VL, VL], [-1.6, 1.6], color=WARM, linewidth=1.3,
+          linestyle=(0, (5, 3)))
+_y = 1.35 * VL ** 3 - 1.15 * VL
+ax0L.plot([VL], [_y], marker="o", markersize=6, color=WARM)
+ax0L.text(VL + 0.12, -1.42, "one point", fontsize=10, color=WARM,
+          ha="left", va="center")
+
+# 右：円（縦線と 2 か所で交わる）
+ax0R.set_title("not a function", fontsize=11, color=INK, loc="left", pad=8)
+TH = np.linspace(0, 2 * np.pi, 400)
+ax0R.plot(np.cos(TH), np.sin(TH), color=ACCENT, linewidth=2.0)
+VR = 0.55
+ax0R.plot([VR, VR], [-1.6, 1.6], color=WARM, linewidth=1.3,
+          linestyle=(0, (5, 3)))
+_h = np.sqrt(1 - VR ** 2)
+ax0R.plot([VR, VR], [_h, -_h], marker="o", markersize=6, color=WARM,
+          linestyle="none")
+ax0R.text(VR + 0.12, -1.42, "two points", fontsize=10, color=WARM,
+          ha="left", va="center")
+ax0R.text(-1.60, 1.18, "$x^{2}+y^{2}=1$", fontsize=10, color=ACCENT,
+          ha="left", va="center")
+
+
+# ══════════════════════════════════════════════════════════
+# (hlt) horizontal line test
+# ══════════════════════════════════════════════════════════
+for _ax in (axHL, axHR):
+    _ax.set_xlim(-3.4, 3.4)
+    _ax.set_ylim(-3.4, 5.2)
+    _ax.axis("off")
+    _ax.plot([-3.1, 3.1], [0, 0], color=FAINT, linewidth=1.0)
+    _ax.plot([0, 0], [-3.1, 4.9], color=FAINT, linewidth=1.0)
+
+# 左：y = 4x - 7 は one-to-one
+axHL.set_title("one-to-one", fontsize=11, color=INK, loc="left", pad=8)
+XH = np.linspace(1.0, 3.0, 50)
+axHL.plot(XH, 4 * XH - 7, color=ACCENT, linewidth=2.0)
+HL = 2.0
+axHL.plot([-3.1, 3.1], [HL, HL], color=WARM, linewidth=1.3,
+          linestyle=(0, (5, 3)))
+axHL.plot([(HL + 7) / 4], [HL], marker="o", markersize=6, color=WARM)
+axHL.text(-3.1, 3.9, "$y = 4x - 7$", fontsize=10, color=ACCENT,
+          ha="left", va="center")
+axHL.text(-3.1, 2.45, "one point", fontsize=10, color=WARM,
+          ha="left", va="center")
+
+# 右：y = x^2 は one-to-one でない
+axHR.set_title("not one-to-one", fontsize=11, color=INK, loc="left", pad=8)
+XQ = np.linspace(-2.2, 2.2, 300)
+axHR.plot(XQ, XQ ** 2, color=ACCENT, linewidth=2.0)
+HR = 2.6
+axHR.plot([-3.1, 3.1], [HR, HR], color=WARM, linewidth=1.3,
+          linestyle=(0, (5, 3)))
+axHR.plot([-np.sqrt(HR), np.sqrt(HR)], [HR, HR], marker="o", markersize=6,
+          color=WARM, linestyle="none")
+axHR.text(-3.1, 4.7, "$y = x^{2}$", fontsize=10, color=ACCENT,
+          ha="left", va="center")
+axHR.text(0.15, 3.35, "two points", fontsize=10, color=WARM,
+          ha="left", va="center")
 
 # ══════════════════════════════════════════════════════════
 # (a) domain と range
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Domain on the $x$-axis, range on the $y$-axis",
+ax1.set_title("Domain on the $x$-axis, range on the $y$-axis",
               fontsize=11, color=INK, loc="left", pad=10)
 ax1.set_xlim(-4.6, 3.6)
 ax1.set_ylim(-1.3, 3.2)
@@ -80,7 +164,7 @@ ax1.text(-0.5, -1.22, "shadow on each axis", fontsize=9.5, color=INK,
 # ══════════════════════════════════════════════════════════
 # (b) y = x について対称
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) The inverse is the reflection in $y = x$",
+ax2.set_title("The inverse is the reflection in $y = x$",
               fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(-0.5, 3.4)
 ax2.set_ylim(-0.5, 3.4)
@@ -115,16 +199,17 @@ ax2.text(A - 0.12, B + 0.14, "$(a,\\,b)$", fontsize=10, color=ACCENT,
 ax2.text(B + 0.06, A - 0.34, "$(b,\\,a)$", fontsize=10, color=WARM,
          ha="left", va="top")
 
-ax2.text(1.5, -0.45, "$f(a) = b$ means $f^{-1}(b) = a$", fontsize=10,
-         color=INK, ha="center")
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-2-2-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig0, "aasl-2-2-vlt.svg"),
+                    (fig1, "aasl-2-2-idea-a.svg"),
+                    (figH, "aasl-2-2-hlt.svg"),
+                    (fig2, "aasl-2-2-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

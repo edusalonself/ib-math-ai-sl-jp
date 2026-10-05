@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_4_4.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_4_4.py  … 目視用の PNG も
 
-出力: aa-sl/04-statistics-and-probability/img/aasl-4-4-idea.svg
+出力: aa-sl/04-statistics-and-probability/img/aasl-4-4-idea-a.svg
+      aa-sl/04-statistics-and-probability/img/aasl-4-4-idea-b.svg
 
 (a) 相関の向きと強さ。r が 0 に近くても、曲線の関係はありうる。
 (b) 回帰直線は mean point を通る。データの範囲の外は外挿。
@@ -55,15 +56,16 @@ def corr(xs, ys):
     return sxy / math.sqrt(sxx * syy)
 
 
-fig = plt.figure(figsize=(10.0, 4.8))
-gs = GridSpec(2, 4, figure=fig, wspace=0.35, hspace=0.55,
-              left=0.04, right=0.98, top=0.84, bottom=0.13)
+fig1 = plt.figure(figsize=(5.6, 4.8))
+gs = GridSpec(2, 2, figure=fig1, wspace=0.30, hspace=0.55,
+              left=0.07, right=0.94, top=0.86, bottom=0.10)
+fig2 = plt.figure(figsize=(5.8, 4.8))
 
 # ══════════════════════════════════════════════════════════
 # (a) 4 つの散布図
 # ══════════════════════════════════════════════════════════
 for _i, (_lab, _ys) in enumerate(PANELS):
-    ax = fig.add_subplot(gs[_i // 2, _i % 2])
+    ax = fig1.add_subplot(gs[_i // 2, _i % 2])
     ax.scatter(XS, _ys, s=20, color=ACCENT, zorder=3)
     ax.set_xticks([])
     ax.set_yticks([])
@@ -76,18 +78,15 @@ for _i, (_lab, _ys) in enumerate(PANELS):
                  loc="left", pad=4)
     ax.margins(0.14)
     if _i == 0:
-        ax.text(-0.06, 1.62, "(a) Direction and strength", fontsize=11,
+        ax.text(-0.06, 1.62, "Direction and strength", fontsize=11,
                 color=INK, transform=ax.transAxes)
     if _i == 2:
-        ax.text(0.0, -0.30, "a value of $r$ near $0$ does not mean there is "
-                "no relationship", fontsize=9, color=WARM,
-                transform=ax.transAxes)
 
 # ══════════════════════════════════════════════════════════
 # (b) 回帰直線・mean point・外挿
 # ══════════════════════════════════════════════════════════
-ax2 = fig.add_subplot(gs[:, 2:])
-ax2.set_title("(b) Where the line can be trusted", fontsize=11, color=INK,
+ax2 = fig2.add_subplot(111)
+ax2.set_title("Where the line can be trusted", fontsize=11, color=INK,
               loc="left", pad=10)
 
 DX = [2.2, 3.0, 3.8, 4.6, 5.4, 6.2, 7.0, 7.8]
@@ -123,17 +122,18 @@ for _sp in ("top", "right"):
     ax2.spines[_sp].set_visible(False)
 for _sp in ("left", "bottom"):
     ax2.spines[_sp].set_color(GREY)
-ax2.text(0.0, -0.10, "outside the range of the data, nothing has been "
-         "measured", fontsize=9, color=WARM, transform=ax2.transAxes)
 
-path = os.path.join(OUT, "aasl-4-4-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
 for _lab, _ys in PANELS:
     print(f"  {_lab}: r = {corr(XS, _ys):.3f}")
 
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-4-4-idea-a.svg"), (fig2, "aasl-4-4-idea-b.svg")):
+    if _fig is fig2:
+        _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

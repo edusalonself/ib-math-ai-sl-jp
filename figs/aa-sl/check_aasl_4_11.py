@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """AA SL 4.11 のページを検算する。
 
-    python3 figs/aa-sl/check_aasl_4_6a.py
+    python3 figs/aa-sl/check_aasl_4_6.py
 """
 import glob
 import os
@@ -80,10 +80,10 @@ for _h in ("## What you should be able to do", "## The idea {#idea}",
 not_in_text("## Using your GDC", "4.11 に GDC の節は置かない")
 
 _secs = re.findall(r"^### (\d)\. .*\{#([a-z-]+)\}$", TEXT, re.M)
-chk([s[0] for s in _secs] == [str(i) for i in range(1, 8)],
-    "### の番号 1..7: %s" % [s[0] for s in _secs])
-chk([s[1] for s in _secs] == ["formal", "multiply", "three", "test", "solve",
-                              "total", "choose"],
+chk([s[0] for s in _secs] == [str(i) for i in range(1, 9)],
+    "### の番号 1..8: %s" % [s[0] for s in _secs])
+chk([s[1] for s in _secs] == ["formal", "table", "formula", "multiply",
+                              "test", "solve", "total", "choose"],
     "アンカー: %s" % [s[1] for s in _secs])
 
 chk(len(re.findall(r"^\[\d+\]\{\.ex-no\}", TEXT, re.M)) == 10, "演習 10 問")
@@ -93,7 +93,8 @@ chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
 chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
-chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + 電卓 1）")
+chk(TEXT.count("{.callout-warning}") == 6, "callout-warning 6（誤り 6）")
+not_in_text("## この項目に電卓は要りません", "電卓の callout は削除した")
 chk(TEXT.count("{.callout-important}") == 2,
     "callout-important 2（公式集 4.6 の条件付き確率と独立）")
 chk(TEXT.count("**検算") >= 12, "検算 12 以上: %d" % TEXT.count("**検算"))
@@ -118,9 +119,12 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-4-11-idea.svg){#fig-aasl411-idea width=100%}", "図の埋め込み")
-in_text("@fig-aasl411-idea (a)", "図 (a) の参照")
-in_text("@fig-aasl411-idea (b)", "図 (b) の参照")
+not_in_text("aasl-4-11-idea-a", "図 (a) は削除した（2026-10-05）")
+in_text("(img/aasl-4-11-idea-b.svg){#fig-aasl411-idea-b width=100%}", "図 (b) の埋め込み")
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-11-idea.svg")),
+    "分割前の SVG は消してある")
+not_in_text("@fig-aasl411-idea-a", "図 (a) への参照もない")
+in_text("@fig-aasl411-idea-b", "図 (b) の参照")
 
 chk(not re.search(r"^> ", TEXT, re.M), "引用ブロックは使わない")
 for _w in ("そのとおり", "もちろん", "簡単です", "自明", "当たり前", "明らか", "当然"):
@@ -131,7 +135,7 @@ for _w in ("得点になりません", "点になりません", "減点されま
 # ══════════════════════════════════════════════════════════
 # 2. 式と公式集
 # ══════════════════════════════════════════════════════════
-in_text("P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)}, \\qquad P(B) \\ne 0\n"
+in_text("P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)}, \\qquad P(B) > 0\n"
         "$$ {#eq-aasl411-cond}", "条件付き確率の式")
 in_text("P(A \\cap B) = P(B)\\,P(A \\mid B)\n$$ {#eq-aasl411-mult}", "かけ算の形")
 in_text("P(A \\cap B) = P(A)P(B)\n$$ {#eq-aasl411-indep}", "独立の式")
@@ -145,11 +149,9 @@ in_text("シラバスの **4.11** に出てきます。公式集にはありま�
         "3 つの言い方は公式集にない")
 in_text("{#tbl-aasl411-formulae}", "式の使い分けの表")
 in_text("{#tbl-aasl411-choose}", "式の選び方の表")
-in_text("[SL 4.6b](aasl-4-6b.qmd#restrict)", "4.6b への参照（狭まる）")
-in_text("[SL 4.6b](aasl-4-6b.qmd#formula)", "4.6b への参照（式）")
-in_text("[SL 4.6b](aasl-4-6b.qmd#multiply)", "4.6b への参照（かけ算）")
-in_text("[SL 4.6b](aasl-4-6b.qmd#compare)", "4.6b への参照（排反と独立）")
-in_text("[SL 4.6a の加法定理](aasl-4-6a.qmd#addition)", "4.6a への参照")
+not_in_text("aasl-4-6b", "4.6b は統合した（2026-10-05）")
+in_text("[SL 4.6](aasl-4-6.qmd#independent)", "4.6 への参照（独立）")
+in_text("[SL 4.6 の加法定理](aasl-4-6.qmd#addition)", "4.6 への参照（加法）")
 
 # 3 つの言い方が同値であること（記号のまま）
 _pa, _pb = sp.symbols("p_A p_B", positive=True)
@@ -167,9 +169,9 @@ for _w in (R(0), R(1, 4), R(1, 2), R(3, 4), R(1)):
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('r"$P(A \\cap B) = P(A)\\,P(B)$"', "図 (a) のかけ算の形")
-in_fig('r"$P(A \\mid B) = P(A)$"', "図 (a) の条件付きの形")
-in_fig('r"$P(A \\mid B\') = P(A)$"', "図 (a) の余事象の形")
+# 図 (a) は削除し、3 つの言い方は本文の式にまとめた
+in_text("P(A \\mid B) = P(A) \\quad (P(B) > 0), \\qquad "
+        "P(A \\mid B') = P(A) \\quad (P(B') > 0)", "3 つの言い方は本文の式")
 in_fig('["$B$", "$18$", "$12$", "$30$"]', "図 (b) の表の 1 行目")
 eq(18 + 12 + 42 + 28, 100, "図の表の合計は 100")
 eq(R(18, 30), R(3, 5), "図 18/30 = 0.6")
@@ -379,24 +381,20 @@ chk(_nstmt >= 8, "ページの計算を %d 本たしかめた" % _nstmt)
 # ══════════════════════════════════════════════════════════
 
 # --- B2: 3 つの言いかえは 0 < P(B) < 1 のときだけ同値 -----------
-chk("$0 < P(B) < 1$ のとき、次の $3$ つのどれで書いても同じです" in TEXT,
-    "第3節: 同値の条件 0 < P(B) < 1 を書いている")
-chk("**$0 < P(B) < 1$ なら、$1$ つ示せば十分です。**" in TEXT,
-    "第3節: 「1 つ示せば十分」に条件がついている")
+chk("**この $2$ つを同時に使う説明では $0 < P(B) < 1$ が要ります。**"
+    in TEXT, "第5節: 同値の条件 0 < P(B) < 1 を書いている")
 chk("だから、独立の定義に選ぶのはかけ算の形です。" in TEXT,
     "第3節: かけ算の形を定義に選ぶ理由を書いている")
 chk("$P(B) = 1$ だと $P(A \\mid B')$ が定義されません" in TEXT,
     "第3節: P(B)=1 のとき P(A|B') が定義されないと書いている")
-chk("$3$ つは同じことなので" in TEXT, "第3節: 言いかえの説明が残っている")
+chk("@eq-aasl411-indep と @eq-aasl411-three の $3$ つはすべて同じことを"
+    "表します" in TEXT, "第5節: 3 つは同じことだと書いている")
 # 「割り算がないから P(B)=0 でも使える」だけで終わっていないこと
 chk("$P(B) = 0$ でも $P(B) = 1$ でも意味を持ちます" in TEXT,
     "第3節: かけ算の形は両端でも意味を持つ")
 
-# --- B2 図: 同値の条件と、かけ算の形の但し書き ------------------
-chk("when $0 < P(B) < 1$, each one implies the others" in FIGCODE,
-    "図(a): 同値に条件がついている")
-chk("only the first still makes sense when $P(B) = 0$ or " in FIGCODE,
-    "図(a): かけ算の形だけが両端でも意味を持つ")
+# --- B2 同値の条件と、かけ算の形の但し書きは、本文に置く（2026-09-22）--
+in_text("$0 < P(B) < 1$", "同値に条件がついている（本文）")
 chk("the first needs no division, so it works even when" not in FIGCODE,
     "図(a): 古い（条件なしの）文が消えている")
 
@@ -456,6 +454,115 @@ chk('facecolor=SHADE if _i == 0 else "white"' not in FIGCODE,
 _head = TEXT[:TEXT.index("## Worked examples")]
 for _leak in ["$0.5$ です", "何でもありえます", "$0$ から $1$ まで"]:
     chk(_leak not in _head, "前半に演習の答えがもれていない: %s" % _leak)
+
+# ══════════════════════════════════════════════════════════
+# 独立性の判定は、その例を最後まで（方針変更 2026-09-15 第 7 節）
+# ══════════════════════════════════════════════════════════
+in_text("**その1。** $P(A) = 0.6$、$P(B) = 0.5$、$P(A \\cap B) = 0.3$ のとき。",
+        "第4節の例 その1")
+in_text("**その2。** 同じ $P(A)$、$P(B)$ で、$P(A \\cap B) = 0.2$ のとき。",
+        "第4節の例 その2")
+_pa, _pb = sp.Rational(3, 5), sp.Rational(1, 2)
+chk(_pa * _pb == sp.Rational(3, 10), "第4節 P(A)P(B) = 0.3")
+chk(_pa * _pb == sp.Rational(3, 10), "第4節 その1 は独立")
+chk(_pa * _pb != sp.Rational(1, 5), "第4節 その2 は独立でない")
+chk(sp.Rational(3, 10) / _pb == _pa, "第4節 検算 P(A|B) = P(A)")
+chk(sp.Rational(1, 5) / _pb != _pa, "第4節 検算 その2 はちがう")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 4. the multiplication rule（かけ算の形） {#multiply}', "見出しの英語: 2. the multiplication rule")
+in_text('### 7. $P(A)$ を組み立てる（the law of total probability） {#total}', "見出しの英語: 6. $P(A)$ を組み立てる（the law o")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'when $0 < P(B) < 1$, eac',
+    'showing any one of the t',
+    'only the first still mak',
+    'if one row gave a differ',
+]:
+    chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
+not_in_text('### 3. 独立の $3$ つの言い方 {#three}', "独立の言い方は第 5 節へ")
+in_text('### 5. testing for independence（独立性の判定） {#test}',
+        "第 5 節の見出し（英語）")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (b) から説明の文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+chk("as well, so $A$ and $B$" not in FIG, "図に説明の文を書いていない")
+chk("independent, however small the difference" not in FIG,
+    "図に説明の文を書いていない（2）")
+# 式そのものは残す
+# 図の中の式は本文へ移した（2026-10-05）
+chk("frac{60}{100}" not in FIG, "図 (b) に式は書いていない")
+in_text("P(A \\mid B) = \\frac{18}{30} = 0.6, \\qquad "
+        "P(A \\mid B') = \\frac{42}{70} = 0.6", "表の 2 行の割合は本文")
+in_text("P(A) = \\frac{60}{100} = 0.6", "表全体の割合も本文")
+in_text("**二元表では、独立は「どの行も同じ割合」として見えます**",
+        "表での見え方")
+chk(F(18, 30) == F(42, 70) == F(60, 100), "18/30 = 42/70 = 60/100")
+chk(18 + 12 + 42 + 28 == 100, "図 (b) の表の合計は 100")
+# 外した内容は本文にある
+in_text("3. $P(A \\cap B)$ と比べる。等しければ独立、等しくなければ独立ではない。",
+        "判定の手順は本文にある")
+chk(F(18, 30) == F(6, 10) and F(42, 70) == F(6, 10) and F(60, 100) == F(6, 10),
+    "図の 3 つの割合はどれも 0.6")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-05：SL 4.6b を統合し、説明の順を組み替えた
+# ══════════════════════════════════════════════════════════
+in_text("**[SL 4.6](aasl-4-6.qmd) では、樹形図を使って、条件によって確率が"
+        "変わることを学びました。**", "導入")
+in_text("このページでは、**条件付き確率を記号と公式で表し、計算する方法**を"
+        "学びます。", "導入の 2 文目")
+in_text("### 1. conditional probability（条件付き確率）の意味と記号 {#formal}",
+        "第 1 節")
+in_text("### 2. 表から求める {#table}", "第 2 節")
+in_text("### 3. 条件付き確率の公式 {#formula}", "第 3 節")
+in_text("(img/aasl-4-11-idea-c.svg){#fig-aasl411-idea-c", "表の図")
+in_text("(img/aasl-4-11-idea-d.svg){#fig-aasl411-idea-d", "樹形図")
+for _n411 in ("aasl-4-11-idea-c.svg", "aasl-4-11-idea-d.svg"):
+    chk(os.path.exists(os.path.join(os.path.dirname(QMD), "img", _n411)),
+        "SVG がある: " + _n411)
+in_text("P(A \\mid B) = \\frac{21}{30} = \\frac{7}{10}", "表から読む例")
+in_text("P(A) = \\frac{55}{100} = \\frac{11}{20}", "表全体からの P(A)")
+chk(F(21, 30) == F(7, 10) and F(55, 100) == F(11, 20), "表の約分")
+chk(F(7, 10) != F(11, 20), "条件が付くと値が変わる")
+chk(21 + 9 + 34 + 36 == 100, "表の合計は 100")
+in_text("P(A \\cap B) = \\frac{1}{3} \\times \\frac{3}{5} = \\frac{1}{5}", "樹形図の例")
+chk(F(1, 3) * F(3, 5) == F(1, 5), "1/3 × 3/5 = 1/5")
+in_text("**$P(A \\mid B)$ と $P(B \\mid A)$ は、ふつう別のものです。**",
+        "P(A|B) と P(B|A) のちがい")
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -18,7 +18,7 @@ sidebar: aa-sl
 
 ### 1. 文章から図をつくる {#diagram}
 
-この項目の問題は、ほとんどが**文章**で与えられます。**最初の一手は、いつも図をかくこと**です（[SL 3.2](aasl-3-2.qmd#area)）。
+この項目の問題は、ほとんどが**文章**で与えられます。**最初の一手は、いつも図をかくこと**です。
 
 図には、次を書き入れます。
 
@@ -30,14 +30,16 @@ sidebar: aa-sl
 
 **縮尺は合っていなくてかまいません。** 大事なのは、どの角がどこにあるかです。
 
-### 2. 仰角と俯角 {#elevation}
+### 2. angle of elevation and angle of depression（仰角と俯角） {#elevation}
+
+![The angle of elevation and the angle of depression](img/aasl-3-3-idea-a.svg){#fig-aasl33-idea-a width=100%}
 
 どちらも、**水平線から測った角**です。
 
 - **angle of elevation**（仰角）… 見上げるとき、水平線から**上へ**測った角
 - **angle of depression**（俯角）… 見下ろすとき、水平線から**下へ**測った角
 
-@fig-aasl33-idea の (a) がその図です。
+@fig-aasl33-idea-a がその図です。
 
 ::: {.callout-warning}
 ## 俯角は、垂直な線からではなく、水平線から測ります
@@ -62,7 +64,9 @@ $2$ 本の水平線は平行なので、視線がその $2$ 本を横切ると�
 
 **だから、どちらか測りやすいほうで解けます。** 問題文が俯角で与えても、下の点での仰角として図に書きこんでかまいません。
 
-### 4. 方位角 {#bearings}
+### 4. bearings（方位角） {#bearings}
+
+![A bearing, measured clockwise from north](img/aasl-3-3-idea-b.svg){#fig-aasl33-idea-b width=100%}
 
 **bearing**（方位角）は、**北から時計回りに測った角**で、**整数部分を必ず $3$ 桁**にそろえて書きます。
 
@@ -71,7 +75,7 @@ $2$ 本の水平線は平行なので、視線がその $2$ 本を横切ると�
 - 真南 → $180°$
 - 真西 → $270°$
 
-$60°$ ではなく **$060°$** と書きます。@fig-aasl33-idea の (b) を見てください。
+$60°$ ではなく **$060°$** と書きます。@fig-aasl33-idea-b を見てください。
 
 **これは「有効数字 $3$ 桁」とは別の約束です。** 頭に $0$ を足して桁をそろえるだけで、四捨五入の話ではありません。小数が出るときは、**先に有効数字 $3$ 桁に丸め、そのあとで整数部分を $3$ 桁にそろえます。**たとえば $71.565\ldots°$ なら、$71.6°$ と丸めてから **$071.6°$** と書きます。桁は $4$ つになりますが、これで正しい形です。
 
@@ -102,16 +106,46 @@ $1$ つの三角形では足りないとき、**共通の辺**を橋渡しにし
 
 という流れになります。**共通の辺がどれかを、図で先に見つけてください。**
 
+**この手順で、$1$ つやってみます。** 塔を地点 $\mathrm{A}$ から見上げると仰角 $30°$、塔に $40$ m 近づいた地点 $\mathrm{B}$ からは $45°$ でした。塔の高さ $h$ を求めます。
+
+![The height $h$, shared by two right-angled triangles](img/aasl-3-3-idea-c.svg){#fig-aasl33-idea-c width=88%}
+
+@fig-aasl33-idea-c が、その図です。**$h$ が $2$ つの三角形に共通の辺**で、$\mathrm{B}$ から塔の足もとまでを $x$ とおくと、$\mathrm{A}$ から足もとまでは $x+40$ になります。
+
+**手順1。** $\mathrm{B}$ から塔の足もとまでを $x$ m とすると、$\mathrm{B}$ の三角形で
+
+$$
+\tan 45° = \frac{h}{x} \qquad \Longrightarrow \qquad h = x
+$$
+
+**手順2。** $\mathrm{A}$ から塔の足もとまでは $x + 40$ なので
+
+$$
+\tan 30° = \frac{h}{x+40} \qquad \Longrightarrow \qquad h = \frac{x+40}{\sqrt{3}}
+$$
+
+**手順3。** 共通の辺 $h$ を等しいとおきます。
+
+$$
+x = \frac{x+40}{\sqrt{3}}
+\ \Longrightarrow \
+\sqrt{3}\,x = x + 40
+\ \Longrightarrow \
+x = \frac{40}{\sqrt{3}-1} = 20\left(\sqrt{3}+1\right)
+$$
+
+$h = x = 20\left(\sqrt{3}+1\right) \approx 54.6$ m です。
+
+**検算。** $\tan 30° = \dfrac{54.6}{54.6+40} = \dfrac{54.6}{94.6} = 0.577\ldots = \dfrac{1}{\sqrt{3}}$ ✓
+
+**検算（大小）。** 近い地点のほうが仰角が大きいはずです。$45° > 30°$ ✓ 図とも合っています。
+
 ### 6. 直角がないとき {#non-right}
 
 図をかいてみて**直角が見つからない**なら、正弦定理か余弦定理です（[SL 3.2](aasl-3-2.qmd#which)）。
 
 - 辺とその向かいの角の**組**があれば → 正弦定理
 - $2$ 辺と**はさむ角**、または $3$ 辺 → 余弦定理
-
-方位角の問題では、**$2$ つの方位角の差**が三角形の内角になることがよくあります。図に北の線をかき足すと、その差が見えます。
-
-また、$1$ 本の行程を**東西方向と南北方向に分ける**こともあります。そのときに使うのは、**いちばん近い南北の線（北か南）から測った鋭角**です。その鋭角を $\alpha$、進んだ距離を $d$ とすると、東西の成分は $d\sin\alpha$、南北の成分は $d\cos\alpha$ になります。東か西か、北か南かは、図から読みます。**（北から測った角をそのまま入れる一般の形は、SL 3.5 で扱います。）**
 
 ### 7. 答えの書き方 {#answers}
 
@@ -130,13 +164,14 @@ TI-Nspire の Calculator 画面で、$\sin^{-1}$ などを使って角を出せ�
 **Paper 1 では使えません。** このページの例題と演習は、すべて手で解ける形にしてあります。
 :::
 
-![(a) The angle of elevation is measured up from the horizontal at the lower point and the angle of depression is measured down from the horizontal at the upper point; the two horizontals are parallel, so the angles are equal. (b) A bearing is measured clockwise from north and written with three figures, and the bearing back the other way differs by $180°$](img/aasl-3-3-idea.svg){#fig-aasl33-idea width=100%}
-
 ## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
 
 **なぜ、俯角と仰角が等しいのでしょうか。**
 
-@fig-aasl33-idea の (a) で、下の点 $P$ を通る水平線と、上の点 $T$ を通る水平線を考えます。**どちらも水平なので、この $2$ 本は平行**です。
+@fig-aasl33-idea-a で、下の点 $P$ を通る水平線と、上の点 $T$ を通る水平線を考えます。**どちらも水平なので、この $2$ 本は平行**です。
 
 視線 $PT$ は、この $2$ 本の平行線を横切る **transversal**（横断線）です。平行線を $1$ 本の直線が横切ると、**alternate angles**（錯角）は等しくなります。
 
@@ -154,6 +189,7 @@ $P$ と $Q$ での北の線は平行なので、**どちらの点でも「北」
 **なぜ、$2$ つの三角形をつなげるのでしょうか。** それぞれの三角形の中だけでは、未知のものが多すぎて解けないことがあります。ところが**共通の辺は、どちらの三角形から見ても同じ長さ**です。
 
 だから、その辺を $2$ とおりに表して等号でつなぐと、**未知のものが $1$ つ減った方程式**になります。$2$ 点から同じ塔を見上げる問題が、その典型です。
+:::
 
 ## Worked examples
 

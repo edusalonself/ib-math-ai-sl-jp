@@ -9,6 +9,18 @@
 npm install -g katex playwright
 ```
 
+**Python 側**（チェッカーが使います）:
+
+```bash
+pip install sympy matplotlib scipy
+```
+
+★ `scipy` は Topic 4 の分布と AHL 5.13 のチェッカーが使います。
+Mac 側の作業用 VM は**セッションごとに作り直される**ので、
+チェッカーを流す前に毎回入れてください。入っていないと
+`figs/ai-hl/check_ahl_4_*.py` と `check_ahl_5_13.py` が
+`ModuleNotFoundError` で止まります（本文の誤りではありません）。
+
 Chromium は `/opt/pw-browsers/chromium` に入っているので、
 `playwright install` は**実行しないでください**（環境変数で解決されます）。
 

@@ -25,7 +25,6 @@ FIGCODE = FIG.split('"""', 2)[-1]
 OK = NG = 0
 R = sp.Rational
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -34,27 +33,21 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.nsimplify(u) - sp.nsimplify(v)) == 0,
         msg + f"  ({u} vs {v})")
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 道具 — 四分位数と外れ値の境目（IB の手計算のやり方）
@@ -64,7 +57,6 @@ def med(a):
     m = len(a)
     return F(a[m // 2]) if m % 2 else (F(a[m // 2 - 1]) + F(a[m // 2])) / 2
 
-
 def quartiles(d):
     """中央値を除いて下半分・上半分に分ける、IB の手計算のやり方。"""
     d = sorted(d)
@@ -73,17 +65,14 @@ def quartiles(d):
     hi = d[n // 2 + 1:] if n % 2 else d[n // 2:]
     return med(lo), med(d), med(hi)
 
-
 def fences(d):
     q1, _m, q3 = quartiles(d)
     iqr = q3 - q1
     return q1 - F(3, 2) * iqr, q3 + F(3, 2) * iqr
 
-
 def outliers(d):
     lo, hi = fences(d)
     return [x for x in sorted(d) if x < lo or x > hi]
-
 
 # 道具そのものの検算
 chk(med([1, 2, 3]) == 2, "道具: 奇数個の中央値")
@@ -144,11 +133,9 @@ _m0 = sum(_base) / len(_base)
 _m1 = sum(_with) / len(_with)
 chk(_m1 > _m0, f"75 を入れると平均が上がる: {_m0} → {_m1}")
 
-
 def sd(d):
     m = sum(d) / len(d)
     return (sum((x - m) ** 2 for x in d) / len(d)) ** 0.5
-
 
 chk(sd(_with) > sd(_base), f"75 を入れると標準偏差が上がる: {sd(_base):.3f} → {sd(_with):.3f}")
 chk(quartiles(_with)[0] == 18 and quartiles(_with)[2] == 33, "四分位数は 75 に動かされない")
@@ -358,14 +345,15 @@ not_in_text("Reliability of data sources", "Content 欄は引用しない")
 # ══════════════════════════════════════════════════════════
 in_text("答案では、**どの向きにずれるかまで書きます。**", "向きまで書く")
 in_text("**どちらかは、数字だけでは決められません。**", "場面で決める")
-in_text("**記録の誤り** … 打ちまちがい、単位ちがい、機械の故障。", "記録の誤り")
-in_text("**本物の値** …", "本物の値")
+in_text("**recording error**（記録の誤り）… 打ちまちがい、単位ちがい、機械の故障。", "記録の誤り")
+in_text("**genuine value**（本物の値）…", "本物の値")
 
 # ══════════════════════════════════════════════════════════
 # 11. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -385,8 +373,8 @@ chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
 chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
-chk(TEXT.count("{.model-answer}") == 9,
-    f"model-answer が 9: {TEXT.count('{.model-answer}')}")
+chk(TEXT.count("{.model-answer}") == 10,
+    f"model-answer が 10: {TEXT.count('{.model-answer}')}")
 _asks = len(re.findall(r"\[(?:[^\]]*?)(?:Explain|Justify|Comment|Interpret|Identify"
                        r"|Describe|Suggest)(?:[^\]]*?)\]\{\.q-en\}", TEXT))
 chk(_asks == 9, f"説明を求める問いが 9: {_asks}")
@@ -442,23 +430,25 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 13. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-4-1-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-4-1-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-4-1-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-4-1-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-4-1-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-4-1-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-4-1-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Population and sample", "図(a) の題")
-in_fig("population: everyone we want to know about", "図(a) の population")
+in_fig("Population and sample", "図(a) の題")
 in_fig("measure the sample", "図(a) の矢印")
-in_fig("say something about the population", "図(a) の矢印の先")
-in_fig("if the sample is chosen badly", "図(a) の説明")
-in_fig("(b) The two outlier boundaries", "図(b) の題")
+in_fig("The two outlier boundaries", "図(b) の題")
 in_fig("$Q_1 - 1.5\\\\,IQR$", "図(b) の下の境目")
 in_fig("$Q_3 + 1.5\\\\,IQR$", "図(b) の上の境目")
 in_fig("marked with", "図(b) の × の説明")
-in_fig("a value beyond a boundary is an outlier; the ", "図(b) の説明")
 # 図に例題・演習の数値が出ていないこと
 for _bad in ["55.5", "21.25", "37.5", "75", "44", "30"]:
     chk(_bad not in FIGSTR, "図に答えの数値: " + _bad)
@@ -471,18 +461,16 @@ _mx = re.search(r"ax2\.plot\(\[([0-9.]+)\], \[1\.6\], marker=\"x\"", FIGCODE)
 chk(_mx is not None, "図の × の位置が読める")
 chk(float(_mx.group(1)) > _fhi,
     f"図の × は上の境目より外: {_mx.group(1)} vs {_fhi}")
-in_text("(a) A sample is a part of the population", "キャプションが (a) を説明")
-in_text("(b) The two boundaries used to decide whether a value is an outlier",
-        "キャプションが (b) を説明")
 
 # ══════════════════════════════════════════════════════════
 # 14. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/04-statistics-and-probability/aasl-4-1.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/04-statistics-and-probability/aasl-4-1.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-3-8.qmd") < DRAFT.index("aasl-4-1.qmd"), "並びが 3.8 → 4.1")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(04-statistics-and-probability/aasl-4-1.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -647,6 +635,111 @@ in_fig("sample: spread over the whole population", "図(a) の標本のラベル
 in_fig("rng.choice(len(_pts), 13, replace=False)", "標本は無作為に散らす")
 chk("Ellipse" not in FIGCODE, "かたまりの楕円は消した")
 chk("_pts[i][0] - 6.4" not in FIGCODE, "位置で選ぶ書き方は消した")
+
+# ══════════════════════════════════════════════════════════
+# outlier の手順は、その例を最後まで（方針変更 2026-09-15 第 7 節）
+# ══════════════════════════════════════════════════════════
+in_text("データは $4, \\ 7, \\ 8, \\ 9, \\ 10, \\ 12, \\ 25$ です。",
+        "第6節の例")
+in_text("$25 > 19.5$ なので、**$25$ が outlier** です。", "第6節の答え")
+_d = [4, 7, 8, 9, 10, 12, 25]
+chk(len(_d) == 7 and _d[3] == 9, "第6節 median は 9")
+_lo, _hi = _d[:3], _d[4:]
+_q1, _q3 = _lo[1], _hi[1]
+chk(_q1 == 7 and _q3 == 12, "第6節 Q1=7, Q3=12")
+chk(_q3 - _q1 == 5, "第6節 IQR=5")
+chk(_q1 - 1.5 * 5 == -0.5 and _q3 + 1.5 * 5 == 19.5, "第6節 境目は -0.5 と 19.5")
+chk([v for v in _d if v < -0.5 or v > 19.5] == [25], "第6節 outlier は 25 だけ")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. population と sample {#population}', "見出しの英語: 1. population と sample")
+in_text('### 2. discrete data と continuous data {#data-types}', "見出しの英語: 2. discrete data と continu")
+in_text('### 3. sampling techniques（標本の取り方）：$5$ つ {#techniques}', "見出しの英語: 3. sampling techniques（標本の")
+in_text('### 4. bias：結果がかたよるとき {#bias}', "見出しの英語: 4. bias：結果がかたよるとき")
+in_text('### 5. どの取り方が bias を小さくするか {#effect}', "見出しの英語: 5. どの取り方が bias を小さくす")
+in_text('### 6. outlier の決め方 {#outlier}', "見出しの英語: 6. outlier の決め方")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'population: everyone we ',
+    'say something about the ',
+    'if the sample is chosen ',
+    'a value beyond a boundar',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:24])
+in_text('### 1. population と sample {#population}', "その内容は本文にある")
+in_text('### 4. bias：結果がかたよるとき {#bias}', "その内容は本文にある")
+in_text('### 6. outlier の決め方 {#outlier}', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-24：bias の答案例を英語で、中央値の位置の式を追加
+# ══════════════════════════════════════════════════════════
+in_text("**答案は英語なので、こう書きます。**", "英語で書くと断っている")
+in_text("*The sample is biased because customers who come more often are more "
+        "likely to be asked. Repeating the survey would give a mean number of "
+        "visits that is too high.*", "bias の答案例（英語）")
+not_in_text("（この標本は、よく来る客ほど声をかけられやすいので"
+            "かたよっている。", "その日本語訳は削除した（2026-10-05）")
+in_text("**中央値は $\\dfrac{n+1}{2}$ 番目のデータ**です（$n$ はデータの個数）。",
+        "中央値の位置の式")
+in_text("$n$ が偶数のときは $\\dfrac{n+1}{2}$ が整数にならないので、"
+        "**まん中の $2$ つの平均**になります。", "偶数のときの但し書き")
+# (n+1)/2 が、実際に中央の位置になっている
+for _n, _pos in ((7, 4), (9, 5), (11, 6), (5, 3)):
+    chk(sp.Rational(_n + 1, 2) == _pos, f"n={_n} の中央値は {_pos} 番目")
+for _n in (6, 8, 10):
+    chk(not sp.Rational(_n + 1, 2).is_Integer, f"n={_n} では整数にならない")
+chk(sp.Rational(6 + 1, 2) == sp.Rational(7, 2), "n=6 なら 3.5 番目＝3 と 4 の平均")
+
+in_text("- **genuine value**（本物の値）… 実際にそういう人がいる。", "本物の値に英語")
+in_text("- **recording error**（記録の誤り）… 打ちまちがい、単位ちがい、機械の故障。",
+        "記録の誤りに英語")
+in_text("a genuine value rather than a recording error", "答案の英語とそろっている")
+for _t in ["| genuine value |", "| recording error |"]:
+    chk(_t in GLO, "対訳表にある: " + _t)
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-05：bias の節を、取り方の比較より前に置く
+# ══════════════════════════════════════════════════════════
+chk(TEXT.index("### 4. bias：結果がかたよるとき {#bias}")
+    < TEXT.index("### 5. どの取り方が bias を小さくするか {#effect}"),
+    "bias の節が先")
+chk(TEXT.index("### 5. どの取り方が bias を小さくするか {#effect}")
+    < TEXT.index("### 6. outlier の決め方 {#outlier}"), "その次が第 6 節")
+not_in_text("### 5. bias：結果がかたよるとき", "前の番号は消した")
+not_in_text("### 4. どの取り方が bias を小さくするか", "同上")
+# 節番号つきの参照も入れかえた
+chk(TEXT.count("（[第 4 節](#bias)）") == 3,
+    f"bias への参照: {TEXT.count(chr(65288) + chr(91))}")
+chk(TEXT.count("（[第 5 節](#effect)）") == 3, "effect への参照は 3 か所")
+not_in_text("[第 5 節](#bias)", "古い番号の参照は残っていない")
+not_in_text("[第 4 節](#effect)", "同上")
 
 print()
 print("OK", OK, "/ NG", NG)

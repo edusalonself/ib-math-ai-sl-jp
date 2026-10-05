@@ -25,7 +25,6 @@ OK = NG = 0
 R = sp.Rational
 PI = sp.pi
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -34,46 +33,35 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(u - v) == 0, msg + f"  ({u} vs {v})")
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 def arc(r, t):
     return r * t
 
-
 def sector(r, t):
     return R(1, 2) * r ** 2 * t
-
 
 def segment(r, t):
     return sector(r, t) - R(1, 2) * r ** 2 * sp.sin(t)
 
-
 def to_rad(d):
     return sp.rad(d)
 
-
 def to_deg(t):
     return sp.deg(t)
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 定義と変換、公式そのもの
@@ -232,16 +220,13 @@ in_text("公式集の **3.4** の欄に `Area of a sector` として印刷され
 in_text("> $A = \\dfrac{1}{2}r^2\\theta$, where $r$ is the radius, $\\theta$ is the "
         "angle measured in radians", "扇形を逐語で")
 # ★ 答案の書き方を縛る一文だけを引く
-in_text("> On examination papers, radian measure should be assumed unless otherwise "
-        "indicated.", "radian を仮定する一文")
-chk(TEXT.count("\n> ") == 3, f"引用は公式集 2 つ + 冒頭の一文 1 つ: {TEXT.count(chr(10) + '> ')}")
+chk(TEXT.count("\n> ") == 2, f"引用は公式集の 2 つだけ: {TEXT.count(chr(10) + '> ')}")
 chk(TEXT.count("::: {.callout-important}") == 2, "公式集の callout は 2 つ")
 not_in_text("The circle: radian measure of angles", "シラバス本文は引かない")
 not_in_text("Radian measure may be expressed as exact multiples", "Guidance は引かない")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 in_text("**この表は公式集にはありません。**", "変換表は公式集にない")
 in_text("**この式は公式集にはありません。**", "弓形の式は公式集にない")
-in_text("**$\\pi$ を使った正確な形でも、小数でもかまいません。**", "答えの形")
 
 # ══════════════════════════════════════════════════════════
 # 8. 説明のしかた（条件と断定）
@@ -262,8 +247,9 @@ in_text("## 扇形の周を、弧の長さだけにする", "周の注意")
 # ══════════════════════════════════════════════════════════
 # 9. GDC
 # ══════════════════════════════════════════════════════════
-_tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_tips = re.findall(r"::: \{(?:#[A-Za-z0-9_-]+ )?\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -290,7 +276,7 @@ _want = ["The idea", "Why it works", "Worked examples", "Common errors",
 chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
-chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
+chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
 chk(TEXT.count("**検算") >= 12, f"検算が十分ある: {TEXT.count('**検算')}")
 chk("**確かめ。**" not in TEXT and "**確かめます。**" not in TEXT, "「確かめ。」なし")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -350,39 +336,37 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-3-4-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-3-4-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-3-4-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-3-4-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-3-4-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-3-4-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-3-4-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) One radian", "図(a) の題")
-in_fig("the angle at the centre cut off by an arc", "図(a) の説明")
-in_fig("as long as the radius is one radian", "図(a) の説明（続き）")
+in_fig("One radian", "図(a) の題")
 in_fig("arc of length $r$", "図(a) のラベル")
-in_fig("a whole turn is $2\\\\pi$ radians", "図(a) の一周")
-in_fig("(b) Sector and segment", "図(b) の題")
+in_fig("Sector and segment", "図(b) の題")
 in_fig("arc $l = r\\\\theta$", "図(b) の弧")
 in_fig("sector $A = \\\\frac{1}{2}r^{2}\\\\theta$", "図(b) の面積")
 in_fig("segment", "図(b) の弓形")
-in_fig("the chord cuts the sector into a triangle", "図(b) の説明")
-in_fig("both formulas need $\\\\theta$ in radians", "図(b) の但し書き")
-in_text("(a) In a circle of radius $r$, an arc of length $r$ cuts off an angle of "
-        "one radian at the centre", "キャプションが (a) を説明")
-in_text("(b) For a sector of radius $r$ and angle $\\theta$ in radians",
-        "キャプションが (b) を説明")
 chk(set(re.findall(r"\d+", FIGSTR)) <= {"1", "2"},
     f"図の数字は 1 と 2 だけ: {set(re.findall(chr(92) + 'd+', FIGSTR))}")
 
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-4.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/03-geometry/aasl-3-4.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-3-3.qmd") < DRAFT.index("aasl-3-4.qmd"), "並びが 3.3 → 3.4")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-4.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -510,6 +494,91 @@ chk(TEXT.count("aasl-3-2.qmd#area") == 1, "面積の式へのリンクは 1 か�
 # --- 見分けかたを断定にしない --------------------------------------------
 in_text("かけ算の向きを取りちがえた可能性が高いので、もう一度見てください。", "断定を避けた")
 not_in_text("$3$ くらいの数が出たら、かけ算の向きが逆です。", "断定は消した")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 6. area of a segment（弓形の面積） {#segment}', "見出しの英語: 6. area of a segment（弓形の面積")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義や説明の文を、図から本文へ移した
+# ══════════════════════════════════════════════════════════
+for _sent in ("the angle at the centre cut off by an arc",
+              "as long as the radius is one radian",
+              "a whole turn is",
+              "the chord cuts the sector into a triangle",
+              "and a segment",
+              "both formulas need"):
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent)
+
+# 図に残ってよいのは、短いラベルだけ（題をのぞいて 5 語まで）
+_labels = [t for t in FIGSTR.split("\n")
+           if re.search(r"[A-Za-z]", t)
+           and t not in ("One radian", "Sector and segment")]
+chk(len(_labels) >= 3, "図のラベルは残っている")
+for _t in _labels:
+    chk(len(re.findall(r"[A-Za-z]+", _t)) <= 5,
+        "図のラベルが長すぎる（説明は本文へ）: " + _t[:50])
+
+# 同じ内容が、本文にある
+in_text("**半径 $r$ の円で、長さ $r$ の弧を切り取る中心角**が、**$1$ radian** です。",
+        "ラジアンの定義は本文にある")
+in_text("**弧の長さを半径で割った値**が、そのまま radian で測った角の大きさです。",
+        "弧÷半径の言い方も本文にある")
+in_text("\\text{（一周）} = 2\\pi \\ \\text{radian} = 360°", "一周は本文の式にある")
+in_text("**$\\theta$ が radian であることも、公式集に書いてあります。**",
+        "θ は radian も本文にある")
+in_text("扇形の $2$ 本の半径の端を結ぶと、**chord**（弦）ができます。"
+        "弦と弧のあいだの部分が **segment**（弓形）です。", "弦と弓形も本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22（2）：見出しの英語と、第 7 節の削除
+# ══════════════════════════════════════════════════════════
+in_text("### 1. radian（ラジアンとは） {#radian}", "見出しの英語: 1. radian")
+in_text("### 2. converting between degrees and radians（度とラジアンの変換）"
+        " {#convert}", "見出しの英語: 2. converting between")
+in_text("### 4. arc length（弧の長さ） {#arc}", "見出しの英語: 4. arc length")
+in_text("### 5. area of a sector（扇形の面積） {#sector}",
+        "見出しの英語: 5. area of a sector")
+
+# 第 7 節は無い。節は 1..6
+not_in_text("### 7. 試験での約束", "第 7 節の見出しは無い")
+not_in_text("> On examination papers, radian measure should be assumed",
+            "シラバスの逐語引用は置かない")
+not_in_text("ただし `exact` と指定されたら $\\pi$ を残します。", "exact の節も消した")
+not_in_text("[第 7 節](#exam)", "第 7 節への案内は無い")
+_idea2 = [int(m) for m in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
+chk(_idea2 == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea2}")
+
+# #exam は GDC の折りたたみに移した（他ページからのリンク先）
+in_text('::: {#exam .callout-tip collapse="true"}', "#exam は GDC の折りたたみ")
+
+# 約束は、使う場所で言っている
+in_text("**(a)** `exact` と指定されているので、**$\\pi$ を残した形**で答えます。",
+        "例題 2(a) で exact を説明")
+in_text("**試験では、とくに断りがなければ radian と読む決まりです。**",
+        "演習 3 で radian の約束を説明")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

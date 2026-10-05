@@ -16,7 +16,7 @@ sidebar: aa-sl
 
 ## The idea
 
-### 1. ことばを分ける {#words}
+### 1. probability vocabulary（確率の語彙） {#words}
 
 | 英語 | 日本語 | 中身 |
 |:--|:--|:--|
@@ -31,22 +31,33 @@ sidebar: aa-sl
 
 **$n(A)$ は $A$ に入っている結果の個数**、**$n(U)$ は全部の個数**を表します。
 
-### 2. equally likely なら、数えるだけ {#counting}
+### 2. equally likely なら、場合の数で求められる {#counting}
 
-**equally likely outcomes**（同様に確からしい結果）とは、どの結果も同じ確からしさで起こることです。そのときだけ、確率は**数えれば出ます**。
+**equally likely outcomes**（同様に確からしい結果）とは、区別したそれぞれの結果が、すべて同じ確率で起こることです。
+
+たとえば、公平なさいころでは「$1$、$2$、$3$、$4$、$5$、$6$」はそれぞれ同じ確率で出ます。いっぽう、「$1$ が出る」と「$1$ 以外が出る」は、同じ確率ではありません。**何を $1$ つの結果として数えるかに注意します。**
+
+起こりうる結果が有限個で、すべて同様に確からしいとき、
 
 $$
 P(A) = \frac{n(A)}{n(U)}
+= \frac{A \text{ が起こる場合の数}}{\text{起こりうるすべての場合の数}}
 $$ {#eq-aasl45-prob}
+
+で確率を求められます。
+
+$U$ は起こりうるすべての結果の集合、$A$ はそのうち求めたい事象に含まれる結果の集合です（[第 1 節](#words)）。$n(A)$、$n(U)$ は、それぞれの集合に含まれる結果の個数を表します。
+
+**$n(A)$ は、実験で「$A$ が起こった回数」ではありません。** 実際に試して得た回数を使うのは、[第 6 節](#relative)の relative frequency（相対度数）です。
 
 ::: {.callout-important}
 ## この式は公式集にあります
 $P(A) = \dfrac{n(A)}{n(U)}$ は、公式集の **4.5** の欄にあります。試験中に配られるので、覚える必要はありません。
 
-**覚えるのは、この式が使える条件のほうです。** どの結果も同様に確からしいときにだけ使えます。
+**覚えるのは、この式が使える条件のほうです。** **並べた結果が、どれも同じ起こりやすさのときにだけ**使えます。
 :::
 
-**「同様に確からしい」が成り立たない例もあります。** ゆがんださいころ、当たりの大きさがちがうルーレット、天気。そういうときは、数えても確率になりません。
+**並べ直しても成り立たない場面もあります。** ゆがんださいころ、当たりの大きさがちがうルーレット、画びょう、天気。**どれも同じ起こりやすさだと言える理由**（形の対称性など）**がありません。** そういうときは、数えても確率になりません。実験して見積もるしかありません（[第 6 節](#relative)）。
 
 ### 3. 確率の性質 {#properties}
 
@@ -84,16 +95,22 @@ $P(A) + P(A') = 1$ は、公式集の **4.5** の欄にあります。
 
 ### 5. sample space の書き方 {#listing}
 
+![A table of outcomes for two dice, with one event shaded](img/aasl-4-5-idea-a.svg){#fig-aasl45-idea-a width=100%}
+
 **書き出せる大きさなら、書き出します。** 方法は $2$ つあります。
 
 - **リスト** … $\{HH, HT, TH, TT\}$ のように並べる。
-- **表** … $2$ つのものを組にするとき（@fig-aasl45-idea の (a)）。行と列を $2$ つの試行にします。
+- **表** … $2$ つのものを組にするとき（@fig-aasl45-idea-a）。行と列を $2$ つの試行にします。
 
 **表のマス目の数が $n(U)$ です。** コイン $1$ 枚とさいころ $1$ 個なら $2 \times 6 = 12$ マスです。
 
-**順番のちがうものを区別します。** さいころ $2$ 個で $(1, 4)$ と $(4, 1)$ は**別の結果**です。区別しないと、どの結果も同様に確からしい、が崩れます。
+**event は、マス目の集まりです。** @fig-aasl45-idea-a はさいころ $2$ 個の表で、マス目は $36$ あります。色をつけたのが「$2$ つの数の和が $7$」という event で、マス目は $6$ つです。だから $P = \dfrac{6}{36} = \dfrac{1}{6}$ です。**数えるのはマス目の数だけ**で、それ以上のことはしません。
+
+**順番のちがうものを区別します。** さいころ $2$ 個で $(1, 4)$ と $(4, 1)$ は**別の結果**です。@fig-aasl45-idea-a でも $(2, 5)$ と $(5, 2)$ は別のマス目で、どちらにも色がついています。区別しないと、どの結果も同様に確からしい、が崩れます。
 
 ### 6. relative frequency {#relative}
+
+![Relative frequency settling towards the probability](img/aasl-4-5-idea-b.svg){#fig-aasl45-idea-b width=100%}
 
 **relative frequency**（相対度数）は、**実際にやってみた結果**から出す確率です。
 
@@ -103,7 +120,7 @@ $$ {#eq-aasl45-relfreq}
 
 **理論上の確率と一致するとはかぎりません。** 公平なコインを $60$ 回投げても、表がちょうど $30$ 回になるほうがめずらしいくらいです。
 
-**回数を増やすと、理論上の値に近づいていきます**（@fig-aasl45-idea の (b)）。ただし、$1$ 回ごとに近づくのではなく、上下しながら近づきます。
+**回数を増やすと、理論上の値に近づいていきます**（@fig-aasl45-idea-b）。ただし、$1$ 回ごとに近づくのではなく、上下しながら近づきます。
 
 **この式は公式集にありません。** ただ、割り算をするだけです。
 
@@ -130,9 +147,10 @@ $$ {#eq-aasl45-expected}
 **答えは分数のままで書けます。** $\dfrac{4}{36}$ は $\dfrac{1}{9}$ まで約分します。小数にする必要はありません。
 :::
 
-![(a) When two things happen one after the other, the sample space can be set out as a table whose rows are the outcomes of the first and whose columns are the outcomes of the second, so the number of cells is the number of outcomes and an event is a set of cells; the shaded event here is that the two numbers add to seven. (b) The relative frequency of an event moves up and down as trials are added, and settles towards the theoretical probability only as the number of trials becomes large](img/aasl-4-5-idea.svg){#fig-aasl45-idea width=100%}
-
 ## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
 
 **なぜ、equally likely のときだけ数えられるのでしょうか。** 確率の合計は $1$ です。結果が $n(U)$ 個あって、どれも同じ確からしさなら、$1$ つあたりの確率は $\dfrac{1}{n(U)}$ です。
 
@@ -159,6 +177,7 @@ $$
 **なぜ、期待される回数が整数でなくてよいのでしょうか。** これは「今日の欠席者数の予想」ではなく、**同じことを何日もくり返したときの $1$ 日あたりの平均**だからです。平均は整数になる理由がありません。
 
 $1$ 日ごとに見れば、欠席者は $0$ 人か $1$ 人か $2$ 人か…と整数です。それを何日ぶんも平均すれば、$12.8$ のような値になります。
+:::
 
 ## Worked examples
 
@@ -488,7 +507,7 @@ $$200 \times 0.5 = 100$$
 
 ::: {.callout-warning}
 ## equally likely でないのに数える
-数えて出せるのは、どの結果も同様に確からしいときだけです（[第 2 節](#counting)）。
+数えて出せるのは、**並べた結果がどれも同じ起こりやすさのとき**だけです（[第 2 節](#counting)）。**並べ直せば成り立つこともあります。**
 :::
 
 ::: {.callout-warning}

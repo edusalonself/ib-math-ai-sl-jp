@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_4_1.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_4_1.py  … 目視用の PNG も
 
-出力: aa-sl/04-statistics-and-probability/img/aasl-4-1-idea.svg
+出力: aa-sl/04-statistics-and-probability/img/aasl-4-1-idea-a.svg
+      aa-sl/04-statistics-and-probability/img/aasl-4-1-idea-b.svg
 
 (a) population と sample の関係。
 (b) 外れ値の境目（Q1 - 1.5 IQR と Q3 + 1.5 IQR）。
@@ -34,12 +35,12 @@ GREY = "#6b7280"
 WARM = "#b45309"
 PALE = "#c7d7e8"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.0, 4.4))
-
+fig1, ax1 = plt.subplots(figsize=(5.4, 4.4))
+fig2, ax2 = plt.subplots(figsize=(5.4, 4.4))
 # ══════════════════════════════════════════════════════════
 # (a) population と sample
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Population and sample", fontsize=11, color=INK,
+ax1.set_title("Population and sample", fontsize=11, color=INK,
               loc="left", pad=10)
 ax1.set_xlim(-0.4, 10.4)
 ax1.set_ylim(-1.5, 7.9)
@@ -62,8 +63,6 @@ ax1.scatter(_pts[_outside, 0], _pts[_outside, 1], s=17, color=PALE, zorder=2)
 ax1.scatter(_pts[_inside, 0], _pts[_inside, 1], s=52, color=ACCENT, zorder=3,
             marker="o", edgecolors="white", linewidths=0.8)
 
-ax1.text(0.05, 6.15, "population: everyone we want to know about",
-         fontsize=10, color=INK)
 _top = max(_inside, key=lambda i: (_pts[i][1], _pts[i][0]))
 ax1.annotate("sample: spread over the whole population",
              xy=(_pts[_top, 0], _pts[_top, 1] + 0.16),
@@ -74,16 +73,12 @@ ax1.annotate("sample: spread over the whole population",
 ax1.text(0.05, 0.62, "measure the sample", fontsize=9.5, color=WARM)
 ax1.annotate("", xy=(6.5, 0.55), xytext=(4.4, 0.55),
              arrowprops=dict(arrowstyle="->", color=WARM, linewidth=1.5))
-ax1.text(6.7, 0.62, "say something about the population",
-         fontsize=9.5, color=WARM)
 
-ax1.text(-0.4, -1.45, "if the sample is chosen badly, the answer about the "
-         "population is wrong", fontsize=9.5, color=INK, va="bottom")
 
 # ══════════════════════════════════════════════════════════
 # (b) 外れ値の境目
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) The two outlier boundaries", fontsize=11, color=INK,
+ax2.set_title("The two outlier boundaries", fontsize=11, color=INK,
               loc="left", pad=10)
 ax2.set_xlim(-0.6, 13.6)
 ax2.set_ylim(-1.5, 4.2)
@@ -126,16 +121,14 @@ ax2.text(12.2, 1.95, "outlier", fontsize=9.5, color=INK, ha="center")
 ax2.text(12.2, 0.40, "marked with\na cross", fontsize=9.0, color=GREY,
          ha="center", va="top")
 
-ax2.text(-0.6, -1.45, "a value beyond a boundary is an outlier; the "
-         "boundary itself is not", fontsize=9.5, color=INK, va="bottom")
 
-fig.tight_layout(w_pad=2.2)
-path = os.path.join(OUT, "aasl-4-1-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-4-1-idea-a.svg"), (fig2, "aasl-4-1-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

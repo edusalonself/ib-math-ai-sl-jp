@@ -10,6 +10,7 @@
     2. ページ内リンク ](#anchor) の行き先があるか
     3. 別ページへのリンク ](other.qmd#anchor) の行き先があるか
     4. 参照されていない図・表・式のラベル（参考情報）
+    5. 使わないと決めた言い方（aa-sl のみ。下の BAN）
 
   実行: python3 tools/check_refs.py
 """
@@ -30,6 +31,17 @@ RE_REF = re.compile(r"(?<![A-Za-z0-9_])@(-?(?:%s)-[A-Za-z0-9_\-]+)" % "|".join(K
 RE_SELF = re.compile(r"\]\(#([A-Za-z0-9][A-Za-z0-9_\-]*)\)")
 RE_FILE = re.compile(r"\]\(([^)\s#]+\.qmd)(?:#([A-Za-z0-9][A-Za-z0-9_\-]*))?\)")
 RE_HEAD = re.compile(r"^#{1,6}\s+(.+?)\s*$", re.M)
+
+# 使わないと決めた言い方（_方針変更-2026-09-15.md）。aa-sl の .qmd だけを見る。
+#   キーは正規表現、値は「代わりに使う言い方」。
+BAN_DIRS = ("aa-sl",)
+BAN = [
+    (r"効[くきかい]", "「影響する／はたらく／決め手になる」に言いかえる"),
+    (r"走る例", "「通して使う例」に言いかえる"),
+    (r"いじ[らりるれっ]", "「変更する／変形する」に言いかえる"),
+    (r"素直", "「そのまま」「式のとおり」に言いかえる"),
+]
+RE_BAN = [(re.compile(p), why) for p, why in BAN]
 
 
 def slug(text):
@@ -88,6 +100,18 @@ def main():
                 bad += 1
                 print("NG  %s : %s#%s の行き先がありません"
                       % (rel, m.group(1), m.group(2)))
+
+    # 5. 使わないと決めた言い方
+    for p, t in sorted(texts.items()):
+        rel = os.path.relpath(p, ROOT)
+        if not rel.startswith(BAN_DIRS):
+            continue
+        for i, line in enumerate(t.split("\n"), 1):
+            for rx, why in RE_BAN:
+                if rx.search(line):
+                    bad += 1
+                    print("NG  %s:%d : 「%s」は使わない言い方です。%s"
+                          % (rel, i, rx.search(line).group(0), why))
 
     print("=" * 62)
     print("NG %d 件" % bad if bad else "切れた参照・リンクはありません")

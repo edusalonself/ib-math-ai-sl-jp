@@ -130,9 +130,12 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-5-1-idea.svg){#fig-aasl51-idea width=100%}", "図の埋め込み")
-in_text("@fig-aasl51-idea (a)", "図 (a) の参照")
-in_text("@fig-aasl51-idea (b)", "図 (b) の参照")
+in_text("(img/aasl-5-1-idea-a.svg){#fig-aasl51-idea-a width=100%}", "図 (a) の埋め込み")
+in_text("(img/aasl-5-1-idea-b.svg){#fig-aasl51-idea-b width=100%}", "図 (b) の埋め込み")
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-5-1-idea.svg")),
+    "分割前の SVG は消してある")
+in_text("@fig-aasl51-idea-a", "図 (a) の参照")
+in_text("@fig-aasl51-idea-b", "図 (b) の参照")
 
 for _w in ("そのとおり", "もちろん", "簡単です", "自明", "当たり前", "明らか", "当然"):
     not_in_text(_w, "禁止語 " + _w)
@@ -145,19 +148,20 @@ for _w in ("得点になりません", "点になりません", "減点されま
 _quotes = re.findall(r"^> (.*)$", TEXT, re.M)
 chk(_quotes == ["Not required: Formal analytic methods of calculating limits."],
     "シラバスの引用は Not required の 1 本だけ: %s" % _quotes)
-in_text("**@eq-aasl51-chord は公式集にありません。**", "割線の式は公式集にない")
+in_text("**@eq-aasl51-chord と @eq-aasl51-deriv は公式集にありません。**",
+        "割線と導関数の式は公式集にない")
 not_in_text("公式集にあります", "5.1 に「公式集にあります」は置かない")
 
 in_text("\\text{平均変化率} = \\frac{f(b) - f(a)}{b - a}\n$$ {#eq-aasl51-avg}",
         "平均変化率の式")
 in_text("\\lim_{x \\to a} f(x) = L\n$$ {#eq-aasl51-lim}", "極限の式")
 in_text("\\frac{f(x + h) - f(x)}{h}\n$$ {#eq-aasl51-chord}", "割線の傾きの式")
-in_text("{#tbl-aasl51-est}", "極限を見積もる表")
+in_text("{#tbl-aasl51-est .tbl-narrow}", "極限を見積もる表")
 in_text("{#tbl-aasl51-not}", "記号の表")
 in_text("{#tbl-aasl51-we1}", "例題1 の表")
 in_text("{#tbl-aasl51-we2}", "例題2 の表")
 in_text("{#tbl-aasl51-we4}", "例題4 の表")
-in_text("[SL 5.2](aasl-5-2.qmd)", "5.2 への参照")
+not_in_text("**符号に意味があります。**", "符号の段落は第 6 節から外した")
 
 # 記号は 4 つとも出ている（シラバスの Forms of notation）
 for _n in ("f'(x)", "\\dfrac{dy}{dx}", "\\dfrac{dV}{dr}", "\\dfrac{ds}{dt}"):
@@ -166,10 +170,10 @@ for _n in ("f'(x)", "\\dfrac{dy}{dx}", "\\dfrac{dV}{dr}", "\\dfrac{ds}{dt}"):
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('"(a) The chord turns into the tangent"', "図 (a) の題")
-in_fig('"(b) A limit is where the outputs are heading"', "図 (b) の題")
-in_fig('"$Q_1$"', "図 (a) の Q1")
-in_fig('"tangent at $P$"', "図 (a) の接線")
+in_fig('"A chord joins two points on the curve"', "図 (a) の題")
+in_fig('"A limit is where the outputs are heading"', "図 (b) の題")
+in_fig('"$Q_1$"', "図 (c) の Q1")
+in_fig('"tangent at $P$"', "図 (c) の接線")
 in_fig('"the open circle says $f(a)$ itself need not exist"', "図 (b) の但し書き")
 # 図に数値の答えを出していないこと
 _figmath = " ".join(re.findall(r"\$([^$]*)\$", FIGCODE))
@@ -454,8 +458,8 @@ chk(TEXT.index("Leibniz notation**（ライプニッツの記法）")
     < TEXT.index("in Leibniz notation"), "定義は使う前にある")
 
 # --- m4: ds/dt は「変位」（SL 5.9 と合わせる）---------------------
-chk("| $\\dfrac{ds}{dt}$ | 変位 $s$ が時刻 $t$ で決まるとき |" in TEXT,
-    "記号の表: ds/dt は変位")
+chk("| $\\dfrac{ds}{dt}$ |" not in TEXT, "記号の表から ds/dt の行は外した")
+in_text("$\\dfrac{ds}{dt}$ はメートル毎秒です。", "ds/dt は第 7 節にある")
 
 # --- m5: 例題3 の高さは y（h は割線の増分に使っている）-------------
 chk("The height of a plant, $y$ cm" in TEXT, "例題3: 高さは y")
@@ -465,6 +469,193 @@ chk("The height of a plant, $h$ cm" not in TEXT, "例題3: 古い h が消えて
 # --- m6: 演習8 の参照先を演習1 と合わせる -------------------------
 chk("$f(1.9) = \\dfrac{10}{19}$ です（[第 1 節](#average)）。" in TEXT,
     "演習8 の参照は第 1 節")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. gradient of a chord（$2$ 点を結ぶ直線の傾き） {#average}', "見出しの英語: 1. gradient of a chord（$2$")
+in_text('### 2. limit（極限） {#limit}', "見出しの英語: 2. limit（極限）")
+in_text('### 4. from secant to tangent（割線から接線へ） {#tangent}', "見出しの英語: 4. from secant to tangent（")
+in_text('### 7. rate of change（変化率）としての読み方 {#rate}', "見出しの英語: 7. rate of change（変化率）としての")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'the value they settle on',
+]:
+    chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
+in_text('その値が、$P$ での **tangent**（接線）の傾きです。', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：SL 5.1 の直し
+# ══════════════════════════════════════════════════════════
+# --- 1) 第 1 節 ----------------------------------------------------------
+in_text("**これは「その $2$ 点の間での傾き」です。**", "2 点の間での傾き")
+not_in_text("その区間をならしたときの傾き", "前の言い方は消した")
+
+# --- 2) 第 2 節の lim の式 -----------------------------------------------
+in_text("$$\n\\lim_{x \\to 1} \\frac{x^{2} - 1}{x - 1} = 2\n$$", "第 2 節の lim の式")
+in_text("と書きます。**$x = 1$ を代入できないのに、極限は書けます。**", "代入できない")
+chk(sp.limit((X ** 2 - 1) / (X - 1), X, 1) == 2, "lim (x²−1)/(x−1) = 2")
+chk(sp.simplify((X ** 2 - 1) / (X - 1) - (X + 1)) == 0, "(x²−1)/(x−1) = x+1")
+
+# --- 3) 第 3 節は具体例の表 -----------------------------------------------
+not_in_text("| 見ること | すること |", "整理した表は消した")
+not_in_text("| 一致するか | 両側が同じ値に向かっていれば、それが極限 |", "同上")
+in_text("$f(x) = \\dfrac{x^{2} - 1}{x - 1}$ で、$x$ を $1$ に近づけてみます。",
+        "第 3 節の具体例")
+in_text("| $x$ | $0.9$ | $0.99$ | $1.01$ | $1.1$ |", "表の x の行")
+in_text("| $f(x)$ | $1.9$ | $1.99$ | $2.01$ | $2.1$ |", "表の f(x) の行")
+in_text("**左からは $1.9$、$1.99$ と、下から $2$ に近づいています。**", "左から")
+in_text("右からは $2.1$、$2.01$ と、上から $2$ に近づいています。", "右から")
+in_text("**両側が同じ $2$ に向かっているので、極限は $2$ です。**", "両側で一致")
+# 表の値が合っている
+for _x51, _v51 in ((R(9, 10), R(19, 10)), (R(99, 100), R(199, 100)),
+                   (R(101, 100), R(201, 100)), (R(11, 10), R(21, 10))):
+    chk(((_x51 ** 2 - 1) / (_x51 - 1)) == _v51, f"表の値 x = {_x51}")
+chk(R(19, 10) < R(199, 100) < 2 < R(201, 100) < R(21, 10), "左は下から、右は上から")
+in_text("**表には $a$ そのものを入れません。**", "a は入れない（残す）")
+
+# --- 4) 第 4 節 ----------------------------------------------------------
+in_text("### 4. from secant to tangent（割線から接線へ） {#tangent}", "第 4 節の見出し")
+in_text("$$\nf'(x) = \\lim_{h \\to 0} \\frac{f(x + h) - f(x)}{h}\n$$ "
+        "{#eq-aasl51-deriv}", "導関数の定義式")
+chk(TEXT.count("@eq-aasl51-deriv") >= 1, "導関数の式を参照している")
+# 定義式が、実際に傾きを出すこと
+_f51 = X ** 2
+chk(sp.limit((_f51.subs(X, X + H) - _f51) / H, H, 0) == 2 * X,
+    "x² の定義式からの導関数は 2x")
+
+# --- 5) 記号の表は 3 行 ---------------------------------------------------
+_ls51 = TEXT.split(chr(10))
+_ci51 = [i for i, l in enumerate(_ls51) if l.startswith(": 導関数の書き方")]
+chk(len(_ci51) == 1, "記号の表がある")
+_e51 = _ci51[0]
+while not _ls51[_e51].startswith("|"):
+    _e51 -= 1
+_s51 = _e51
+while _s51 > 0 and _ls51[_s51 - 1].startswith("|"):
+    _s51 -= 1
+chk(_e51 - _s51 == 4, f"記号の表は 3 行: {_e51 - _s51 - 1}")
+not_in_text("| $\\dfrac{dV}{dr}$ | 体積 $V$ が半径 $r$ で決まるとき |",
+            "dV/dr の行は外した")
+# シラバスが求める 4 つの書き方は、ページのどこかに残っている
+for _n51 in ("f'(x)", "\\dfrac{dy}{dx}", "\\dfrac{dV}{dr}", "\\dfrac{ds}{dt}"):
+    in_text(_n51, "記号は残っている: " + _n51)
+
+# --- 6) 英語での読み方 ----------------------------------------------------
+in_text("**英語での読み方も覚えてください。** $f'(x)$ は `f prime of x`"
+        "（`f dash x` とも読みます）、$y'$ は `y prime`、"
+        "$\\dfrac{dy}{dx}$ は `dee-y, dee-x` です。"
+        "$\\dfrac{dV}{dr}$ なら `dee-V, dee-r` です。", "英語での読み方")
+not_in_text("dy by dx", "前の読み方は消した")
+# 第 2 節と第 3 節の両方に lim の式がある
+chk(TEXT.count("\\lim_{x \\to 1} \\frac{x^{2} - 1}{x - 1} = 2") == 2,
+    f"lim の式は 2 か所: {TEXT.count(chr(92) + chr(92))}")
+in_text("**両側が同じ $2$ に向かっているので、極限は $2$ です。** これを",
+        "第 3 節の結び")
+in_text("**$\\dfrac{dy}{dx}$ は $1$ つの記号です。**", "1 つの記号（残す）")
+
+# --- 7) 第 6 節から符号の段落を外した --------------------------------------
+not_in_text("$f'(x) = 0$ なら接線が水平です", "符号の話は第 6 節から消した")
+not_in_text("[SL 5.2](aasl-5-2.qmd)", "SL 5.2 への案内も消した")
+in_text("**だから $f'(3)$ のように、値を入れて使えます。**", "第 6 節の残り")
+
+# --- 8) 日本語 ------------------------------------------------------------
+not_in_text("場面のある問題", "「場面のある問題」は言いかえた")
+in_text("**答えに単位を書いてください。** 実際の場面を扱う問題では、数だけでは意味が"
+        "伝わりません。", "第 7 節の言いかえ")
+in_text("実際の場面を扱う問題では、単位まで書いて答えです（[第 7 節](#rate)）。",
+        "Common errors の言いかえ")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (a) は chord だけ、図 (c) を新しく作った
+# ══════════════════════════════════════════════════════════
+SVG_C51 = os.path.join(ROOT, "aa-sl", "05-calculus", "img",
+                       "aasl-5-1-idea-c.svg")
+chk(os.path.exists(SVG_C51), "図 (c) がある")
+chk(not os.path.exists(SVG_C51[:-4] + ".png"), "図 (c) の PNG は消してある")
+in_text("(img/aasl-5-1-idea-c.svg){#fig-aasl51-idea-c width=100%}",
+        "本文が図 (c) を貼っている")
+in_text("@fig-aasl51-idea-c", "図 (c) を参照している")
+# 図 (c) は第 4 節にある
+chk(TEXT.index("(img/aasl-5-1-idea-c.svg)")
+    > TEXT.index("### 4. from secant to tangent"), "図 (c) は第 4 節")
+chk(TEXT.index("(img/aasl-5-1-idea-c.svg)") < TEXT.index("### 5. 記号の書き方"),
+    "図 (c) は第 5 節より前")
+# 図 (a) は第 1 節にあり、接線も Q1〜Q3 も持っていない
+chk(TEXT.index("(img/aasl-5-1-idea-a.svg)")
+    < TEXT.index("### 2. limit（極限）"), "図 (a) は第 1 節")
+_A51 = FIG.split("# (a) chord とは")[1].split("# (b) ")[0]
+for _bad in ("$Q_1$", "$Q_2$", "$Q_3$", "tangent at $P$",
+             "as $Q$ slides towards $P$"):
+    chk(_bad not in _A51, "図 (a) にはもう無い: " + _bad)
+for _need in ('"chord"', "$b - a$", "$f(b) - f(a)$", '"$P$"', '"$Q$"',
+              '"$a$"', '"$b$"'):
+    chk(_need in _A51, "図 (a) にある: " + _need)
+# 図 (c) は Q1〜Q3 と接線を持つ
+_C51 = FIG.split("# (c) Q を P に近づけると")[1]
+for _need in ("$Q_1$", "$Q_2$", "$Q_3$", "tangent at $P$", '"$P$"'):
+    chk(_need in _C51, "図 (c) にある: " + _need)
+chk("annotate" not in _C51, "図 (c) に矢印は置かない")
+chk("as $Q$ slides towards $P$" not in FIG, "図に説明の文を書いていない")
+# 図 (a) の三角形が、平均変化率の式と同じもの
+_a51, _b51 = R(7, 5), R(43, 10)
+
+
+def _f51fig(t):
+    return R(28, 100) * t * t + R(1, 2)
+
+
+chk(_b51 - _a51 == R(29, 10), "図 (a) の横の差は b − a")
+chk((_f51fig(_b51) - _f51fig(_a51)) / (_b51 - _a51)
+    == R(28, 100) * (_a51 + _b51), "図 (a) の割線の傾きは (f(b)−f(a))/(b−a)")
+# 図 (c) の接線の傾きは、Q を近づけたときの極限
+_t51 = sp.Symbol("t51", positive=True)
+chk(sp.limit((R(28, 100) * _t51 ** 2 - R(28, 100) * _a51 ** 2)
+             / (_t51 - _a51), _t51, _a51) == 2 * R(28, 100) * _a51,
+    "図 (c) の接線の傾きは 2·0.28·P_x")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-05：記号の表に $y'$ を加えた
+# ══════════════════════════════════════════════════════════
+in_text("| $y'$ | $y$ が $x$ の式で与えられ、短く書きたいとき |",
+        "表に y' の行")
+in_text("$y'$ は `y prime`", "y' の読み方")
+_rows51 = [l for l in TEXT.split(chr(10))
+           if l.startswith("| $f'(x)$ |") or l.startswith("| $y'$ |")
+           or l.startswith("| $\\dfrac{dy}{dx}$ |")]
+chk(len(_rows51) == 3, "書き方の表は 3 行")
 
 print()
 print("OK", OK, "/ NG", NG)

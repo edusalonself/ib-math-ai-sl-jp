@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_4_8.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_4_8.py  … 目視用の PNG も
 
-出力: aa-sl/04-statistics-and-probability/img/aasl-4-8-idea.svg
+出力: aa-sl/04-statistics-and-probability/img/aasl-4-8-idea-a.svg
+      aa-sl/04-statistics-and-probability/img/aasl-4-8-idea-b.svg
 
 (a) 二項分布の形。棒の高さが P(X = x)。E(X) = np はつり合う点。
 (b)「以下」は棒の足し算。「以上」は残り。
@@ -45,8 +46,8 @@ def binom(n, p, x):
     return math.comb(n, x) * p ** x * (1 - p) ** (n - x)
 
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.4, 4.7))
-
+fig1, ax1 = plt.subplots(figsize=(5.6, 4.7))
+fig2, ax2 = plt.subplots(figsize=(5.6, 4.7))
 # ══════════════════════════════════════════════════════════
 # (a) 二項分布の形と E(X) = np
 # ══════════════════════════════════════════════════════════
@@ -55,7 +56,7 @@ XS1 = list(range(N1 + 1))
 YS1 = [binom(N1, P1, x) for x in XS1]
 MEAN1 = N1 * P1
 
-ax1.set_title("(a) $X \\sim B(7,\\ 0.4)$: the bars add to $1$", fontsize=11,
+ax1.set_title("$X \\sim B(7,\\ 0.4)$: the bars add to $1$", fontsize=11,
               color=INK, loc="left", pad=12)
 ax1.bar(XS1, YS1, width=0.5, color=FILL, edgecolor=ACCENT, linewidth=1.2)
 ax1.set_xlim(-0.8, 7.8)
@@ -77,11 +78,6 @@ ax1.plot([MEAN1, MEAN1], [0, 0.35], color=WARM, linewidth=1.5,
 ax1.plot([MEAN1], [0.362], marker="v", markersize=10, color=WARM)
 ax1.text(MEAN1 + 0.18, 0.352, "$E(X) = np = 2.8$", fontsize=10, color=WARM)
 
-ax1.text(0.0, -0.20, "$x$ counts the successes in $7$ independent trials, each "
-         "with success probability $0.4$", fontsize=9, color=INK,
-         transform=ax1.transAxes)
-ax1.text(0.0, -0.28, "the peak is near $np$, and the shape is not symmetric "
-         "unless $p = 0.5$", fontsize=9, color=WARM, transform=ax1.transAxes)
 
 # ══════════════════════════════════════════════════════════
 # (b) 「以下」は棒の足し算
@@ -90,7 +86,7 @@ N2, P2 = 6, 0.5
 XS2 = list(range(N2 + 1))
 YS2 = [binom(N2, P2, x) for x in XS2]
 
-ax2.set_title("(b) $X \\sim B(6,\\ 0.5)$: $P(X \\leq 2)$ adds the bars up "
+ax2.set_title("$X \\sim B(6,\\ 0.5)$: $P(X \\leq 2)$ adds the bars up "
               "to $x = 2$", fontsize=11, color=INK, loc="left", pad=12)
 _cols = [SHADE if x <= 2 else FILL for x in XS2]
 _edges = [WARM if x <= 2 else ACCENT for x in XS2]
@@ -118,21 +114,14 @@ ax2.annotate("", xy=(2.70, 0.345), xytext=(6.30, 0.345),
 ax2.text(2.80, 0.358, "$P(X \\geq 3) = 1 - P(X \\leq 2)$", fontsize=10,
          color=ACCENT)
 
-ax2.text(0.0, -0.20, "\"at most $2$\" means $x = 0, 1, 2$; \"at least $3$\" is "
-         "everything else", fontsize=9, color=INK, transform=ax2.transAxes)
-ax2.text(0.0, -0.28, "\"more than $2$\" is the same as \"at least $3$\" only "
-         "because $x$ is a whole number", fontsize=9, color=WARM,
-         transform=ax2.transAxes)
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-4-8-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-print("  (a) sum =", round(sum(YS1), 12), " mean =", MEAN1)
-print("  (b) sum =", round(sum(YS2), 12))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-4-8-idea-a.svg"), (fig2, "aasl-4-8-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_1_1.py          … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_1_1.py  … 目視用の PNG も
 
-出力: aa-sl/01-number-and-algebra/img/aasl-1-1-scale.svg
+出力: aa-sl/01-number-and-algebra/img/aasl-1-1-scale-a.svg
+      aa-sl/01-number-and-algebra/img/aasl-1-1-scale-b.svg
 
 (a) 10 のべきの物差し。原子から太陽までを 1 本の線に並べる。
 (b) 小数点をどちらへ何桁動かすか。
@@ -45,10 +46,8 @@ ITEMS = [
     (1.5e11, r"$1.5 \times 10^{11}$", "Earth to Sun (distance)", True),
 ]
 
-fig, (ax1, ax2) = plt.subplots(
-    2, 1, figsize=(9.0, 5.9), gridspec_kw={"height_ratios": [1.3, 1.0]}
-)
-
+fig1, ax1 = plt.subplots(figsize=(9.0, 3.2))
+fig2, ax2 = plt.subplots(figsize=(9.0, 3.2))
 # ══════════════════════════════════════════════════════════
 # (a) 10 のべきの物差し
 # ══════════════════════════════════════════════════════════
@@ -56,7 +55,7 @@ ax1.set_xlim(-11.8, 12.8)
 ax1.set_ylim(-2.0, 1.9)
 ax1.axis("off")
 ax1.set_title(
-    "(a) Lengths in metres — one step along the line is ten times bigger",
+    "Lengths in metres — one step along the line is ten times bigger",
     fontsize=11, color=INK, loc="left", pad=8,
 )
 
@@ -94,11 +93,11 @@ for value_of, value, name, above in ITEMS:
 # ══════════════════════════════════════════════════════════
 # (b) 小数点の動かし方
 # ══════════════════════════════════════════════════════════
-ax2.set_xlim(0, 10)
+ax2.set_xlim(0, 6.2)
 ax2.set_ylim(0, 3.5)
 ax2.axis("off")
 ax2.set_title(
-    "(b) Move the decimal point until the first factor $a$ has $1 \\leq a < 10$",
+    "Move the decimal point until the first factor $a$ has $1 \\leq a < 10$",
     fontsize=11, color=INK, loc="left", pad=8,
 )
 
@@ -131,8 +130,6 @@ xs = digits(list("3200000."), yA)
 move(xs[7], (xs[0] + xs[1]) / 2, yA - 0.40, "6 places to the left", -0.24)
 ax2.text(3.35, yA, r"$= 3.2 \times 10^{6}$", fontsize=14, color=INK,
          va="center")
-ax2.text(5.95, yA, "10 or bigger, so $k$ is positive", fontsize=9.5,
-         color=GREY, va="center")
 
 # 小さい数：小数点を右へ 5 桁
 yB = 1.05
@@ -140,17 +137,14 @@ xs = digits(list("0.000047"), yB)
 move(xs[1], (xs[6] + xs[7]) / 2, yB - 0.40, "5 places to the right", 0.24)
 ax2.text(3.35, yB, r"$= 4.7 \times 10^{-5}$", fontsize=14, color=INK,
          va="center")
-ax2.text(5.95, yB, "less than 1, so $k$ is negative", fontsize=9.5,
-         color=GREY, va="center")
 
-fig.tight_layout(h_pad=2.0)
-path = os.path.join(OUT, "aasl-1-1-scale.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-# 目視用の PNG。確認が終わったら消すこと（リポジトリに入れません）。
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-1-1-scale-a.svg"), (fig2, "aasl-1-1-scale-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

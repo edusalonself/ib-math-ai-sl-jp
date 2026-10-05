@@ -511,7 +511,11 @@ eq("png を残していない",
     and f.endswith(".png")], [])
 
 # 登録
-QY = io.open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
+# ★ 2026-09-15 に AI HL を公開対象へ移しました（_方針変更-2026-09-15.md 第 13 節）。
+#    登録先は _quarto-draft.yml ではなく _quarto.yml です。
+#    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
+#    「index.qmd に」「残りの N 項目」は、もう検査しません。
+QY = io.open(os.path.join(HERE, "..", "..", "_quarto.yml"),
              encoding="utf-8").read()
 IX = io.open(os.path.join(HERE, "..", "..", "ai-hl", "index.qmd"),
              encoding="utf-8").read()
@@ -521,19 +525,11 @@ for s in ("ai-hl/01-number-and-algebra/ahl-1-12a.qmd",
           "ai-hl/01-number-and-algebra/ahl-1-12b.qmd",
           "AHL 1.12a — Complex numbers in Cartesian form",
           "AHL 1.12b — The complex plane"):
-    eq("_quarto-draft.yml に " + s[:44], s in QY, True)
-for s in ("01-number-and-algebra/ahl-1-12a.qmd",
-          "01-number-and-algebra/ahl-1-12b.qmd"):
-    eq("index.qmd に " + s[:44], s in IX, True)
-# 「残りの N 項目」が、✅ の付いていない項目表の行数と合っているか
-_rows = re.findall(r"^\| (?:\*\*)?AHL [0-9.]+(?:\*\*)? \|(.*)\|$", IX, re.M)
-_left_rows = [r for r in _rows if "\u2705" not in r]
-_left = re.search(r"残りの(\d+)項目", IX)
-eq("残りの N 項目 があるか、全部の行に ✅ が付いている",
-   _left is not None or len(_left_rows) == 0, True)
-if _left:
-    eq("残りの N 項目 が、まだ書いていない行の数と合う",
-       len(_left_rows), int(_left.group(1)))
+    eq("_quarto.yml に " + s[:44], s in QY, True)
+QD = io.open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
+             encoding="utf-8").read()
+for s in ("ai-hl/01-number-and-algebra/ahl-1-12a.qmd", "ai-hl/01-number-and-algebra/ahl-1-12b.qmd"):
+    eq("下書き用の _quarto-draft.yml には残っていない: " + s[:44], s in QD, False)
 for s in ("| discriminant | 判別式 |", "| Argand diagram | アルガン図 |",
           "| argument | 偏角 |", "| principal argument | 主偏角 |",
           "| complex plane | 複素平面 |", "| imaginary unit | 虚数単位 |",

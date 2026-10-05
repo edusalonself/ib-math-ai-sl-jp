@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_5_5.py
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_5_5.py
 
-出力: aa-sl/05-calculus/img/aasl-5-5-idea.svg
+出力: aa-sl/05-calculus/img/aasl-5-5-idea-a.svg
+      aa-sl/05-calculus/img/aasl-5-5-idea-b.svg
 
 (a) 微分と積分が逆向きであること、+C が要ること
     （同じ導関数をもつ曲線が、縦にずれて何本もある）。
@@ -37,12 +38,12 @@ WARM = "#b45309"
 FILL = "#cfe0f2"
 LIGHT = "#9db8d4"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.8, 5.0))
-
+fig1, ax1 = plt.subplots(figsize=(5.8, 5.0))
+fig2, ax2 = plt.subplots(figsize=(5.8, 5.0))
 # ══════════════════════════════════════════════════════════
 # (a) 同じ導関数をもつ曲線は、縦にずれて何本もある
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Why the constant is needed", fontsize=11, color=INK,
+ax1.set_title("Why the constant is needed", fontsize=11, color=INK,
               loc="left", pad=12)
 
 T = np.linspace(-1.6, 1.6, 300)
@@ -53,7 +54,7 @@ def g(t):
 
 
 ax1.set_xlim(-2.15, 2.75)
-ax1.set_ylim(-4.75, 3.35)
+ax1.set_ylim(-4.05, 3.35)
 ax1.axis("off")
 ax1.plot([-2.0, 2.45], [0, 0], color=GREY, linewidth=1.0)
 ax1.plot([0, 0], [-3.15, 3.05], color=GREY, linewidth=1.0)
@@ -78,15 +79,11 @@ for _lo, _hi in ((-1.5, 0.0), (0.0, 1.5)):
 ax1.text(_xc + 0.12, g(1.6), "$+C$", fontsize=11, color=GREY, ha="left",
          va="center")
 
-ax1.text(-2.05, -3.75, "the curves differ only by a vertical shift",
-         fontsize=10, color=INK)
-ax1.text(-2.05, -4.40, "so they all have the same gradient at each $x$",
-         fontsize=10, color=WARM)
 
 # ══════════════════════════════════════════════════════════
 # (b) 面積と定積分
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Area under a curve that stays above the axis", fontsize=11,
+ax2.set_title("Area under a curve that stays above the axis", fontsize=11,
               color=INK, loc="left", pad=12)
 
 U = np.linspace(0.15, 4.6, 400)
@@ -98,7 +95,7 @@ def h(t):
 
 ax2.plot(U, h(U), color=ACCENT, linewidth=2.0)
 ax2.set_xlim(-0.55, 5.3)
-ax2.set_ylim(-1.55, 4.3)
+ax2.set_ylim(-1.05, 4.3)
 ax2.axis("off")
 ax2.plot([-0.35, 5.1], [0, 0], color=GREY, linewidth=1.0)
 ax2.plot([0, 0], [0, 4.0], color=GREY, linewidth=1.0)
@@ -120,19 +117,14 @@ ax2.text((AA + BB) / 2, 0.68, "area", fontsize=11, color=INK, ha="center")
 
 ax2.text(-0.35, -0.92, r"$A = \int_{a}^{b} y \, dx$   when $f(x) > 0$ "
          "between $a$ and $b$", fontsize=11.5, color=ACCENT)
-ax2.text(-0.35, -1.42, "write the expression first, then work out its value",
-         fontsize=9.5, color=GREY)
 
-fig.tight_layout(w_pad=2.2)
-path = os.path.join(OUT, "aasl-5-5-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-print("  gradients at x = %.2f:" % _x0,
-      [round(3 * _x0 ** 2 - 2.0, 6) for _c in (1.5, 0.0, -1.5)])
-print("  h(a) = %.3f  h(b) = %.3f  (both positive)" % (h(AA), h(BB)))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-5-5-idea-a.svg"), (fig2, "aasl-5-5-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

@@ -28,7 +28,6 @@ R = sp.Rational
 PI = sp.pi
 r_, h_, l_, a_, b_, c_ = sp.symbols("r h l a b c", positive=True)
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -37,34 +36,26 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) == 0, msg + f"  ({u} vs {v})")
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 def dist(P, Q):
     return sp.sqrt(sum((p - q) ** 2 for p, q in zip(P, Q)))
 
-
 def mid(P, Q):
     return tuple(sp.Rational(1, 2) * (p + q) for p, q in zip(P, Q))
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 公式そのもの
@@ -231,21 +222,24 @@ not_in_text("Volume and surface area of three-dimensional solids",
             "シラバス本文は引かない")
 not_in_text("シラバスは、答案", "答案の書き方の引用はこのページにはない")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
-in_text("SL の試験で立体を題材に問われる三角比は、**直角三角形のもの**に限られます。",
-        "3D は直角三角形の三角比だけ（要約で書く）")
-in_text("**立体の中の三角形がぜんぶ直角三角形だ、という意味ではありません。**",
-        "直角でない三角形もあると断る")
-in_text("**垂線を $1$ 本下ろして直角三角形に分ける**", "垂線で分ける手")
+not_in_text("SL の試験で立体を題材に問われる三角比は、", "3D の三角比の節は消した")
+not_in_text("**立体の中の三角形がぜんぶ直角三角形だ、という意味ではありません。**",
+            "その断りも消した")
+not_in_text("**垂線を $1$ 本下ろして直角三角形に分ける**", "垂線で分ける手も消した")
+not_in_text("**その $3$ 点でできる三角形が、直角三角形になるかを見る。**",
+            "3 手順も消した")
 not_in_text("シラバスは、SL の試験で立体について", "シラバスに帰属させない")
 
 # ══════════════════════════════════════════════════════════
 # 8. 説明のしかた（条件と断定）
 # ══════════════════════════════════════════════════════════
 in_text("## `surface area` は、ふつう底面も入ります", "total と curved の注意")
-in_text("## くっついている面は、表面積に入れません", "組み合わせの注意")
+not_in_text("## くっついている面は、表面積に入れません", "The idea の注意は消した")
+in_text("## 組み合わせた立体で、くっついている面を数える",
+        "Common errors には残してある")
 in_text("## 「影」は、真下に下ろした先です", "影の注意")
-in_text("ただし、**平らな円の面**を足すかどうかは、その半球がどう置かれているかで決まります。",
-        "半球は置かれ方による")
+not_in_text("ただし、**平らな円の面**を足すかどうかは、その半球がどう",
+            "半球の場合分けの節は消した")
 in_text("$0°$ から $180°$ の間では **$\\cos$ が小さいほど角は大きい**ので、",
         "cos の単調性")
 
@@ -253,7 +247,8 @@ in_text("$0°$ から $180°$ の間では **$\\cos$ が小さいほど角は大
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -279,7 +274,7 @@ _want = ["The idea", "Why it works", "Worked examples", "Common errors",
 chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
-chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
+chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
 chk(TEXT.count("**検算") >= 12, f"検算が十分ある: {TEXT.count('**検算')}")
 chk("**確かめ。**" not in TEXT and "**確かめます。**" not in TEXT, "「確かめ。」なし")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -317,8 +312,7 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
         "まだないページへのリンク: " + _href)
 chk(TEXT.count("@fig-aasl31-idea") >= 1, "図を本文から参照している")
 chk(TEXT.count("@tbl-aasl31-booklet") >= 1, "表を本文から参照している")
-for _lab in ["eq-aasl31-dist", "eq-aasl31-mid", "eq-aasl31-slant",
-             "eq-aasl31-hemi"]:
+for _lab in ["eq-aasl31-dist", "eq-aasl31-mid", "eq-aasl31-slant"]:
     chk(TEXT.count("@" + _lab) >= 1, "本文から参照していない: " + _lab)
 _head = TEXT[:TEXT.index("## The idea")]
 chk("::: {.callout-important}" not in _head,
@@ -332,41 +326,43 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-3-1-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-3-1-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-3-1-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-3-1-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-3-1-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-3-1-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-3-1-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Pythagoras twice", "図(a) の題")
+in_fig("Pythagoras twice", "図(a) の題")
 in_fig("$\\\\sqrt{a^{2}+b^{2}}$", "図(a) の底面の対角線")
 in_fig("$\\\\sqrt{a^{2}+b^{2}+c^{2}}$", "図(a) の空間の対角線")
-in_fig("the base diagonal first, then straight up", "図(a) の説明")
-in_fig("(b) A line and a plane", "図(b) の題")
+in_fig("A line and a plane", "図(b) の題")
 in_fig("the line", "図(b) の直線")
 in_fig("its shadow on the plane", "図(b) の影")
 in_fig("$\\\\theta$", "図(b) の角")
-in_fig("$\\\\theta$ is the angle with the shadow, and it is the smallest one",
-       "図(b) の説明")
-in_text("(a) The space diagonal of a cuboid is found with Pythagoras' theorem "
-        "used twice", "キャプションが (a) を説明")
-in_text("(b) The angle between a line and a plane is the angle between the line "
-        "and its shadow", "キャプションが (b) を説明")
 # 図に具体的な数を書いていない
-chk(not re.search(r"\d", FIGSTR.replace("a^{2}", "").replace("b^{2}", "")
-                  .replace("c^{2}", "")), "図のラベルに数字がない")
+_fs = FIGSTR
+for _sq in ("a^{2}", "b^{2}", "c^{2}", "r^{2}", "h^{2}", "l^{2}"):
+    _fs = _fs.replace(_sq, "")
+chk(not re.search(r"\d", _fs), "図のラベルに数字がない")
 
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-1.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/03-geometry/aasl-3-1.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-2-11.qmd") < DRAFT.index("aasl-3-1.qmd"), "並びが 2.11 → 3.1")
 chk('- section: "Topic 3 — Geometry and trigonometry"' in DRAFT,
     "Topic 3 の section がある")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-1.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -396,10 +392,10 @@ eq(sp.sqrt(17 + 64), 9, "演習9 2 段でも 9")
 not_in_text("edges of length $2$ cm, $3$ cm and $6$ cm", "本文と重なる演習9 は消した")
 
 # --- 半球の場合分け -----------------------------------------------------
-in_text("**単独の半球**（中身のつまった `solid hemisphere`。伏せて置いた形）",
-        "solid hemisphere と明記")
-in_text("**半径のちがう立体の上にのった半球** → かくれるのは**重なっているところだけ**です。",
-        "半径がちがう場合")
+not_in_text("**単独の半球**（中身のつまった `solid hemisphere`。伏せて置いた形）",
+            "solid hemisphere の箇条書きは消した")
+not_in_text("**半径のちがう立体の上にのった半球**", "半径がちがう場合も消した")
+in_text("半径 $3$ cm の半球（中身のつまった立体）", "演習 7 で solid を説明している")
 eq(PI * sp.Symbol("R", positive=True) ** 2 - PI * r_ ** 2,
    PI * (sp.Symbol("R", positive=True) ** 2 - r_ ** 2), "ドーナツ形の面積")
 not_in_text("（お椀を伏せた形）", "中空に読める言い方は消した")
@@ -495,7 +491,6 @@ not_in_text("**立体の問題はふつう度**なので、`Degree` にしてお
             "一般則のような助言は消した")
 in_text("`trig` キーで開くパレットから選びます", "trig はパレット")
 
-
 # ══════════════════════════════════════════════════════════
 # C03  「影との角がいちばん小さい」証明は、余弦定理（3.2）を使う
 # ══════════════════════════════════════════════════════════
@@ -511,7 +506,6 @@ _cos = [sp.Rational(_a ** 2 + _b ** 2 - _c ** 2, 2 * _a * _b)
 chk(_cos[1] < _cos[0], "C03 PR が長いほど cos は小さい")
 chk(sp.acos(_cos[1]) > sp.acos(_cos[0]), "C03 cos が小さいほど角は大きい")
 chk(3 ** 2 + 27 == 6 ** 2, "C03 PR^2 = PQ^2 + QR^2")
-
 
 # ══════════════════════════════════════════════════════════
 # E05  演習5 — 斜高から表面積、側稜と底面のなす角
@@ -540,6 +534,156 @@ chk(float("%.3g" % float(_e05t)) == 43.3, "E05 3 有効数字で 43.3")
 _e05a = sp.deg(sp.atan(sp.Rational(4, 3)))
 chk(float(_e05t) < float(_e05a), "E05 側稜の角は面の傾きより小さい")
 chk(abs(float(_e05a) - 53.1301) < 1e-3, "E05 面の傾きは 53.1°")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text('空間の $2$ 点間の距離を求める公式は、次のとおりです。', "公式の前置き 1")
+in_text('線分の中点の座標を求める公式は、次のとおりです。', "公式の前置き 2")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. coordinates in three dimensions（空間の座標） {#coordinates}', "見出しの英語: 1. coordinates in three di")
+in_text('### 2. distance between two points（$2$ 点間の距離） {#distance}', "見出しの英語: 2. distance between two po")
+in_text('### 3. midpoint（中点） {#midpoint}', "見出しの英語: 3. midpoint（中点）")
+in_text('### 4. volume and surface area（立体の体積と表面積） {#solids}', "見出しの英語: 4. volume and surface area")
+in_text('### 5. the space diagonal of a cuboid（直方体の対角線） {#right-triangles}',
+        "見出しの英語: 5. the space diagonal of a")
+in_text('### 6. angles in three dimensions（なす角） {#angles}', "見出しの英語: 6. angles in three dimensi")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：母線の図を足し、第 5 節（半球と組み合わせた立体）を消した
+# ══════════════════════════════════════════════════════════
+
+# --- 図 (c)：円錐の母線 -------------------------------------------------
+SVG_C = os.path.join(BASE, "img", "aasl-3-1-idea-c.svg")
+chk(os.path.exists(SVG_C), "図 (c) がある")
+chk(not os.path.exists(SVG_C[:-4] + ".png"), "図 (c) の PNG は消してある")
+in_text("](img/aasl-3-1-idea-c.svg){#fig-aasl31-idea-c", "本文が図 (c) を貼っている")
+in_text("@fig-aasl31-idea-c のように、**半径 $r$・高さ $h$・母線 $l$ で直角三角形が"
+        "できます。**", "図 (c) を参照している")
+in_fig("Slant height of a cone", "図 (c) の題")
+in_fig("apex", "図 (c) の apex")
+in_fig("$l^{2} = r^{2} + h^{2}$", "図 (c) の関係式")
+# 図 (c) は第 4 節の中、図 (a) より前にある
+_i4 = TEXT.index("### 4. volume and surface area")
+_i5 = TEXT.index("### 5. the space diagonal")
+chk(_i4 < TEXT.index("](img/aasl-3-1-idea-c.svg)") < _i5, "図 (c) は第 4 節の中")
+# 母線は斜辺なので、r と h より長い
+_r, _h = sp.symbols("r h", positive=True)
+chk(sp.simplify(sp.sqrt(_r ** 2 + _h ** 2) - _r).is_positive is not False,
+    "l > r")
+eq(sp.sqrt(sp.Integer(4) ** 2 + sp.Integer(3) ** 2), 5, "r=4, h=3 なら l=5")
+
+# --- 第 5 節（半球と組み合わせ）はもう無い -----------------------------
+not_in_text("{#combinations}", "#combinations のアンカーは無い")
+not_in_text("(#combinations)", "#combinations へのリンクも無い")
+not_in_text("@eq-aasl31-hemi", "半球の式のラベルは無い")
+not_in_text("### 5. hemisphere", "第 5 節の見出しは無い")
+not_in_text("$2$ つ以上の立体を組み合わせるときは、**体積は足す、",
+            "The idea のまとめ文も消した")
+
+# --- 半球の説明は、例題 3 と演習 7 の中にある -------------------------
+in_text("**半球（hemisphere）の式は、印刷されていません。** 球の式を半分にして、"
+        "自分で出します（例題 $3$、演習 $7$）。", "第 4 節から例題・演習へ案内")
+in_text("**半球は球の半分**なので、体積は $\\dfrac{1}{2} \\cdot \\dfrac{4}{3}"
+        "\\pi r^{3} = \\dfrac{2}{3}\\pi r^{3}$ です。",
+        "例題 3(b) で半球の体積を出している")
+in_text("**この式は公式集にありません**（@tbl-aasl31-booklet）。",
+        "例題 3(b) で公式集に無いと断っている")
+in_text("**$2$ つ以上の立体を組み合わせたときは、体積は足しますが、表面積は"
+        "「外から見える面だけ」を足します。**", "例題 3(c) で組み合わせを説明")
+in_text("円柱の上の円は、半球がぴったりかぶさって**かくれている**ので数えません。",
+        "例題 3(c) でかくれる面を説明")
+in_text("**半球は球の半分**なので、曲面は $\\dfrac{1}{2}(4\\pi r^{2}) = 2\\pi r^{2}$ "
+        "です。", "演習 7 で曲面を出している")
+in_text("**何かの上にのっている半球なら、平らな円はかくれる**ので足しません"
+        "（例題 $3$）。", "演習 7 が例題 3 と対になっている")
+# 半球の値を、もう一度たしかめる
+_R3 = sp.Integer(3)
+eq(R(2, 3) * PI * _R3 ** 3, 18 * PI, "半径 3 の半球の体積は 18π")
+eq(PI * _R3 ** 2 * 8, 72 * PI, "円柱の体積は 72π")
+eq(R(2, 3) * PI * _R3 ** 3 + PI * _R3 ** 2 * 8, 90 * PI, "合わせて 90π")
+eq(2 * PI * _R3 * 8 + 2 * PI * _R3 ** 2 + PI * _R3 ** 2, 75 * PI,
+   "表面積は 75π（境目の円は入れない）")
+eq(2 * PI * _R3 * 8 + 2 * PI * _R3 ** 2 + 2 * PI * _R3 ** 2, 84 * PI,
+   "境目を入れると 84π")
+eq(2 * PI * _R3 ** 2 + PI * _R3 ** 2, 27 * PI, "単独の半球は 27π")
+
+# --- 第 5 節の書き出しと、第 6 節の英語 -------------------------------
+in_text("**直方体の空間の対角線は、ピタゴラスの定理を $2$ 回使って出します。**",
+        "第 5 節の書き出し")
+in_text("**$2$ 直線のなす角（the angle between two lines）**は、",
+        "2 直線のなす角に英語")
+in_text("**直線と平面のなす角（the angle between a line and a plane）**は、",
+        "直線と平面のなす角に英語")
+not_in_text("[第 7 節]", "第 7 節への案内は残っていない")
+
+# --- 対訳表 -----------------------------------------------------------
+GLO3 = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
+for _t in ["| slant height |", "| hemisphere |", "| apex |"]:
+    chk(_t in GLO3, "対訳表にある: " + _t)
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'the base diagonal first, then ',
+    '$\\\\theta$ is the angle with th',
+    '$l$: apex to the edge of the b',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:30])
+in_text('**直方体の空間の対角線は、ピタゴラスの定理を $2$ 回使って出します。**', "その内容は本文にある")
+in_text('**その直線と、平面に落とした「影」とのなす角**のことです。', "その内容は本文にある")
+in_text('円錐の頂点から底面の縁までの長さです。高さ $h$ とはちがいます。', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01 の手直し
+# ══════════════════════════════════════════════════════════
+in_text("平面では $(x, y)$ の $2$ つでしたが、空間では $3$ つになります。",
+        "第 1 節は太字にしない")
+not_in_text("空間では **$3$ つ**になります", "前の太字は消した")
+in_text("$z$ は「高さ」だと思ってさしつかえありません。", "ここも太字にしない")
+not_in_text("**$z$ は「高さ」だと思って**", "前の太字は消した")
+in_text("cone（円錐）において、**slant height**（母線）$l$ は、", "母線の文")
+# 円錐の例は箇条書きに
+in_text("たとえば $r = 4$、$h = 3$ の円錐なら $l = 5$ です。\n\n"
+        "- 体積は $\dfrac{1}{3}\pi(16)(3) = 16\pi$\n"
+        "- 側面積は $\pi(4)(5) = 20\pi$\n"
+        "- **底面の円を入れた表面積**は $20\pi + 16\pi = 36\pi$", "円錐の例")
+chk(sp.Rational(1, 3) * 16 * 3 == 16, "体積は 16π")
+chk(4 * 5 == 20, "側面積は 20π")
+chk(20 + 16 == 36, "表面積は 36π")
+chk(sp.sqrt(4 ** 2 + 3 ** 2) == 5, "l = 5")
+# 図 (a) のラベルの位置
+in_fig('ax1.text((P100[0] + P110[0]) / 2 + 0.26', "b は辺の近く")
+in_fig('ax1.text(2.40, 2.76, "$\\\\sqrt{a^{2}+b^{2}+c^{2}}$"', "対角線のラベルも近く")
+chk("ax1.text(P110[0] + 0.16" not in FIG, "b の前の位置は消した")
+chk("ax1.text(0.55, 3.05" not in FIG, "対角線のラベルの前の位置も消した")
 
 print()
 print("OK", OK, "/ NG", NG)

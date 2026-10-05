@@ -28,7 +28,6 @@ R = sp.Rational
 x = sp.Symbol("x")
 REALS = sp.S.Reals
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -37,34 +36,26 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) == 0, msg + f"  ({u} vs {v})")
-
 
 def ne(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) != 0, msg + f"  ({u} vs {v})")
 
-
 def roots(expr, want, msg=""):
     chk(sp.solveset(sp.Eq(expr, 0), x, REALS) == want, "零点: " + msg)
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. The idea
@@ -260,9 +251,19 @@ for _lk, _m in [("x^{2} - 4x + 3", "演習1"), ("x^{2} + 2x - 8", "演習2"),
 # ══════════════════════════════════════════════════════════
 # 7. 公式集とシラバス
 # ══════════════════════════════════════════════════════════
-in_text("## この式は、公式集にありません", "2.4 は公式集にない")
-chk(TEXT.index("{#eq-aasl24-axis}") < TEXT.index("## この式は、公式集にありません"),
-    "公式集の callout は式の直後に置く")
+not_in_text("## この式は、公式集にありません", "公式集の囲みは置かない")
+# 用語の英語併記と、分割で消えた案内
+in_text("**頂点（vertex）を通る縦の直線**について左右対称（symmetry）です。",
+        "左右対称の英語")
+in_text("**そのまん中**が対称の軸（axis of symmetry）です。", "対称の軸の英語")
+not_in_text("(b) は[第 5 節](#asymptotes)で使います。", "分割前の (b) の案内は消した")
+in_text("$y = f(x)$ と $y = g(x)$ の交点は、$f(x) = g(x)$ を解いて求めます。",
+        "§6 は前置きなしで")
+for _e in ["$y$ 切片（$y$-intercept）", "$x$ 切片・zeros（$x$-intercepts）",
+           "放物線の頂点（vertex）", "漸近線（asymptotes）",
+           "交点（points of intersection）",
+           "一般の曲線の極大・極小（local maximum and minimum）"]:
+    in_text("| " + _e + " |", "表 3 の英語: " + _e)
 in_text("> Maximum and minimum values; intercepts; symmetry; vertex; zeros of "
         "functions or roots of equations; vertical and horizontal asymptotes "
         "using graphing technology.", "Guidance を逐語で（末尾まで）")
@@ -289,7 +290,8 @@ in_text("**戻すのは、どちらの式でもかまいません。**", "交点
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -350,7 +352,7 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
         or _href.startswith("http"),
         "まだないページへのリンク: " + _href)
 for _lab in ["tbl-aasl24-list", "tbl-aasl24-zeros", "tbl-aasl24-how",
-             "fig-aasl24-idea", "eq-aasl24-axis", "eq-aasl24-even",
+             "fig-aasl24-idea-a", "fig-aasl24-idea-b", "eq-aasl24-axis", "eq-aasl24-even",
              "eq-aasl24-meet"]:
     chk(TEXT.count("@" + _lab) >= 1, "本文から参照していない: " + _lab)
 _head = TEXT[:TEXT.index("## The idea")]
@@ -362,23 +364,26 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-2-4-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-2-4-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-2-4-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-2-4-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-2-4-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-2-4-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-2-4-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Key features of a graph", "図(a) の題")
+in_fig("Key features of a graph", "図(a) の題")
 in_fig("local maximum", "図(a) の極大")
 in_fig("local minimum", "図(a) の極小")
 in_fig("zeros of $f$", "図(a) の零点")
-in_fig("(b) Vertical and horizontal asymptotes", "図(b) の題")
+in_fig("Vertical and horizontal asymptotes", "図(b) の題")
 in_fig("vertical asymptote", "図(b) の垂直漸近線")
 in_fig("horizontal asymptote", "図(b) の水平漸近線")
-in_text("(a) Some key features of a curve", "キャプションが (a) を説明")
-in_text("(b) A curve with a vertical asymptote and a horizontal asymptote",
-        "キャプションが (b) を説明")
 # 図は「必ず届かない」と断定していない
 chk("but never" not in FIGSTR, "図が無条件の断定をしていない")
 # 図に数値の座標を書いていない
@@ -389,11 +394,12 @@ for leak in ["= -9", "= -2", "(2, 4)", "x = 3", "y = -1", "= -5/3"]:
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-4.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/02-functions/aasl-2-4.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-2-3.qmd") < DRAFT.index("aasl-2-4.qmd"), "並びが 2.3 → 2.4")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-4.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -405,7 +411,6 @@ GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for _t in ["| zero |", "| root |", "| asymptote |", "| vertex |",
            "| local maximum |", "| symmetry |"]:
     chk(_t in GLO, "対訳表にある: " + _t)
-
 
 # ══════════════════════════════════════════════════════════
 # 13. 査読で直したところ（2026-09-07）
@@ -448,7 +453,81 @@ eq((3 / (x + 2)).subs(x, sp.Rational("-2.01")), -300, "x=-2.01 で -300")
 in_text("因数分解、または解の公式（SL 2.7）で解けるなら", "項目番号をそろえた")
 # 図のラベル
 chk("($x$-intercepts)" not in FIGSTR, "図は zeros と intercepts を同一視していない")
-in_text("(a) Some key features of a curve: the zeros of $f$", "キャプションも直した")
+
+# ══════════════════════════════════════════════════════════
+# 分類の表には「図」の列（_方針変更-2026-09-15.md 第 6 節）
+# ══════════════════════════════════════════════════════════
+def _figcol(tid, fig):
+    _ls = TEXT.split(chr(10))
+    _ci = [i for i, l in enumerate(_ls)
+           if l.startswith(": ") and ("{#" + tid + "}") in l]
+    if not _ci:
+        chk(False, "表が見つからない: " + tid)
+        return
+    _e = _ci[0]
+    while not _ls[_e].startswith("|"):
+        _e -= 1
+    _s = _e
+    while _s > 0 and _ls[_s - 1].startswith("|"):
+        _s -= 1
+    chk(_ls[_s].rstrip().endswith("図 |"), "図の列がある: " + tid)
+    _rows = _ls[_s + 2:_e + 1]
+    chk(len(_rows) >= 2, "行がある: " + tid)
+    chk(all(r.rstrip().endswith(fig + " |") for r in _rows),
+        "どの行も図を指している: " + tid)
+    if fig.startswith("@fig-") and " " not in fig:
+        chk(("{#" + fig[1:] + " ") in TEXT or ("{#" + fig[1:] + "}") in TEXT,
+            "指している図がこのページにある: " + fig)
+
+_figcol("tbl-aasl24-zeros", "@fig-aasl24-idea-a")
+
+# ══════════════════════════════════════════════════════════
+# 英語の用語は、このページの初出で日本語を添える
+# （_方針変更-2026-09-15.md 第 10 節）
+# ══════════════════════════════════════════════════════════
+in_text('シラバスは、この項目に **using graphing technology**（グラフ機能を使って）と書き添えています。', "英語併記 1")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. key features とは、この $6$ つ {#idea}', "見出しの英語: 1. key features とは、この $6$ ")
+in_text('### 2. intercepts と zeros / roots {#zeros}', "見出しの英語: 2. intercepts と zeros / ro")
+in_text('### 3. maximum と minimum {#maxmin}', "見出しの英語: 3. maximum と minimum")
+in_text('### 4. symmetry と vertex {#symmetry}', "見出しの英語: 4. symmetry と vertex")
+in_text('### 5. asymptotes（漸近線） {#asymptotes}', "見出しの英語: 5. asymptotes（漸近線）")
+in_text('### 6. points of intersection（$2$ つのグラフの交点） {#intersection}', "見出しの英語: 6. points of intersection（")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (b) から漸近線の説明文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+chk("the curve gets closer and closer" not in FIG, "図に説明の文を書いていない")
+# 残してよいラベル（部品の名前）
+in_fig("vertical asymptote", "図 (b) のラベル: vertical asymptote")
+in_fig("horizontal asymptote", "図 (b) のラベル: horizontal asymptote")
+# 外した内容は本文にある
+in_text("**asymptote（漸近線）**とは、グラフが**どこまでも近づいていく直線**の"
+        "ことです（@fig-aasl24-idea-b）。", "漸近線の定義は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

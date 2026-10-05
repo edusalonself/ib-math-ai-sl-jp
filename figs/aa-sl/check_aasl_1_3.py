@@ -344,7 +344,8 @@ in_text("**電卓で数列や和を出したときも、$u_1$ と $r$ が何か�
 in_text("menu → List & Spreadsheet → Sequence", "seq( の場所")
 in_text("3^(n-1)", "指数はかっこで囲む")
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -399,10 +400,16 @@ chk("公式集の" not in _head, "冒頭に公式集のブロックを置いて�
 # ══════════════════════════════════════════════════════════
 # 10. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-1-3-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-1-3-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-1-3-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-1-3-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-1-3-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-1-3-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-1-3-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
@@ -415,11 +422,12 @@ for leak in ["6250", "4095", "2186", "508", "127.5", "43923", "8437.5",
 # ══════════════════════════════════════════════════════════
 # 11. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-3.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/01-number-and-algebra/aasl-1-3.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-1-2.qmd") < DRAFT.index("aasl-1-3.qmd"), "並びが 1.2 → 1.3")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("[SL 1.3 — Geometric sequences and series]"
     "(01-number-and-algebra/aasl-1-3.qmd)" in IDX, "index の一覧にある")
@@ -435,15 +443,18 @@ for t in ["| geometric sequence |", "| common ratio |", "| population growth |",
 
 
 # ── 公比を割り算で求める条件（★2026-09-07 の修正）────────
-in_text("**この割り算を使うときは、分母になる項が $0$ でないことが必要です。**",
-        "割る項は 0 でない")
-in_text("このページでは、比を求めるときに割る項は $0$ でないものとして扱います。", "同上")
+in_text("**そもそも、等比数列に $0$ の項はありません。**", "0 の項はない")
+in_text("つまり $u_1 \\neq 0$ と $r \\neq 0$ がはじめから必要です。",
+        "u_1 も r も 0 でない")
+in_text("**ですから、比を求める割り算は、いつでもできます。**", "割り算はいつでもできる")
+not_in_text("分母になる項が $0$ でないことが必要です", "古い言い方（0 の項がありうる）は消した")
 in_text("### 3. 項が $2$ つ分かれば、$r$ と $u_1$ を求められる {#two-terms}",
         "見出しから断定を外した")
 not_in_text("### 3. 項が $2$ つ分かれば、数列が決まる", "古い見出しは残っていない")
-in_text("**ここでも割り算を使うので、分母になる項が $0$ でないことが要ります。**",
-        "第 3 節でも条件を書いた")
-in_text("$u_2 = 0$ なら $\\dfrac{u_5}{u_2}$ が書けません。", "0 のときの例")
+in_text("**ここでも割り算をしますが、等比数列なら $u_2 \\neq 0$ なので、"
+        "そのまま割れます**（[第 1 節](#idea)）。", "第 3 節でも 0 でないと書いた")
+in_text("$0$ の項が出てくる並びは、そもそも等比数列ではありません。", "0 の項なら等比でない")
+not_in_text("$u_2 = 0$ なら", "0 になりうるかのような例は消した")
 # 指数が偶数なら r は 2 通り、という説明は残す
 in_text("## 指数が偶数のときは、$r$ が $2$ 通りになります", "±r の説明は残す")
 in_text("問題文に「すべての項が正」などの断りがあれば、そこで $1$ つに絞ります。",
@@ -451,6 +462,70 @@ in_text("問題文に「すべての項が正」などの断りがあれば、�
 # 採点の言い方
 in_text("**$r = 2$ だけを答えていたら、得点が半分になることがあります。**", "断定を弱めた")
 not_in_text("点を半分落とします", "古い言い方は残っていない")
+
+# 一般項の公式には、前置きの 1 文がある／分割で消した (b) の案内は残っていない
+in_text("等比数列の一般項（第 $n$ 項）を求める公式は、次のとおりです。",
+        "一般項の公式の前置き")
+chk(TEXT.index("等比数列の一般項（第 $n$ 項）を求める公式は")
+    < TEXT.index("$$\nu_n = u_1 r^{\\,n-1}\n$$"), "前置きは式のすぐ前")
+not_in_text("いまは (a) だけ見てください", "分割前の (a)(b) の案内は消した")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text('等比数列のはじめの $n$ 項の和 $S_n$ を求める公式は、次のとおりです。', "公式の前置き 1")
+
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 2. the $n$th term（$n$ 番目の項）：掛ける回数は $n-1$ {#nth}', "見出しの英語: 2. the $n$th term（$n$ 番目の項")
+in_text('### 4. sum of the first $n$ terms（和）：$S_n$ の $2$ つの形 {#sum}', "見出しの英語: 4. sum of the first $n$ te")
+in_text('### 6. sigma notation（シグマ記号） {#sigma}', "見出しの英語: 6. sigma notation（シグマ記号）")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01 の手直し
+# ══════════════════════════════════════════════════════════
+in_text("### 1. geometric sequence（等比数列） {#idea}", "第 1 節の見出し")
+not_in_text("### 1. 同じ数を掛けていく並び", "前の見出しは消した")
+in_text("## $r$ は「うしろ $\div$ 前」です", "うしろ ÷ 前")
+not_in_text("うしろ割る前", "前の言い方は消した")
+not_in_text("tbl-aasl13-percent", "パーセントの表は消した")
+not_in_text("| 増え方・減り方 | $r$ |", "その表の見出しも消した")
+in_text("**$r\%$ 増えるなら掛ける倍率は $1 + \dfrac{r}{100}$、$r\%$ 減るなら "
+        "$1 - \dfrac{r}{100}$ です。**", "倍率の形")
+in_text("公式集 **1.4** の compound interest の式に $1 + \dfrac{r}{100k}$ の形で"
+        "一部が載っています。", "公式集にある形")
+in_text("**そこでの $r$ は百分率で、このページの common ratio の $r$ とは"
+        "別のものです。**", "記号のちがいに注意")
+# 倍率そのものは正しい
+for _p, _up, _down in ((10, "1.1", "0.9"), (25, "1.25", "0.75")):
+    eq(1 + sp.Rational(_p, 100), sp.Rational(_up), f"{_p}% 増は {_up} 倍")
+    eq(1 - sp.Rational(_p, 100), sp.Rational(_down), f"{_p}% 減は {_down} 倍")
 
 print()
 print("OK", OK, "/ NG", NG)

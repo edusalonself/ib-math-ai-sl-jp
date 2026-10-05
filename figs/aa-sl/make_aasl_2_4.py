@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_2_4.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_2_4.py  … 目視用の PNG も
 
-出力: aa-sl/02-functions/img/aasl-2-4-idea.svg
+出力: aa-sl/02-functions/img/aasl-2-4-idea-a.svg
+      aa-sl/02-functions/img/aasl-2-4-idea-b.svg
 
 (a) 曲線の key features（切片・極大・極小）。
 (b) 垂直漸近線と水平漸近線。
@@ -32,12 +33,12 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.8, 4.4))
-
+fig1, ax1 = plt.subplots(figsize=(5.3, 4.4))
+fig2, ax2 = plt.subplots(figsize=(5.3, 4.4))
 # ══════════════════════════════════════════════════════════
 # (a) key features
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Key features of a graph", fontsize=11, color=INK,
+ax1.set_title("Key features of a graph", fontsize=11, color=INK,
               loc="left", pad=10)
 ax1.set_xlim(-3.4, 4.2)
 ax1.set_ylim(-4.4, 5.0)
@@ -85,7 +86,7 @@ ax1.annotate("", xy=(2.6, 0), xytext=(-1.7, 1.45),
 # ══════════════════════════════════════════════════════════
 # (b) 漸近線
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Vertical and horizontal asymptotes", fontsize=11,
+ax2.set_title("Vertical and horizontal asymptotes", fontsize=11,
               color=INK, loc="left", pad=10)
 ax2.set_xlim(-2.6, 5.4)
 ax2.set_ylim(-1.6, 6.4)
@@ -113,17 +114,14 @@ ax2.text(VA + 0.16, 6.0, "vertical asymptote", fontsize=10, color=WARM,
          ha="left", va="top")
 ax2.text(5.1, HA - 0.22, "horizontal asymptote", fontsize=10, color=WARM,
          ha="right", va="top")
-ax2.text(-2.3, 5.4, "the curve gets closer and closer\n"
-         "to each dashed line as it runs out\nto the edges of the picture",
-         fontsize=9.5, color=INK, va="top")
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-2-4-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-2-4-idea-a.svg"), (fig2, "aasl-2-4-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

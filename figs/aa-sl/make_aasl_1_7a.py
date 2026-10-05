@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_1_7a.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_1_7a.py  … 目視用の PNG も
 
-出力: aa-sl/01-number-and-algebra/img/aasl-1-7a-idea.svg
+出力: aa-sl/01-number-and-algebra/img/aasl-1-7a-idea-a.svg
+      aa-sl/01-number-and-algebra/img/aasl-1-7a-idea-b.svg
 
 (a) 27^(2/3) への 2 つの道。先に 3 乗根をとると数が小さいままで済む。
 (b) 指数を 1/2 きざみで動かすと、値は毎回 3 倍になる（底 9）。
@@ -31,14 +32,12 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig, (ax1, ax2) = plt.subplots(
-    1, 2, figsize=(10.0, 4.0), gridspec_kw={"width_ratios": [1.1, 1.0]}
-)
-
+fig1, ax1 = plt.subplots(figsize=(5.4, 4.0))
+fig2, ax2 = plt.subplots(figsize=(5.4, 4.0))
 # ══════════════════════════════════════════════════════════
 # (a) 27^(2/3) への 2 つの道
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Two routes to $27^{\\frac{2}{3}}$",
+ax1.set_title("Two routes to $27^{\\frac{2}{3}}$",
               fontsize=11, color=INK, loc="left", pad=10)
 ax1.set_xlim(0.0, 1.0)
 ax1.set_ylim(0.0, 1.0)
@@ -69,10 +68,10 @@ ax1.plot([0.0, 1.0], [0.49, 0.49], color="#e5e7eb", linewidth=1.0)
 # ══════════════════════════════════════════════════════════
 # (b) 指数を 1/2 きざみで動かす（底 9）
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Half-steps in the exponent, base $9$",
+ax2.set_title("Half-steps in the exponent, base $9$",
               fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(-0.45, 2.45)
-ax2.set_ylim(-1.35, 1.55)
+ax2.set_ylim(-1.10, 1.55)
 ax2.axis("off")
 
 POINTS = [(0.0, "$9^{0}$", "$1$"),
@@ -97,18 +96,16 @@ for i in range(len(POINTS) - 1):
     ax2.text((a + b) / 2, -0.93, r"$\times 3$", ha="center", va="center",
              fontsize=9, color=WARM)
 
-ax2.text(1.0, -1.25, "the half-steps are the square roots",
-         ha="center", va="center", fontsize=9.5, color=INK)
 ax2.text(1.0, 1.25, "exponent", ha="center", va="center",
          fontsize=9.5, color=GREY)
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-1-7a-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-1-7a-idea-a.svg"), (fig2, "aasl-1-7a-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

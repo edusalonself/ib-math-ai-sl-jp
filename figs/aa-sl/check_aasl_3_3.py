@@ -24,10 +24,8 @@ FIGCODE = FIG.split('"""', 2)[-1]
 OK = NG = 0
 R = sp.Rational
 
-
 def D(x):
     return sp.rad(x)
-
 
 def chk(cond, msg):
     global OK, NG
@@ -37,38 +35,29 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(u - v) == 0, msg + f"  ({u} vs {v})")
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 def cos_rule(a, b, C):
     return a ** 2 + b ** 2 - 2 * a * b * sp.cos(D(C))
 
-
 def area(a, b, C):
     return R(1, 2) * a * b * sp.sin(D(C))
 
-
 def back(b):
     return b + 180 if b < 180 else b - 180
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 本文の走る例と、逆向きの方位角
@@ -256,7 +245,8 @@ in_text("**共通の辺は、どちらの三角形から見ても同じ長さ**�
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -339,38 +329,39 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-3-3-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-3-3-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-3-3-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-3-3-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-3-3-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-3-3-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-3-3-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Elevation and depression", "図(a) の題")
+in_fig("Elevation and depression", "図(a) の題")
 in_fig("angle of depression, measured", "図(a) の俯角")
 in_fig("down from the horizontal", "図(a) の俯角（続き）")
 in_fig("angle of elevation", "図(a) の仰角")
-in_fig("the two are alternate angles between parallel horizontals, so they ",
-       "図(a) の説明")
-in_fig("(b) Bearings", "図(b) の題")
-in_fig("measured from north, clockwise,", "図(b) の説明")
-in_fig("always written with three figures", "図(b) の説明（続き）")
-in_fig("the bearing back the other way differs by $180°$", "図(b) の逆向き")
-in_text("(a) The angle of elevation is measured up from the horizontal at the "
-        "lower point", "キャプションが (a) を説明")
-in_text("(b) A bearing is measured clockwise from north and written with three "
-        "figures", "キャプションが (b) を説明")
+in_fig("Bearings", "図(b) の題")
 # 図に答えの数を書いていない（角度は θ、方位は 180° の一般則だけ）
-chk(set(re.findall(r"\d+", FIGSTR)) <= {"180"}, f"図の数字は 180 だけ: {set(re.findall(chr(92) + 'd+', FIGSTR))}")
+chk(set(re.findall(r"\d+", FIGSTR)) <= {"180", "30", "45", "40"},
+    f"図の数字は 180 と、塔の問題で与えられた 30・45・40 だけ: {set(re.findall(chr(92) + 'd+', FIGSTR))}")
+for _bad in ("54.6", "20", "94.6"):
+    chk(_bad not in FIGSTR, "図に答えを書いていない: " + _bad)
 
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-3.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/03-geometry/aasl-3-3.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-3-2.qmd") < DRAFT.index("aasl-3-3.qmd"), "並びが 3.2 → 3.3")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-3.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -400,9 +391,6 @@ chk("\\sin 135" not in TEXT and "\\cos 135" not in TEXT, "鈍角の三角比は�
 chk("\\sin 120" in TEXT, "sin120 は SL 3.2 で扱ったので使ってよい（面積で使う）")
 
 # --- 成分に分けるときの角に、条件を付けた --------------------------------
-in_text("**いちばん近い南北の線（北か南）から測った鋭角**です。その鋭角を $\\alpha$、"
-        "進んだ距離を $d$ とすると、東西の成分は $d\\sin\\alpha$、南北の成分は "
-        "$d\\cos\\alpha$ になります。", "成分の条件つきの書き方")
 not_in_text("**東向きの成分は $\\sin$**、北向きの成分は $\\cos$ です。",
             "条件なしの一般則は消した")
 
@@ -488,7 +476,6 @@ in_text("Find the exact distance the ship ends up east of its starting point.",
         "演習5 の英文")
 not_in_text("Find the exact distance it has travelled due east.", "紛らわしい英文は消した")
 
-
 # ══════════════════════════════════════════════════════════
 # C06  方位角の「$3$ 桁」は、有効数字 $3$ 桁とは別
 # ══════════════════════════════════════════════════════════
@@ -504,6 +491,105 @@ chk(float("%.3g" % 71.5652) == 71.6, "C06 71.5652 を 3 有効数字で 71.6")
 chk("%05.1f" % 71.6 == "071.6", "C06 整数部分を 3 桁にそろえると 071.6")
 chk(len("071.6".split(".")[0]) == 3, "C06 整数部分が 3 桁")
 chk("%03d" % 60 == "060" and "%03d" % 45 == "045", "C06 060 と 045")
+
+# ══════════════════════════════════════════════════════════
+# 三角形を 2 つ使う手順は、その例を最後まで（方針変更 第 7 節）
+# ══════════════════════════════════════════════════════════
+in_text("塔を地点 $\\mathrm{A}$ から見上げると仰角 $30°$、塔に $40$ m 近づいた"
+        "地点 $\\mathrm{B}$ からは $45°$ でした。", "第5節の例")
+in_text("$h = x = 20\\left(\\sqrt{3}+1\\right) \\approx 54.6$ m です。",
+        "第5節の答え")
+_x = sp.Symbol("x", positive=True)
+_sol = sp.solve(sp.Eq(_x, (_x + 40) / sp.sqrt(3)), _x)
+chk(len(_sol) == 1 and sp.simplify(_sol[0] - 20 * (sp.sqrt(3) + 1)) == 0,
+    "第5節 x = 20(sqrt3+1)")
+chk(abs(float(20 * (sp.sqrt(3) + 1)) - 54.641) < 1e-3, "第5節 約 54.6 m")
+chk(abs(float(sp.tan(sp.rad(30))) - 54.641 / 94.641) < 1e-4, "第5節 検算 tan30")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 2. angle of elevation and angle of depression（仰角と俯角） {#elevation}', "見出しの英語: 2. angle of elevation and ")
+in_text('### 4. bearings（方位角） {#bearings}', "見出しの英語: 4. bearings（方位角）")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：塔の例に図を足し、第 6 節の 2 段落を消した
+# ══════════════════════════════════════════════════════════
+SVG_C = os.path.join(BASE, "img", "aasl-3-3-idea-c.svg")
+chk(os.path.exists(SVG_C), "図 (c) がある")
+chk(not os.path.exists(SVG_C[:-4] + ".png"), "図 (c) の PNG は消してある")
+in_text("](img/aasl-3-3-idea-c.svg){#fig-aasl33-idea-c", "本文が図 (c) を貼っている")
+in_text("@fig-aasl33-idea-c が、その図です。", "図 (c) を参照している")
+in_fig("Two triangles, one shared side", "図 (c) の題")
+in_fig("$30°$", "図 (c) の 30 度")
+in_fig("$45°$", "図 (c) の 45 度")
+in_fig("$40$ m", "図 (c) の 40 m")
+in_fig("$x$ m", "図 (c) の x")
+in_fig("$h$", "図 (c) の h")
+in_text("**$h$ が $2$ つの三角形に共通の辺**で、", "共通の辺を本文でも書いている")
+in_text("$\\mathrm{A}$ から足もとまでは $x+40$ になります。", "A 側は x+40")
+# 図 (c) は第 5 節の中
+chk(TEXT.index("### 5. 三角形を $2$ つ使う問題")
+    < TEXT.index("](img/aasl-3-3-idea-c.svg)")
+    < TEXT.index("### 6. 直角がないとき"), "図 (c) は第 5 節の中")
+# 図の形が、この問題のとおりになっている（B で 45 度、A で 30 度）
+_xa, _xb, _xf, _ht = 0.0, 3.55, 8.40, 4.85
+chk(abs(sp.deg(sp.atan(sp.Rational(485, 100) / sp.Rational(485, 100)))
+        - 45) < sp.Rational(1, 100), "B の角は 45 度")
+chk(abs(float(sp.deg(sp.atan(_ht / (_xf - _xa)))) - 30.0) < 0.1,
+    "A の角は 30 度")
+chk("XA, XB, XF = 0.0, 3.55, 8.40" in FIGCODE, "図は実際の比で置いている")
+
+# --- 第 6 節から消した 2 段落 -----------------------------------------
+not_in_text("方位角の問題では、**$2$ つの方位角の差**", "方位角の差の段落は消した")
+not_in_text("**東西方向と南北方向に分ける**", "成分に分ける段落も消した")
+not_in_text("**いちばん近い南北の線（北か南）から測った鋭角**", "鋭角の説明も消した")
+not_in_text("$d\\sin\\alpha$", "d sin α は残っていない")
+not_in_text("（北から測った角をそのまま入れる一般の形は、SL 3.5 で扱います。）",
+            "SL 3.5 への断りも消した")
+
+# --- 塔の答えを、もう一度たしかめる ------------------------------------
+_x = 40 / (sp.sqrt(3) - 1)
+chk(sp.simplify(_x - 20 * (sp.sqrt(3) + 1)) == 0, "x = 20(√3+1)")
+chk(abs(float(20 * (sp.sqrt(3) + 1)) - 54.641) < 0.01, "h ≈ 54.6")
+chk(sp.simplify(sp.tan(sp.pi / 6) - (20 * (sp.sqrt(3) + 1))
+                / (20 * (sp.sqrt(3) + 1) + 40)) == 0, "tan 30 で戻る")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'the two are alternate angles b',
+    'measured from north, clockwise',
+    'the bearing back the other way',
+    '$h$ is in both triangles, so w',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:30])
+in_text('### 3. 俯角と仰角が等しいわけ {#alternate}', "その内容は本文にある")
+in_text('**北から時計回りに測った角**で、**整数部分を必ず $3$ 桁**にそろえて書きます。', "その内容は本文にある")
+in_text('**back bearing**（逆向きの方位角）は、$180°$ ちがいます。', "その内容は本文にある")
+in_text('**$h$ が $2$ つの三角形に共通の辺**で、', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

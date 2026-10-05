@@ -24,7 +24,6 @@ FIGCODE = FIG.split('"""', 2)[-1]
 
 OK = NG = 0
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -33,27 +32,21 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.nsimplify(u) - sp.nsimplify(v)) == 0,
         msg + f"  ({u} vs {v})")
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 道具
@@ -63,7 +56,6 @@ def med(a):
     m = len(a)
     return F(a[m // 2]) if m % 2 else (F(a[m // 2 - 1]) + F(a[m // 2])) / 2
 
-
 def quartiles(d):
     d = sorted(d)
     n = len(d)
@@ -71,14 +63,11 @@ def quartiles(d):
     hi = d[n // 2 + 1:] if n % 2 else d[n // 2:]
     return med(lo), med(d), med(hi)
 
-
 def expand(x, f):
     return [v for v, c in zip(x, f) for _ in range(c)]
 
-
 def cumf(f):
     return [sum(f[:i + 1]) for i in range(len(f))]
-
 
 def interp(bnd, f, pos):
     """累積度数グラフを直線とみなして pos 番目の値を出す。"""
@@ -89,11 +78,9 @@ def interp(bnd, f, pos):
             return F(bnd[i]) + F(pos - below, f[i]) * (bnd[i + 1] - bnd[i])
     return None
 
-
 def fences(q1, q3):
     iqr = q3 - q1
     return q1 - F(3, 2) * iqr, q3 + F(3, 2) * iqr
-
 
 # 道具そのものの検算
 chk(cumf([1, 2, 3]) == [1, 3, 6], "道具: 累積度数")
@@ -117,9 +104,8 @@ in_text("$(20, 15)$ に打ちます。$(10, 15)$ でも $(15, 15)$ でもあり�
 for _r in ["| median | $\\dfrac{n}{2}$ |", "| $Q_1$ | $\\dfrac{n}{4}$ |",
            "| $Q_3$ | $\\dfrac{3n}{4}$ |"]:
     in_text(_r, "読み方の表: " + _r[:20])
-in_text("{#tbl-aasl42-read}", "読み方の表のラベル")
+in_text("{#tbl-aasl42-read .tbl-narrow}", "読み方の表のラベル")
 chk(TEXT.count("@tbl-aasl42-read") >= 3, "読み方の表を参照している")
-in_text("ここでは $n$ を使います。$n+1$ ではありません。**", "n を使う（表について）")
 in_text("{#eq-aasl42-interp}", "補間の式のラベル")
 in_text("{#eq-aasl42-iqr}", "IQR の式のラベル")
 # 階級の書き方
@@ -402,7 +388,8 @@ in_text("ひげの先は、**外れ値でないもののうち、いちばん外
 # 11. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -487,20 +474,24 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 13. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-4-2-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-4-2-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-4-2-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-4-2-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-4-2-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-4-2-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-4-2-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Reading a cumulative frequency graph", "図(a) の題")
+in_fig("Reading a cumulative frequency graph", "図(a) の題")
 in_fig("in on the vertical axis", "図(a) の入り方")
 in_fig("out on the", "図(a) の出方")
-in_fig("(b) A box and whisker diagram with an outlier", "図(b) の題")
-in_fig("the whisker stops at the last value", "図(b) のひげ")
+in_fig("A box and whisker diagram with an outlier", "図(b) の題")
 in_fig("$Q_3 + 1.5\\\\,IQR$", "図(b) の境目")
-in_fig("the outlier is plotted as a cross and the whisker does ", "図(b) の説明")
 # 図の × が本当に境目の外にあること
 _m = re.search(r"MN, Q1, MD, Q3, LAST = ([0-9.]+), ([0-9.]+), ([0-9.]+), "
                r"([0-9.]+), ([0-9.]+)", FIGCODE)
@@ -516,18 +507,16 @@ chk(_v[4] < _ffence, f"図のひげの先は境目より内: {_v[4]} vs {_ffence
 # 図に例題・演習の数値が出ていないこと
 for _bad in ["23.3", "28.75", "9.25", "45", "48", "33"]:
     chk(_bad not in FIGSTR, "図に答えの数値: " + _bad)
-in_text("(a) A cumulative frequency graph is read by entering on the vertical axis",
-        "キャプションが (a) を説明")
-in_text("(b) A box and whisker diagram shows five numbers", "キャプションが (b) を説明")
 
 # ══════════════════════════════════════════════════════════
 # 14. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/04-statistics-and-probability/aasl-4-2.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/04-statistics-and-probability/aasl-4-2.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-4-1.qmd") < DRAFT.index("aasl-4-2.qmd"), "並びが 4.1 → 4.2")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(04-statistics-and-probability/aasl-4-2.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -549,7 +538,6 @@ in_text("**値が $1$ つずつ分かっているときは別です。**", "2 �
 in_text("$n$ が奇数なら median は $\\dfrac{n+1}{2}$ 番目、偶数なら $\\dfrac{n}{2}$ 番目と "
         "$\\dfrac{n}{2}+1$ 番目の平均です。", "数えるときの位置")
 in_text("median で下半分と上半分に分け（$n$ が奇数なら median は除く）", "四分位数の分け方")
-in_text("**どちらの表なのかを、先に見てください。**", "どちらの表か")
 in_text("値が $1$ つずつ分かっている表なので、**小さい順に並べて数える**方法を使います",
         "例題1 が方法を明示")
 in_text("## 位置の出し方を取りちがえる", "Common errors も両方向")
@@ -665,7 +653,6 @@ not_in_text("度数 $f$ の階級の中で「下から $j$ 番目」", "j での
 # k = 上端の累積度数 のときも、式が階級の上端を返す（例題2 の Q3）
 eq(20 + F(30 - 15, 15) * 10, 30, "k = c + f なら階級の上端")
 
-
 # ══════════════════════════════════════════════════════════
 # C08  演習6 — P を選んでも、数を挙げれば正解
 # ══════════════════════════════════════════════════════════
@@ -681,7 +668,6 @@ chk(_p5[2] < _q5[2], "C08 median は P のほうが小さい")
 chk(_p5[1] < _q5[1], "C08 Q1 は P のほうが小さい")
 chk(_p5[4] > _q5[4], "C08 最大値は P のほうが大きい")
 chk(_p5[3] - _p5[1] > _q5[3] - _q5[1], "C08 散らばりは Q のほうが小さい")
-
 
 # ══════════════════════════════════════════════════════════
 # E07  演習2・3・5 — 図を実際にかかせる
@@ -724,6 +710,157 @@ chk(30 + sp.Rational(3, 2) * 10 == 45, "E07 上の境目は 45")
 chk(20 - sp.Rational(3, 2) * 10 == 5, "E07 下の境目は 5")
 chk(48 > 45 and 33 < 45, "E07 48 だけが外れ値")
 chk(min(_e07d) == 12 and 12 > 5, "E07 下側に外れ値はない")
+
+# ══════════════════════════════════════════════════════════
+# 分類の表には「図」の列（_方針変更-2026-09-15.md 第 6 節）
+# ══════════════════════════════════════════════════════════
+def _figcol(tid, fig):
+    _ls = TEXT.split(chr(10))
+    _ci = [i for i, l in enumerate(_ls)
+           if l.startswith(": ") and ("{#" + tid + "}") in l]
+    if not _ci:
+        chk(False, "表が見つからない: " + tid)
+        return
+    _e = _ci[0]
+    while not _ls[_e].startswith("|"):
+        _e -= 1
+    _s = _e
+    while _s > 0 and _ls[_s - 1].startswith("|"):
+        _s -= 1
+    chk(_ls[_s].rstrip().endswith("図 |"), "図の列がある: " + tid)
+    _rows = _ls[_s + 2:_e + 1]
+    chk(len(_rows) >= 2, "行がある: " + tid)
+    chk(all(r.rstrip().endswith(fig + " |") for r in _rows),
+        "どの行も図を指している: " + tid)
+    if fig.startswith("@fig-") and " " not in fig:
+        chk(("{#" + fig[1:] + " ") in TEXT or ("{#" + fig[1:] + "}") in TEXT,
+            "指している図がこのページにある: " + fig)
+
+# ══════════════════════════════════════════════════════════
+# 英語の用語は、このページの初出で日本語を添える
+# （_方針変更-2026-09-15.md 第 10 節）
+# ══════════════════════════════════════════════════════════
+in_text('グラフから **median**（中央値）・**quartile**（四分位数）・**percentile**（百分位数）を読める。', "英語併記 1")
+in_text('- **range**（範囲）と **interquartile range**（四分位範囲）を求められる。', "英語併記 2")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. frequency distribution（度数分布表） {#table}', "見出しの英語: 1. frequency distribution（")
+in_text('### 2. histogram {#histogram}', "見出しの英語: 2. histogram")
+in_text('### 3. cumulative frequency（累積度数） {#cf}', "見出しの英語: 3. cumulative frequency（")
+in_text('### 4. cumulative frequency graph の読み方 {#cfgraph}', "見出しの英語: 4. cumulative frequency gr")
+in_text('### 5. range と interquartile range {#iqr}', "見出しの英語: 5. range と interquartile r")
+in_text('### 6. box and whisker diagram {#box}', "見出しの英語: 6. box and whisker diagram")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'the whisker stops at the',
+    'the outlier is plotted a',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:24])
+in_text('### 6. box and whisker diagram {#box}', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-24：SL 4.2 の直し
+# ══════════════════════════════════════════════════════════
+# --- 1) 表 1・表 2・表 3 は、中身の幅にそろえる -------------------------
+for _t in ("{#tbl-aasl42-discrete .tbl-narrow}",
+           "{#tbl-aasl42-cf .tbl-narrow}",
+           "{#tbl-aasl42-read .tbl-narrow}"):
+    in_text(_t, "表を .tbl-narrow に: " + _t)
+_SCSS = open(os.path.join(ROOT, "styles.scss"), encoding="utf-8").read()
+chk("table.tbl-narrow {" in _SCSS, "styles.scss に .tbl-narrow の規則がある")
+chk("width: auto;" in _SCSS.split("table.tbl-narrow {")[1].split("}")[0],
+    ".tbl-narrow は width: auto")
+
+# --- 2) 第 3 節の見出し -------------------------------------------------
+not_in_text("### 3. cumulative frequency {#cf}", "日本語なしの見出しは残っていない")
+
+# --- 3) 表 3 に「図」の列はない ------------------------------------------
+_ls42 = TEXT.split(chr(10))
+_ci42 = [i for i, l in enumerate(_ls42)
+         if l.startswith(": ") and "{#tbl-aasl42-read" in l]
+chk(len(_ci42) == 1, "読み方の表が 1 つある")
+_e42 = _ci42[0]
+while not _ls42[_e42].startswith("|"):
+    _e42 -= 1
+_s42 = _e42
+while _s42 > 0 and _ls42[_s42 - 1].startswith("|"):
+    _s42 -= 1
+chk(_ls42[_s42].rstrip() == "| ほしいもの | 縦軸で入る値 |",
+    f"読み方の表は 2 列: {_ls42[_s42]}")
+chk(all(r.count("|") == 3 for r in _ls42[_s42:_e42 + 1]),
+    "読み方の表のどの行も 2 列")
+chk(all("@fig-aasl42-idea-a" not in r for r in _ls42[_s42:_e42 + 1]),
+    "読み方の表に図の列はない")
+# 図 (a) は、本文の中から参照されている
+in_text("**読み方は、いつも「縦から入って、横に出る」**です（@fig-aasl42-idea-a）。",
+        "図 (a) は本文から参照している")
+
+# --- 4)「ここでは n を使います」の 2 文は消した --------------------------
+in_text("**この表は、累積度数グラフと、階級にまとめられた表から読むときのものです。**",
+        "表 3 の但し書き")
+not_in_text("ここでは $n$ を使います。", "「ここでは n を使います」は消した")
+not_in_text("$n+1$ ではありません。", "「n+1 ではありません」は消した")
+# n と n+1 の使い分けは、あとの段落と Why it works に残っている
+in_text("**値が $1$ つずつ分かっているときは別です。**", "2 通りあることは残っている")
+in_text("$\\dfrac{n+1}{2}$ を使うのは、**値を $1$ つずつ並べて数えるとき**です。",
+        "Why it works に n+1 の話は残っている")
+
+# --- 5) 補間の式は、第 4 節ではなく例題 2 (b) の中にある -------------------
+not_in_text("**どちらの表なのかを、先に見てください。**", "第 4 節の 1 行は消した")
+chk(TEXT.count("{#eq-aasl42-interp}") == 1, "補間の式は 1 つだけ")
+_i42 = TEXT.index("### 4. cumulative frequency graph の読み方")
+_j42 = TEXT.index("### 5. range と interquartile range")
+chk("{#eq-aasl42-interp}" not in TEXT[_i42:_j42], "第 4 節に補間の式はない")
+chk("直線とみなして" not in TEXT[_i42:_j42], "第 4 節に「直線とみなして」はない")
+_w42 = TEXT.index("## Worked examples")
+chk(TEXT.index("{#eq-aasl42-interp}") > _w42, "補間の式は Worked examples の中")
+in_text("**グラフがないので、階級の中で直線とみなして計算します。** 位置 $k$ が"
+        "ある階級について、その階級の手前までの累積度数を $c$、その階級の度数を "
+        "$f$ とすると", "例題 2 (b) の導入")
+in_text("です。これは、**その階級の中で値が等間隔に並んでいると考える**という"
+        "ことです。だから答えは**推定値**になります。", "等間隔・推定値の説明")
+# 式を参照しているところが、すべて式より後ろにある必要はないが、ページ内にあること
+chk(TEXT.count("@eq-aasl42-interp") >= 4,
+    f"補間の式を参照している: {TEXT.count('@eq-aasl42-interp')} か所")
+in_text("**なぜ、階級の中で直線とみなしてよいのでしょうか**（@eq-aasl42-interp）**。**",
+        "Why it works から式を指している")
+# 例題 2 (b)(c) の数値が、移した式のとおりであること
+chk(10 + F(10 - 5, 10) * 10 == 15, "例題 2 (b) Q1 = 15")
+chk(20 + F(20 - 15, 15) * 10 == F(70, 3), "例題 2 (c) median = 70/3")
+
+# --- 6) 図 2 の、行き先のない矢印を消した ---------------------------------
+chk("ax2.annotate(" not in FIGCODE, "図 (b) に矢印は残っていない")
+chk(FIGCODE.count("annotate(") == 2, f"矢印は図 (a) の 2 本だけ: "
+    f"{FIGCODE.count('annotate(')}")
+# ひげの先が、外れ値でないもののうちいちばん外側だという説明は本文にある
+in_text("ひげの先は、**外れ値でないもののうち、いちばん外側の値**です。",
+        "ひげの先の説明は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

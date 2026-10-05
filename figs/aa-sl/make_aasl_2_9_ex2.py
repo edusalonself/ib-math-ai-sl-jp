@@ -72,9 +72,6 @@ ax.set_yticks([])
 ax.set_aspect("equal")
 for _s in ("top", "right", "left", "bottom"):
     ax.spines[_s].set_visible(False)
-ax.text(-4.5, -4.5,
-        "each curve is the reflection of the other in $y = x$; both are "
-        "decreasing", fontsize=10, color=INK, ha="left", va="bottom")
 
 fig.tight_layout()
 path = os.path.join(OUT, "aasl-2-9-ex2.svg")

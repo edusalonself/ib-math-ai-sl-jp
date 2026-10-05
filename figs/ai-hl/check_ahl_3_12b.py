@@ -403,27 +403,20 @@ for rel, an in re.findall(r"\]\((\.\./[a-z0-9-]+/[a-z0-9-]+\.qmd|ahl-3-[0-9a-z]+
 # ══════════════════════════════════════════════════════════
 # 10. 登録
 # ══════════════════════════════════════════════════════════
+# ★ 2026-09-15 に AI HL を公開対象へ移しました（_方針変更-2026-09-15.md 第 13 節）。
+#    登録先は _quarto-draft.yml ではなく _quarto.yml です。
+#    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
+#    「index の一覧にある」「残りの N 項目」は、もう検査しません。
+PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"),
+           encoding="utf-8").read()
+chk("ai-hl/03-geometry-and-trigonometry/ahl-3-12b.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
+chk(PUB.index("ahl-3-12a.qmd") < PUB.index("ahl-3-12b.qmd")
+    < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.12a → 3.12b → 3.14")
 DRAFT = open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
              encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-12b.qmd" in DRAFT,
-    "_quarto-draft.yml に登録されている")
-chk(DRAFT.index("ahl-3-12a.qmd") < DRAFT.index("ahl-3-12b.qmd")
-    < DRAFT.index("ahl-3-14.qmd"), "サイドバーの並びが 3.12a → 3.12b → 3.14")
-PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"), encoding="utf-8").read()
-chk("ahl-3-12b" not in PUB, "公開用の _quarto.yml は SL だけのまま")
-IDX = open(os.path.join(HERE, "..", "..", "ai-hl", "index.qmd"),
-           encoding="utf-8").read()
-chk("[AHL 3.12b — Kinematics: variable velocity]"
-    "(03-geometry-and-trigonometry/ahl-3-12b.qmd)" in IDX, "index の一覧にある")
-chk("| **AHL 3.12** | **[Kinematics: constant velocity]"
-    "(03-geometry-and-trigonometry/ahl-3-12a.qmd)** ／ "
-    "**[Kinematics: variable velocity]"
-    "(03-geometry-and-trigonometry/ahl-3-12b.qmd)** ✅ |" in IDX,
-    "index の表が両方そろって ✅ になっている")
-_left = int(_m.group(1)) if (_m := re.search(r"残りの(\d+)項目", IDX)) else 0
-_rows = re.findall(r"^\| (?:\*\*)?AHL [0-9.]+(?:\*\*)? \|(.*)\|$", IDX, re.M)
-chk(_left == len([x for x in _rows if "✅" not in x]),
-    "「残りの N 項目」が、まだ ✅ の付いていない行の数と合う")
+chk("ai-hl/03-geometry-and-trigonometry/ahl-3-12b.qmd" not in DRAFT,
+    "下書き用の _quarto-draft.yml には残っていない")
+
 GLO = open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
            encoding="utf-8").read()
 for term in ["| variable velocity |", "| projectile motion |",

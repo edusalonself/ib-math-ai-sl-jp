@@ -30,7 +30,6 @@ PI = sp.pi
 X = sp.Symbol("x", real=True)
 C = sp.Symbol("c", real=True)
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -39,26 +38,20 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(u - v) == 0, msg + f"  ({u} vs {v})")
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 解を出す道具（solveset には頼らない）
@@ -93,7 +86,6 @@ def solve_ratio(fn, k, lo, hi):
             n += 1
     return sorted(out, key=lambda z: float(z))
 
-
 def brute(expr, lo, hi, cands):
     """候補のうち、区間の中で expr = 0 をみたすものを返す（検算用）。"""
     return sorted([c for c in cands
@@ -101,11 +93,9 @@ def brute(expr, lo, hi, cands):
                    and sp.simplify(c - lo) >= 0 and sp.simplify(hi - c) >= 0],
                   key=lambda z: float(z))
 
-
 def same(got, want, msg):
     chk([sp.nsimplify(g) for g in got] == [sp.nsimplify(w) for w in want],
         f"{msg}: {got} vs {want}")
-
 
 # 道具そのものの検算
 same(solve_ratio(sp.sin, R(1, 2), 0, 2 * PI), [PI / 6, 5 * PI / 6],
@@ -125,10 +115,6 @@ eq(sp.tan(A + PI) - sp.tan(A), 0, "tan(α+π) = tan α")
 eq(sp.periodicity(sp.sin(X), X), 2 * PI, "sin の period は 2π")
 eq(sp.periodicity(sp.cos(X), X), 2 * PI, "cos の period は 2π")
 eq(sp.periodicity(sp.tan(X), X), PI, "tan の period は π")
-in_text("| $\\sin x = k$ | $\\alpha$ | $\\pi - \\alpha$ | $2\\pi$ |", "表の sin の行")
-in_text("| $\\cos x = k$ | $\\alpha$ | $-\\alpha$（または $2\\pi - \\alpha$） | $2\\pi$ |",
-        "表の cos の行")
-in_text("（$\\alpha + \\pi$ がくり返しそのもの）", "表の tan の行")
 in_text("**$\\tan$ だけは $1$ 周期に $1$ つ**です。", "tan は 1 周期に 1 つ")
 
 # |k| > 1 なら解なし
@@ -141,7 +127,8 @@ in_text("$\\tan$ にはこの制限がありません。", "tan には制限が�
 
 # 中身の区間
 eq(2 * PI, 2 * PI, "0≤x≤π なら 0≤2x≤2π")
-in_text("$0 \\le x \\le \\pi$ なら $0 \\le 2x \\le 2\\pi$ です。", "中身の区間")
+in_text("たとえば、$0 \\le x \\le \\pi$ で $u = 2x$ なら、"
+        "$0 \\le u \\le 2\\pi$ です。", "中身の区間")
 # 2(x - π/4) の動く範囲
 eq(2 * (0 - PI / 4), -PI / 2, "x=0 で中身 -π/2")
 eq(2 * (2 * PI - PI / 4), 7 * PI / 2, "x=2π で中身 7π/2")
@@ -150,7 +137,7 @@ in_text("中身は $-\\dfrac{\\pi}{2}$ から $\\dfrac{7\\pi}{2}$ まで動き�
 # 割ってはいけない
 eq(sp.expand(sp.sin(X) * (2 * sp.cos(X) - 1)),
    sp.expand(2 * sp.sin(X) * sp.cos(X) - sp.sin(X)), "因数分解の確認")
-in_text("$\\sin x(2\\cos x - 1) = 0$", "§6 の因数分解した形")
+in_text("\\sin x(2\\cos x - 1) = 0", "§6 の因数分解した形")
 in_text("$\\cos^{2}\\theta + \\sin^{2}\\theta = 1$", "2 次式は Pythagoras で")
 
 # ══════════════════════════════════════════════════════════
@@ -161,8 +148,6 @@ same(solve_ratio(sp.sin, 1, 0, 2 * PI), [PI / 2], "sin x = 1 は 1 つ")
 same(solve_ratio(sp.sin, -1, 0, 2 * PI), [3 * PI / 2], "sin x = -1 は 1 つ")
 chk(len(solve_ratio(sp.sin, R(1, 2), 0, 2 * PI)) == 2, "-1<k<1 なら 2 つ")
 in_text("$k = \\pm 1$ のときだけ、$2$ 点が重なって $1$ つになります。", "k = ±1")
-in_text("その $2$ 点は**原点について対称**で、角は $\\alpha$ と $\\alpha + \\pi$ です。",
-        "tan は原点対称")
 in_text("**「もう $1$ つの解」ではなく「次のくり返し」**", "次のくり返し")
 # sin x = 0 を入れると両辺 0
 for _v in [0, PI, 2 * PI]:
@@ -209,21 +194,29 @@ eq(R(3, 2) - R(5, 2) + 1, 0, "3/2 - 5/2 + 1 = 0")
 eq(sp.expand((2 * C + 1) * (C - 3)), 2 * C ** 2 - 6 * C + C - 3, "展開の途中")
 
 # ══════════════════════════════════════════════════════════
-# 5. 例題 3  tan 2x = √3
+# 5. 中身の例題  tan 3x = 1（0 ≤ x ≤ π）
 # ══════════════════════════════════════════════════════════
-_th = solve_ratio(sp.tan, sp.sqrt(3), 0, 4 * PI)
-same(_th, [PI / 3, 4 * PI / 3, 7 * PI / 3, 10 * PI / 3], "例題3(b) 中身の値")
-same([t / 2 for t in _th], [PI / 6, 2 * PI / 3, 7 * PI / 6, 5 * PI / 3], "例題3(c)")
-for _v in [PI / 6, 2 * PI / 3, 7 * PI / 6, 5 * PI / 3]:
-    eq(sp.tan(2 * _v), sp.sqrt(3), f"例題3 の解 {_v}")
-chk(sp.simplify(13 * PI / 3 - 4 * PI) > 0, "13π/3 > 4π")
-for _i in range(3):
+_th = solve_ratio(sp.tan, 1, 0, 3 * PI)
+same(_th, [PI / 4, 5 * PI / 4, 9 * PI / 4], "例題4(b) 中身の値")
+same([t / 3 for t in _th], [PI / 12, 5 * PI / 12, 3 * PI / 4], "例題4(c)")
+for _v in [PI / 12, 5 * PI / 12, 3 * PI / 4]:
+    eq(sp.tan(3 * _v), 1, f"例題4 の解 {_v}")
+    chk(0 <= _v <= PI, f"{_v} は 0 ≤ x ≤ π の中")
+chk(sp.simplify(13 * PI / 4 - 3 * PI) > 0, "13π/4 > 3π")
+for _i in range(2):
     eq(_th[_i + 1] - _th[_i], PI, "中身は π ずつ")
-_xs = [PI / 6, 2 * PI / 3, 7 * PI / 6, 5 * PI / 3]
-for _i in range(3):
-    eq(_xs[_i + 1] - _xs[_i], PI / 2, "x は π/2 ずつ")
-eq(sp.periodicity(sp.tan(2 * X), X), PI / 2, "tan2x の period は π/2")
-eq(sp.tan(4 * PI / 3), sp.sqrt(3), "tan(4π/3) = √3")
+_xs = [PI / 12, 5 * PI / 12, 3 * PI / 4]
+for _i in range(2):
+    eq(_xs[_i + 1] - _xs[_i], PI / 3, "x は π/3 ずつ")
+eq(sp.periodicity(sp.tan(3 * X), X), PI / 3, "tan3x の period は π/3")
+eq(sp.tan(9 * PI / 4), 1, "tan(9π/4) = 1")
+eq(9 * PI / 4 - 2 * PI, PI / 4, "9π/4 − 2π = π/4")
+eq(sp.tan(5 * PI / 4), 1, "tan(5π/4) = 1")
+in_text("[Consider the equation $\\tan 3x = 1$ for $0 \\le x \\le \\pi$.]{.q-en}",
+        "例題 4 の問題文")
+in_text("**(d)** 解が $1$ つではなく $3$ つある理由を説明しなさい。",
+        "例題 4(d) の訳")
+not_in_text("\\tan 2x = \\sqrt{3}", "前の例題は消した")
 
 # ══════════════════════════════════════════════════════════
 # 6. 例題 4  sin 2x = cos x
@@ -349,8 +342,10 @@ for _leak, _m in [
         ("\\frac{5\\pi}{6}", "例題1 の答え"),
         ("\\frac{13\\pi}{6}", "例題1(c)"),
         ("\\frac{10\\pi}{3}", "例題2(c)"),
-        ("\\frac{7\\pi}{3}", "例題3(b)"),
-        ("\\frac{5\\pi}{3}", "例題3(c)・演習1"),
+        ("\\frac{5\\pi}{3}", "演習1"),
+        ("\\frac{\\pi}{12}", "例題4(c)"),
+        ("\\frac{5\\pi}{12}", "例題4(c)"),
+        ("\\frac{3\\pi}{4}", "例題4(c)"),
         ("\\frac{11\\pi}{6}", "演習2"),
         ("\\frac{5\\pi}{4}", "演習3"),
         ("\\frac{25\\pi}{6}", "演習4"),
@@ -383,14 +378,19 @@ not_in_text("+ 2n\\pi$ の形で答えます", "一般解を答えさせてい�
 in_text("**捨てる作業を書き残してください。**", "捨てた候補を書く")
 in_text("**区間を書き写してから始めます。**", "区間を書き写す")
 in_text("**解はすべて、小さい順に**書きます。", "小さい順")
-in_text("**`exact` と言われたら $\\pi$ を残します。**", "exact なら π")
-in_text("**移項して $0$ にし、因数分解します。**", "移項して因数分解")
+in_text("- **`exact` と指定されたら、近似小数にせず、正確な値で"
+        "答えます。**", "exact の意味")
+not_in_text("`exact` と言われたら $\\pi$ を残します", "前の言い方は消した")
+in_text("**$\\sin x$ でそのまま割ると、$\\sin x = 0$ の解を"
+        "失います。**", "割る前に 0 になる場合を確かめる")
+not_in_text("**移項して $0$ にし、因数分解します。**", "前の言い方は消した")
 
 # ══════════════════════════════════════════════════════════
 # 11. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -456,21 +456,20 @@ for _f0 in set(re.findall(r"\]\((\.\./[a-z0-9-]+/)?([a-z0-9-]+\.qmd)(?:#[a-z0-9-
     _path = os.path.join(BASE, _f0[0] + _f0[1]) if _f0[0] else \
         os.path.join(BASE, _f0[1])
     chk(os.path.exists(_path), "リンク先のファイルがない: " + _f0[0] + _f0[1])
-for _tgt, _dir in [("aasl-3-5a", BASE), ("aasl-3-5b", BASE), ("aasl-3-6", BASE),
+for _tgt, _dir in [("aasl-3-5", BASE), ("aasl-3-5", BASE), ("aasl-3-6", BASE),
                    ("aasl-3-7a", BASE), ("aasl-3-7b", BASE),
-                   ("aasl-2-7a", os.path.join(ROOT, "aa-sl", "02-functions"))]:
+                   ("aasl-2-7", os.path.join(ROOT, "aa-sl", "02-functions"))]:
     _TT = open(os.path.join(_dir, _tgt + ".qmd"), encoding="utf-8").read()
     for _a2 in set(re.findall(r"\]\((?:\.\./02-functions/)?" + _tgt
                               + r"\.qmd#([a-z0-9-]+)\)", TEXT)):
-        chk(("{#" + _a2 + "}") in _TT, _tgt + " 側に見出しがない: #" + _a2)
+        chk(re.search(r"\{#" + re.escape(_a2) + r"[ }]", _TT),
+            _tgt + " 側に見出しがない: #" + _a2)
 for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
     chk(_href.startswith("#") or _href.startswith("img/")
         or _href.endswith(".qmd") or ".qmd#" in _href
         or _href.startswith("http") or _href.startswith("../"),
         "まだないページへのリンク: " + _href)
 chk(TEXT.count("@fig-aasl38-idea") >= 1, "図を本文から参照している")
-chk("{#tbl-aasl38-second}" in TEXT, "表にラベルがある")
-chk(TEXT.count("@tbl-aasl38-second") >= 1, "表を本文から参照している")
 _head = TEXT[:TEXT.index("## The idea")]
 chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
     "冒頭の callout は What you should be able to do の 1 つだけ")
@@ -481,34 +480,27 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 13. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-3-8-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-3-8-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-3-8-idea-a.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-3-8-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-3-8-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Reading the number of solutions", "図(a) の題")
-in_fig("the line meets the curve twice, so there are two ", "図(a) の説明")
-in_fig("(b) When the inside is $2x$", "図(b) の題")
-in_fig("$x$ runs from $0$ to $\\\\pi$", "図(b) の x の区間")
-in_fig("so $2x$ runs from $0$ to $2\\\\pi$", "図(b) の 2x の区間")
+in_fig("Reading the number of solutions", "図(a) の題")
 chk("to $2\\\\pi$\", fontsize=10, color=ACCENT)" not in FIG, "図は例題3(a) の区間ではない")
-in_fig("double it", "図(b) の矢印")
-in_fig("solve on the longer line first, then halve every answer", "図(b) の説明")
 chk("$y = k$" in FIG, "図の高さは k のまま")
-in_text("(a) The number of solutions of an equation such as $\\sin x = k$",
-        "キャプションが (a) を説明")
-in_text("(b) When the inside of the function is $2x$", "キャプションが (b) を説明")
-
 # ══════════════════════════════════════════════════════════
 # 14. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-8.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/03-geometry/aasl-3-8.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-3-7b.qmd") < DRAFT.index("aasl-3-8.qmd"), "並びが 3.7b → 3.8")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-8.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -528,16 +520,17 @@ for _t in ["| interval |", "| solution |", "| reject |"]:
 in_text("- $\\sin$・$\\cos$ では**もう $1$ つの解**の出し方が、$\\tan$ では"
         "**くり返しの幅**が言える。", "目標は tan を分けて書く")
 not_in_text("$\\sin$・$\\cos$・$\\tan$ のそれぞれで、**もう $1$ つの解**", "古い目標は消した")
-in_text("1. 基本の解 $\\alpha$ を出す。$\\sin$・$\\cos$ なら、もう $1$ つの解も出す。",
-        "§3 の手順も tan を分ける")
 not_in_text("1. 基本の解 $\\alpha$ と、もう $1$ つの解を出す。", "古い手順は消した")
 
 # --- §2 は k < 0 のとき参照角しか出ないことを言う ----------------------
-in_text("**$k$ が負のときは、表から出るのは参照角**", "k が負のとき")
-in_text("象限の符号から、その参照角がどの象限の角になるかを決めてから、"
-        "基本の解にします（[SL 3.5b](aasl-3-5b.qmd#reference)）。", "象限で決める")
-in_text("表の $\\pi - \\alpha$ や $-\\alpha$ が使えるのは、"
-        "**$\\alpha$ 自身が解になっているとき**だけです。", "α 自身が解のとき")
+not_in_text("象限の符号から、その参照角がどの象限の角になるか", "象限で決める言い方は消した")
+# k が何かを説明している
+not_in_text("$\\cos x = -\\dfrac{1}{2}$ なら $k = -\\dfrac{1}{2}$ です。",
+            "k の例の 1 文は削除した")
+# 参照角は、このページの初出で英語を添えてある（方針 第 10 節）
+_ri = TEXT.index("参照角")
+chk(TEXT[_ri - 24:_ri].endswith("reference angle（"),
+    "参照角の初出に英語を添えている")
 not_in_text("（電卓や表の値で出る、いちばん近い解）", "電卓という言い方は消した")
 # 反例：sin x = -1/2 で参照角 π/6 をそのまま入れると外れる
 chk(sp.sin(PI / 6) != R(-1, 2), "参照角 π/6 は sin x = -1/2 の解ではない")
@@ -547,9 +540,15 @@ eq(sp.sin(2 * PI - PI / 6), R(-1, 2), "2π - π/6 も解")
 
 # --- §6 と Why it works が例題4 の答えを出していた ---------------------
 in_text("$\\sin 2x = \\sin x$ のように $2$ 倍角が混ざっているとき", "§6 は sin 2x = sin x")
-in_text("## 共通因数で割らないでください", "callout の見出し")
-in_text("$2\\sin x\\cos x - \\sin x = 0$ から $\\sin x(2\\cos x - 1) = 0$",
-        "§6 の因数分解")
+in_text("## 共通因数で割る前に、その因数が $0$ になる場合を確かめます",
+        "callout の見出し")
+not_in_text("## 共通因数で割らないでください", "前の見出しは消した")
+in_text("2\\sin x\\cos x - \\sin x = 0", "§6 の移項")
+in_text("\\sin x(2\\cos x - 1) = 0", "§6 の因数分解")
+in_text("よって $\\sin x = 0$ または $\\cos x = \\dfrac{1}{2}$ で、"
+        "それぞれを指定された区間で解きます。", "§6 の 2 つの場合")
+in_text("**$\\sin x$ でそのまま割ると、$\\sin x = 0$ の解を"
+        "失います。**", "§6 の注意")
 in_text("**なぜ、共通因数で割ってはいけないのでしょうか。**", "Why it works の問い")
 in_text("もとの式で $\\sin x = 0$ を入れると、$2\\sin x\\cos x = \\sin x$ の両辺が $0$ に",
         "Why it works の例")
@@ -562,11 +561,12 @@ eq(sp.expand(sp.sin(X) * (2 * sp.cos(X) - 1)),
    sp.expand(sp.expand_trig(sp.sin(2 * X)) - sp.sin(X)), "sin2x - sinx の因数分解")
 
 # --- §1・§4・Why it works が例題1・例題3 の答えを出していた -------------
-in_text("$\\sin x = \\dfrac{\\sqrt{2}}{2}$ は $\\dfrac{\\pi}{4}$ でも成り立ちますが、",
-        "§1 は π/4 の例")
+in_text("は $x = \\dfrac{\\pi}{4}$ で成り立ち、この角に $2\\pi$ を"
+        "何回足しても成り立ちます。", "§1 は π/4 の例")
 eq(sp.sin(PI / 4), sp.sqrt(2) / 2, "sin(π/4) = √2/2")
 eq(sp.sin(PI / 4 + 2 * PI), sp.sqrt(2) / 2, "2π 足しても同じ")
-not_in_body("$0 \\le 2x \\le 4\\pi$", "例題3(a) の答えは本文に出さない")
+not_in_body("$0 \\le 3x \\le 3\\pi$", "例題4(a) の答えは本文に出さない")
+not_in_body("0 \\le 3x \\le 3\\pi", "同上（$$ の形でも）")
 in_text("$x$ が長さ $L$ の区間を動くとき、$2x$ は長さ $2L$ の区間を動きます。",
         "Why it works は一般の L で書く")
 not_in_text("$x$ が $0$ から $2\\pi$ まで動くとき、$2x$ は $0$ から $4\\pi$ まで動きます。",
@@ -580,8 +580,8 @@ in_text("$$2\\sin x = 1 \\ \\Rightarrow \\ \\sin x = \\frac{1}{2}$$",
 in_text("**検算（(a)(b) について）。** **もとの式に戻します。**", "例題2 の検算の見出し")
 
 # --- 例題3 の検算(b) が循環していた ------------------------------------
-in_text("**検算（(b) について）。** **別の値で入れ直します。** $2x = \\dfrac{10\\pi}{3}$",
-        "例題3 の検算(b)")
+in_text("**検算（(b) について）。** **別の値で入れ直します。** $3x = \\dfrac{9\\pi}{4}$",
+        "例題4 の検算(b)")
 not_in_text("$4$ つの値は $\\pi$ ずつ離れています ✓ $\\tan$ の period と一致します。",
             "循環した検算は消した")
 eq(10 * PI / 3 - 2 * PI, 4 * PI / 3, "10π/3 - 2π = 4π/3")
@@ -623,6 +623,431 @@ not_in_text("has exactly two solutions in each interval of length $2\\pi$",
 chk(len(solve_ratio(sp.sin, R(1, 2), PI / 6, PI / 6 + 2 * PI)) == 3,
     "[π/6, π/6+2π] には 3 つ入る")
 chk(len(solve_ratio(sp.sin, R(1, 2), 0, 2 * PI)) == 2, "[0, 2π] には 2 つ")
+
+# ══════════════════════════════════════════════════════════
+# 手順を並べた節は、その例を最後まで解く（方針変更 2026-09-15 第 7 節）
+# ══════════════════════════════════════════════════════════
+in_text("**この手順で、$1$ つやってみます。** $0 \\le x \\le 4\\pi$ で "
+        "$\\cos x = \\dfrac{\\sqrt{2}}{2}$ を解きます。", "第3節の例")
+in_text("$$\nx = \\frac{\\pi}{4}, \\ \\frac{7\\pi}{4}, \\ "
+        "\\frac{9\\pi}{4}, \\ \\frac{15\\pi}{4}\n$$", "第3節の答え")
+same(solve_ratio(sp.cos, sp.sqrt(2) / 2, 0, 4 * PI),
+     [PI / 4, 7 * PI / 4, 9 * PI / 4, 15 * PI / 4], "第3節の例の解")
+in_text("$0 \\le x \\le \\pi$ で $\\sin 2x = \\dfrac{\\sqrt{3}}{2}$ を解きます。",
+        "第4節の例")
+for _v in [PI / 6, PI / 3]:
+    eq(sp.sin(2 * _v), sp.sqrt(3) / 2, "第4節の解 %s" % _v)
+in_text("$0 \\le x \\le 2\\pi$ で $2\\sin^{2}x - 5\\cos x - 4 = 0$ を解きます。",
+        "第5節の例")
+_c = sp.Symbol("c")
+chk(sp.factor(2 * _c**2 + 5 * _c + 2) == (2 * _c + 1) * (_c + 2),
+    "第5節の因数分解")
+chk(not (-1 <= -2 <= 1), "第5節で捨てる値は範囲の外")
+for _v in [2 * PI / 3, 4 * PI / 3]:
+    eq(2 * sp.sin(_v)**2 - 5 * sp.cos(_v) - 4, 0, "第5節の解 %s" % _v)
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 5. $2$ 次式になるとき（quadratic in $\\sin x$ or $\\cos x$） {#quadratic}', "見出しの英語: 5. $2$ 次式になるとき（quadratic i")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'solve on the longer line first',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:30])
+in_text("1. $u = 2x$ などと置き、**$x$ の区間を $u$ の区間に変換する**。",
+        "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：もう 1 つの解は、単位円に線を引いて見つける
+# ══════════════════════════════════════════════════════════
+SVG_C = os.path.join(BASE, "img", "aasl-3-8-idea-c.svg")
+chk(os.path.exists(SVG_C), "図 (c) がある")
+chk(not os.path.exists(SVG_C[:-4] + ".png"), "図 (c) の PNG は消してある")
+in_text("](img/aasl-3-8-idea-c.svg){#fig-aasl38-idea-c", "本文が図 (c) を貼っている")
+in_fig("$y = k$", "図 (c) の横線")
+in_fig("$x = k$", "図 (c) の縦線")
+in_fig(r"$\pi-\alpha$", "図 (c) の π−α")
+in_text("**単位円に縦線 $x = \\dfrac{\\sqrt{2}}{2}$ を引きます。**",
+        "第 3 節の例も単位円で")
+not_in_text("（$\\cos$ なので、$2\\pi$ から引きます）", "引き算の覚え方は消した")
+
+# 図 (c) の角が、式のとおりになっている
+_alp = sp.asin(sp.Rational(62, 100))
+eq(sp.sin(sp.pi - _alp), sp.sin(_alp), "sin(π−α) = sin α")
+_bet = sp.acos(sp.Rational(62, 100))
+eq(sp.cos(-_bet), sp.cos(_bet), "cos(−α) = cos α")
+eq(sp.cos(2 * sp.pi - sp.pi / 4), sp.cos(sp.pi / 4), "cos(2π−π/4) = cos(π/4)")
+eq(sp.cos(7 * sp.pi / 4), sp.sqrt(2) / 2, "cos(7π/4) = √2/2")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：図 3（中身が 2x）を削除し、図 2 を説明の下へ移した
+# ══════════════════════════════════════════════════════════
+not_in_text("idea-b", "図 3 は本文から消した")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-3-8-idea-b.svg")),
+    "図 3 の SVG も消した")
+chk("ax2" not in FIGCODE and "fig2" not in FIGCODE, "図のスクリプトからも消した")
+in_text("**中身の区間を変換しないと、解を見落とすことがあります。**",
+        "見落としの注意は本文に残っている")
+not_in_text("**区間を広げ忘れると、解を半分しか拾えません。**",
+            "前の言い方は消した")
+not_in_text("$0 \\le 2x \\le \\pi$ としてしまうと", "誤りの例は消した")
+# 新しい例：0 ≤ x ≤ 2π で sin 2x = √3/2
+in_text("を解く場合、中身の区間は $0 \\le 2x \\le 4\\pi$ です。",
+        "中身の区間は 0 ≤ 2x ≤ 4π")
+in_text("2x = \\frac{\\pi}{3}, \\ \\frac{2\\pi}{3}, \\ "
+        "\\frac{7\\pi}{3}, \\ \\frac{8\\pi}{3}", "中身の 4 つの解")
+in_text("x = \\frac{\\pi}{6}, \\ \\frac{\\pi}{3}, \\ "
+        "\\frac{7\\pi}{6}, \\ \\frac{4\\pi}{3}", "x の 4 つの解")
+in_text("**中身の区間を $0 \\le 2x \\le 2\\pi$ のままにすると、"
+        "後半の $2$ つを見落とします。**", "見落とす 2 つ")
+_U38 = [PI / 3, 2 * PI / 3, 7 * PI / 3, 8 * PI / 3]
+for _u in _U38:
+    eq(sp.sin(_u), sp.sqrt(3) / 2, f"sin({_u}) = √3/2")
+    chk(0 <= _u <= 4 * PI, f"{_u} は 0 ≤ 2x ≤ 4π の中")
+chk(sorted(_U38, key=float) == _U38, "中身の解は小さい順")
+# 2x = 4π までで、ほかに解はない
+chk(sorted(float(_r) for _r in
+           sp.solveset(sp.sin(sp.Symbol("u38")) - sp.sqrt(3) / 2,
+                       sp.Symbol("u38"),
+                       sp.Interval(0, 4 * sp.pi))) ==
+    sorted(float(_u) for _u in _U38), "0 ≤ 2x ≤ 4π の解はこの 4 つだけ")
+for _u in _U38:
+    chk(0 <= _u / 2 <= 2 * PI, f"x = {_u / 2} は 0 ≤ x ≤ 2π の中")
+# 図 2 は「グラフでも数えられます」の下にある
+_i_sent = TEXT.index("**グラフでも数えられます。**")
+_i_img = TEXT.index("](img/aasl-3-8-idea-a.svg)")
+chk(_i_sent < _i_img, "図 2 は、その説明の下にある")
+chk(_i_img < TEXT.index("### 4. 中身が変わっているとき"), "図 2 は第 3 節の中")
+
+in_text("角が $2x$ や $b(x-c)$ のときは、次の $3$ 手順で解きます。",
+        "第 4 節の書き出し")
+in_text("1. $u = 2x$ などと置き、**$x$ の区間を $u$ の区間に"
+        "変換する**。", "手順 1")
+in_text("2. その区間で、**$u$ の解をすべて求める**。", "手順 2")
+in_text("3. $u = 2x$ などに**もどして、$x$ を求める**。", "手順 3")
+in_text("たとえば、$0 \\le x \\le \\pi$ で $u = 2x$ なら、"
+        "$0 \\le u \\le 2\\pi$ です。", "u の区間の例")
+not_in_text("**中身をひとかたまり**として扱います。", "前の書き出しは消した")
+in_text("「$\\sin x = 2$: `no solution since` $-1 \\le \\sin x \\le 1$」",
+        "捨てる一言は英語で（第 5 節）")
+in_text("「$\\cos x = 3$: `no solution since` $-1 \\le \\cos x \\le 1$」",
+        "捨てる一言は英語で（演習）")
+not_in_text("「$\\sin x = 2$ は不適」", "日本語の言い回しは消した")
+not_in_text("「$\\cos x = 3$ は不適」", "日本語の言い回しは消した（演習）")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：冒頭の 1 文（英語併記と、足した先を具体的に書く）
+# ══════════════════════════════════════════════════════════
+in_text("**trigonometric equation**（三角方程式）では、三角関数が同じ値を"
+        "**周期的にくり返します**。たとえば", "冒頭の 1 文")
+in_text("は $x = \\dfrac{\\pi}{4}$ で成り立ち、この角に $2\\pi$ を"
+        "何回足しても成り立ちます。", "2π を足しても成り立つ")
+in_text("**この単元では、指定された区間にある解をすべて求めます。**",
+        "この単元で求めるもの")
+not_in_text("には、**解が無限にあります**", "断定はやめた")
+not_in_text("三角方程式には、ふつう**解が無限にあります**。", "前の書き方は消した")
+not_in_text("そこに $2\\pi$ を足しても、また足しても成り立ちます。", "あいまいな言い方は消した")
+# 挙げた 3 つの角が、本当に同じ値をとること
+for _k38 in (0, 1, 2):
+    eq(sp.sin(sp.pi / 4 + 2 * _k38 * sp.pi), sp.sqrt(2) / 2,
+       f"sin(π/4 + {2 * _k38}π) = √2/2")
+eq(sp.sin(sp.pi / 4 + 4 * sp.pi), sp.sin(sp.pi / 4), "π/4 + 4π は π/4 と同じ値")
+_GLO38 = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
+chk("| trigonometric equation |" in _GLO38, "対訳表に trigonometric equation")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：第 2 節を書き直した
+#   α は「基本の解」ではなく reference angle（参照角）
+# ══════════════════════════════════════════════════════════
+in_text("### 2. trigonometric equation（三角方程式）の解き方 {#two}", "第 2 節の見出し")
+not_in_text("### 2. もう $1$ つの解", "前の見出しは消した")
+not_in_text("基本の解", "「基本の解」という言い方はページのどこにもない")
+
+# --- 形にそろえる・k とは何か -------------------------------------------
+in_text("三角方程式は、まず $\\sin x = k$、$\\cos x = k$、$\\tan x = k$ のように、"
+        "**$\\sin$・$\\cos$・$\\tan$ がどんな値になるかが分かる形**にします。"
+        "$k$ は右辺の数です。", "形にそろえる")
+not_in_text("なら $k = \\dfrac{\\sqrt{2}}{2}$", "k の例の 1 文は削除した")
+
+# --- 単位円のどこを読むか（3 つ）-----------------------------------------
+in_text("単位円の上では、$3$ つはこう読みます。", "単位円をかく")
+in_text("**$\\sin\\theta$ は、単位円上の点の $y$ 座標**です。"
+        "$\\sin\\theta = k$ は、**横線 $y = k$** と単位円の交点から"
+        "読み取れます（@fig-aasl38-idea-c）。", "sin は y 座標")
+in_text("**$\\cos\\theta$ は、単位円上の点の $x$ 座標**です。"
+        "$\\cos\\theta = k$ は、**縦線 $x = k$** と単位円の交点から"
+        "読み取れます（@fig-aasl38-idea-d）。", "cos は x 座標")
+in_text("**$\\tan\\theta$ は、半径をのばした直線が、$(1, 0)$ での接線と交わる点の"
+        "高さ**です。$\\tan x = k$ なら、接線の上の**高さ $k$ の点**と原点を結んで、"
+        "その直線と円との交点を見ます（@fig-aasl38-idea-e）。", "tan は接線の高さ")
+
+# --- 参照角 --------------------------------------------------------------
+not_in_text("**$k$ が負のときも、まずは $k$ が正だとして考えます。**",
+            "前の書き方は消した")
+in_text("**まず、$\\sin$・$\\cos$ では $-1 \\le k \\le 1$ を"
+        "確かめます。** この範囲を外れる場合、実数の解はありません。",
+        "k の範囲を先に確かめる")
+in_text("$\\sin$・$\\cos$ で $0 < \\lvert k \\rvert < 1$、"
+        "$\\tan$ で $k \\ne 0$ の場合は、**reference angle"
+        "（参照角）$\\alpha$** を求めます", "参照角を使える場合")
+in_text("\\sin x = k &: \\quad \\alpha = \\sin^{-1}\\lvert k "
+        "\\rvert,", "sin の参照角")
+in_text("\\cos x = k &: \\quad \\alpha = \\cos^{-1}\\lvert k "
+        "\\rvert,", "cos の参照角")
+in_text("\\tan x = k &: \\quad \\alpha = \\tan^{-1}\\lvert k "
+        "\\rvert.", "tan の参照角")
+in_text("参照角は $0 < \\alpha < \\dfrac{\\pi}{2}$ の角です。",
+        "参照角の範囲")
+in_text("**符号から、解のある象限を判断します。**", "符号から象限へ")
+in_text("**$k = 0$、または $\\sin$・$\\cos$ で $k = \\pm 1$ の"
+        "場合は、単位円の軸の上の点から直接求めます。**", "例外の場合")
+# 参照角の式が、0 < α < π/2 に入ること
+for _k38b in (R(1, 10), R(1, 2), sp.sqrt(2) / 2, R(9, 10)):
+    for _inv38 in (sp.asin, sp.acos, sp.atan):
+        _a38 = _inv38(_k38b)
+        chk(0 < _a38 < PI / 2, f"0 < {_inv38.__name__}({_k38b}) < π/2")
+# 例外：k = 0, ±1 では参照角が鋭角にならない
+chk(sp.asin(0) == 0, "sin⁻¹0 = 0 は鋭角ではない")
+chk(sp.acos(1) == 0, "cos⁻¹1 = 0 は鋭角ではない")
+chk(sp.acos(0) == PI / 2, "cos⁻¹0 = π/2 は鋭角ではない")
+chk(sp.solveset(sp.sin(sp.Symbol("x38", real=True)) - R(3, 2),
+                sp.Symbol("x38", real=True), sp.S.Reals)
+    == sp.EmptySet, "|k| > 1 では実数の解がない")
+in_text("**$\\alpha$ の出し方は $2$ とおりです。** $\\lvert k \\rvert$ が"
+        "正確な値の表（[SL 3.5](aasl-3-5.qmd#special)）にある値なら、表から"
+        "読みます。そうでなければ、$\\sin^{-1}$・$\\cos^{-1}$・$\\tan^{-1}$ を"
+        "使って電卓で出します（[SL 3.2](aasl-3-2.qmd#inverse)）。",
+        "参照角の出し方は 2 とおり")
+in_text("**特別な角のときだけの話ではありません。**", "特別角だけではない")
+_T32 = open(os.path.join(BASE, "aasl-3-2.qmd"), encoding="utf-8").read()
+chk("{#inverse}" in _T32, "SL 3.2 に #inverse の見出しがある")
+in_text("$x$ 軸と半径とのなす**鋭角**なので、いつも第 $1$ 象限の角です。",
+        "参照角は第 1 象限")
+in_text("**そのあとで、単位円に、符号を込みにした $k$ の線を引きます。**",
+        "符号込みの k の線")
+in_text("**線と円の交点が、求める角のある場所**です。", "交点が解の場所")
+in_text("**$\\alpha$ そのものが解とはかぎりません。** 解は、**円のどの交点か**で"
+        "決まります。", "α は解とはかぎらない")
+
+# --- 区間が -π..π のとき --------------------------------------------------
+in_text("**区間が $-\\pi \\le \\theta \\le \\pi$ のときは、円の下半分を負で読みます。**",
+        "下半分は負")
+in_text("上半分は反時計回りに $0$ から $\\pi$ まで、下半分は時計回りに $0$ から "
+        "$-\\pi$ までです。", "上半分と下半分")
+in_text("$\\dfrac{4\\pi}{3}$ は $-\\dfrac{2\\pi}{3}$、$\\dfrac{7\\pi}{4}$ は "
+        "$-\\dfrac{\\pi}{4}$ と書きます。", "負で書きなおす例")
+eq(4 * PI / 3 - 2 * PI, -2 * PI / 3, "4π/3 − 2π = −2π/3")
+eq(7 * PI / 4 - 2 * PI, -PI / 4, "7π/4 − 2π = −π/4")
+for _th38 in (4 * PI / 3, 7 * PI / 4):
+    eq(sp.sin(_th38 - 2 * PI), sp.sin(_th38), "2π を引いても sin は同じ")
+    eq(sp.cos(_th38 - 2 * PI), sp.cos(_th38), "2π を引いても cos は同じ")
+    chk(-PI <= _th38 - 2 * PI <= PI, "引いたあとは −π..π の中")
+
+# --- 図 (c) は 3 枚 -------------------------------------------------------
+in_fig(r"$\sin\theta = k$", "図 (c) の 1 枚目の題")
+in_fig(r"$\cos\theta = k$", "図 (c) の 2 枚目の題")
+in_fig(r"$\tan\theta = k$", "図 (c) の 3 枚目の題")
+in_fig("tangent at $(1,0)$", "図 (c) の接線")
+in_fig(r"$(1,\,k)$", "図 (c) の (1, k)")
+in_fig(r"$2\pi-\alpha$", "図 (c) の 2π−α")
+in_fig(r"$\pi+\alpha$", "図 (c) の π+α")
+# 図は 1 つずつに分けてある
+for _n38, _who in (("c", "sin"), ("d", "cos"), ("e", "tan")):
+    _sv = os.path.join(BASE, "img", "aasl-3-8-idea-" + _n38 + ".svg")
+    chk(os.path.exists(_sv), f"図 ({_n38}) がある（{_who}）")
+    chk(not os.path.exists(_sv[:-4] + ".png"), f"図 ({_n38}) の PNG は消してある")
+    in_text("](img/aasl-3-8-idea-" + _n38 + ".svg){#fig-aasl38-idea-" + _n38,
+            f"本文が図 ({_n38}) を貼っている")
+    chk(TEXT.count("@fig-aasl38-idea-" + _n38) >= 1,
+        f"図 ({_n38}) を本文から参照している")
+chk("fig4, ax4 = plt.subplots" in FIGCODE and "fig5, ax5 = plt.subplots" in FIGCODE,
+    "図は 1 枚ずつ作っている")
+chk("width_ratios" not in FIGCODE, "3 枚並べる書き方は消した")
+chk("_refarc" in FIGCODE, "参照角の弧をかいている")
+# 図に説明の文は書かない（方針 第 21 節）
+for _s38 in ("is the $y$-coordinate", "is the $x$-coordinate",
+             "a horizontal line", "a vertical line", "mirror image"):
+    chk(_s38 not in FIGSTR, "図に説明の文を書いていない: " + _s38[:24])
+
+# --- 例題・演習の言いかえ -------------------------------------------------
+in_text("**(c)** $\\cos x = -\\dfrac{1}{2}$ を解きます。$\\lvert k \\rvert = "
+        "\\dfrac{1}{2}$ なので、参照角は $\\alpha = \\dfrac{\\pi}{3}$ です。"
+        "$k < 0$ なので、解は $\\pi - \\alpha = \\dfrac{2\\pi}{3}$ と "
+        "$\\pi + \\alpha = \\dfrac{4\\pi}{3}$ です", "例題3(c) は参照角で")
+eq(sp.cos(PI - PI / 3), R(-1, 2), "cos(π − π/3) = −1/2")
+eq(sp.cos(PI + PI / 3), R(-1, 2), "cos(π + π/3) = −1/2")
+eq(PI - PI / 3, 2 * PI / 3, "π − π/3 = 2π/3")
+eq(PI + PI / 3, 4 * PI / 3, "π + π/3 = 4π/3")
+in_text("**(b)** $\\lvert k \\rvert = \\dfrac{1}{2}$ なので、参照角は "
+        "$\\alpha = \\dfrac{\\pi}{6}$ です", "例題1(b) は参照角で")
+in_text("1. 参照角 $\\alpha$ を出し、$0 \\le x \\le 2\\pi$ の $2$ つの解を書く"
+        "（[第 2 節](#two)）。", "第 3 節の手順 1")
+in_text("**手順1。** **単位円に縦線 $x = \\dfrac{\\sqrt{2}}{2}$ を引きます。**",
+        "第 3 節の例も単位円から")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：第 2 節の図を 1 つずつに分けた
+# ══════════════════════════════════════════════════════════
+# 説明 → 図 → 説明 → 図 → 説明 → 図 の順に並んでいる
+_o38 = [TEXT.index("**$\\sin\\theta$ は、単位円上の点の $y$ 座標**"),
+        TEXT.index("](img/aasl-3-8-idea-c.svg)"),
+        TEXT.index("**$\\cos\\theta$ は、単位円上の点の $x$ 座標**"),
+        TEXT.index("](img/aasl-3-8-idea-d.svg)"),
+        TEXT.index("**$\\tan\\theta$ は、半径をのばした直線が"),
+        TEXT.index("](img/aasl-3-8-idea-e.svg)")]
+chk(_o38 == sorted(_o38), f"説明と図が交互に並んでいる: {_o38}")
+# 交点の対称性は本文にある
+in_text("$\\lvert k \\rvert < 1$ なら交点は $2$ つで、$y$ 軸に"
+        "ついて対称です。$\\lvert k \\rvert = 1$ なら $1$ つ、"
+        "$\\lvert k \\rvert > 1$ なら交点はありません。",
+        "sin の交点の個数")
+in_text("$\\lvert k \\rvert < 1$ なら交点は $2$ つで、$x$ 軸に"
+        "ついて対称です。$\\lvert k \\rvert = 1$ なら $1$ つ、"
+        "$\\lvert k \\rvert > 1$ なら交点はありません。",
+        "cos の交点の個数")
+not_in_text("（@fig-aasl38-idea-c）。交点は $2$ つで", "条件なしは消した")
+not_in_text("（@fig-aasl38-idea-d）。交点は $2$ つで", "同上")
+# 交点の個数を実際に数える
+_x38c = sp.Symbol("x38c", real=True)
+for _k38c, _n38c in ((R(1, 2), 2), (1, 1), (-1, 1)):
+    chk(len(sp.solveset(sp.sin(_x38c) - _k38c, _x38c,
+                        sp.Interval.Ropen(0, 2 * sp.pi))) == _n38c,
+        f"sin x = {_k38c} の 0 ≤ x < 2π での解は {_n38c} 個")
+    chk(len(sp.solveset(sp.cos(_x38c) - _k38c, _x38c,
+                        sp.Interval.Ropen(0, 2 * sp.pi))) == _n38c,
+        f"cos x = {_k38c} の 0 ≤ x < 2π での解は {_n38c} 個")
+in_text("交点は $2$ つで、原点について対称です。", "tan は原点対称")
+_th38s = sp.Symbol("th38", real=True)
+eq(sp.sin(PI - _th38s), sp.sin(_th38s), "sin(π−θ) = sin θ")
+eq(sp.cos(-_th38s), sp.cos(_th38s), "cos(−θ) = cos θ")
+eq(sp.simplify(sp.tan(_th38s + PI) - sp.tan(_th38s)), 0, "tan(θ+π) = tan θ")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：第 2 節の順番（参照角 → 符号込みの線 → 図）
+# ══════════════════════════════════════════════════════════
+_p38 = [TEXT.index("$k$ は右辺の数です。"),
+        TEXT.index("**まず、$\\sin$・$\\cos$ では $-1 \\le k \\le 1$ を"),
+        TEXT.index("**$\\alpha$ の出し方は $2$ とおりです。**"),
+        TEXT.index("**そのあとで、単位円に、符号を込みにした $k$ の線を引きます。**"),
+        TEXT.index("単位円の上では、$3$ つはこう読みます。"),
+        TEXT.index("](img/aasl-3-8-idea-c.svg)"),
+        TEXT.index("](img/aasl-3-8-idea-d.svg)"),
+        TEXT.index("](img/aasl-3-8-idea-e.svg)"),
+        TEXT.index("**$\\alpha$ そのものが解とはかぎりません。**"),
+        TEXT.index("**区間が $-\\pi \\le \\theta \\le \\pi$ のときは、"),
+        TEXT.index("### 3. 区間の中をすべて拾う")]
+chk(_p38 == sorted(_p38), f"第 2 節の順番: {_p38}")
+# 参照角の説明は、図より前にある
+chk(TEXT.index("reference angle（参照角）$\\alpha$") <
+    TEXT.index("](img/aasl-3-8-idea-c.svg)"), "参照角の説明は図より前")
+in_text("どの図でも、$\\alpha$ は **$x$ 軸と、交点へ向かう半径とのなす鋭角**です。"
+        "$2$ つの交点のどちらから測っても、同じ $\\alpha$ になります。",
+        "図のあとの参照角のまとめ")
+# 参照角は 0 < α < π/2 に入る
+for _kk38 in (R(1, 2), sp.sqrt(2) / 2, sp.sqrt(3) / 2):
+    for _f38, _inv in ((sp.sin, sp.asin), (sp.cos, sp.acos)):
+        _a38 = _inv(_kk38)
+        chk(0 < _a38 < PI / 2, f"参照角は 0 と π/2 のあいだ: {_a38}")
+        eq(_f38(_a38), _kk38, "参照角は |k| から出る")
+for _kk38 in (sp.sqrt(3) / 3, sp.Integer(1), sp.sqrt(3)):
+    _a38 = sp.atan(_kk38)
+    chk(0 < _a38 < PI / 2, f"tan の参照角も 0..π/2: {_a38}")
+# 2 つの交点のどちらから測っても、x 軸とのなす鋭角は同じ
+for _al38 in (PI / 6, PI / 4, PI / 3):
+    eq(sp.Abs(sp.sin(PI - _al38)), sp.sin(_al38), "π−α でも鋭角は α")
+    eq(sp.Abs(sp.cos(2 * PI - _al38)), sp.cos(_al38), "2π−α でも鋭角は α")
+    eq(sp.Abs(sp.sin(PI + _al38)), sp.sin(_al38), "π+α でも鋭角は α")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：第 2 節の表を削除した
+# ══════════════════════════════════════════════════════════
+not_in_text("tbl-aasl38-second", "表 1 は消した")
+not_in_text("| 方程式 | $k$ の符号 | $2$ つの解 | くり返しの幅 |", "表の見出し行も消した")
+not_in_text("**この表を覚えなくても、図があれば出せます。**", "表についての段落も消した")
+chk(TEXT.count("@tbl-") == 0, "このページに表の参照はもう無い")
+# 代わりに、第 2 節へ案内している
+chk(TEXT.count("[第 2 節](#two)") >= 6,
+    f"第 2 節への案内: {TEXT.count('[第 2 節](#two)')} か所")
+in_text("$k > 0$ なので、解は $\\alpha$ と $\\pi - \\alpha$ です（[第 2 節](#two)）。",
+        "例題1(b) は第 2 節へ")
+in_text("$k < 0$ なので、解は $\\pi - \\alpha = \\dfrac{2\\pi}{3}$ と "
+        "$\\pi + \\alpha = \\dfrac{4\\pi}{3}$ です（[第 2 節](#two)）。",
+        "例題3(c) は第 2 節へ")
+in_text("$0 \\le \\theta \\le 2\\pi$ で出した角のうち、$\\pi$ より大きいものから "
+        "$2\\pi$ を引けば、この区間の書き方になります。", "−π..π の言いかえ")
+
+# --- 表が持っていた中身は、本文と図に残っている --------------------------
+in_text("**$\\alpha$ そのものが解とはかぎりません。** 解は、**円のどの交点か**で"
+        "決まります。図で交点が第何象限にあるかを見て、そこから角を書きます。",
+        "どの交点かで決まる")
+in_text("**$\\tan$ だけは $1$ 周期に $1$ つ**です。", "tan は 1 周期に 1 つ")
+in_text("2. それぞれに $2\\pi$（$\\tan$ なら $\\pi$）を**足していく**。",
+        "くり返しの幅は第 3 節にある")
+# 例題・演習が使っている解の組は、いまも正しい
+eq(sp.sin(PI / 6), R(1, 2), "例題1(b) α = π/6")
+eq(sp.sin(PI - PI / 6), R(1, 2), "例題1(b) π − α も解")
+eq(sp.cos(PI - PI / 3), R(-1, 2), "例題3(c) π − α")
+eq(sp.cos(PI + PI / 3), R(-1, 2), "例題3(c) π + α")
+eq(sp.cos(PI / 4), sp.sqrt(2) / 2, "第 3 節の例 α = π/4")
+eq(sp.cos(2 * PI - PI / 4), sp.sqrt(2) / 2, "第 3 節の例 2π − α")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (a) から説明文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+chk("the line meets the curve twice" not in FIG, "図 (a) に説明の文を書いていない")
+chk("ax1.set_ylim(-1.45, 1.95)" in FIG, "図 (a) の下の余白を詰めた")
+in_fig("$y = \\\\sin x$", "図 (a) の y = sin x のラベルは残す")
+in_text("**グラフでも数えられます。** @fig-aasl38-idea-a のように、$y = \\sin x$ と "
+        "$y = k$ をかいて、**交点の数**を見ます。", "交点の数は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-05：第 3 節の個数の数え方、第 6 節の見出し
+# ══════════════════════════════════════════════════════════
+in_text("**検算。** この例では、各区間 $0 \\le x < 2\\pi$、"
+        "$2\\pi \\le x < 4\\pi$ に解が $2$ つずつあります。"
+        "端点 $x = 4\\pi$ は解ではないので、合計 $4$ つ ✓",
+        "第 3 節の検算")
+not_in_text("$1$ つの period に解が $2$ つなので", "一般化した言い方は消した")
+in_text("**解の個数を確かめるときは、区間の端点も元の式に代入して"
+        "ください。**", "端点も代入する")
+in_text("たとえば $0 \\le x \\le 2\\pi$ で $\\sin x = 0$ の解は、"
+        "$0$、$\\pi$、$2\\pi$ の $3$ つです。", "端点を含む例")
+_x38e = sp.Symbol("x38e", real=True)
+chk(sp.cos(4 * PI) != sp.sqrt(2) / 2, "x = 4π は cos x = √2/2 の解ではない")
+chk(len(sp.solveset(sp.sin(_x38e), _x38e,
+                    sp.Interval(0, 2 * sp.pi))) == 3,
+    "0 ≤ x ≤ 2π で sin x = 0 の解は 3 つ")
+chk(len(sp.solveset(sp.cos(_x38e) - sp.sqrt(2) / 2, _x38e,
+                    sp.Interval(0, 4 * sp.pi))) == 4,
+    "0 ≤ x ≤ 4π で cos x = √2/2 の解は 4 つ")
+in_text("### 6. 倍角公式を使って因数分解する {#mixed}", "第 6 節の見出し")
+not_in_text("### 6. $\\sin$ と $\\cos$ が混ざるとき", "前の見出しは消した")
 
 print()
 print("OK", OK, "/ NG", NG)

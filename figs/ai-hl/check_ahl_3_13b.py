@@ -550,31 +550,20 @@ for leak in ["14.2", "5.87", "4.07", "63.6", "116", "9.5", "22", "$11",
 # ══════════════════════════════════════════════════════════
 # 10. 登録
 # ══════════════════════════════════════════════════════════
+# ★ 2026-09-15 に AI HL を公開対象へ移しました（_方針変更-2026-09-15.md 第 13 節）。
+#    登録先は _quarto-draft.yml ではなく _quarto.yml です。
+#    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
+#    「index の一覧にある」「残りの N 項目」は、もう検査しません。
+PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"),
+           encoding="utf-8").read()
+chk("ai-hl/03-geometry-and-trigonometry/ahl-3-13b.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
+chk(PUB.index("ahl-3-13a.qmd") < PUB.index("ahl-3-13b.qmd")
+    < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.13a → 3.13b → 3.14")
 DRAFT = open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
              encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-13b.qmd" in DRAFT,
-    "_quarto-draft.yml に登録されている")
-chk(DRAFT.index("ahl-3-13a.qmd") < DRAFT.index("ahl-3-13b.qmd")
-    < DRAFT.index("ahl-3-14.qmd"), "サイドバーの並びが 3.13a → 3.13b → 3.14")
-PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"), encoding="utf-8").read()
-chk("ahl-3-13b" not in PUB, "公開用の _quarto.yml は SL だけのまま")
-IDX = open(os.path.join(HERE, "..", "..", "ai-hl", "index.qmd"),
-           encoding="utf-8").read()
-chk("[AHL 3.13b — The vector product]"
-    "(03-geometry-and-trigonometry/ahl-3-13b.qmd)" in IDX, "index の一覧にある")
-_row = [x for x in re.findall(r"^\| (?:\*\*)?AHL [0-9.]+(?:\*\*)? \|(.*)\|$",
-                              IDX, re.M) if "ahl-3-13b.qmd" in x]
-chk(len(_row) == 1 and "✅" in _row[0] and "ahl-3-13a.qmd" in _row[0],
-    "AHL 3.13 の行が、両方へのリンクと ✅ を持つ")
-_rows = re.findall(r"^\| (?:\*\*)?AHL [0-9.]+(?:\*\*)? \|(.*)\|$", IDX, re.M)
-_left_rows = [x for x in _rows if "✅" not in x]
-_m = re.search(r"残りの(\d+)項目", IDX)
-if _m:
-    chk(int(_m.group(1)) == len(_left_rows),
-        "「残りの N 項目」が、まだ ✅ の付いていない行の数と合う")
-else:
-    chk(len(_left_rows) == 0,
-        "「残りの N 項目」が無いなら、全部の行に ✅ が付いている")
+chk("ai-hl/03-geometry-and-trigonometry/ahl-3-13b.qmd" not in DRAFT,
+    "下書き用の _quarto-draft.yml には残っていない")
+
 GLO = open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
            encoding="utf-8").read()
 for term in ["| vector product |", "| cross product |",

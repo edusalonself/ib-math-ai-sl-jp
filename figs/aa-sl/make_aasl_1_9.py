@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_1_9.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_1_9.py  … 目視用の PNG も
 
-出力: aa-sl/01-number-and-algebra/img/aasl-1-9-idea.svg
+出力: aa-sl/01-number-and-algebra/img/aasl-1-9-idea-a.svg
+      aa-sl/01-number-and-algebra/img/aasl-1-9-idea-b.svg
 
 (a) パスカルの三角形（n = 0 から 4 まで）。すぐ上の 2 つを足す。
 (b) (a+b)^4 の一般項の読み方。a の指数は下がり、b の指数は上がり、
@@ -32,17 +33,15 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig, (ax1, ax2) = plt.subplots(
-    1, 2, figsize=(10.2, 4.2), gridspec_kw={"width_ratios": [1.0, 1.3]}
-)
-
+fig1, ax1 = plt.subplots(figsize=(5.5, 4.2))
+fig2, ax2 = plt.subplots(figsize=(5.5, 4.2))
 # ══════════════════════════════════════════════════════════
 # (a) パスカルの三角形（n = 0 から 4）
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Pascal's triangle", fontsize=11, color=INK,
+ax1.set_title("Pascal's triangle", fontsize=11, color=INK,
               loc="left", pad=10)
 ax1.set_xlim(-3.0, 3.0)
-ax1.set_ylim(-1.5, 4.9)
+ax1.set_ylim(-0.95, 4.9)
 ax1.axis("off")
 
 ROWS = [[1], [1, 1], [1, 2, 1], [1, 3, 3, 1], [1, 4, 6, 4, 1]]
@@ -69,13 +68,11 @@ for _i in (1, 2):
                  arrowprops=dict(arrowstyle="->", color=ACCENT, linewidth=1.3))
 ax1.text(0.0, -0.42, "$3 + 3 = 6$", ha="center", va="center",
          fontsize=11, color=ACCENT)
-ax1.text(0.0, -1.10, "add the two entries above",
-         ha="center", va="center", fontsize=10, color=INK)
 
 # ══════════════════════════════════════════════════════════
 # (b) 一般項の読み方
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Reading a term of $(a+b)^{4}$", fontsize=11, color=INK,
+ax2.set_title("Reading a term of $(a+b)^{4}$", fontsize=11, color=INK,
               loc="left", pad=10)
 ax2.set_xlim(0.0, 1.0)
 ax2.set_ylim(0.0, 1.0)
@@ -113,16 +110,14 @@ ax2.text(0.20, Y_SUM, "sum", ha="right", va="center",
 
 ax2.text(0.62, 0.92, "falls   $\\longrightarrow$   rises",
          ha="center", va="center", fontsize=10, color=INK)
-ax2.text(0.55, 0.01, "the two indices always add up to $n$",
-         ha="center", va="center", fontsize=10, color=INK)
 
-fig.tight_layout(w_pad=2.0)
-path = os.path.join(OUT, "aasl-1-9-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-1-9-idea-a.svg"), (fig2, "aasl-1-9-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

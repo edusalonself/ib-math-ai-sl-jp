@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_4_7.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_4_7.py  … 目視用の PNG も
 
-出力: aa-sl/04-statistics-and-probability/img/aasl-4-7-idea.svg
+出力: aa-sl/04-statistics-and-probability/img/aasl-4-7-idea-a.svg
+      aa-sl/04-statistics-and-probability/img/aasl-4-7-idea-b.svg
 
 (a) 確率分布の棒グラフ。E(X) は棒がつり合う点。
 (b) ゲームの利得。E(X) = 0 が公平なゲーム。
@@ -37,12 +38,12 @@ GREY = "#6b7280"
 WARM = "#b45309"
 FILL = "#cfe0f2"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.4, 4.8))
-
+fig1, ax1 = plt.subplots(figsize=(5.6, 4.8))
+fig2, ax2 = plt.subplots(figsize=(5.6, 4.8))
 # ══════════════════════════════════════════════════════════
 # (a) 確率分布と、つり合う点
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) $E(X)$ is where the distribution balances", fontsize=11,
+ax1.set_title("$E(X)$ is where the distribution balances", fontsize=11,
               color=INK, loc="left", pad=12)
 
 XS = [0, 1, 2, 3]
@@ -75,19 +76,14 @@ ax1.plot([MEAN], [-0.012], marker="^", markersize=11, color=WARM,
          clip_on=False)
 ax1.text(MEAN + 0.10, 0.61, "$E(X) = 1.6$", fontsize=10, color=WARM)
 
-ax1.text(0.0, -0.20, "the four probabilities add to $1$; $E(X)$ is each value "
-         "weighted by its probability", fontsize=9, color=INK,
-         transform=ax1.transAxes)
-ax1.text(0.0, -0.28, "$1.6$ is not a value $X$ can take, and it does not have "
-         "to be", fontsize=9, color=WARM, transform=ax1.transAxes)
 
 # ══════════════════════════════════════════════════════════
 # (b) ゲームの利得
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) A game is fair when $E(X) = 0$", fontsize=11, color=INK,
+ax2.set_title("A game is fair when $E(X) = 0$", fontsize=11, color=INK,
               loc="left", pad=12)
 ax2.set_xlim(-3.6, 5.6)
-ax2.set_ylim(-3.6, 3.4)
+ax2.set_ylim(-3.1, 3.1)
 ax2.axis("off")
 
 
@@ -106,29 +102,22 @@ def _game(y, gains, probs, sizes, label, mean, colour):
 
 
 _game(1.6, [3, -2], [r"$\frac{1}{3}$", r"$\frac{2}{3}$"], [1 / 3, 2 / 3],
-      "a losing game: gain $+3$ with probability $\\frac{1}{3}$, "
-      "$-2$ with probability $\\frac{2}{3}$", -1 / 3, WARM)
+      "a losing game", -1 / 3, WARM)
 ax2.text(-3.5, 0.55, r"$E(X) = 3\times\frac{1}{3}+(-2)\times\frac{2}{3}"
-         r"=-\frac{1}{3}$: the player loses in the long run",
-         fontsize=9.5, color=WARM)
+         r"=-\frac{1}{3}$", fontsize=9.5, color=WARM)
 
 _game(-1.5, [4, -2], [r"$\frac{1}{3}$", r"$\frac{2}{3}$"], [1 / 3, 2 / 3],
-      "a fair game: gain $+4$ with probability $\\frac{1}{3}$, "
-      "$-2$ with probability $\\frac{2}{3}$", 0.0, ACCENT)
-ax2.text(-3.5, -2.55, r"$E(X) = 4\times\frac{1}{3}+(-2)\times\frac{2}{3}=0$: "
-         "the game is fair", fontsize=9.5, color=ACCENT)
-ax2.text(-3.5, -3.15, "the triangle marks $E(X)$; the dot sizes show the "
-         "probabilities", fontsize=9, color=GREY)
+      "a fair game", 0.0, ACCENT)
+ax2.text(-3.5, -2.55, r"$E(X) = 4\times\frac{1}{3}+(-2)\times\frac{2}{3}=0$",
+         fontsize=9.5, color=ACCENT)
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-4-7-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-print("  (a) sum =", sum(PS), " mean =", MEAN)
-print("  (b) game A mean =", 3 / 3 - 2 * 2 / 3, " game B mean =", 4 / 3 - 4 / 3)
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-4-7-idea-a.svg"), (fig2, "aasl-4-7-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

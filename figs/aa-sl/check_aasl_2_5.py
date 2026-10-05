@@ -29,7 +29,6 @@ x = sp.Symbol("x")
 xp = sp.Symbol("xp", nonnegative=True)
 REALS = sp.S.Reals
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -38,19 +37,15 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) == 0, msg + f"  ({u} vs {v})")
-
 
 def ne(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) != 0, msg + f"  ({u} vs {v})")
 
-
 def comp(outer, inner):
     """(outer ∘ inner)(x) を作る。"""
     return sp.simplify(outer.subs(x, inner))
-
 
 def inv_ok(f, fi, msg="", dom=None):
     """f(f^{-1}(x)) = x と f^{-1}(f(x)) = x を確かめる。"""
@@ -58,22 +53,17 @@ def inv_ok(f, fi, msg="", dom=None):
     chk(sp.simplify(f.subs(x, fi).subs(x, v) - v) == 0, "f(f^-1) = x: " + msg)
     chk(sp.simplify(fi.subs(x, f).subs(x, v) - v) == 0, "f^-1(f) = x: " + msg)
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. The idea
@@ -243,16 +233,26 @@ for _lk, _m in [("3x + 4", "演習2"), ("3x + 12", "演習2"),
 # ══════════════════════════════════════════════════════════
 # 7. 公式集とシラバス
 # ══════════════════════════════════════════════════════════
-in_text("## この項目には、公式集の欄がありません", "2.5 は公式集にない")
-in_text("> $(f \\circ g)(x) = f(g(x))$.", "Guidance を逐語で")
-in_text("> $(f \\circ f^{-1})(x) = (f^{-1} \\circ f)(x) = x$.", "同上")
-chk(TEXT.count("\n> ") == 2, f"引用は 2 つだけ: {TEXT.count(chr(10) + '> ')}")
+not_in_text("## この項目には、公式集の欄がありません", "公式集の囲みは置かない")
+# シラバスの引用は、すぐ下の式と同じことを言っていたので置かない（第 9 節）
+not_in_text("> $(f \\circ g)(x) = f(g(x))$.", "合成の記号の引用は置かない")
+not_in_text("> $(f \\circ f^{-1})(x) = (f^{-1} \\circ f)(x) = x$.", "逆関数の引用も置かない")
+not_in_text("シラバスは、記号をこう定めています。", "同上")
+not_in_text("シラバスは、次の関係を挙げています。", "同上")
+in_text("合成関数の記号は、次のように決まっています。", "§2 の前置き")
+in_text("$f$ と $f^{-1}$ を続けて通すと、どちらの順でも $x$ に戻ります。", "§5 の前置き")
+in_text("### 4. inverse function（逆関数）$f^{-1}(x)$ の式を求める {#find-inverse}",
+        "§4 の見出しに inverse function")
+chk(TEXT.count("\n> ") == 0,
+    f"シラバスの引用は置かない: {TEXT.count(chr(10) + '> ')}")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
 # ══════════════════════════════════════════════════════════
 # 8. 説明のしかた（条件と断定）
 # ══════════════════════════════════════════════════════════
-in_text("**$\\circ$ は「かける」ではありません。**", "記号の注意")
+in_text("**$\\circ$ は「かける」ではありません。** $f \\circ g$ は "
+        "$f \\times g$ とは別のもので、**関数 $f$ の中に $g$ が入っている**"
+        "という意味です。", "記号の注意")
 in_text("正しくは、**$g(x)$ が $f$ の domain に入る条件**を、$x$ の条件に書き直します。",
         "合成の domain の決め方")
 not_in_text("**できあがった式を見て決める**のがいちばん確実です。", "誤った指示は残っていない")
@@ -268,7 +268,8 @@ in_text("**$\\sqrt{x^{2}} = x$ と書けるのは $x \\ge 0$ のときだけ**�
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -292,7 +293,7 @@ _want = ["The idea", "Why it works", "Worked examples", "Common errors",
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
-chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
+chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
 chk(TEXT.count("**検算") >= 12, f"検算が十分ある: {TEXT.count('**検算')}")
 chk("**確かめ。**" not in TEXT and "**確かめます。**" not in TEXT, "「確かめ。」なし")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -328,8 +329,9 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
         or _href.endswith(".qmd") or ".qmd#" in _href
         or _href.startswith("http"),
         "まだないページへのリンク: " + _href)
-for _lab in ["tbl-aasl25-steps", "tbl-aasl25-swap", "fig-aasl25-idea",
-             "eq-aasl25-comp", "eq-aasl25-identity", "eq-aasl25-undo"]:
+for _lab in ["tbl-aasl25-steps", "tbl-aasl25-swap", "fig-aasl25-idea-a",
+             "fig-aasl25-idea-b",
+             "eq-aasl25-comp", "eq-aasl25-undo"]:
     chk(TEXT.count("@" + _lab) >= 1, "本文から参照していない: " + _lab)
 _head = TEXT[:TEXT.index("## The idea")]
 chk("::: {.callout-important}" not in _head,
@@ -340,23 +342,24 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-2-5-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-2-5-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-2-5-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-2-5-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-2-5-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-2-5-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-2-5-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) $(f \\\\circ g)(x) = f(g(x))$: $g$ acts first", "図(a) の題")
+in_fig("$(f \\\\circ g)(x) = f(g(x))$: $g$ acts first", "図(a) の題")
 in_fig("$g(x)$", "図(a) の途中")
 in_fig("$f(g(x))$", "図(a) の出口")
-in_fig("the inner function is written next to $x$, ", "図(a) の要点")
-in_fig("(b) $(f^{-1} \\\\circ f)(x) = x$: the inverse undoes $f$", "図(b) の題")
+in_fig("$(f^{-1} \\\\circ f)(x) = x$: the inverse undoes $f$", "図(b) の題")
 in_fig("$x$ again", "図(b) の出口")
-in_text("(a) In $(f \\circ g)(x) = f(g(x))$ the inner function $g$ acts first",
-        "キャプションが (a) を説明")
-in_text("(b) Passing $x$ through $f$ and then through $f^{-1}$",
-        "キャプションが (b) を説明")
 # 図に具体的な式を書いていない
 chk(not re.search(r"\d\s*x", FIGSTR), "図に具体的な式を書いていない")
 for leak in ["3x + 4", "4x - 12", "x+5", "x-9", "x+3"]:
@@ -365,11 +368,12 @@ for leak in ["3x + 4", "4x - 12", "x+5", "x-9", "x+3"]:
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-5.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/02-functions/aasl-2-5.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-2-4.qmd") < DRAFT.index("aasl-2-5.qmd"), "並びが 2.4 → 2.5")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-5.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -378,10 +382,9 @@ chk(len(_ticked) == len(_written), f"✅ {len(_ticked)} と ページ {len(_writ
 _mm = re.search(r"いまのところ (\d+) ページです（全 (\d+) ページ）", IDX)
 chk(_mm is not None and int(_mm.group(1)) == len(_written), "「いまのところ N」")
 GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
-for _t in ["| composite function |", "| identity function |",
+for _t in ["| composite function |",
            "| inner function |", "| restrict |"]:
     chk(_t in GLO, "対訳表にある: " + _t)
-
 
 # ══════════════════════════════════════════════════════════
 # 13. 査読で直したところ（2026-09-07）
@@ -465,6 +468,84 @@ in_text("図には描いていませんが、順を入れかえて $f^{-1}$ → 
 in_text("$x^{2} = y-1$ から $x = \\sqrt{y-1}$ に戻れるのは $x \\ge 0$ のときだけで",
         "2 乗の条件を正しく述べた")
 not_in_text("**ここで $x \\ge 0$ が効きます**", "古い言い方は残っていない")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. composite function（合成関数）は、機械を $2$ 台つないだもの {#idea}', "見出しの英語: 1. composite function（合成関数")
+in_text('### 3. 合成関数の domain {#comp-domain}', "見出しの英語: 3. 合成関数の domain")
+in_text('### 6. $f^{-1}$ の domain と range {#dom-range}', "見出しの英語: 6. $f^{-1}$ の domain と ran")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-17：恒等関数の節をやめ、domain の結論を足した
+# ══════════════════════════════════════════════════════════
+for _w in ["恒等関数", "identity function", "I(x) = x", "eq-aasl25-identity",
+           "{#identity}"]:
+    not_in_text(_w, "恒等関数という言い方は使わない: " + _w)
+in_text("2. **$g$ の range**（$g$ が出す値 $g(x)$）が **$f$ の domain** に"
+        "入っていること", "条件 2 は g の range")
+in_text("**ですから $(f \\circ g)(x) = \\sqrt{2x-6}$ の domain は $x \\ge 3$ です。**",
+        "§3 の結論")
+in_text("### 5. $f \\circ f^{-1}$ と $f^{-1} \\circ f$ で、$x$ に戻る {#check}",
+        "§5 の見出し")
+in_text("$x$ そのものになりました ✓ **$f^{-1}$ の式が正しければ、必ずこうなります。**",
+        "検算の締め")
+in_text("どちらの順でも $x$ そのものになります（@eq-aasl25-undo）。",
+        "Why it works も x そのもの")
+# 2x - 6 >= 0 は x >= 3
+_x = sp.Symbol("x", real=True)
+chk(sp.solveset(2 * _x - 6 >= 0, _x, sp.S.Reals) == sp.Interval(3, sp.oo),
+    "2x-6>=0 は x>=3")
+eq(sp.sqrt(2 * 3 - 6), 0, "x=3 で √0 = 0")
+eq(sp.sqrt(2 * 5 - 6), 2, "x=5 で √4 = 2")
+
+# 表 2 は、具体的な関数で書く（A・B のような文字では見えない）
+in_text("| | $f(x) = \\sqrt{x+2}$ | $f^{-1}(x) = x^{2}-2$ |", "表 2 の見出し")
+in_text("| domain | $x \\ge -2$ | $x \\ge 0$ |", "表 2 の domain 行")
+in_text("| range | $f(x) \\ge 0$ | $f^{-1}(x) \\ge -2$ |", "表 2 の range 行")
+not_in_text("| domain | $A$ | $B$ |", "A・B の表は残っていない")
+in_text("**上下・左右にたすきがけで入れかわる**", "入れかわりの読み方")
+# √(x+2) の逆関数は x^2 - 2、domain と range は入れかわる
+_x = sp.Symbol("x", real=True)
+chk(sp.simplify(sp.sqrt((_x ** 2 - 2) + 2) - sp.Abs(_x)) == 0,
+    "x>=0 では f(f^-1(x)) = x")
+eq((sp.sqrt(_x + 2) ** 2 - 2).subs(_x, 7), 7, "f^-1(f(7)) = 7")
+eq(sp.sqrt(-2 + 2), 0, "f(-2) = 0（f の range の下端）")
+eq(0 ** 2 - 2, -2, "f^-1(0) = -2（f^-1 の range の下端）")
+chk(sp.solveset(_x + 2 >= 0, _x, sp.S.Reals) == sp.Interval(-2, sp.oo),
+    "f の domain は x >= -2")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'the inner function is writ',
+    'the same holds the other w',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
+in_text('$f(g(x))$ と書き直せば、**かっこの内側が先**だとすぐ分かります。', "その内容は本文にある")
+in_text('### 5. $f \\circ f^{-1}$ と $f^{-1} \\circ f$ で、$x$ に戻る {#check}', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -20,7 +20,6 @@ FIGCODE = FIG.split('"""', 2)[-1]
 OK = 0
 NG = 0
 
-
 def chk(cond, msg=""):
     global OK, NG
     if cond:
@@ -29,39 +28,30 @@ def chk(cond, msg=""):
         NG += 1
         print("NG :", msg)
 
-
 def eq(a, b, msg=""):
     chk(sp.simplify(sp.nsimplify(a) - sp.nsimplify(b)) == 0,
         "%s :: %s != %s" % (msg, a, b))
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: %s :: %s" % (msg, sub[:60]))
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: %s :: %s" % (msg, sub[:60]))
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
-
 BODY = TEXT.split("## Worked examples")[0]
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
-
 
 R = sp.Rational
 X = sp.Symbol("x")
 K = sp.Symbol("k")
 
-
 def d(e):
     return sp.simplify(sp.diff(sp.expand(sp.together(e)), X))
-
 
 # ══════════════════════════════════════════════════════════
 # 1. ページの骨組み
@@ -77,10 +67,10 @@ for _h in ("## What you should be able to do", "## The idea",
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
 
 _secs = re.findall(r"^### (\d)\. .*\{#([a-z0-9-]+)\}$", TEXT, re.M)
-chk([s[0] for s in _secs] == [str(i) for i in range(1, 8)],
-    "### の番号 1..7: %s" % [s[0] for s in _secs])
+chk([s[0] for s in _secs] == [str(i) for i in range(1, 7)],
+    "### の番号 1..6: %s" % [s[0] for s in _secs])
 chk([s[1] for s in _secs] == ["power", "constant", "sum", "zeroderiv",
-                              "negative", "rewrite", "evaluate"],
+                              "negative", "rewrite"],
     "アンカー: %s" % [s[1] for s in _secs])
 
 chk(len(re.findall(r"^\[\d+\]\{\.ex-no\}", TEXT, re.M)) == 10, "演習 10 問")
@@ -115,9 +105,10 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-5-3-idea.svg){#fig-aasl53-idea width=100%}", "図の埋め込み")
-in_text("@fig-aasl53-idea (a)", "図 (a) の参照")
-in_text("@fig-aasl53-idea (b)", "図 (b) の参照")
+in_text("(img/aasl-5-3-idea-a.svg){#fig-aasl53-idea-a width=100%}", "図 (a) の埋め込み")
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-5-3-idea.svg")),
+    "分割前の SVG は消してある")
+in_text("@fig-aasl53-idea-a", "図 (a) の参照")
 
 for _w in ("そのとおり", "もちろん", "簡単です", "自明", "当たり前", "明らか", "当然"):
     not_in_text(_w, "禁止語 " + _w)
@@ -139,25 +130,19 @@ in_text("$$ {#eq-aasl53-const}", "定数倍の式")
 in_text("$$ {#eq-aasl53-sum}", "和と差の式")
 in_text("$$ {#eq-aasl53-zero}", "定数の微分の式")
 in_text("$$ {#eq-aasl53-neg}", "負の指数の式")
-in_text("{#tbl-aasl53-neg}", "負の指数の表")
-in_text("{#tbl-aasl53-rewrite}", "直し方の表")
+in_text("{#tbl-aasl53-neg .tbl-narrow}", "負の指数の表")
+in_text("{#tbl-aasl53-rewrite .tbl-narrow}", "直し方の表")
 in_text("{#tbl-aasl53-we1}", "例題1 の表")
-in_text("[SL 5.6a](aasl-5-6a.qmd)", "5.6a への参照（有理数の指数）")
-in_text("[SL 5.6b](aasl-5-6b.qmd)", "5.6b への参照（積と商）")
+in_text("[SL 5.6](aasl-5-6.qmd)", "5.6 への参照")
 in_text("[SL 5.1](aasl-5-1.qmd#gradfn)", "5.1 への参照")
-in_text("[SL 5.2](aasl-5-2.qmd#sign)", "5.2 への参照")
+in_text("[SL 5.2](aasl-5-2.qmd#zero)", "5.2 への参照")
 chk(os.path.exists(os.path.join(ROOT, "aa-sl", "01-number-and-algebra",
                                 "aasl-1-9.qmd")), "1.9 のファイルがある")
 
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('"(a) Two things happen to the power"', "図 (a) の題")
-in_fig('"(b) Get it into a sum of powers first"', "図 (b) の題")
-in_fig('"1. the old power comes down and multiplies"', "図 (a) の動き 1")
-in_fig('"2. the power drops by one"', "図 (a) の動き 2")
-in_fig('"a product of brackets", "expand it"', "図 (b) の行 1")
-in_fig('"there is no rule yet for a product or a quotient"', "図 (b) の注意")
+in_fig('"Two things happen to the power"', "図 (a) の題")
 _figmath = " ".join(re.findall(r"\$([^$]*)\$", FIGCODE))
 for _v in ("12", "239", "4x - 5", "2x", "7x^{6}", "15"):
     chk(_v not in _figmath, "図の数式に答え %s は出さない" % _v)
@@ -271,14 +256,12 @@ _STMT = re.compile(
     r"(?<![\d\w}])(%s(?:\s*=\s*%s)+)(?!\s*(?:[+-]|[\d.(]|\\(?!ldots|approx)))"
     % (_EXPR, _EXPR))
 
-
 def _tonum(t):
     t = t.strip()
     m = re.fullmatch(r"\\[dt]?frac\{(-?\d+)\}\{(-?\d+)\}", t)
     if m:
         return sp.Rational(int(m.group(1)), int(m.group(2)))
     return sp.Rational(t)
-
 
 def _value(expr):
     total = sp.Integer(0)
@@ -292,7 +275,6 @@ def _value(expr):
                 prod *= _tonum(_f.group(0))
             total += sign * prod
     return total
-
 
 _nstmt = 0
 for _m in _STMT.finditer(TEXT):
@@ -356,8 +338,8 @@ chk("for $x \\ne 0$ the two expressions take the same value, so they are the "
 chk("$$f'(x) = 2x, \\qquad x \\ne 0$$" in TEXT, "演習7 の答えに定義域がある")
 
 # --- m1: x^0 = 1 の但し書きと、ax の導関数 ----------------------
-chk("$3 \\times 1 \\times x^{0} = 3$ になります（$x^{0} = 1$）。" in TEXT,
-    "第2節: x^0 = 1 の但し書き")
+chk("f'(x) = 3 \\times 1 \\times x^{0} = 3 \\qquad (x^{0} = 1)" in TEXT,
+    "第2節: x^0 = 1 の但し書き（式の中）")
 chk("**$ax$ の導関数は、$x = 0$ をふくめてどの $x$ でも $a$ です。**" in TEXT,
     "第2節: ax の導関数はどこでも a")
 
@@ -399,17 +381,163 @@ chk("**検算（$1$ つの値で）。** $x = 1$ で $f(1) = (3)(-2) = -6$" in T
 chk("$x = 0$ で $f(0) = (1)(-3) = -3$" not in TEXT,
     "定数項しか見ない検算が消えている")
 
-# --- m7: stationary point の訳を出している ----------------------
-chk("$f'(a) = 0$ のとき、その点を **stationary point**（停留点）といいます"
-    in TEXT, "第7節: 停留点の訳")
+# --- m7: stationary point の訳を、それを使う演習 5 の解説で出す ---
+chk("$f'(a) = 0$ となる点を **stationary point**（停留点）といいます"
+    "（[SL 5.2](aasl-5-2.qmd#zero)）。" in TEXT, "演習5: 停留点の訳")
+chk(TEXT.count("**stationary point**（停留点）") == 1,
+    "訳は 1 か所だけ")
 chk(TEXT.index("**stationary point**（停留点）")
-    < TEXT.index("## Worked examples"), "訳は The idea の中にある")
+    < TEXT.index("*$f'(x) = 3x^{2} - 12$, so $f'(2) = 12 - 12 = 0$"),
+    "訳は、解答例より前にある")
 
 # --- m8: 電卓の書き方が検証ずみの範囲 ----------------------------
 chk("グラフ画面に $y = f(x)$ をかくと、$x = a$ のあたりで上がっているか"
     in TEXT, "電卓の節: 検証ずみの言い方")
 chk("接線の傾きを見れば、求めた $f'(a)$ の見当が付きます。" not in TEXT,
     "検証していない操作の記述が消えている")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    '1. the old power comes d',
+    '2. the power drops by on',
+    'a constant multiple just',
+    'and a constant on its ow',
+    'now differentiate one te',
+    'there is no rule yet for',
+]:
+    chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
+in_text('- 定数倍 $ax^{n}$ を微分できる。', "その内容は本文にある")
+in_text('**なぜ、定数倍はそのまま残るのでしょうか。**', "その内容は本文にある")
+in_text('### 2. 定数倍 {#constant}', "その内容は本文にある")
+in_text('**項ごとに微分して、そのまま足し引きします。**', "その内容は本文にある")
+in_text('- 和と差の形を、項ごとに微分できる。', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：第 1 節の導入と、図 (a) のはみ出し
+# ══════════════════════════════════════════════════════════
+in_text("### 1. the power rule（べき乗の微分） {#power}", "第 1 節の見出し")
+not_in_text("### 1. べき乗の微分", "前の見出しは消した")
+in_text("微分の出発点は、**$x$ のべき乗**（$x^{2}$、$x^{3}$、$x^{-1}$ など）です。"
+        "多項式も、$\\dfrac{1}{x^{2}}$ のような分数も、**$ax^{n}$ の形の和**に"
+        "直せば微分できます。そのための規則が **the power rule**（べき乗の微分）"
+        "です。", "第 1 節の導入")
+in_text("**規則は $1$ つです。** $n$ が整数のとき", "式の前置き")
+# 導入は、図と式より前にある
+chk(TEXT.index("微分の出発点は、") < TEXT.index("](img/aasl-5-3-idea-a.svg)")
+    < TEXT.index("{#eq-aasl53-power}"), "導入 → 図 → 式 の順")
+# 図 (a) は、枠の外に文字を置いていない
+_A53 = FIG.split("# (a) べき乗の微分の 2 つの動き")[1].split(
+    "for _fig, _name in")[0]
+chk("ax1.text(0.5, 1.9" not in _A53, "ylim の外に置いた行は消した")
+for _ln in _A53.split(chr(10)):
+    _mt = re.match(r"\s*ax1\.text\(\s*([-0-9.]+)\s*,\s*([-0-9.]+)", _ln)
+    if _mt:
+        _yy = float(_mt.group(2))
+        chk(6.9 <= _yy <= 9.0, f"図 (a) の文字は枠の中: y = {_yy}")
+# 定数倍の規則は、図ではなく第 2 節にある（方針 第 21 節）
+chk("a\\,n\\,x" not in _A53, "定数倍の式は図 (a) に書いていない")
+in_text("f(x) = ax^{n} \\quad \\Longrightarrow \\quad f'(x) = anx^{n-1}",
+        "定数倍の式は第 2 節にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 2 を削除／第 2 節を式に／第 3 節に書き出し／表 2 を式に
+# ══════════════════════════════════════════════════════════
+
+# --- 図 2 は消した -------------------------------------------------------
+for _s in ("aasl-5-3-idea-b", "fig-aasl53-idea-b"):
+    not_in_text(_s, "本文から図 2 を消した: " + _s)
+for _s in ("fig2", "ax2", "Get it into a sum of powers first",
+           "a product of brackets"):
+    chk(_s not in FIG, "図をつくる側からも消した: " + _s)
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img",
+                                    "aasl-5-3-idea-b.svg")),
+    "図 2 の SVG を消した")
+in_fig('"aasl-5-3-idea-a.svg"', "書き出すのは図 1 だけ")
+
+# --- 図 1 の枠 -----------------------------------------------------------
+in_fig("fig1, ax1 = plt.subplots(figsize=(6.4, 1.8))", "図 1 は低い枠")
+in_fig("ax1.set_ylim(6.9, 9.0)", "図 1 の ylim は中身に合わせてある")
+chk(9.0 - 6.9 < 10.3 - 6.3, "図 1 の縦はせまくなった")
+
+# --- 第 2 節：3x の微分は式で -------------------------------------------
+in_text("$$\nf(x) = 3x = 3x^{1} \\quad \\Longrightarrow \\quad "
+        "f'(x) = 3 \\times 1 \\times x^{0} = 3 \\qquad (x^{0} = 1)\n$$",
+        "第 2 節: 3x の微分は中央ぞろえの式")
+not_in_text("@eq-aasl53-const で $n = 1$ とすると", "説明の文は消した")
+in_text("**$ax$ の導関数は、$x = 0$ をふくめてどの $x$ でも $a$ です。**",
+        "第 2 節: ax の導関数")
+
+# --- 第 3 節：書き出し ---------------------------------------------------
+in_text("多項式は、$4x^{3}$ や $-5x^{2}$ のような **$ax^{n}$ の形の項**を、"
+        "足したり引いたりしたものです。項がいくつあっても、新しい規則は"
+        "要りません。", "第 3 節の書き出し")
+chk(TEXT.index("多項式は、$4x^{3}$ や")
+    < TEXT.index("**項ごとに微分して、そのまま足し引きします。**"),
+    "書き出しは「項ごとに」より前")
+chk(TEXT.index("### 3. 和と差 {#sum}") < TEXT.index("多項式は、$4x^{3}$ や")
+    < TEXT.index("### 4. 定数の微分"), "書き出しは第 3 節の中")
+
+# --- 表 2：直した形を式で ------------------------------------------------
+in_text("| 式 | 直した形 |", "表 2 の見出し行")
+not_in_text("| 見た目 | すること |", "前の見出し行は消した")
+for _row in ("| $(x+2)(x-5)$ | $x^{2} - 3x - 10$ |",
+             "| $\\dfrac{x^{3} + 4x}{x}$ | $x^{2} + 4$ |",
+             "| $\\dfrac{6}{x^{2}}$ | $6x^{-2}$ |"):
+    in_text(_row, "表 2 の行: " + _row[:24])
+for _w in ("展開する", "項ごとに分ける", "負の指数にする"):
+    not_in_text("| " + _w + " |", "表 2 から「すること」を消した: " + _w)
+# 表 2 の書きかえが正しいこと
+chk(sp.expand((X + 2) * (X - 5) - (X ** 2 - 3 * X - 10)) == 0,
+    "(x+2)(x-5) = x^2 - 3x - 10")
+chk(sp.simplify((X ** 3 + 4 * X) / X - (X ** 2 + 4)) == 0,
+    "(x^3+4x)/x = x^2 + 4  (x != 0)")
+chk(sp.simplify(6 / X ** 2 - 6 * X ** (-2)) == 0, "6/x^2 = 6x^(-2)")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：第 7 節「導関数に値を入れる」を削除
+# ══════════════════════════════════════════════════════════
+not_in_text("### 7.", "第 7 節は消した")
+not_in_text("#evaluate", "第 7 節のアンカーとリンクは消した")
+not_in_text("導関数に値を入れる", "第 7 節の見出しは消した")
+not_in_text("$f'(3)$ は、$x = 3$ での接線の傾きです。",
+            "5.1 と重なる文は消した（SL 5.1 第 6 節にある）")
+# Paper の callout は第 6 節の終わりに移した
+_i6 = TEXT.index("### 6. 直してから微分する {#rewrite}")
+_iw = TEXT.index(chr(10) + "## Why it works")
+_s6 = TEXT[_i6:_iw]
+chk("## この項目は Paper 1 に出ます" in _s6, "Paper 1 の callout は第 6 節に")
+chk("## Paper 2 では、電卓でこう確かめます" in _s6, "Paper 2 の callout は第 6 節に")
+chk(_s6.count("### ") == 1, "第 6 節が The idea の最後")
+chk(_s6.count(":::") % 2 == 0, "第 6 節の ::: が閉じている")
+# 値を入れる話は、例題と演習に残っている
+in_text("**(b)** $x = 2$ を入れます（[SL 5.1](aasl-5-1.qmd#gradfn)）。",
+        "例題: 値を入れる（5.1 へ送る）")
+in_text("$f'(3)$ を求めるときは、先に $f'(x)$ を出します。",
+        "Common errors: 先に f'(x) を出す")
+in_text("先に $f'(x)$ を求めてから $x = 2$ を入れます。", "演習5: 先に f'(x)")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

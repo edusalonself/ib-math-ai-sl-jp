@@ -27,7 +27,6 @@ OK = NG = 0
 R = sp.Rational
 x = sp.Symbol("x", real=True)
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -36,30 +35,24 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def _S(v):
     if isinstance(v, float):
         return sp.Rational(str(v))
     return sp.nsimplify(v, rational=True)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(_S(u) - _S(v)) == 0, msg + f"  ({u} vs {v})")
 
-
 def ne(u, v, msg=""):
     chk(sp.simplify(_S(u) - _S(v)) != 0, msg + f"  ({u} vs {v})")
-
 
 def Sinf(u1, r):
     """公式集の式から。"""
     return _S(u1) / (1 - _S(r))
 
-
 def Sn(u1, r, n):
     """公式集の有限和の式から。"""
     return _S(u1) * (1 - _S(r) ** n) / (1 - _S(r))
-
 
 def partial(u1, r, k):
     """1 項ずつ足した列（公式を使わない道すじ）。"""
@@ -70,18 +63,14 @@ def partial(u1, r, k):
         term *= _S(r)
     return out
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 公式そのもの
@@ -306,7 +295,8 @@ not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシ
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -329,7 +319,7 @@ _want = ["The idea", "Why it works", "Worked examples", "Common errors",
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
-chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
+chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
 chk(TEXT.count("**検算") >= 12, f"検算が十分ある: {TEXT.count('**検算')}")
 chk("**確かめ。**" not in TEXT and "**確かめます。**" not in TEXT, "「確かめ。」なし")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -365,21 +355,23 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-1-8-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-1-8-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-1-8-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-1-8-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-1-8-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-1-8-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-1-8-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Filling a bar of length $1$", "図(a) の題")
-in_fig("the pieces never overflow", "図(a) の要点")
-in_fig("each new piece is half of what is left", "図(a) の説明")
+in_fig("A square of area $1$", "図(a) の題")
 in_fig("The terms of $r^{\\\\,n}$", "図(b) の題")
 in_fig("dies away to $0$", "図(b) の |r|<1")
 in_fig("off the top", "図(b) の |r|>1")
-in_text("(a) Each new piece is half of what is left", "キャプションが (a) を説明")
-in_text("(b) When the ratio is less than 1 in size", "キャプションが (b) を説明")
 # 図の値が本文と合っているか
 _edges, _x = [0], R(0)
 for _k in range(1, 8):
@@ -398,11 +390,12 @@ for leak in ["100", "= 27", "= 30", "20}{7", "5}{9", "2}{11", "= 32", "= 16"]:
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-8.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/01-number-and-algebra/aasl-1-8.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-1-7b.qmd") < DRAFT.index("aasl-1-8.qmd"), "並びが 1.7b → 1.8")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-8.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -415,7 +408,6 @@ for t in ["| convergent |", "| divergent |", "| sum to infinity |",
           "| modulus |"]:
     chk(t in GLO, "対訳表にある: " + t)
 
-
 # ══════════════════════════════════════════════════════════
 # 13. レビュー反映の見張り
 # ══════════════════════════════════════════════════════════
@@ -425,10 +417,12 @@ in_text("$r \\neq 1$ という条件も、公式集に書かれています。",
 in_text("$r = 1$ のときは、そもそも @eq-aasl18-sn が使えません（分母が $0$）。",
         "r=1 では有限和の式も使えない")
 # 第 6 節・第 7 節を、例題と別の数にした
-in_text("$S_{\\infty} = 24$、$u_{1} = 16$ なら", "第 6 節の r の例")
+not_in_text("$S_{\\infty} = 24$、$u_{1} = 16$ なら",
+            "逆向きの節といっしょに消した")
 chk(sp.solve(sp.Eq(16 / (1 - x), 24), x) == [R(1, 3)], "16/(1-r)=24 なら r=1/3")
 eq(R(16, 24), R(2, 3), "1 - r = 2/3")
-in_text("$S_{\\infty} = 21$、$r = \\dfrac{3}{7}$ なら", "第 6 節の u1 の例")
+not_in_text("$S_{\\infty} = 21$、$r = \\dfrac{3}{7}$ なら",
+            "同上")
 eq(21 * (1 - R(3, 7)), 12, "21 × 4/7 = 12")
 eq(Sinf(12, R(3, 7)), 21, "戻すと 21")
 not_in_text("**$r$ を求める。** $S_{\\infty} = 40$", "例題 2 と重ならない")
@@ -512,7 +506,6 @@ in_text("本体に一般項（$0.\\overline{7}$ なら $7 \\times 10^{-n}$）を
         "一般項を入れることを書く")
 in_text("**$|r|$ が $1$ に近いほど、収束はゆっくり**です。", "収束の速さ")
 
-
 # ── |r| > 1 の発散理由（★2026-09-07 の修正）──────────────
 # r < -1 でも通る説明に直した
 in_text("**$|r| > 1$ のとき**（以下、$u_{1} \\neq 0$ とします）。", "u1 ≠ 0 の但し書き")
@@ -538,6 +531,123 @@ chk(sp.limit(abs(sp.Integer(-2)) ** sp.Symbol("m", positive=True),
 # r = 1、r = -1 の説明は残っている
 in_text("**$r = 1$ のとき。**", "r = 1 の場合は残す")
 in_text("**$r = -1$ のとき。**", "r = -1 の場合も残す")
+
+# ══════════════════════════════════════════════════════════
+# 分類の表には「図」の列（_方針変更-2026-09-15.md 第 6 節）
+# ══════════════════════════════════════════════════════════
+def _figcol(tid, fig):
+    _ls = TEXT.split(chr(10))
+    _ci = [i for i, l in enumerate(_ls)
+           if l.startswith(": ") and ("{#" + tid + "}") in l]
+    if not _ci:
+        chk(False, "表が見つからない: " + tid)
+        return
+    _e = _ci[0]
+    while not _ls[_e].startswith("|"):
+        _e -= 1
+    _s = _e
+    while _s > 0 and _ls[_s - 1].startswith("|"):
+        _s -= 1
+    chk(_ls[_s].rstrip().endswith("図 |"), "図の列がある: " + tid)
+    _rows = _ls[_s + 2:_e + 1]
+    chk(len(_rows) >= 2, "行がある: " + tid)
+    chk(all(r.rstrip().endswith(fig + " |") for r in _rows),
+        "どの行も図を指している: " + tid)
+    if fig.startswith("@fig-") and " " not in fig:
+        chk(("{#" + fig[1:] + " ") in TEXT or ("{#" + fig[1:] + "}") in TEXT,
+            "指している図がこのページにある: " + fig)
+
+_figcol("tbl-aasl18-diverge", "@fig-aasl18-idea-b")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text('無限等比級数の和 $S_{\\infty}$ を求める公式は、次のとおりです。', "公式の前置き 1")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 4. convergence and divergence（収束と発散） {#converge}', "見出しの英語: 4. convergence and diverge")
+in_text('### 6. recurring decimal（循環小数）を分数に直す {#recurring}', "見出しの英語: 6. recurring decimal（循環小数）")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (a) から説明の文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _s18 in ("the pieces never overflow", "each new piece is half of"):
+    chk(_s18 not in FIG, "図に説明の文を書いていない: " + _s18[:26])
+chk("ax1.set_ylim(-0.06, 1.10)" in FIG, "図 (a) の上下の余白を詰めた")
+in_text("**$1$ を超えることはありません。** 毎回、残りのちょうど半分を足している"
+        "からです。", "1 を超えないのは本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01 の手直し
+# ══════════════════════════════════════════════════════════
+in_text("![A square of area $1$, filled by halving what is left]"
+        "(img/aasl-1-8-idea-a.svg){#fig-aasl18-idea-a width=100%}",
+        "図 1 のキャプション")
+not_in_text("Each new piece is half of what is left", "前のキャプションは消した")
+in_text("**面積 $1$ の正方形を、毎回「残りの半分」で埋めていくのと同じです**",
+        "図 1 への導入")
+in_fig("ax1.set_aspect(\"equal\")", "図 1 は正方形")
+in_fig("(0.0, 0.0, 0.5, 1.0,", "1/2 は左半分")
+in_fig("(0.5, 0.5, 0.5, 0.5,", "1/4 は右上")
+in_fig("(0.5, 0.0, 0.25, 0.5,", "1/8 はその下")
+chk("Filling a bar" not in FIG, "前の棒の図は消した")
+# 分けた区画の面積が、ちょうど 1/2, 1/4, 1/8, ... になっている
+_areas = [sp.Rational(1, 2) ** k for k in range(1, 9)]
+_from_fig = [sp.Rational(w) * sp.Rational(h) for w, h in
+             ((sp.Rational(1, 2), 1), (sp.Rational(1, 2), sp.Rational(1, 2)),
+              (sp.Rational(1, 4), sp.Rational(1, 2)),
+              (sp.Rational(1, 4), sp.Rational(1, 4)),
+              (sp.Rational(1, 8), sp.Rational(1, 4)),
+              (sp.Rational(1, 8), sp.Rational(1, 8)),
+              (sp.Rational(1, 16), sp.Rational(1, 8)),
+              (sp.Rational(1, 16), sp.Rational(1, 16)))]
+chk(_from_fig == _areas, "区画の面積が 1/2, 1/4, 1/8, ...: %s" % _from_fig)
+chk(sum(_from_fig) == 1 - sp.Rational(1, 2) ** 8, "8 区画の合計は 1 - 1/256")
+
+# 見出し
+in_text("### 2. sum to infinity（無限等比級数の和） {#formula}", "第 2 節の見出し")
+not_in_text("### 2. 公式 {#formula}", "前の見出しは消した")
+in_text("### 3. modulus（絶対値） {#modulus}", "第 3 節の見出し")
+not_in_text("### 3. $|r| < 1$ の読み方", "前の見出しは消した")
+
+# 第 6 節（逆向きに使う）は削除
+not_in_text("#backwards", "逆向きの節は消した")
+not_in_text("### 6. 逆向きに使う", "その見出しも消した")
+not_in_text("**分母をはらってから動かす**のが、いちばん間違えにくい順です。",
+            "その本文も消した")
+in_text("### 6. recurring decimal（循環小数）を分数に直す {#recurring}",
+        "第 6 節は循環小数")
+chk(TEXT.count("[第 2 節](#formula)") >= 3,
+    "逆向きの参照は第 2 節へ: %d 件" % TEXT.count("[第 2 節](#formula)"))
+# 消した計算そのものは正しい
+chk(sp.solve(sp.Eq(16 / (1 - sp.Symbol("r")), 24), sp.Symbol("r"))
+    == [sp.Rational(1, 3)], "S=24, u1=16 なら r=1/3")
+chk(21 * (1 - sp.Rational(3, 7)) == 12, "S=21, r=3/7 なら u1=12")
 
 print()
 print("OK", OK, "/ NG", NG)

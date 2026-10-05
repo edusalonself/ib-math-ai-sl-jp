@@ -29,7 +29,6 @@ x, y = sp.symbols("x y", real=True)
 E = sp.E
 REALS = sp.S.Reals
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -38,26 +37,20 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) == 0, msg + f"  ({u} vs {v})")
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 指数と対数の性質そのもの
@@ -197,7 +190,7 @@ not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシ
 # ══════════════════════════════════════════════════════════
 # 8. 説明のしかた（条件と断定）
 # ══════════════════════════════════════════════════════════
-in_text("**底（base）$a$ は正**とします。", "a > 0 の断り")
+in_text("**base（底）$a$ は正**とします。", "a > 0 の断り")
 in_text("**さらに、ここから先は $a \\neq 1$ とします。**", "a ≠ 1 を先に断る")
 in_text("## $\\log$ の中身が $0$ や負のときは、値がありません", "log の中身の注意")
 in_text("## $a^{x}$ は $0$ にも負にもなりません", "a^x > 0 の注意")
@@ -210,7 +203,8 @@ in_text("「値が $0$」ではなく「**値がない**」です。答案には
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -272,7 +266,7 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
         or _href.endswith(".qmd") or ".qmd#" in _href
         or _href.startswith("http") or _href.startswith("../"),
         "まだないページへのリンク: " + _href)
-for _lab in ["fig-aasl29-idea", "tbl-aasl29-pair", "eq-aasl29-equiv",
+for _lab in ["fig-aasl29-idea-a", "fig-aasl29-idea-b", "tbl-aasl29-pair", "eq-aasl29-equiv",
              "eq-aasl29-undo", "eq-aasl29-basee"]:
     chk(TEXT.count("@" + _lab) >= 1, "本文から参照していない: " + _lab)
 _head = TEXT[:TEXT.index("## The idea")]
@@ -287,27 +281,28 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-2-9-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-2-9-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-2-9-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-2-9-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-2-9-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-2-9-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-2-9-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Exponential functions", "図(a) の題")
+in_fig("Exponential functions", "図(a) の題")
 in_fig("$y = 2^{x}$", "図(a) の y = 2^x")
 in_fig("$y = e^{x}$", "図(a) の y = e^x")
 in_fig("$y = \\\\left(\\\\frac{1}{2}\\\\right)^{x}$", "図(a) の減る例")
 in_fig("$(0,\\\\ 1)$", "図(a) の通る点")
-in_fig("asymptote $y = 0$; the value is never $0$ or negative", "図(a) の注意")
-in_fig("(b) Inverse of each other", "図(b) の題")
+in_fig("Inverse of each other", "図(b) の題")
 in_fig("$y = \\\\ln x$", "図(b) の対数")
 in_fig("$(1,\\\\ 0)$", "図(b) の通る点")
 in_fig("$y = x$", "図(b) の対称の線")
-in_fig("each is the reflection of the other in $y = x$", "図(b) の説明")
-in_text("(a) Exponential functions $y=a^x$ all pass through $(0,1)$",
-        "キャプションが (a) を説明")
-in_text("(b) $y=e^x$ and $y=\\ln x$ are inverse functions", "キャプションが (b) を説明")
 # 図に例題・演習の答えを書いていない
 for leak in ["3^", "5^", "6^", "7^", "8^", "9^", "125", "= 4", "= 5", "= 7"]:
     chk(leak not in FIGSTR, "図が答えを載せている: " + leak)
@@ -315,11 +310,12 @@ for leak in ["3^", "5^", "6^", "7^", "8^", "9^", "125", "= 4", "= 5", "= 7"]:
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-9.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/02-functions/aasl-2-9.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-2-8.qmd") < DRAFT.index("aasl-2-9.qmd"), "並びが 2.8 → 2.9")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-9.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -343,7 +339,7 @@ in_text("$a = 1$ だと $1^{x} = 1$ で、グラフは水平な直線になり�
         "$1$ 点だけ、漸近線もありません。", "a = 1 の場合の説明")
 not_in_text("ふつうは $a \\neq 1$ とします。", "「ふつうは」という言い方は消した")
 chk(TEXT.index("**さらに、ここから先は $a \\neq 1$ とします。**")
-    < TEXT.index("- **range** は $y > 0$。"), "a ≠ 1 の断りが range より前")
+    < TEXT.index("- **range**（値域）は $y > 0$。"), "a ≠ 1 の断りが range より前")
 in_text("ここで**底 $a$ は $a > 0$、$a \\neq 1$** とします。", "対数の節にも底の条件")
 in_text("$a = 1$ では $1^{y}$ がいつも $1$ なので、「$1$ を何乗したら $x$ に"
         "なるか」に答えられず、対数が決められません。", "a = 1 で対数が決まらない理由")
@@ -386,8 +382,8 @@ in_text("- $f(x) = e^{x}$ の $e$ が、$2.718\\ldots$ という無理数の定�
 
 # --- 真数・漸近線の英語 -------------------------------------------------
 in_text("真数（$\\log$ の中身）も正です。", "真数の言いかえ")
-in_text("**$y = 0$ が水平漸近線**（horizontal asymptote）です。", "水平漸近線の英語")
-in_text("**$x = 0$ が垂直漸近線**（vertical asymptote）です。", "垂直漸近線の英語")
+in_text("**$y = 0$ が horizontal asymptote（水平漸近線）**です。", "水平漸近線の英語")
+in_text("**$x = 0$ が vertical asymptote（垂直漸近線）**です。", "垂直漸近線の英語")
 
 # --- 電卓（キー名に頼らない）--------------------------------------------
 in_text("**自分の機械で一度たしかめておいてください。**", "キーの位置は機種による")
@@ -444,7 +440,6 @@ in_text("[Explain why the graph of $y = f^{-1}(x)$ is the reflection of the grap
         "of $y = f(x)$ in the line $y = x$.]", "例題3(d) は Explain why")
 not_in_text("Explain the geometric relationship", "Explain + relationship は消した")
 
-
 # ══════════════════════════════════════════════════════════
 # E02  演習2 — 0 < a < 1 の指数関数と対数関数
 # ══════════════════════════════════════════════════════════
@@ -465,6 +460,119 @@ chk(sp.log(sp.Rational(1, 4), sp.Rational(1, 2)) == 2, "E02 (1/4, 2) を通る")
 chk(sp.limit(sp.Rational(1, 2) ** sp.Symbol("t"), sp.Symbol("t"), sp.oo)
     == 0, "E02 指数関数の漸近線は y = 0")
 chk(sp.Rational(1, 2) ** 3 < sp.Rational(1, 2) ** 2, "E02 指数関数は減少")
+
+# ══════════════════════════════════════════════════════════
+# 分類の表には「図」の列（_方針変更-2026-09-15.md 第 6 節）
+# ══════════════════════════════════════════════════════════
+def _figcol(tid, fig):
+    _ls = TEXT.split(chr(10))
+    _ci = [i for i, l in enumerate(_ls)
+           if l.startswith(": ") and ("{#" + tid + "}") in l]
+    if not _ci:
+        chk(False, "表が見つからない: " + tid)
+        return
+    _e = _ci[0]
+    while not _ls[_e].startswith("|"):
+        _e -= 1
+    _s = _e
+    while _s > 0 and _ls[_s - 1].startswith("|"):
+        _s -= 1
+    chk(_ls[_s].rstrip().endswith("図 |"), "図の列がある: " + tid)
+    _rows = _ls[_s + 2:_e + 1]
+    chk(len(_rows) >= 2, "行がある: " + tid)
+    chk(all(r.rstrip().endswith(fig + " |") for r in _rows),
+        "どの行も図を指している: " + tid)
+    if fig.startswith("@fig-") and " " not in fig:
+        chk(("{#" + fig[1:] + " ") in TEXT or ("{#" + fig[1:] + "}") in TEXT,
+            "指している図がこのページにある: " + fig)
+
+# 表 1 は「図」の列をやめた（4 行とも同じ図で、情報が増えなかった）
+not_in_text("| domain | 実数全体 | $x > 0$ | @fig-aasl29-idea-b |",
+            "図の列つきの古い行は残っていない")
+in_text("| domain | 実数全体 | $x > 0$ |", "表 1 の domain 行")
+chk(TEXT.count("@fig-aasl29-idea-b") >= 1, "図 (b) は本文から参照している")
+
+# ══════════════════════════════════════════════════════════
+# 英語の用語は、このページの初出で日本語を添える
+# （_方針変更-2026-09-15.md 第 10 節）
+# ══════════════════════════════════════════════════════════
+in_text('- **domain**（定義域）は実数全体。', "英語併記 1")
+in_text('- **range**（値域）は $y > 0$。', "英語併記 2")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text("$e$ は **Euler's number**（ネイピア数、自然対数の底）と"
+        "よばれる定数で、次の値をもちます。", "公式の前置き 1")
+not_in_text('$e$ は、次の値をもつ定数です。', "名前なしの言い方は消した")
+chk("| Euler's number |" in GLO, "対訳表に Euler's number がある")
+in_text('底が $a$ の対数関数は、次の形の関数です。', "公式の前置き 2")
+in_text('底が $a$ の指数を、底 $e$ の指数に書きかえる式は、次のとおりです。', "公式の前置き 3")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. exponential function（指数関数）$f(x) = a^{x}$ {#exponential}', "見出しの英語: 1. exponential function（指数")
+in_text('### 2. $e$ と $f(x) = e^{x}$（the natural exponential function） {#natural}', "見出しの英語: 2. $e$ と $f(x) = e^{x}$（th")
+in_text('### 3. logarithmic function（対数関数）$f(x) = \\log_{a} x$ {#logarithm}', "見出しの英語: 3. logarithmic function（対数")
+in_text('### 4. 指数と対数は、互いに inverse functions（逆関数） {#inverse}', "見出しの英語: 4. 指数と対数は、互いに inverse func")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'asymptote $y = 0$; the val',
+    'each is the reflection of ',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
+in_text('**$a^{x}$ は決して $0$ にも負にもなりません。**', "その内容は本文にある")
+in_text('のように **$y = x$ について互いの折り返し**になります。', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：演習 2 の図から説明文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+_F92 = open(os.path.join(HERE, "make_aasl_2_9_ex2.py"), encoding="utf-8").read()
+chk("each curve is the reflection of the other" not in _F92,
+    "図に説明の文を書いていない")
+chk("$y = x$" in _F92, "図のラベル y = x は残す")
+in_text("**底が $1$ より小さいので、どちらも減少します**", "減少は解説にある")
+in_text("**この $2$ つは互いに逆関数です**", "逆関数は解説にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01（その 2）
+# ══════════════════════════════════════════════════════════
+not_in_text("**答案では底を書いた方が安全**です。", "底の注意は削除した")
+in_text("$\log_{10} x$ は $\log x$ と書かれることもあります。", "残した言い方")
+in_text("1. **asymptote（漸近線）**（指数なら $y = 0$、対数なら $x = 0$）を"
+        "点線でかき、式を書く。", "sketch の 1")
+in_text("2. **intercept（軸との交点）**（指数なら $(0, 1)$、対数なら "
+        "$(1, 0)$）に点を打ち、座標を書く。", "sketch の 2")
+in_text("3. **increasing or decreasing（増えるか減るか）**が分かる形にかく。",
+        "sketch の 3")
+not_in_text("1. **漸近線**（指数なら", "前の書き方は消した")
 
 print()
 print("OK", OK, "/ NG", NG)

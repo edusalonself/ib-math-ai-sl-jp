@@ -8,7 +8,8 @@ sidebar: aa-sl
 ## What you should be able to do
 - $P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}$ を**定義として**使い、図をかかなくても計算できる。
 - かけ算の形 $P(A \cap B) = P(B)\,P(A \mid B)$ を使える。
-- 独立の $3$ つの言い方 $P(A \cap B) = P(A)P(B)$、$P(A \mid B) = P(A)$、$P(A \mid B') = P(A)$ が同じことを表すと説明できる。
+- 二元表の $1$ 行だけを見て、条件付き確率を読み取れる。
+- 独立の $3$ つの言い方 $P(A \cap B) = P(A)P(B)$、$P(A \mid B) = P(A)$、$P(A \mid B') = P(A)$ が、$0 < P(B) < 1$ のとき同じことを表すと説明できる。
 - **testing for independence**（独立性の判定）を、式で行える。
 - $P(A) = P(A \cap B) + P(A \cap B')$ を使って、$P(A \mid B)$ と $P(A \mid B')$ から $P(A)$ を組み立てられる（樹形図の枝先を足すことを、式で書く）。
 - 未知数を含む問題を、式を解いて処理できる。
@@ -16,30 +17,60 @@ sidebar: aa-sl
 
 ## The idea {#idea}
 
-**[SL 4.6a](aasl-4-6a.qmd) と [SL 4.6b](aasl-4-6b.qmd) で図をかいて確かめた関係を、ここでは式として使い、未知数を含む問題に当てはめます。**
+**[SL 4.6](aasl-4-6.qmd) では、樹形図を使って、条件によって確率が変わることを学びました。**
 
-### 1. 定義としての式 {#formal}
+このページでは、**条件付き確率を記号と公式で表し、計算する方法**を学びます。また、その公式を使って、$2$ つの事象が独立かどうかを判定します。
 
-[SL 4.6b](aasl-4-6b.qmd#restrict) では、条件付き確率を「標本空間が狭まること」として見ました。ここでは、同じ式を**定義そのもの**として使います。
+### 1. conditional probability（条件付き確率）の意味と記号 {#formal}
+
+**conditional probability**（条件付き確率）$P(A \mid B)$ は、「**$B$ が起こったという条件で**、$A$ が起こる確率」です。$A \mid B$ は「$B$ のもとでの $A$」と読みます。
+
+**縦棒の右にあるほうが、分かっている側です。** 分かったことは、考える範囲をせまくします。もともと $U$ 全体だったのが、$B$ の中だけになります。
+
+### 2. 表から求める {#table}
+
+![A conditional probability restricts the table to one row](img/aasl-4-11-idea-c.svg){#fig-aasl411-idea-c width=100%}
+
+二元表では、**$B$ の行だけを見て、その中で $A$ の割合を求めます**（@fig-aasl411-idea-c）。
+
+色のついた $B$ の行だけが残るので、分母はその行の合計 $n(B) = 30$ です。分子は、その行のうち $A$ の列にある $n(A \cap B) = 21$ です。
 
 $$
-P(A \mid B) = \frac{P(A \cap B)}{P(B)}, \qquad P(B) \ne 0
+P(A \mid B) = \frac{21}{30} = \frac{7}{10}
+$$
+
+いっぽう、**何も分かっていないとき**の $A$ の確率は、表全体を分母にします。$A$ の列の合計 $55$ を、全体の $100$ で割ります。
+
+$$
+P(A) = \frac{55}{100} = \frac{11}{20}
+$$
+
+**$\dfrac{7}{10}$ と $\dfrac{11}{20}$ はちがう値です。** 「$B$ が起こった」と分かったことで、$A$ の確率が変わりました。
+
+### 3. 条件付き確率の公式 {#formula}
+
+表の個数を、どちらも全体 $n(U)$ で割ると、確率だけの式になります。
+
+$$
+P(A \mid B) = \frac{P(A \cap B)}{P(B)}, \qquad P(B) > 0
 $$ {#eq-aasl411-cond}
 
 ::: {.callout-important}
 ## この式は公式集にあります
-$P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}$ は、公式集の **4.6** の欄に *Conditional probability* として載っています。[SL 4.6b](aasl-4-6b.qmd#formula) のときと同じ欄です。
+$P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}$ は、公式集の **4.6** の欄に *Conditional probability* として載っています。
 
 **このページでは、式だけで進める練習をします。** 与えられるのが確率の値だけ、という問題に強くなるためです。
 
-**図をかいてはいけない、という意味ではありません。** 迷ったら、[SL 4.6a](aasl-4-6a.qmd) のベン図や樹形図をかいて確かめてかまいません。答案に図が残っていてもかまいません。
+**図をかいてはいけない、という意味ではありません。** 迷ったら、[SL 4.6](aasl-4-6.qmd) のベン図や樹形図をかいて確かめてかまいません。答案に図が残っていてもかまいません。
 :::
 
-**$P(B) \ne 0$ が要ります。** 起こらないと分かっていることを「起こった」とはできません。
+**$P(B) > 0$ が要ります。** 起こらないと分かっていることを「起こった」とはできません。
 
 **分子は $P(A \cap B)$ で、$P(A)$ ではありません。** ここが最も多い誤りです。
 
-### 2. かけ算の形 {#multiply}
+**$P(A \mid B)$ と $P(B \mid A)$ は、ふつう別のものです。** 分子はどちらも $P(A \cap B)$ ですが、**条件がちがう**ので分母がちがいます。$P(A \mid B)$ の分母は $P(B)$、$P(B \mid A)$ の分母は $P(A)$ です。
+
+### 4. the multiplication rule（かけ算の形） {#multiply}
 
 @eq-aasl411-cond の両辺に $P(B)$ をかけると
 
@@ -47,7 +78,17 @@ $$
 P(A \cap B) = P(B)\,P(A \mid B)
 $$ {#eq-aasl411-mult}
 
-になります。
+になります。**「条件となる事象の確率 $\times$ その条件での確率」**です。
+
+![Multiplying along two branches](img/aasl-4-11-idea-d.svg){#fig-aasl411-idea-d width=100%}
+
+**これが、樹形図で枝に沿ってかけていることの正体です**（@fig-aasl411-idea-d）。$1$ 段目の枝が $P(B)$、$2$ 段目の枝が $P(A \mid B)$ です。$P(B) = \dfrac{1}{3}$、$P(A \mid B) = \dfrac{3}{5}$ なら
+
+$$
+P(A \cap B) = \frac{1}{3} \times \frac{3}{5} = \frac{1}{5}
+$$
+
+です。
 
 **$A$ と $B$ を入れかえた形もあります。**
 
@@ -57,17 +98,67 @@ $$
 
 **$2$ とおりに書けるので、検算に使えます。** 同じ $P(A \cap B)$ が両方から出るはずです。
 
-### 3. 独立の $3$ つの言い方 {#three}
+### 5. testing for independence（独立性の判定） {#test}
 
-$A$ と $B$ が**独立**であることは、$0 < P(B) < 1$ のとき、次の $3$ つのどれで書いても同じです（@fig-aasl411-idea (a)）。
+![Independence in a two-way table](img/aasl-4-11-idea-b.svg){#fig-aasl411-idea-b width=100%}
+
+$A$ と $B$ が**独立**であることは、まず次の式で判定します（[SL 4.6](aasl-4-6.qmd#independent)）。
 
 $$
 P(A \cap B) = P(A)P(B)
 $$ {#eq-aasl411-indep}
 
+**testing for independence**（独立性の判定）は、次の手順で行います。
+
+1. 必要な確率を $3$ つそろえる。$P(A)$、$P(B)$、$P(A \cap B)$。
+2. $P(A)P(B)$ を計算する。
+3. $P(A \cap B)$ と比べる。等しければ独立、等しくなければ独立ではない。
+
+**この手順で、$2$ つやってみます。**
+
+**その1。** $P(A) = 0.6$、$P(B) = 0.5$、$P(A \cap B) = 0.3$ のとき。
+
 $$
-P(A \mid B) = P(A) \quad (P(B) \ne 0), \qquad P(A \mid B') = P(A) \quad (P(B') \ne 0)
+P(A)P(B) = 0.6 \times 0.5 = 0.3 = P(A \cap B)
+$$
+
+等しいので、$A$ と $B$ は**独立です**。
+
+**その2。** 同じ $P(A)$、$P(B)$ で、$P(A \cap B) = 0.2$ のとき。
+
+$$
+P(A)P(B) = 0.3 \ne 0.2 = P(A \cap B)
+$$
+
+等しくないので、**独立ではありません**。
+
+**「だいたい等しい」は使いません。** ちがえば、どんなに小さな差でも独立ではありません。
+
+**$P(A \cap B)$ が直接与えられないことがあります。** そのときは、@eq-aasl411-cond や [SL 4.6 の加法定理](aasl-4-6.qmd#addition)から作ります。
+
+**条件付き確率で書くこともできます。**
+
+$$
+P(A \mid B) = P(A) \quad (P(B) > 0), \qquad P(A \mid B') = P(A) \quad (P(B') > 0)
 $$ {#eq-aasl411-three}
+
+**この $2$ つを同時に使う説明では $0 < P(B) < 1$ が要ります。** どちらの条件付き確率も定義されている必要があるからです。その範囲では、@eq-aasl411-indep と @eq-aasl411-three の $3$ つはすべて同じことを表します。
+
+**検算（条件付き確率で）。** 上の その1 では $P(A \mid B) = \dfrac{0.3}{0.5} = 0.6 = P(A)$ ✓ その2 では $P(A \mid B) = \dfrac{0.2}{0.5} = 0.4 \ne 0.6$ ✓ どちらも同じ結論になりました。
+
+**二元表では、独立は「どの行も同じ割合」として見えます**（@fig-aasl411-idea-b）。色のついた $2$ 行から
+
+$$
+P(A \mid B) = \frac{18}{30} = 0.6, \qquad P(A \mid B') = \frac{42}{70} = 0.6
+$$
+
+で、どちらも表全体から出る
+
+$$
+P(A) = \frac{60}{100} = 0.6
+$$
+
+と等しくなっています。**$B$ と分かっても $B'$ と分かっても $A$ の割合が変わらないので、$A$ と $B$ は独立です。**
 
 ::: {.callout-important}
 ## この式も公式集にあります
@@ -76,25 +167,9 @@ $P(A \cap B) = P(A)P(B)$ は、公式集の **4.6** の欄に *Independent event
 $P(A \mid B) = P(A) = P(A \mid B')$ という書き方のほうは、シラバスの **4.11** に出てきます。公式集にはありません。
 :::
 
-**$0 < P(B) < 1$ なら、$1$ つ示せば十分です。** $3$ つは同じことなので、いちばん使いやすいものを選びます。
-
 **$P(A \cap B) = P(A)P(B)$ には割り算がありません。** $P(B) = 0$ でも $P(B) = 1$ でも意味を持ちます。条件付き確率のほうは、$P(B) = 0$ だと $P(A \mid B)$ が、$P(B) = 1$ だと $P(A \mid B')$ が定義されません。**だから、独立の定義に選ぶのはかけ算の形です。**
 
-### 4. 独立性の判定 {#test}
-
-**testing for independence**（独立性の判定）は、次の手順で行います。
-
-1. 必要な確率を $3$ つそろえる。$P(A)$、$P(B)$、$P(A \cap B)$。
-2. $P(A)P(B)$ を計算する。
-3. $P(A \cap B)$ と比べる。等しければ独立、等しくなければ独立ではない。
-
-**「だいたい等しい」は使いません。** ちがえば、どんなに小さな差でも独立ではありません。
-
-**$P(A \cap B)$ が直接与えられないことがあります。** そのときは、@eq-aasl411-cond や [SL 4.6a の加法定理](aasl-4-6a.qmd#addition)から作ります。
-
-**条件付き確率で比べても同じです。** $P(A \mid B)$ と $P(A)$ を比べる形でもかまいません（@fig-aasl411-idea (b)）。
-
-### 5. 式だけで解く {#solve}
+### 6. 式だけで解く {#solve}
 
 **このページの問題は、図がなくても解けます。** 与えられた確率を式に入れ、未知数について解きます。
 
@@ -115,7 +190,7 @@ $P(A \mid B) = P(A) = P(A \mid B')$ という書き方のほうは、シラバ�
 
 **未知数が $1$ つなら、式も $1$ つで足ります。** $2$ つなら、式も $2$ つ必要です。
 
-### 6. $P(A)$ を組み立てる {#total}
+### 7. $P(A)$ を組み立てる（the law of total probability） {#total}
 
 $A$ が起こる道すじは、$B$ を通るものと $B'$ を通るものの $2$ つです。重ならないので、足せます。
 
@@ -133,11 +208,11 @@ $$ {#eq-aasl411-total}
 **@eq-aasl411-total は公式集にありません。** $A$ を $B$ と $B'$ で分けて、@eq-aasl411-mult を $2$ 回使っただけです。試験では、この式を書いても、樹形図をかいて枝先を足しても、どちらでもかまいません。
 :::
 
-**これは樹形図の枝先を足すことと同じです**（[SL 4.6b](aasl-4-6b.qmd#multiply)）。式で書いただけです。
+**これは樹形図の枝先を足すことと同じです**（[第 4 節](#multiply)）。式で書いただけです。
 
 **「$B$ のもとでの $A$ の確率」と「$B'$ のもとでの $A$ の確率」が与えられたら、この式で $P(A)$ が出ます。**
 
-### 7. どの式を選ぶか {#choose}
+### 8. どの式を選ぶか {#choose}
 
 | 与えられるもの | 求めたいもの | 使う式 |
 |:--|:--|:--|
@@ -152,16 +227,10 @@ $$ {#eq-aasl411-total}
 
 **答えはすべて $0$ 以上 $1$ 以下です。** ここを外したら、式か代入がまちがっています。
 
-::: {.callout-warning}
-## この項目に電卓は要りません
-このページの計算は、Paper 1 でも Paper 2 でも**手でできます**。かける・割る・引くだけです。
-
-**答えは分数のままで書けます。** $\dfrac{21}{56}$ は $\dfrac{3}{8}$ まで約分します。
-:::
-
-![(a) The three standard ways of writing independence say the same thing when the probability of the condition is strictly between zero and one, since dividing the product rule by the probability of the condition gives the conditional form and splitting the probability of an event across the condition and its complement gives the third form, so showing any one of them is enough; the product form is the one taken as the definition, because it uses no division and still makes sense when that probability is zero or one. (b) In a two-way table, independence shows up as equal proportions along the rows, and those proportions also equal the overall proportion for the column event, which is why comparing a conditional probability with an unconditional one is a valid test](img/aasl-4-11-idea.svg){#fig-aasl411-idea width=100%}
-
 ## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
 
 **なぜ、$3$ つの言い方が同じことなのでしょうか。** $1$ つずつ移り合うことを見ます。
 
@@ -206,7 +275,7 @@ $$
 
 です。それぞれに @eq-aasl411-mult を使えば @eq-aasl411-total になります。
 
-**なぜ、二元表では「行の割合が等しい」が独立なのでしょうか**（@fig-aasl411-idea (b)）。行の割合が $P(A \mid B)$ と $P(A \mid B')$ だからです。
+**なぜ、二元表では「行の割合が等しい」が独立なのでしょうか**（@fig-aasl411-idea-b）。行の割合が $P(A \mid B)$ と $P(A \mid B')$ だからです。
 
 この $2$ つが等しいとき、その共通の値を $p$ とおくと
 
@@ -217,6 +286,7 @@ $$
 です。**列の合計の割合も同じ $p$ になります。** だから $P(A \mid B) = P(A)$ で、独立です。
 
 **逆に、$2$ つの行で割合がちがえば、独立ではありません。** $P(A \mid B) \ne P(A \mid B')$ のとき、$P(A)$ はその $2$ つの間に入るので、どちらとも一致しないからです。
+:::
 
 ## Worked examples
 
@@ -260,7 +330,7 @@ $$
 P(A \mid B) = \frac{0.2}{0.5} = 0.4
 $$
 
-**(b)** まず $P(A \cap B')$ と $P(B')$ を出します（[第 5 節](#solve)）。
+**(b)** まず $P(A \cap B')$ と $P(B')$ を出します（[第 6 節](#solve)）。
 
 $$
 P(A \cap B') = P(A) - P(A \cap B) = 0.4 - 0.2 = 0.2
@@ -344,7 +414,7 @@ $2$ つの事象 $A$、$B$ について、$P(A) = 0.6$、$P(B) = 0.4$、$P(A \cu
 
 ---
 
-**(a)** [SL 4.6a の加法定理](aasl-4-6a.qmd#addition)を移項します。
+**(a)** [SL 4.6 の加法定理](aasl-4-6.qmd#addition)を移項します。
 
 $$
 P(A \cap B) = 0.6 + 0.4 - 0.8 = 0.2
@@ -362,7 +432,7 @@ $$
 P(A \mid B') = \frac{0.4}{0.6} = \frac{2}{3}
 $$
 
-**(c)** @eq-aasl411-indep で判定します（[第 4 節](#test)）。
+**(c)** @eq-aasl411-indep で判定します（[第 5 節](#test)）。
 
 $$
 P(A)P(B) = 0.6 \times 0.4 = 0.24, \qquad P(A \cap B) = 0.2
@@ -517,7 +587,7 @@ $$
 0.5 \times P(B) = 0.2, \qquad P(B) = 0.4
 $$
 
-**(b)** [SL 4.6a の加法定理](aasl-4-6a.qmd#addition)です。
+**(b)** [SL 4.6 の加法定理](aasl-4-6.qmd#addition)です。
 
 $$
 P(A \cup B) = 0.5 + 0.4 - 0.2 = 0.7
@@ -566,12 +636,12 @@ $$P(A \mid B') = P(A) = 0.5$$
 
 ::: {.callout-warning}
 ## 分子に $P(A)$ を使う
-@eq-aasl411-cond の分子は $P(A \cap B)$ です（[第 1 節](#formal)）。$P(A)$ ではありません。
+@eq-aasl411-cond の分子は $P(A \cap B)$ です（[第 3 節](#formula)）。$P(A)$ ではありません。
 :::
 
 ::: {.callout-warning}
 ## $P(A \mid B)$ と $P(B \mid A)$ を取りちがえる
-分母は縦棒の**右**の事象です（[第 1 節](#formal)）。分子はどちらも $P(A \cap B)$ です。
+分母は縦棒の**右**の事象です（[第 3 節](#formula)）。分子はどちらも $P(A \cap B)$ です。
 :::
 
 ::: {.callout-warning}
@@ -581,12 +651,12 @@ $$P(A \mid B') = P(A) = 0.5$$
 
 ::: {.callout-warning}
 ## 「だいたい等しい」で独立と判定する
-$P(A \cap B)$ と $P(A)P(B)$ は、等しいか等しくないかです（[第 4 節](#test)）。小さな差でも独立ではありません。
+$P(A \cap B)$ と $P(A)P(B)$ は、等しいか等しくないかです（[第 5 節](#test)）。小さな差でも独立ではありません。
 :::
 
 ::: {.callout-warning}
 ## 独立と排反を混同する
-独立は $P(A \cap B) = P(A)P(B)$、排反は $P(A \cap B) = 0$ です（[SL 4.6b](aasl-4-6b.qmd#compare)）。
+独立は $P(A \cap B) = P(A)P(B)$、排反は $P(A \cap B) = 0$ です（[SL 4.6](aasl-4-6.qmd#independent)）。
 :::
 
 ::: {.callout-warning}
@@ -627,7 +697,7 @@ $$P(A \mid B) = \frac{0.28}{0.4} = 0.7$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-@eq-aasl411-indep の両辺を計算して比べます（[第 4 節](#test)）。次に @eq-aasl411-cond を使います。
+@eq-aasl411-indep の両辺を計算して比べます（[第 5 節](#test)）。次に @eq-aasl411-cond を使います。
 
 **検算（独立の性質で）。** 独立なら $P(A \mid B) = P(A)$ になるはずです。$0.7 = P(A)$ ✓ 一致します。
 
@@ -662,7 +732,7 @@ $$P(A)P(B) = 0.45 \times 0.6 = 0.27 \ne 0.2$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-分母は縦棒の右の事象です（[第 1 節](#formal)）。判定は @eq-aasl411-indep です。
+分母は縦棒の右の事象です（[第 3 節](#formula)）。判定は @eq-aasl411-indep です。
 
 **検算（条件付き確率で）。** $P(A \mid B) = \dfrac{1}{3} \approx 0.333$ で、$P(A) = 0.45$ とちがいます ✓ 独立でないことと合っています。
 
@@ -746,7 +816,7 @@ $$P(X)P(Y) = \frac{80}{200} \times \frac{100}{200} = 0.4 \times 0.5 = 0.2$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-表から $3$ つの確率を読み、@eq-aasl411-indep で比べます（[第 4 節](#test)）。
+表から $3$ つの確率を読み、@eq-aasl411-indep で比べます（[第 5 節](#test)）。
 
 **検算（行の割合で）。** $P(X \mid Y) = \dfrac{30}{100} = 0.3$、$P(X \mid Y') = \dfrac{50}{100} = 0.5$ です ✓ ちがうので、独立ではありません。
 
@@ -818,7 +888,7 @@ $$P(A \cup B) = 0.4 + 0.5 - 0.2 = 0.7$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-独立なので @eq-aasl411-indep で共通部分を出し、次に [SL 4.6a の加法定理](aasl-4-6a.qmd#addition)を使います。
+独立なので @eq-aasl411-indep で共通部分を出し、次に [SL 4.6 の加法定理](aasl-4-6.qmd#addition)を使います。
 
 **検算（余事象で）。** $P((A \cup B)') = P(A')P(B') = 0.6 \times 0.5 = 0.3$ です（$A$ と $B$ が独立なら、[Why it works](#why-it-works) の議論をもう一度使って $A'$ と $B'$ も独立です）。$1 - 0.3 = 0.7$ ✓
 
@@ -851,7 +921,7 @@ $2$ つの事象 $A$、$B$ について、$P(A) = 0.5$、$P(B) = 0.2$ です。�
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-`Comment on` なので、**どこがまちがっているか**を書きます（[第 1 節](#formal)）。$P(A \mid B)$ を決めるのは $P(A \cap B)$ と $P(B)$ で、$P(B)$ の大きさだけでは決まりません。
+`Comment on` なので、**どこがまちがっているか**を書きます（[第 3 節](#formula)）。$P(A \mid B)$ を決めるのは $P(A \cap B)$ と $P(B)$ で、$P(B)$ の大きさだけでは決まりません。
 
 **検算（両端で）。** $P(A \cap B) = 0$ なら $P(A \mid B) = 0$、$P(A \cap B) = 0.2$ なら $P(A \mid B) = 1$ です ✓ どちらも $0$ 以上 $1$ 以下におさまります。
 
@@ -927,7 +997,7 @@ $$P(B) = \frac{0.35}{0.7} = 0.5$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-独立なので、[SL 4.6a の加法定理](aasl-4-6a.qmd#addition)の $P(A \cap B)$ を @eq-aasl411-indep で $P(A)P(B)$ に置きかえられます。未知数が $1$ つなので、式も $1$ つで足ります（[第 5 節](#solve)）。
+独立なので、[SL 4.6 の加法定理](aasl-4-6.qmd#addition)の $P(A \cap B)$ を @eq-aasl411-indep で $P(A)P(B)$ に置きかえられます。未知数が $1$ つなので、式も $1$ つで足ります（[第 6 節](#solve)）。
 
 **検算（もどします）。** $P(A \cap B) = 0.3 \times 0.5 = 0.15$ なので $P(A \cup B) = 0.3 + 0.5 - 0.15 = 0.65$ ✓ 与えられた値と一致します。$P(A \cap B)$ を引き忘れて式を立てると、$P(B) = 0.35$ が出ます。
 

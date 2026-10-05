@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_2_1.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_2_1.py  … 目視用の PNG も
 
-出力: aa-sl/01-number-and-algebra/../02-functions/img/aasl-2-1-idea.svg
+出力: aa-sl/01-number-and-algebra/../02-functions/img/aasl-2-1-idea-a.svg
+      aa-sl/01-number-and-algebra/../02-functions/img/aasl-2-1-idea-b.svg
 
 (a) 傾きは rise / run。直線上のどの 2 点で測っても同じ。
 (b) 平行なら傾きが等しい。垂直なら傾きは負の逆数。
@@ -33,12 +34,12 @@ GREY = "#6b7280"
 WARM = "#b45309"
 FAINT = "#e5e7eb"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.8, 4.2))
-
+fig1, ax1 = plt.subplots(figsize=(5.3, 4.2))
+fig2, ax2 = plt.subplots(figsize=(5.4, 3.9))
 # ══════════════════════════════════════════════════════════
 # (a) rise / run
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Gradient $=$ rise $\\div$ run", fontsize=11, color=INK,
+ax1.set_title("Gradient $=$ rise $\\div$ run", fontsize=11, color=INK,
               loc="left", pad=10)
 ax1.set_xlim(-0.6, 6.4)
 ax1.set_ylim(-0.9, 5.4)
@@ -73,34 +74,34 @@ for px, py, lab, dy in [(AX, AY, "$A(x_{1},\\,y_{1})$", 0.30),
 
 ax1.text(0.55, 4.55, "$m = \\dfrac{y_{2}-y_{1}}{x_{2}-x_{1}}$",
          ha="left", va="center", fontsize=13, color=ACCENT)
-ax1.text(3.0, -0.78, "any two points on the line give the same $m$",
-         ha="center", va="center", fontsize=9.5, color=INK)
 
 # ══════════════════════════════════════════════════════════
 # (b) 平行と垂直
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Parallel and perpendicular", fontsize=11, color=INK,
+ax2.set_title("Parallel and perpendicular", fontsize=11, color=INK,
               loc="left", pad=10)
-ax2.set_xlim(-3.2, 3.2)
-ax2.set_ylim(-3.2, 3.2)
+ax2.set_xlim(-2.5, 3.7)
+ax2.set_ylim(-2.3, 2.8)
 ax2.set_aspect("equal")
 ax2.axis("off")
 
-ax2.plot([-3.0, 3.0], [0, 0], color=FAINT, linewidth=1.0)
-ax2.plot([0, 0], [-3.0, 3.0], color=FAINT, linewidth=1.0)
+ax2.plot([-2.35, 3.55], [0, 0], color=FAINT, linewidth=1.0)
+ax2.plot([0, 0], [-2.15, 2.65], color=FAINT, linewidth=1.0)
 
 M = 2.0
-t = np.linspace(-1.35, 1.35, 40)
+t = np.linspace(-1.05, 1.25, 40)
 # 傾き m の直線（2 本、平行）
 ax2.plot(t, M * t, color=ACCENT, linewidth=2.0)
 ax2.plot(t, M * t + 2.0, color=ACCENT, linewidth=2.0, linestyle=(0, (6, 3)))
 # 傾き -1/m の直線
-s = np.linspace(-2.9, 2.9, 40)
+s = np.linspace(-2.2, 3.1, 40)
 ax2.plot(s, -s / M, color=WARM, linewidth=2.0)
 
-ax2.text(1.45, 2.55, "gradient $m$", fontsize=10, color=ACCENT, ha="left")
-ax2.text(-2.9, -2.05, "gradient $m$", fontsize=10, color=ACCENT, ha="left")
-ax2.text(2.05, -1.35, "gradient $-\\dfrac{1}{m}$", fontsize=11, color=WARM,
+ax2.text(1.35, 2.45, "gradient $m_{1}$", fontsize=10, color=ACCENT,
+         ha="left", va="center")
+ax2.text(-1.50, -0.72, "gradient $m_{2}$", fontsize=10, color=ACCENT,
+         ha="right", va="center")
+ax2.text(1.30, -1.85, "gradient $-\\dfrac{1}{m_{1}}$", fontsize=11, color=WARM,
          ha="left", va="center")
 
 # 直角の印
@@ -110,17 +111,14 @@ v = np.array([1.0, -1.0 / M]) / np.hypot(1.0, 1.0 / M) * d
 ax2.plot([u[0], u[0] + v[0], v[0]], [u[1], u[1] + v[1], v[1]],
          color=INK, linewidth=1.2)
 
-ax2.text(0.0, -2.85, "parallel: $m_{1}=m_{2}$      "
-         "perpendicular: $m_{1}m_{2}=-1$",
-         ha="center", va="center", fontsize=10, color=INK)
 
-fig.tight_layout(w_pad=2.2)
-path = os.path.join(OUT, "aasl-2-1-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-2-1-idea-a.svg"), (fig2, "aasl-2-1-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

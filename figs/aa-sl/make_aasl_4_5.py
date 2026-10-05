@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_4_5.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_4_5.py  … 目視用の PNG も
 
-出力: aa-sl/04-statistics-and-probability/img/aasl-4-5-idea.svg
+出力: aa-sl/04-statistics-and-probability/img/aasl-4-5-idea-a.svg
+      aa-sl/04-statistics-and-probability/img/aasl-4-5-idea-b.svg
 
 (a) さいころ 2 個の標本空間を表にする。事象はマス目の集まり。
 (b) 相対度数は、回数を増やすと理論値のまわりに落ち着いていく。
@@ -34,15 +35,15 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.0, 4.6))
-
+fig1, ax1 = plt.subplots(figsize=(5.0, 5.0))
+fig2, ax2 = plt.subplots(figsize=(5.4, 4.6))
 # ══════════════════════════════════════════════════════════
 # (a) さいころ 2 個の標本空間
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) The sample space as a table", fontsize=11, color=INK,
+ax1.set_title("The sample space as a table", fontsize=11, color=INK,
               loc="left", pad=10)
 ax1.set_xlim(-1.1, 6.4)
-ax1.set_ylim(-1.9, 7.3)
+ax1.set_ylim(-0.35, 7.3)
 ax1.set_aspect("equal")
 ax1.axis("off")
 
@@ -62,16 +63,11 @@ ax1.text(2.5, 6.95, "second die", fontsize=9.5, color=ACCENT, ha="center")
 ax1.text(-0.95, 3.0, "first die", fontsize=9.5, color=ACCENT, rotation=90,
          va="center")
 
-ax1.text(-1.1, -0.55, "the number of cells is $n(U)$", fontsize=10, color=INK)
-ax1.text(-1.1, -1.16, "shaded event: the two numbers add to $7$. It has $6$ "
-         "cells, so $\\frac{6}{36} = \\frac{1}{6}$", fontsize=9.5, color=ACCENT)
-ax1.text(-1.1, -1.62, "$(2,5)$ and $(5,2)$ are both shaded, and are counted "
-         "separately", fontsize=9.5, color=WARM)
 
 # ══════════════════════════════════════════════════════════
 # (b) 相対度数の落ち着き方
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Relative frequency as trials are added", fontsize=11,
+ax2.set_title("Relative frequency as trials are added", fontsize=11,
               color=INK, loc="left", pad=10)
 
 P = 0.4
@@ -105,18 +101,14 @@ ax2.annotate("", xy=(N - 2, 0.79), xytext=(N - 120, 0.79),
              arrowprops=dict(arrowstyle="<->", color=GREY, linewidth=1.0))
 ax2.text(N - 128, 0.76, "narrow later", fontsize=9, color=GREY, ha="right")
 
-ax2.text(0.0, -0.22, "the relative frequency settles towards the theoretical "
-         "value, but never has to reach it exactly", fontsize=9, color=INK,
-         transform=ax2.transAxes)
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-4-5-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-print(f"  shaded cells: {len(SHADED)}   final relative frequency: {_run[-1]:.3f}")
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-4-5-idea-a.svg"), (fig2, "aasl-4-5-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

@@ -3,10 +3,9 @@
     python3 figs/aa-sl/make_aasl_5_4.py
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_5_4.py
 
-出力: aa-sl/05-calculus/img/aasl-5-4-idea.svg
+出力: aa-sl/05-calculus/img/aasl-5-4-idea-a.svg
 
 (a) 曲線上の点 P での接線と法線。直角の印と、傾きの関係。
-(b) 3 歩の手順と、傾きが 0 のときの特別な場合。
 
 ★ 数値は入れません。文字だけです（例題・演習と重ならないように）。
 
@@ -36,12 +35,11 @@ WARM = "#b45309"
 FILL = "#e8f0f9"
 SHADE = "#fdf0dc"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.8, 5.2))
-
+fig1, ax1 = plt.subplots(figsize=(5.8, 5.2))
 # ══════════════════════════════════════════════════════════
 # (a) 接線と法線
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) The tangent and the normal at $P$", fontsize=11, color=INK,
+ax1.set_title("The tangent and the normal at $P$", fontsize=11, color=INK,
               loc="left", pad=12)
 
 
@@ -90,50 +88,13 @@ ax1.text(0.0, -0.62, "gradient of tangent $= m$", fontsize=10, color=WARM)
 ax1.text(0.0, -1.06, r"gradient of normal $= -\frac{1}{m}$   (when $m \neq 0$)",
          fontsize=10, color=ACCENT)
 
-# ══════════════════════════════════════════════════════════
-# (b) 3 歩の手順
-# ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Three steps, and one special case", fontsize=11, color=INK,
-              loc="left", pad=12)
-ax2.set_xlim(0, 10)
-ax2.set_ylim(-0.6, 10)
-ax2.axis("off")
-
-STEPS = ((8.9, r"1.  find the point:  $y_{1} = f(a)$"),
-         (7.5, r"2.  find the gradient:  $m = f'(a)$"),
-         (6.1, r"3.  put both into  $y - y_{1} = m(x - x_{1})$,"
-          "  with  $x_{1} = a$"))
-for _y, _s in STEPS:
-    ax2.text(0.15, _y, _s, fontsize=11.5, color=ACCENT, ha="left",
-             va="center",
-             bbox=dict(boxstyle="round,pad=0.42", facecolor=FILL,
-                       edgecolor=ACCENT, linewidth=1.2))
-
-ax2.text(0.15, 4.85, "for the normal, use $-\\dfrac{1}{m}$ in step 3",
-         fontsize=11, color=INK, ha="left", va="center")
-
-ax2.text(0.15, 3.35, "special case:  $m = 0$", fontsize=11.5, color=WARM,
-         ha="left", va="center",
-         bbox=dict(boxstyle="round,pad=0.42", facecolor=SHADE,
-                   edgecolor=WARM, linewidth=1.2))
-ax2.text(0.5, 2.05, r"tangent is horizontal:  $y = y_{1}$", fontsize=11,
-         color=WARM, ha="left", va="center")
-ax2.text(0.5, 1.15, r"normal is vertical:  $x = a$", fontsize=11,
-         color=WARM, ha="left", va="center")
-ax2.text(0.5, 0.30, "a vertical line has no gradient,\nso it cannot be "
-         "written as $y = mx + c$", fontsize=9.5, color=GREY, ha="left",
-         va="center", linespacing=1.6)
-
-fig.tight_layout(w_pad=2.2)
-path = os.path.join(OUT, "aasl-5-4-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-print("  P = (%.2f, %.2f)  tangent gradient = %.3f  normal gradient = %.3f"
-      % (PX, PY, M, -1.0 / M))
-print("  product =", round(M * (-1.0 / M), 10))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-5-4-idea-a.svg"),):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

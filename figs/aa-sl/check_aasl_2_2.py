@@ -27,7 +27,6 @@ R = sp.Rational
 x, t, n, a, b = sp.symbols("x t n a b")
 REALS = sp.S.Reals
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -36,31 +35,24 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) == 0, msg + f"  ({u} vs {v})")
 
-
 def ne(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) != 0, msg + f"  ({u} vs {v})")
-
 
 def dom(expr_ge0, want, msg=""):
     """expr_ge0 >= 0 の解が want と一致するか。"""
     chk(sp.solveset(expr_ge0 >= 0, x, REALS) == want, "定義域: " + msg)
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 定義そのもの
@@ -224,8 +216,10 @@ chk(0 not in sp.Interval(5, sp.oo), "x=0 は生徒の範囲の外")
 # ══════════════════════════════════════════════════════════
 # 7. 公式集とシラバス
 # ══════════════════════════════════════════════════════════
-in_text("## この項目には、公式集の欄がありません", "2.2 は公式集にない")
-in_text("**2.2 の内容は、公式集には載っていません。**", "同上")
+not_in_text("## この項目には、公式集の欄がありません", "公式集の囲みは置かない")
+not_in_text("**2.2 の内容は、公式集には載っていません。**", "同上")
+in_text("**domain に影響することが多いのは、次の $2$ つの例**です。", "表の前置き")
+not_in_text("式が意味をもたなくなるのは", "古い言い方は残っていない")
 not_in_text("> Function notation, for example", "Content 欄の引用は置かない")
 in_text("シラバスは、$f(x)$、$v(t)$、$C(n)$ のような書き方を挙げています。", "文章で書く")
 in_text("> Unless otherwise stated, the domain will be the largest possible "
@@ -247,7 +241,10 @@ not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシ
 # ══════════════════════════════════════════════════════════
 # 8. 説明のしかた
 # ══════════════════════════════════════════════════════════
-in_text("**vertical line test**（縦線判定）", "縦線判定")
+in_text("これを **vertical line test** と言います。",
+        "vertical line test は英語だけ")
+not_in_text("縦線判定", "訳語は置かない")
+not_in_text("横線判定", "同上")
 in_text("$f^{-1}(x)$ は $\\dfrac{1}{f(x)}$ ではありません", "指数ではない")
 not_in_text("**domain が変われば、range も変わります。**", "無条件の断定は外した")
 in_text("**domain を変えると、range も変わることがあります。**", "断定を弱めた")
@@ -262,7 +259,8 @@ in_text("このとき、$2$ 点を結ぶ線分の傾きは", "a = b を先に片
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -321,7 +319,7 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
         "まだないページへのリンク: " + _href)
 # 定義した表・式・図は、本文から参照している
 for _lab in ["tbl-aasl22-isfn", "tbl-aasl22-notation", "tbl-aasl22-domain",
-             "tbl-aasl22-shadow", "fig-aasl22-idea", "eq-aasl22-undo"]:
+             "tbl-aasl22-shadow", "fig-aasl22-idea-a", "fig-aasl22-idea-b", "eq-aasl22-undo"]:
     chk(TEXT.count("@" + _lab) >= 1, "本文から参照していない: " + _lab)
 _head = TEXT[:TEXT.index("## The idea")]
 chk("::: {.callout-important}" not in _head,
@@ -332,25 +330,27 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-2-2-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-2-2-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-2-2-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-2-2-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-2-2-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-2-2-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-2-2-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Domain on the $x$-axis, range on the $y$-axis", "図(a) の題")
+in_fig("Domain on the $x$-axis, range on the $y$-axis", "図(a) の題")
 in_fig("$y = \\\\sqrt{2-x}$", "図(a) の関数")
 in_fig("domain: $x \\\\leq 2$", "図(a) の domain")
 in_fig("range:\\n$y \\\\geq 0$", "図(a) の range")
 in_fig("shadow on each axis", "図(a) の要点")
-in_fig("(b) The inverse is the reflection in $y = x$", "図(b) の題")
+in_fig("The inverse is the reflection in $y = x$", "図(b) の題")
 in_fig("$y = f(x)$", "図(b) の f")
 in_fig("$y = f^{-1}(x)$", "図(b) の逆関数")
-in_fig("$f(a) = b$ means $f^{-1}(b) = a$", "図(b) の要点")
-in_text("(a) The domain of $f(x)=\\sqrt{2-x}$ is the shadow of the graph",
-        "キャプションが (a) を説明")
-in_text("(b) The graph of $y=f^{-1}(x)$ is the reflection", "キャプションが (b) を説明")
 # 図が使っている 2 点は、実際に入れかえの関係
 chk(abs(1.4 ** 2 - 1.96) < 1e-9, "図の点は y = x^2 の上")
 # 図に演習の答えを書いていない
@@ -361,11 +361,12 @@ for leak in ["x \\\\leq 5", "x \\\\geq 1", "x \\\\geq -3", "f(x) \\\\geq -3",
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-2.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/02-functions/aasl-2-2.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-2-1.qmd") < DRAFT.index("aasl-2-2.qmd"), "並びが 2.1 → 2.2")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-2.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -377,7 +378,6 @@ GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for _t in ["| function |", "| domain |", "| range |", "| inverse function |",
            "| one-to-one |", "| mathematical model |"]:
     chk(_t in GLO, "対訳表にある: " + _t)
-
 
 # ══════════════════════════════════════════════════════════
 # 13. 査読で直したところ（2026-09-07）
@@ -397,7 +397,7 @@ in_text("**(d) は (c) と同じ事実を左右から見たものなので、(d)
 chk(sp.solve(sp.Eq(_f2, 21), x)[0] > sp.solve(sp.Eq(_f2, 5), x)[0],
     "大きい値のほうが戻り値も大きい")
 # 所見 5 — 例題 4 (c) の検算を、範囲の外で意味が壊れることに変えた
-in_text("(b) と同じ計算を繰り返しても検算にはなりません。", "循環を避けた")
+in_text("と同じ計算を繰り返しても検算にはなりません。", "循環を避けた")
 in_text("$t = 20$ とすると $V(20) = 120 - 160 = -40$ となり、水の量が負に"
         "なってしまいます ✓", "外側で壊れる")
 eq(120 - 160, -40, "V(20) = -40")
@@ -420,7 +420,8 @@ in_text("**入力 $1$ つに出力 $1$ つ**という[第 1 節](#idea)の条件
 in_text("この $f$ は、ちがう $x$ からは必ずちがう値が出るので、戻し先が $1$ つに"
         "決まります。", "前提を書いた")
 # 所見 15 — 図 (b) の位置づけ
-in_text("**(b) は逆関数の図で、[第 7 節](#inverse)で使います。**", "図(b) の案内")
+in_text("@fig-aasl22-idea-a が、その読み方です。", "図(a) の案内")
+not_in_text("いまは (a) だけを見てください", "分割前の (a)(b) の案内は消した")
 # 所見 16 — モデルと現実を分けた
 in_text("The model simply stops applying at $t = 15$", "モデルの外だと明記")
 # 所見 17 — 演習 3 と 演習 10 の論点を分けた
@@ -435,6 +436,110 @@ chk("(x-3)" not in _body22, "同上")
 for _blk in re.findall(r"::: \{\.model-answer\}(.*?):::", TEXT, re.S):
     _w = len(_blk.split())
     chk(_w <= 110, f"model-answer が長すぎない: {_w} 語")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 2. function notation（関数の書き方） {#notation}', "見出しの英語: 2. function notation（関数の書き")
+in_text('### 3. domain（定義域） {#domain}', "見出しの英語: 3. domain（定義域）")
+in_text('### 4. range（値域） {#range}', "見出しの英語: 4. range（値域）")
+in_text('### 5. グラフから domain と range を読む {#from-graph}', "見出しの英語: 5. グラフから domain と range を読")
+in_text('### 6. 関数は、現実世界のモデルになる（mathematical model） {#model}', "見出しの英語: 6. 関数は、場面のモデルになる（mathemati")
+in_text('### 7. inverse function（逆関数）は、もとに戻す関数 {#inverse}', "見出しの英語: 7. inverse function（逆関数）は、")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    '$f(a) = b$ means $f^{-1}(b',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
+in_text('$f(a) = b$ だとします。逆関数は、これをもとに戻すのですから $f^{-1}(b) = a$ です', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01 の手直し
+# ══════════════════════════════════════════════════════════
+in_text("**関数かどうかは、グラフでは、縦線を引いて確かめられます。**",
+        "vertical line test の書き出し")
+not_in_text("グラフでは、**縦線を引いて確かめられます**。", "前の書き出しは消した")
+in_text(": 「ちょうど $1$ つ」を確かめる {#tbl-aasl22-isfn .tbl-nowrap}",
+        "表 1 は tbl-nowrap")
+in_text("### 6. 関数は、現実世界のモデルになる（mathematical model） {#model}",
+        "第 6 節の見出し")
+in_text("### 7. inverse function（逆関数）は、もとに戻す関数 {#inverse}",
+        "第 7 節の見出し")
+
+# --- vertical line test の図 --------------------------------------------
+in_text("![A vertical line meets a function once, and this circle twice]"
+        "(img/aasl-2-2-vlt.svg){#fig-aasl22-vlt width=100%}", "図のキャプション")
+in_text("@fig-aasl22-vlt の左は関数です。", "図への参照")
+chk(os.path.exists(os.path.join(BASE, "img", "aasl-2-2-vlt.svg")),
+    "SVG がある: aasl-2-2-vlt.svg")
+in_fig("a function", "左の題")
+in_fig("not a function", "右の題")
+in_fig("$x^{2}+y^{2}=1$", "右は単位円")
+in_fig("one point", "左は 1 か所")
+in_fig("two points", "右は 2 か所")
+chk(TEXT.count("](img/") == 4, "図は 4 枚: %d" % TEXT.count("](img/"))
+# --- horizontal line test の図 ------------------------------------------
+in_text("**one-to-one かどうかは、グラフでは、横線を引いて確かめられます。**",
+        "horizontal line test の書き出し")
+in_text("![A horizontal line meets $y = 4x-7$ once, and $y = x^{2}$ twice]"
+        "(img/aasl-2-2-hlt.svg){#fig-aasl22-hlt width=100%}",
+        "横線判定の図のキャプション")
+in_text("@fig-aasl22-hlt の左 $y = 4x-7$ は、", "横線判定の図への参照")
+in_text("**vertical line test（[第 1 節](#idea)）とは、見るものがちがいます。**",
+        "縦線と横線のちがい")
+chk(os.path.exists(os.path.join(BASE, "img", "aasl-2-2-hlt.svg")),
+    "SVG がある: aasl-2-2-hlt.svg")
+in_fig("one-to-one", "左の題")
+in_fig("not one-to-one", "右の題")
+in_fig("$y = 4x - 7$", "左の式")
+in_fig("$y = x^{2}$", "右の式")
+# y = 4x-7 は 1 対 1、y = x^2 はそうでない
+_xs = sp.Symbol("x", real=True)
+chk(sp.solve(sp.Eq(4 * _xs - 7, 2), _xs) == [sp.Rational(9, 4)],
+    "y = 4x-7 は y = 2 で 1 点")
+chk(len(sp.solve(sp.Eq(_xs ** 2, sp.Rational(13, 5)), _xs)) == 2,
+    "y = x^2 は y = 2.6 で 2 点")
+# 図の文字が枠の中にあるか
+for _ax, _lo, _hi in (("ax0L", -1.75, 1.75), ("ax0R", -1.75, 1.75),
+                      ("axHL", -3.4, 5.2), ("axHR", -3.4, 5.2)):
+    for _t in re.finditer(_ax + r"\.text\(\s*[-\d.]+\s*,\s*([-\d.]+)", FIG):
+        chk(_lo <= float(_t.group(1)) <= _hi,
+            "%s.text の y=%s は枠の中" % (_ax, _t.group(1)))
+# 左の曲線は 1 つの x に 1 つの y、円は 2 つ
+_x = sp.Symbol("x", real=True)
+_y = sp.Symbol("y", real=True)
+chk(len(sp.solve(sp.Eq(_y, sp.Rational(27, 20) * sp.Rational(19, 20) ** 3
+                       - sp.Rational(23, 20) * sp.Rational(19, 20)), _y)) == 1,
+    "左は x = 0.95 で y が 1 つ")
+chk(len(sp.solve([sp.Eq(_x ** 2 + _y ** 2, 1),
+                  sp.Eq(_x, sp.Rational(11, 20))], [_x, _y])) == 2,
+    "円は x = 0.55 で y が 2 つ")
 
 print()
 print("OK", OK, "/ NG", NG)

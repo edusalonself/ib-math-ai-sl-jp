@@ -66,10 +66,6 @@ ax.set_yticklabels(["$-1$", "$0$", "$1$"], fontsize=11)
 for _s in ("top", "right", "left"):
     ax.spines[_s].set_visible(False)
 ax.spines["bottom"].set_visible(False)
-ax.text(2.2, 1.8,
-        "plot the five values, then join them smoothly;\nboth endpoints "
-        "are maximum points", fontsize=10, color=INK,
-        ha="left", va="top")
 
 fig.tight_layout()
 path = os.path.join(OUT, "aasl-3-7a-ex1.svg")

@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_2_3.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_2_3.py  … 目視用の PNG も
 
-出力: aa-sl/02-functions/img/aasl-2-3-idea.svg
+出力: aa-sl/02-functions/img/aasl-2-3-idea-a.svg
+      aa-sl/02-functions/img/aasl-2-3-idea-b.svg
 
 (a) sketch にラベルする key features。
 (b) 和のグラフは、同じ x での y の値を足したもの。
@@ -33,12 +34,12 @@ GREY = "#6b7280"
 WARM = "#b45309"
 GREEN = "#15803d"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.8, 4.4))
-
+fig1, ax1 = plt.subplots(figsize=(5.3, 4.4))
+fig2, ax2 = plt.subplots(figsize=(5.3, 4.4))
 # ══════════════════════════════════════════════════════════
 # (a) sketch にラベルするもの
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) What a sketch must show", fontsize=11, color=INK,
+ax1.set_title("What a sketch must show", fontsize=11, color=INK,
               loc="left", pad=10)
 ax1.set_xlim(-3.8, 4.6)
 ax1.set_ylim(-3.4, 4.6)
@@ -76,14 +77,11 @@ ax1.annotate("minimum point", xy=(vx, (vx + 1.4) * (vx - 3.0) * 0.55),
              xytext=(1.7, -3.15), fontsize=10, color=WARM,
              arrowprops=dict(arrowstyle="->", color=WARM, linewidth=0.9))
 
-ax1.text(-3.7, 4.5, "label the axes, every intercept,\n"
-         "every maximum and minimum,\nand the curve itself",
-         fontsize=9.5, color=INK, va="top")
 
 # ══════════════════════════════════════════════════════════
 # (b) 和のグラフ
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Adding two graphs", fontsize=11, color=INK,
+ax2.set_title("Adding two graphs", fontsize=11, color=INK,
               loc="left", pad=10)
 ax2.set_xlim(-0.6, 4.4)
 ax2.set_ylim(-0.9, 5.4)
@@ -116,16 +114,14 @@ for hv, col in [(fp, ACCENT), (gp, GREEN), (fp + gp, WARM)]:
     ax2.plot([p], [hv], marker="o", markersize=5.5, color=col, zorder=3)
 ax2.text(p + 0.16, (fp + gp) / 2, "heights add", fontsize=10, color=INK,
          ha="left", va="center")
-ax2.text(2.0, -0.8, "at each $x$, add the two $y$-values", fontsize=9.5,
-         color=INK, ha="center")
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-2-3-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-2-3-idea-a.svg"), (fig2, "aasl-2-3-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

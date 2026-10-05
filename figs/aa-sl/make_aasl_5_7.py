@@ -3,10 +3,9 @@
     python3 figs/aa-sl/make_aasl_5_7.py
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_5_7.py
 
-出力: aa-sl/05-calculus/img/aasl-5-7-idea.svg
+出力: aa-sl/05-calculus/img/aasl-5-7-idea-a.svg
 
 (a) f、f'、f'' の 3 つのグラフを、x をそろえて縦に並べる。
-(b) f'' の符号と f' の増減の対応。
 
 ★ 式は書きません（例題・演習と重ならないように）。曲線の形だけを見せます。
 
@@ -45,12 +44,11 @@ F = X ** 3 - 3 * X ** 2
 F1 = 3 * X ** 2 - 6 * X
 F2 = 6 * X - 6
 
-fig = plt.figure(figsize=(11.2, 6.2))
-gs = GridSpec(3, 2, figure=fig, width_ratios=[1.15, 1.0], hspace=0.55,
-              wspace=0.30)
+fig1 = plt.figure(figsize=(6.2, 6.2))
+gs = GridSpec(3, 1, figure=fig1, hspace=0.55,
+              left=0.10, right=0.97, top=0.90, bottom=0.07)
 
-ax_a = [fig.add_subplot(gs[i, 0]) for i in range(3)]
-ax_b = fig.add_subplot(gs[:, 1])
+ax_a = [fig1.add_subplot(gs[i, 0]) for i in range(3)]
 
 TITLES = ("$y = f(x)$", "$y = f'(x)$", "$y = f''(x)$")
 CURVES = (F, F1, F2)
@@ -73,7 +71,7 @@ for _ax, _y, _t, _c, _lim in zip(ax_a, CURVES, TITLES, COLS, YLIMS):
         _ax.axvline(_v, color=GREY, linewidth=0.7, linestyle=(0, (3, 3)),
                     alpha=0.75)
 
-ax_a[0].set_title("(a) The same $x$ on all three graphs", fontsize=11,
+ax_a[0].set_title("The same $x$ on all three graphs", fontsize=11,
                   color=INK, loc="left", pad=26)
 
 AR = dict(arrowstyle="->", linewidth=1.0)
@@ -94,46 +92,12 @@ ax_a[2].annotate("zero here", xy=(1.02, -0.4), xytext=(1.30, -8.0),
                  arrowprops=dict(color=WARM, **AR))
 ax_a[2].set_xlabel("$x$", fontsize=10, color=GREY, labelpad=2)
 
-# ══════════════════════════════════════════════════════════
-# (b) f'' の符号と f' の増減
-# ══════════════════════════════════════════════════════════
-ax_b.set_title("(b) What the sign of $f''$ tells you", fontsize=11,
-               color=INK, loc="left", pad=10)
-ax_b.set_xlim(0, 10)
-ax_b.set_ylim(0, 10)
-ax_b.axis("off")
-
-BOX1 = dict(boxstyle="round,pad=0.35", facecolor=SHADE, edgecolor=WARM,
-            linewidth=1.2)
-BOX2 = dict(boxstyle="round,pad=0.35", facecolor=FILL, edgecolor=ACCENT,
-            linewidth=1.2)
-
-ROWS = (("$f''(x) > 0$", "$f'$ is increasing there"),
-        ("$f''(x) < 0$", "$f'$ is decreasing there"),
-        ("$f''(a) = 0$", "the graph of $f'$ is flat at $x = a$"))
-YS = (8.4, 6.8, 5.2)
-for _y, (_l, _r) in zip(YS, ROWS):
-    ax_b.text(1.7, _y, _l, fontsize=12.5, color=WARM, ha="center",
-              va="center", bbox=BOX1)
-    ax_b.annotate("", xy=(4.05, _y), xytext=(3.15, _y),
-                  arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.3))
-    ax_b.text(6.6, _y, _r, fontsize=11, color=ACCENT, ha="center",
-              va="center", bbox=BOX2)
-
-ax_b.plot([0.2, 9.8], [3.9, 3.9], color=GREY, linewidth=0.9)
-ax_b.text(0.25, 3.00, "differentiate once to go from $f$ to $f'$,",
-          fontsize=10, color=INK, va="center")
-ax_b.text(0.25, 2.25, "and once more to go from $f'$ to $f''$",
-          fontsize=10, color=INK, va="center")
-ax_b.text(0.25, 1.35, "the same reading works between $f\'$ and $f\'\'$",
-          fontsize=9.5, color=GREY, va="center")
-
-path = os.path.join(OUT, "aasl-5-7-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-5-7-idea-a.svg"),):
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

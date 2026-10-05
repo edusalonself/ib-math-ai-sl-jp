@@ -29,7 +29,6 @@ R = sp.Rational
 x = sp.Symbol("x")
 a, b = sp.symbols("a b")
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -38,30 +37,23 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) == 0, msg + f"  ({u} vs {v})")
-
 
 def ne(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) != 0, msg + f"  ({u} vs {v})")
 
-
 def coeff(expr, k):
     return sp.expand(expr).coeff(x, k)
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 定理そのもの
@@ -297,7 +289,8 @@ not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシ
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -358,24 +351,24 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-1-9-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-1-9-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-1-9-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-1-9-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-1-9-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-1-9-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-1-9-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Pascal's triangle", "図(a) の題")
-in_fig("add the two entries above", "図(a) の作り方")
+in_fig("Pascal's triangle", "図(a) の題")
 in_fig("$3 + 3 = 6$", "図(a) の例")
-in_fig("(b) Reading a term of $(a+b)^{4}$", "図(b) の題")
+in_fig("Reading a term of $(a+b)^{4}$", "図(b) の題")
 in_fig("index of $a$", "図(b) のラベル")
 in_fig("index of $b$", "図(b) のラベル")
-in_fig("the two indices always add up to $n$", "図(b) の要点")
-in_text("(a) Apart from the 1 at each end, every entry of Pascal's triangle"
-        " is the sum of the two entries directly above it",
-        "キャプションが (a) を説明（両端は例外）")
-in_text("(b) In every term the two indices add up to n", "キャプションが (b) を説明")
 # 図の値が本文と合っているか
 _figrows = [[1], [1, 1], [1, 2, 1], [1, 3, 3, 1], [1, 4, 6, 4, 1]]
 for _n, _row in enumerate(_figrows):
@@ -389,11 +382,12 @@ for leak in ["10", "15", "20", "28", "280", "24", "54", "108", "35"]:
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-9.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/01-number-and-algebra/aasl-1-9.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-1-8.qmd") < DRAFT.index("aasl-1-9.qmd"), "並びが 1.8 → 1.9")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-9.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -405,7 +399,6 @@ GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for t in ["| binomial theorem |", "| Pascal's triangle |", "| factorial |",
           "| combination |", "| coefficient |", "| expansion |"]:
     chk(t in GLO, "対訳表にある: " + t)
-
 
 # ══════════════════════════════════════════════════════════
 # 13. レビュー反映の見張り
@@ -520,7 +513,7 @@ eq(7 * R(6, 2), 21, "7 × 6/2 = 21")
 eq(21 * R(5, 3), 35, "21 × 5/3 = 35")
 eq(C(7, 2), 21, "7C2 = 21")
 # 演習 7 の検算
-in_text("**効くのは $x = 1$ の代入です。**", "効く検算を名指し")
+in_text("**決め手になるのは $x = 1$ の代入です。**", "効く検算を名指し")
 eq(16 - 32 + 12 - 8 + 1, -11, "(2x)^2 を 2x^2 とした誤答は x=1 で -11")
 ne(-11, 1, "合わない")
 # 演習 8 の検算
@@ -533,14 +526,16 @@ ne(sum([1, 6, 15, 22, 15, 6, 1]), 64, "しかし合計は 64 にならない")
 not_in_text("のは偶然ではありません。$1 \\times 27$", "「偶然ではない」を直した")
 eq(1 * 27, 3 * 9, "1×27 と 3×9 はたまたま同じ")
 # GDC
-in_text("| Casio fx-CG50 | `OPTN → PROB → nCr` |", "機種を増やした")
-in_text("| TI-84 | `MATH → PRB → nCr` |", "同上")
-in_text("`6 nCr 3` の形で入力します", "入力の形")
+# GDC は TI-Nspire CX II だけ（本全体の約束）
+in_text("`menu → Probability → Combinations` を選ぶと、`nCr(` が出ます。",
+        "Nspire のメニュー")
+in_text("`nCr(6,3)` と入れます。", "Nspire の入力の形")
+for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "6 nCr 3"]:
+    not_in_text(_m, "TI-Nspire 以外の機種は書かない: " + _m)
 # Common errors を足した
 in_text("## `ascending powers` を、降べきの順で答える", "順序の Common error")
 in_text("**符号も係数の一部です。**", "符号の注意")
 chk(TEXT.count("::: {.callout-warning}") >= 6, "Common errors が 6 つ以上")
-
 
 # ══════════════════════════════════════════════════════════
 # C12  「単項式」の言い方と、符号の場合分け
@@ -564,6 +559,101 @@ chk(all(_v > 0 for _v in
 _c12s = [sp.sign(_v) for _v in
          sp.Poly(sp.expand((2 * _c12x - 3) ** 4), _c12x).all_coeffs()]
 chk(_c12s == [1, -1, 1, -1, 1], "C12 符号が逆なら 1 つおきに変わる")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# 節の見出しには、なるべく英語を添える（_方針変更-2026-09-15.md 第 17 節）
+in_text("### 2. Pascal's triangle（パスカルの三角形） {#pascal}", "見出しの英語 1")
+in_text('### 3. $^{n}\\mathrm{C}_{r}$（binomial coefficient）の式 {#ncr}', "見出しの英語 2")
+in_text('### 4. binomial theorem（二項定理） {#theorem}', "見出しの英語 3")
+in_text('### 5. 特定の項だけを取り出す（the term in $x^{k}$） {#one-term}', "見出しの英語 4")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text("### 2. Pascal's triangle（パスカルの三角形） {#pascal}", "見出しの英語: 2. Pascal's triangle（パスカルの")
+in_text('### 3. $^{n}\\mathrm{C}_{r}$（binomial coefficient）の式 {#ncr}', "見出しの英語: 3. $^{n}\mathrm{C}_{r}$（bi")
+in_text('### 4. binomial theorem（二項定理） {#theorem}', "見出しの英語: 4. binomial theorem（二項定理）")
+in_text('### 5. 特定の項だけを取り出す（the term in $x^{k}$） {#one-term}', "見出しの英語: 5. 特定の項だけを取り出す（the term in")
+in_text('### 7. 係数を簡単に求める方法（table of values） {#tabulate}', "見出しの英語: 7. 係数を簡単に求める方法（table of va")
+
+# 2026-09-17：係数と Pascal's triangle のつながりを、はっきり書く
+in_text("**この係数が従うのが、Pascal's triangle（パスカルの三角形）です。**",
+        "係数は Pascal's triangle に従う")
+in_text("三角形を $n$ 行目まで書けば、展開に使う係数は、その行をそのまま読むだけで",
+        "行を読むだけで係数が出る")
+in_text("| $n$ | 係数（coefficients） |", "表 1 の見出しに英語")
+in_text("### 7. 係数を簡単に求める方法（table of values） {#tabulate}", "§7 の見出し")
+not_in_text("### 7. 値を並べて解く", "古い見出しは残っていない")
+# n = 5 の行と、その展開
+in_text("1 \\quad 5 \\quad 10 \\quad 10 \\quad 5 \\quad 1", "n=5 の行")
+in_text("(a+b)^{5} = a^{5} + 5a^{4}b + 10a^{3}b^{2} + 10a^{2}b^{3} + 5ab^{4} + b^{5}",
+        "n=5 の展開")
+_a, _b = sp.symbols("a b")
+_p5 = sp.expand((_a + _b) ** 5)
+eq(_p5, sp.expand(_a**5 + 5*_a**4*_b + 10*_a**3*_b**2 + 10*_a**2*_b**3
+                  + 5*_a*_b**4 + _b**5), "(a+b)^5 の展開")
+chk([int(sp.binomial(5, _r)) for _r in range(6)] == [1, 5, 10, 10, 5, 1],
+    "Pascal の n=5 の行は 1,5,10,10,5,1")
+for _x, _y, _z in ((1, 4, 5), (4, 6, 10), (6, 4, 10), (4, 1, 5)):
+    eq(_x + _y, _z, "上の 2 つを足す: %d+%d" % (_x, _y))
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+chk("add the two entries above" not in FIGSTR,
+    "作り方を図に書いていない")
+chk("the two indices always add up" not in FIGSTR,
+    "指数の和の規則を図に書いていない")
+in_text("> 両端は $1$。**それ以外は、すぐ上の $2$ つを足す。**",
+        "作り方は本文にある")
+in_text("- どの項でも、**$2$ つの指数の和は $n$** です。",
+        "指数の和は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01 の手直し
+# ══════════════════════════════════════════════════════════
+in_text("### 1. expansion of a binomial（二項展開） {#idea}", "第 1 節の見出し")
+not_in_text("### 1. 展開すると、何が起きるか", "前の見出しは消した")
+in_text("**$^{n}\mathrm{C}_{r}$ は、$n$ 個のものから $r$ 個を選ぶ"
+        "combination（組み合わせ）の数です。**", "組み合わせの数だと先に書く")
+in_text("展開の係数は、まさにこの数になります", "係数とのつながり")
+not_in_text("三角形を書かずに、係数を直接出す式があります。", "前の書き出しは消した")
+in_text("**$\\binom{n}{r}$ と書くこともあります。**", "かっこの書き方")
+in_text("$^{n}\mathrm{C}_{r} = \\binom{n}{r}$ です。", "2 つは同じもの")
+in_text("**公式集と電卓は $^{n}\mathrm{C}_{r}$ のほうです。**", "公式集の書き方")
+chk(TEXT.index("combination（組み合わせ）の数です。**")
+    < TEXT.index("{#eq-aasl19-ncr}"), "説明は式より前")
+chk(TEXT.index("{#eq-aasl19-ncr}")
+    < TEXT.index("**$\\binom{n}{r}$ と書くこともあります。**"),
+    "かっこの書き方は式のあと")
+# nCr は組み合わせの数
+for _n in range(1, 9):
+    for _r in range(0, _n + 1):
+        chk(sp.binomial(_n, _r)
+            == sp.factorial(_n) / (sp.factorial(_r) * sp.factorial(_n - _r)),
+            "C(%d,%d) = n!/(r!(n-r)!)" % (_n, _r))
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -25,7 +25,6 @@ FIGCODE = FIG.split('"""', 2)[-1]
 
 OK = NG = 0
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -34,32 +33,25 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def _S(x):
     if isinstance(x, float):
         return sp.Rational(str(x))
     return sp.nsimplify(x, rational=True)
 
-
 def eq(a, b, msg=""):
     chk(sp.simplify(_S(a) - _S(b)) == 0, msg + f"  ({a} vs {b})")
-
 
 def ne(a, b, msg=""):
     chk(sp.simplify(_S(a) - _S(b)) != 0, msg + f"  ({a} vs {b})")
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 指数法則そのもの（記号で）
@@ -273,8 +265,11 @@ in_text("公式集の **1.5** の欄に `Exponents and logarithms` として印�
         "公式集にある")
 in_text("> $a^{x} = b \\iff x = \\log_{a} b$, where $a > 0$, $b > 0$, $a \\neq 1$",
         "公式集の条件を逐語で")
-in_text("> Awareness that $a^x = b$ is equivalent to $\\log_ab = x$, "
-        "that $b > 0$, and $\\log_e x = \\ln x$.", "シラバスの Guidance を逐語で")
+not_in_text("Awareness that $a^x = b$", "Guidance の引用は置かない")
+not_in_text("商の法則は、積の法則から出ます", "商の法則の導出は置かない")
+not_in_text("この項目であつかうのは**整数の指数**です", "整数の指数の但し書きは置かない")
+in_text("（整数の指数法則と、対数の導入）", "題名は「対数の導入」")
+not_in_text("対数のはじまり", "古い題名は残っていない")
 in_text("> Numerical evaluation of logarithms using technology.",
         "電卓の Guidance")
 in_text("## この $5$ つは、公式集にありません", "指数法則は載っていないと明記")
@@ -285,7 +280,8 @@ not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシ
 # 8. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -342,23 +338,24 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 10. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-1-5-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-1-5-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-1-5-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-1-5-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-1-5-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-1-5-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-1-5-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
 in_fig("Each step down divides by", "図(a) の題")
 in_fig("forced,\\nnot chosen", "図(a) の要点")
 in_fig("One fact, written two ways", "図(b) の題")
-in_fig("a logarithm is the exponent you are looking for", "図(b) の要点")
 for _lab in ["base", "exponent", "value"]:
     in_fig('"' + _lab + '"', "図(b) のラベル " + _lab)
-in_text("(a) Going down the ladder, each step divides by 2",
-        "キャプションが (a) を説明")
-in_text("(b) The same statement written two ways",
-        "キャプションが (b) を説明")
 # 図の値が本文と合っているか
 for _e, _v in _ladder:
     eq(sp.Rational(2) ** _e, _v, f"図(a) の {_e} 段目")
@@ -370,11 +367,12 @@ for leak in ["49", "36", "64", "125", "243", "625", "729", "0.0001",
 # ══════════════════════════════════════════════════════════
 # 11. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-5.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/01-number-and-algebra/aasl-1-5.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-1-4.qmd") < DRAFT.index("aasl-1-5.qmd"), "並びが 1.4 → 1.5")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-5.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -387,7 +385,6 @@ for t in ["| exponent |", "| base |", "| laws of exponents |",
           "| logarithm |", "| natural logarithm ($\\ln$) |",
           "| simplify |"]:
     chk(t in GLO, "対訳表にある: " + t)
-
 
 # ══════════════════════════════════════════════════════════
 # 12. レビュー反映の見張り
@@ -459,6 +456,68 @@ in_text("## 負の指数で割るとき、マイナスを $1$ つ落とす", "6 
 eq(sp.Rational(2 ** 2, 1) / sp.Rational(2) ** -4, 64, "2^2 / 2^-4 = 64")
 eq(sp.Rational(2) ** -2, sp.Rational(1, 4), "2 - 4 とした誤答")
 chk(TEXT.count("::: {.callout-warning}") >= 9, "callout-warning が十分ある")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# 底（base）は、このページの初出で英語を併記（第 10 節）
+in_text('- 底（base）が $10$ の対数（$\\log$）と、底が $e$ の対数（$\\ln$）が読める。', "底の英語併記")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 3. $a^{0} = 1$ と、負の指数（zero and negative exponents） {#zero-negative}', "見出しの英語: 3. $a^{0} = 1$ と、負の指数（zero")
+in_text('### 6. 底が $10$ と、底が $e$（common and natural logarithms） {#base-10-e}', "見出しの英語: 6. 底が $10$ と、底が $e$（common")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+chk("a logarithm is the exponent" not in FIGSTR,
+    "対数の定義を図に書いていない")
+in_text("> $\\log_{a} b$ は、**「$a$ を何乗したら $b$ になるか」**という数。", "その定義は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01：第 1 節の見出し
+# ══════════════════════════════════════════════════════════
+in_text("### 1. exponent（指数） {#idea}", "第 1 節の見出し")
+not_in_text("### 1. 指数は「何回掛けるか」", "前の見出しは消した")
+
+in_text("### 2. laws of exponents（指数法則） {#laws}", "第 2 節の見出し")
+not_in_text("### 2. 指数法則 {#laws}", "前の見出しは消した")
+in_text("### 5. logarithm（対数） {#log-def}", "第 5 節の見出し")
+not_in_text("### 5. 対数は、指数を取り出す", "前の見出しは消した")
+
+in_text("### 4. coefficients and variables（係数と文字がまざったとき） "
+        "{#coefficients}", "第 4 節の見出し")
+not_in_text("### 4. 係数と文字がまざったとき {#coefficients}",
+            "前の見出しは消した")
+in_text("### 7. logarithms by hand（手で出す対数） {#by-hand}", "第 7 節の見出し")
+not_in_text("### 7. 手で出す対数と、電卓", "前の見出しは消した")
+# The idea の見出しは、英語と日本語の両方を含む
+# （方針 §17：①英語（日本語）／②そのまま英語／③日本語（英語））
+for _n, _t in re.findall(r"^### (\d+)\. (.*) \{#[a-z0-9-]+\}$", TEXT, re.M):
+    chk(re.search(r"[a-z]{3}", _t), "見出し %s に英語がある: %s" % (_n, _t))
+    chk("（" in _t and "）" in _t, "見出し %s に（）がある: %s" % (_n, _t))
 
 print()
 print("OK", OK, "/ NG", NG)

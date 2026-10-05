@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_5_9.py
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_5_9.py
 
-出力: aa-sl/05-calculus/img/aasl-5-9-idea.svg
+出力: aa-sl/05-calculus/img/aasl-5-9-idea-a.svg
+      aa-sl/05-calculus/img/aasl-5-9-idea-b.svg
 
 (a) v-t グラフ。displacement は符号つきの和、distance は大きさの和。
 (b) s → v → a のつながり（下は微分、上は積分）。
@@ -43,12 +44,12 @@ T1, T2, TEND = 1.0, 2.6, 4.2
 T = np.linspace(0, TEND, 400)
 V = (T - T1) * (T - T2)
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.4, 5.2))
-
+fig1, ax1 = plt.subplots(figsize=(6.4, 3.4))
+fig2, ax2 = plt.subplots(figsize=(7.8, 3.6))
 # ══════════════════════════════════════════════════════════
 # (a) v-t グラフ
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Reading a velocity-time graph", fontsize=11, color=INK,
+ax1.set_title("Reading a velocity-time graph", fontsize=11, color=INK,
               loc="left", pad=12)
 ax1.plot(T, V, color=ACCENT, linewidth=2.2)
 ax1.axhline(0, color=GREY, linewidth=1.0)
@@ -83,65 +84,54 @@ ax1.text(0.42, 2.55, "$v > 0$", fontsize=9.5, color=ACCENT, ha="center")
 ax1.text(1.8, -1.35, "$v < 0$", fontsize=9.5, color=WARM, ha="center")
 ax1.text(3.30, 3.45, "$v > 0$", fontsize=9.5, color=ACCENT, ha="center")
 
-ax1.text(-0.25, -2.35,
-         "$A_{1}$, $A_{2}$, $A_{3}$ are areas, so each one is positive",
-         fontsize=9.5, color=GREY, ha="left", va="center")
-ax1.text(-0.25, -3.05, "displacement $= A_{1} - A_{2} + A_{3}$", fontsize=10.5,
-         color=INK, ha="left", va="center")
-ax1.text(-0.25, -3.75, "distance $= A_{1} + A_{2} + A_{3}$", fontsize=10.5,
-         color=WARM, ha="left", va="center")
-ax1.text(-0.25, -4.45, "the particle changes direction at $t_{1}$ and $t_{2}$",
-         fontsize=9.5, color=GREY, ha="left", va="center")
-ax1.set_clip_on(False)
 
 # ══════════════════════════════════════════════════════════
 # (b) s → v → a
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) How $s$, $v$ and $a$ are linked", fontsize=11, color=INK,
-              loc="left", pad=12)
+# ★ ラベルは必ず ylim の中に置くこと（外に置くと図がずれます）。
+ax2.set_title("How $s$, $v$ and $a$ are linked", fontsize=11, color=INK,
+              loc="left", pad=8)
 ax2.set_xlim(0, 10)
-ax2.set_ylim(0, 10)
+ax2.set_ylim(0, 5.3)
 ax2.axis("off")
 
 BOX = dict(boxstyle="round,pad=0.42", facecolor=FILL, edgecolor=ACCENT,
            linewidth=1.3)
-XS = (1.55, 5.0, 8.45)
+XS = (1.45, 5.0, 8.55)
 NAMES = ("$s$", "$v$", "$a$")
 SUB = ("displacement", "velocity", "acceleration")
 for _x, _n, _sub in zip(XS, NAMES, SUB):
-    ax2.text(_x, 6.4, _n, fontsize=15, color=ACCENT, ha="center",
+    ax2.text(_x, 2.62, _n, fontsize=15, color=ACCENT, ha="center",
              va="center", bbox=BOX)
-    ax2.text(_x, 5.25, _sub, fontsize=9.5, color=GREY, ha="center",
+    ax2.text(_x, 1.88, _sub, fontsize=9.5, color=GREY, ha="center",
              va="center")
 
-for _a, _b in ((XS[0], XS[1]), (XS[1], XS[2])):
-    ax2.annotate("", xy=(_b - 0.75, 6.95), xytext=(_a + 0.75, 6.95),
-                 arrowprops=dict(arrowstyle="->", color=WARM, linewidth=1.4,
-                                 connectionstyle="arc3,rad=-0.25"))
-    ax2.annotate("", xy=(_a + 0.75, 5.85), xytext=(_b - 0.75, 5.85),
-                 arrowprops=dict(arrowstyle="->", color=INK, linewidth=1.4,
-                                 connectionstyle="arc3,rad=-0.25"))
+DIFF = (r"differentiate:  $\frac{ds}{dt} = v$",
+        r"differentiate:  $\frac{dv}{dt} = a$")
+INTEG = (r"integrate:  $s = \int v\,dt$",
+         r"integrate:  $v = \int a\,dt$")
+for _k, (_a, _b) in enumerate(((XS[0], XS[1]), (XS[1], XS[2]))):
+    _mid = (_a + _b) / 2
+    # 上：微分（左から右へ）
+    ax2.annotate("", xy=(_b - 0.62, 3.30), xytext=(_a + 0.62, 3.30),
+                 arrowprops=dict(arrowstyle="-|>", color=WARM, linewidth=1.5,
+                                 connectionstyle="arc3,rad=-0.28"))
+    ax2.text(_mid, 4.55, DIFF[_k], fontsize=10.5, color=WARM, ha="center",
+             va="center")
+    # 下：積分（右から左へ）
+    ax2.annotate("", xy=(_a + 0.62, 1.30), xytext=(_b - 0.62, 1.30),
+                 arrowprops=dict(arrowstyle="-|>", color=INK, linewidth=1.5,
+                                 connectionstyle="arc3,rad=-0.28"))
+    ax2.text(_mid, 0.42, INTEG[_k], fontsize=10.5, color=INK, ha="center",
+             va="center")
 
-ax2.text(3.3, 8.35, "differentiate", fontsize=10, color=WARM, ha="center")
-ax2.text(6.75, 8.35, "differentiate", fontsize=10, color=WARM, ha="center")
-ax2.text(3.3, 4.05, "integrate", fontsize=10, color=INK, ha="center")
-ax2.text(6.75, 4.05, "integrate", fontsize=10, color=INK, ha="center")
-
-ax2.plot([0.2, 9.8], [3.1, 3.1], color=GREY, linewidth=0.9)
-ax2.text(0.25, 2.35, "speed $= |v|$, so speed is never negative",
-         fontsize=10.5, color=INK, va="center")
-ax2.text(0.25, 1.55, "the particle is at rest when $v = 0$, not when $a = 0$",
-         fontsize=10, color=WARM, va="center")
-ax2.text(0.25, 0.75, "integrating needs a starting value to fix $C$",
-         fontsize=9.5, color=GREY, va="center")
-
-fig.tight_layout(w_pad=2.4, rect=(0, 0.16, 1, 1))
-path = os.path.join(OUT, "aasl-5-9-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-5-9-idea-a.svg"), (fig2, "aasl-5-9-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

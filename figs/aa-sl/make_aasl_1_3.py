@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_1_3.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_1_3.py  … 目視用の PNG も
 
-出力: aa-sl/01-number-and-algebra/img/aasl-1-3-idea.svg
+出力: aa-sl/01-number-and-algebra/img/aasl-1-3-idea-a.svg
+      aa-sl/01-number-and-algebra/img/aasl-1-3-idea-b.svg
 
 (a) 同じ数を掛けていく。u_1 から u_5 までで r を掛けるのは 4 回。
 (b) S_n と r S_n を並べて引くと、まん中が消える。
@@ -32,10 +33,8 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig, (ax1, ax2) = plt.subplots(
-    2, 1, figsize=(9.0, 5.8), gridspec_kw={"height_ratios": [1.0, 1.1]}
-)
-
+fig1, ax1 = plt.subplots(figsize=(9.0, 3.2))
+fig2, ax2 = plt.subplots(figsize=(9.0, 3.2))
 # ══════════════════════════════════════════════════════════
 # (a) 掛ける回数は n-1
 # ══════════════════════════════════════════════════════════
@@ -43,7 +42,7 @@ ax1.set_xlim(-0.6, 5.4)
 ax1.set_ylim(-1.15, 1.5)
 ax1.axis("off")
 ax1.set_title(
-    "(a) From $u_1$ to $u_n$ the ratio $r$ is used $n-1$ times",
+    "From $u_1$ to $u_n$ the ratio $r$ is used $n-1$ times",
     fontsize=11, color=INK, loc="left", pad=8,
 )
 
@@ -74,7 +73,7 @@ ax2.set_xlim(-0.2, 10.2)
 ax2.set_ylim(-1.7, 1.8)
 ax2.axis("off")
 ax2.set_title(
-    "(b) Write $S_n$ and $rS_n$ one above the other: the middle terms cancel",
+    "Write $S_n$ and $rS_n$ one above the other: the middle terms cancel",
     fontsize=11, color=INK, loc="left", pad=8,
 )
 
@@ -110,13 +109,13 @@ ax2.text(5.0, -1.35, "$S_n(r-1) = u_1(r^{n}-1)$   $\\Rightarrow$   "
          "$S_n = \\frac{u_1(r^{n}-1)}{r-1}$   (needs $r \\neq 1$)",
          ha="center", va="center", fontsize=12, color=INK)
 
-fig.tight_layout(h_pad=2.0)
-path = os.path.join(OUT, "aasl-1-3-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-1-3-idea-a.svg"), (fig2, "aasl-1-3-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

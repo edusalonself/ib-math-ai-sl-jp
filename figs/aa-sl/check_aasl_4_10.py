@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """AA SL 4.10 のページを検算する。
 
-    python3 figs/aa-sl/check_aasl_4_6a.py
+    python3 figs/aa-sl/check_aasl_4_6.py
 """
 import glob
 import os
@@ -132,9 +132,12 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-4-10-idea.svg){#fig-aasl410-idea width=100%}", "図の埋め込み")
-in_text("@fig-aasl410-idea (a)", "図 (a) の参照")
-in_text("@fig-aasl410-idea (b)", "図 (b) の参照")
+in_text("(img/aasl-4-10-idea-a.svg){#fig-aasl410-idea-a width=100%}", "図 (a) の埋め込み")
+in_text("(img/aasl-4-10-idea-b.svg){#fig-aasl410-idea-b width=100%}", "図 (b) の埋め込み")
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-10-idea.svg")),
+    "分割前の SVG は消してある")
+in_text("@fig-aasl410-idea-a", "図 (a) の参照")
+in_text("@fig-aasl410-idea-b", "図 (b) の参照")
 
 chk(not re.search(r"^> ", TEXT, re.M), "引用ブロックは使わない（4.10 に引用可の行はない）")
 not_in_text("シラバスにあります", "公式集にない式に callout-important を付けない")
@@ -524,6 +527,42 @@ not_in_text("$2$ 本のなす角", "M13 目盛りによる言い方は使わな�
 in_fig('ax2.set_ylabel("$y$", fontsize=10, color=GREY)', "m4 図 (b) の y 軸")
 in_fig('"horizontal gaps: $x$ on $y$"', "m5 図のラベル")
 chk('"dashed horizontal gaps' not in FIGCODE, "dashed の語は外した")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'both lines pass through ',
+    'they agree only when eve',
+    'the $y$ on $x$ line make',
+    'the $x$ on $y$ line make',
+]:
+    chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
+in_text('### 7. $2$ 本の直線の関係 {#compare}', "その内容は本文にある")
+in_text('### 2. どちらの直線を使うか {#which}', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

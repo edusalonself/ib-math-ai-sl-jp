@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_1_7b.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_1_7b.py  … 目視用の PNG も
 
-出力: aa-sl/01-number-and-algebra/img/aasl-1-7b-idea.svg
+出力: aa-sl/01-number-and-algebra/img/aasl-1-7b-idea-a.svg
+      aa-sl/01-number-and-algebra/img/aasl-1-7b-idea-b.svg
 
 (a) 値の世界の掛け算が、指数の世界の足し算になる（底 2）。
     8 x 4 = 32 の下に 3 + 2 = 5 が並ぶ。
@@ -32,17 +33,15 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig, (ax1, ax2) = plt.subplots(
-    1, 2, figsize=(10.0, 4.0), gridspec_kw={"width_ratios": [1.2, 1.0]}
-)
-
+fig1, ax1 = plt.subplots(figsize=(5.4, 4.0))
+fig2, ax2 = plt.subplots(figsize=(5.4, 4.0))
 # ══════════════════════════════════════════════════════════
 # (a) 掛け算 → 足し算
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Multiplying below, adding above (base $2$)",
+ax1.set_title("Multiplying below, adding above (base $2$)",
               fontsize=11, color=INK, loc="left", pad=10)
 ax1.set_xlim(0.0, 1.0)
-ax1.set_ylim(0.0, 1.0)
+ax1.set_ylim(0.10, 1.0)
 ax1.axis("off")
 
 COLS = [(0.14, "$8$", "$3$"), (0.50, "$4$", "$2$"), (0.86, "$32$", "$5$")]
@@ -67,13 +66,11 @@ ax1.text(0.02, 0.24, "values", ha="left", va="center", fontsize=9.5,
          color=GREY, rotation=90)
 ax1.text(0.02, 0.76, "$\\log_{2}$", ha="left", va="center", fontsize=9.5,
          color=ACCENT, rotation=90)
-ax1.text(0.50, 0.03, "a product becomes a sum",
-         ha="center", va="center", fontsize=10, color=INK)
 
 # ══════════════════════════════════════════════════════════
 # (b) 底の変換
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Change of base: pick $b$ you can do by hand",
+ax2.set_title("Change of base: pick $b$ you can do by hand",
               fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(0.0, 1.0)
 ax2.set_ylim(0.0, 1.0)
@@ -98,13 +95,13 @@ ax2.annotate("", xy=(0.50, 0.19), xytext=(0.50, 0.29),
 ax2.text(0.50, 0.10, r"$\dfrac{3}{2}$", ha="center", va="center",
          fontsize=17, color=ACCENT)
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-1-7b-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-1-7b-idea-a.svg"), (fig2, "aasl-1-7b-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

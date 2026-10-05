@@ -24,7 +24,6 @@ FIGCODE = FIG.split('"""', 2)[-1]
 
 OK = NG = 0
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -33,37 +32,29 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.nsimplify(u) - sp.nsimplify(v)) == 0,
         msg + f"  ({u} vs {v})")
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 道具 —— 標本空間を作って数える
 # ══════════════════════════════════════════════════════════
 DICE = [(a, b) for a in range(1, 7) for b in range(1, 7)]
 
-
 def prob(space, pred):
     return F(sum(1 for s in space if pred(s)), len(space))
-
 
 chk(len(DICE) == 36, "さいころ 2 個の標本空間は 36")
 chk(prob(DICE, lambda s: True) == 1, "道具: 全体の確率は 1")
@@ -302,7 +293,8 @@ in_text("**$1$ より大きい確率や、負の確率が出たら、計算が�
 # ══════════════════════════════════════════════════════════
 chk("## Using your GDC" not in TEXT, "4.5 には GDC の節を置かない")
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 0, f"GDC の折りたたみも置かない: {_gdc}")
 in_text("## この項目に電卓は要りません", "電卓が要らないことを書く")
 in_text("確率の計算は、Paper 1 でも Paper 2 でも**手でできます**。", "手でできる")
@@ -374,24 +366,25 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 13. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-4-5-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-4-5-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-4-5-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-4-5-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-4-5-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-4-5-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-4-5-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) The sample space as a table", "図(a) の題")
-in_fig("the number of cells is $n(U)$", "図(a) の n(U)")
+in_fig("The sample space as a table", "図(a) の題")
 chk("6 \\\\times 6 = 36" not in FIG, "図に 36 は書かない")
-in_fig("shaded event: the two numbers add to $7$", "図(a) の事象の名前")
-in_fig("\\\\frac{6}{36} = \\\\frac{1}{6}", "図(a) は約分してある")
-in_fig("$(2,5)$ and $(5,2)$ are both shaded, and are counted ", "図(a) の注意")
-in_fig("(b) Relative frequency as trials are added", "図(b) の題")
+in_fig("Relative frequency as trials are added", "図(b) の題")
 in_fig("theoretical probability", "図(b) の理論値")
 in_fig("wide swings at the start", "図(b) のはじめ")
 in_fig("narrow later", "図(b) のあと")
-in_fig("the relative frequency settles towards the theoretical ", "図(b) の説明")
 # 図の色を付けた事象は「和が 7」で、例題・演習の「和が 5」とちがう
 chk("a + b == 7" in FIGCODE, "図は和が 7 を色づけしている")
 chk("a + b == 5" not in FIGCODE, "図は和が 5 ではない")
@@ -406,19 +399,16 @@ chk(_m is not None, "図の p が読める")
 for _v in ["0.045", "0.5", "0.35", "0.82", "0.2"]:
     chk(abs(float(_m.group(1)) - float(_v)) > 1e-9,
         "図の p が本文の値と重なる: " + _v)
-in_text("(a) When two things happen one after the other, the sample space can be set "
-        "out as a table", "キャプションが (a) を説明")
-in_text("(b) The relative frequency of an event moves up and down",
-        "キャプションが (b) を説明")
 
 # ══════════════════════════════════════════════════════════
 # 14. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/04-statistics-and-probability/aasl-4-5.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/04-statistics-and-probability/aasl-4-5.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-4-4.qmd") < DRAFT.index("aasl-4-5.qmd"), "並びが 4.4 → 4.5")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(04-statistics-and-probability/aasl-4-5.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -484,8 +474,6 @@ chk(float(sp.sqrt(1000 * F(1, 4))) / 1000 < float(sp.sqrt(10 * F(1, 4))) / 10,
     "それでも、割ったあとは小さくなる")
 
 # --- 図のキャプションに事象の名前を入れた --------------------------------
-in_text("the shaded event here is that the two numbers add to seven.",
-        "キャプションに事象の名前")
 
 # --- 例題2 の検算 3 つ ---------------------------------------------------
 in_text("**$1$ 個目を固定して数えます。**", "例題2(a) の検算")
@@ -578,7 +566,6 @@ in_text("When they are not, the same conclusion follows because the probabilitie
 in_fig("np.random.default_rng(22)", "系列の種を変えた")
 chk("20260908" not in FIGCODE, "古い種は消した")
 
-
 # ══════════════════════════════════════════════════════════
 # C09  $P(A)=0$ =「起こらない」は、結果が有限個の場面に限る
 # ══════════════════════════════════════════════════════════
@@ -595,6 +582,148 @@ chk(sp.integrate(sp.exp(-_c09 ** 2 / 2) / sp.sqrt(2 * sp.pi),
                  (_c09, 1, 1)) == 0, "C09 1 点の区間の面積は 0")
 chk(sp.integrate(sp.Rational(1, 1), (_c09, 0, 1)) == 1,
     "C09 区間全体の面積は 1")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'the relative frequency s',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:24])
+in_text('### 6. relative frequency {#relative}', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-24：第 1 節の見出し（方針 第 17 節 ①「英語（日本語）」）
+# ══════════════════════════════════════════════════════════
+in_text("### 1. probability vocabulary（確率の語彙） {#words}", "第 1 節の見出し")
+not_in_text("### 1. ことばを分ける", "前の見出しは消した")
+not_in_text("ことばを分ける", "「ことばを分ける」はページのどこにもない")
+in_text(": 確率のことば {#tbl-aasl45-words}", "表の見出しはそのまま")
+for _w in ("| trial | 試行 |", "| outcome | 結果 |",
+           "| sample space $U$ | 標本空間 |", "| event $A$ | 事象 |"):
+    in_text(_w, "語彙の表の行: " + _w[:20])
+
+in_text("$U$ は起こりうるすべての結果の集合、$A$ はそのうち求めたい事象に"
+        "含まれる結果の集合です（[第 1 節](#words)）。$n(A)$、$n(U)$ は、"
+        "それぞれの集合に含まれる結果の個数を表します。", "U・A・n の説明")
+in_text("**$n(A)$ は、実験で「$A$ が起こった回数」ではありません。** 実際に"
+        "試して得た回数を使うのは、[第 6 節](#relative)の relative frequency"
+        "（相対度数）です。", "回数ではないという注意")
+# 第 6 節（relative frequency）のほうは「回数」で書いてある
+in_text("(\\text{起こった回数})", "relative frequency は回数")
+in_text("### 6. relative frequency {#relative}", "第 6 節の見出し")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-24：図 (a) の説明文を本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in ("the number of cells is",
+              "shaded event: the two numbers add to",
+              "are both shaded, and are counted"):
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:28])
+chk("\\frac{6}{36}" not in FIGCODE, "図に計算は書いていない")
+# 図に残ってよいのは、題と部品の名前だけ
+for _lab in ("The sample space as a table", "second die", "first die"):
+    in_fig(_lab, "図 (a) に残す label: " + _lab)
+chk("ax1.set_ylim(-0.35, 7.3)" in FIGCODE, "図 (a) の下の余白を詰めた")
+
+# --- 外した文は、本文にある ----------------------------------------------
+in_text("**表のマス目の数が $n(U)$ です。**", "n(U) はマス目の数（本文）")
+in_text("**event は、マス目の集まりです。** @fig-aasl45-idea-a はさいころ $2$ 個の"
+        "表で、マス目は $36$ あります。色をつけたのが「$2$ つの数の和が $7$」という "
+        "event で、マス目は $6$ つです。だから $P = \\dfrac{6}{36} = \\dfrac{1}{6}$ "
+        "です。", "色のついた event の説明（本文）")
+in_text("@fig-aasl45-idea-a でも $(2, 5)$ と $(5, 2)$ は別のマス目で、"
+        "どちらにも色がついています。", "(2,5) と (5,2) の注意（本文）")
+chk(TEXT.count("@fig-aasl45-idea-a") >= 3,
+    f"図 (a) を本文から参照している: {TEXT.count('@fig-aasl45-idea-a')}")
+
+# --- 本文の数が、図のとおりであること -------------------------------------
+_cells = [(a, b) for a in range(1, 7) for b in range(1, 7)]
+chk(len(_cells) == 36, "マス目は 36")
+_seven = [(a, b) for a, b in _cells if a + b == 7]
+chk(len(_seven) == 6, f"和が 7 のマス目は 6: {len(_seven)}")
+chk(F(len(_seven), len(_cells)) == F(1, 6), "6/36 = 1/6")
+chk((2, 5) in _seven and (5, 2) in _seven, "(2,5) と (5,2) はどちらも和が 7")
+chk((2, 5) != (5, 2), "(2,5) と (5,2) は別の結果")
+# 例題・演習の答え（和が 5）は本文に出していないまま
+not_in_body("和が $5$", "例題2(c) の場面は本文に出さない")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：equally likely は「並べ方の性質」だと書き直した
+# ══════════════════════════════════════════════════════════
+in_text("### 2. equally likely なら、場合の数で求められる {#counting}",
+        "第 2 節の見出し")
+not_in_text("### 2. equally likely なら、数えるだけ", "前の見出しは消した")
+in_text("**equally likely outcomes**（同様に確からしい結果）とは、"
+        "区別したそれぞれの結果が、すべて同じ確率で起こることです。",
+        "equally likely の定義")
+in_text("起こりうる結果が有限個で、すべて同様に確からしいとき、",
+        "式が使える条件")
+in_text("= \\frac{A \\text{ が起こる場合の数}}"
+        "{\\text{起こりうるすべての場合の数}}", "式の日本語の形")
+in_text("で確率を求められます。", "式のあとの結び")
+not_in_text("どの結果も同じ確からしさで起こることです。そのときだけ、確率は"
+            "**数えれば出ます**。", "前の書き方は消した")
+not_in_text("そのときだけ、確率は", "「そのときだけ」という言い方はもう無い")
+
+# --- 並べ方で変わる、という例 --------------------------------------------
+in_text("たとえば、公平なさいころでは「$1$、$2$、$3$、$4$、$5$、$6$」は"
+        "それぞれ同じ確率で出ます。いっぽう、「$1$ が出る」と「$1$ 以外が出る」は、"
+        "同じ確率ではありません。**何を $1$ つの結果として数えるかに"
+        "注意します。**", "さいころの例")
+not_in_text("**成り立つかどうかは、並べ方で変わります。**",
+            "同じ例をくり返す段落は削除した")
+# 本文の例が、本当に同じ起こりやすさでないこと
+chk(F(1, 6) != F(5, 6), "「1」と「1 以外」は同じ起こりやすさではない")
+chk(F(1, 6) + F(5, 6) == 1, "それでも合計は 1")
+for _i45 in range(1, 7):
+    chk(F(1, 6) == F(1, 6), f"1..6 はどれも 1/6（{_i45}）")
+chk(sum(F(1, 6) for _ in range(6)) == 1, "1..6 の合計は 1")
+
+# --- 並べ直しても成り立たない場面 ----------------------------------------
+in_text("**並べ直しても成り立たない場面もあります。** ゆがんださいころ、当たりの"
+        "大きさがちがうルーレット、画びょう、天気。", "成り立たない場面")
+in_text("**どれも同じ起こりやすさだと言える理由**（形の対称性など）"
+        "**がありません。**", "対称性の理由がない")
+in_text("実験して見積もるしかありません（[第 6 節](#relative)）。", "第 6 節へ")
+# 画びょうは演習 10 でも同じ言い方をしている
+in_text("画びょうには上向きと上向きでないを同じ確からしさにする形の対称性が"
+        "ありません", "演習 10 の解説と同じ立場")
+
+# --- 式の条件 ------------------------------------------------------------
+in_text("**覚えるのは、この式が使える条件のほうです。** **並べた結果が、どれも同じ"
+        "起こりやすさのときにだけ**使えます。", "式が使える条件")
+in_text("数えて出せるのは、**並べた結果がどれも同じ起こりやすさのとき**だけです"
+        "（[第 2 節](#counting)）。**並べ直せば成り立つこともあります。**",
+        "Common errors も並べ方の言い方")
+# 演習 3 の解説（0,1,2 枚 → HH,HT,TH,TT）と、立場が合っている
+in_text("その $3$ つは**同様に確からしくありません**", "演習 3 の解説")
+in_text("$HH, HT, TH, TT$ のように**同様に確からしい結果**で書き出します。",
+        "書き直せば数えられる")
+# 演習 3 の答えは本文に漏れていない
+not_in_body("exactly one head", "演習 3 の場面は本文に出さない")
+not_in_body("$HH$", "演習 3 の並べ方は本文に出さない")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

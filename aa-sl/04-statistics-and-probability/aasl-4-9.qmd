@@ -19,7 +19,9 @@ sidebar: aa-sl
 
 ### 1. 正規分布の曲線 {#curve}
 
-**normal distribution**（正規分布）は、真ん中が高く、両側になだらかに下がっていく**釣り鐘型**の分布です（@fig-aasl49-idea (a)）。
+![The normal curve, and the $68$–$95$–$99.7$ areas](img/aasl-4-9-idea-a.svg){#fig-aasl49-idea-a width=100%}
+
+**normal distribution**（正規分布）は、真ん中が高く、両側になだらかに下がっていく**釣り鐘型**の分布です（@fig-aasl49-idea-a）。
 
 **身長、測定の誤差、大量生産した製品の重さ**など、多くの量がこの形に近くなります。
 
@@ -58,15 +60,17 @@ $$
 
 ### 3. $68\%$ / $95\%$ / $99.7\%$ のめやす {#empirical}
 
-正規分布では、次のことが成り立ちます（@fig-aasl49-idea (a)）。
+正規分布では、次のことが成り立ちます（@fig-aasl49-idea-a）。
 
 | 区間 | およその割合 |
 |:--|--:|
 | $\mu - \sigma$ から $\mu + \sigma$ | 約 $68\%$ |
 | $\mu - 2\sigma$ から $\mu + 2\sigma$ | 約 $95\%$ |
-| $\mu - 3\sigma$ から $\mu + 3\sigma$ | 約 $99.7\%$ |
+| $\mu - 3\sigma$ から $\mu + 3\sigma$ | $99\%$ 以上 |
 
 : $68$–$95$–$99.7$ のめやす {#tbl-aasl49-emp}
+
+**標準偏差 $1$ 個分以内は約 $68\%$、$2$ 個分以内は約 $95\%$、$3$ 個分以内は $99\%$ 以上、と覚えておきましょう。** ただし、$3$ 個分の区間の**外側**の確率を見積もる例では、約 $99.7\%$ を使います。
 
 **これは電卓の答えの見当をつけるためのものです。** 答案では GDC の値を書きます。
 
@@ -76,7 +80,9 @@ $$
 
 ### 4. 確率は面積 {#calc}
 
-**$P(a < X < b)$ は、曲線の下の $a$ から $b$ までの面積です**（@fig-aasl49-idea (b)）。
+![A probability is the area to the left of a value](img/aasl-4-9-idea-b.svg){#fig-aasl49-idea-b width=100%}
+
+**$P(a < X < b)$ は、曲線の下の $a$ から $b$ までの面積です**（@fig-aasl49-idea-b）。
 
 **ちょうど $1$ つの値をとる確率は $0$ です。** 幅のない区間には、面積がないからです。だから **$P(X < a)$ と $P(X \le a)$ は同じ値**になり、等号が付いているかどうかを気にする必要はありません。（[SL 4.5](aasl-4-5.qmd#properties) の「確率 $0$ = 起こらない」は、結果が有限個の場面の話です。ここでは、確率 $0$ の値も実際に出ます。）
 
@@ -135,9 +141,10 @@ GDC では `invNorm(area, μ, σ)` を使います（[GDC の節](#gdc-invnorm)�
 **答えの見当も、手でつけられます。** $\mu$ を中心とした対称性、$0.5$ との大小、$68$–$95$–$99.7$ のめやす ——この $3$ つで、入力ミスのほとんどは見つかります。
 :::
 
-![(a) The normal curve is symmetric about the mean, the total area under it is one, and roughly sixty-eight per cent of the values lie within one standard deviation of the mean, ninety-five per cent within two and ninety-nine point seven per cent within three. (b) A probability is the area under the curve to the left of a value, so finding a probability from a given value and finding a value from a given area are the two directions of the same picture](img/aasl-4-9-idea.svg){#fig-aasl49-idea width=100%}
-
 ## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
 
 **なぜ、確率が面積になるのでしょうか。** 正規分布は連続量の分布だからです。
 
@@ -158,6 +165,7 @@ $\mu$ を変えると曲線は左右に動くだけ、$\sigma$ を変えると�
 **なぜ、逆正規計算では面積を「左から」で数えるのでしょうか。** `invNorm` がもどしているのは、「$k$ に、$k$ より左の面積を対応させる関数」の逆だからです。$P(X < k)$ は $k$ が右へ動くほど増えていくので、面積 $1$ つに対して $k$ が $1$ つだけ決まります。右からの面積で決めることもできますが、どちらかに約束を決めておかないと、同じ面積に $2$ とおりの答えが出ます。
 
 **この向きは、図をかけば目で確かめられます。** 面積と $0.5$ の大小を、$k$ と $\mu$ の大小と見くらべてください。
+:::
 
 ## Worked examples
 
@@ -354,7 +362,7 @@ $$
 
 **(b)** **図：$\mu = 500$ に縦線を入れ、右のすその細い部分を塗ります。**塗った部分の面積が $0.05$ なので、その左は $1 - 0.05 = 0.95$ です。`invNorm(0.95, 500, 40)` を使います。
 
-![A normal curve with a dashed vertical line at the mean five hundred. A second, solid vertical line stands further to the right at five hundred and sixty-six, and the thin region under the curve to the right of it is shaded and labelled as having area zero point zero five. The area to the left of that line is therefore zero point nine five](img/aasl-4-9-tail.svg){#fig-aasl49-tail width=100%}
+![A normal curve with the upper tail shaded](img/aasl-4-9-tail.svg){#fig-aasl49-tail width=100%}
 
 $$
 566 \ \text{hours} \ (3 \text{ s.f.})

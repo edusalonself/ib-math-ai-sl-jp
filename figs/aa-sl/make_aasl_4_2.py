@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_4_2.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_4_2.py  … 目視用の PNG も
 
-出力: aa-sl/04-statistics-and-probability/img/aasl-4-2-idea.svg
+出力: aa-sl/04-statistics-and-probability/img/aasl-4-2-idea-a.svg
+      aa-sl/04-statistics-and-probability/img/aasl-4-2-idea-b.svg
 
 (a) 累積度数グラフの読み方（縦から入って、横に出る）。
 (b) 箱ひげ図と、外れ値の × とひげの止まる位置。
@@ -32,12 +33,12 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.0, 4.6))
-
+fig1, ax1 = plt.subplots(figsize=(5.4, 4.6))
+fig2, ax2 = plt.subplots(figsize=(7.6, 2.5))
 # ══════════════════════════════════════════════════════════
 # (a) 累積度数グラフの読み方
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Reading a cumulative frequency graph", fontsize=11,
+ax1.set_title("Reading a cumulative frequency graph", fontsize=11,
               color=INK, loc="left", pad=10)
 
 # なめらかな S 字（ロジスティック）。数値そのものには意味を持たせない。
@@ -85,10 +86,10 @@ ax1.text(_xof(0.5) + 1.55, 0.24, "out on the\nhorizontal axis",
 # ══════════════════════════════════════════════════════════
 # (b) 箱ひげ図
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) A box and whisker diagram with an outlier", fontsize=11,
+ax2.set_title("A box and whisker diagram with an outlier", fontsize=11,
               color=INK, loc="left", pad=10)
 ax2.set_xlim(-0.8, 13.6)
-ax2.set_ylim(-1.6, 3.6)
+ax2.set_ylim(-0.05, 2.15)
 ax2.axis("off")
 
 MN, Q1, MD, Q3, LAST = 0.6, 3.4, 4.8, 6.4, 8.2
@@ -120,21 +121,15 @@ ax2.plot([CROSS], [Y], marker="x", markersize=10, markeredgewidth=2.2,
          color=INK, zorder=4)
 ax2.text(CROSS, Y + 0.34, "outlier", fontsize=9.5, color=INK, ha="center")
 
-ax2.annotate("", xy=(LAST, Y + H * 0.62 + 0.08), xytext=(6.9, Y + H + 1.00),
-             arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.1))
-ax2.text(6.7, Y + H + 1.06, "the whisker stops at the last value\n"
-         "that is not an outlier", fontsize=9.5, color=GREY, ha="left")
 
-ax2.text(-0.8, -1.55, "the outlier is plotted as a cross and the whisker does "
-         "not reach it", fontsize=9.5, color=INK, va="bottom")
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-4-2-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-4-2-idea-a.svg"), (fig2, "aasl-4-2-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

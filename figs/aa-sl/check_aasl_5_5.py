@@ -121,9 +121,12 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-5-5-idea.svg){#fig-aasl55-idea width=100%}", "図の埋め込み")
-in_text("@fig-aasl55-idea (a)", "図 (a) の参照")
-in_text("@fig-aasl55-idea (b)", "図 (b) の参照")
+in_text("(img/aasl-5-5-idea-a.svg){#fig-aasl55-idea-a width=100%}", "図 (a) の埋め込み")
+in_text("(img/aasl-5-5-idea-b.svg){#fig-aasl55-idea-b width=100%}", "図 (b) の埋め込み")
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-5-5-idea.svg")),
+    "分割前の SVG は消してある")
+in_text("@fig-aasl55-idea-a", "図 (a) の参照")
+in_text("@fig-aasl55-idea-b", "図 (b) の参照")
 
 for _w in ("そのとおり", "もちろん", "簡単です", "自明", "当たり前", "明らか", "当然"):
     not_in_text(_w, "禁止語 " + _w)
@@ -151,7 +154,7 @@ in_text("$$ {#eq-aasl55-def}", "積分の記号の式")
 in_text("$$ {#eq-aasl55-sum}", "和と定数倍の式")
 in_text("{#tbl-aasl55-bc}", "境界条件の表")
 in_text("{#tbl-aasl55-we1}", "例題1 の表")
-for _a in ("aasl-5-10a.qmd", "aasl-5-11a.qmd", "aasl-5-11b.qmd"):
+for _a in ("aasl-5-10.qmd", "aasl-5-11.qmd", "aasl-5-11.qmd"):
     in_text(_a, "先のページへの参照 " + _a)
 in_text("[SL 5.3](aasl-5-3.qmd#zeroderiv)", "5.3 への参照")
 in_text("[SL 5.2](aasl-5-2.qmd#interval)", "5.2 への参照（区間）")
@@ -159,12 +162,10 @@ in_text("[SL 5.2](aasl-5-2.qmd#interval)", "5.2 への参照（区間）")
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('"(a) Why the constant is needed"', "図 (a) の題")
-in_fig('"(b) Area under a curve that stays above the axis"', "図 (b) の題")
+in_fig('"Why the constant is needed"', "図 (a) の題")
+in_fig('"Area under a curve that stays above the axis"', "図 (b) の題")
 in_fig('"$+C$"', "図 (a) の +C")
-in_fig('"the curves differ only by a vertical shift"', "図 (a) の説明")
 in_fig("when $f(x) > 0$ ", "図 (b) の条件")
-in_fig('"write the expression first, then work out its value"', "図 (b) の注意")
 # 図の 3 本の曲線は、同じ x で同じ傾き
 _g = X ** 3 - 2 * X
 for _c in (R(3, 2), 0, R(-3, 2)):
@@ -402,6 +403,100 @@ chk("**検算（対称）。** $4 - x^{2}$ は $y$ 軸について対称なの�
 chk("**検算（数で確かめる）。**" in TEXT, "演習9: 数で確かめる検算")
 chk("**検算（面積として）。** 面積は $1$ つに決まる量です" not in TEXT,
     "結論を言いかえただけの検算が消えている")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text('$x^{n}$ の不定積分を求める公式は、次のとおりです。', "公式の前置き 1")
+
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. antidifferentiation（微分の逆をたどる） {#anti}',
+        "見出しの英語: 1. antidifferentiation（微分の逆をたどる）")
+not_in_text('### 1. 微分の逆をたどる（', "前の見出しは消した")
+in_text('### 2. constant of integration（積分定数） {#plusc}', "見出しの英語: 2. constant of integration")
+in_text('### 5. boundary condition（境界条件）で $C$ を決める {#boundary}', "見出しの英語: 5. boundary condition（境界条件")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'so they all have the sam',
+    'write the expression fir',
+]:
+    chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
+in_text('**グラフで見ると、縦にずらした曲線の束です。** どれも同じ形なので、どの $x$ でも傾きが同じです。', "その内容は本文にある")
+in_text('まず式を書いてから、値を出します', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (a) から説明の文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+chk("the curves differ only by a vertical shift" not in FIG,
+    "図に説明の文を書いていない")
+in_fig("$+C$", "図の +C のラベルは残す")
+in_text("**グラフで見ると、縦にずらした曲線の束です。**", "縦にずらすのは本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：∫ の英語での読み方
+# ══════════════════════════════════════════════════════════
+in_text("**$\\displaystyle\\int$ は integral sign（積分記号）といいます。** "
+        "@eq-aasl55-def の左辺は `the integral of f of x with respect to x` と"
+        "読みます。$dx$ が `with respect to x` の部分です。",
+        "∫ の読み方")
+# 読み方は、記号を出したあと・dx の説明のあとに置く
+chk(TEXT.index("$\\displaystyle\\int$ の記号で書きます")
+    < TEXT.index("**$dx$ は「$x$ について」という印です。**")
+    < TEXT.index("integral sign（積分記号）"), "記号 → dx → 読み方 の順")
+chk(TEXT.index("integral sign（積分記号）")
+    < TEXT.index("### 2. constant of integration（積分定数）"),
+    "読み方は第 1 節の中")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：第 6 節の見出しと、どの条件かを書く
+# ══════════════════════════════════════════════════════════
+in_text("### 6. area under a curve（面積とのつながり） {#area}", "第 6 節の見出し")
+not_in_text("### 6. 面積とのつながり", "前の見出しは消した")
+in_text("**$f(x) > 0$ という条件が要ります。** 曲線が $x$ 軸より下にある部分を"
+        "ふくむと、この式のままでは面積になりません。", "どの条件かを書いてある")
+not_in_text("**この条件が要ります。**", "指す先が分からない言い方は消した")
+# 公式集の欄にも同じ条件が書いてある
+in_text("**「$f(x) > 0$」という条件も、いっしょに印刷されています。**",
+        "公式集の欄の条件")
+# 式そのものにも条件が添えてある
+chk(TEXT.index("$f(x) > 0$ である $a \\leq x \\leq b$ で、")
+    < TEXT.index("{#eq-aasl55-area}"), "式の前に条件がある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

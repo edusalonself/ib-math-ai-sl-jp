@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_2_8.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_2_8.py  … 目視用の PNG も
 
-出力: aa-sl/02-functions/img/aasl-2-8-idea.svg
+出力: aa-sl/02-functions/img/aasl-2-8-idea-a.svg
+      aa-sl/02-functions/img/aasl-2-8-idea-b.svg
 
 (a) y = 1/x のグラフ。2 本の漸近線と、y = x についての対称性。
 (b) y = (ax+b)/(cx+d) のグラフ。垂直漸近線 x = -d/c と水平漸近線 y = a/c。
@@ -33,12 +34,12 @@ GREY = "#6b7280"
 WARM = "#b45309"
 GREEN = "#15803d"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.8, 4.8))
-
+fig1, ax1 = plt.subplots(figsize=(5.3, 4.8))
+fig2, ax2 = plt.subplots(figsize=(5.3, 4.8))
 # ══════════════════════════════════════════════════════════
 # (a) y = 1/x
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) The reciprocal function", fontsize=11, color=INK,
+ax1.set_title("The reciprocal function", fontsize=11, color=INK,
               loc="left", pad=10)
 ax1.set_xlim(-4.2, 4.6)
 ax1.set_ylim(-4.2, 4.6)
@@ -63,13 +64,11 @@ ax1.text(2.6, 3.2, "$y = x$", fontsize=10, color=GREEN)
 ax1.text(2.5, 1.05, "$y = \\dfrac{1}{x}$", fontsize=12, color=ACCENT)
 ax1.text(0.28, -2.7, "asymptote $x = 0$", fontsize=9.5, color=WARM)
 ax1.text(-4.0, 0.3, "asymptote $y = 0$", fontsize=9.5, color=WARM)
-ax1.text(-4.0, 4.0, "two branches;\nits own reflection in $y = x$",
-         fontsize=9.5, color=INK, va="top")
 
 # ══════════════════════════════════════════════════════════
 # (b) y = (ax+b)/(cx+d)
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) A rational function", fontsize=11, color=INK,
+ax2.set_title("A rational function", fontsize=11, color=INK,
               loc="left", pad=10)
 ax2.set_xlim(-3.4, 7.4)
 ax2.set_ylim(-4.4, 6.4)
@@ -95,8 +94,6 @@ ax2.plot(v, HA + 3.5 / (v - VA), color=ACCENT, linewidth=2.3)
 
 ax2.text(VA + 0.30, 5.6, "$x = -\\dfrac{d}{c}$", fontsize=11.5, color=WARM)
 ax2.text(5.0, HA + 0.35, "$y = \\dfrac{a}{c}$", fontsize=11.5, color=WARM)
-ax2.text(2.9, -3.9, "the two asymptotes and both axis\nintercepts must appear on a sketch",
-         fontsize=9.5, color=INK, va="bottom")
 
 for px, py in [(-1.5, HA + 3.5 / (-1.5 - VA)), (0, HA + 3.5 / (0 - VA))]:
     ax2.plot([px], [py], marker="o", markersize=5.5, color=INK, zorder=3)
@@ -105,13 +102,13 @@ for px, py in [(-1.5, HA + 3.5 / (-1.5 - VA)), (0, HA + 3.5 / (0 - VA))]:
     ax2.annotate("", xy=(px, py), xytext=(-1.9, -2.4),
                  arrowprops=dict(arrowstyle="->", color=INK, linewidth=0.8))
 
-fig.tight_layout(w_pad=2.2)
-path = os.path.join(OUT, "aasl-2-8-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-2-8-idea-a.svg"), (fig2, "aasl-2-8-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

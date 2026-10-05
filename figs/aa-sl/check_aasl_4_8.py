@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """AA SL 4.8 のページを検算する。
 
-    python3 figs/aa-sl/check_aasl_4_6a.py
+    python3 figs/aa-sl/check_aasl_4_6.py
 """
 import glob
 import os
@@ -23,7 +23,6 @@ FIGCODE = FIG.split('"""', 2)[-1]
 OK = 0
 NG = 0
 
-
 def chk(cond, msg=""):
     global OK, NG
     if cond:
@@ -32,37 +31,28 @@ def chk(cond, msg=""):
         NG += 1
         print("NG :", msg)
 
-
 def eq(a, b, msg=""):
     chk(sp.simplify(sp.nsimplify(a) - sp.nsimplify(b)) == 0,
         "%s :: %s != %s" % (msg, a, b))
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: %s :: %s" % (msg, sub[:60]))
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: %s :: %s" % (msg, sub[:60]))
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
-
 BODY = TEXT.split("## Worked examples")[0]
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
 
-
 DICE = [(a, b) for a in range(1, 7) for b in range(1, 7)]
-
 
 def prob(space, pred):
     return F(sum(1 for s in space if pred(s)), len(space))
-
 
 # ══════════════════════════════════════════════════════════
 # 1. ページの骨組み
@@ -76,10 +66,10 @@ for _h in ("## What you should be able to do", "## The idea", "## Why it works",
     in_text(_h, "節 " + _h)
 
 _secs = re.findall(r"^### (\d)\. .*\{#([a-z-]+)\}$", TEXT, re.M)
-chk([s[0] for s in _secs] == [str(i) for i in range(1, 8)] + ["1", "2", "3"],
-    "### の番号 1..7 と GDC 1..3: %s" % [s[0] for s in _secs])
+chk([s[0] for s in _secs] == [str(i) for i in range(1, 7)] + ["1", "2", "3"],
+    "### の番号 1..6 と GDC 1..3: %s" % [s[0] for s in _secs])
 chk([s[1] for s in _secs] == ["when", "notation", "pmf", "range", "mean",
-                              "model", "read",
+                              "read",
                               "gdc-pdf", "gdc-cdf", "gdc-check"],
     "アンカー: %s" % [s[1] for s in _secs])
 # GDC の節は Exercises の直前
@@ -120,9 +110,12 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-4-8-idea.svg){#fig-aasl48-idea width=100%}", "図の埋め込み")
-in_text("@fig-aasl48-idea (a)", "図 (a) の参照")
-in_text("@fig-aasl48-idea (b)", "図 (b) の参照")
+in_text("(img/aasl-4-8-idea-a.svg){#fig-aasl48-idea-a width=100%}", "図 (a) の埋め込み")
+in_text("(img/aasl-4-8-idea-b.svg){#fig-aasl48-idea-b width=100%}", "図 (b) の埋め込み")
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-8-idea.svg")),
+    "分割前の SVG は消してある")
+in_text("@fig-aasl48-idea-a", "図 (a) の参照")
+in_text("@fig-aasl48-idea-b", "図 (b) の参照")
 
 # シラバスの引用は「Not required:」の 1 行だけ
 _quotes = re.findall(r"^> (.+)$", TEXT, re.M)
@@ -177,8 +170,8 @@ eq(sp.binomial(4, 2), 6, "4C2 = 6")
 in_text("[SL 1.9 の binomial theorem](../01-number-and-algebra/aasl-1-9.qmd)",
         "1.9 への参照")
 in_text("[SL 4.5 の期待される回数](aasl-4-5.qmd#expected)", "4.5 への参照")
-in_text("[SL 4.6b](aasl-4-6b.qmd#without)", "4.6b への参照（もどさない）")
-in_text("[SL 4.6b](aasl-4-6b.qmd#independent)", "4.6b への参照（独立）")
+in_text("[SL 4.6](aasl-4-6.qmd#conditional)", "4.6 への参照（条件）")
+in_text("[SL 4.6](aasl-4-6.qmd#independent)", "4.6 への参照（独立）")
 in_text("[SL 4.3](aasl-4-3.qmd#sd)", "4.3 への参照")
 in_text("$1$ 回あたりの確率に回数をかける、という形が共通しています。",
         "4.5 とのつながり")
@@ -219,14 +212,11 @@ chk("0.29" not in FIGCODE and "0.31" not in FIGCODE, "図に確率の値は書�
 def bp(n, p, x):
     return sp.binomial(n, x) * sp.Rational(p) ** x * (1 - sp.Rational(p)) ** (n - x)
 
-
 def bc(n, p, a, b):
     return sum(bp(n, p, x) for x in range(a, b + 1))
 
-
 def r3(v):
     return float(sp.N(v, 20))
-
 
 # 例題1 B(8, 0.25)
 chk(abs(r3(bp(8, "0.25", 2)) - 0.311) < 5e-4, "例題1(a) 0.311: %.5f" % r3(bp(8, "0.25", 2)))
@@ -351,14 +341,12 @@ _EXPR = r"%s(?:\s*[+-]\s*%s)*" % (_TERM, _TERM)
 _STMT = re.compile(r"(?<![\d\w}])(%s(?:\s*=\s*%s)+)(?!\s*(?:[+-]|\\times|[\d.]))"
                    % (_EXPR, _EXPR))
 
-
 def _tonum(t):
     t = t.strip()
     m = re.fullmatch(r"\\[dt]?frac\{(-?\d+)\}\{(-?\d+)\}", t)
     if m:
         return sp.Rational(int(m.group(1)), int(m.group(2)))
     return sp.Rational(t)
-
 
 def _value(expr):
     """+ - かけ算だけの式を、かけ算を先に計算して評価する。"""
@@ -373,7 +361,6 @@ def _value(expr):
                 prod *= _tonum(_f.group(0))
             total += sign * prod
     return total
-
 
 _nstmt = 0
 for _m in _STMT.finditer(TEXT):
@@ -446,9 +433,8 @@ chk(abs(float(sp.Rational("0.2") ** 13) - 8.192e-10) < 1e-13,
     "0.2^13 は約 8.2e-10")
 chk(float(sp.Rational("0.2") ** 13) < 1e-8, "取りちがえると極端に小さい")
 
-# --- M5・M6 第 6 節の例 ------------------------------------------------
-in_text("- **回どうしが影響しあう。** 同じ家に住む人、同じ日に同じ場所で測った"
-        "測定値、など。", "M5 直した例")
+# --- M5・M6 第 6 節は削除した（2026-10-05）-----------------------------
+not_in_text("- **回どうしが影響しあう。**", "崩れ方の箇条書きも消した")
 not_in_text("同じクラスの生徒、同じ機械で連続して作った製品",
             "演習10・演習4 と重なる例は消した")
 
@@ -474,8 +460,11 @@ not_in_text("## この項目は Paper 2 です", "C10 4.8 断定が消えてい�
 
 # --- M8 「もどさない → 確率が毎回変わる」 ------------------------------
 in_text("前に何が出たかで次の確率が変わるので、独立の条件が崩れます", "M8 第 1 節")
-in_text("- **もどさずに取り出す。** $1$ 回目の結果が分かると、$2$ 回目の確率が"
-        "変わります。", "M8 第 6 節")
+not_in_text("- **もどさずに取り出す。** $1$ 回目の結果が分かると、",
+            "第 6 節は削除した（2026-10-05）")
+not_in_text("### 6. モデルとして適切か", "その見出しも消した")
+not_in_text("**よくある崩れ方が $3$ つあります。**", "同上")
+not_in_text("(#model)", "model への参照も残っていない")
 in_text("回数は $5$ で決まっていて、結果も $2$ 通りですが、各回が独立では"
         "ありません。", "M8 演習5 の解説")
 not_in_text("the success probability is not constant", "誤った言い方は消した")
@@ -519,14 +508,10 @@ in_text("**検算（(a) について、$4$ つ全部に触れたか）。**", "m
 in_text("**補足（袋の大きさ）。**", "m3 補足に格下げ")
 
 # --- m4 図 (b) のタイトル ----------------------------------------------
-in_fig("(b) $X \\\\sim B(6,\\\\ 0.5)$: $P(X \\\\leq 2)$ adds the bars up ",
+in_fig("$X \\\\sim B(6,\\\\ 0.5)$: $P(X \\\\leq 2)$ adds the bars up ",
        "m4 図 (b) のタイトル")
 
 # --- m5 キャプション ---------------------------------------------------
-in_text("this panel uses a success probability below one half, so the bars are "
-        "not symmetric", "m5 キャプション (a)")
-in_text("(b) The same kind of diagram for a success probability of one half is "
-        "symmetric", "m5 キャプション (b)")
 
 # --- m6 演習9 を B(20, 0.35) にした ------------------------------------
 in_text("[9]{.ex-no} [For $X \\sim B(20,\\ 0.35)$ we have $E(X) = 7$.", "m6 演習9")
@@ -596,6 +581,54 @@ in_text("**$\\mathrm{Var}(X) = 2.55$ は、独立とみなしたモデルでの�
 not_in_text("超幾何", "E10 超幾何分布は持ち出さない")
 chk(20 * 0.15 == 3, "E10 E(X) = 3")
 chk(abs(20 * 0.15 * 0.85 - 2.55) < 1e-12, "E10 Var(X) = 2.55")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 5. mean and variance（平均と分散） {#mean}', "見出しの英語: 5. mean and variance（平均と分散")
+in_text('### 1. ちょうど $x$ 回：`binomPdf` {#gdc-pdf}', "見出しの英語: 1. ちょうど $x$ 回：`binomPdf`")
+in_text('### 2. 範囲：`binomCdf` {#gdc-cdf}', "見出しの英語: 2. 範囲：`binomCdf`")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'the peak is near $np$, a',
+    '\\"at most $2$\\" means $x',
+    '\\"more than $2$\\" is the',
+]:
+    chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
+in_text('### 5. mean and variance（平均と分散） {#mean}', "その内容は本文にある")
+in_text('### 4. 「以下」「以上」の言いかえ {#range}', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (a) から説明の文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+chk("counts the successes in $7$ independent trials" not in FIG,
+    "図に説明の文を書いていない")
+in_text("**$n$ は試行の回数、$p$ は $1$ 回あたりの成功の確率です。**",
+        "n と p の意味は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

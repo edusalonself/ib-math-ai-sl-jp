@@ -58,16 +58,13 @@ for _px, _py, _lab, _dx, _dy in [(-3, 7, "$(-3,\\ 7)$", -46, 6),
                 xytext=(_dx, _dy), fontsize=11, color=INK)
 
 ax.set_xlim(-4.2, 6.4)
-ax.set_ylim(-11.5, 10.5)
+ax.set_ylim(-10.2, 10.5)
 ax.set_xticks([])
 ax.set_yticks([])
 for _s in ("top", "right", "left", "bottom"):
     ax.spines[_s].set_visible(False)
 ax.text(6.2, 0.5, "$x$", fontsize=12, color=GREY, ha="right")
 ax.text(0.25, 10.2, "$y$", fontsize=12, color=GREY, va="top")
-ax.text(-4.0, -11.0,
-        "the sketch is drawn only for $-3 \\leq x \\leq 5$; the two endpoints "
-        "are marked", fontsize=10, color=INK, ha="left", va="bottom")
 
 fig.tight_layout()
 path = os.path.join(OUT, "aasl-2-3-ex7.svg")

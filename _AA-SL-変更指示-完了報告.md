@@ -70,7 +70,7 @@
 
 `aasl-2-3-ex7` / `aasl-2-8-ex9` / `aasl-2-9-ex2` / `aasl-3-7a-ex1` /
 `aasl-4-2-ex2` / `aasl-4-2-ex3` / `aasl-4-2-ex5` / `aasl-4-4-ex1` /
-`aasl-4-6a-ex6` / `aasl-4-6a-tree` / `aasl-4-6b-tree` / `aasl-4-9-tail`
+`aasl-4-6-ex6` / `aasl-4-6-tree` / `aasl-4-6b-tree` / `aasl-4-9-tail`
 （M03 の `aasl-3-7a-ex3` を含めると 13 点）
 
 目視確認用の PNG は生成後に削除ずみです。

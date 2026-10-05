@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_1_2.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_1_2.py  … 目視用の PNG も
 
-出力: aa-sl/01-number-and-algebra/img/aasl-1-2-idea.svg
+出力: aa-sl/01-number-and-algebra/img/aasl-1-2-idea-a.svg
+      aa-sl/01-number-and-algebra/img/aasl-1-2-idea-b.svg
 
 (a) 等間隔のジャンプ。u_1 から u_n までで d を足すのは n-1 回。
 (b) 和を「前から」と「うしろから」で組にすると、どの組も u_1+u_n。
@@ -32,10 +33,8 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig, (ax1, ax2) = plt.subplots(
-    2, 1, figsize=(9.0, 5.6), gridspec_kw={"height_ratios": [1.0, 1.05]}
-)
-
+fig1, ax1 = plt.subplots(figsize=(9.0, 3.1))
+fig2, ax2 = plt.subplots(figsize=(9.0, 3.1))
 # ══════════════════════════════════════════════════════════
 # (a) 等間隔のジャンプ： u_1 から u_5 まで、d を足すのは 4 回
 # ══════════════════════════════════════════════════════════
@@ -43,7 +42,7 @@ ax1.set_xlim(-0.6, 5.4)
 ax1.set_ylim(-1.15, 1.5)
 ax1.axis("off")
 ax1.set_title(
-    "(a) From $u_1$ to $u_n$ the difference $d$ is added $n-1$ times",
+    "From $u_1$ to $u_n$ the difference $d$ is added $n-1$ times",
     fontsize=11, color=INK, loc="left", pad=8,
 )
 
@@ -73,7 +72,7 @@ ax2.set_xlim(-0.6, 5.4)
 ax2.set_ylim(-1.5, 1.7)
 ax2.axis("off")
 ax2.set_title(
-    "(b) Add the sum forwards and backwards: every pair makes $u_1+u_n$",
+    "Add the sum forwards and backwards: every pair makes $u_1+u_n$",
     fontsize=11, color=INK, loc="left", pad=8,
 )
 
@@ -102,13 +101,13 @@ ax2.text(2.2, -1.20, "$n$ pairs   $\\Rightarrow$   "
          "$S_n = \\frac{n}{2}(u_1+u_n)$",
          ha="center", va="center", fontsize=12, color=INK)
 
-fig.tight_layout(h_pad=2.0)
-path = os.path.join(OUT, "aasl-1-2-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-1-2-idea-a.svg"), (fig2, "aasl-1-2-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

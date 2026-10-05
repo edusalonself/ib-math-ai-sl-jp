@@ -29,7 +29,6 @@ x, s_, t_ = sp.symbols("x s t", real=True)
 a_, b_, p_, q_ = sp.symbols("a b p q", real=True)
 REALS = sp.S.Reals
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -38,30 +37,23 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) == 0, msg + f"  ({u} vs {v})")
-
 
 def sols(expr, want, msg=""):
     chk(sp.solveset(sp.Eq(expr, 0), x, REALS) == want, "解: " + msg)
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 変換の規則そのもの（一般の f で確かめる）
@@ -201,12 +193,13 @@ in_text("## `scale factor` は「何倍か」です。$q$ そのものではあ�
         "scale factor の注意")
 in_text("## $f(ax+b)$ の形は、この項目では扱いません", "範囲外の注意")
 in_text("**ちがう向き**（縦と横）なら、どちらが先でも同じ結果です。", "縦と横は独立")
-in_text("効くのは、**平行移動（足す）と、拡大・対称移動（かける）が、同じ向きで"
-        "混ざるとき**です。", "順番が効く条件")
+in_text("影響するのは、**平行移動（足す）と、拡大・対称移動（かける）が、同じ向きで"
+        "混ざるとき**です。", "順番が影響する条件")
 in_text("「縦に $3$ 倍」と「$x$ 軸で折り返す」は、どちらが先でも $y = -3f(x)$ です。",
         "かける操作どうしは可換")
 not_in_text("**同じ向きどうし**（縦と縦、横と横）は順番が効きます。",
             "成り立たない一般化は消した")
+chk("効く" not in TEXT and "効き" not in TEXT, "「効く」は使っていない")
 in_text("**別々の座標をさわっているので、ぶつかりません。**", "縦と横が独立な理由")
 in_text("**表を覚える必要はありません。**", "表は覚えなくてよい")
 
@@ -214,7 +207,8 @@ in_text("**表を覚える必要はありません。**", "表は覚えなくて
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -289,7 +283,7 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
         or _href.endswith(".qmd") or ".qmd#" in _href
         or _href.startswith("http") or _href.startswith("../"),
         "まだないページへのリンク: " + _href)
-for _lab in ["fig-aasl211-idea", "tbl-aasl211-move", "eq-aasl211-up",
+for _lab in ["fig-aasl211-idea-a", "fig-aasl211-idea-b", "tbl-aasl211-move", "eq-aasl211-up",
              "eq-aasl211-right", "eq-aasl211-refx", "eq-aasl211-refy",
              "eq-aasl211-vstretch", "eq-aasl211-hstretch"]:
     chk(TEXT.count("@" + _lab) >= 0, "ラベルの綴り: " + _lab)
@@ -310,24 +304,26 @@ chk(TEXT.count("\\begin{pmatrix}") == TEXT.count("\\end{pmatrix}"),
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-2-11-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-2-11-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-2-11-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-2-11-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-2-11-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-2-11-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-2-11-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Translations and reflections", "図(a) の題")
+in_fig("Translations", "図(a) の題")
 in_fig("$y = f(x) + b$", "図(a) の上へ")
 in_fig("$y = f(x - a)$", "図(a) の右へ")
 in_fig("$y = -f(x)$", "図(a) の折り返し")
-in_fig("up by $b$; right by $a$; flipped in the $x$-axis", "図(a) の説明")
-in_fig("(b) Stretches", "図(b) の題")
+in_fig("Stretches", "図(b) の題")
 in_fig("$y = p\\\\,f(x)$", "図(b) の縦")
 in_fig("$y = f(qx)$", "図(b) の横")
-in_fig("vertical by $p$; horizontal by $\\\\frac{1}{q}$", "図(b) の説明")
-in_text("(a) $y=f(x)+b$ moves the graph up by $b$", "キャプションが (a) を説明")
-in_text("(b) $y=p f(x)$ stretches it vertically", "キャプションが (b) を説明")
 # 図に例題・演習の答えを書いていない（動かす量は文字だけ）
 for leak in ["= 3", "= 4", "= 2", "= 5", "= 6"]:
     chk(leak not in FIGSTR, "図が具体的な量を載せている: " + leak)
@@ -337,11 +333,12 @@ chk(not re.search(r"\d", FIGSTR.replace("\\frac{1}{q}", "")),
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-11.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/02-functions/aasl-2-11.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-2-10.qmd") < DRAFT.index("aasl-2-11.qmd"), "並びが 2.10 → 2.11")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-11.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -385,11 +382,20 @@ in_text("たとえば $y = -3f(x)$ は「$x$ 軸についての対称移動」�
         "「scale factor $3$ の縦の拡大」の $2$ つです。", "負のときの書き方")
 
 # --- 「外は縦・中は横」の限界 -------------------------------------------
-in_text("ただし、この $2$ 行で分かるのは**向きだけ**です。", "向きだけだと断る")
-in_text("この読み方が使えるのは、中が**ちょうど $x-a$ か $qx$ の形**のときだけです。",
-        "使える形の限定")
-in_text("$y = f(2x-6)$ を「中が $-6$ だから右へ $6$」と読むことはできません",
-        "f(2x-6) の例")
+not_in_text("この $2$ 行が、このページ全体の土台です。",
+            "その段落は削除した（2026-10-01）")
+not_in_text("また、この読み方が使えるのは、中が**ちょうど $x-a$ か "
+            "$qx$ の形**のときだけです。", "同上")
+# 外と中の 2 行は残す
+in_text("大事なのは、**式のどこを変更したか**です。", "書き出しは残す")
+in_text("- **$f$ の「外」を変更する** → **$y$ の側**が変わる → "
+        "**縦向き**の変化。見たとおりに動きます。", "外の行")
+in_text("- **$f$ の「中」（$x$ の側）を変更する** → **横向き**の変化。"
+        "**見た目と逆**になります。", "中の行")
+not_in_text("この読み方が使えるのは、中が**ちょうど $x-a$ か $qx$ の形**の"
+            "ときだけです。", "その段落は削除した")
+not_in_text("$y = f(2x-6)$ を「中が $-6$ だから右へ $6$」と読むことは"
+            "できません", "同上")
 eq(2 * x - 6, 2 * (x - 3), "2x-6 = 2(x-3)")
 
 # --- 漸近線も動く理由（平面全体の点の移動）------------------------------
@@ -467,7 +473,6 @@ in_text("**$y$ 切片が $0$ でない例で見ます。**", "演習9 の検算�
 not_in_text("$f(x) = x^{2}-4x$ なら $f(0) = 0$、$f(-x) = x^{2}+4x$ でこれも",
             "y 切片が 0 の例は消した")
 
-
 # ══════════════════════════════════════════════════════════
 # C01  $f(ax+b)$ が「SL 全体で出ない」と読めた表現を、2.11 の範囲に限る
 # ══════════════════════════════════════════════════════════
@@ -488,6 +493,137 @@ chk(sp.simplify(sp.sin(_c01b * (_c01x + _c01c))
 chk(sp.simplify(sp.sin(2 * (sp.Symbol("x") + sp.pi / 2))
                 - sp.sin(2 * sp.Symbol("x") + sp.pi)) == 0,
     "C01 sin(2x+pi) は sin(2(x+pi/2))")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text('グラフを軸で折り返すときの式は、次の $2$ つです。', "公式の前置き 1")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. transformation は、グラフ全体を動かす操作 {#idea}', "見出しの英語: 1. transformation は、グラフ全体を")
+in_text('### 2. translation（平行移動） {#translation}', "見出しの英語: 2. translation（平行移動）")
+in_text('### 3. reflection（対称移動） {#reflection}', "見出しの英語: 3. reflection（対称移動）")
+in_text('### 4. stretch（拡大） {#stretch}', "見出しの英語: 4. stretch（拡大）")
+in_text('### 5. composite transformations（移動を組み合わせる） {#composite}', "見出しの英語: 5. composite transformations（移動を")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：平行移動と対称移動を、別の図に分けた
+# ══════════════════════════════════════════════════════════
+SVG_C = os.path.join(BASE, "img", "aasl-2-11-idea-c.svg")
+chk(os.path.exists(SVG_C), "図 (c) がある")
+chk(not os.path.exists(SVG_C[:-4] + ".png"), "図 (c) の PNG は消してある")
+in_text("](img/aasl-2-11-idea-c.svg){#fig-aasl211-idea-c", "本文が図 (c) を貼っている")
+in_text("@fig-aasl211-idea-c を見てください。", "図 (c) を参照している")
+in_fig("Reflections", "図 (c) の題")
+in_fig("$y = f(-x)$", "図 (c) に f(-x)")
+# 図 (a) からは対称移動を外した
+chk("-bump(t)" not in FIGCODE.split("(c) 対称移動")[0],
+    "図 (a) に -f(x) は描いていない")
+not_in_text("@fig-aasl211-idea-a の点々の曲線が $y = -f(x)$ です。",
+            "図 (a) を対称移動の説明に使っていない")
+# 置き場所：(a) は第 2 節、(c) は第 3 節
+_i2 = TEXT.index("### 2. translation")
+_i3 = TEXT.index("### 3. reflection")
+_i4 = TEXT.index("### 4. stretch")
+chk(_i2 < TEXT.index("](img/aasl-2-11-idea-a.svg)") < _i3, "図 (a) は第 2 節")
+chk(_i3 < TEXT.index("](img/aasl-2-11-idea-c.svg)") < _i4, "図 (c) は第 3 節")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22（2）：式の注記に英語を添え、表 1 の行と列を入れかえた
+# ══════════════════════════════════════════════════════════
+in_text(r"\text{：up by } b \text{（上へ } b \text{）}", "式 1 に英語")
+in_text(r"\text{：right by } a \text{（右へ } a \text{）}", "式 2 に英語")
+in_text(r"\text{：reflection in the } x \text{-axis（}x\text{ 軸で折り返す）}",
+        "式 3 に英語")
+in_text(r"\text{：reflection in the } y \text{-axis（}y\text{ 軸で折り返す）}",
+        "式 4 に英語")
+in_text(r"\text{：vertical stretch, scale factor } p \text{（縦に } p \text{ 倍）}",
+        "式 5 に英語")
+in_text(r"\text{：horizontal stretch, scale factor } \frac{1}{q}"
+        r" \text{（横に } \frac{1}{q} \text{ 倍）}", "式 6 に英語")
+in_text("答案には **`a horizontal stretch with scale factor` $\\dfrac{1}{5}$**",
+        "答案の書き方は英語")
+not_in_text("あるいは「横に $\\dfrac{1}{5}$ 倍」と書きます", "日本語だけの書き方は消した")
+
+# 表 1：左の列が変換、上の行が「もとの特徴」
+in_text("| 変換 | 点 $(s,\\ t)$ | 水平漸近線 $y = k$ | 垂直漸近線 $x = h$ |",
+        "表 1 の見出し行")
+not_in_text("| もとの特徴 | $y = f(x)+b$ |", "古い向きの見出し行は消した")
+for _row, _cells in [
+    ("$y = f(x)+b$", ["$(s,\\ t+b)$", "$y = k+b$", "$x = h$"]),
+    ("$y = f(x-a)$", ["$(s+a,\\ t)$", "$y = k$", "$x = h+a$"]),
+    ("$y = -f(x)$", ["$(s,\\ -t)$", "$y = -k$", "$x = h$"]),
+    ("$y = f(-x)$", ["$(-s,\\ t)$", "$y = k$", "$x = -h$"]),
+    ("$y = p\\,f(x)$", ["$(s,\\ pt)$", "$y = pk$", "$x = h$"]),
+    ("$y = f(qx)$", ["$\\left(\\dfrac{s}{q},\\ t\\right)$", "$y = k$",
+                     "$x = \\dfrac{h}{q}$"]),
+]:
+    in_text("| " + _row + " | " + " | ".join(_cells) + " |",
+            "表 1 の行: " + _row)
+chk(len([l for l in TEXT.split("\n") if l.startswith("| $y = ")]) == 6,
+    "表 1 は 6 行")
+
+# 表の中身を、点を 1 つ動かして確かめる
+_s, _t, _b, _a, _p, _q = sp.symbols("s t b a p q", positive=True)
+eq(_t + _b, _t + _b, "(s, t+b)")
+chk(sp.simplify((_s + _a) - (_s + _a)) == 0, "(s+a, t)")
+chk(sp.simplify(_s / _q - _s / _q) == 0, "(s/q, t)")
+# y = f(qx) は x を 1/q 倍するので、垂直漸近線 x = h は x = h/q へ
+_h = sp.symbols("h", positive=True)
+chk(sp.solveset(sp.Eq(_q * x, _h), x, REALS) == {_h / _q},
+    "f(qx) の垂直漸近線は x = h/q")
+# y = f(-x) は x = h を x = -h へ
+chk(sp.solveset(sp.Eq(-x, _h), x, REALS) == {-_h},
+    "f(-x) の垂直漸近線は x = -h")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22（3）：「いじる」→「変更する」、「素直」→「そのまま」
+# ══════════════════════════════════════════════════════════
+in_text("大事なのは、**式のどこを変更したか**です。", "式のどこを変更したか")
+in_text("- **$f$ の「外」を変更する** →", "外を変更する")
+in_text("- **$f$ の「中」（$x$ の側）を変更する** →", "中を変更する")
+in_text("**縦はそのまま、横はさかさま**です。", "縦はそのまま")
+in_text("**なぜ、縦向きは式のとおりに動くのでしょうか。**", "Why it works の問い")
+in_text("**縦の拡大は、書かれた数がそのまま倍率**です（[第 4 節](#stretch)）。",
+        "縦の拡大はそのまま倍率")
+chk("いじ" not in TEXT, "「いじる」は使っていない")
+chk("素直" not in TEXT, "「素直」は使っていない")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'up by $b$; right by $a$',
+    'vertical by $p$; horizonta',
+    '$-f(x)$: flipped in the $x',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
+in_text('\\text{：up by } b \\text{（上へ } b \\text{）}', "その内容は本文にある")
+in_text('\\text{：vertical stretch, scale factor } p', "その内容は本文にある")
+in_text('\\text{：reflection in the } x \\text{-axis（}x\\text{ 軸で折り返す）}', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

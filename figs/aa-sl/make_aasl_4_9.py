@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_4_9.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_4_9.py  … 目視用の PNG も
 
-出力: aa-sl/04-statistics-and-probability/img/aasl-4-9-idea.svg
+出力: aa-sl/04-statistics-and-probability/img/aasl-4-9-idea-a.svg
+      aa-sl/04-statistics-and-probability/img/aasl-4-9-idea-b.svg
 
 (a) 正規分布の曲線と 68 / 95 / 99.7 のめやす。
 (b) 確率は面積。逆に、面積から値を求めるのが inverse normal。
@@ -43,14 +44,15 @@ def pdf(z):
     return np.exp(-z ** 2 / 2) / math.sqrt(2 * math.pi)
 
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.6, 4.8))
+fig1, ax1 = plt.subplots(figsize=(5.7, 4.8))
+fig2, ax2 = plt.subplots(figsize=(5.7, 4.8))
 Z = np.linspace(-3.9, 3.9, 800)
 Y = pdf(Z)
 
 # ══════════════════════════════════════════════════════════
 # (a) 曲線と 68 / 95 / 99.7
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) The normal curve and the $68$–$95$–$99.7$ guide",
+ax1.set_title("The normal curve and the $68$–$95$–$99.7$ guide",
               fontsize=11, color=INK, loc="left", pad=12)
 ax1.plot(Z, Y, color=ACCENT, linewidth=1.6)
 ax1.fill_between(Z, 0, Y, where=(Z >= -1) & (Z <= 1), color=FILL)
@@ -75,17 +77,11 @@ ax1.annotate("", xy=(2, 0.478), xytext=(-2, 0.478),
              arrowprops=dict(arrowstyle="<->", color=WARM, linewidth=1.1))
 ax1.text(0, 0.491, "about $95\\%$", fontsize=9.5, color=WARM, ha="center")
 
-ax1.text(0.0, -0.20, "the curve is symmetric about $\\mu$; the total area\n"
-         "under it is $1$", fontsize=9, color=INK, transform=ax1.transAxes,
-         linespacing=1.6)
-ax1.text(0.0, -0.34, "about $99.7\\%$ of the values lie between\n"
-         "$\\mu-3\\sigma$ and $\\mu+3\\sigma$", fontsize=9, color=WARM,
-         transform=ax1.transAxes, linespacing=1.6)
 
 # ══════════════════════════════════════════════════════════
 # (b) 面積から値へ、値から面積へ
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) A probability is an area; the inverse goes the other way",
+ax2.set_title("A probability is an area; the inverse goes the other way",
               fontsize=11, color=INK, loc="left", pad=12)
 ax2.plot(Z, Y, color=ACCENT, linewidth=1.6)
 K = 0.8416212335729144       # z with area 0.8 to the left
@@ -106,22 +102,14 @@ ax2.annotate("", xy=(1.45, 0.055), xytext=(2.6, 0.16),
              arrowprops=dict(arrowstyle="->", color=ACCENT, linewidth=1.1))
 ax2.text(2.35, 0.175, "the rest", fontsize=9.5, color=ACCENT)
 
-ax2.text(0.0, -0.20, "given $k$, the shaded area is $P(X \\leq k)$: this is\n"
-         "the normal probability calculation", fontsize=9, color=INK,
-         transform=ax2.transAxes, linespacing=1.6)
-ax2.text(0.0, -0.34, "given the area, finding $k$ is the inverse normal\n"
-         "calculation: the area is given and $k$ is read off",
-         fontsize=9, color=WARM, transform=ax2.transAxes, linespacing=1.6)
 
-fig.tight_layout(w_pad=2.2)
-path = os.path.join(OUT, "aasl-4-9-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-print("  area to k =", round(0.5 * (1 + math.erf(K / math.sqrt(2))), 6),
-      " (0.8 にしてある)")
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-4-9-idea-a.svg"), (fig2, "aasl-4-9-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

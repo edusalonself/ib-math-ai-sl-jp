@@ -24,10 +24,8 @@ FIGCODE = FIG.split('"""', 2)[-1]
 OK = NG = 0
 R = sp.Rational
 
-
 def D(x):
     return sp.rad(x)
-
 
 def chk(cond, msg):
     global OK, NG
@@ -37,34 +35,26 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(u - v) == 0, msg + f"  ({u} vs {v})")
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 def cos_rule(a, b, C):
     return a ** 2 + b ** 2 - 2 * a * b * sp.cos(D(C))
 
-
 def area(a, b, C):
     return R(1, 2) * a * b * sp.sin(D(C))
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 正確な値の表と、定理そのもの
@@ -207,10 +197,11 @@ in_text("> $c^2 = a^2 + b^2 - 2ab\\cos C$ ; $\\cos C = \\dfrac{a^2+b^2-c^2}{2ab}
 in_text("公式集の **3.2** の欄に `Area of a triangle` として印刷されています。",
         "面積の欄")
 in_text("> $A = \\dfrac{1}{2}ab\\sin C$", "面積を逐語で")
-# ★ 答案の書き方を縛る Guidance の一文だけを引く
-in_text("> In all areas of this topic, students should be encouraged to sketch "
-        "well-labelled diagrams to support their solutions.", "答案の書き方の一文")
-chk(TEXT.count("\n> ") == 4, f"引用は公式集 3 つ + Guidance 1 つ: {TEXT.count(chr(10) + '> ')}")
+# ★ 2026-10-01：図をかく Guidance の段落は削除した
+not_in_text("> In all areas of this topic, students should be encouraged to sketch "
+            "well-labelled diagrams to support their solutions.",
+            "その引用は消した")
+chk(TEXT.count("\n> ") == 3, f"引用は公式集の 3 つ: {TEXT.count(chr(10) + '> ')}")
 chk(TEXT.count("::: {.callout-important}") == 3, "公式集の callout は 3 つ")
 not_in_text("Use of sine, cosine and tangent ratios to find", "シラバス本文は引かない")
 not_in_text("This section does not include the ambiguous case", "シラバス本文は引かない")
@@ -233,7 +224,8 @@ in_text("$\\hat{A}$ が鈍角だと $H$ は $A$ の外側に出ます。この�
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -315,37 +307,40 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-3-2-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-3-2-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-3-2-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-3-2-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-3-2-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-3-2-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-3-2-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Naming sides and angles", "図(a) の題")
-in_fig("$a$ faces $A$", "図(a) の対応")
-in_fig("each small letter names the side opposite that capital", "図(a) の説明")
-in_fig("(b) Which rule?", "図(b) の題")
+in_fig("Naming sides and angles", "図(a) の題")
+chk("$a$ faces $A$" not in FIGSTR, "図(a) から「a faces A」を消した")
+chk("arrowstyle" not in FIGCODE.split("(b) どちらの定理か")[0],
+    "図(a) の点線の矢印も消した")
+in_fig("Which rule?", "図(b) の題")
 in_fig("a side and the angle", "図(b) の正弦定理")
 in_fig("facing it: sine rule", "図(b) の正弦定理（続き）")
 in_fig("two sides and the", "図(b) の余弦定理")
 in_fig("angle between them:", "図(b) の余弦定理（続き）")
 in_fig("cosine rule", "図(b) の余弦定理（名前）")
-in_fig("look for a matching pair first; if there is none, use the ", "図(b) の説明")
-in_text("(a) In triangle $ABC$ each small letter names the side opposite",
-        "キャプションが (a) を説明")
-in_text("(b) If a side and the angle facing it are both known, use the sine rule",
-        "キャプションが (b) を説明")
 chk(not re.search(r"\d", FIGSTR), "図のラベルに数字がない")
 
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-2.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/03-geometry/aasl-3-2.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-3-1.qmd") < DRAFT.index("aasl-3-2.qmd"), "並びが 3.1 → 3.2")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-2.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -429,7 +424,8 @@ in_text("**この表は公式集にはありません。** Paper 1 は電卓な�
         "表は公式集にない")
 
 # --- シラバスは「奨励」------------------------------------------------
-in_text("シラバスは、この項目について次のように述べています。", "述べています")
+not_in_text("シラバスは、この項目について次のように述べています。",
+            "その段落も消した")
 in_text("シラバスが、ラベルを付けた図をかくよう勧めています", "勧めています")
 not_in_text("シラバスは、この項目について次のように求めています。", "「求めています」は消した")
 not_in_text("ラベルを付けた図をかくよう求めています", "「求めています」は消した")
@@ -448,7 +444,6 @@ chk(abs(float(21 * sp.sqrt(3) / 4) - 9.09) < 0.02, "面積は約 9.1 m^2")
 # --- 電卓（機種に依存しない書き方）--------------------------------------
 in_text("ハンドヘルドでは `trig` キーでパレットが開きますが、`sin(` のように直接"
         "打ち込んでもかまいません。", "機種に依存しない書き方")
-
 
 # ══════════════════════════════════════════════════════════
 # E05  演習6 — cos C から角まで、そして GDC で一般の角
@@ -475,6 +470,104 @@ chk(7 + 8 > 11 and 7 + 11 > 8 and 8 + 11 > 7, "E05 3 辺は三角形をつくる
 # ラジアン設定のままだと別の数になる
 chk(abs(float(sp.acos(sp.Rational(-1, 14))) - 1.6423) < 1e-3,
     "E05 ラジアンなら 1.64")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text('辺と、その向かいの角の組を結びつける **sine rule（正弦定理）**の公式は、次のとおりです。', "公式の前置き 1")
+in_text('$2$ 辺とそのあいだの角から残りの辺を求める **cosine rule（余弦定理）**と、それを角について解いた形は、次のとおりです。', "公式の前置き 2")
+in_text('$2$ 辺とそのあいだの角から、三角形の面積を求める公式は、次のとおりです。', "公式の前置き 3")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. sine, cosine and tangent ratios（直角三角形の三角比） {#ratios}',
+        "見出しの英語: 1. sine, cosine and tangent")
+in_text('### 2. inverse trigonometric ratios（角を求める） {#inverse}', "見出しの英語: 2. inverse trigonometric r")
+in_text('### 4. the sine rule（正弦定理） {#sine-rule}', "見出しの英語: 4. the sine rule（正弦定理）")
+in_text('### 5. the cosine rule（余弦定理） {#cosine-rule}', "見出しの英語: 5. the cosine rule（余弦定理）")
+in_text('### 7. area of a triangle（三角形の面積） {#area}', "見出しの英語: 7. area of a triangle（三角形の")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：第 1 節に hyp / opp / adj の図を足した
+# ══════════════════════════════════════════════════════════
+SVG_C = os.path.join(BASE, "img", "aasl-3-2-idea-c.svg")
+chk(os.path.exists(SVG_C), "図 (c) がある")
+chk(not os.path.exists(SVG_C[:-4] + ".png"), "図 (c) の PNG は消してある")
+in_text("](img/aasl-3-2-idea-c.svg){#fig-aasl32-idea-c", "本文が図 (c) を貼っている")
+in_text("@fig-aasl32-idea-c を見てください。", "図 (c) を参照している")
+in_fig("Naming the sides from $\\theta$", "図 (c) の題")
+for _w in ("hypotenuse", "opposite", "adjacent"):
+    in_fig(_w, "図 (c) の " + _w)
+in_fig("$\\sin\\theta$ = opp / hyp", "図 (c) の sin")
+in_fig("$\\cos\\theta$ = adj / hyp", "図 (c) の cos")
+in_fig("$\\tan\\theta$ = opp / adj", "図 (c) の tan")
+in_text("**opposite と adjacent は、どの角から見るかで入れかわります。**",
+        "入れかわることを本文でも書いている")
+in_text("hypotenuse だけは、どちらの角から見ても同じ辺です。", "斜辺は変わらない")
+in_text("**この $3$ 辺の組み合わせが、$3$ つの比になります。**", "公式の前置き")
+# 図 (c) は第 1 節の中（第 2 節より前）
+chk(TEXT.index("### 1. sine, cosine and tangent ratios")
+    < TEXT.index("](img/aasl-3-2-idea-c.svg)")
+    < TEXT.index("### 2. inverse trigonometric ratios"), "図 (c) は第 1 節の中")
+# SOH-CAH-TOA の中身
+_t = sp.Symbol("theta")
+chk(sp.simplify(sp.tan(_t) - sp.sin(_t) / sp.cos(_t)) == 0,
+    "tan = sin / cos（opp/adj と同じ）")
+eq(sp.sin(sp.pi / 6), R(1, 2), "sin 30 = 1/2")
+eq(sp.cos(sp.pi / 3), R(1, 2), "cos 60 = 1/2")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'each small letter names the si',
+    'look for a matching pair first',
+    'opposite and adjacent swap if ',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:30])
+in_text('三角形 $ABC$ では、**小文字の辺は、同じ文字の角の向かい**にあります。', "その内容は本文にある")
+in_text('**まず「向かい合う組」があるかを見ます。** なければ余弦定理です。', "その内容は本文にある")
+in_text('**opposite と adjacent は、どの角から見るかで入れかわります。**', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01 の手直し
+# ══════════════════════════════════════════════════════════
+in_text("辺の長さから角を出すときは、**inverse trigonometric ratios"
+        "（逆の関数）**を使います", "逆の関数に英語を添えた")
+not_in_text("辺の長さから角を出すときは、**逆の関数**を使います",
+            "前の言い方は消した")
+# シラバスの「図をかく」の段落は削除
+not_in_text("> In all areas of this topic, students should be encouraged to "
+            "sketch well-labelled diagrams to support their solutions.",
+            "その引用は削除した")
+not_in_text("つまり、**文章で与えられた問題は、まず図にする**ということです。",
+            "同上")
+not_in_text("**図があると、どの定理を使うかがその場で見えます。**", "同上")
+not_in_text("と、図をかくこと {#area}", "第 7 節の見出しからも外した")
 
 print()
 print("OK", OK, "/ NG", NG)

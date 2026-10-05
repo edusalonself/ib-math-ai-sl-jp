@@ -3,10 +3,13 @@
     python3 figs/aa-sl/make_aasl_2_6.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_2_6.py  … 目視用の PNG も
 
-出力: aa-sl/02-functions/img/aasl-2-6-idea.svg
+出力: aa-sl/02-functions/img/aasl-2-6-idea-a.svg
+      aa-sl/02-functions/img/aasl-2-6-idea-b.svg
+      aa-sl/02-functions/img/aasl-2-6-idea-c.svg
 
 (a) 3 つの形は、それぞれちがう特徴をすぐ見せてくれる。
 (b) a の符号と大きさが、形を決める。
+(c) factorised form は x 切片と、そのまん中の軸を見せる（第 3 節）。
 
 matplotlib の mathtext には次の制限があります（tools/README.md）。
   * \\begin{pmatrix} は読めない → \\binom を使う
@@ -33,12 +36,13 @@ GREY = "#6b7280"
 WARM = "#b45309"
 GREEN = "#15803d"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.8, 4.6))
-
+fig1, ax1 = plt.subplots(figsize=(5.3, 4.6))
+fig2, ax2 = plt.subplots(figsize=(5.3, 4.6))
+fig3, ax3 = plt.subplots(figsize=(5.3, 4.6))
 # ══════════════════════════════════════════════════════════
 # (a) 3 つの形が見せてくれるもの
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Each form shows a different feature", fontsize=11,
+ax1.set_title("Each form shows a different feature", fontsize=11,
               color=INK, loc="left", pad=10)
 ax1.set_xlim(-3.4, 5.6)
 ax1.set_ylim(-4.6, 5.2)
@@ -84,7 +88,7 @@ ax1.text(H + 0.14, 4.9, "axis of\nsymmetry", fontsize=9.5, color=GREY,
 # ══════════════════════════════════════════════════════════
 # (b) a の符号と大きさ
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) The sign and size of $a$", fontsize=11, color=INK,
+ax2.set_title("The sign and size of $a$", fontsize=11, color=INK,
               loc="left", pad=10)
 ax2.set_xlim(-3.0, 3.6)
 ax2.set_ylim(-5.2, 4.6)
@@ -108,16 +112,49 @@ ax2.text(2.3, 2.1, "small $a > 0$:\nwide", fontsize=10, color=GREEN,
          va="top")
 ax2.text(-2.9, -2.6, "$a < 0$:\nopens downwards", fontsize=10, color=WARM,
          va="top")
-ax2.text(0.3, -5.1, "$a$ cannot be $0$: the graph would be a straight line",
-         fontsize=9.5, color=INK, ha="center")
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-2-6-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
+# ══════════════════════════════════════════════════════════
+# (c) factorised form は、x 切片と軸を見せる（第 3 節）
+#     (a) と同じ放物線を使う。読むものだけを変える。
+# ══════════════════════════════════════════════════════════
+ax3.set_title("Factorised form shows the $x$-intercepts", fontsize=11,
+              color=INK, loc="left", pad=10)
+ax3.set_xlim(-3.4, 5.6)
+ax3.set_ylim(-4.6, 5.2)
+ax3.axis("off")
 
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+ax3.annotate("", xy=(5.4, 0), xytext=(-3.2, 0),
+             arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.1))
+ax3.annotate("", xy=(0, 5.0), xytext=(0, -4.0),
+             arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.1))
+ax3.text(5.5, -0.36, "$x$", fontsize=11, color=GREY, ha="center")
+ax3.text(-0.26, 5.1, "$y$", fontsize=11, color=GREY, va="center")
+
+ax3.plot(xs, A * (xs - P) * (xs - Q), color=ACCENT, linewidth=2.2)
+ax3.plot([H, H], [-4.0, 5.0], color=GREY, linewidth=1.0,
+         linestyle=(0, (5, 4)))
+
+for px, lab, ha, dx in ((P, "$(p,\\,0)$", "right", -0.35),
+                        (Q, "$(q,\\,0)$", "left", 0.35)):
+    ax3.plot([px], [0], marker="o", markersize=6, color=WARM, zorder=3)
+    ax3.text(px + dx, 0.5, lab, fontsize=10, color=WARM, ha=ha, va="bottom")
+
+ax3.text(-3.3, 3.4, "$f(x) = a(x-p)(x-q)$", fontsize=11, color=ACCENT,
+         ha="left", va="center")
+ax3.text(H + 0.14, 4.9, "$x = \\dfrac{p+q}{2}$", fontsize=11, color=GREY,
+         ha="left", va="top")
+ax3.text(H + 0.14, 3.9, "halfway between\nthe two intercepts",
+         fontsize=9, color=GREY, ha="left", va="top")
+
+for _fig, _name in ((fig1, "aasl-2-6-idea-a.svg"),
+                    (fig2, "aasl-2-6-idea-b.svg"),
+                    (fig3, "aasl-2-6-idea-c.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

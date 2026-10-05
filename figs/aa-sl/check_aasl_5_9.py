@@ -20,7 +20,6 @@ FIGCODE = FIG.split('"""', 2)[-1]
 OK = 0
 NG = 0
 
-
 def chk(cond, msg=""):
     global OK, NG
     if cond:
@@ -29,50 +28,38 @@ def chk(cond, msg=""):
         NG += 1
         print("NG :", msg)
 
-
 def eq(a, b, msg=""):
     chk(sp.simplify(sp.nsimplify(a) - sp.nsimplify(b)) == 0,
         "%s :: %s != %s" % (msg, a, b))
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: %s :: %s" % (msg, sub[:60]))
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: %s :: %s" % (msg, sub[:60]))
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
-
 BODY = TEXT.split("## Worked examples")[0]
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
 
-
 R = sp.Rational
 T = sp.Symbol("t", nonnegative=True)
-
 
 def d1(f):
     return sp.expand(sp.diff(f, T))
 
-
 def d2(f):
     return sp.expand(sp.diff(f, T, 2))
-
 
 def same(a, b):
     return sp.simplify(sp.nsimplify(a) - sp.nsimplify(b)) == 0
 
-
 def zeros(f):
     return sorted(sp.solve(sp.Eq(f, 0), T))
-
 
 # ══════════════════════════════════════════════════════════
 # 1. ページの骨組み
@@ -125,9 +112,12 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-5-9-idea.svg){#fig-aasl59-idea width=100%}", "図の埋め込み")
-in_text("@fig-aasl59-idea (a)", "図 (a) の参照")
-in_text("@fig-aasl59-idea (b)", "図 (b) の参照")
+in_text("(img/aasl-5-9-idea-a.svg){#fig-aasl59-idea-a width=100%}", "図 (a) の埋め込み")
+in_text("(img/aasl-5-9-idea-b.svg){#fig-aasl59-idea-b width=100%}", "図 (b) の埋め込み")
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-5-9-idea.svg")),
+    "分割前の SVG は消してある")
+in_text("@fig-aasl59-idea-a", "図 (a) の参照")
+in_text("@fig-aasl59-idea-b", "図 (b) の参照")
 
 for _w in ("そのとおり", "もちろん", "簡単です", "自明", "当たり前", "明らか", "当然"):
     not_in_text(_w, "禁止語 " + _w)
@@ -155,23 +145,19 @@ in_text("\\text{displacement} = \\int_{t_{1}}^{t_{2}} v(t)\\,dt\n"
 in_text("\\text{distance} = \\int_{t_{1}}^{t_{2}} |v(t)|\\,dt\n"
         "$$ {#eq-aasl59-dist}", "道のりの式")
 for _r in ("{#eq-aasl59-v}", "{#eq-aasl59-speed}", "{#tbl-aasl59-three}",
-           "{#tbl-aasl59-two}", "{#tbl-aasl59-units}"):
+           "{#tbl-aasl59-units}"):
     in_text(_r, "参照 " + _r)
 for _a in ("aasl-5-1.qmd#limit", "aasl-5-2.qmd#zero", "aasl-5-5.qmd#anti",
            "aasl-5-5.qmd#boundary", "aasl-5-7.qmd#again",
            "aasl-5-7.qmd#notation", "aasl-5-7.qmd#meaning",
-           "aasl-5-11a.qmd", "aasl-5-11b.qmd"):
+           "aasl-5-11.qmd", "aasl-5-11.qmd"):
     in_text(_a, "参照 " + _a)
 
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('"(a) Reading a velocity-time graph"', "図 (a) の題")
-in_fig('"(b) How $s$, $v$ and $a$ are linked"', "図 (b) の題")
-in_fig("displacement $= A_{1} - A_{2} + A_{3}$", "図 (a) の変位")
-in_fig("distance $= A_{1} + A_{2} + A_{3}$", "図 (a) の道のり")
-in_fig("speed $= |v|$, so speed is never negative", "図 (b) の speed")
-in_fig("at rest when $v = 0$, not when $a = 0$", "図 (b) の静止")
+in_fig('"Reading a velocity-time graph"', "図 (a) の題")
+in_fig('"How $s$, $v$ and $a$ are linked"', "図 (b) の題")
 _figmath = " ".join(re.findall(r"\$([^$]*)\$", FIGCODE))
 for _v in ("8.17", "13", "1024", "t^{2}"):
     chk(_v not in _figmath, "図の数式に具体的な数・式 %s は出さない" % _v)
@@ -320,14 +306,12 @@ _STMT = re.compile(
     r"(?<![\d\w}])(%s(?:\s*=\s*%s)+)(?!\s*(?:[+-]|[\d.(^]|\\(?!ldots|approx)))"
     % (_EXPR, _EXPR))
 
-
 def _tonum(t):
     t = t.strip()
     m = re.fullmatch(r"\\[dt]?frac\{(-?\d+)\}\{(-?\d+)\}", t)
     if m:
         return sp.Rational(int(m.group(1)), int(m.group(2)))
     return sp.Rational(t)
-
 
 def _value(expr):
     total = sp.Integer(0)
@@ -341,7 +325,6 @@ def _value(expr):
                 prod *= _tonum(_f.group(0))
             total += sign * prod
     return total
-
 
 _nstmt = 0
 for _m in _STMT.finditer(TEXT):
@@ -403,7 +386,7 @@ chk("\\int_{t_{1}}^{t_{2}} v(t)\\,dt = s(t_{2}) - s(t_{1})" + chr(10)
     + "$$ {#eq-aasl59-diff}" in TEXT, "第6節: s の差")
 chk("**位置の関数 $s$ がわかっているときは、引き算で出せます。**" in TEXT,
     "第6節: 引き算で出す")
-chk("[SL 5.11a](aasl-5-11a.qmd) で扱います。" in TEXT, "5.11a へ送る")
+chk("[SL 5.11](aasl-5-11.qmd) で扱います。" in TEXT, "5.11a へ送る")
 
 # --- M4: 演習4 が「v=0 でも向きが変わらない」形 ----------------------------
 chk("A particle moves along a straight line with velocity $v = (t - 3)^{2}$"
@@ -446,10 +429,6 @@ chk("**検算（区切って考えて）。**" in TEXT, "例題3: 区切る検�
 chk("**検算（符号）。** distance は正です ✓" not in TEXT, "言いかえが消えている")
 
 # --- m2 + m3: 図 ------------------------------------------------------------
-chk("$A_{1}$, $A_{2}$, $A_{3}$ are areas, so each one is positive" in FIG,
-    "図: A は面積")
-chk("A note says that these are areas, so each one is positive." in TEXT,
-    "図の alt: A は面積")
 chk("T1, T2, TEND = 1.0, 2.6, 4.2" in FIG, "図の交点が例題1 と重ならない")
 
 # --- m4 + m5 + m6: 表記 -------------------------------------------------------
@@ -464,6 +443,140 @@ eq((6 * T ** 2 - 30 * T + 24).subs(T, R(5, 2)), R(-27, 2), "演習2 v(2.5)")
 # --- m9: 演習9 の英語 -----------------------------------------------------------
 chk("A student writes that the acceleration is $a = 2t - 10$, and concludes "
     "that the particle is at rest when $t = 5$." in TEXT, "演習9 の英語")
+
+# ══════════════════════════════════════════════════════════
+# 分類の表には「図」の列（_方針変更-2026-09-15.md 第 6 節）
+# ══════════════════════════════════════════════════════════
+def _figcol(tid, fig):
+    _ls = TEXT.split(chr(10))
+    _ci = [i for i, l in enumerate(_ls)
+           if l.startswith(": ") and ("{#" + tid + "}") in l]
+    if not _ci:
+        chk(False, "表が見つからない: " + tid)
+        return
+    _e = _ci[0]
+    while not _ls[_e].startswith("|"):
+        _e -= 1
+    _s = _e
+    while _s > 0 and _ls[_s - 1].startswith("|"):
+        _s -= 1
+    chk(_ls[_s].rstrip().endswith("図 |"), "図の列がある: " + tid)
+    _rows = _ls[_s + 2:_e + 1]
+    chk(len(_rows) >= 2, "行がある: " + tid)
+    chk(all(r.rstrip().endswith(fig + " |") for r in _rows),
+        "どの行も図を指している: " + tid)
+    if fig.startswith("@fig-") and " " not in fig:
+        chk(("{#" + fig[1:] + " ") in TEXT or ("{#" + fig[1:] + "}") in TEXT,
+            "指している図がこのページにある: " + fig)
+
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. $s$、$v$、$a$（displacement, velocity, acceleration） {#three}', "見出しの英語: 1. $s$、$v$、$a$（displacemen")
+in_text('### 3. speed は $|v|$ {#speed}', "見出しの英語: 3. speed は $|v|$")
+in_text('### 4. at rest（静止）と、向きが変わるとき {#atrest}', "見出しの英語: 4. at rest（静止）と、向きが変わるとき")
+in_text('### 6. displacement と distance {#distance}', "見出しの英語: 6. displacement と distance")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'speed $= |v|$, so speed ',
+    'the particle is at rest ',
+    'integrating needs a star',
+]:
+    chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
+in_text('### 3. speed は $|v|$ {#speed}', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (a) から説明の文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+chk("are areas, so each one is positive" not in FIG, "図に説明の文を書いていない")
+chk("displacement $= A_{1}" not in FIG, "式も図から外して本文へ移した")
+in_text("**$A_{1}$、$A_{2}$、$A_{3}$ は面積なので、どれも正の数です。** 符号を"
+        "付けるのは、面積そのものではなく、**足すか引くか**のほうです。",
+        "面積が正なのは本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (b) を作りなおした
+# ══════════════════════════════════════════════════════════
+in_text("![$s$, $v$ and $a$, and how to move between them]", "図 (b) のキャプション")
+in_text("**$s$ を微分すると $v$、$v$ を微分すると $a$ です。** "
+        "逆に、$a$ を積分すると $v$、$v$ を積分すると $s$ にもどります"
+        "（@fig-aasl59-idea-b）。", "本文も両向きを言う")
+# 矢印ごとに式が添えてある
+for _s in (r"differentiate:  $\frac{ds}{dt} = v$",
+           r"differentiate:  $\frac{dv}{dt} = a$",
+           r"integrate:  $s = \int v\,dt$",
+           r"integrate:  $v = \int a\,dt$"):
+    in_fig(_s, "図 (b) のラベル: " + _s[:22])
+# ラベルは ylim の中（外に置くと図がずれる）
+_B59 = FIG.split("# (b) s → v → a")[1].split("for _fig, _name in")[0]
+in_fig("ax2.set_ylim(0, 5.3)", "図 (b) の ylim")
+for _ln in _B59.split(chr(10)):
+    _mt = re.match(r"\s*ax2\.text\(\s*([-0-9.]+)\s*,\s*([-0-9.]+)", _ln)
+    if _mt:
+        _yy = float(_mt.group(2))
+        chk(0 <= _yy <= 5.3, "図 (b) の文字は枠の中: y = %s" % _yy)
+in_fig("fig2, ax2 = plt.subplots(figsize=(7.8, 3.6))", "図 (b) は低い枠")
+not_in_text("differentiate right, integrate left", "前のキャプションは消した")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29（その 2）：kinematics の導入／図 (a) の式を本文へ／表 2 を削除
+# ══════════════════════════════════════════════════════════
+in_text("**kinematics（運動学）は、物が動くようすを displacement・velocity・"
+        "acceleration の $3$ つで表す分野です。** この $3$ つが微分と積分で"
+        "つながっていることが、この項目の中身です。", "第 1 節の書き出し")
+chk(TEXT.index("**kinematics（運動学）は、")
+    < TEXT.index("**直線上を動く物体を考えます。**"), "kinematics は先")
+# 図 (a) にあった式は本文へ
+in_text("$$\n\\text{displacement} = A_{1} - A_{2} + A_{3}\n$$", "変位の式")
+in_text("$$\n\\text{distance} = A_{1} + A_{2} + A_{3}\n$$", "道のりの式")
+in_text("**$v$ が符号を変える $t_{1}$ と $t_{2}$ で、物体は向きを変えて"
+        "います。**", "向きが変わるところ")
+for _s in ("displacement $= A_{1}", "distance $= A_{1}",
+           "the particle changes direction"):
+    chk(_s not in FIG, "図 (a) から外した: " + _s[:26])
+chk("ax1.set_clip_on(False)" not in FIG, "枠の外に書く指定も外した")
+in_fig("fig1, ax1 = plt.subplots(figsize=(6.4, 3.4))", "図 (a) は低い枠")
+# 図 (a) の文字は、すべて枠の中
+_A59 = FIG.split("# (a) v-t グラフ")[1].split("# (b) s")[0]
+for _ln in _A59.split(chr(10)):
+    _mt = re.match(r"\s*ax1\.text\(\s*([-0-9.]+)\s*,\s*([-0-9.]+)", _ln)
+    if _mt:
+        _yy = float(_mt.group(2))
+        chk(-1.9 <= _yy <= 4.6, "図 (a) の文字は枠の中: y = %s" % _yy)
+# 表 2 は削除
+not_in_text("{#tbl-aasl59-two}", "2 つのちがいの表は消した")
+not_in_text("| $v > 0$ | 足す | 足す |", "表 2 の行は消した")
+in_text("$v > 0$ の面積はどちらにも足し、$v < 0$ の面積は displacement からは"
+        "引いて、distance には大きさを足します。", "表 2 の中身は本文に")
 
 print()
 print("OK", OK, "/ NG", NG)

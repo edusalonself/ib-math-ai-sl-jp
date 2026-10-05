@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_2_9.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_2_9.py  … 目視用の PNG も
 
-出力: aa-sl/02-functions/img/aasl-2-9-idea.svg
+出力: aa-sl/02-functions/img/aasl-2-9-idea-a.svg
+      aa-sl/02-functions/img/aasl-2-9-idea-b.svg
 
 (a) 指数関数 y = a^x。a > 1 は増える、0 < a < 1 は減る。どれも (0, 1) を通る。
 (b) y = e^x と y = ln x は、y = x について互いの折り返し。
@@ -33,12 +34,12 @@ GREY = "#6b7280"
 WARM = "#b45309"
 GREEN = "#15803d"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.8, 4.8))
-
+fig1, ax1 = plt.subplots(figsize=(5.3, 4.8))
+fig2, ax2 = plt.subplots(figsize=(5.3, 4.8))
 # ══════════════════════════════════════════════════════════
 # (a) y = a^x
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Exponential functions", fontsize=11, color=INK,
+ax1.set_title("Exponential functions", fontsize=11, color=INK,
               loc="left", pad=10)
 ax1.set_xlim(-3.4, 3.4)
 ax1.set_ylim(-1.6, 7.4)
@@ -64,13 +65,11 @@ ax1.text(2.05, 5.2, "$y = 2^{x}$", fontsize=11, color=ACCENT)
 ax1.text(1.05, 5.9, "$y = e^{x}$", fontsize=11, color=GREEN)
 ax1.text(-3.3, 2.4, "$y = \\left(\\frac{1}{2}\\right)^{x}$", fontsize=11,
          color=WARM)
-ax1.text(-3.2, -1.5, "asymptote $y = 0$; the value is never $0$ or negative",
-         fontsize=9.5, color=INK, va="bottom")
 
 # ══════════════════════════════════════════════════════════
 # (b) y = e^x と y = ln x
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Inverse of each other", fontsize=11, color=INK,
+ax2.set_title("Inverse of each other", fontsize=11, color=INK,
               loc="left", pad=10)
 ax2.set_xlim(-3.4, 5.4)
 ax2.set_ylim(-3.4, 5.4)
@@ -99,16 +98,14 @@ ax2.text(1.15, -0.85, "$(1,\\ 0)$", fontsize=10, color=INK)
 ax2.text(1.7, 4.6, "$y = e^{x}$", fontsize=11, color=ACCENT)
 ax2.text(3.6, 1.6, "$y = \\ln x$", fontsize=11, color=WARM)
 ax2.text(3.75, 4.55, "$y = x$", fontsize=10, color=GREEN)
-ax2.text(-3.3, -3.3, "each is the reflection of the other in $y = x$",
-         fontsize=9.5, color=INK, va="bottom")
 
-fig.tight_layout(w_pad=2.2)
-path = os.path.join(OUT, "aasl-2-9-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-2-9-idea-a.svg"), (fig2, "aasl-2-9-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

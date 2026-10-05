@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_4_10.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_4_10.py  … 目視用の PNG も
 
-出力: aa-sl/04-statistics-and-probability/img/aasl-4-10-idea.svg
+出力: aa-sl/04-statistics-and-probability/img/aasl-4-10-idea-a.svg
+      aa-sl/04-statistics-and-probability/img/aasl-4-10-idea-b.svg
 
 (a) 2 本の回帰直線。どちらも平均点を通るが、一致しない。
 (b) 何を最小にしているか —— 縦のずれ（y on x）と横のずれ（x on y）。
@@ -41,12 +42,12 @@ MX, MY = XS.mean(), YS.mean()
 A = np.polyfit(XS, YS, 1)          # y on x
 B = np.polyfit(YS, XS, 1)          # x on y
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.4, 4.9))
-
+fig1, ax1 = plt.subplots(figsize=(5.6, 4.9))
+fig2, ax2 = plt.subplots(figsize=(5.6, 4.9))
 # ══════════════════════════════════════════════════════════
 # (a) 2 本の回帰直線
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Two different regression lines", fontsize=11, color=INK,
+ax1.set_title("Two different regression lines", fontsize=11, color=INK,
               loc="left", pad=12)
 ax1.scatter(XS, YS, s=34, color=ACCENT, zorder=3)
 
@@ -78,15 +79,11 @@ for _sp in ("left", "bottom"):
 ax1.tick_params(length=0, colors=GREY)
 ax1.legend(loc="upper left", fontsize=9.5, frameon=False)
 
-ax1.text(0.0, -0.20, "both lines pass through the mean point, but they are not "
-         "the same line", fontsize=9, color=INK, transform=ax1.transAxes)
-ax1.text(0.0, -0.28, "they agree only when every point lies exactly on one "
-         "straight line", fontsize=9, color=WARM, transform=ax1.transAxes)
 
 # ══════════════════════════════════════════════════════════
 # (b) 何を最小にしているか
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) The two lines minimise different gaps", fontsize=11,
+ax2.set_title("The two lines minimise different gaps", fontsize=11,
               color=INK, loc="left", pad=12)
 ax2.scatter(XS, YS, s=34, color=ACCENT, zorder=3)
 ax2.plot(_gx, A[0] * _gx + A[1], color=ACCENT, linewidth=1.4)
@@ -118,21 +115,14 @@ ax2.text(0.55, 11.2, "solid vertical gaps: $y$ on $x$", fontsize=9,
 ax2.text(0.55, 10.3, "horizontal gaps: $x$ on $y$", fontsize=9,
          color=WARM)
 
-ax2.text(0.0, -0.20, "the $y$ on $x$ line makes the vertical gaps as small as "
-         "possible", fontsize=9, color=ACCENT, transform=ax2.transAxes)
-ax2.text(0.0, -0.28, "the $x$ on $y$ line makes the horizontal gaps as small "
-         "as possible", fontsize=9, color=WARM, transform=ax2.transAxes)
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-4-10-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-print("  mean point = (%.4f, %.4f)" % (MX, MY))
-print("  y on x slope %.5f, x on y slope %.5f, product %.5f"
-      % (A[0], B[0], A[0] * B[0]))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-4-10-idea-a.svg"), (fig2, "aasl-4-10-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

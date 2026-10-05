@@ -62,7 +62,7 @@ for _z in (0.0, np.pi, 2 * np.pi):
     ax.plot([_z], [0.0], marker="o", markersize=5.5, color=WARM, zorder=5)
 
 ax.set_xlim(-0.35, 2 * np.pi + 0.35)
-ax.set_ylim(-YMAX - 0.35, YMAX + 2.1)
+ax.set_ylim(-YMAX - 0.35, YMAX + 0.85)
 ax.set_xticks([0, A1, np.pi, A2, 2 * np.pi])
 ax.set_xticklabels(["$0$", "$\\dfrac{\\pi}{2}$", "$\\pi$",
                     "$\\dfrac{3\\pi}{2}$", "$2\\pi$"], fontsize=11)
@@ -75,10 +75,6 @@ ax.text(2 * np.pi + 0.2, 2.6, "$y = \\tan x$", fontsize=12, color=ACCENT,
         ha="right")
 ax.text(0.05, -YMAX - 0.05, "zeros at $0$, $\\pi$ and $2\\pi$", fontsize=10,
         color=WARM, ha="left", va="center")
-ax.text(0.05, YMAX + 1.95,
-        "three pieces on $0 \\leq x \\leq 2\\pi$: the middle one is a whole "
-        "branch,\nthe two outer ones are halves of a branch. period $= \\pi$",
-        fontsize=10, color=INK, ha="left", va="top")
 
 fig.tight_layout()
 path = os.path.join(OUT, "aasl-3-7a-ex3.svg")

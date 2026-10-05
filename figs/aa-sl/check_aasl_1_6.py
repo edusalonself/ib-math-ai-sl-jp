@@ -26,7 +26,6 @@ FIGCODE = FIG.split('"""', 2)[-1]
 OK = NG = 0
 x, n, m = sp.symbols("x n m")
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -35,41 +34,32 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def _S(v):
     if isinstance(v, float):
         return sp.Rational(str(v))
     return sp.nsimplify(v, rational=True)
 
-
 def eq(a, b, msg=""):
     chk(sp.simplify(_S(a) - _S(b)) == 0, msg + f"  ({a} vs {b})")
 
-
 def ne(a, b, msg=""):
     chk(sp.simplify(_S(a) - _S(b)) != 0, msg + f"  ({a} vs {b})")
-
 
 def ident(lhs, rhs, msg=""):
     """恒等式（すべての値で等しい）であることを確かめる。"""
     chk(sp.simplify(sp.expand(lhs) - sp.expand(rhs)) == 0, "恒等式でない: " + msg)
 
-
 def not_ident(lhs, rhs, msg=""):
     chk(sp.simplify(sp.expand(lhs) - sp.expand(rhs)) != 0, "恒等式になってしまう: " + msg)
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 1. The idea
@@ -250,7 +240,8 @@ eq(4 + 9, 13, "x=2 の右辺")
 # ══════════════════════════════════════════════════════════
 # 8. 公式集とシラバス
 # ══════════════════════════════════════════════════════════
-in_text("公式集の Topic 1 に、**1.6 の欄はありません。**", "公式集に欄がないと明記")
+not_in_text("公式集の Topic 1 に、**1.6 の欄はありません。**",
+            "公式集の囲みは置かない")
 in_text("> LHS to RHS proofs require students to begin with the left-hand side"
         " expression and transform this using known algebraic steps into the"
         " expression on the right-hand side (or vice versa).",
@@ -263,7 +254,8 @@ not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシ
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -286,7 +278,7 @@ _want = ["The idea", "Why it works", "Worked examples", "Common errors",
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
-chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
+chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
 chk(TEXT.count("**検算") >= 12, f"検算が十分ある: {TEXT.count('**検算')}")
 chk("**確かめ。**" not in TEXT and "**確かめます。**" not in TEXT, "「確かめ。」なし")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -320,10 +312,16 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-1-6-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-1-6-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-1-6-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-1-6-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-1-6-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-1-6-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-1-6-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
@@ -334,9 +332,6 @@ in_fig("avoid starting\\nfrom the answer", "図(a) の注意")
 in_fig("Where the statement is true", "図(b) の題")
 in_fig("true\\neverywhere", "図(b) の恒等式")
 in_fig("true at\\none value", "図(b) の方程式")
-in_text("(a) The layout expected in an examination runs down one side only",
-        "キャプションが (a) を説明")
-in_text("(b) An equation is true at particular values", "キャプションが (b) を説明")
 # 図の数値が本文と合っているか
 eq(sp.solve(sp.Eq(2 * x + 1, 7), x)[0], 3, "図(b) の x=3")
 ident((x + 1) ** 2, x ** 2 + 2 * x + 1, "図(b) の恒等式")
@@ -347,11 +342,12 @@ for leak in ["29", "37", "13", "42", "110", "4(n+1)", "4(n+2)", "3(n+1)",
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-6.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/01-number-and-algebra/aasl-1-6.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-1-5.qmd") < DRAFT.index("aasl-1-6.qmd"), "並びが 1.5 → 1.6")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-6.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -364,14 +360,13 @@ for t in ["| identity |", "| deductive proof |", "| consecutive |",
           "| counterexample |", "| multiple |"]:
     chk(t in GLO, "対訳表にある: " + t)
 
-
 # ══════════════════════════════════════════════════════════
 # 13. レビュー反映の見張り
 # ══════════════════════════════════════════════════════════
 # 例題 2 を、シラバス自身の形（和の形、m^2+m）に差しかえた
 ident(1 / (m + 1) + 1 / (m ** 2 + m), 1 / m, "例題2 の恒等式（シラバスの形）")
 ident(m ** 2 + m, m * (m + 1), "m^2 + m = m(m+1)")
-in_text("[Show that $\\dfrac{1}{m+1} + \\dfrac{1}{m^{2}+m} \\equiv \\dfrac{1}{m}$,"
+in_text("[**(a)** Show that $\\dfrac{1}{m+1} + \\dfrac{1}{m^{2}+m} \\equiv \\dfrac{1}{m}$,"
         " where $m \\neq 0$ and $m \\neq -1$.]{.q-en}", "シラバスの形を出題")
 in_text("**$m^{2} + m = m(m+1)$ と因数分解するのが、最初の一歩です。**", "因数分解が要")
 eq(sp.Rational(1, 4) + sp.Rational(1, 12), sp.Rational(1, 3), "(a) は m=3 の場合")
@@ -379,10 +374,17 @@ eq(sp.Rational(1, 3 + 1) + sp.Rational(1, 3 ** 2 + 3), sp.Rational(1, 3), "m=3 �
 eq(sp.Rational(1, 6) + sp.Rational(1, 30), sp.Rational(1, 5), "m=5 の検算")
 eq(sp.Rational(5, 30) + sp.Rational(1, 30), sp.Rational(6, 30), "m=5 の通分")
 eq(sp.Rational(1, 3) + sp.Rational(1, 6), sp.Rational(1, 2), "m=2 の検算")
-in_text("**(a) は、(b) の $m = 3$ の場合です。**", "数の例が一般化のもとだと明記")
-in_text("**(a) は (b) から作った場合なので、検算には使えません。**", "循環を避ける断り")
+# (b) は、条件がなぜ要るかを問う小問に差しかえた（数だけの小問を外した）
+in_text("**(b)** [Explain why the conditions $m \\neq 0$ and $m \\neq -1$ are needed.]{.q-en}",
+        "例題2(b) は条件の理由")
+in_text("$\\equiv$ は「**両辺が定義されるすべての値で等しい**」という意味なので",
+        "≡ の意味に戻して答える")
+in_text("*If $m = 0$ or $m = -1$, a denominator is zero and the expressions are not defined, so these values must be excluded.*",
+        "英語の解答例")
+not_in_text("Show that $\\dfrac{1}{4} + \\dfrac{1}{12}", "数だけの小問は消した")
 # 分数を含む恒等式の条件
-in_text("## 分数を含むときは、分母が $0$ にならない値について", "≡ の意味を限定")
+in_text("## $\\dfrac{1}{n}$ は、$n = 0$ では値がありません", "≡ の意味を限定")
+in_text("**分母を $0$ にする値だけを、外しておく**という約束です。", "短い言い方")
 in_text("\\qquad (n \\neq 0, \\ n \\neq -1)", "部分分数に条件")
 in_text("where $n \\neq 0$ and $n \\neq -2$", "演習 5 に条件")
 # 出発点の説明を 1 か所に
@@ -394,7 +396,7 @@ in_text("$\\equiv$ が使える場面で $=$ を書くことはできます。**
 in_text("| $=$ | equation（方程式）として |", "表の見出しを直した")
 # 小数の警告
 not_in_text("$0.333 + 0.167 = 0.5$", "たまたま合う例は消した")
-in_text("$0.17 - 0.14 = 0.03$ です。**合っていません。**", "実際にずれる例")
+not_in_text("$0.17 - 0.14 = 0.03$ です。", "数の証明の節は置かない")
 chk(abs(float(sp.Rational(1, 6) - sp.Rational(1, 7)) - 0.0238095) < 1e-6, "1/42 = 0.0238…")
 ne(sp.Rational("0.03"), sp.Rational(1, 42), "0.03 は 1/42 ではない")
 eq(sp.Rational("0.33") * 3, sp.Rational("0.99"), "0.33 を 3 つ足すと 0.99")
@@ -417,13 +419,26 @@ not_in_text("別の通分でも同じになるかを見ます", "同じ道すじ
 eq(sp.Rational(3, 10) - sp.Rational(1, 4), sp.Rational(1, 20), "3/10 - 1/4 = 1/20")
 eq(sp.Rational(6, 20) - sp.Rational(5, 20), sp.Rational(1, 20), "通分して 1/20")
 eq(sp.Rational(2, 3) - sp.Rational(1, 6), sp.Rational(1, 2), "2/3 - 1/6 = 1/2")
-in_text("**もともと (b) から作った式なので、これは検算になりません。**", "n=6 は使えない")
+in_text("**負の整数でも成り立ちます。**", "例題1 の検算は負の値でも")
 eq(sp.Rational(1, 4) - sp.Rational(1, 5), sp.Rational(1, 20), "n=4 の検算")
 eq(sp.Rational(1, 4 * 5), sp.Rational(1, 20), "n=4 の右辺")
 # 演習 2 の逆向きは検算であって答案ではない
-in_text("## これは検算であって、答案の書き方ではありません", "両辺に足す書き方は不可")
-in_text("\\text{RHS} = \\frac{1}{4} = \\frac{3}{12} = \\frac{4}{12} - \\frac{1}{12}"
-        " = \\frac{1}{3} - \\frac{1}{12} = \\text{LHS}", "RHS→LHS の正しい書き方")
+# 演習 1・2 は、数だけの問題から整数の証明に差しかえた
+in_text("[1]{.ex-no} [Show that $(n+1)^{2} - n^{2} \\equiv 2n + 1$, and hence"
+        " explain why the difference between the squares of two consecutive"
+        " integers is always odd.]{.q-en}", "演習1 は平方の差")
+ident((n + 1) ** 2 - n ** 2, 2 * n + 1, "演習1 の恒等式")
+eq(8 ** 2 - 7 ** 2, 15, "演習1 の検算 7,8")
+eq((-2) ** 2 - (-3) ** 2, -5, "演習1 の検算 -3,-2")
+in_text("*$n$ is an integer, so $2n+1$ is odd.", "演習1 は英語で結論まで")
+in_text("[2]{.ex-no} [Show that the sum of any four consecutive integers is even.]{.q-en}",
+        "演習2 は連続する 4 整数")
+ident(n + (n + 1) + (n + 2) + (n + 3), 2 * (2 * n + 3), "演習2 の恒等式")
+eq(5 + 6 + 7 + 8, 26, "演習2 の検算")
+chk(26 % 4 != 0, "26 は 4 の倍数ではない")
+in_text("*$2n+3$ is an integer, so $2(2n+3)$ is even.*", "演習2 は英語で結論まで")
+not_in_text("Show that $\\dfrac{1}{2} + \\dfrac{1}{6}", "数だけの演習1 は消した")
+not_in_text("Show that $\\dfrac{1}{3} - \\dfrac{1}{12}", "数だけの演習2 は消した")
 # 2 次式は 3 点で
 in_text("**$2$ 次式どうしなら、$3$ つの値で合うところまで見てください。**", "2 点では足りない")
 not_in_text("**$2$ つの値で合えば、展開ミスはまず見つかります。**", "言い過ぎを直した")
@@ -434,8 +449,15 @@ eq(_bad.subs(x, 1), 12, "2 点で偶然そろう例（x=1）")
 eq(_bad.subs(x, 5), 4, "同じく x=5")
 ne(_bad.subs(x, 2), 7, "x=2 では分かれる")
 # 命令語
-in_text("[Suggest a general result, in terms of $n$, that part **(b)** illustrates.]{.q-en}",
-        "Write down ではなく Suggest")
+# 例題 1 は、数だけの問題から文字の一般化に差しかえた
+in_text("[**(a)** Show that $\\dfrac{1}{n} + \\dfrac{1}{n+1} \\equiv \\dfrac{2n+1}{n(n+1)}$,"
+        " where $n \\neq 0$ and $n \\neq -1$.]{.q-en}", "例題1 は文字の一般化")
+ident(1 / n + 1 / (n + 1), (2 * n + 1) / (n * (n + 1)), "例題1 の恒等式")
+eq(sp.Rational(1, 3) + sp.Rational(1, 4), sp.Rational(7, 12), "例題1(b) n=3")
+eq(sp.Rational(2 * 3 + 1, 3 * 4), sp.Rational(7, 12), "例題1(b) 右辺")
+eq(sp.Rational(-1, 2) + sp.Rational(-1, 1), sp.Rational(-3, 2), "例題1 の検算 n=-2")
+eq(sp.Rational(2 * (-2) + 1, (-2) * (-1)), sp.Rational(-3, 2), "同 右辺")
+not_in_text("Suggest a general result", "予想させる小問は残っていない")
 not_in_text("Write down the general result suggested", "命令語を直した")
 # 演習 7 の文字
 in_text("[7]{.ex-no} [Show that $(x+3)^{2} - (x+1)^{2} \\equiv 4(x+2)$.]{.q-en}",
@@ -454,7 +476,6 @@ in_text("Reducing it to $x^{2} + 9 = x^{2} + 9$ shows only that the claim implie
 in_text("**画面で重なって見えても、ちがう式のことがあります。**", "GDC の限界")
 # 公式集に欄がない理由を決めつけない
 not_in_text("証明のしかたに、覚える公式がないからです。", "IB の意図を決めつけない")
-
 
 # ── 両辺を同時に変形する方法（★2026-09-07 の修正）────────
 # 「常に無効」ではなく「同値変形かどうかを確かめる必要がある」に直した
@@ -476,7 +497,7 @@ in_text("**両辺を同時に変形する書き方そのものが誤り、とい
 in_text("両辺に $3$ を足す、両辺から $x^{2}$ を引く、といった操作は逆向きにも成り立つ",
         "同値変形の例")
 # Common errors も、禁止ではなく推奨に
-in_text("## 示したい式から出発して、両辺をいじる", "Common error の見出し")
+in_text("## 示したい式から出発して、両辺を変形する", "Common error の見出し")
 in_text("**この書き方が通るのは、使った変形がすべて逆向きにも成り立つときだけ**です",
         "条件つきの言い方")
 in_text("**LHS か RHS のどちらか一方から出発してください。**", "推奨の言い方")
@@ -493,15 +514,107 @@ in_text("That is enough only if every step can be reversed", "model-answer で�
 not_in_text("答えを書き写しただけでは点になりません", "採点の断定を弱めた")
 in_text("求められていることをしたことになりません", "言いかえ")
 in_text("> **採点されるのは、「なぜそうなるか」の道すじです。**", "同上")
-in_text("そこまでの得点にとどまることがあります", "同上")
-in_text("**$0.5$ とだけ書いても、示したことになりません。**", "同上")
+not_in_text("そこまでの得点にとどまることがあります", "得点の断定は消した")
+not_in_text("**$0.5$ とだけ書いても、示したことになりません。**", "数の証明の節は消した")
+in_text("ただし、**示したいところまで書き切る**必要はあります。", "書き切ると言いかえた")
 in_text("必要な過程を示したことになりません", "同上")
 for _ng in ["点になりません", "点にはなりません"]:
     not_in_text(_ng, "断定的な採点の言い方は残っていない: " + _ng)
 
-
 not_in_text("違うのは**出発点**です", "出発点そのものを誤りとは言わない")
 in_text("足りないのは、**その変形が逆向きにも成り立つという確認**です", "何が足りないのかを正しく書く")
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-17 の手入れ
+# ══════════════════════════════════════════════════════════
+# 「ふつうの向き」という言い方はしない
+in_text("このページでは、LHS → RHS の向きで書きます（@fig-aasl16-idea-a）。",
+        "向きの言い方")
+not_in_text("ふつうの向き", "「ふつうの向き」は消した")
+
+# §4 の証明は LHS → RHS で最後まで
+in_text("**LHS から出発して、\nRHS にたどり着くまで書きます。**", "§4 は LHS→RHS")
+in_text("= \\frac{1}{n(n+1)} = \\text{RHS}", "§4 は = RHS で終わる")
+ident(1 / n - 1 / (n + 1), 1 / (n * (n + 1)), "§4 の恒等式")
+
+# 表 2 に英語の列
+in_text("| 日本語 | 英語（問題文の言い方） | 文字で |", "表2 に英語の列")
+for _e in ["an even number", "an odd number", "two consecutive integers",
+           "three consecutive integers", "two consecutive odd numbers",
+           "a multiple of $3$"]:
+    in_text("| " + _e + " |", "表2 の英語: " + _e)
+
+# 倍数の示し方と、英語の結論
+in_text("`Show that ... is a multiple of 3`（$3$ の倍数であることを示す）",
+        "命令語を英語で")
+in_text("> *Since $n+1$ is an integer, $3(n+1)$ is a multiple of $3$.*",
+        "結論の英語")
+
+# Why it works に同値変形（⇔）の例
+in_text("2x + 6 = 10 \\iff 2x = 4 \\iff x = 2", "⇔ でつなぐ例")
+eq(sp.solve(sp.Eq(2 * sp.Symbol("x") + 6, 10))[0], 2, "2x+6=10 の解は 2")
+in_text("$x^{2} = 1 \\implies x = -1$ は正しくありません", "2 乗は ⇔ にできない")
+chk(set(sp.solve(sp.Eq(sp.Symbol("x") ** 2, 1))) == {-1, 1},
+    "x^2 = 1 の解は ±1（だから戻せない）")
+
+# 数だけの節は置かない
+not_in_text("### 4. 数の証明", "数の証明の節は消した")
+not_in_text("いちばん短い `Show that` は、数だけの式です。", "同上")
+
+# 「任意の」は英語を併記（第 10 節）
+in_text("問題文が `any`（任意の）と言っていたら、", "any の併記")
+in_text("`the sum of any three consecutive integers` なら、", "any の使われ方の例")
+not_in_text("「任意の $\\ldots$」と問われたら", "古い言い方は残っていない")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. Show that は、答えを出す問題ではない {#idea}', "見出しの英語: 1. Show that は、答えを出す問題では")
+in_text('### 2. LHS から RHS へ {#lhs-rhs}', "見出しの英語: 2. LHS から RHS へ")
+in_text('### 3. $=$ と $\\equiv$（equation and identity） {#equality-identity}', "見出しの英語: 3. $=$ と $\equiv$（equation")
+in_text('### 4. algebraic generalisation（文字の証明）：数の例から一般化する {#algebraic}', "見出しの英語: 4. algebraic generalisatio")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：「いじる」→「変形する」
+# ══════════════════════════════════════════════════════════
+in_text("そのまま「両辺を変形してよいかどうか」です。", "両辺を変形してよいか")
+in_text("この式のまま書いて、両辺を変形して $0 = 0$ にする書き方です。",
+        "Common error の本文")
+chk("いじ" not in TEXT, "「いじる」は使っていない")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01：`Show that` を普通のフォントに
+# ══════════════════════════════════════════════════════════
+not_in_text("`Show that`", "Show that はコードの書体にしない")
+in_text("- Show that の問題で、**答えではなく道すじ**が問われていることが"
+        "分かる。", "できるようになること")
+in_text("### 1. Show that は、答えを出す問題ではない {#idea}", "第 1 節の見出し")
+in_text("Show that の問題では、**答えは問題文にもう書いてあります。**",
+        "第 1 節の本文")
+in_text("ですから、Show that を見たら、次の $2$ つを考えてください。", "同上")
+
 print()
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

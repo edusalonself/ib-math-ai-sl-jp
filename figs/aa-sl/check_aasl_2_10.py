@@ -29,7 +29,6 @@ x, u = sp.symbols("x u", real=True)
 E = sp.E
 REALS = sp.S.Reals
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -38,30 +37,23 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(v_, w_, msg=""):
     chk(sp.simplify(sp.expand(v_) - sp.expand(w_)) == 0, msg + f"  ({v_} vs {w_})")
-
 
 def sols(expr, want, msg=""):
     chk(sp.solveset(sp.Eq(expr, 0), x, REALS) == want, "解: " + msg)
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 「解く」の意味そのもの
@@ -225,11 +217,15 @@ in_text("**試験用紙の冒頭の指示**", "桁数は試験用紙の指示に
 # 8. 説明のしかた（条件と断定）
 # ══════════════════════════════════════════════════════════
 in_text("## $u = e^{x}$ なら、$u > 0$ でなければなりません", "u > 0 の注意")
-in_text("## 変形の途中で、解が増えることがあります", "増える解の注意")
+not_in_text("## 変形の途中で、解が増えることがあります",
+            "第 7 節といっしょに消した（2026-10-01）")
 in_text("## `exact` と言われたら、小数にしないでください", "exact の注意")
-in_text("**「解けない」のではなく、「習った変形では届かない」**ということです。",
+in_text("**「解けない」のではなく、「習った変形では解くことができない」**ということです。",
         "解けないの言い方")
-in_text("**SL の道具ではすぐに手が出ない**", "x^4+5x-6 の言い方（解けないとは書かない）")
+in_text("$x^{4} + 5x - 3 = 0$ のような問題は Paper 2 に出てきます。",
+        "x^4+5x-3 の言い方（解けないとは書かない）")
+in_text("**電卓でグラフをかき、解く問題です。**", "同上")
+not_in_text("SL の道具", "「SL の道具」という言い方は使わない")
 not_in_text("$x^{4} + 5x - 6 = 0$ は解析的に解けません", "誤った断定を置かない")
 in_text("答案には *reject*（捨てる）と理由を書いてください。", "reject の書き方")
 
@@ -237,7 +233,8 @@ in_text("答案には *reject*（捨てる）と理由を書いてください�
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -263,7 +260,7 @@ _want = ["The idea", "Why it works", "Worked examples", "Common errors",
 chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
-chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
+chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
 chk(TEXT.count("**検算") >= 12, f"検算が十分ある: {TEXT.count('**検算')}")
 chk("**確かめ。**" not in TEXT and "**確かめます。**" not in TEXT, "「確かめ。」なし")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -299,7 +296,7 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
         or _href.endswith(".qmd") or ".qmd#" in _href
         or _href.startswith("http") or _href.startswith("../"),
         "まだないページへのリンク: " + _href)
-for _lab in ["fig-aasl210-idea", "eq-aasl210-eq"]:
+for _lab in ["fig-aasl210-idea-a", "fig-aasl210-idea-b", "eq-aasl210-eq"]:
     chk(TEXT.count("@" + _lab) >= 1, "本文から参照していない: " + _lab)
 _head = TEXT[:TEXT.index("## The idea")]
 chk("::: {.callout-important}" not in _head,
@@ -313,27 +310,28 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-2-10-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-2-10-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-2-10-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-2-10-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-2-10-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-2-10-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-2-10-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Two ways to see a solution", "図(a) の題")
+in_fig("Two ways to see a solution", "図(a) の題")
 in_fig("$y = f(x)$", "図(a) の f")
 in_fig("$y = g(x)$", "図(a) の g")
 in_fig("$y = f(x) - g(x)$", "図(a) の差")
 in_fig("$x_{1}$", "図(a) の解 1")
 in_fig("$x_{2}$", "図(a) の解 2")
-in_fig("the crossings of $f$ and $g$ sit above the zeros of $f - g$", "図(a) の説明")
-in_fig("(b) When no method reaches it", "図(b) の題")
+in_fig("When no method reaches it", "図(b) の題")
 in_fig("$y = e^{x}$", "図(b) の指数")
 in_fig("$y = \\\\sin x$", "図(b) の sin")
-in_fig("at SL, these crossings are found with technology", "図(b) の説明")
-in_text("(a) The solutions of $f(x)=g(x)$ are the $x$-coordinates",
-        "キャプションが (a) を説明")
-in_text("(b) The equation $e^x=\\sin x$ has crossings", "キャプションが (b) を説明")
 # 図に例題・演習の答えを書いていない
 for leak in ["= 4", "= 6", "= 1", "\\ln", "\\log"]:
     chk(leak not in FIGSTR, "図が答えを載せている: " + leak)
@@ -341,11 +339,12 @@ for leak in ["= 4", "= 6", "= 1", "\\ln", "\\log"]:
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-10.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/02-functions/aasl-2-10.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-2-9.qmd") < DRAFT.index("aasl-2-10.qmd"), "並びが 2.9 → 2.10")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-10.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -367,7 +366,7 @@ _q = x ** 4 + 5 * x - 3
 chk(sp.factor(_q) == _q, "x^4+5x-3 は有理数の範囲で因数分解できない")
 chk(len(sp.real_roots(_q)) == 2, "実数解は 2 つ")
 chk(all(not r.is_rational for r in sp.real_roots(_q)), "実数解は有理数でない")
-in_text("$x^{4} + 5x - 3 = 0$ のように、**SL の道具ではすぐに手が出ない**",
+in_text("$x^{4} + 5x - 3 = 0$ のような問題は Paper 2 に出てきます。",
         "手が出ない例は x^4+5x-3")
 # 差しかえ前の式は、実際には解けてしまう
 chk(sp.factor(x ** 4 + 5 * x - 6)
@@ -388,10 +387,10 @@ in_text("（$x \\ge 0$ では $e^{x} \\ge 1$、$\\sin x \\le 1$ で、同時に 
         "ならないので交わりません。）", "x ≥ 0 で交わらない理由")
 
 # --- 「解が増える」と「おきかえで捨てる」を分けた ------------------------
-in_text("$\\log$ を $1$ つにまとめる、両辺を $2$ 乗する、といった変形をすると",
-        "解が増える変形の例")
-in_text("おきかえのときは少しちがい、出てきた $u$ の値のうち**対応する $x$ が"
-        "ないもの**を落とすことになります。", "おきかえは別だと書く")
+not_in_text("$\\log$ を $1$ つにまとめる、両辺を $2$ 乗する、といった変形をすると",
+            "第 7 節といっしょに消した")
+not_in_text("おきかえのときは少しちがい、出てきた $u$ の値のうち**対応する $x$ が"
+            "ないもの**を落とすことになります。", "同上")
 not_in_text("おきかえや $2$ 乗をすると、**もとの方程式の解ではない値**",
             "混ざった言い方は消した")
 in_text("**なぜ、おきかえた先で出た値を、そのまま答えにできないのでしょうか。**",
@@ -417,7 +416,7 @@ not_in_text("the parabola grows faster than any line in both directions",
 eq(sp.expand((x + 4) * (x - 1)), x ** 2 + 3 * x - 4, "例題3 検算の展開")
 in_text("**検算（(a)(b) について）。** **因数分解を展開して戻します。**",
         "例題3 の検算に独立した道すじ")
-in_text("aasl-2-7b.qmd#intersect", "2.7b の直線と曲線の節へ")
+in_text("aasl-2-7.qmd#intersect", "2.7 の直線と曲線の節へ")
 
 # --- 例題4：連続であること・検算の独立・外側だけの主張 -------------------
 in_text("$y = 2^{x} - x - 3$ のグラフは**切れ目のない $1$ 本の曲線**なので",
@@ -458,13 +457,14 @@ in_text("*The original equation needs $x > 0$ and $x - 3 > 0$, so $x > 3$.",
 not_in_text("*The value $x = -1$ makes $\\ln x$ undefined, so it is not a solution",
             "片方の条件だけの解答例は消した")
 
-
 # ══════════════════════════════════════════════════════════
 # E03  第6節を既習の $2^{x} = x+3$ から始め、例題4 に (e) を足す
 # ══════════════════════════════════════════════════════════
-in_text("### 6. 習った変形では解けない方程式 {#no-analytic}" + chr(10) + chr(10)
-        + "$$" + chr(10) + "2^{x} = x + 3" + chr(10) + "$$",
-        "E03 第6節は 2^x = x+3 から")
+in_text("### 6. 習った変形では解けない方程式 {#no-analytic}",
+        "E03 第6節の見出し")
+_e03sec = TEXT.split("### 6. 習った変形では解けない方程式")[1].split("### ")[0]
+chk(_e03sec.index("2^{x} = x + 3") < _e03sec.index("e^{x} = \\sin x"),
+    "E03 第6節は 2^x = x+3 が先、e^x = sin x があと")
 in_text("**三角関数は [SL 3.7a](../03-geometry/aasl-3-7a.qmd) で学びます**",
         "E03 三角関数は未習と断る")
 in_text("[Using technology, find both solutions of $f(x) = g(x)$, correct "
@@ -486,6 +486,78 @@ chk(float("%.3g" % float(_e03a)) == 2.44, "E03 正の解は 3 有効数字で 2.
 chk(float("%.3g" % float(_e03b)) == -2.86, "E03 負の解は 3 有効数字で -2.86")
 chk(abs(float(_e03a) - 2.44490) < 5e-5, "E03 画面に出る値 2.44490...")
 chk(abs(float(_e03b) + 2.86250) < 5e-5, "E03 画面に出る値 -2.86250...")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# 底（base）は、このページの初出で英語を併記（第 10 節）
+in_text('**底（base）が合わせられるなら、対数は要りません。**', "底の英語併記")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 3. $u$ でおきかえる（substitution） {#substitution}', "見出しの英語: 3. $u$ でおきかえる（substitution")
+in_text('### 4. 両辺の対数をとる（taking logarithms） {#taking-logs}', "見出しの英語: 4. 両辺の対数をとる（taking logarit")
+in_text('### 5. グラフで解く（Paper 2） {#graphical}', "見出しの英語: 5. グラフで解く（Paper 2）")
+not_in_text('### 7. extraneous solution（捨てる解）と、解の個数 {#care}',
+            "第 7 節は削除した")
+
+# 2026-09-22：exact value の併記と、図 2 の置き場所
+in_text("**式の変形だけで、exact value（正確な値）まで出す**ことです。",
+        "exact value の併記")
+_i_sin = TEXT.index("同時に $1$ にはならないので交わりません。）")
+_i_fig = TEXT.index("](img/aasl-2-10-idea-b.svg)")
+_i_x4 = TEXT.index("$x^{4} + 5x - 3 = 0$ のような問題は")
+chk(_i_sin < _i_fig < _i_x4, "図 2 は e^x = sin x の説明の下にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'the crossings of $f$ and $',
+    'at SL, these crossings are',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
+in_text('$y = x^{2}-x-6$ の $x$ 切片を見ても、同じ $x$ が出ます。', "その内容は本文にある")
+in_text('Paper 2 では電卓で読む。', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01：第 7 節（extraneous solution と解の個数）を削除
+# ══════════════════════════════════════════════════════════
+in_text("電卓が使えるときは、@fig-aasl210-idea-a の見方をそのまま GDC で"
+        "やります。", "GDC でやります")
+not_in_text("そのまま画面でやります。", "前の言い方は消した")
+not_in_text("{#care}", "第 7 節は削除した")
+not_in_text("### 7. extraneous solution", "その見出しも消した")
+not_in_text("## 変形の途中で、解が増えることがあります", "callout 1 も消した")
+not_in_text("## 解の個数は、グラフを思いうかべると分かります", "callout 2 も消した")
+not_in_text("[第 7 節](#care)", "第 7 節への参照も消した")
+_idea2 = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
+chk(_idea2 == list(range(1, 7)), "The idea が 1..6 で連番: %s" % _idea2)
+# 捨てる解の説明は、演習の解説に残っている
+in_text("**まとめる変形で、解が増えました。**", "余分な解は演習の解説にある")
+in_text("出た値を**もとの式に入れ直して**、$\log$ の中身が正かを見てください。",
+        "入れ直して確かめる話も残っている")
 
 print()
 print("OK", OK, "/ NG", NG)

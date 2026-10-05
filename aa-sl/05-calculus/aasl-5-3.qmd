@@ -17,15 +17,19 @@ sidebar: aa-sl
 
 ## The idea
 
-### 1. べき乗の微分 {#power}
+### 1. the power rule（べき乗の微分） {#power}
 
-$n$ が整数のとき
+微分の出発点は、**$x$ のべき乗**（$x^{2}$、$x^{3}$、$x^{-1}$ など）です。多項式も、$\dfrac{1}{x^{2}}$ のような分数も、**$ax^{n}$ の形の和**に直せば微分できます。そのための規則が **the power rule**（べき乗の微分）です。
+
+![The power comes down in front, and drops by one](img/aasl-5-3-idea-a.svg){#fig-aasl53-idea-a width=100%}
+
+**規則は $1$ つです。** $n$ が整数のとき
 
 $$
 f(x) = x^{n} \quad \Longrightarrow \quad f'(x) = nx^{n-1}
 $$ {#eq-aasl53-power}
 
-です（@fig-aasl53-idea (a)）。
+です（@fig-aasl53-idea-a）。
 
 ::: {.callout-important}
 ## この式は公式集にあります
@@ -36,7 +40,7 @@ $$ {#eq-aasl53-power}
 
 **使える $x$ の範囲に気をつけてください。** $n$ が正の整数のときは、すべての $x$ で使えます。**$n$ が $0$ 以下の整数のときは、$x \ne 0$ のところだけです。** $x^{n}$ も $nx^{n-1}$ も、$x = 0$ では値がありません。
 
-**このページでは $n$ は整数です。** $\sqrt{x} = x^{\frac{1}{2}}$ のような有理数の指数は [SL 5.6a](aasl-5-6a.qmd) で扱います。
+**このページでは $n$ は整数です。** $\sqrt{x} = x^{\frac{1}{2}}$ のような有理数の指数は [SL 5.6](aasl-5-6.qmd) で扱います。
 
 ### 2. 定数倍 {#constant}
 
@@ -54,9 +58,17 @@ $$ {#eq-aasl53-const}
 
 **$a$ を先にかけても、あとでかけても同じです。** $5x^{3}$ なら、$x^{3}$ を微分して $3x^{2}$、それを $5$ 倍して $15x^{2}$ です。
 
-**$3x$ の微分は $3$ です。** $3x = 3x^{1}$ なので、@eq-aasl53-const で $n = 1$ とすると $3 \times 1 \times x^{0} = 3$ になります（$x^{0} = 1$）。**$ax$ の導関数は、$x = 0$ をふくめてどの $x$ でも $a$ です。**
+**$3x$ の微分は $3$ です。**
+
+$$
+f(x) = 3x = 3x^{1} \quad \Longrightarrow \quad f'(x) = 3 \times 1 \times x^{0} = 3 \qquad (x^{0} = 1)
+$$
+
+**$ax$ の導関数は、$x = 0$ をふくめてどの $x$ でも $a$ です。**
 
 ### 3. 和と差 {#sum}
+
+多項式は、$4x^{3}$ や $-5x^{2}$ のような **$ax^{n}$ の形の項**を、足したり引いたりしたものです。項がいくつあっても、新しい規則は要りません。
 
 **項ごとに微分して、そのまま足し引きします。**
 
@@ -66,7 +78,7 @@ $$ {#eq-aasl53-sum}
 
 **この規則も公式集にありません。** 和と差については、そのまま項ごとに計算してよい、と知っておいてください。
 
-**かけ算と割り算には、まだ規則がありません。** かっこの積や分数は、**まず和の形に直します**（@fig-aasl53-idea (b)）。積の微分法と商の微分法は [SL 5.6b](aasl-5-6b.qmd) です。
+**かけ算と割り算には、まだ規則がありません。** かっこの積や分数は、**まず和の形に直します**（[第 6 節](#rewrite)）。積の微分法と商の微分法は [SL 5.6](aasl-5-6.qmd) です。
 
 ### 4. 定数の微分 {#zeroderiv}
 
@@ -96,41 +108,29 @@ $$ {#eq-aasl53-neg}
 | $\dfrac{1}{x^{2}}$ | $x^{-2}$ |
 | $\dfrac{5}{x^{3}}$ | $5x^{-3}$ |
 
-: 負の指数への直し方 {#tbl-aasl53-neg}
+: 負の指数への直し方 {#tbl-aasl53-neg .tbl-narrow}
 
 **指数を $1$ 減らすと、負の数はさらに小さくなります。** $x^{-3}$ の指数を $1$ 減らすと $-4$ です。$-2$ ではありません。
 
 **答えは、分数の形にもどして書いてかまいません。** $-3x^{-4}$ でも $-\dfrac{3}{x^{4}}$ でも、どちらでも正しい答えです。
 
-**符号を調べるときは、$x > 0$ と $x < 0$ を分けて見てください。** $x = 0$ でグラフが切れているので、$f'$ の符号をひとまとめに語ることはできません（[SL 5.2](aasl-5-2.qmd#table)）。
+**符号を調べるときは、$x > 0$ と $x < 0$ を分けて見てください。** $x = 0$ でグラフが切れているので、$f'$ の符号をひとまとめに語ることはできません（[SL 5.2](aasl-5-2.qmd#interval)）。
 
 ### 6. 直してから微分する {#rewrite}
 
-@eq-aasl53-sum が使えるのは、$ax^{n}$ の**和の形**のときだけです。そうでないときは、先に直します（@fig-aasl53-idea (b)）。
+@eq-aasl53-sum が使えるのは、$ax^{n}$ の**和の形**のときだけです。そうでないときは、先に直します。
 
-| 見た目 | すること |
+| 式 | 直した形 |
 |:--|:--|
-| $(x+2)(x-5)$ | 展開する |
-| $\dfrac{x^{3} + 4x}{x}$ | 項ごとに分ける |
-| $\dfrac{6}{x^{2}}$ | 負の指数にする |
+| $(x+2)(x-5)$ | $x^{2} - 3x - 10$ |
+| $\dfrac{x^{3} + 4x}{x}$ | $x^{2} + 4$ |
+| $\dfrac{6}{x^{2}}$ | $6x^{-2}$ |
 
-: 直し方 {#tbl-aasl53-rewrite}
+: 直し方 {#tbl-aasl53-rewrite .tbl-narrow}
 
 **分けられるのは、分母が $1$ つの項のときだけです。** $\dfrac{1}{x + 2}$ は、この方法では分けられません。
 
 **直してよいのは、直した式ともとの式が同じ関数だからです。** $x$ の動ける範囲で値がいつも等しければ、導関数も同じです。$\dfrac{x^{3} + 4x}{x}$ を $x^{2} + 4$ に直せるのは $x \ne 0$ のときだけですが、$x = 0$ はもとの式にもとから入っていないので、困りません。
-
-### 7. 導関数に値を入れる {#evaluate}
-
-$f'$ は関数なので、値を入れて使えます（[SL 5.1](aasl-5-1.qmd#gradfn)）。
-
-**$f'(3)$ は、$x = 3$ での接線の傾きです。**
-
-$f'(a) = 0$ のとき、その点を **stationary point**（停留点）といいます（[SL 5.2](aasl-5-2.qmd#zero)）。接線が水平になる点です。
-
-**先に $f'(x)$ を求めてから、値を入れます。** $f(3)$ を先に計算してしまうと、それはただの数なので、微分すると $0$ になってしまいます。
-
-**符号を見れば、そこで上がっているか下がっているかが分かります**（[SL 5.2](aasl-5-2.qmd#sign)）。
 
 ::: {.callout-warning}
 ## この項目は Paper 1 に出ます
@@ -144,9 +144,10 @@ $f'(a) = 0$ のとき、その点を **stationary point**（停留点）とい�
 **答案に書くのは、手で出した $f'(x)$ と値です。** 電卓は確かめに使ってください。
 :::
 
-![(a) The rule for differentiating a power shown as two separate moves: the old power comes down in front as a multiplier, and the power itself drops by one, with a note that a constant multiplier is simply carried along and that a constant on its own differentiates to zero. (b) A flow chart showing that a product of brackets should be expanded, a fraction over a single term should be split up, and a power written under a fraction bar should be rewritten with a negative index, so that the expression becomes a sum of terms of the form a times x to a power, which can then be differentiated one term at a time](img/aasl-5-3-idea.svg){#fig-aasl53-idea width=100%}
-
 ## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
 
 **なぜ、指数が前に下りてくるのでしょうか。** 割線の傾きを計算すると、そうなるからです。
 
@@ -178,11 +179,12 @@ $$
 
 と $2$ つに分かれます。それぞれの行き先が $f'(x)$ と $g'(x)$ なので、合わせて $f'(x) + g'(x)$ です。
 
-**かけ算では、同じようには分かれません。** $f(x+h)g(x+h) - f(x)g(x)$ は $2$ つの分数にきれいに分かれないので、**別の規則が要ります**（[SL 5.6b](aasl-5-6b.qmd)）。
+**かけ算では、同じようには分かれません。** $f(x+h)g(x+h) - f(x)g(x)$ は $2$ つの分数にきれいに分かれないので、**別の規則が要ります**（[SL 5.6](aasl-5-6.qmd)）。
 
 **なぜ、定数の導関数は $0$ なのでしょうか。** 値が変わらないからです。
 
 $f(x) = c$ なら $f(x+h) - f(x) = c - c = 0$ で、割線の傾きは $\dfrac{0}{h} = 0$ です。$h$ をどれだけ小さくしても $0$ のままです。
+:::
 
 ## Worked examples
 
@@ -260,7 +262,7 @@ $$
 \frac{dy}{dx} = 3 \times 5 x^{4} - 1 = 15x^{4} - 1
 $$
 
-**(b)** $x = 2$ を入れます（[第 7 節](#evaluate)）。
+**(b)** $x = 2$ を入れます（[SL 5.1](aasl-5-1.qmd#gradfn)）。
 
 $$
 15 \times 2^{4} - 1 = 15 \times 16 - 1 = 240 - 1 = 239
@@ -444,7 +446,7 @@ $\dfrac{1}{x + 2}$ は $\dfrac{1}{x} + \dfrac{1}{2}$ ではありません（[�
 
 ::: {.callout-warning}
 ## 値を先に入れてしまう
-$f'(3)$ を求めるときは、先に $f'(x)$ を出します（[第 7 節](#evaluate)）。$f(3)$ を先に計算すると、ただの数になってしまいます。
+$f'(3)$ を求めるときは、先に $f'(x)$ を出します。$f(3)$ を先に計算すると、ただの数になってしまいます。
 :::
 
 ## Exercises
@@ -616,7 +618,7 @@ $$f'(2) = 3 \times 4 - 12 = 0$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-先に $f'(x)$ を求めてから $x = 2$ を入れます（[第 7 節](#evaluate)）。
+先に $f'(x)$ を求めてから $x = 2$ を入れます。$f'(a) = 0$ となる点を **stationary point**（停留点）といいます（[SL 5.2](aasl-5-2.qmd#zero)）。
 
 **検算（$2^{2}$）。** $3 \times 2^{2} = 3 \times 4 = 12$ ✓ $12 - 12 = 0$ です。
 

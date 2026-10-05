@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_2_10.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_2_10.py  … 目視用の PNG も
 
-出力: aa-sl/02-functions/img/aasl-2-10-idea.svg
+出力: aa-sl/02-functions/img/aasl-2-10-idea-a.svg
+      aa-sl/02-functions/img/aasl-2-10-idea-b.svg
 
 (a) f(x) = g(x) の解は、2 つのグラフの交点の x 座標。差 f - g の零点でもある。
 (b) e^x = sin x のように、習った方法では解けない方程式もある。
@@ -33,12 +34,12 @@ GREY = "#6b7280"
 WARM = "#b45309"
 GREEN = "#15803d"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.8, 4.8))
-
+fig1, ax1 = plt.subplots(figsize=(5.3, 4.8))
+fig2, ax2 = plt.subplots(figsize=(5.3, 4.8))
 # ══════════════════════════════════════════════════════════
 # (a) 交点として見る／差の零点として見る
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Two ways to see a solution", fontsize=11, color=INK,
+ax1.set_title("Two ways to see a solution", fontsize=11, color=INK,
               loc="left", pad=10)
 ax1.set_xlim(-3.6, 4.4)
 ax1.set_ylim(-6.9, 9.4)
@@ -72,13 +73,11 @@ ax1.text(sorted(r)[1] - 0.18, -1.15, "$x_{2}$", fontsize=11, color=INK)
 ax1.text(1.35, 8.4, "$y = f(x)$", fontsize=10.5, color=ACCENT)
 ax1.text(-3.5, 1.2, "$y = g(x)$", fontsize=10.5, color=WARM)
 ax1.text(1.15, -5.3, "$y = f(x) - g(x)$", fontsize=10.5, color=GREEN)
-ax1.text(-3.5, -6.8, "the crossings of $f$ and $g$ sit above the zeros of $f - g$",
-         fontsize=9.5, color=INK, va="bottom")
 
 # ══════════════════════════════════════════════════════════
 # (b) e^x = sin x
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) When no method reaches it", fontsize=11, color=INK,
+ax2.set_title("When no method reaches it", fontsize=11, color=INK,
               loc="left", pad=10)
 ax2.set_xlim(-9.6, 3.2)
 ax2.set_ylim(-1.9, 3.1)
@@ -105,16 +104,14 @@ for i in range(len(v) - 1):
 
 ax2.text(1.2, 2.45, "$y = e^{x}$", fontsize=10.5, color=ACCENT)
 ax2.text(-4.6, 1.25, "$y = \\sin x$", fontsize=10.5, color=WARM)
-ax2.text(-9.5, -1.88, "at SL, these crossings are found with technology",
-         fontsize=9.5, color=INK, va="bottom")
 
-fig.tight_layout(w_pad=2.2)
-path = os.path.join(OUT, "aasl-2-10-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-2-10-idea-a.svg"), (fig2, "aasl-2-10-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

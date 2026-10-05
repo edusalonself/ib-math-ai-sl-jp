@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_1_5.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_1_5.py  … 目視用の PNG も
 
-出力: aa-sl/01-number-and-algebra/img/aasl-1-5-idea.svg
+出力: aa-sl/01-number-and-algebra/img/aasl-1-5-idea-a.svg
+      aa-sl/01-number-and-algebra/img/aasl-1-5-idea-b.svg
 
 (a) 2 の累乗のはしご。1 段下りるたびに 2 で割る。
     だから 2^0 = 1、2^(-1) = 1/2、2^(-2) = 1/4 と決まってしまう。
@@ -32,14 +33,12 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig, (ax1, ax2) = plt.subplots(
-    1, 2, figsize=(9.6, 4.3), gridspec_kw={"width_ratios": [1.0, 1.15]}
-)
-
+fig1, ax1 = plt.subplots(figsize=(5.2, 4.3))
+fig2, ax2 = plt.subplots(figsize=(5.2, 4.3))
 # ══════════════════════════════════════════════════════════
 # (a) 2 の累乗のはしご
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Each step down divides by $2$",
+ax1.set_title("Each step down divides by $2$",
               fontsize=11, color=INK, loc="left", pad=10)
 ax1.set_xlim(0.0, 1.0)
 ax1.set_ylim(-0.6, 5.6)
@@ -71,10 +70,10 @@ ax1.text(0.12, 1.0, "forced,\nnot chosen", ha="right", va="center",
 # ══════════════════════════════════════════════════════════
 # (b) 1 つの事実を、2 通りに書く
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) One fact, written two ways",
+ax2.set_title("One fact, written two ways",
               fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(0.0, 1.0)
-ax2.set_ylim(0.0, 1.0)
+ax2.set_ylim(0.18, 1.0)
 ax2.axis("off")
 
 ax2.text(0.50, 0.80, "$2^{3} = 8$", ha="center", va="center",
@@ -96,17 +95,14 @@ ax2.annotate("value", xy=(0.575, 0.80), xytext=(0.80, 0.955),
              fontsize=9.5, color=WARM, ha="center",
              arrowprops=dict(arrowstyle="->", color=WARM, linewidth=1.0))
 
-ax2.text(0.50, 0.10,
-         "a logarithm is the exponent you are looking for",
-         ha="center", va="center", fontsize=10, color=INK)
 
-fig.tight_layout(w_pad=2.2)
-path = os.path.join(OUT, "aasl-1-5-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-1-5-idea-a.svg"), (fig2, "aasl-1-5-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

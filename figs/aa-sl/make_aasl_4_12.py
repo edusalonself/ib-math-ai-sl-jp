@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_4_12.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_4_12.py  … 目視用の PNG も
 
-出力: aa-sl/04-statistics-and-probability/img/aasl-4-12-idea.svg
+出力: aa-sl/04-statistics-and-probability/img/aasl-4-12-idea-a.svg
+      aa-sl/04-statistics-and-probability/img/aasl-4-12-idea-b.svg
 
 (a) z 値は「平均から標準偏差いくつぶん」を数にしたもの。
     横軸に x の目もりと z の目もりを並べて置く。
@@ -44,12 +45,12 @@ def bell(t):
     return np.exp(-0.5 * t * t) / np.sqrt(2 * np.pi)
 
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.8, 4.9))
-
+fig1, ax1 = plt.subplots(figsize=(5.8, 4.9))
+fig2, ax2 = plt.subplots(figsize=(5.8, 4.9))
 # ══════════════════════════════════════════════════════════
 # (a) 同じ曲線を、2 通りの目もりで読む
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) The same curve read on two scales", fontsize=11,
+ax1.set_title("The same curve read on two scales", fontsize=11,
               color=INK, loc="left", pad=12)
 T = np.linspace(-3.6, 3.6, 400)
 Y = bell(T)
@@ -79,13 +80,11 @@ ax1.text(0.0, 0.435, r"$z = \frac{x - \mu}{\sigma}$", fontsize=12,
          color=WARM, ha="center", va="center")
 ax1.text(0.0, -0.185, r"$x = \mu + z\sigma$ goes the other way",
          fontsize=10, color=ACCENT, ha="center", va="center")
-ax1.text(2.55, 0.33, "z counts standard\ndeviations from\nthe mean",
-         fontsize=9, color=GREY, ha="center", va="center", linespacing=1.5)
 
 # ══════════════════════════════════════════════════════════
 # (b) 2 つの面積 → 2 つの z → 2 本の式
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Two known areas give two equations", fontsize=11,
+ax2.set_title("Two known areas give two equations", fontsize=11,
               color=INK, loc="left", pad=12)
 ax2.plot(T, Y, color=ACCENT, linewidth=1.8)
 LO, HI = -1.15, 0.95
@@ -109,20 +108,18 @@ ax2.annotate("", xy=(1.75, 0.032), xytext=(2.75, 0.135),
              arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.1))
 ax2.text(2.8, 0.155, "given area", fontsize=9, color=GREY, ha="center")
 
-ax2.text(0.0, 0.435, "each given area fixes one z-value", fontsize=10,
-         color=GREY, ha="center", va="center")
 ax2.text(0.0, -0.135, r"$a = \mu + z_1\sigma$    and    $b = \mu + z_2\sigma$",
          fontsize=11, color=ACCENT, ha="center", va="center")
 ax2.text(0.0, -0.245, "two equations, two unknowns", fontsize=9.5,
          color=INK, ha="center", va="center")
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-4-12-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-4-12-idea-a.svg"), (fig2, "aasl-4-12-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

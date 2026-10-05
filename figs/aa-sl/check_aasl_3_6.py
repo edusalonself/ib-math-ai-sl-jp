@@ -26,7 +26,6 @@ R = sp.Rational
 PI = sp.pi
 TH = sp.Symbol("theta", real=True)
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -35,34 +34,26 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(u - v) == 0, msg + f"  ({u} vs {v})")
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 def s2(s_, c_):
     return 2 * s_ * c_
 
-
 def c2(s_, c_):
     return c_ ** 2 - s_ ** 2
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 恒等式そのもの
@@ -252,15 +243,14 @@ in_text("$3$ つは**同じ値の書きかえ**です。", "3 つは書きかえ
 in_text("$P$ が軸の上にあるときは三角形がつぶれますが、そのときも座標が "
         "$(\\pm 1,\\ 0)$ か $(0,\\ \\pm 1)$ なので、式はそのまま成り立ちます。",
         "軸の上の場合")
-in_text("- **使える角を確かめる。** 書きかえた式に $\\tan$ や分数が出てきたら、"
-        "**分母が $0$ になる角がないか**を見ます。", "使えない角")
 in_text("## $\\cos^{2}\\theta$ を $\\cos(\\theta^{2})$ と読む", "記法の注意")
 
 # ══════════════════════════════════════════════════════════
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -292,7 +282,7 @@ _want = ["The idea", "Why it works", "Worked examples", "Common errors",
 chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
-chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
+chk(_idea == list(range(1, 6)), f"The idea が 1..5 で連番: {_idea}")
 chk(TEXT.count("**検算") >= 12, f"検算が十分ある: {TEXT.count('**検算')}")
 chk("**確かめ。**" not in TEXT and "**確かめます。**" not in TEXT, "「確かめ。」なし")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -323,20 +313,21 @@ for _f0 in set(re.findall(r"\]\((\.\./[a-z0-9-]+/)?([a-z0-9-]+\.qmd)(?:#[a-z0-9-
     _path = os.path.join(BASE, _f0[0] + _f0[1]) if _f0[0] else \
         os.path.join(BASE, _f0[1])
     chk(os.path.exists(_path), "リンク先のファイルがない: " + _f0[0] + _f0[1])
-for _tgt in ["aasl-3-4", "aasl-3-5a", "aasl-3-5b"]:
+for _tgt in ["aasl-3-4", "aasl-3-5", "aasl-3-5"]:
     _TT = open(os.path.join(BASE, _tgt + ".qmd"), encoding="utf-8").read()
     for _a2 in set(re.findall(r"\]\(" + _tgt + r"\.qmd#([a-z0-9-]+)\)", TEXT)):
-        chk(("{#" + _a2 + "}") in _TT, _tgt + " 側に見出しがない: #" + _a2)
+        chk(re.search(r"\{#" + re.escape(_a2) + r"[ }]", _TT),
+            _tgt + " 側に見出しがない: #" + _a2)
 for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
     chk(_href.startswith("#") or _href.startswith("img/")
         or _href.endswith(".qmd") or ".qmd#" in _href
         or _href.startswith("http") or _href.startswith("../"),
         "まだないページへのリンク: " + _href)
 chk(TEXT.count("@fig-aasl36-idea") >= 1, "図を本文から参照している")
-for _lab in ["tbl-aasl36-which", "eq-aasl36-pyth", "eq-aasl36-move",
+for _lab in ["eq-aasl36-pyth", "eq-aasl36-move",
              "eq-aasl36-sin2", "eq-aasl36-cos2"]:
     chk(("{#" + _lab + "}") in TEXT, "ラベルがある: " + _lab)
-for _lab in ["tbl-aasl36-which", "eq-aasl36-pyth", "eq-aasl36-move",
+for _lab in ["eq-aasl36-pyth", "eq-aasl36-move",
              "eq-aasl36-sin2", "eq-aasl36-cos2"]:
     chk(TEXT.count("@" + _lab) >= 1, "本文から参照していない: " + _lab)
 _head = TEXT[:TEXT.index("## The idea")]
@@ -351,38 +342,38 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-3-6-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-3-6-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-3-6-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-3-6-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-3-6-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-3-6-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-3-6-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) The Pythagorean identity", "図(a) の題")
-in_fig("the hypotenuse is the radius, so it is $1$", "図(a) の説明")
-in_fig("$\\\\cos^{2}\\\\theta + \\\\sin^{2}\\\\theta = 1$ for every ", "図(a) の式")
-in_fig("(b) Three forms of $\\\\cos 2\\\\theta$", "図(b) の題")
+in_fig("The Pythagorean identity", "図(a) の題")
+in_fig("Three forms of $\\\\cos 2\\\\theta$", "図(b) の題")
 in_fig("the same value, written three ways", "図(b) の説明")
 in_fig("put $\\\\sin^{2}\\\\theta = 1 - \\\\cos^{2}\\\\theta$", "図(b) の入れかえ 1")
 in_fig("put $\\\\cos^{2}\\\\theta = 1 - \\\\sin^{2}\\\\theta$", "図(b) の入れかえ 2")
 in_fig("$2\\\\cos^{2}\\\\theta - 1$", "図(b) の 2 つ目の形")
 in_fig("$1 - 2\\\\sin^{2}\\\\theta$", "図(b) の 3 つ目の形")
-in_text("(a) When $\\theta$ is not on an axis, the point on the unit circle at angle "
-        "$\\theta$ gives a right-angled triangle with legs $|\\cos\\theta|$ and "
-        "$|\\sin\\theta|$", "キャプションが (a) を説明")
-in_text("(b) The three forms of $\\cos 2\\theta$ are obtained from one another",
-        "キャプションが (b) を説明")
 chk(set(re.findall(r"\d+", FIGSTR)) <= {"1", "2"},
     f"図の数字は 1 と 2 だけ: {set(re.findall(chr(92) + 'd+', FIGSTR))}")
 
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-6.qmd" in DRAFT, "draft に登録")
-chk(DRAFT.index("aasl-3-5b.qmd") < DRAFT.index("aasl-3-6.qmd"), "並びが 3.5b → 3.6")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/03-geometry/aasl-3-6.qmd" in DRAFT, "_quarto.yml に登録")
+chk(DRAFT.index("aasl-3-5.qmd") < DRAFT.index("aasl-3-6.qmd"), "並びが 3.5b → 3.6")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-6.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -399,10 +390,6 @@ for _t in ["| identity |", "| Pythagorean identity |", "| double angle |"]:
 # ══════════════════════════════════════════════════════════
 
 # --- 見分けの試し値を π/6 にした -----------------------------------------
-in_text("$\\theta = \\dfrac{\\pi}{6}$ を入れて確かめる習慣をつけて", "試し値は π/6")
-in_text("**$\\theta = 0$ でも、この符号のまちがいは見つかります。** 正しい $2$ つの形は"
-        "どちらも $1$ を返しますが、$2\\sin^{2}\\theta - 1$ や $1 - 2\\cos^{2}\\theta$ は "
-        "$-1$ を返すからです。", "θ = 0 でも符号の誤りは見つかる")
 not_in_text("**$\\theta = 0$ ではどの形も $1$ を返してしまう**ので、確かめになりません。",
             "古い（誤った）θ = 0 の説明は戻っていない")
 in_text("$\\theta = \\dfrac{\\pi}{6}$ を入れると、どちらも $\\dfrac{1}{2}$ になるはずです。",
@@ -428,9 +415,6 @@ in_text("ただし、$2$ 乗だけで決まる量（あとで出てくる $\\cos
 not_in_body("\\sin^{2}\\theta = \\frac{1 - \\cos 2\\theta}{2}", "例題4(a) の結果")
 not_in_body("$\\\\cos\\\\theta = 0$ の角では使えません", "例題4(d) の理由")
 not_in_text("{#eq-aasl36-half}", "使わないラベルは消した")
-in_text("$\\sin^{2}\\theta$ や $\\cos^{2}\\theta$ を $\\cos 2\\theta$ の $1$ 次式に"
-        "書きかえられます（例題 4）。", "例題 4 に送る")
-
 # --- 2 倍角の出どころ ----------------------------------------------------
 in_text("**$2$ 倍角の式そのものは、公式集に印刷されているところから出発します。** "
         "導き方は SL の範囲外なので、ここでは「$3$ つの形がなぜ同じものか」を見ます。",
@@ -446,10 +430,6 @@ in_text("正確な値を求める問題は電卓では答えが出せないの�
 not_in_text("Paper 1 でよく出ます。", "食いちがう言い方は消した")
 
 # --- 図のキャプションに絶対値と例外 --------------------------------------
-in_text("with legs $|\\cos\\theta|$ and $|\\sin\\theta|$ and hypotenuse $1$",
-        "キャプションに絶対値")
-in_text("on the axes the coordinates are $(\\pm 1, 0)$ or $(0, \\pm 1)$ and the identity "
-        "still holds.", "軸の上の場合もキャプションに")
 for _a in [0, PI / 2, PI, 3 * PI / 2]:
     eq(sp.cos(_a) ** 2 + sp.sin(_a) ** 2, 1, f"軸の上でも成り立つ ({_a})")
 
@@ -500,6 +480,88 @@ eq(sp.cos(PI / 2), 0, "sinθ = 1 なら cosθ = 0")
 chk(sp.sqrt(1 - 1) == 0, "k = 1 では ± が消える")
 for _k in [R(1, 2), R(-1, 3), R(3, 5)]:
     chk(sp.sqrt(1 - _k ** 2) != 0, f"-1 < k < 1 なら cosθ は 0 でない ({_k})")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text('$\\sin 2\\theta$ を、$\\theta$ の $\\sin$ と $\\cos$ で書きかえる公式は、次のとおりです。', "公式の前置き 1")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. the Pythagorean identity（ピタゴラスの恒等式） {#pythagoras}', "見出しの英語: 1. the Pythagorean identit")
+in_text('### 4. double angle identities（$2$ 倍角）：$\\sin 2\\theta$ {#sin2}', "見出しの英語: 4. double angle identities")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'the hypotenuse is the radius, ',
+    '$\\\\cos^{2}\\\\theta + \\\\sin^{2}\\',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:30])
+in_text('斜辺は**半径なので $1$** です。', "その内容は本文にある")
+in_text('**どんな $\\theta$ でも成り立つ**、という意味で、解くべき方程式ではありません。', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：第 6 節（どの形を選ぶか）と第 7 節（使いどころ）を削除
+# ══════════════════════════════════════════════════════════
+not_in_text("### 6. どの形を選ぶか", "第 6 節の見出しは無い")
+not_in_text("### 7. 恒等式の使いどころ", "第 7 節の見出しは無い")
+not_in_text("{#which}", "#which は無い")
+not_in_text("{#using}", "#using は無い")
+not_in_text("tbl-aasl36-which", "形の選び方の表は無い")
+not_in_text("**ただし、$1$ 点の代入は恒等式の証明ではありません。**", "1 点代入の注意も消した")
+_idea6 = [int(m) for m in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
+chk(_idea6 == list(range(1, 6)), f"The idea が 1..5 で連番: {_idea6}")
+in_text("$\\cos\\theta = 0$ の角では $\\tan\\theta$ が定まりません"
+        "（[SL 3.5](aasl-3-5.qmd#definitions)）。", "案内は SL 3.5 へ")
+chk(TEXT.count("（[第 5 節](#cos2)）") == 3, "表への 3 つの参照は第 5 節へ")
+in_text("### 5. $2$ 倍角：$\\cos 2\\theta$ の $3$ つの形 {#cos2}", "第 5 節は残っている")
+_t6 = sp.Symbol("t6", real=True)
+eq(sp.cos(2 * _t6), sp.cos(_t6) ** 2 - sp.sin(_t6) ** 2, "cos2θ = cos²−sin²")
+eq(sp.simplify(sp.cos(2 * _t6) - (1 - 2 * sp.sin(_t6) ** 2)), 0, "cos2θ = 1−2sin²")
+eq(sp.simplify(sp.cos(2 * _t6) - (2 * sp.cos(_t6) ** 2 - 1)), 0, "cos2θ = 2cos²−1")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01：§2 の具体例は、象限ではなく角の範囲で書く
+# ══════════════════════════════════════════════════════════
+in_text("たとえば $\\sin\\theta = \\dfrac{2}{3}$ で "
+        "$0 \\le \\theta \\le \\dfrac{\\pi}{2}$ なら、"
+        "$\\cos\\theta$ は正なので", "§2 の例：0 ≤ θ ≤ π/2")
+in_text("です。$\\dfrac{\\pi}{2} \\le \\theta \\le \\pi$ なら、"
+        "同じ計算で $\\cos\\theta = -\\dfrac{\\sqrt{5}}{3}$ に"
+        "なります。", "§2 の例：π/2 ≤ θ ≤ π")
+not_in_text("$\\dfrac{2}{3}$ で $\\theta$ が鋭角なら", "前の言い方は消した")
+not_in_text("です。$\\theta$ が第 $2$ 象限なら", "同上")
+# 値そのものを確かめる
+eq(sp.sqrt(1 - sp.Rational(2, 3) ** 2), sp.sqrt(5) / 3, "√(1−4/9) = √5/3")
+chk(sp.cos(sp.asin(sp.Rational(2, 3))) == sp.sqrt(5) / 3,
+    "0 ≤ θ ≤ π/2 では cos θ = +√5/3")
+chk(sp.cos(sp.pi - sp.asin(sp.Rational(2, 3))) == -sp.sqrt(5) / 3,
+    "π/2 ≤ θ ≤ π では cos θ = −√5/3")
 
 print()
 print("OK", OK, "/ NG", NG)

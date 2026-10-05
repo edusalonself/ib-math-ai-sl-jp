@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_1_4.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_1_4.py  … 目視用の PNG も
 
-出力: aa-sl/01-number-and-algebra/img/aasl-1-4-idea.svg
+出力: aa-sl/01-number-and-algebra/img/aasl-1-4-idea-a.svg
+      aa-sl/01-number-and-algebra/img/aasl-1-4-idea-b.svg
 
 (a) 単利はまっすぐ、複利は上に曲がる（$1000、年 10%）。
 (b) k を大きくすると、1 回あたりの利率は小さく、回数は多くなる。
@@ -31,10 +32,8 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig, (ax1, ax2) = plt.subplots(
-    1, 2, figsize=(9.4, 4.0), gridspec_kw={"width_ratios": [1.15, 1.0]}
-)
-
+fig1, ax1 = plt.subplots(figsize=(5.1, 4.0))
+fig2, ax2 = plt.subplots(figsize=(5.1, 4.0))
 # ══════════════════════════════════════════════════════════
 # (a) 単利と複利（$1000、年 10%、10 年）
 # ══════════════════════════════════════════════════════════
@@ -42,7 +41,7 @@ YEARS = list(range(0, 11))
 SIMPLE = [1000 + 100 * n for n in YEARS]
 COMP = [1000 * 1.1 ** n for n in YEARS]
 
-ax1.set_title("(a) $\\$1000$ at $10\\%$ per year",
+ax1.set_title("$\\$1000$ at $10\\%$ per year",
               fontsize=11, color=INK, loc="left", pad=8)
 ax1.plot(YEARS, SIMPLE, marker="o", markersize=4, color=GREY, linewidth=1.6,
          label="simple interest")
@@ -73,7 +72,7 @@ ax1.annotate("the gap widens", xy=(10, 2300), xytext=(4.6, 2380),
 ax2.set_xlim(-0.1, 1.32)
 ax2.set_ylim(-0.35, 3.35)
 ax2.axis("off")
-ax2.set_title("(b) One year, split into $k$ periods (nominal $12\\%$)",
+ax2.set_title("One year, split into $k$ periods (nominal $12\\%$)",
               fontsize=11, color=INK, loc="left", pad=8)
 
 # 1 期あたりの倍率は、12% を k 等分したもの
@@ -95,13 +94,13 @@ ax2.text(0.5, -0.18, "smaller rate, more times $\\Rightarrow$ "
          "index $kn$, denominator $100k$",
          ha="center", va="center", fontsize=9.5, color=INK)
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-1-4-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-1-4-idea-a.svg"), (fig2, "aasl-1-4-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

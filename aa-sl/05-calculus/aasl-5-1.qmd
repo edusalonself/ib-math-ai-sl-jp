@@ -17,9 +17,11 @@ sidebar: aa-sl
 
 ## The idea
 
-### 1. $2$ 点を結ぶ直線の傾き {#average}
+### 1. gradient of a chord（$2$ 点を結ぶ直線の傾き） {#average}
 
-曲線の上に $2$ 点をとって直線で結ぶと、その直線を **chord**（割線）といいます（@fig-aasl51-idea (a)）。
+![A chord joining $P$ and $Q$, with its two differences](img/aasl-5-1-idea-a.svg){#fig-aasl51-idea-a width=100%}
+
+曲線の上に $2$ 点をとって直線で結ぶと、その直線を **chord**（割線）といいます（@fig-aasl51-idea-a）。
 
 $x = a$ から $x = b$ までの割線の傾きが、**average rate of change**（平均変化率）です。
 
@@ -27,11 +29,13 @@ $$
 \text{平均変化率} = \frac{f(b) - f(a)}{b - a}
 $$ {#eq-aasl51-avg}
 
-**これは「その区間をならしたときの傾き」です。** 途中でどれだけ上下していても、両端しか見ません。
+**これは「その $2$ 点の間での傾き」です。** 途中でどれだけ上下していても、両端しか見ません。
 
 **直線なら、どこで測っても同じ値になります。** 曲線だと、区間の取り方で値が変わります。**ここが曲線の難しいところで、微分が要る理由です。**
 
 ### 2. limit（極限） {#limit}
+
+![A limit at $x = a$, from the left and from the right](img/aasl-5-1-idea-b.svg){#fig-aasl51-idea-b width=100%}
 
 $x$ を $a$ に近づけたときに $f(x)$ が向かう先を、**limit**（極限）といい
 
@@ -39,25 +43,39 @@ $$
 \lim_{x \to a} f(x) = L
 $$ {#eq-aasl51-lim}
 
-と書きます（@fig-aasl51-idea (b)）。
+と書きます（@fig-aasl51-idea-b）。
 
 **「近づく」であって「代入する」ではありません。** $x = a$ そのものは見ません。
 
-**だから、$f(a)$ が存在しなくても極限はありえます。** $\dfrac{x^{2} - 1}{x - 1}$ は $x = 1$ で分母が $0$ になり値がありませんが、$x$ を $1$ に近づけていくと出力は $1$ つの値に向かいます。
+**だから、$f(a)$ が存在しなくても極限はありえます。** $\dfrac{x^{2} - 1}{x - 1}$ は $x = 1$ で分母が $0$ になり値がありませんが、$x$ を $1$ に近づけていくと出力は $1$ つの値に向かいます。この場合は
+
+$$
+\lim_{x \to 1} \frac{x^{2} - 1}{x - 1} = 2
+$$
+
+と書きます。**$x = 1$ を代入できないのに、極限は書けます。**
 
 **左からと右からの両方を見ます。** どちらも同じ値に向かうとき、その値が極限です。
 
 ### 3. 表で見積もる {#estimate}
 
-極限は、**$a$ に近い $x$ を並べた表**から見積もれます。
+極限は、**$a$ に近い $x$ を並べた表**から見積もれます。$a$ より少し小さい $x$ を**左から**、$a$ より少し大きい $x$ を**右から**、それぞれ $a$ に近づけていきます。
 
-| 見ること | すること |
-|:--|:--|
-| 左から | $a$ より少し小さい $x$ を、$a$ に近づけていく |
-| 右から | $a$ より少し大きい $x$ を、$a$ に近づけていく |
-| 一致するか | 両側が同じ値に向かっていれば、それが極限 |
+$f(x) = \dfrac{x^{2} - 1}{x - 1}$ で、$x$ を $1$ に近づけてみます。
 
-: 表から極限を見積もる {#tbl-aasl51-est}
+| $x$ | $0.9$ | $0.99$ | $1.01$ | $1.1$ |
+|:--|--:|--:|--:|--:|
+| $f(x)$ | $1.9$ | $1.99$ | $2.01$ | $2.1$ |
+
+: $x$ を $1$ に近づけたときの $f(x)$ {#tbl-aasl51-est .tbl-narrow}
+
+**左からは $1.9$、$1.99$ と、下から $2$ に近づいています。** 右からは $2.1$、$2.01$ と、上から $2$ に近づいています。**両側が同じ $2$ に向かっているので、極限は $2$ です。** これを
+
+$$
+\lim_{x \to 1} \frac{x^{2} - 1}{x - 1} = 2
+$$
+
+と書きます。
 
 **表には $a$ そのものを入れません。** 極限は「$a$ に近い $x$ での値の行き先」であって、$x = a$ での値のことではないからです。$f(a)$ は存在しないこともありますし、存在していても、極限をそこから決めるわけではありません。
 
@@ -65,9 +83,11 @@ $$ {#eq-aasl51-lim}
 
 **式変形で極限を出す方法は、SL では求められていません。** 表かグラフで見積もれれば十分です。
 
-### 4. 割線から接線へ {#tangent}
+### 4. from secant to tangent（割線から接線へ） {#tangent}
 
-曲線上の点 $P$ を固定し、もう $1$ 点 $Q$ を $P$ に近づけていきます（@fig-aasl51-idea (a)）。
+曲線上の点 $P$ を固定し、もう $1$ 点 $Q$ を $P$ に近づけていきます（@fig-aasl51-idea-c）。
+
+![Chords turning into the tangent at $P$](img/aasl-5-1-idea-c.svg){#fig-aasl51-idea-c width=100%}
 
 **なめらかな曲線では、割線 $PQ$ の傾きは $1$ つの値に落ち着いていきます。** その値が、$P$ での **tangent**（接線）の傾きです。
 
@@ -79,10 +99,16 @@ $$
 \frac{f(x + h) - f(x)}{h}
 $$ {#eq-aasl51-chord}
 
-です。$h$ を $0$ に近づけたときの行き先が、$P$ での傾きです。
+です。$h$ を $0$ に近づけたときの行き先が、$P$ での傾きです。式で書くと
+
+$$
+f'(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
+$$ {#eq-aasl51-deriv}
+
+です。
 
 ::: {.callout-note appearance="simple"}
-**@eq-aasl51-chord は公式集にありません。** SL では、この式を使って導関数を計算することも求められていません。**「割線が接線に近づく」という理解までです。**
+**@eq-aasl51-chord と @eq-aasl51-deriv は公式集にありません。** SL では、この式を使って導関数を計算することも求められていません。**「割線が接線に近づく」という理解までです。**
 :::
 
 ### 5. 記号の書き方 {#notation}
@@ -92,13 +118,14 @@ $P$ での傾きを、$x$ の関数として見たものが **derivative**（導
 | 書き方 | よく使う場面 |
 |:--|:--|
 | $f'(x)$ | 関数を $f$ と名づけたとき |
+| $y'$ | $y$ が $x$ の式で与えられ、短く書きたいとき |
 | $\dfrac{dy}{dx}$ | $y$ が $x$ の式で与えられたとき |
-| $\dfrac{dV}{dr}$ | 体積 $V$ が半径 $r$ で決まるとき |
-| $\dfrac{ds}{dt}$ | 変位 $s$ が時刻 $t$ で決まるとき |
 
 : 導関数の書き方 {#tbl-aasl51-not}
 
 $\dfrac{dy}{dx}$ の形の書き方を **Leibniz notation**（ライプニッツの記法）といいます。
+
+**英語での読み方も覚えてください。** $f'(x)$ は `f prime of x`（`f dash x` とも読みます）、$y'$ は `y prime`、$\dfrac{dy}{dx}$ は `dee-y, dee-x` です。$\dfrac{dV}{dr}$ なら `dee-V, dee-r` です。
 
 **$\dfrac{dy}{dx}$ は $1$ つの記号です。** $dy$ と $dx$ という $2$ つの数の分数ではありません。約分はできません。
 
@@ -110,9 +137,7 @@ $\dfrac{dy}{dx}$ の形の書き方を **Leibniz notation**（ライプニッツ
 
 **だから $f'(3)$ のように、値を入れて使えます。** $f'(3)$ は「$x = 3$ での接線の傾き」です。
 
-**符号に意味があります。** $f'(x) > 0$ ならその点で右上がり、$f'(x) < 0$ なら右下がり、$f'(x) = 0$ なら接線が水平です。**詳しくは [SL 5.2](aasl-5-2.qmd) で扱います。**
-
-### 7. 変化率としての読み方 {#rate}
+### 7. rate of change（変化率）としての読み方 {#rate}
 
 導関数は、**rate of change**（変化率）としても読めます。
 
@@ -120,7 +145,7 @@ $\dfrac{dy}{dx}$ の形の書き方を **Leibniz notation**（ライプニッツ
 
 **単位は「$y$ の単位 ÷ $x$ の単位」です。** $s$ がメートル、$t$ が秒なら、$\dfrac{ds}{dt}$ はメートル毎秒です。
 
-**答えに単位を書いてください。** 場面のある問題では、数だけでは意味が伝わりません。
+**答えに単位を書いてください。** 実際の場面を扱う問題では、数だけでは意味が伝わりません。
 
 ::: {.callout-warning}
 ## この項目は Paper 1 に出ます
@@ -134,9 +159,10 @@ Topic 5 は、AA では**ほとんどが電卓なしの項目**です。**この
 **それでも、答案に書くのは手で出せる形の式と値です。** 電卓は確かめに使ってください。
 :::
 
-![(a) A curve with a fixed point P and three further points on the curve, joined to P by chords, together with the tangent at P: as the second point slides towards P the chords turn, and the value their gradients settle on is what is meant by the gradient of the curve at P. (b) A curve with an open circle at x equals a, showing that a limit describes where the outputs are heading as x approaches a from the left and from the right, and that the value of the function at a itself need not exist](img/aasl-5-1-idea.svg){#fig-aasl51-idea width=100%}
-
 ## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
 
 **なぜ、$1$ 点での傾きを「極限」で決めるのでしょうか。** 傾きの定義に $2$ 点が要るからです。
 
@@ -169,6 +195,7 @@ $x$ を入れると傾きが $1$ つ返ってくるので、これは関数で�
 **なぜ、単位が「$y$ の単位 ÷ $x$ の単位」になるのでしょうか。** @eq-aasl51-avg が割り算だからです。
 
 分子は $y$ の差なので $y$ の単位、分母は $x$ の差なので $x$ の単位です。割ればその比になります。極限を取っても単位は変わりません。
+:::
 
 ## Worked examples
 
@@ -440,7 +467,7 @@ $\displaystyle\lim_{x \to a} f(x)$ は、$f(a)$ とは別のものです（[第 
 
 ::: {.callout-warning}
 ## 変化率に単位を書かない
-場面のある問題では、単位まで書いて答えです（[第 7 節](#rate)）。「$y$ の単位 ÷ $x$ の単位」です。
+実際の場面を扱う問題では、単位まで書いて答えです（[第 7 節](#rate)）。「$y$ の単位 ÷ $x$ の単位」です。
 :::
 
 ## Exercises

@@ -64,9 +64,6 @@ for _s in ("top", "right", "left", "bottom"):
     ax.spines[_s].set_visible(False)
 ax.text(7.8, 0.6, "$x$", fontsize=12, color=GREY, ha="right")
 ax.text(0.25, 11.6, "$y$", fontsize=12, color=GREY, va="top")
-ax.text(-5.9, -11.6,
-        "two branches, one on each side of $x = 1$; both approach $y = 2$",
-        fontsize=10, color=INK, ha="left", va="bottom")
 
 fig.tight_layout()
 path = os.path.join(OUT, "aasl-2-8-ex9.svg")

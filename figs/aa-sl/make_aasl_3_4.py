@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_3_4.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_3_4.py  … 目視用の PNG も
 
-出力: aa-sl/03-geometry/img/aasl-3-4-idea.svg
+出力: aa-sl/03-geometry/img/aasl-3-4-idea-a.svg
+      aa-sl/03-geometry/img/aasl-3-4-idea-b.svg
 
 (a) ラジアンの定義。半径と同じ長さの弧に対する中心角が 1 ラジアン。
 (b) 扇形。弧の長さと面積。弦を引くと弓形が見える。
@@ -33,14 +34,14 @@ GREY = "#6b7280"
 WARM = "#b45309"
 GREEN = "#15803d"
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.8, 4.9))
-
+fig1, ax1 = plt.subplots(figsize=(5.3, 3.9))
+fig2, ax2 = plt.subplots(figsize=(5.3, 3.9))
 # ══════════════════════════════════════════════════════════
 # (a) ラジアンの定義
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) One radian", fontsize=11, color=INK, loc="left", pad=10)
-ax1.set_xlim(-1.55, 1.75)
-ax1.set_ylim(-1.45, 1.85)
+ax1.set_title("One radian", fontsize=11, color=INK, loc="left", pad=10)
+ax1.set_xlim(-1.25, 2.30)
+ax1.set_ylim(-1.30, 1.30)
 ax1.set_aspect("equal")
 ax1.axis("off")
 
@@ -64,20 +65,14 @@ ax1.text(0.46, -0.20, "$r$", fontsize=12, color=INK)
 ax1.text(0.16, 0.52, "$r$", fontsize=12, color=INK)
 ax1.text(1.02, 0.62, "arc of length $r$", fontsize=10, color=ACCENT)
 
-ax1.text(-1.55, 1.62, "the angle at the centre cut off by an arc",
-         fontsize=10, color=INK)
-ax1.text(-1.55, 1.34, "as long as the radius is one radian",
-         fontsize=10, color=INK)
-ax1.text(-1.55, -1.40, "a whole turn is $2\\pi$ radians", fontsize=9.5,
-         color=INK, va="bottom")
 
 # ══════════════════════════════════════════════════════════
 # (b) 扇形と弓形
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Sector and segment", fontsize=11, color=INK, loc="left",
+ax2.set_title("Sector and segment", fontsize=11, color=INK, loc="left",
               pad=10)
-ax2.set_xlim(-1.6, 2.05)
-ax2.set_ylim(-1.45, 1.85)
+ax2.set_xlim(-1.25, 2.65)
+ax2.set_ylim(-1.30, 1.35)
 ax2.set_aspect("equal")
 ax2.axis("off")
 
@@ -112,19 +107,14 @@ ax2.text(1.05, 0.62, "sector $A = \\frac{1}{2}r^{2}\\theta$", fontsize=10.5,
          color=ACCENT)
 ax2.text(0.16, 0.70, "segment", fontsize=10, color=WARM)
 
-ax2.text(-1.6, 1.62, "the chord cuts the sector into a triangle",
-         fontsize=10, color=INK)
-ax2.text(-1.6, 1.34, "and a segment", fontsize=10, color=INK)
-ax2.text(-1.6, -1.40, "both formulas need $\\theta$ in radians",
-         fontsize=9.5, color=INK, va="bottom")
 
-fig.tight_layout(w_pad=2.0)
-path = os.path.join(OUT, "aasl-3-4-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-3-4-idea-a.svg"), (fig2, "aasl-3-4-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

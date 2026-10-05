@@ -3,10 +3,11 @@
     python3 figs/aa-sl/make_aasl_1_8.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_1_8.py  … 目視用の PNG も
 
-出力: aa-sl/01-number-and-algebra/img/aasl-1-8-idea.svg
+出力: aa-sl/01-number-and-algebra/img/aasl-1-8-idea-a.svg
+      aa-sl/01-number-and-algebra/img/aasl-1-8-idea-b.svg
 
-(a) 長さ 1 の棒を、毎回「残りの半分」で埋めていく。
-    足しても棒からはみ出さない ＝ 部分和が 1 を超えない。
+(a) 面積 1 の正方形を、毎回「残りの半分」で埋めていく。
+    足しても正方形からはみ出さない ＝ 部分和が 1 を超えない。
 (b) r の大きさで、項のふるまいが分かれる。
     |r| < 1 なら 0 に向かい、|r| > 1 なら大きくなる。
 
@@ -33,62 +34,48 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig, (ax1, ax2) = plt.subplots(
-    1, 2, figsize=(9.8, 4.0), gridspec_kw={"width_ratios": [1.15, 1.0]}
-)
-
+fig1, ax1 = plt.subplots(figsize=(4.6, 4.6))
+fig2, ax2 = plt.subplots(figsize=(5.3, 4.0))
 # ══════════════════════════════════════════════════════════
-# (a) 長さ 1 の棒を、半分ずつ埋めていく
+# (a) 面積 1 の正方形を、半分ずつ埋めていく
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) Filling a bar of length $1$",
-              fontsize=11, color=INK, loc="left", pad=10)
-ax1.set_xlim(-0.04, 1.10)
-ax1.set_ylim(-0.75, 1.05)
+ax1.set_title("A square of area $1$", fontsize=11, color=INK,
+              loc="left", pad=10)
+ax1.set_xlim(-0.06, 1.06)
+ax1.set_ylim(-0.06, 1.10)
+ax1.set_aspect("equal")
 ax1.axis("off")
 
-TOP, BOT = 0.55, 0.15
-edges = [0.0]
-x = 0.0
-for k in range(1, 8):
-    x += 0.5 ** k
-    edges.append(x)
+#   1/2 : left half            1/4 : top right
+#   1/8 : bottom, left of it   1/16, 1/32, ... spiral inwards
+PIECES = [
+    (0.0, 0.0, 0.5, 1.0, "#cfe3f7", r"$\frac{1}{2}$"),
+    (0.5, 0.5, 0.5, 0.5, "#a9cdef", r"$\frac{1}{4}$"),
+    (0.5, 0.0, 0.25, 0.5, "#83b7e7", r"$\frac{1}{8}$"),
+    (0.75, 0.25, 0.25, 0.25, "#5da1df", None),
+    (0.75, 0.0, 0.125, 0.25, "#4a93d6", None),
+    (0.875, 0.125, 0.125, 0.125, "#3f8ace", None),
+    (0.875, 0.0, 0.0625, 0.125, "#3782c7", None),
+    (0.9375, 0.0625, 0.0625, 0.0625, "#2f78bd", None),
+]
+for _x, _y, _w, _h, _c, _lab in PIECES:
+    ax1.fill_between([_x, _x + _w], _y, _y + _h, color=_c, linewidth=0)
+    ax1.plot([_x, _x + _w, _x + _w, _x, _x],
+             [_y, _y, _y + _h, _y + _h, _y], color="white", linewidth=1.0)
+    if _lab:
+        ax1.text(_x + _w / 2, _y + _h / 2, _lab, ha="center", va="center",
+                 fontsize=13, color="#0b2f52")
 
-shades = ["#cfe3f7", "#a9cdef", "#83b7e7", "#5da1df", "#4a93d6",
-          "#3f8ace", "#3782c7"]
-for i in range(len(edges) - 1):
-    ax1.fill_between([edges[i], edges[i + 1]], BOT, TOP,
-                     color=shades[i], linewidth=0)
-    ax1.plot([edges[i + 1], edges[i + 1]], [BOT, TOP],
-             color="white", linewidth=1.0)
-ax1.plot([0, 1, 1, 0, 0], [BOT, BOT, TOP, TOP, BOT], color=INK, linewidth=1.4)
-
-LABELS = [(0.25, r"$\frac{1}{2}$"), (0.625, r"$\frac{1}{4}$"),
-          (0.8125, r"$\frac{1}{8}$")]
-for cx, lab in LABELS:
-    ax1.text(cx, (TOP + BOT) / 2, lab, ha="center", va="center",
-             fontsize=13, color="#0b2f52")
-ax1.text(0.945, (TOP + BOT) / 2, r"$\cdots$", ha="center", va="center",
-         fontsize=13, color="#0b2f52")
-
-ax1.plot([1.0, 1.0], [TOP, TOP + 0.22], color=WARM, linewidth=1.2)
-ax1.text(1.0, TOP + 0.30, "$1$", ha="center", va="bottom",
-         fontsize=12, color=WARM)
-ax1.text(0.5, TOP + 0.30, "the pieces never overflow",
-         ha="center", va="bottom", fontsize=10, color=INK)
-
-for i, lab in [(1, "$S_1$"), (2, "$S_2$"), (3, "$S_3$")]:
-    ax1.plot([edges[i], edges[i]], [BOT - 0.10, BOT], color=GREY,
-             linewidth=1.0)
-    ax1.text(edges[i], BOT - 0.18, lab, ha="center", va="top",
-             fontsize=9.5, color=GREY)
-
-ax1.text(0.5, -0.58, "each new piece is half of what is left",
-         ha="center", va="center", fontsize=10, color=INK)
+ax1.plot([0, 1, 1, 0, 0], [0, 0, 1, 1, 0], color=INK, linewidth=1.4)
+ax1.annotate("", xy=(1.0, 1.045), xytext=(0.0, 1.045),
+             arrowprops=dict(arrowstyle="<->", color=WARM, linewidth=1.1))
+ax1.text(0.5, 1.075, "$1$", ha="center", va="bottom", fontsize=11,
+         color=WARM)
 
 # ══════════════════════════════════════════════════════════
 # (b) r の大きさで、項のふるまいが分かれる
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) The terms of $r^{\\,n}$", fontsize=11, color=INK,
+ax2.set_title("The terms of $r^{\\,n}$", fontsize=11, color=INK,
               loc="left", pad=10)
 NS = list(range(0, 6))
 small = [0.5 ** k for k in NS]
@@ -119,13 +106,13 @@ ax2.annotate("off the top", xy=(2.15, 4.15), xytext=(3.1, 3.6),
              fontsize=9.5, color=WARM,
              arrowprops=dict(arrowstyle="->", color=WARM, linewidth=1.0))
 
-fig.tight_layout(w_pad=2.4)
-path = os.path.join(OUT, "aasl-1-8-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-1-8-idea-a.svg"), (fig2, "aasl-1-8-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

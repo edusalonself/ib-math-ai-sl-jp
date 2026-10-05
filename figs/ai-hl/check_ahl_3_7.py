@@ -365,22 +365,20 @@ in_text("[SL 3.4](../../ai-sl/03-geometry-and-trigonometry/sl-3-4.qmd#segment-ar
 in_text("[AHL 2.9a](../02-functions/ahl-2-9a.qmd#radian)")
 
 # 登録されているか
+# ★ 2026-09-15 に AI HL を公開対象へ移しました（_方針変更-2026-09-15.md 第 13 節）。
+#    登録先は _quarto-draft.yml ではなく _quarto.yml です。
+#    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
+#    「index の一覧にある」「残りの N 項目」は、もう検査しません。
+PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"),
+           encoding="utf-8").read()
+chk("ai-hl/03-geometry-and-trigonometry/ahl-3-7.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
+chk(PUB.index("ahl-3-7.qmd") < PUB.index("ahl-3-9.qmd"),
+    "サイドバーで 3.7 が 3.9 より先")
 DRAFT = open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
              encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-7.qmd" in DRAFT,
-    "_quarto-draft.yml に登録されている")
-chk(DRAFT.index("ahl-3-7.qmd") < DRAFT.index("ahl-3-9.qmd"),
-    "サイドバーで 3.7 が 3.9 より先")
-IDX = open(os.path.join(HERE, "..", "..", "ai-hl", "index.qmd"),
-           encoding="utf-8").read()
-chk("[AHL 3.7 — Radian measure](03-geometry-and-trigonometry/ahl-3-7.qmd)" in IDX,
-    "index の一覧にある")
-chk("| **AHL 3.7** | **[Radian measure](03-geometry-and-trigonometry/ahl-3-7.qmd)** ✅ |"
-    in IDX, "index の表が ✅ になっている")
-_left = int(_m.group(1)) if (_m := re.search(r"残りの(\d+)項目", IDX)) else 0
-_rows = re.findall(r"^\| (?:\*\*)?AHL [0-9.]+(?:\*\*)? \|(.*)\|$", IDX, re.M)
-chk(_left == len([r for r in _rows if "\u2705" not in r]),
-    "「残りの N 項目」が、まだ ✅ の付いていない行の数と合う")
+chk("ai-hl/03-geometry-and-trigonometry/ahl-3-7.qmd" not in DRAFT,
+    "下書き用の _quarto-draft.yml には残っていない")
+
 GLO = open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
            encoding="utf-8").read()
 for term in ["| radian measure |", "| arc length |", "| area of a sector |",

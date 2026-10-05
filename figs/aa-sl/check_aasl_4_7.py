@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """AA SL 4.7 のページを検算する。
 
-    python3 figs/aa-sl/check_aasl_4_6a.py
+    python3 figs/aa-sl/check_aasl_4_6.py
 """
 import glob
 import os
@@ -23,7 +23,6 @@ FIGCODE = FIG.split('"""', 2)[-1]
 OK = 0
 NG = 0
 
-
 def chk(cond, msg=""):
     global OK, NG
     if cond:
@@ -32,37 +31,28 @@ def chk(cond, msg=""):
         NG += 1
         print("NG :", msg)
 
-
 def eq(a, b, msg=""):
     chk(sp.simplify(sp.nsimplify(a) - sp.nsimplify(b)) == 0,
         "%s :: %s != %s" % (msg, a, b))
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: %s :: %s" % (msg, sub[:60]))
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: %s :: %s" % (msg, sub[:60]))
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
-
 BODY = TEXT.split("## Worked examples")[0]
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
 
-
 DICE = [(a, b) for a in range(1, 7) for b in range(1, 7)]
-
 
 def prob(space, pred):
     return F(sum(1 for s in space if pred(s)), len(space))
-
 
 # ══════════════════════════════════════════════════════════
 # 1. ページの骨組み
@@ -113,9 +103,12 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-4-7-idea.svg){#fig-aasl47-idea width=100%}", "図の埋め込み")
-in_text("@fig-aasl47-idea (a)", "図 (a) の参照")
-in_text("@fig-aasl47-idea (b)", "図 (b) の参照")
+in_text("(img/aasl-4-7-idea-a.svg){#fig-aasl47-idea-a width=100%}", "図 (a) の埋め込み")
+in_text("(img/aasl-4-7-idea-b.svg){#fig-aasl47-idea-b width=100%}", "図 (b) の埋め込み")
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-7-idea.svg")),
+    "分割前の SVG は消してある")
+in_text("@fig-aasl47-idea-a", "図 (a) の参照")
+in_text("@fig-aasl47-idea-b", "図 (b) の参照")
 
 chk(not re.search(r"^> ", TEXT, re.M), "引用ブロックは使わない（4.7 に Not required はない）")
 not_in_text("シラバス", "シラバスへの言及はしない")
@@ -351,14 +344,12 @@ _EXPR = r"%s(?:\s*[+-]\s*%s)*" % (_TERM, _TERM)
 _STMT = re.compile(r"(?<![\d\w}])(%s(?:\s*=\s*%s)+)(?!\s*(?:[+-]|\\times|[\d.]))"
                    % (_EXPR, _EXPR))
 
-
 def _tonum(t):
     t = t.strip()
     m = re.fullmatch(r"\\[dt]?frac\{(-?\d+)\}\{(-?\d+)\}", t)
     if m:
         return sp.Rational(int(m.group(1)), int(m.group(2)))
     return sp.Rational(t)
-
 
 def _value(expr):
     """+ - かけ算だけの式を、かけ算を先に計算して評価する。"""
@@ -373,7 +364,6 @@ def _value(expr):
                 prod *= _tonum(_f.group(0))
             total += sign * prod
     return total
-
 
 _nstmt = 0
 for _m in _STMT.finditer(TEXT):
@@ -542,14 +532,87 @@ chk(TEXT.count("これは**引き算をやり直すための検算**です。") 
     "N9 目的を 2 か所に書いた")
 
 # --- N1・N2・N3・N4 図 -------------------------------------------------
-in_fig('"a losing game: gain $+3$', "N2 図の 1 つ目のゲーム")
-in_fig('"a fair game: gain $+4$', "N2 図の 2 つ目のゲーム")
+in_fig('"a losing game"', "N2 図の 1 つ目のゲーム（短いラベル）")
+in_fig('"a fair game"', "N2 図の 2 つ目のゲーム（短いラベル）")
+chk("gain $+3$ with probability" not in FIG, "長い説明は図から外した")
+chk("gain $+4$ with probability" not in FIG, "長い説明は図から外した（2）")
 chk('"game A' not in FIGCODE and '"game B' not in FIGCODE,
     "図では game A / game B と呼ばない（演習10 と紛らわしい）")
 in_fig('marker="v"', "N4 三角は線の上に置く")
-in_text("(b) Two games are shown on a number line of gains, where the dots are "
-        "the possible gains and their sizes show the probabilities while the "
-        "triangle marks the expected value", "N3 キャプション")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'the four probabilities a',
+    '$1.6$ is not a value $X$',
+]:
+    chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
+in_text('### 5. expected value（期待値） {#expected}', "その内容は本文にある")
+in_text('### 6. $E(X)$ の意味 {#meaning}', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (b) から説明の文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+chk("the player loses in the long run" not in FIG, "図に説明の文を書いていない")
+chk("the game is fair" not in FIG, "図に説明の文を書いていない（2）")
+# 式そのもの・絵を指す注記は残す
+in_fig("=-\\frac{1}{3}$", "負けるゲームの式は残す")
+in_fig("\\frac{2}{3}=0$", "公平なゲームの式は残す")
+chk("the triangle marks" not in FIG, "下の注記も図から外した")
+# 外した内容は本文にある
+in_text("**$X$ を「プレイヤーの利得」とすると、$E(X) = 0$ のゲームを fair（公平）"
+        "といいます**", "fair の定義は本文にある")
+in_text("- $E(X) = 0$ なら、長い目で見てどちらの得にもなりません。",
+        "長い目で見ての話は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-05：離散に英語、表を名ざす、図 (b) の説明を本文へ
+# ══════════════════════════════════════════════════════════
+in_text("**discrete（離散）は、とりうる値がとびとびであることです。**",
+        "離散に英語を添えた")
+not_in_text("**「離散」は、とりうる値が", "かぎかっこだけの書き方は消した")
+in_text("**確率分布の表（[第 2 節](#dist)）の $2$ 段をかけて、"
+        "足すだけです。** $x$ の段と $P(X = x)$ の段を**縦にかけて、"
+        "横に足す**、と覚えると速いです。", "何の表かを書いた")
+not_in_text("**表の $2$ 段をかけて、足すだけです。**", "前の書き方は消した")
+# 図 (b) の読み方は本文にある
+in_text("**@fig-aasl47-idea-b は、$2$ つのゲームを利得の数直線にのせた"
+        "ものです。** 点の位置が利得、**点の大きさがその利得になる確率**、"
+        "**三角が $E(X)$ の位置**です。", "図 (b) の読み方")
+in_text("- 上の **losing game** は、確率 $\\dfrac{1}{3}$ で $+3$、確率 "
+        "$\\dfrac{2}{3}$ で $-2$ です。$E(X) = -\\dfrac{1}{3}$ なので、"
+        "三角は $0$ より左にあります。", "losing game の説明")
+in_text("- 下の **fair game** は、確率 $\\dfrac{1}{3}$ で $+4$、確率 "
+        "$\\dfrac{2}{3}$ で $-2$ です。$E(X) = 0$ なので、三角はちょうど "
+        "$0$ のところにあります。", "fair game の説明")
+# 図の 2 つのゲームの E(X)
+chk(F(3, 1) * F(1, 3) + F(-2, 1) * F(2, 3) == F(-1, 3),
+    "losing game の E(X) = -1/3")
+chk(F(4, 1) * F(1, 3) + F(-2, 1) * F(2, 3) == 0, "fair game の E(X) = 0")
+chk(F(1, 3) + F(2, 3) == 1, "図の確率の合計は 1")
 
 print()
 print("OK", OK, "/ NG", NG)

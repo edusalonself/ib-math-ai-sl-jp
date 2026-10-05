@@ -9,7 +9,7 @@
     間違いをして、本当に別の値になることを確かめる
   * レビューで直した箇所には not_in_text の見張りを置く
   * 構成の不変量（★AA 版：`##` は 5 つ・例題 4・演習 10）を数える
-  * 登録先（_quarto-draft.yml、aa-sl/index.qmd、glossary-aa.qmd）を見る
+  * 登録先（_quarto.yml、aa-sl/index.qmd、glossary-aa.qmd）を見る
 """
 import glob
 import os
@@ -370,7 +370,8 @@ in_text("menu → List & Spreadsheet → Sequence", "seq( の場所")
 in_text("seq(5 + (n-1)*3, n, 1, 20)", "seq の例")
 in_text("Press-to-Test（試験モード）でも $\\sum$ は使えます", "Σ は試験モードで使える")
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -429,10 +430,16 @@ chk("公式集の" not in _head, "冒頭に公式集のブロックを置いて�
 # ══════════════════════════════════════════════════════════
 # 10. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-1-2-idea.svg")
-chk(os.path.exists(SVG), "図がある: aasl-1-2-idea.svg")
-chk("](img/aasl-1-2-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-1-2-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-1-2-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-1-2-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-1-2-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-1-2-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
@@ -446,13 +453,14 @@ for leak in ["38", "100", "2730", "2772", "670", "765", "4200", "168", "42",
 # ══════════════════════════════════════════════════════════
 # 11. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
 chk("aa-sl/01-number-and-algebra/aasl-1-2.qmd" in DRAFT,
-    "_quarto-draft.yml に登録されている")
+    "_quarto.yml に登録されている")
 chk(DRAFT.index("aasl-1-1.qmd") < DRAFT.index("aasl-1-2.qmd"),
     "サイドバーの並びが 1.1 → 1.2")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用の _quarto.yml は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("[SL 1.2 — Arithmetic sequences and series]"
     "(01-number-and-algebra/aasl-1-2.qmd)" in IDX, "index の一覧にある")
@@ -468,6 +476,78 @@ for t in ["| sequence |", "| term |", "| arithmetic sequence |",
           "| common difference |", "| series |", "| sigma notation |",
           "| first term |", "| simple interest |"]:
     chk(t in GLO, "対訳表にある: " + t)
+
+# 第 5 節から Why it works への案内
+in_text("$S_n$ の公式のもう $1$ つの形をどう導くかは、"
+        "[Why it works](#why-it-works) に書いてあります。",
+        "もう 1 つの形の導き方への案内")
+chk(TEXT.index("もう $1$ つの形をどう導くかは")
+    < TEXT.index("## Why it works"), "案内は Why it works より前")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 2. the $n$th term（$n$ 番目の項）：なぜ $n-1$ なのか {#nth}', "見出しの英語: 2. the $n$th term（$n$ 番目の項")
+in_text('### 4. sum of the first $n$ terms（和）：$S_n$ の $2$ つの形 {#sum}', "見出しの英語: 4. sum of the first $n$ te")
+in_text('### 6. sigma notation {#sigma}', "見出しの英語: 6. sigma notation")
+in_text('### 7. 現実の場面：simple interest（単利） {#applications}', "見出しの英語: 7. 現実の場面：simple interest（単")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01 の手直し
+# ══════════════════════════════════════════════════════════
+in_text("### 1. arithmetic sequence（等差数列） {#idea}", "第 1 節の見出し")
+not_in_text("### 1. 同じ数ずつ変わる並び", "前の見出しは消した")
+# なぜ n-1 なのか：小見出しと表をやめて、1 段落に
+not_in_text("#### なぜ $n$ ではなく $n-1$ なのか", "小見出しは消した")
+not_in_text("tbl-aasl12-count", "足した回数の表は消した")
+not_in_text("u_5 = 5 + (5-1)(3)", "ここの確かめは消した")
+in_text("**足す回数は、項の番号より $1$ つ少ないから、$n$ ではなく $n-1$ に"
+        "なります。** @fig-aasl12-idea-a を見てください。$u_1$ から $u_5$ へ"
+        "行くのに、$d$ を足すのは $4$ 回です。$1$ 番目にはまだ $1$ 回も足して"
+        "いません。", "普通の文章になった")
+chk(5 + (5 - 1) * 3 == 17, "u_5 = 17（本文から外したが、値は正しい）")
+# 連立方程式
+in_text("**連立方程式（simultaneous equations）を解きます。**", "連立方程式")
+not_in_text("**引き算をすると $u_1$ が消えます。**", "前の言い方は消した")
+# sigma
+in_text("$k$ は **index**（添字）で、シグマ記号のうしろの式と同じものを"
+        "使います。**その $k$ に値を代入して求めた数を、全部足します。**",
+        "index の説明")
+not_in_text("名前は何でも構いません", "前の言い方は消した")
+in_text("**$k$ の式が $1$ 次なら、それは等差数列（arithmetic sequence）です。**",
+        "1 次なら等差（本文）")
+not_in_text("## $k$ の式が $1$ 次なら、それは等差数列です", "tip の見出しは消した")
+# 「n 年後」の警告
+not_in_text("## 「$n$ 年後」と「第 $n$ 項」は、番号が $1$ つずれます",
+            "その警告は削除した")
+not_in_text("答えが $90$ だけずれます", "同上")
+# 値は変わっていない
+eq(5 * (5 + 21) / 2, 65, "S_5 = 65")
+eq(5 + 9 + 13 + 17 + 21, 65, "書き出しても 65")
 
 print()
 print("OK", OK, "/ NG", NG)

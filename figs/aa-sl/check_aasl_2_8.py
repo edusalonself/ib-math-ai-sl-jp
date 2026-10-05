@@ -29,7 +29,6 @@ x, y = sp.symbols("x y")
 a, b, c, d = sp.symbols("a b c d")
 REALS = sp.S.Reals
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -38,52 +37,41 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.together(u) - sp.together(v)) == 0, msg + f"  ({u} vs {v})")
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 def va(expr):
     """垂直漸近線（分母の零点）"""
     num, den = sp.fraction(sp.together(expr))
     return sp.solveset(sp.Eq(den, 0), x, REALS)
 
-
 def ha(expr):
     """水平漸近線"""
     return sp.limit(expr, x, sp.oo)
-
 
 def xint(expr):
     num, den = sp.fraction(sp.together(expr))
     return sp.solveset(sp.Eq(num, 0), x, REALS)
 
-
 def yint(expr):
     return expr.subs(x, 0)
-
 
 def inverse(expr):
     sol = sp.solve(sp.Eq(y, expr), x)
     chk(len(sol) == 1, "逆関数が一意に出る")
     return sp.simplify(sol[0].subs(y, x))
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 一般論そのもの
@@ -104,17 +92,22 @@ eq((a * x + b).subs(x, -b / a), 0, "x 切片は -b/a")
 eq((1 / (1 / x)), x, "f(f(x)) = x")
 eq(inverse(1 / x), 1 / x, "1/x の逆関数は 1/x")
 
-# 走る例 (x+5)/(x-2)
+# 通して使う例 (x+5)/(x-2)
 RUN = (x + 5) / (x - 2)
-chk(va(RUN) == sp.FiniteSet(2), "走る例の垂直漸近線 x = 2")
-eq(ha(RUN), 1, "走る例の水平漸近線 y = 1")
-eq(yint(RUN), R(-5, 2), "走る例の y 切片 -5/2")
-chk(xint(RUN) == sp.FiniteSet(-5), "走る例の x 切片 -5")
-eq(1 + 7 / (x - 2), RUN, "走る例 = 1 + 7/(x-2)")
-in_text(r"f(x) = \frac{x+5}{x-2}", "走る例の式")
-in_text("**垂直漸近線 $x = 2$**", "走る例の垂直漸近線")
-in_text("**水平漸近線 $y = 1$**", "走る例の水平漸近線")
-in_text(r"\frac{x+5}{x-2} = 1 + \frac{7}{x-2}", "走る例の分けた形")
+chk(va(RUN) == sp.FiniteSet(2), "通して使う例の垂直漸近線 x = 2")
+eq(ha(RUN), 1, "通して使う例の水平漸近線 y = 1")
+eq(yint(RUN), R(-5, 2), "通して使う例の y 切片 -5/2")
+chk(xint(RUN) == sp.FiniteSet(-5), "通して使う例の x 切片 -5")
+eq(1 + 7 / (x - 2), RUN, "通して使う例 = 1 + 7/(x-2)")
+in_text(r"f(x) = \frac{x+5}{x-2}", "通して使う例の式")
+in_text("**垂直漸近線 $x = 2$**", "通して使う例の垂直漸近線")
+# 用語は初出で英語（日本語）（第 10 節）
+in_text("→ **$x = 0$ が vertical asymptote（垂直漸近線）**。", "垂直漸近線の併記")
+in_text("→ **$y = 0$ が horizontal asymptote（水平漸近線）**。", "水平漸近線の併記")
+not_in_text("走る例", "「走る例」という言い方は使わない")
+in_text("このページでは、通して使う例として", "言いかえ")
+in_text("**水平漸近線 $y = 1$**", "通して使う例の水平漸近線")
+in_text(r"\frac{x+5}{x-2} = 1 + \frac{7}{x-2}", "通して使う例の分けた形")
 
 # ══════════════════════════════════════════════════════════
 # 1. 例題 1  f(x) = 1/x
@@ -282,7 +275,8 @@ in_text("$bc - ad \\neq 0$ ならこの分数は $0$ になれない", "bc - ad 
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -347,7 +341,7 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
         or _href.endswith(".qmd") or ".qmd#" in _href
         or _href.startswith("http"),
         "まだないページへのリンク: " + _href)
-for _lab in ["fig-aasl28-idea", "eq-aasl28-va", "eq-aasl28-ha",
+for _lab in ["fig-aasl28-idea-a", "fig-aasl28-idea-b", "eq-aasl28-va", "eq-aasl28-ha",
              "eq-aasl28-split"]:
     chk(TEXT.count("@" + _lab) >= 1, "本文から参照していない: " + _lab)
 _head = TEXT[:TEXT.index("## The idea")]
@@ -362,28 +356,28 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-2-8-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-2-8-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-2-8-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-2-8-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-2-8-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-2-8-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-2-8-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) The reciprocal function", "図(a) の題")
+in_fig("The reciprocal function", "図(a) の題")
 in_fig("$y = \\\\dfrac{1}{x}$", "図(a) の式")
 in_fig("asymptote $x = 0$", "図(a) の垂直漸近線")
 in_fig("asymptote $y = 0$", "図(a) の水平漸近線")
 in_fig("$y = x$", "図(a) の対称の線")
-in_fig("its own reflection in $y = x$", "図(a) の説明")
-in_fig("(b) A rational function", "図(b) の題")
+in_fig("A rational function", "図(b) の題")
 in_fig("$x = -\\\\dfrac{d}{c}$", "図(b) の垂直漸近線")
 in_fig("$y = \\\\dfrac{a}{c}$", "図(b) の水平漸近線")
 in_fig("axis intercepts", "図(b) の切片")
-in_fig("must appear on a sketch", "図(b) の注意")
-in_text("(a) The reciprocal function $y=1/x$ has the two axes as its asymptotes",
-        "キャプションが (a) を説明")
-in_text("(b) A rational function $y=(ax+b)/(cx+d)$ has a vertical asymptote",
-        "キャプションが (b) を説明")
 # 図に例題・演習の答えを書いていない
 for leak in ["= 3", "= 2", "= -2", "\\frac{15}{4}", "x+5", "2x+1"]:
     chk(leak not in FIGSTR, "図が答えを載せている: " + leak)
@@ -391,11 +385,12 @@ for leak in ["= 3", "= 2", "= -2", "\\frac{15}{4}", "x+5", "2x+1"]:
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-8.qmd" in DRAFT, "draft に登録")
-chk(DRAFT.index("aasl-2-7b.qmd") < DRAFT.index("aasl-2-8.qmd"), "並びが 2.7b → 2.8")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/02-functions/aasl-2-8.qmd" in DRAFT, "_quarto.yml に登録")
+chk(DRAFT.index("aasl-2-7.qmd") < DRAFT.index("aasl-2-8.qmd"), "並びが 2.7 → 2.8")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-8.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -432,12 +427,13 @@ in_text("**domain は、分母が $0$ になる $x$（＝垂直漸近線の $x$�
 # --- 切片がない場合 -----------------------------------------------------
 chk(sp.solveset(sp.Eq(sp.Integer(3), 0), x, REALS) == sp.EmptySet,
     "分子が定数なら x 切片はない")
-in_text("**切片がない場合もあります。**", "切片がない場合を書いてある")
-in_text(r"たとえば $f(x) = \dfrac{3}{x+1}$ では $3 = 0$ が解けないので、"
-        "$x$ 切片はありません。", "a = 0 の例（演習4 とは別の式）")
+not_in_text("**切片がない場合もあります。**",
+            "その段落は削除した（2026-10-01）")
+not_in_text(r"たとえば $f(x) = \dfrac{3}{x+1}$ では $3 = 0$ が解けないので、"
+            "$x$ 切片はありません。", "その例も消えた")
 in_text("つまり $x = -\\dfrac{b}{a}$（$a \\neq 0$ のとき）", "x 切片の条件")
-in_text("シラバスが **any** intercepts と書いているのは、このためです。",
-        "any intercepts の理由")
+not_in_text("シラバスが **any** intercepts と書いているのは、このためです。",
+            "同上")
 in_text("- **$y$ 切片**（$y$-intercept）", "y-intercept の英語")
 in_text("- **$x$ 切片**（$x$-intercept）", "x-intercept の英語")
 
@@ -483,7 +479,6 @@ in_text("The sketch also omits the asymptotes $x = 3$ and $y = 2$, which a "
 not_in_text("the sketch is wrong because it shows one connected curve",
             "同じ判断のくり返しは消した")
 
-
 # ══════════════════════════════════════════════════════════
 # E02  演習9 — 有理関数を最後までかく
 # ══════════════════════════════════════════════════════════
@@ -507,6 +502,89 @@ chk(sp.solveset(sp.Eq(2 * _e02x + 1, 0), _e02x)
     == sp.FiniteSet(sp.Rational(-1, 2)), "E02 x 切片は -1/2")
 chk(_e02f.subs(_e02x, 101) > 2, "E02 右の枝は y = 2 の上")
 chk(_e02f.subs(_e02x, -99) < 2, "E02 左の枝は y = 2 の下")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text('このページで扱う分数関数は、次の形の関数です。', "公式の前置き 1")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. reciprocal function（逆数関数）$f(x) = \\dfrac{1}{x}$ {#reciprocal}', "見出しの英語: 1. reciprocal function（逆数関")
+in_text('### 2. $\\dfrac{1}{x}$ は自分自身が逆関数（self-inverse） {#selfinverse}', "見出しの英語: 2. $\dfrac{1}{x}$ は自分自身が逆関")
+in_text('### 3. rational function（分数関数）$f(x) = \\dfrac{ax+b}{cx+d}$ {#rational}', "見出しの英語: 3. rational function（分数関数）")
+in_text('### 4. $2$ 本の漸近線（asymptotes） {#asymptotes}', "見出しの英語: 4. $2$ 本の漸近線（asymptotes）")
+in_text('### 5. intercepts（軸との交点） {#intercepts}', "見出しの英語: 5. intercepts（軸との交点）")
+in_text('### 6. domain と range {#domainrange}', "見出しの英語: 6. domain と range")
+in_text('### 7. sketch のかき方 {#sketch}', "見出しの英語: 7. sketch のかき方")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'two branches;\\nits own ref',
+    'the two asymptotes and bot',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
+in_text('- $\\dfrac{1}{x}$ が**自分自身の逆関数**（self-inverse）だと分かる。', "その内容は本文にある")
+in_text('つまり、**漸近線 $2$ 本と、軸との交点をすべて**かき入れます。', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：演習 9 の図から説明文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+_F89 = open(os.path.join(HERE, "make_aasl_2_8_ex9.py"), encoding="utf-8").read()
+chk("two branches, one on each side" not in _F89, "図に説明の文を書いていない")
+in_fig2 = "$x = 1$"
+chk(in_fig2 in _F89, "図のラベル x = 1 は残す")
+chk("$y = 2$" in _F89, "図のラベル y = 2 は残す")
+in_text("**枝は $2$ 本です。** 垂直漸近線を横切ることはできないので、左右に $1$ 本"
+        "ずつになります。", "枝が 2 本は解説にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01 の手直し
+# ══════════════════════════════════════════════════════════
+in_text("書いてしまいがちです。\n\n**分子にも $x$ があるときは、"
+        "$y = \dfrac{a}{c}$ です**（@eq-aasl28-ha）。", "callout を改行した")
+not_in_text("書いてしまいがちです。**分子にも $x$ があるとき**は、",
+            "前のつながりは消した")
+# 「通して使う例」は、立ち上げの 1 か所だけ
+chk(TEXT.count("通して使う例") == 1,
+    "「通して使う例」は 1 か所だけ: %d" % TEXT.count("通して使う例"))
+in_text("このページでは、通して使う例として", "立ち上げの 1 か所は残す")
+for _s in ("$f(x) = \dfrac{x+5}{x-2}$ では、$x - 2 = 0$ から",
+           "$f(x) = \dfrac{x+5}{x-2}$ では、$f(0) = ",
+           "$f(x) = \dfrac{x+5}{x-2}$ では domain が",
+           "$f(x) = \dfrac{x+5}{x-2}$ なら"):
+    in_text(_s, "式をそのまま書いている: " + _s[:28])
+in_text("4. **$2$ つのグラフ**を、漸近線に近づけながらかく。", "第 7 節の手順 4")
+not_in_text("4. **$2$ つの枝**を、", "前の言い方は消した")
+# 消した段落の中身は正しかった（値は検算しておく）
+_xx = sp.Symbol("x")
+chk(sp.solve(sp.Eq(3, 0), _xx) == [], "3/(x+1) に x 切片はない")
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -82,10 +82,10 @@ for _h in ("## What you should be able to do", "## The idea",
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
 
 _secs = re.findall(r"^### (\d)\. .*\{#([a-z0-9-]+)\}$", TEXT, re.M)
-chk([s[0] for s in _secs] == [str(i) for i in range(1, 8)],
-    "### の番号 1..7: %s" % [s[0] for s in _secs])
+chk([s[0] for s in _secs] == [str(i) for i in range(1, 7)],
+    "### の番号 1..6: %s" % [s[0] for s in _secs])
 chk([s[1] for s in _secs] == ["gradient", "tangent", "normalidea",
-                              "normalgrad", "normaleq", "steps", "special"],
+                              "normalgrad", "normaleq", "special"],
     "アンカー: %s" % [s[1] for s in _secs])
 
 chk(len(re.findall(r"^\[\d+\]\{\.ex-no\}", TEXT, re.M)) == 10, "演習 10 問")
@@ -120,9 +120,10 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-5-4-idea.svg){#fig-aasl54-idea width=100%}", "図の埋め込み")
-in_text("@fig-aasl54-idea (a)", "図 (a) の参照")
-in_text("@fig-aasl54-idea (b)", "図 (b) の参照")
+in_text("(img/aasl-5-4-idea-a.svg){#fig-aasl54-idea-a width=100%}", "図 (a) の埋め込み")
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-5-4-idea.svg")),
+    "分割前の SVG は消してある")
+in_text("@fig-aasl54-idea-a", "図 (a) の参照")
 
 for _w in ("そのとおり", "もちろん", "簡単です", "自明", "当たり前", "明らか", "当然"):
     not_in_text(_w, "禁止語 " + _w)
@@ -141,7 +142,7 @@ in_text("**@eq-aasl54-perp は公式集にありません。**", "垂直の関�
 in_text("m = f'(a)\n$$ {#eq-aasl54-m}", "接線の傾きの式")
 in_text("y - y_{1} = m(x - x_{1})\n$$ {#eq-aasl54-line}", "直線の式")
 in_text("$$ {#eq-aasl54-perp}", "垂直の式")
-for _t in ("{#tbl-aasl54-cmp}", "{#tbl-aasl54-steps}", "{#tbl-aasl54-zero}"):
+for _t in ("{#tbl-aasl54-cmp}", "{#tbl-aasl54-zero}"):
     in_text(_t, "表 " + _t)
 in_text("[SL 5.1](aasl-5-1.qmd#gradfn)", "5.1 への参照")
 in_text("[SL 5.3](aasl-5-3.qmd#negative)", "5.3 への参照（負の指数）")
@@ -153,12 +154,9 @@ for _w in ("maximum", "minimum", "極大", "極小", "変曲点", "optimi"):
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('"(a) The tangent and the normal at $P$"', "図 (a) の題")
-in_fig('"(b) Three steps, and one special case"', "図 (b) の題")
+in_fig('"The tangent and the normal at $P$"', "図 (a) の題")
 in_fig('"tangent"', "図 (a) の接線ラベル")
 in_fig('"normal"', "図 (a) の法線ラベル")
-in_fig("special case:  $m = 0$", "図 (b) の特別な場合")
-in_fig("a vertical line has no gradient", "図 (b) の縦の直線")
 # 図の接線と法線が本当に垂直か
 _FM = 2 * 0.30 * 2.6
 eq(_FM * (-1 / _FM), -1, "図 傾きの積は -1")
@@ -371,12 +369,12 @@ chk("右に $m$ 進んで $1$ 下がる向き、つまり右に $1$ 進んで" n
     "負の m で読めなくなる文が消えている")
 
 # --- m1: Common errors の参照先 ---------------------------------
-chk("（[第 6 節](#steps) の $3$ 歩目）。$-\\dfrac{1}{2}$ ではありません。"
-    in TEXT, "かっこの符号の誤りは第6節を指す")
+chk("（[第 2 節](#tangent)）。$-\\dfrac{1}{2}$ ではありません。"
+    in TEXT, "かっこの符号の誤りは第2節を指す")
 
-# --- m3: 図の式が @eq-aasl54-line と同じ文字 ----------------------
-chk("$y - y_{1} = m(x - x_{1})$" in FIG, "図(b): 式の文字が本文と同じ")
-chk("with  $x_{1} = a$" in FIG, "図(b): x1 = a と書いてある")
+# --- m3: 入れる文字が @eq-aasl54-line と同じ（図から本文へ）-------
+chk("$x_{1} = a$、$y_{1} = f(a)$、$m = f'(a)$ です。" in TEXT,
+    "第 2 節: 入れる文字が式と同じ")
 
 # --- m4: 演習2 は ax + by + d = 0 の形 ---------------------------
 chk("giving your answer in the form $ax + by + d = 0$." in TEXT,
@@ -395,6 +393,110 @@ chk("Find the equation of the normal to $C$ at the point where $x = 1$.]"
 chk("（$x \\ne x_{1}$ のときの話です）" in TEXT, "Why it works: x != x1")
 chk("**かけ算の形にすると、点そのもの（$x = x_{1}$）もふくめて書けます。**"
     in TEXT, "Why it works: かけ算の形なら点もふくむ")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'for the normal, use $-\\\\',
+    'a vertical line has no g',
+]:
+    chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
+in_text('- 法線の傾きが $-\\dfrac{1}{m}$ になることを使える（$m \\ne 0$ のとき）。', "その内容は本文にある")
+in_text('- 接線が水平なとき、法線が縦の直線 $x = a$ になることを説明できる。', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：節の見出しに英語を添える（方針 第 17 節）
+# ══════════════════════════════════════════════════════════
+for _h in ("### 1. gradient of the tangent（接線の傾き） {#gradient}",
+           "### 2. equation of the tangent（接線の方程式） {#tangent}",
+           "### 3. normal（法線）とは {#normalidea}",
+           "### 4. gradient of the normal（法線の傾き） {#normalgrad}",
+           "### 5. equation of the normal（法線の方程式） {#normaleq}",
+           "### 6. horizontal tangent（傾きが $0$ のとき） {#special}"):
+    in_text(_h, "見出しの英語: " + _h[4:])
+for _h in ("### 1. 接線の傾き", "### 2. 接線の方程式", "### 3. 法線とは",
+           "### 4. 法線の傾き", "### 5. 法線の方程式", "### 6. 手順",
+           "### 7. "):
+    not_in_text(_h, "前の見出しは消した: " + _h[4:])
+# どの見出しも 英語（日本語） の形（③ の 日本語（英語） は使っていない）
+for _n, _line in re.findall(r"^### (\d)\. (.*)$", TEXT, re.M):
+    chk(re.match(r"^[a-z]", _line), "見出し %s は英語で始まる: %s" % (_n, _line))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 1 を削除／第 6 節（手順）を削除／表 1 の列見出し
+# ══════════════════════════════════════════════════════════
+
+# --- 図 1（3 歩の手順）は消した ------------------------------------------
+for _s in ("aasl-5-4-idea-b", "fig-aasl54-idea-b"):
+    not_in_text(_s, "本文から図 (b) を消した: " + _s)
+for _s in ("fig2", "ax2", "Three steps, and one special case"):
+    chk(_s not in FIG, "図をつくる側からも消した: " + _s)
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img",
+                                    "aasl-5-4-idea-b.svg")),
+    "図 (b) の SVG を消した")
+
+# --- 図 1 の中身は第 2 節の文にした ---------------------------------------
+in_text("**入れるものは $3$ つです。** $x_{1} = a$、$y_{1} = f(a)$、"
+        "$m = f'(a)$ です。", "第 2 節: 入れるもの 3 つ")
+in_text("**$x_{1}$ と $y_{1}$ は点の座標、$m$ は傾きです。** 点は $f$ から、"
+        "傾きは $f'$ から出します。**$f$ と $f'$ を取りちがえないでください。**",
+        "第 2 節: 点は f、傾きは f'")
+in_text("**答えは $y = \\ldots$ の形に整理します。** "
+        "問題文が別の形を指定していれば、それに合わせます。",
+        "第 2 節: 答えの形")
+_i2 = TEXT.index("### 2. equation of the tangent（接線の方程式） {#tangent}")
+_i3 = TEXT.index("### 3. normal（法線）とは {#normalidea}")
+_s2 = TEXT[_i2:_i3]
+for _s in ("入れるものは $3$ つです", "点は $f$ から", "答えは $y = \\ldots$ の形"):
+    chk(_s in _s2, "第 2 節の中にある: " + _s)
+
+# --- 第 6 節（手順）は消した ---------------------------------------------
+not_in_text("### 6. the three steps（手順）", "第 6 節（手順）の見出しは消した")
+not_in_text("#steps", "#steps のアンカーとリンクは消した")
+not_in_text("{#tbl-aasl54-steps}", "手順の表は消した")
+not_in_text("$3$ 歩で書けます", "3 歩の言い方は消した")
+not_in_text("### 7.", "節は 6 つ")
+in_text("### 6. horizontal tangent（傾きが $0$ のとき） {#special}",
+        "傾きが 0 のときは第 6 節")
+chk(TEXT.count("[第 6 節](#special)") == 5, "第 6 節への参照 5 件")
+chk(TEXT.count("[第 2 節](#tangent)") >= 5, "第 2 節への参照 5 件以上")
+
+# --- 第 6 節の最後の 1 文は消した ----------------------------------------
+not_in_text("**逆に、接線が縦になることは、このページの関数では起こりません。**",
+            "接線が縦になる話は消した")
+in_text("**縦の直線には傾きがありません。**", "縦の直線の話は残す")
+
+# --- 表 1 の列見出し -----------------------------------------------------
+in_text("| | tangent（接線） | normal（法線） |", "表 1 の列見出しは 英語（日本語）")
+not_in_text("| | 接線 | 法線 |", "前の列見出しは消した")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

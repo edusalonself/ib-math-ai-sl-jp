@@ -63,9 +63,6 @@ for _s in ("top", "right", "left", "bottom"):
 ax.annotate("area $= 0.05$", (K + 30, 0.0012), textcoords="offset points",
             xytext=(6, 26), fontsize=11, color=WARM,
             arrowprops=dict(arrowstyle="->", color=WARM, linewidth=1.1))
-ax.text(MU - 155, 0.0115,
-        "area to the left of the line is $0.95$, so the shaded tail is $0.05$",
-        fontsize=10, color=INK, ha="left", va="top")
 
 fig.tight_layout()
 path = os.path.join(OUT, "aasl-4-9-tail.svg")

@@ -27,7 +27,6 @@ OK = NG = 0
 R = sp.Rational
 x, y, k = sp.symbols("x y k")
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -36,37 +35,29 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) == 0, msg + f"  ({u} vs {v})")
-
 
 def ne(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) != 0, msg + f"  ({u} vs {v})")
 
-
 def grad(p, q):
     """公式集の gradient formula から。"""
     return R(q[1] - p[1], q[0] - p[0])
-
 
 def on(line, p, msg=""):
     """点 p が直線 line（= 0 の形）の上にあるか。"""
     chk(sp.simplify(line.subs({x: p[0], y: p[1]})) == 0,
         "点が直線上にない: " + msg + f" {p}")
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 公式そのもの
@@ -279,7 +270,8 @@ not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシ
 # 8. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -346,22 +338,29 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 10. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-2-1-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-2-1-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-2-1-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-2-1-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-2-1-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-2-1-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-2-1-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Gradient $=$ rise $\\\\div$ run", "図(a) の題")
+in_fig("Gradient $=$ rise $\\\\div$ run", "図(a) の題")
 in_fig("run $= x_{2}-x_{1}$", "図(a) の run")
 in_fig("rise\\n$= y_{2}-y_{1}$", "図(a) の rise")
-in_fig("any two points on the line give the same $m$", "図(a) の要点")
-in_fig("(b) Parallel and perpendicular", "図(b) の題")
-in_fig("gradient $m$", "図(b) のラベル")
-in_fig("gradient $-\\\\dfrac{1}{m}$", "図(b) の負の逆数")
-in_text("(a) The gradient is the rise divided by the run", "キャプションが (a) を説明")
-in_text("(b) Parallel lines have equal gradients", "キャプションが (b) を説明")
+in_fig("Parallel and perpendicular", "図(b) の題")
+# 青い 2 本には m_1・m_2、直交する線には -1/m_1 と書く
+in_fig("gradient $m_{1}$", "図(b) の m_1")
+in_fig("gradient $m_{2}$", "図(b) の m_2")
+in_fig("gradient $-\\\\dfrac{1}{m_{1}}$", "図(b) の負の逆数")
+chk("the two blue lines are parallel" not in FIG,
+    "図(b) の下の注記は外した（2026-10-01）")
 # 図が使っている傾きは、実際に垂直
 eq(2 * (-R(1, 2)), -1, "図(b) の 2 本は垂直")
 # 図に数値の答えを書いていない
@@ -372,11 +371,12 @@ for leak in ["-2", "4x", "3x - 4y", "(4, 0)", "(0, -10)", "2x + y",
 # ══════════════════════════════════════════════════════════
 # 11. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-1.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/02-functions/aasl-2-1.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-1-9.qmd") < DRAFT.index("aasl-2-1.qmd"), "並びが 1.9 → 2.1")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-1.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -388,7 +388,6 @@ GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for t in ["| gradient |", "| intercept |", "| parallel |", "| perpendicular |",
           "| incline |"]:
     chk(t in GLO, "対訳表にある: " + t)
-
 
 # ══════════════════════════════════════════════════════════
 # 12. 査読で直したところ（2026-09-07）
@@ -446,6 +445,123 @@ chk(TEXT.count("Write down the equation") == 1, "Write down は代入だけの�
 not_in_text("cannot be used to check that a horizontal line and a vertical line",
             "例題 3(d) は差し替えた")
 chk(TEXT.count("A vertical line has") == 1, "縦向きの直線の英文は演習 9 だけ")
+
+# ══════════════════════════════════════════════════════════
+# 分類の表には「図」の列（_方針変更-2026-09-15.md 第 6 節）
+# ══════════════════════════════════════════════════════════
+def _figcol(tid, fig):
+    _ls = TEXT.split(chr(10))
+    _ci = [i for i, l in enumerate(_ls)
+           if l.startswith(": ") and ("{#" + tid + "}") in l]
+    if not _ci:
+        chk(False, "表が見つからない: " + tid)
+        return
+    _e = _ci[0]
+    while not _ls[_e].startswith("|"):
+        _e -= 1
+    _s = _e
+    while _s > 0 and _ls[_s - 1].startswith("|"):
+        _s -= 1
+    chk(_ls[_s].rstrip().endswith("図 |"), "図の列がある: " + tid)
+    _rows = _ls[_s + 2:_e + 1]
+    chk(len(_rows) >= 2, "行がある: " + tid)
+    chk(all(r.rstrip().endswith(fig + " |") for r in _rows),
+        "どの行も図を指している: " + tid)
+    if fig.startswith("@fig-") and " " not in fig:
+        chk(("{#" + fig[1:] + " ") in TEXT or ("{#" + fig[1:] + "}") in TEXT,
+            "指している図がこのページにある: " + fig)
+
+# 表 3 の「図」の列は 2026-10-01 に外した
+chk("| $m_{1}$ | 垂直な直線の傾き $m_{2}$ |" in TEXT, "表 3 は 2 列")
+chk("@fig-aasl21-idea-b |" not in TEXT, "図の列は残っていない")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text('直線の式の書き方は、次の $3$ つです。', "公式の前置き 1")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 2. gradient（傾き）を、$2$ 点から出す {#gradient}', "見出しの英語: 2. gradient（傾き）を、$2$ 点から出す")
+in_text('### 5. intercepts（切片） {#intercepts}', "見出しの英語: 5. intercepts（切片）")
+in_text('### 6. parallel and perpendicular（平行と垂直） {#parallel-perp}', "見出しの英語: 6. parallel and perpendicu")
+in_text('### 7. gradient（勾配）：傾きが表しているもの {#incline}', "見出しの英語: 7. gradient（勾配）：傾きが表しているもの")
+
+# 2026-09-17：公式の前置きと、傾きの意味
+in_text("$2$ 直線の傾きを $m_{1}$、$m_{2}$ とすると、平行・垂直の条件は"
+        "次のようになります。", "平行・垂直の公式の前置き")
+chk(TEXT.index("平行・垂直の条件は次のようになります")
+    < TEXT.index("\\text{parallel:} \\quad m_{1} = m_{2}"), "前置きは式より前")
+in_text("**傾き $m$ は、「$x$ が $1$ 増えると、$y$ が $m$ 増える」という意味です。**",
+        "傾きの意味")
+in_text("「$1$ 分あたり $2.5$ L 増える」", "文脈での読み（増える）")
+in_text("「$1$ km 走るごとに燃料が $0.08$ L 減る」", "文脈での読み（減る）")
+in_text("`Interpret the gradient in this context`（この場面での傾きの意味を説明せよ）",
+        "命令語の併記")
+eq(sp.Rational("2.5") * 4, 10, "2.5 L/分 なら 4 分で 10 L")
+eq(sp.Rational("0.08") * 50, 4, "0.08 L/km なら 50 km で 4 L")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'any two points on the line',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
+in_text('**直線上のどの $2$ 点で測っても、$m$ は同じ値**になります。', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01：表 1 から「使うとき」の列を外した
+# ══════════════════════════════════════════════════════════
+in_text("| 形 | 英語名 | すぐ読み取れるもの |\n|:--|:--|:--|", "表 1 は 3 列")
+not_in_text("| 形 | 英語名 | すぐ読み取れるもの | 使うとき |", "前の 4 列は消した")
+not_in_text("グラフをかく、傾きを比べる", "使うときの中身も消した")
+in_text(": $3$ つの形 {#tbl-aasl21-forms .tbl-narrow}", "表 1 は tbl-narrow")
+in_text(": 逆数にして、符号を変える {#tbl-aasl21-perp .tbl-narrow}",
+        "表 3 も tbl-narrow")
+# 外した内容は本文にある
+in_text("**答えを整数の係数でそろえたいときは、general form に直します。**",
+        "general form を使うときは本文に")
+in_text("**傾きと、$y$ 切片でない点が分かっているときは、point-gradient form "
+        "から**組み立てます。", "point-gradient を使うときも本文に")
+# 図 (b) はコンパクトに
+in_fig("ax2.set_xlim(-2.5, 3.7)", "図(b) の枠を詰めた")
+in_fig("ax2.set_ylim(-2.3, 2.8)", "同上")
+in_fig("figsize=(5.4, 3.9)", "図(b) の大きさ")
+# 図の文字が枠の中にあるか
+_mb = re.search(r"ax2\.set_ylim\(([-\d.]+), ([-\d.]+)\)", FIG)
+_lo, _hi = float(_mb.group(1)), float(_mb.group(2))
+for _t in re.finditer(r"ax2\.text\(\s*[-\d.]+\s*,\s*([-\d.]+)", FIG):
+    chk(_lo <= float(_t.group(1)) <= _hi,
+        "ax2.text の y=%s は %s〜%s の中" % (_t.group(1), _lo, _hi))
+# 表 3 の値（逆数にして符号を変える）
+for _m1, _m2 in ((2, sp.Rational(-1, 2)), (sp.Rational(-2, 3),
+                                           sp.Rational(3, 2)), (1, -1)):
+    chk(sp.Rational(_m1) * _m2 == -1, "m1 m2 = -1: %s, %s" % (_m1, _m2))
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -525,7 +525,11 @@ eq("png を残していない",
     and f.endswith(".png")], [])
 
 # 登録
-QY = io.open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
+# ★ 2026-09-15 に AI HL を公開対象へ移しました（_方針変更-2026-09-15.md 第 13 節）。
+#    登録先は _quarto-draft.yml ではなく _quarto.yml です。
+#    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
+#    「index.qmd に」「残りの N 項目」は、もう検査しません。
+QY = io.open(os.path.join(HERE, "..", "..", "_quarto.yml"),
              encoding="utf-8").read()
 IX = io.open(os.path.join(HERE, "..", "..", "ai-hl", "index.qmd"),
              encoding="utf-8").read()
@@ -534,21 +538,14 @@ GL = io.open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
 for s in ("ai-hl/01-number-and-algebra/ahl-1-13.qmd",
           "AHL 1.13 — Polar and exponential form",
           ):
-    eq("_quarto-draft.yml に " + s[:44], s in QY, True)
-for s in ("01-number-and-algebra/ahl-1-13.qmd",):
-    eq("index.qmd に " + s[:44], s in IX, True)
+    eq("_quarto.yml に " + s[:44], s in QY, True)
+QD = io.open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
+             encoding="utf-8").read()
+for s in ("ai-hl/01-number-and-algebra/ahl-1-13.qmd",):
+    eq("下書き用の _quarto-draft.yml には残っていない: " + s[:44], s in QD, False)
 for s in ("ahl-1-13a", "ahl-1-13b"):
     eq("旧ページ " + s + " への参照が残っていない",
        (s in QY) or (s in IX) or (s in TA), False)
-# 「残りの N 項目」が、✅ の付いていない項目表の行数と合っているか
-_rows = re.findall(r"^\| (?:\*\*)?AHL [0-9.]+(?:\*\*)? \|(.*)\|$", IX, re.M)
-_left_rows = [r for r in _rows if "\u2705" not in r]
-_left = re.search(r"残りの(\d+)項目", IX)
-eq("残りの N 項目 があるか、全部の行に ✅ が付いている",
-   _left is not None or len(_left_rows) == 0, True)
-if _left:
-    eq("残りの N 項目 が、まだ書いていない行の数と合う",
-       len(_left_rows), int(_left.group(1)))
 for s in ("| polar form | 極形式 |", "| exponential form | 指数形式 |",
           "| Euler form | オイラー形式 |", "| cis | シス |",
           "| frequency | 周波数 |",

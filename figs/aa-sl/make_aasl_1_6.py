@@ -3,7 +3,8 @@
     python3 figs/aa-sl/make_aasl_1_6.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-sl/make_aasl_1_6.py  … 目視用の PNG も
 
-出力: aa-sl/01-number-and-algebra/img/aasl-1-6-idea.svg
+出力: aa-sl/01-number-and-algebra/img/aasl-1-6-idea-a.svg
+      aa-sl/01-number-and-algebra/img/aasl-1-6-idea-b.svg
 
 (a) 試験で安全な書き方は、片側だけを下りていく。LHS から出発して RHS に着く。
     示したい式から出発する道は、線を引いて消してある。
@@ -34,14 +35,12 @@ GREY = "#6b7280"
 WARM = "#b45309"
 RED = "#b91c1c"
 
-fig, (ax1, ax2) = plt.subplots(
-    1, 2, figsize=(9.8, 4.2), gridspec_kw={"width_ratios": [1.15, 1.0]}
-)
-
+fig1, ax1 = plt.subplots(figsize=(5.3, 4.2))
+fig2, ax2 = plt.subplots(figsize=(5.3, 4.2))
 # ══════════════════════════════════════════════════════════
 # (a) LHS から RHS へ、片側だけを下りる
 # ══════════════════════════════════════════════════════════
-ax1.set_title("(a) The safe layout: down one side only",
+ax1.set_title("The safe layout: down one side only",
               fontsize=11, color=INK, loc="left", pad=10)
 ax1.set_xlim(0.0, 1.0)
 ax1.set_ylim(0.0, 1.0)
@@ -74,7 +73,7 @@ ax1.text(0.10, 0.03, "avoid starting\nfrom the answer", ha="center", va="bottom"
 # ══════════════════════════════════════════════════════════
 # (b) 方程式は 1 点、恒等式はどこでも
 # ══════════════════════════════════════════════════════════
-ax2.set_title("(b) Where the statement is true",
+ax2.set_title("Where the statement is true",
               fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(-4.6, 5.4)
 ax2.set_ylim(-1.5, 2.3)
@@ -107,13 +106,13 @@ ax2.text(3.0, -0.85, "$x = 3$", ha="center", va="center",
 
 ax2.text(0.5, -1.35, "$x$", ha="center", va="center", fontsize=10, color=GREY)
 
-fig.tight_layout(w_pad=2.6)
-path = os.path.join(OUT, "aasl-1-6-idea.svg")
-fig.savefig(path, format="svg", bbox_inches="tight", transparent=True)
-print("wrote", os.path.normpath(path))
-
-if os.environ.get("FIG_PNG"):
-    png = path[:-4] + ".png"
-    fig.savefig(png, format="png", dpi=150, bbox_inches="tight",
-                facecolor="white")
-    print("wrote", os.path.normpath(png))
+for _fig, _name in ((fig1, "aasl-1-6-idea-a.svg"), (fig2, "aasl-1-6-idea-b.svg")):
+    _fig.tight_layout()
+    _p = os.path.join(OUT, _name)
+    _fig.savefig(_p, format="svg", bbox_inches="tight", transparent=True)
+    print("wrote", os.path.normpath(_p))
+    if os.environ.get("FIG_PNG"):
+        _q = _p[:-4] + ".png"
+        _fig.savefig(_q, format="png", dpi=150, bbox_inches="tight",
+                     facecolor="white")
+        print("wrote", os.path.normpath(_q))

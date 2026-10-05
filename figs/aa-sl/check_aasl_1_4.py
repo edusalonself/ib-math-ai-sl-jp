@@ -25,7 +25,6 @@ FIGCODE = FIG.split('"""', 2)[-1]
 
 OK = NG = 0
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -34,37 +33,29 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def _S(x):
     if isinstance(x, float):
         return sp.Rational(str(x))
     return sp.nsimplify(x, rational=True)
 
-
 def eq(a, b, msg=""):
     chk(sp.simplify(_S(a) - _S(b)) == 0, msg + f"  ({a} vs {b})")
-
 
 def ne(a, b, msg=""):
     chk(sp.simplify(_S(a) - _S(b)) != 0, msg + f"  ({a} vs {b})")
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 def FV(pv, r, k, n):
     """公式集の式から。r はパーセントの数字。"""
     return _S(pv) * (1 + sp.Rational(r, 100 * k)) ** (k * n)
-
 
 def step(pv, factor, times):
     """1 期ずつ掛けた値の列（公式を使わない道すじ）。"""
@@ -73,7 +64,6 @@ def step(pv, factor, times):
         x = x * _S(factor)
         out.append(x)
     return out
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 公式そのもの
@@ -298,8 +288,9 @@ in_text("where $FV$ is the future value, $PV$ is the present value, $n$ is the"
         " number of years, $k$ is the number of compounding periods per year,"
         " $r\\%$ is the nominal annual rate of interest", "記号の説明を逐語で")
 in_text("**depreciation の式は、公式集にありません。**", "載っていないものを明記")
-in_text("> In examinations, questions that ask students to derive the formula"
-        " will not be set.", "導出は問われない（Guidance）")
+not_in_text("> In examinations, questions that ask students to derive "
+            "the formula will not be set.",
+            "導出の tip といっしょに消した（2026-10-01）")
 in_text("> Calculate the real value of an investment with an interest rate and"
         " an inflation rate.", "real value の Guidance")
 in_text("`Compound interest can be calculated yearly, half-yearly, quarterly"
@@ -331,7 +322,8 @@ in_text("menu → Finance → Finance Solver", "Finance Solver の場所")
 in_text("`N` | 期間の**回数**", "N は回数")
 in_text("自分から出ていくお金は**負**", "符号のきまり")
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -387,10 +379,16 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 10. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-1-4-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-1-4-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-1-4-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-1-4-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-1-4-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-1-4-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-1-4-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
@@ -404,8 +402,6 @@ for _fx in ["1.12", "1.06", "1.03"]:
 eq(1 + sp.Rational(12, 100 * 1), sp.Rational("1.12"), "k=1 で 1.12 倍")
 eq(1 + sp.Rational(12, 100 * 2), sp.Rational("1.06"), "k=2 で 1.06 倍")
 eq(1 + sp.Rational(12, 100 * 4), sp.Rational("1.03"), "k=4 で 1.03 倍")
-in_text("(b) One year split into k equal periods",
-        "キャプションが (b) も説明している")
 # 図の数値が本文と合っているか
 eq(1000 * sp.Rational("1.1") ** 10, sp.Rational("2593.742460100"),
    "図(a) の 10 年後（複利）")
@@ -417,11 +413,12 @@ for leak in ["2916", "7200", "2928.2", "3375", "4096", "1324", "5192",
 # ══════════════════════════════════════════════════════════
 # 11. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-4.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/01-number-and-algebra/aasl-1-4.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-1-3.qmd") < DRAFT.index("aasl-1-4.qmd"), "並びが 1.3 → 1.4")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-4.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -435,11 +432,74 @@ for t in ["| compound interest |", "| present value ($PV$) |",
           "| inflation |", "| real value |", "| annual depreciation |"]:
     chk(t in GLO, "対訳表にある: " + t)
 
-
 # ── 用語と採点の言い方（★2026-09-07 の修正）──────────────
 for t in ["| growth factor |", "| growth rate |"]:
     chk(t in GLO, "対訳表にある: " + t)
 not_in_text("点を落とします", "採点の断定を弱めた")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# 公式の前に、何を表す式かを書く（_方針変更-2026-09-15.md 第 14 節）
+in_text("compound interest で、$n$ 年後の額 $FV$ を求める公式は、次のとおりです。", "公式の前置き")
+chk(TEXT.index("$n$ 年後の額 $FV$ を求める公式は")
+    < TEXT.index("FV = PV \\times"), "前置きは式より前")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. 利息が、利息を生む（compound interest） {#idea}', "見出しの英語: 1. 利息が、利息を生む（compound inte")
+in_text('### 3. $k$：compounding periods per year（$1$ 年に何回つくか） {#k}', "見出しの英語: 3. $k$：compounding periods")
+in_text('### 4. simple interest（単利）とのちがい {#simple-vs-compound}', "見出しの英語: 4. simple interest（単利）とのちが")
+in_text('### 5. depreciation：価値が減る {#depreciation}', "見出しの英語: 5. depreciation：価値が減る")
+in_text('### 6. inflation と real value {#real}', "見出しの英語: 6. inflation と real value")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01 の手直し
+# ══════════════════════════════════════════════════════════
+not_in_text("## 導出は、試験に出ません", "その tip は削除した")
+not_in_text("**Paper 1 では、$\log$ を使わずに、$1$ 年ずつ調べます。**",
+            "前の書き出しは消した")
+in_text("**「何年で $\ldots$ を超えるか」には、答え方が $2$ つあります。** "
+        "$1$ 年ずつ調べる方法と、方程式にして解く方法です。", "第 7 節の書き出し")
+# 方程式にして解く方法
+in_text("**もう $1$ つは、方程式にして解く方法です。**", "方程式の方法")
+in_text("$$\n1500 \\times 1.1^{\,n} = 2000\n$$", "方程式")
+in_text("**グラフで解けます。** $y = 1500 \\times 1.1^{x}$ と $y = 2000$ を同じ"
+        "画面にかいて、交点の $x$ を読むと $x = 3.02\ldots$ です。", "グラフで解く")
+in_text("**`nSolve` でも解けます。** `nSolve` は `menu → Algebra → Numerical "
+        "Solve` から入れられます。", "nSolve で解く")
+in_text("**出てくるのは小数です。**", "小数が出てくる")
+in_text("**どちらも電卓の機能なので、Paper 2 の方法です。**", "Paper 2 の方法")
+not_in_text("**電卓がなくてもできるので、Paper 1 ではこの方法です。**",
+            "この一文は削除した")
+# 値を確かめる
+_n = sp.log(sp.Rational(4, 3)) / sp.log(sp.Rational(11, 10))
+chk(abs(float(_n) - 3.0184) < 0.001, "方程式の解は 3.02 くらい: %s" % float(_n))
+chk(sp.ceiling(_n) == 4, "切り上げると 4 年")
+eq(1500 * sp.Rational("1.1") ** 3, sp.Rational("1996.5"), "3 年では 1996.5")
+chk(1500 * sp.Rational("1.1") ** 3 < 2000, "3 年では 2000 に届かない")
+chk(1500 * sp.Rational("1.1") ** 4 > 2000, "4 年で 2000 を超える")
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -5,7 +5,8 @@
 公式集は `2.Math AA SL formula booklet(New) copy.pdf`（10 ページ、SL の欄のみ）を使います。
 
 - **シラバス項目：51**（SL 1.1–1.9 / 2.1–2.11 / 3.1–3.8 / 4.1–4.12 / 5.1–5.11）
-- **ページ数：60**（うち 9 項目を a / b に分割）
+- **ページ数：53**（うち 3 項目を a / b に分割。5.6・5.8・5.10 は 2026-09-29、5.11 は 2026-10-01、4.6 は 2026-10-05 に 1 ページへ統合）
+  ★2026-09-22：2.7a と 2.7b を `aasl-2-7.qmd` に結合し、60 → 59 になりました。
 - ファイル名の接頭辞は `aasl-`。AI SL の `sl-1-1.qmd` とアンカーが衝突しないようにします
   （見出しは `{#sec-aasl-1-1}`、参照は `@eq-aasl11-...`、図は `figs/aa-sl/make_aasl_1_1.py`）。
 
@@ -49,7 +50,7 @@
 
 ## 進捗（2026-09-08 現在）
 
-**AA SL は 全 60 ページが完成しました（Topic 1 から Topic 5 まで）。**
+**AA SL は 全 53 ページが完成しました（Topic 1 から Topic 5 まで）。**
 
 ### 2026-09-09 の変更指示（35 項目）— 完了
 
@@ -159,8 +160,7 @@ $16^{3/4}$ の手計算と、対数法則の変形は、それぞれ例題 4 本
 | SL 3.2 | Right-angled trigonometry, the sine and cosine rules（三角比と正弦定理・余弦定理） | `aasl-3-2.qmd` |
 | SL 3.3 | Applications of trigonometry（三角法の応用 — 仰角・俯角・方位角） | `aasl-3-3.qmd` |
 | SL 3.4 | Radian measure, arc length and sector area（弧度法・弧の長さ・扇形の面積） | `aasl-3-4.qmd` |
-| **SL 3.5a** | The unit circle definitions of sine, cosine and tangent（単位円による定義と象限） | `aasl-3-5a.qmd` |
-| **SL 3.5b** | Exact values and the ambiguous case of the sine rule（三角比の正確な値と正弦定理のあいまいな場合） | `aasl-3-5b.qmd` |
+| **SL 3.5** | The unit circle, exact values and the ambiguous case（単位円・正確な値・あいまいな場合。3.5a と 3.5b を結合） | `aasl-3-5.qmd` |
 | SL 3.6 | Trigonometric identities（三角関数の相互関係と 2 倍角の公式） | `aasl-3-6.qmd` |
 | **SL 3.7a** | The circular functions and their graphs（三角関数のグラフ） | `aasl-3-7a.qmd` |
 | **SL 3.7b** | Transformations of trigonometric graphs and real-life models（$a\sin(b(x+c))+d$ と現実の場面） | `aasl-3-7b.qmd` |
@@ -191,8 +191,7 @@ SL 3.3・SL 3.7・SL 3.8 には公式集の項目がないので、`callout-impo
 | SL 4.3 | Measures of central tendency and dispersion（代表値と散らばり） | `aasl-4-3.qmd` |
 | SL 4.4 | Correlation and linear regression（相関と回帰 — Pearson の相関係数） | `aasl-4-4.qmd` |
 | SL 4.5 | Introduction to probability（確率の基礎） | `aasl-4-5.qmd` |
-| **SL 4.6a** | Combined events: Venn diagrams, tree diagrams and tables（事象の組み合わせ） | `aasl-4-6a.qmd` |
-| **SL 4.6b** | Conditional probability and independence（条件付き確率と独立） | `aasl-4-6b.qmd` |
+| **SL 4.6** | Combined events: Venn diagrams, tree diagrams and tables（事象の組み合わせ） | `aasl-4-6.qmd` |
 | SL 4.7 | Discrete random variables and expected value（離散確率変数と期待値） | `aasl-4-7.qmd` |
 | SL 4.8 | The binomial distribution（二項分布） | `aasl-4-8.qmd` |
 | SL 4.9 | The normal distribution（正規分布） | `aasl-4-9.qmd` |
@@ -236,7 +235,7 @@ Topic 5 でレビューが見つけた主なもの（すべて修正ずみ）。
 Topic 5 で使った規約（Topic 1 から 4 と共通のものに加えて）。
 
 - **GDC の節は置きません。** 電卓の話は、たたむ `callout-note` に $1$ つだけ入れます。
-- 公式集の `callout-important` を置けるのは **5.3・5.5・5.6a・5.6b・5.9・5.10a・
+- 公式集の `callout-important` を置けるのは **5.3・5.5・5.6・5.9・5.10・
   5.11a・5.11b** のページだけです（5.11a は 5.11 の欄が面積の式だけなので $0$ 個）。
 - シラバスの逐語引用は SL 5.1・5.5・5.9・5.11 の $4$ 項目・$5$ 文だけです。
 - ページをまたぐ Quarto の相互参照（`@eq-…`）は使いません。リンクで送ります。
@@ -252,16 +251,12 @@ Topic 5 で使った規約（Topic 1 から 4 と共通のものに加えて）�
 | SL 5.3 | Differentiating $ax^n$（べき乗の微分） | `aasl-5-3.qmd` |
 | SL 5.4 | Tangents and normals（接線と法線） | `aasl-5-4.qmd` |
 | SL 5.5 | Introduction to integration（原始関数・積分定数・面積） | `aasl-5-5.qmd` |
-| **SL 5.6a** | Derivatives of standard functions and the chain rule（$\sin x$・$\cos x$・$e^x$・$\ln x$ の微分と連鎖律） | `aasl-5-6a.qmd` |
-| **SL 5.6b** | The product and quotient rules（積の微分法と商の微分法） | `aasl-5-6b.qmd` |
+| **SL 5.6** | Standard derivatives and the rules of differentiation（標準的な導関数・連鎖律・積と商の微分法） | `aasl-5-6.qmd` |
 | SL 5.7 | The second derivative（第 2 次導関数と $f$・$f'$・$f''$ のグラフ） | `aasl-5-7.qmd` |
-| **SL 5.8a** | Maximum and minimum points, concavity and points of inflexion（極大・極小・凹凸・変曲点） | `aasl-5-8a.qmd` |
-| **SL 5.8b** | Optimization（最適化問題） | `aasl-5-8b.qmd` |
+| **SL 5.8** | Maximum and minimum points, concavity and optimization（極大・極小・凹凸・変曲点と最適化） | `aasl-5-8.qmd` |
 | SL 5.9 | Kinematics（変位・速度・加速度・道のり） | `aasl-5-9.qmd` |
-| **SL 5.10a** | Indefinite integrals of standard functions（標準的な不定積分と $ax+b$ の合成） | `aasl-5-10a.qmd` |
-| **SL 5.10b** | Integration by inspection and by substitution（逆連鎖律と置換積分） | `aasl-5-10b.qmd` |
-| **SL 5.11a** | Definite integrals（定積分 — $\int_a^b g'(x)\,dx = g(b)-g(a)$） | `aasl-5-11a.qmd` |
-| **SL 5.11b** | Areas below the axis and areas between curves（符号のある面積と 2 曲線ではさまれた面積） | `aasl-5-11b.qmd` |
+| **SL 5.10** | Standard integrals, reverse chain rule and substitution（標準的な不定積分・逆連鎖律・置換積分） | `aasl-5-10.qmd` |
+| **SL 5.11** | Definite integrals and areas（定積分と面積） | `aasl-5-11.qmd` |
 
 **分ける理由。**
 

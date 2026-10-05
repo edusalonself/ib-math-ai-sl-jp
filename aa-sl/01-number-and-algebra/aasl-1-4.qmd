@@ -16,7 +16,7 @@ sidebar: aa-sl
 
 ## The idea
 
-### 1. 利息が、利息を生む {#idea}
+### 1. 利息が、利息を生む（compound interest） {#idea}
 
 [SL 1.2](aasl-1-2.qmd#applications) の **simple interest**（単利）では、利息はいつも元金に対して計算されました。ですから毎年、**同じ額**が加わります。
 
@@ -44,6 +44,8 @@ $0.1$ 倍ではありません（[SL 1.3 第 7 節](aasl-1-3.qmd#applications)�
 :::
 
 ### 2. 公式 {#formula}
+
+compound interest で、$n$ 年後の額 $FV$ を求める公式は、次のとおりです。
 
 $$
 FV = PV \times \left(1 + \frac{r}{100k}\right)^{kn}
@@ -77,16 +79,9 @@ $10\%$ なら $r = 10$ であって、$0.1$ ではありません。$100k$ で�
 $k = 1$、$r = 10$ なら $\dfrac{10}{100 \times 1} = 0.1$ となり、$(1 + 0.1)^{n} = 1.1^{n}$ です。@tbl-aasl14-compound と合います。
 :::
 
-::: {.callout-tip}
-## 導出は、試験に出ません
-シラバスに、はっきり書かれています。
+### 3. $k$：compounding periods per year（$1$ 年に何回つくか） {#k}
 
-> In examinations, questions that ask students to derive the formula will not be set.
-
-**「なぜこの式になるのか証明しなさい」という問題は出ません。** 式の意味が分かって、正しく使えれば十分です。それでも、なぜこうなるのかは [Why it works](#why-it-works) で $1$ 度だけ確かめておきます。読まなくても解けます。
-:::
-
-### 3. $k$ — $1$ 年に何回つくか {#k}
+![One year split into $k$ equal periods](img/aasl-1-4-idea-b.svg){#fig-aasl14-idea-b width=100%}
 
 シラバスは `Compound interest can be calculated yearly, half-yearly, quarterly or monthly.` と書いています。
 
@@ -99,7 +94,7 @@ $k = 1$、$r = 10$ なら $\dfrac{10}{100 \times 1} = 0.1$ となり、$(1 + 0.1
 
 : $k$ の読み取り方 {#tbl-aasl14-k}
 
-**$k$ は、指数と分母の両方に効きます。**
+**$k$ は、指数と分母の両方に影響します。**
 
 $$
 \left(1 + \underbrace{\frac{r}{100k}}_{1 \text{ 回あたりの利率}}\right)^{\overbrace{kn}^{\text{回数}}}
@@ -107,13 +102,13 @@ $$
 
 $1$ 回あたりの利率は小さくなりますが、回数が増えます。**両方を同時に直してください。** 片方だけ直すのが、この項目でいちばん多い誤りです。
 
-@fig-aasl14-idea の (b) が、その様子です。
+@fig-aasl14-idea-b が、その様子です。
 
-![(a) Simple interest grows in a straight line, while compound interest curves upward. (b) One year split into k equal periods: a smaller rate applied more often](img/aasl-1-4-idea.svg){#fig-aasl14-idea width=100%}
+### 4. simple interest（単利）とのちがい {#simple-vs-compound}
 
-### 4. 単利とのちがい {#simple-vs-compound}
+![Simple interest and compound interest, side by side](img/aasl-1-4-idea-a.svg){#fig-aasl14-idea-a width=100%}
 
-@fig-aasl14-idea の (a) が、$\$1000$ を年 $10\%$ で預けたときの $2$ つのちがいです。
+@fig-aasl14-idea-a が、$\$1000$ を年 $10\%$ で預けたときの $2$ つのちがいです。
 
 | | simple interest | compound interest |
 |:--|:--|:--|
@@ -128,7 +123,7 @@ $1$ 回あたりの利率は小さくなりますが、回数が増えます。*
 
 （$k$ が $2$ 以上なら、$1$ 年目からもう差がつきます。）
 
-### 5. depreciation — 価値が減る {#depreciation}
+### 5. depreciation：価値が減る {#depreciation}
 
 **annual depreciation**（毎年の価値の目減り）は、複利の裏返しです。
 
@@ -200,7 +195,7 @@ $2$ つの割合がちがうと、答えがずれます（@exm-aasl14-real の�
 
 ### 7. 何年で超えるか {#when}
 
-**Paper 1 では、$\log$ を使わずに、$1$ 年ずつ調べます。**
+**「何年で $\ldots$ を超えるか」には、答え方が $2$ つあります。** $1$ 年ずつ調べる方法と、方程式にして解く方法です。
 
 $\$1500$ が年 $10\%$ で、いつ $\$2000$ を超えるか。
 
@@ -222,6 +217,20 @@ $n = 3$ で届かないこと、$n = 4$ で超えることの**両方**を見せ
 
 **片方だけでは、答えの根拠になりません。**
 :::
+
+**もう $1$ つは、方程式にして解く方法です。** ちょうど $\$2000$ になるときの $n$ を求めます。
+
+$$
+1500 \times 1.1^{\,n} = 2000
+$$
+
+**グラフで解けます。** $y = 1500 \times 1.1^{x}$ と $y = 2000$ を同じ画面にかいて、交点の $x$ を読むと $x = 3.02\ldots$ です。
+
+**`nSolve` でも解けます。** `nSolve` は `menu → Algebra → Numerical Solve` から入れられます。
+
+**出てくるのは小数です。** $n = 3.02\ldots$ は「$3$ 年ではまだ届いていない」という意味なので、答えは **$4$ 年**です。**切り上げます。**
+
+**どちらも電卓の機能なので、Paper 2 の方法です。** Paper 1 では、上の表のように $1$ 年ずつ調べます。
 
 ::: {.callout-tip collapse="true"}
 ## Paper 2 では、Finance Solver が使えます
@@ -246,6 +255,9 @@ menu → Finance → Finance Solver
 :::
 
 ## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
 
 **なぜ $\left(1 + \dfrac{r}{100k}\right)^{kn}$ なのか。**（試験では問われません。[第 2 節](#formula)の断りのとおりです。）
 
@@ -280,6 +292,7 @@ k = 4 &: \quad 800(1.03)^{4} = 900.4070\ldots
 $$
 
 **増えますが、増え方はごくわずか**です。$k$ を $4$ 倍にしても、$4$ 倍増えるわけではありません。
+:::
 
 ## Worked examples
 
@@ -619,7 +632,7 @@ $r = 0.1$ と入れると、$\dfrac{0.1}{100} = 0.001$ となり、$0.1\%$ の�
 
 ::: {.callout-warning}
 ## $k$ を、分母か指数の片方だけ直す
-$k$ は**両方**に効きます（[第 3 節](#k)）。
+$k$ は**両方**に影響します（[第 3 節](#k)）。
 
 half-yearly で $2$ 年なら、$\left(1 + \dfrac{r}{200}\right)^{4}$ です。
 
@@ -1027,7 +1040,7 @@ $$FV = 5000\left(1 + \frac{20}{200}\right)^{4} = 5000(1.1)^{4} = 5000 \times 1.4
 
 `Identify the error` なので、**どこが違うのかを名指し**してから、正しい答えを書きます。
 
-**$k$ は分母と指数の両方に効きます**（[第 3 節](#k)）。生徒は指数だけ直しました。
+**$k$ は分母と指数の両方に影響します**（[第 3 節](#k)）。生徒は指数だけ直しました。
 
 **検算。** 生徒の答えの大きさを見ます。$10\,368$ は元金の $2$ 倍以上です。**年 $20\%$ で $2$ 年なら、$2$ 倍にはなりません**（$1.2^{2} = 1.44$）。ここで気づけます。
 

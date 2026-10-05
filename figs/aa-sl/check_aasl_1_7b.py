@@ -28,7 +28,6 @@ R = sp.Rational
 x = sp.Symbol("x", real=True)
 a, y, p, q = sp.symbols("a y p q", positive=True)
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -37,36 +36,28 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def lg(v, b):
     """log_b(v) を、値になるところまで簡単にする。"""
     return sp.simplify(sp.log(v, b))
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(u - v) == 0, msg + f"  ({u} vs {v})")
 
-
 def ne(u, v, msg=""):
     chk(sp.simplify(u - v) != 0, msg + f"  ({u} vs {v})")
-
 
 def sols(equation):
     """実数解だけを、小さい順に返す。"""
     return sorted(v for v in sp.solve(equation, x) if v.is_real)
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 法則そのもの（記号で）
@@ -287,7 +278,8 @@ not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシ
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -298,13 +290,13 @@ in_text("**Paper 1 では、$\\dfrac{\\ln 7}{\\ln 3}$ が答えです。**",
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
-chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
-chk(TEXT.count("</details>") == 14, "</details> も 14")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 7, "--- は 7 本")
+chk(TEXT.count('<details class="jp-trans">') == 15, "日本語訳が 15")
+chk(TEXT.count("</details>") == 15, "</details> も 15")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
 chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
 chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
-chk(len(re.findall(r"^::: \{#exm-aasl17b-", TEXT, re.M)) == 4, "例題が 4")
+chk(len(re.findall(r"^::: \{#exm-aasl17b-", TEXT, re.M)) == 5, "例題が 5")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
 _want = ["The idea", "Why it works", "Worked examples", "Common errors",
          "Exercises"]
@@ -344,22 +336,23 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-1-7b-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-1-7b-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-1-7b-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-1-7b-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-1-7b-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-1-7b-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-1-7b-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
 in_fig("Multiplying below, adding above (base $2$)", "図(a) の題")
-in_fig("a product becomes a sum", "図(a) の要点")
 in_fig("values", "図(a) の下段ラベル")
 in_fig("Change of base: pick $b$ you can do by hand", "図(b) の題")
 in_fig("take $b = 5$", "図(b) の選び方")
-in_text("(a) Multiplying values corresponds to adding exponents",
-        "キャプションが (a) を説明")
-in_text("(b) Change of base rewrites one logarithm as a ratio",
-        "キャプションが (b) を説明")
 eq(lg(8, 2) + lg(4, 2), lg(32, 2), "図(a) の 3 + 2 = 5")
 eq(lg(125, 25), R(3, 2), "図(b) の 3/2")
 eq(5 ** 3, 125, "図(b) の 125 = 5^3")
@@ -370,12 +363,13 @@ for _lk in ["28", "45", "81", "30", "4096", "5}{3", "16"]:
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-7b.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/01-number-and-algebra/aasl-1-7b.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-1-7a.qmd") < DRAFT.index("aasl-1-7b.qmd"),
     "並びが 1.7a → 1.7b")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-7b.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -387,7 +381,6 @@ GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for t in ["| laws of logarithms |", "| change of base |",
           "| exponential equation |", "| exact value |", "| logarithm |"]:
     chk(t in GLO, "対訳表にある: " + t)
-
 
 # ══════════════════════════════════════════════════════════
 # 13. レビュー反映の見張り
@@ -495,20 +488,91 @@ not_in_text("where the base is $10$", "底は式の中に書く")
 in_text("The student subtracted the arguments instead of dividing them", "演習 10 の英語")
 in_text("which is exactly what the first law of logarithms states", "records → states")
 
-
-# まだ存在しないページへのリンクを置かない
+# 他の Topic へのリンクは、そのファイルが実在することを確かめる
+#（Topic 2 も書き上がったので、「まだない」という見張りから実在の確認に変えた）
 for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
-    chk(not _href.startswith("../") or _href.endswith(".qmd"),
-        "まだないページへのリンク: " + _href)
-not_in_text("(../02-functions/)", "Topic 2 はまだ書いていない")
-
+    if not _href.startswith("../"):
+        continue
+    _p = os.path.join(os.path.dirname(QMD), _href.split("#")[0])
+    chk(os.path.exists(_p), "リンク先のページがある: " + _href)
 
 # ── 採点の言い方（★2026-09-07 の修正）────────────────────
 in_text("方法点（M mark）を得るためにも、途中式を書いておくのが安全です。", "断定を弱めた")
 not_in_text("方法点（M mark）がもらえないことがあります", "古い言い方は残っていない")
-# Topic 2 へのリンクは、ページができるまで張らない
-not_in_text("(../02-functions/)", "まだないページへのリンクは張らない")
+
 in_text("**Topic 2（Functions）** の指数関数で使います", "文章で書く")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text('かけ算・わり算・累乗を、$\\log$ の足し算・引き算・かけ算に変える法則は、次の $3$ つです。', "公式の前置き 1")
+in_text('指数と対数が、たがいに打ち消し合うことを表す式は、次のとおりです。', "公式の前置き 2")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-17 の手入れ
+# ══════════════════════════════════════════════════════════
+in_text("**これが対数法則（laws of logarithms）の正体**です。", "対数法則の併記")
+in_text("指数法則（laws of exponents）を別の言葉で言っただけです。", "指数法則の併記")
+in_text("### 3. change of base（底の変換） {#change-of-base}", "§3 の併記")
+in_text("### 6. 指数方程式（$1$）：底をそろえる（same base） {#same-base}", "§6 の併記")
+in_text("### 7. 指数方程式（$2$）：対数をとる（taking logarithms） {#take-logs}",
+        "§7 の併記")
+in_text("新しい底の $b$ は、**こちらが選べます。**", "新しい底の b")
+in_text("**中身を素因数に分ける**のが、カギです。", "カギです")
+not_in_text("いつもの第一歩", "「いつもの第一歩」は消した")
+
+# 例題 5：置きかえて 2 次方程式にする
+in_text("[**(a)** Solve $4^{x} - 5(2^{x}) + 4 = 0$.]{.q-en}", "例題5(a)")
+in_text("**(b)** [Solve $(\\log_{2} x)^{2} - 3\\log_{2} x + 2 = 0$.]{.q-en}", "例題5(b)")
+_y = sp.Symbol("y")
+chk(sorted(sp.solve(_y ** 2 - 5 * _y + 4, _y)) == [1, 4], "y^2-5y+4=0 の解は 1, 4")
+chk(sorted(sp.solve(_y ** 2 - 3 * _y + 2, _y)) == [1, 2], "y^2-3y+2=0 の解は 1, 2")
+_x = sp.Symbol("x", real=True)
+chk(sorted(sp.solve(sp.Eq(4 ** _x - 5 * 2 ** _x + 4, 0), _x)) == [0, 2],
+    "4^x-5*2^x+4=0 の解は 0, 2")
+eq(4 ** 0 - 5 * 2 ** 0 + 4, 0, "例題5(a) x=0 の検算")
+eq(4 ** 2 - 5 * 2 ** 2 + 4, 0, "例題5(a) x=2 の検算")
+eq(sp.log(2, 2) ** 2 - 3 * sp.log(2, 2) + 2, 0, "例題5(b) x=2 の検算")
+eq(sp.log(4, 2) ** 2 - 3 * sp.log(4, 2) + 2, 0, "例題5(b) x=4 の検算")
+chk(sp.simplify(sp.log(4, 2) - 2) == 0, "log_2 4 = 2")
+in_text("**$2^{x}$ は、どんな $x$ でも正**です", "2^x は正")
+in_text("**$(\\log_{2} x)^{2}$ と $\\log_{2} x^{2}$ は別ものです。**", "かっこの位置")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 3. change of base（底の変換） {#change-of-base}', "見出しの英語: 3. change of base（底の変換）")
+in_text('### 6. 指数方程式（$1$）：底をそろえる（same base） {#same-base}', "見出しの英語: 6. 指数方程式（$1$）：底をそろえる（same ")
+in_text('### 7. 指数方程式（$2$）：対数をとる（taking logarithms） {#take-logs}', "見出しの英語: 7. 指数方程式（$2$）：対数をとる（taking")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (a) から説明の文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+chk("a product becomes a sum" not in FIG, "図に説明の文を書いていない")
+chk("ax1.set_ylim(0.10, 1.0)" in FIG, "図 (a) の下の余白を詰めた")
+in_text("かけ算・わり算・累乗を、$\\log$ の足し算・引き算・かけ算に変える法則は、"
+        "次の $3$ つです。", "積が和になるのは本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

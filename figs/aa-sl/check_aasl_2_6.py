@@ -29,7 +29,6 @@ x = sp.Symbol("x")
 a, b, c, p, q, h, k = sp.symbols("a b c p q h k")
 REALS = sp.S.Reals
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -38,18 +37,14 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) == 0, msg + f"  ({u} vs {v})")
-
 
 def ne(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) != 0, msg + f"  ({u} vs {v})")
 
-
 def roots(expr, want, msg=""):
     chk(sp.solveset(sp.Eq(expr, 0), x, REALS) == want, "零点: " + msg)
-
 
 def axis(expr, want, msg=""):
     """公式集の軸の式で確かめる。"""
@@ -57,22 +52,17 @@ def axis(expr, want, msg=""):
     _a, _b = _p[0], _p[1]
     eq(-_b / (2 * _a), want, "軸: " + msg)
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
 
-
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. 公式そのもの
@@ -282,7 +272,8 @@ in_text("定義域が閉区間に制限されていれば、$f$ は端点のど�
 # 10. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -343,7 +334,7 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
         or _href.startswith("http"),
         "まだないページへのリンク: " + _href)
 for _lab in ["tbl-aasl26-forms", "tbl-aasl26-convert", "tbl-aasl26-a",
-             "tbl-aasl26-build", "fig-aasl26-idea", "eq-aasl26-standard",
+             "tbl-aasl26-build", "fig-aasl26-idea-a", "fig-aasl26-idea-b", "eq-aasl26-standard",
              "eq-aasl26-axis", "eq-aasl26-factorised", "eq-aasl26-mid",
              "eq-aasl26-vertex"]:
     chk(TEXT.count("@" + _lab) >= 1, "本文から参照していない: " + _lab)
@@ -356,26 +347,28 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 12. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-2-6-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-2-6-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-2-6-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-2-6-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-2-6-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-2-6-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-2-6-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) Each form shows a different feature", "図(a) の題")
+in_fig("Each form shows a different feature", "図(a) の題")
 in_fig("$a(x-p)(x-q)$", "図(a) factorised form")
 in_fig("$ax^{2}+bx+c$", "図(a) standard form")
 in_fig("$a(x-h)^{2}+k$", "図(a) vertex form")
 in_fig("axis of\\nsymmetry", "図(a) の軸")
-in_fig("(b) The sign and size of $a$", "図(b) の題")
+in_fig("The sign and size of $a$", "図(b) の題")
 in_fig("large $a > 0$:\\nnarrow", "図(b) 細い")
 in_fig("small $a > 0$:\\nwide", "図(b) 広い")
 in_fig("$a < 0$:\\nopens downwards", "図(b) 上に凸")
-in_fig("$a$ cannot be $0$: the graph would be a straight line", "a ≠ 0")
-in_text("(a) The same parabola written in three ways", "キャプションが (a) を説明")
-in_text("(b) The sign of $a$ decides which way the parabola opens",
-        "キャプションが (b) を説明")
 # 図に数値の座標を書いていない
 chk(not re.search(r"\(\s*-?\d", FIGSTR), "図に数値の座標を書いていない")
 for leak in ["= -8", "= 9", "(0, 11)", "x = -4", "x = 2"]:
@@ -384,11 +377,12 @@ for leak in ["= -8", "= 9", "(0, 11)", "x = -4", "x = 2"]:
 # ══════════════════════════════════════════════════════════
 # 13. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-6.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/02-functions/aasl-2-6.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-2-5.qmd") < DRAFT.index("aasl-2-6.qmd"), "並びが 2.5 → 2.6")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-6.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -400,7 +394,6 @@ GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for _t in ["| quadratic function |", "| completing the square |",
            "| standard form |", "| factorised form |", "| vertex form |"]:
     chk(_t in GLO, "対訳表にある: " + _t)
-
 
 # ══════════════════════════════════════════════════════════
 # 14. 査読で直したところ（2026-09-07）
@@ -429,7 +422,7 @@ ne(24, 16, "誤った a では合わない")
 for _av in (3, 5, -2):
     _pp = sp.Poly(sp.expand(_av * (x - 1) ** 2 + 4), x).all_coeffs()
     eq(-_pp[1] / (2 * _pp[0]), 1, f"a={_av} でも軸は 1（だから検算にならない）")
-in_text("(b) は (a) を展開したものなので、$a$ がどんな値でも軸は $1$ になってしまう",
+in_text("は (a) を展開したものなので、$a$ がどんな値でも軸は $1$ になってしまう",
         "なぜ検算にならないかを書いた")
 # 所見 3 — 演習 4 の検算の順序
 in_text("**定数項の誤りは、ここでしか見つかりません。**", "y 切片が効く")
@@ -444,9 +437,9 @@ in_text("**$a$ を決めるのに使っていない $x$ を選んで、$2$ つ�
 eq(_f3.subs(x, 2), 7, "vertex form で x=2 は 7")
 eq((3 * x ** 2 - 6 * x + 7).subs(x, 2), 7, "standard form でも 7")
 # 所見 5 — 図の参照
-not_in_text("**どれも同じ $x$ 切片**をもちます（@fig-aasl26-idea の (b)）。",
+not_in_text("**どれも同じ $x$ 切片**をもちます（@fig-aasl26-idea-b）。",
             "誤った図の参照は残っていない")
-in_text("ちがうのは開き方だけです（$a$ が形に効くようすは @fig-aasl26-idea の (b)）",
+in_text("ちがうのは開き方だけです（$a$ が形に影響するようすは @fig-aasl26-idea-b）",
         "正しい参照")
 # 所見 6 — Why it works の平方完成
 in_text("なので、$\\dfrac{b^{2}}{4a^{2}}$ が余分です。引いておきます。", "展開を見せた")
@@ -485,6 +478,102 @@ in_text("$y = x^{2}$ を目安にすると、$\\lvert a \\rvert > 1$ なら細�
 # 所見 16 — 符号の書き方をそろえた
 chk(TEXT.count("-\\dfrac{(-12)}{2(2)}") == 1, "かっこを付けて書いた")
 eq(-sp.Rational(-12, 4), 3, "= 3")
+
+# ══════════════════════════════════════════════════════════
+# 分類の表には「図」の列（_方針変更-2026-09-15.md 第 6 節）
+# ══════════════════════════════════════════════════════════
+def _figcol(tid, fig):
+    _ls = TEXT.split(chr(10))
+    _ci = [i for i, l in enumerate(_ls)
+           if l.startswith(": ") and ("{#" + tid + "}") in l]
+    if not _ci:
+        chk(False, "表が見つからない: " + tid)
+        return
+    _e = _ci[0]
+    while not _ls[_e].startswith("|"):
+        _e -= 1
+    _s = _e
+    while _s > 0 and _ls[_s - 1].startswith("|"):
+        _s -= 1
+    chk(_ls[_s].rstrip().endswith("図 |"), "図の列がある: " + tid)
+    _rows = _ls[_s + 2:_e + 1]
+    chk(len(_rows) >= 2, "行がある: " + tid)
+    chk(all(r.rstrip().endswith(fig + " |") for r in _rows),
+        "どの行も図を指している: " + tid)
+    if fig.startswith("@fig-") and " " not in fig:
+        chk(("{#" + fig[1:] + " ") in TEXT or ("{#" + fig[1:] + "}") in TEXT,
+            "指している図がこのページにある: " + fig)
+
+# 表 1 は「図」の列をやめた（3 行とも同じ図を指していて、情報が増えなかった）
+not_in_text("| $f(x) = ax^{2}+bx+c$ | standard form（一般形） | $y$ 切片 $(0, c)$ |",
+            "図の列つきの古い行は残っていない")
+in_text("| $y$-intercept（$y$ 切片）$(0, c)$ |", "表 1 の y 切片に英語")
+in_text("| $x$-intercepts（$x$ 切片）$(p,0)$、$(q,0)$ |", "表 1 の x 切片に英語")
+in_text("### 2. standard form と、axis of symmetry（対称の軸） {#standard}",
+        "§2 の見出し")
+in_text("axis of symmetry（対称の軸）は、次の式で求められます。", "§2 の前置き")
+in_text("### 3. factorised form と $x$-intercepts（$x$ 切片） {#factorised}",
+        "§3 の見出しに英語")
+_figcol("tbl-aasl26-a", "@fig-aasl26-idea-b")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
+# ══════════════════════════════════════════════════════════
+in_text('$2$ 次関数を、展開した形（standard form）で書くと、次のようになります。', "公式の前置き 1")
+in_text('$2$ 次関数を、頂点が読める形（vertex form）で書くと、次のようになります。', "公式の前置き 2")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：図を、説明している節に合わせた
+# ══════════════════════════════════════════════════════════
+# 図 (c)：factorised form が見せるもの（第 3 節）
+SVG_C = os.path.join(BASE, "img", "aasl-2-6-idea-c.svg")
+chk(os.path.exists(SVG_C), "図 (c) がある")
+chk(not os.path.exists(SVG_C[:-4] + ".png"), "図 (c) の PNG は消してある")
+in_text("](img/aasl-2-6-idea-c.svg){#fig-aasl26-idea-c", "本文が図 (c) を貼っている")
+chk(TEXT.count("@fig-aasl26-idea-c") >= 2, "図 (c) を本文から参照している")
+in_fig("Factorised form shows the $x$-intercepts", "図 (c) の題")
+in_fig("$f(x) = a(x-p)(x-q)$", "図 (c) の式")
+in_fig("$x = \\\\dfrac{p+q}{2}$", "図 (c) の軸")
+in_fig("halfway between", "図 (c) の注記")
+# 置き場所：(c) は第 3 節、(b) は第 6 節
+_i3 = TEXT.index("### 3. factorised form")
+_i4 = TEXT.index("### 4. vertex form")
+_i6 = TEXT.index("### 6. $a$ の符号と大きさ")
+_i7 = TEXT.index("### 7. 情報から式を組み立てる")
+chk(_i3 < TEXT.index("](img/aasl-2-6-idea-c.svg)") < _i4,
+    "図 (c) は第 3 節にある")
+chk(_i6 < TEXT.index("](img/aasl-2-6-idea-b.svg)") < _i7,
+    "図 (b) は第 6 節にある（a の符号と大きさ）")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    '$a$ cannot be $0$: the gra',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
+in_text('**$a$ は $0$ であってはいけません。**', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -26,7 +26,6 @@ R = sp.Rational
 PI = sp.pi
 X = sp.Symbol("x", real=True)
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -35,26 +34,20 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(u - v) == 0, msg + f"  ({u} vs {v})")
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 def zeros_in(f, lo, hi):
     """f(x) = 0 の解を [lo, hi] で数える（π の整数倍・半整数倍だけ調べる）。"""
@@ -66,7 +59,6 @@ def zeros_in(f, lo, hi):
             out.append(v)
         k += 1
     return out
-
 
 # ══════════════════════════════════════════════════════════
 # 0. グラフの基本
@@ -104,7 +96,6 @@ for _k in range(-2, 3):
     chk(sp.cos(PI / 2 + _k * PI) == 0, f"cos が 0 になる: π/2 + {_k}π")
 chk(sp.tan(PI / 2) == sp.zoo, "tan(π/2) は値をもたない")
 # 表の値
-in_text("| $\\cos x$ | $1$ | $0$ | $-1$ | $0$ | $1$ |", "cos の 5 点")
 for _x, _v in [(0, 1), (PI / 2, 0), (PI, -1), (3 * PI / 2, 0), (2 * PI, 1)]:
     eq(sp.cos(_x), _v, f"cos の 5 点 ({_x})")
 in_text("| $y = \\tan x$ | $x \\ne \\dfrac{\\pi}{2} + n\\pi$（$n$ は整数） | "
@@ -235,7 +226,8 @@ in_text("## $y = \\tan x$ の period を $2\\pi$ とする", "period の注意")
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h_ for h_ in _tips if not h_.startswith("解説")]
+_gdc = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -263,7 +255,7 @@ _want = ["The idea", "Why it works", "Worked examples", "Common errors",
 chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
-chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
+chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
 chk(TEXT.count("**検算") >= 12, f"検算が十分ある: {TEXT.count('**検算')}")
 chk("**確かめ。**" not in TEXT and "**確かめます。**" not in TEXT, "「確かめ。」なし")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -294,17 +286,18 @@ for _f0 in set(re.findall(r"\]\((\.\./[a-z0-9-]+/)?([a-z0-9-]+\.qmd)(?:#[a-z0-9-
     _path = os.path.join(BASE, _f0[0] + _f0[1]) if _f0[0] else \
         os.path.join(BASE, _f0[1])
     chk(os.path.exists(_path), "リンク先のファイルがない: " + _f0[0] + _f0[1])
-for _tgt in ["aasl-3-4", "aasl-3-5a", "aasl-3-5b"]:
+for _tgt in ["aasl-3-4", "aasl-3-5", "aasl-3-5"]:
     _TT = open(os.path.join(BASE, _tgt + ".qmd"), encoding="utf-8").read()
     for _a2 in set(re.findall(r"\]\(" + _tgt + r"\.qmd#([a-z0-9-]+)\)", TEXT)):
-        chk(("{#" + _a2 + "}") in _TT, _tgt + " 側に見出しがない: #" + _a2)
+        chk(re.search(r"\{#" + re.escape(_a2) + r"[ }]", _TT),
+            _tgt + " 側に見出しがない: #" + _a2)
 for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
     chk(_href.startswith("#") or _href.startswith("img/")
         or _href.endswith(".qmd") or ".qmd#" in _href
         or _href.startswith("http") or _href.startswith("../"),
         "まだないページへのリンク: " + _href)
 chk(TEXT.count("@fig-aasl37a-idea") >= 1, "図を本文から参照している")
-for _lab in ["tbl-aasl37a-cos", "tbl-aasl37a-summary", "eq-aasl37a-shift",
+for _lab in ["tbl-aasl37a-summary", "eq-aasl37a-shift",
              "eq-aasl37a-amp"]:
     chk(("{#" + _lab + "}") in TEXT, "ラベルがある: " + _lab)
     chk(TEXT.count("@" + _lab) >= 1, "本文から参照していない: " + _lab)
@@ -318,31 +311,33 @@ chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-3-7a-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-3-7a-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-3-7a-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-3-7a-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-3-7a-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-3-7a-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-3-7a-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) $y = \\\\sin x$ and $y = \\\\cos x$", "図(a) の題")
-in_fig("both repeat every $2\\\\pi$ and stay between ", "図(a) の説明")
-in_fig("(b) $y = \\\\tan x$", "図(b) の題")
+in_fig("$y = \\\\sin x$ and $y = \\\\cos x$", "図(a) の題")
+in_fig("$y = \\\\tan x$", "図(b) の題")
 in_fig("repeats every $\\\\pi$", "図(b) の周期")
 in_fig("asymptote", "図(b) の漸近線")
-in_fig("no largest or smallest value; breaks where ", "図(b) の説明")
-in_text("(a) The graphs of $y = \\sin x$ and $y = \\cos x$ have the same shape",
-        "キャプションが (a) を説明")
-in_text("(b) The graph of $y = \\tan x$ repeats every $\\pi$", "キャプションが (b) を説明")
 
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-7a.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/03-geometry/aasl-3-7a.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-3-6.qmd") < DRAFT.index("aasl-3-7a.qmd"), "並びが 3.6 → 3.7a")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-7a.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -361,7 +356,10 @@ for _t in ["| amplitude |", "| period |", "| asymptote |"]:
 # --- period と amplitude の定義をていねいにした -------------------------
 in_text("すべての $x$ で $f(x + p) = f(x)$ となる、**いちばん小さい正の数** $p$。",
         "period は最小の正の数")
-in_text("（$1$ 周期ぶんの最大値 $-$ $1$ 周期ぶんの最小値）$\\div 2$", "amplitude は 1 周期ぶん")
+in_text("- **amplitude**（振幅）… 波の形のグラフで、"
+        "（最大値 $-$ 最小値）$\\div 2$。上下の振れ幅の半分です。",
+        "amplitude の定義")
+not_in_text("$1$ 周期ぶんの最大値", "「1 周期ぶんの」は外した")
 not_in_text("**period**（周期）… 同じ形がくり返される $x$ の幅。", "ゆるい定義は消した")
 # 定義域を切ると (max - min)/2 が amplitude と合わなくなる例
 chk(sp.maximum(sp.sin(X), X, sp.Interval(0, PI / 2)) == 1
@@ -403,9 +401,9 @@ eq(sp.sin(PI) / sp.cos(PI), 0, "tan π = 0")
 # --- 例題4(c) を単位円と直線 y = x にした -------------------------------
 in_text("[Find the number of points at which the two graphs meet in this interval.]{.q-en}",
         "例題4(c) は Find")
-in_text("つまり点が直線 $y = x$ の上にあるときです（[SL 3.5a](aasl-3-5a.qmd#line)）。",
+in_text("つまり点が直線 $y = x$ の上にあるときです（[SL 3.5](aasl-3-5.qmd#definitions)）。",
         "y = x の上")
-not_in_text("@fig-aasl37a-idea の (a) で、$0$ から $2\\pi$ の部分を見ます。実線と破線は",
+not_in_text("@fig-aasl37a-idea-a で、$0$ から $2\\pi$ の部分を見ます。実線と破線は",
             "図から数える言い方は消した")
 in_text("$\\sin\\dfrac{\\pi}{4} = \\cos\\dfrac{\\pi}{4} = \\dfrac{\\sqrt{2}}{2}$", "例題4(c) の検算")
 eq(sp.sin(PI / 4), sp.cos(PI / 4), "π/4 で一致")
@@ -490,7 +488,6 @@ in_text("but the period is the smallest positive such repeat", "model answer も
 in_text("and the period is the smallest positive repeat;", "解答例も positive")
 eq(sp.tan(X - PI), sp.tan(X), "負の幅でもくり返す")
 
-
 # ══════════════════════════════════════════════════════════
 # E09  演習1 — 完成した cos のグラフ
 # ══════════════════════════════════════════════════════════
@@ -501,6 +498,116 @@ _e09v = [sp.cos(_v) for _v in _e09t]
 chk(_e09v == [1, 0, -1, 0, 1], "E09 表の値は 1, 0, -1, 0, 1")
 chk(max(_e09v) == 1 and min(_e09v) == -1, "E09 上下の幅は -1 から 1")
 chk(_e09v[0] == 1 and _e09v[4] == 1, "E09 両端がどちらも最大")
+
+# ══════════════════════════════════════════════════════════
+# 表 1 からは「図」の列を外した（2026-10-05）
+# ══════════════════════════════════════════════════════════
+_ls = TEXT.split(chr(10))
+_ci = [i for i, l in enumerate(_ls)
+       if l.startswith(": ") and "{#tbl-aasl37a-summary}" in l]
+chk(len(_ci) == 1, "tbl-aasl37a-summary がある")
+_e = _ci[0]
+while not _ls[_e].startswith("|"):
+    _e -= 1
+_s = _e
+while _s > 0 and _ls[_s - 1].startswith("|"):
+    _s -= 1
+chk(_ls[_s].rstrip().endswith("period |"), "最後の列は period")
+chk(not _ls[_s].rstrip().endswith("図 |"), "図の列はない")
+_rows = _ls[_s + 2:_e + 1]
+chk(len(_rows) == 3, "3 行ある")
+for _r in _rows:
+    chk(_r.count("|") == 5, "1 行は 4 列: " + _r[:24])
+    chk("@fig-" not in _r, "行に図の参照はない: " + _r[:24])
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 4. amplitude と period {#amplitude}', "見出しの英語: 4. amplitude と period")
+in_text('### 6. domain and range（定義域と値域） {#range}', "見出しの英語: 6. domain and range（定義域と値域")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'both repeat every $2\\\\pi$ and ',
+    'no largest or smallest value; ',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:30])
+in_text('**幅 $2\\pi$ でくり返し**、**値は $-1$ 以上 $1$ 以下**です。', "その内容は本文にある")
+in_text('- **最大値も最小値もありません。**', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：第 6 節（かくときの手順）を削除し、言い方を直した
+# ══════════════════════════════════════════════════════════
+in_text("- $y = \\sin x$、$y = \\cos x$、$y = \\tan x$ の**グラフ**をかける。",
+        "「形」ではなく「グラフ」")
+not_in_text("の**形**をかける", "「形をかける」は残っていない")
+in_text("いちばん狭いものです。**最大値または最小値が起こる間隔**と"
+        "見てもよいです。", "period は 1 つの箇条書きにまとめた")
+not_in_text("です。\n- **最大値または最小値が起こる間隔**",
+            "別の箇条書きにはしない")
+not_in_text("### 6. かくときの手順", "第 6 節の見出しは無い")
+not_in_text("{#sketch}", "#sketch は無い")
+not_in_text("tbl-aasl37a-cos", "cos の 5 点の表は無い")
+not_in_text("[第 6 節](#sketch)", "第 6 節への案内も無い")
+_idea7 = [int(m) for m in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
+chk(_idea7 == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea7}")
+in_text("### 6. domain and range（定義域と値域） {#range}", "第 7 節 → 第 6 節")
+# period の意味を、式でも確かめる
+_x7 = sp.Symbol("x7", real=True)
+eq(sp.sin(_x7 + 2 * PI), sp.sin(_x7), "sin の period は 2π")
+eq(sp.cos(_x7 + 2 * PI), sp.cos(_x7), "cos の period は 2π")
+eq(sp.simplify(sp.tan(_x7 + PI) - sp.tan(_x7)), 0, "tan の period は π")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：演習 1・演習 3 の図から説明文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+_F71 = open(os.path.join(HERE, "make_aasl_3_7a_ex1.py"), encoding="utf-8").read()
+_F73 = open(os.path.join(HERE, "make_aasl_3_7a_ex3.py"), encoding="utf-8").read()
+chk("plot the five values" not in _F71, "演習 1 の図に説明の文を書いていない")
+chk("three pieces on" not in _F73, "演習 3 の図に説明の文を書いていない")
+chk("halves of a branch" not in _F73, "演習 3 の図に説明の文を書いていない（2）")
+chk("ax.set_ylim(-YMAX - 0.35, YMAX + 0.85)" in _F73, "演習 3 の図の上の余白を詰めた")
+# 絵を指す注記・部品の名前は残す
+chk("zeros at $0$" in _F73, "零点の注記は残す")
+chk("tan x" in _F73, "y = tan x のラベルは残す")
+# 外した内容は、解説・解答例にある
+in_text("点を先に打ってから、なめらかにつなぎます。", "なめらかにつなぐのは解説にある")
+in_text("**最大点を $1$ つで済ませないでください。** 両端の $2$ 点とも最大点です。",
+        "両端が最大点なのは解説にある")
+in_text("**指定された区間では、$3$ つの部分になります。** まん中は枝が丸ごと $1$ 本、"
+        "左と右はそれぞれ枝の半分です。", "3 つの部分は解説にある")
+in_text("$$\\text{period} = \\pi$$", "period = π は解答例にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+in_text("- **$\\tan x = 0$ になるのは $\\sin x = 0$ のとき**で、"
+        "つまり $x = 0$、$\\pm\\pi$、$\\pm 2\\pi$、… です。",
+        "tan x = 0 は第 5 節の箇条書きの中")
+chk(sp.tan(0) == 0 and sp.tan(PI) == 0 and sp.tan(2 * PI) == 0,
+    "tan は 0、π、2π で 0")
+chk(sp.sin(0) == 0 and sp.sin(PI) == 0, "そこでは sin も 0")
 
 print()
 print("OK", OK, "/ NG", NG)

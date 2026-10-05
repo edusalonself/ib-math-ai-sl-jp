@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """AA SL 4.9 のページを検算する。
 
-    python3 figs/aa-sl/check_aasl_4_6a.py
+    python3 figs/aa-sl/check_aasl_4_6.py
 """
 import glob
 import os
@@ -23,7 +23,6 @@ FIGCODE = FIG.split('"""', 2)[-1]
 OK = 0
 NG = 0
 
-
 def chk(cond, msg=""):
     global OK, NG
     if cond:
@@ -32,55 +31,42 @@ def chk(cond, msg=""):
         NG += 1
         print("NG :", msg)
 
-
 def eq(a, b, msg=""):
     chk(sp.simplify(sp.nsimplify(a) - sp.nsimplify(b)) == 0,
         "%s :: %s != %s" % (msg, a, b))
 
-
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: %s :: %s" % (msg, sub[:60]))
-
 
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: %s :: %s" % (msg, sub[:60]))
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
-
 BODY = TEXT.split("## Worked examples")[0]
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
 
-
 DICE = [(a, b) for a in range(1, 7) for b in range(1, 7)]
-
 
 def prob(space, pred):
     return F(sum(1 for s in space if pred(s)), len(space))
-
 
 from statistics import NormalDist as ND
 
 BIG = 10 ** 9
 
-
 def ncdf(a, b, mu, sd):
     _d = ND(mu, sd)
     return _d.cdf(b) - _d.cdf(a)
 
-
 def inv(area, mu, sd):
     return ND(mu, sd).inv_cdf(area)
 
-
 def near(v, target, tol=5e-4):
     return abs(v - target) < tol
-
 
 # ══════════════════════════════════════════════════════════
 # 1. ページの骨組み
@@ -137,9 +123,12 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-4-9-idea.svg){#fig-aasl49-idea width=100%}", "図の埋め込み")
-in_text("@fig-aasl49-idea (a)", "図 (a) の参照")
-in_text("@fig-aasl49-idea (b)", "図 (b) の参照")
+in_text("(img/aasl-4-9-idea-a.svg){#fig-aasl49-idea-a width=100%}", "図 (a) の埋め込み")
+in_text("(img/aasl-4-9-idea-b.svg){#fig-aasl49-idea-b width=100%}", "図 (b) の埋め込み")
+chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-9-idea.svg")),
+    "分割前の SVG は消してある")
+in_text("@fig-aasl49-idea-a", "図 (a) の参照")
+in_text("@fig-aasl49-idea-b", "図 (b) の参照")
 
 _quotes = re.findall(r"^> (.+)$", TEXT, re.M)
 chk(_quotes == ["For inverse normal calculations mean and standard deviation "
@@ -325,14 +314,12 @@ _EXPR = r"%s(?:\s*[+-]\s*%s)*" % (_TERM, _TERM)
 _STMT = re.compile(r"(?<![\d\w}])(%s(?:\s*=\s*%s)+)(?!\s*(?:[+-]|\\times|[\d.]))"
                    % (_EXPR, _EXPR))
 
-
 def _tonum(t):
     t = t.strip()
     m = re.fullmatch(r"\\[dt]?frac\{(-?\d+)\}\{(-?\d+)\}", t)
     if m:
         return sp.Rational(int(m.group(1)), int(m.group(2)))
     return sp.Rational(t)
-
 
 def _value(expr):
     """+ - かけ算だけの式を、かけ算を先に計算して評価する。"""
@@ -347,7 +334,6 @@ def _value(expr):
                 prod *= _tonum(_f.group(0))
             total += sign * prod
     return total
-
 
 _nstmt = 0
 for _m in _STMT.finditer(TEXT):
@@ -398,8 +384,6 @@ not_in_text("左半分だけで面積は $0.5$ なので、それをこえるに
 chk("面積が $0.5$ より大きければ $k > \\mu$、小さければ $k < \\mu$ です。"
     not in TEXT.split("## Worked examples")[0],
     "§6 の先出しは消した（GDC の節に検査として残すのは可）")
-not_in_text("a value with more than half the area to its left must lie above "
-            "the mean", "キャプションの先出しは消した")
 chk("$k$ is above $\\mu$ because the area exceeds" not in FIG,
     "図の説明から理由は消した")
 in_text("**この向きは、図をかけば目で確かめられます。**", "M3 言いかえ")
@@ -407,7 +391,11 @@ in_text("**この向きは、図をかけば目で確かめられます。**", "
 # --- m5 図の面積を 0.8 にした -----------------------------------------
 chk(near(inv(0.75, 250, 12), 258.094, 5e-3), "演習3 の Q3 は面積 0.75")
 chk(near(ncdf(-BIG, 0.8416212335729144, 0, 1), 0.8, 1e-9), "図は面積 0.8")
-in_fig("0.8 にしてある", "m5 図の但し書き")
+in_fig("(b) の面積は 0.8 にしてあります", "m5 図の但し書き")
+# 図が実際に面積 0.8 の z を使っている（invNorm(0.8) = 0.8416…）
+in_fig("K = 0.8416", "m5 図は面積 0.8 の z を使う")
+chk(abs(float(sp.N(sp.sqrt(2) * sp.erfinv(sp.Rational(3, 5))))
+        - 0.8416212335729144) < 1e-9, "m5 面積 0.8 の z の値")
 
 # --- m1 §2 の言い方 ---------------------------------------------------
 in_text("**「より小さい」と「以下」（同じく「より大きい」と「以上」）を区別する"
@@ -530,7 +518,6 @@ chk(near(30 + 5 * 4, 50, 1e-9), "30 + 5×4 = 50")
 in_text("*Every value with $X > 50$ also has $X > 45$", "m16")
 not_in_text("The region $X > 45$ contains all of $X > 50$", "読みにくい文は消した")
 
-
 # ══════════════════════════════════════════════════════════
 # E09・C09  正規曲線の図と、連続分布での P(X = a) = 0
 # ══════════════════════════════════════════════════════════
@@ -545,6 +532,69 @@ chk(sp.integrate(sp.exp(-_e09z ** 2 / 2) / sp.sqrt(2 * sp.pi),
 # 566 は 500 + z*40 で z ≈ 1.645
 chk(abs(float(500 + 40 * 1.6449) - 565.8) < 0.5, "E09 5% の境目は約 566")
 chk(500 < 566, "E09 右のすそは平均より右")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'the curve is symmetric a',
+    'about $99.7\\\\%$ of the v',
+    'given $k$, the shaded ar',
+    'given the area, finding ',
+]:
+    chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
+in_text('### 2. 曲線の性質 {#properties}', "その内容は本文にある")
+in_text('### 3. $68\\%$ / $95\\%$ / $99.7\\%$ のめやす {#empirical}', "その内容は本文にある")
+in_text('### 4. 確率は面積 {#calc}', "その内容は本文にある")
+in_text('### 6. inverse normal（逆正規計算） {#inverse}', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：演習の図から説明の文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+_F9T = open(os.path.join(HERE, "make_aasl_4_9_tail.py"), encoding="utf-8").read()
+chk("area to the left of the line is $0.95$" not in _F9T,
+    "図に説明の文を書いていない")
+chk("so the shaded tail is $0.05$" not in _F9T,
+    "図に説明の文を書いていない（2）")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-05：3σ は「99% 以上」と書く
+# ══════════════════════════════════════════════════════════
+in_text("| $\\mu - 3\\sigma$ から $\\mu + 3\\sigma$ | $99\\%$ 以上 |",
+        "表の 3σ の行")
+not_in_text("| $\\mu - 3\\sigma$ から $\\mu + 3\\sigma$ | 約 $99.7\\%$ |",
+            "前の書き方は消した")
+in_text("**標準偏差 $1$ 個分以内は約 $68\\%$、$2$ 個分以内は約 $95\\%$、"
+        "$3$ 個分以内は $99\\%$ 以上、と覚えておきましょう。**",
+        "覚え方")
+in_text("ただし、$3$ 個分の区間の**外側**の確率を見積もる例では、"
+        "約 $99.7\\%$ を使います。", "外側では 99.7% を使うと断る")
+# 99% 以上であることと、99.7% の位置
+chk(ncdf(-3, 3, 0, 1) > 0.99, "μ±3σ は 99% 以上")
+chk(near(ncdf(-3, 3, 0, 1), 0.9973, 5e-4), "その値は約 99.7%")
+chk(near(1 - ncdf(-3, 3, 0, 1), 0.0027, 5e-4), "外側は約 0.27%")
 
 print()
 print("OK", OK, "/ NG", NG)

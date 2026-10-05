@@ -9,7 +9,7 @@
     間違いをして、本当に別の値になることを確かめる
   * レビューで直した箇所には not_in_text の見張りを置く
   * 構成の不変量（★AA 版：`##` は 5 つ・例題 4・演習 10）を数える
-  * 登録先（_quarto-draft.yml、aa-sl/index.qmd、glossary-aa.qmd）を見る
+  * 登録先（_quarto.yml、aa-sl/index.qmd、glossary-aa.qmd）を見る
 """
 import glob
 import os
@@ -146,15 +146,6 @@ eq(sf("3.4", 6) + sf("5", 5), sf("3.9", 6), "3.4×10^6 + 5×10^5 = 3.9×10^6")
 eq(sf("5", 5), sf("0.5", 6), "5×10^5 = 0.5×10^6")
 eq(sf("34", 5) + sf("5", 5), sf("39", 5), "小さいほうにそろえると 39×10^5")
 eq(sf("39", 5), sf("3.9", 6), "39×10^5 = 3.9×10^6（同じ値）")
-# 見積もりの節
-eq(sp.Rational("7.9") * sp.Rational("4.2"), sp.Rational("33.18"), "7.9×4.2 = 33.18")
-eq(sf("7.9", -6) * sf("4.2", 3), sf("3.318", -2), "積は 3.318×10^-2")
-eq(sf("8", 0) * sf("4", 0), 32, "見積もりは 8×4 = 32")
-eq(sf("32", -3), sf("3.2", -2), "32×10^-3 = 3.2×10^-2（見積もりの桁）")
-a_est, k_est = parts(sf("3.318", -2))
-chk(k_est == -2, "正しい答えの桁は 10^-2")
-ne(sf("3.318", -3), sf("3.318", -2), "3.318×10^-3 は別の値")
-ne(sf("3.318", -1), sf("3.318", -2), "3.318×10^-1 は別の値")
 
 # ══════════════════════════════════════════════════════════
 # 2. 例題 1 — 書き直す
@@ -354,7 +345,7 @@ chk(sp.floor(sp.log(sf("1.2", -2) / sf("1.2", -39), 10)) == 37,
     "生徒の答えは 30 桁以上小さい（実際は 37 桁）")
 # (4) 「唯一の検算」は言いすぎだった
 not_in_text("これが**唯一の検算**", "唯一と書いていた（レビュー6）")
-in_text("**手早い検算**", "直した言い方")
+not_in_text("**手早い検算**", "見積もりの節といっしょに消えた")
 not_in_text("いちばん速い検算", "並ぶ／いちばん が噛み合っていなかった（レビュー2-B2）")
 # (5) 掛け算・割り算のあとの a は「よくある」
 not_in_text("割り算のあとは小さくなりすぎます。", "無条件だった断定（レビュー7）")
@@ -449,7 +440,6 @@ not_in_text("`E` を入力する専用のキー", "未検証の主張（レビ�
 in_text("A memory card holds two files", "演習 9 の文脈を変えた（レビュー2-F4）")
 chk(TEXT.count("Two samples have masses") == 1, "「試料の質量」は例題 3(c) だけ")
 eq(sf("4.8", -3) + sf("1.2", -3), sf("6", -3), "演習9(a) GB でも同じ数")
-in_fig("10 or bigger, so $k$ is positive", "図の注記も k=0 を含む言い方に（レビュー2-A1）")
 chk("bigger than 1, so" not in FIG, "図の古い注記が残っていない")
 
 # ══════════════════════════════════════════════════════════
@@ -477,8 +467,9 @@ for bad in ["nDeriv(", "nDerivative(", "solve("]:
     not_in_text(bad, "非 CAS にない命令")
 # GDC の callout は、すべて折りたたみで、Paper 2 で始まる
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
-chk(len(_gdc) == 3, f"GDC の折りたたみは 3 つ: {_gdc}")
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
+chk(len(_gdc) == 2, f"GDC の折りたたみは 2 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
 chk(len([h for h in _tips if h.startswith("解説")]) == 10,
@@ -501,7 +492,7 @@ _want = ["The idea", "Why it works", "Worked examples", "Common errors",
          "Exercises"]
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 _idea = [int(m) for m in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
-chk(_idea == list(range(1, 9)), f"The idea が 1..8 で連番: {_idea}")
+chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
 chk(TEXT.count("**検算") >= 14, f"検算が十分ある: {TEXT.count('**検算')}")
 chk("**確かめ。**" not in TEXT and "**確かめます。**" not in TEXT,
     "検算の見出しに「確かめ。」を使っていない")
@@ -552,11 +543,16 @@ for _f in set(re.findall(r"\]\((\.\./)?([a-z0-9/-]+\.qmd)", TEXT)):
 # ══════════════════════════════════════════════════════════
 # 10. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-1-1-scale.svg")
-chk(os.path.exists(SVG), "図がある: aasl-1-1-scale.svg")
-chk("](img/aasl-1-1-scale.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"),
-    "目視用の PNG は消してある（リポジトリに入れない）")
+SVG_A = os.path.join(BASE, "img", "aasl-1-1-scale-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-1-1-scale-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-1-1-scale.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-1-1-scale-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-1-1-scale-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
@@ -567,7 +563,7 @@ chk(abs(float(sp.log(sp.Rational(8, 1000000), 10)) - (-5.0969100)) < 1e-6,
 chk(abs((-5.0969100) - (-6)) > 0.9, "指数を使うと 0.9 目盛り（8 倍）ずれる")
 in_fig("$1 \\\\leq a < 10$", "図(b) の見出しが 1 <= a < 10（レビュー5）")
 # ★ 単位と「何の長さか」を、図の中で言い切る
-in_fig("(a) Lengths in metres", "図(a) の見出しに単位がある")
+in_fig("Lengths in metres", "図(a) の見出しに単位がある")
 for _lab in ["atom (width)", "red blood cell (width)", "person (height)",
              "Earth (diameter)", "Earth to Sun (distance)"]:
     in_fig(_lab, "図(a) のラベルが、何の長さかを言っている: " + _lab)
@@ -593,14 +589,15 @@ for leak in ["9.1", "6.24", "0.000306", "2500000", "3.7", "8.7", "6.24",
 # ══════════════════════════════════════════════════════════
 # 11. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
 chk("aa-sl/01-number-and-algebra/aasl-1-1.qmd" in DRAFT,
-    "_quarto-draft.yml に登録されている")
+    "_quarto.yml に登録されている")
 chk("glossary-aa.qmd" in DRAFT, "対訳表も登録されている")
 chk("- aa-sl/**/*.qmd" in DRAFT, "render の対象に入っている")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB and "aa-sl" not in PUB,
-    "公開用の _quarto.yml は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+chk("aa-hl" not in PUB, "AA HL はまだ下書きのまま")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("[SL 1.1 — Numbers in standard form](01-number-and-algebra/aasl-1-1.qmd)"
     in IDX, "index の「いま読めるページ」にある")
@@ -614,9 +611,9 @@ _m = re.search(r"いまのところ (\d+) ページです（全 (\d+) ページ�
 chk(_m is not None, "index に「いまのところ N ページ」がある")
 if _m:
     chk(int(_m.group(1)) == len(_written), "その N が、書けたページ数と合う")
-    chk(int(_m.group(2)) == 60, "全体は 60 ページ（_AA-SL-PLAN.md と同じ）")
+    chk(int(_m.group(2)) == 53, "全体は 53 ページ（_AA-SL-PLAN.md と同じ）")
 PLAN = open(os.path.join(ROOT, "_AA-SL-PLAN.md"), encoding="utf-8").read()
-chk("**ページ数：60**" in PLAN, "計画も 60 ページ")
+chk("**ページ数：53**" in PLAN, "計画も 53 ページ")
 GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for term in ["| standard form |", "| ordinary number |", "| integer |",
              "| significant figures |", "| order of magnitude |",
@@ -635,6 +632,68 @@ in_text("書き方だけで得点を落とすことがあるのは", "断定を�
 in_text("値が合っていても、ここで得点にならないことがあります。", "同上")
 not_in_text("ここで点を落とします。", "古い言い方は残っていない")
 not_in_text("いちばんもったいない失点", "同上")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 3. 普通の数と standard form の変換 {#convert}', "見出しの英語: 3. 普通の数と standard form の変換")
+in_text('### 6. 答えを standard form に直す {#tidy}', "見出しの英語: 6. 答えを standard form に直す")
+in_text('### 1. standard form（なぜ、この書き方が要るのか） {#why}', "見出しの英語: 1. standard form")
+in_text('### 7. 答案の書き方：電卓の表記は認められません {#notation}', "見出しの英語: 7. 答案の書き方")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図 (b) から説明の文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _s11 in ("10 or bigger, so", "less than 1, so"):
+    chk(_s11 not in FIG, "図に説明の文を書いていない: " + _s11)
+chk("ax2.set_xlim(0, 6.2)" in FIG, "図 (b) の右の余白を詰めた")
+# 外した内容は、本文の callout にある
+in_text("## 符号は、元の数が $10$ 以上か、$1$ 未満かで決まります", "符号の callout")
+in_text("- 元の数が **$10$ 以上** なら、$k$ は **正**", "10 以上なら正")
+in_text("- 元の数が **$1$ 未満** なら、$k$ は **負**", "1 未満なら負")
+in_text("- 元の数が **$1$ 以上 $10$ 未満** なら、$k$ は **$0$**", "1〜10 なら 0")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-01：第 7 節（桁で見積もる）を削除した
+# ══════════════════════════════════════════════════════════
+not_in_text("{#estimate}", "見積もりの節は消した")
+not_in_text("桁で見積もる", "その見出しも消した")
+not_in_text("order of magnitude", "本文に order of magnitude は残っていない")
+not_in_text("3.318", "見積もりの例は消した")
+not_in_text("## Paper 2 では、電卓の打ち間違いを、これで見つけます",
+            "その中の callout も消した")
+not_in_text("- 答えの桁が合っているかを、**見積もりで確かめられる**。",
+            "できるようになることからも外した")
+not_in_text("[第 8 節](#notation)", "第 8 節への参照は残っていない")
+in_text("[第 7 節](#notation)", "電卓の表記は第 7 節")
+# 対訳表には order of magnitude を残す（ほかのページでも使う語）
+chk("| order of magnitude |" in GLO, "対訳表には残してある")
 
 print()
 print("OK", OK, "/ NG", NG)

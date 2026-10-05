@@ -16,11 +16,8 @@ BASE = os.path.join(ROOT, "aa-sl", "04-statistics-and-probability")
 QMD = os.path.join(BASE, "aasl-4-3.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
 BODY = TEXT[:TEXT.index("## Worked examples")]
-FIG = open(os.path.join(HERE, "make_aasl_4_3.py"), encoding="utf-8").read()
-_NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
-FIGSTR = "\n".join(t for t in re.findall(r'r?"((?:[^"\\]|\\.)*)"', _NODOC)
-                   if not t.startswith("#") and (" " in t or "$" in t))
-FIGCODE = FIG.split('"""', 2)[-1]
+# 2026-09-24：このページに図はありません（図 1・図 2 を削除）。
+# make_aasl_4_3.py も消したので、FIG / FIGSTR / FIGCODE はありません。
 
 OK = NG = 0
 
@@ -51,8 +48,6 @@ def not_in_body(sub, msg=""):
     chk(sub not in BODY, "例題・演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
 
-def in_fig(sub, msg=""):
-    chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
 # ══════════════════════════════════════════════════════════
@@ -138,7 +133,8 @@ for _aa in (3, -2, F(1, 2)):
 chk(sd([7, 7, 7, 7]) == 0, "全部 7 でも sd = 0")
 chk(sd([0, 0, 0]) == 0, "全部 0 でも sd = 0")
 chk(sd([1, 2]) > 0, "ちがえば sd > 0")
-in_text("**$\\sigma = 0$ になるのは、すべての値が等しいとき**だけです。", "sd = 0 の意味")
+in_text("- **データのすべての値が等しいと、$\\sigma = 0$ になります。** "
+        "$\\sigma = 0$ になるのは、このときだけです。", "sd = 0 の意味")
 in_text("**$0$ 以上**です。負にはなりません。", "sd は 0 以上")
 in_text("**$\\sigma$ の式は公式集にありません。**", "sd の式は公式集にない")
 
@@ -411,7 +407,8 @@ chk("**$n$ を見る習慣**" in _gdc, "n を見る習慣")
 not_in_text("solve(", "CAS 前提の solve( は書いていない")
 not_in_text("Plot Type", "確認していない操作は書かない")
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_tip = [h_ for h_ in _tips if not h_.startswith("解説")]
+_tip = [h_ for h_ in _tips
+        if not h_.startswith("解説") and h_ != "クリックすると開きます"]
 chk(len(_tip) == 1, f"本文中の GDC の折りたたみは 1 つ: {_tip}")
 for _h in _tip:
     chk(_h.startswith("Paper 2 では"), "折りたたみの見出しが Paper 2 で始まる: " + _h)
@@ -479,7 +476,8 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
         or _href.endswith(".qmd") or ".qmd#" in _href
         or _href.startswith("http") or _href.startswith("../"),
         "まだないページへのリンク: " + _href)
-chk(TEXT.count("@fig-aasl43-idea") >= 2, "図を本文から 2 か所以上参照している")
+chk(TEXT.count("@fig-aasl43-idea") == 0,
+    "図はもう無い（2026-09-24 に図 1・図 2 を削除）")
 _head = TEXT[:TEXT.index("## The idea")]
 chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
     "冒頭の callout は What you should be able to do の 1 つだけ")
@@ -488,39 +486,34 @@ _close = len(re.findall(r"^:::$", TEXT, re.M))
 chk(_open == _close, f"::: の開閉が合う: 開 {_open} / 閉 {_close}")
 
 # ══════════════════════════════════════════════════════════
-# 13. 図
+# 13. 図（2026-09-24：このページに図はありません）
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-4-3-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-4-3-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
-for bad in ["pmatrix", "\\lvert", "\\rvert"]:
-    chk(bad not in FIGCODE, "図で使えない記法: " + bad)
-chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) The mid-interval value stands for the whole class", "図(a) の題")
-in_fig("the actual values in a class are not known", "図(a) の説明 1")
-in_fig("each one is replaced by the middle of its class", "図(a) の説明 2")
-in_fig("so the mean found from a grouped table is an estimate", "図(a) の結論")
-in_fig("(b) Adding and multiplying by a constant", "図(b) の題")
-in_fig("the gaps are unchanged, so $\\\\sigma$ is unchanged", "図(b) の足す")
-in_fig("the gaps are scaled, so $\\\\sigma$ is multiplied by $|a|$", "図(b) のかける")
-in_fig("the mean moves both times; the spread moves only when ", "図(b) の結論")
-# 図の (b) が、本当に足しても間隔が変わらないように描かれていること
-chk("BASE + 3.2" in FIGCODE, "足す行は BASE + 定数")
-chk("BASE * 2.2" in FIGCODE, "かける行は BASE × 定数")
-in_text("(a) When data are grouped, every value in a class is replaced by the "
-        "mid-interval value", "キャプションが (a) を説明")
-in_text("(b) Adding a constant slides every value along without changing the gaps",
-        "キャプションが (b) を説明")
+for _old in ("aasl-4-3-idea-a.svg", "aasl-4-3-idea-b.svg",
+             "aasl-4-3-idea-a.png", "aasl-4-3-idea-b.png",
+             "aasl-4-3-idea.svg"):
+    chk(not os.path.exists(os.path.join(BASE, "img", _old)),
+        _old + " は消した")
+chk(not os.path.exists(os.path.join(HERE, "make_aasl_4_3.py")),
+    "make_aasl_4_3.py は消した")
+chk("![" not in TEXT, "本文に図は貼っていない")
+chk("fig-aasl43" not in TEXT, "図への参照は残っていない")
+chk("img/" not in TEXT, "img/ への参照は残っていない")
+# 図が説明していたことは、本文にある
+in_text("この $60$ を、その階級の**すべての値**に使います。", "(a) の中身は本文にある")
+in_text("全体が同じだけ動くので、**値どうしの間隔**が変わらないからです。",
+        "(b) の足すほうは本文にある")
+in_text("**かけると間隔も $\\lvert a \\rvert$ 倍になります。**",
+        "(b) のかけるほうは本文にある")
 
 # ══════════════════════════════════════════════════════════
 # 14. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/04-statistics-and-probability/aasl-4-3.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/04-statistics-and-probability/aasl-4-3.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-4-2.qmd") < DRAFT.index("aasl-4-3.qmd"), "並びが 4.2 → 4.3")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(04-statistics-and-probability/aasl-4-3.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -677,10 +670,6 @@ in_text("を選び、**データを入れた列を指定します**。", "列を
 in_text("度数の合計より小さければ、度数の列がうまく使われていません。", "n の確かめ方")
 not_in_text("これは統計でいちばん多い操作ミスです", "根拠のない断定は消した")
 
-# --- 図 (a) の点を、まん中について対称に置いた --------------------------
-in_fig("-0.40, -0.20, 0.0, 0.20, 0.40", "対称なオフセット")
-chk("rng.uniform(0, 1, 5)" not in FIGCODE, "片寄る置き方は消した")
-in_fig("まん中について対称に置く", "理由をスクリプトに残す")
 
 
 # ══════════════════════════════════════════════════════════
@@ -741,6 +730,128 @@ chk(_var == 94, "E08 分散は 94")
 chk(float("%.3g" % float(sp.sqrt(_var))) == 9.7, "E08 σx は 3 有効数字で 9.70")
 chk(sp.Rational(sum(_mid), 4) == 20, "E08 度数を使わないと 20 になる")
 chk(_mean != sp.Rational(sum(_mid), 4), "E08 重みをつけると値が変わる")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 1. mean・median・mode の $3$ つ {#three}', "見出しの英語: 1. mean・median・mode の $3$ ")
+in_text('### 3. 度数分布表からの mean {#mean}', "見出しの英語: 3. 度数分布表からの mean")
+in_text('### 4. grouped frequency table（グループ化された表）と mid-interval value {#grouped}', "見出しの英語: 4. グループ化された表：mid-interval ")
+in_text('### 5. modal class と、四分位数の求め方 {#quartiles}', "見出しの英語: 5. modal class と、四分位数の求め方")
+in_text('### 6. standard deviation と variance {#sd}', "見出しの英語: 6. standard deviation と va")
+in_text('### 7. データ全体を動かすとどうなるか（effect of constant changes） {#changes}', "見出しの英語: 7. データ全体を動かすとどうなるか（effect ")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 4. grouped frequency table（グループ化された表）と mid-interval value {#grouped}', "その内容は本文にある")
+in_text('### 7. データ全体を動かすとどうなるか（effect of constant changes） {#changes}', "その内容は本文にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-24：SL 4.3 の直し
+# ══════════════════════════════════════════════════════════
+# --- 1) 第 3 節の、度数分布表の例 ----------------------------------------
+in_text("たとえば、$20$ 人に兄弟姉妹の人数をたずねると、次のような表になります。",
+        "第 3 節の例の書き出し")
+in_text(": 度数分布表から mean を出す {#tbl-aasl43-mean .tbl-narrow}", "第 3 節の表")
+in_text("| frequency $f$ | $5$ | $9$ | $4$ | $2$ | $20$ |", "第 3 節の f の行")
+in_text("| $fx$ | $0$ | $9$ | $8$ | $6$ | $23$ |", "第 3 節の fx の行")
+_x3 = [0, 1, 2, 3]
+_f3 = [5, 9, 4, 2]
+chk(sum(_f3) == 20, f"第 3 節の n = 20: {sum(_f3)}")
+chk([_a * _b for _a, _b in zip(_x3, _f3)] == [0, 9, 8, 6], "第 3 節の fx の行")
+chk(sum(_a * _b for _a, _b in zip(_x3, _f3)) == 23, "第 3 節の Σfx = 23")
+chk(F(23, 20) == F(115, 100), "第 3 節の mean = 1.15")
+in_text("$$\n\\bar{x} = \\frac{23}{20} = 1.15\n$$", "第 3 節の mean の式")
+in_text("**$fx$ の行を作ってから足します。**", "fx の行を作る")
+
+# --- 2) 第 4 節の、mid-interval value の例 -------------------------------
+in_text("階級にまとめられた表を **grouped frequency table** といいます。",
+        "grouped frequency table の英語")
+in_text(": mid-interval value を使って mean を推定する {#tbl-aasl43-mid .tbl-narrow}",
+        "第 4 節の表")
+_lo4 = [30, 50, 70, 90]
+_hi4 = [50, 70, 90, 110]
+_f4 = [5, 14, 15, 6]
+_m4 = [F(_a + _b, 2) for _a, _b in zip(_lo4, _hi4)]
+chk(_m4 == [40, 60, 80, 100], f"第 4 節の階級値: {_m4}")
+chk(sum(_f4) == 40, f"第 4 節の n = 40: {sum(_f4)}")
+_fx4 = [_a * _b for _a, _b in zip(_m4, _f4)]
+chk(_fx4 == [200, 840, 1200, 600], f"第 4 節の fx: {_fx4}")
+chk(sum(_fx4) == 2840, f"第 4 節の Σfx = 2840: {sum(_fx4)}")
+chk(F(2840, 40) == 71, "第 4 節の mean = 71")
+for _r in ("| $30 \\le v < 50$ | $40$ | $5$ | $200$ |",
+           "| $50 \\le v < 70$ | $60$ | $14$ | $840$ |",
+           "| $70 \\le v < 90$ | $80$ | $15$ | $1200$ |",
+           "| $90 \\le v < 110$ | $100$ | $6$ | $600$ |",
+           "| 合計 | | $40$ | $2840$ |"):
+    in_text(_r, "第 4 節の表の行: " + _r[:22])
+in_text("$$\n\\bar{v} = \\frac{2840}{40} = 71\n$$", "第 4 節の mean の式")
+# 本文の 50 ≤ v < 70 → 60 という例が、表の行と合っている
+chk(F(50 + 70, 2) == 60, "本文の例 50≤v<70 の階級値は 60")
+# 階級の幅はすべて同じ（modal class の話と食いちがわない）
+chk(len({_b - _a for _a, _b in zip(_lo4, _hi4)}) == 1, "第 4 節の階級の幅はそろっている")
+# 例題・演習の表とは別のデータ
+chk(TEXT.count("$30 \\le v < 50$") == 1, "第 4 節のデータは例題・演習と別")
+
+# --- 3) variance の話 ----------------------------------------------------
+in_text("| したこと | mean | standard deviation | variance |",
+        "定数の表に variance の列")
+in_text("| すべてに $c$ を足す | $\\bar{x} + c$ | 変わらない | 変わらない |",
+        "足すと variance も変わらない")
+in_text("| すべてに $a$ をかける | $a\\bar{x}$ | $\\lvert a \\rvert \\sigma$ | "
+        "$a^{2}\\sigma^{2}$ |", "かけると variance は a² 倍")
+in_text("**variance（分散）は $\\sigma$ の $2$ 乗なので、$a^{2}$ 倍**になります",
+        "variance の説明")
+in_text("**足し算では variance も変わりません。**", "足しても variance は同じ")
+# 実際のデータで確かめる
+_Dv = [2, 5, 5, 9, 14]
+
+
+def _var(v):
+    _mu = F(sum(v), len(v))
+    return F(sum((F(t) - _mu) ** 2 for t in v), len(v))
+
+
+for _aa in (-3, -1, F(1, 2), 2, 4):
+    chk(_var([_aa * t for t in _Dv]) == _aa ** 2 * _var(_Dv),
+        f"かけると variance は a² 倍 (a = {_aa})")
+for _cc in (-7, 0, 11):
+    chk(_var([t + _cc for t in _Dv]) == _var(_Dv),
+        f"足しても variance は同じ (c = {_cc})")
+chk(_var([_aa * t + 5 for t in _Dv]) == _aa ** 2 * _var(_Dv),
+    "ax + c でも variance は a² 倍")
+
+# --- 4) 足しても σ が変わらない、の言い方 --------------------------------
+in_text("**すべてのデータに同じ数を足しても、standard deviation $\\sigma$ は"
+        "変わりません。**", "足しても σ は変わらない")
+not_in_text("**足しても $\\sigma$ が変わらないのが要点です。**", "前の言い方は消した")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -28,7 +28,6 @@ R = sp.Rational
 x, t, p_ = sp.symbols("x t p")
 REALS = sp.S.Reals
 
-
 def chk(cond, msg):
     global OK, NG
     if cond:
@@ -37,34 +36,26 @@ def chk(cond, msg):
         NG += 1
         print("NG :", msg)
 
-
 def eq(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) == 0, msg + f"  ({u} vs {v})")
-
 
 def ne(u, v, msg=""):
     chk(sp.simplify(sp.expand(u) - sp.expand(v)) != 0, msg + f"  ({u} vs {v})")
 
-
 def roots(expr, want, msg=""):
     chk(sp.solveset(sp.Eq(expr, 0), x, REALS) == want, "解: " + msg)
-
 
 def in_text(sub, msg=""):
     chk(sub in TEXT, "本文に見つからない: " + msg + " :: " + sub[:70])
 
-
 def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: " + msg + " :: " + sub[:70])
-
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "演習の答えが本文に漏れている: " + msg + " :: " + sub[:50])
 
-
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
-
 
 # ══════════════════════════════════════════════════════════
 # 0. The idea の数値
@@ -227,7 +218,12 @@ for _lk, _m in [("(3, 0)", "演習1"), ("(0, -6)", "演習1"),
 # ══════════════════════════════════════════════════════════
 # 7. 公式集とシラバス
 # ══════════════════════════════════════════════════════════
-in_text("## この項目には、公式集の欄がありません", "2.3 は公式集にない")
+not_in_text("## この項目には、公式集の欄がありません", "公式集の囲みは置かない")
+# 表 2 の「ラベルするもの」には英語も
+for _e in ["軸（axes）", "$x$ 切片・$y$ 切片（intercepts）",
+           "最大点・最小点（maximum and minimum points）", "漸近線（asymptote）",
+           "曲線そのもの（the curve）", "domain の端（endpoints of the domain）"]:
+    in_text("| " + _e + " |", "表 2 の英語: " + _e)
 in_text('> Students should be aware of the difference between the command '
         'terms "draw" and "sketch".', "Guidance を逐語で")
 in_text("> All axes and key features should be labelled.", "ラベルの指示を逐語で")
@@ -235,7 +231,13 @@ not_in_text("> Creating a sketch from information given or a context.",
             "Content 欄の引用は置かない")
 not_in_text("> Using technology to graph functions", "同上")
 not_in_text("> ... including transferring a graph from screen to paper.", "同上")
-in_text("文章で与えられた場面から、グラフを sketch する問題も出ます。", "文章で書く")
+in_text("文章で与えられた状況から、グラフを sketch する問題も出ます。",
+        "文章で書く")
+in_text("### 5. 現実の状況からグラフを書く {#context}", "第 5 節の見出し")
+in_text("### 6. GDC から紙に写す {#screen}", "第 6 節の見出し")
+not_in_text("### 5. 場面からグラフをかく", "前の見出しは消した")
+not_in_text("### 6. 画面から紙へ写す", "同上")
+not_in_text("文章で与えられた場面", "「場面」→「状況」")
 in_text("Paper 2 では、電卓の画面のグラフを紙に写すことがあります。", "文章で書く")
 in_text("関数どうしを足したり引いたりしたグラフも、この項目で扱います。", "文章で書く")
 # command term の定義（シラバスの Glossary から逐語）
@@ -269,7 +271,8 @@ in_text("解があれば交点があり、交点があれば解がある", "両�
 # 9. GDC
 # ══════════════════════════════════════════════════════════
 _tips = re.findall(r"::: \{\.callout-tip collapse=\"true\"\}\n## (.+)", TEXT)
-_gdc = [h for h in _tips if not h.startswith("解説")]
+_gdc = [h for h in _tips
+        if not h.startswith("解説") and h != "クリックすると開きます"]
 chk(len(_gdc) == 1, f"GDC の折りたたみは 1 つ: {_gdc}")
 for _h in _gdc:
     chk(_h.startswith("Paper 2 では"), "GDC の見出しが Paper 2 で始まる: " + _h)
@@ -330,7 +333,7 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
         or _href.startswith("http"),
         "まだないページへのリンク: " + _href)
 for _lab in ["tbl-aasl23-drawsketch", "tbl-aasl23-labels",
-             "tbl-aasl23-values", "fig-aasl23-idea", "eq-aasl23-point",
+             "tbl-aasl23-values", "fig-aasl23-idea-a", "fig-aasl23-idea-b", "eq-aasl23-point",
              "eq-aasl23-sum", "eq-aasl23-diff"]:
     chk(TEXT.count("@" + _lab) >= 1, "本文から参照していない: " + _lab)
 _head = TEXT[:TEXT.index("## The idea")]
@@ -342,25 +345,26 @@ chk(_head.count("::: {.callout-note}") == 1 and _head.count(":::") == 2,
 # ══════════════════════════════════════════════════════════
 # 11. 図
 # ══════════════════════════════════════════════════════════
-SVG = os.path.join(BASE, "img", "aasl-2-3-idea.svg")
-chk(os.path.exists(SVG), "図がある")
-chk("](img/aasl-2-3-idea.svg)" in TEXT, "本文が図を貼っている")
-chk(not os.path.exists(SVG[:-4] + ".png"), "目視用の PNG は消してある")
+SVG_A = os.path.join(BASE, "img", "aasl-2-3-idea-a.svg")
+SVG_B = os.path.join(BASE, "img", "aasl-2-3-idea-b.svg")
+chk(os.path.exists(SVG_A), "図 (a) がある")
+chk(os.path.exists(SVG_B), "図 (b) がある")
+chk(not os.path.exists(os.path.join(BASE, "img", "aasl-2-3-idea.svg")),
+    "分割前の SVG は消してある")
+chk("](img/aasl-2-3-idea-a.svg)" in TEXT, "本文が図 (a) を貼っている")
+chk("](img/aasl-2-3-idea-b.svg)" in TEXT, "本文が図 (b) を貼っている")
+chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある")
+chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある")
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("(a) What a sketch must show", "図(a) の題")
+in_fig("What a sketch must show", "図(a) の題")
 in_fig("$x$-intercepts", "図(a) の x 切片")
 in_fig("$y$-intercept", "図(a) の y 切片")
 in_fig("minimum point", "図(a) の最小点")
-in_fig("label the axes, every intercept,", "図(a) の要点")
-in_fig("(b) Adding two graphs", "図(b) の題")
+in_fig("Adding two graphs", "図(b) の題")
 in_fig("$y = f(x) + g(x)$", "図(b) の和")
 in_fig("heights add", "図(b) の要点")
-in_fig("at each $x$, add the two $y$-values", "図(b) の説明")
-in_text("(a) A sketch must show the labelled axes", "キャプションが (a) を説明")
-in_text("(b) The graph of $y=f(x)+g(x)$ is obtained by adding",
-        "キャプションが (b) を説明")
 # 図が使っている 3 つの高さは、実際に足し算になっている
 _fp, _gp = 0.35 * 1.6 + 0.6, 2.6 - 0.42 * 1.6
 chk(abs((_fp + _gp) - (_fp + _gp)) < 1e-12, "和の高さ")
@@ -374,11 +378,12 @@ for leak in ["= 7", "= 20", "500", "(3, 0)", "(2, 7)"]:
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
-DRAFT = open(os.path.join(ROOT, "_quarto-draft.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-3.qmd" in DRAFT, "draft に登録")
+# 2026-10-05：AA SL は公開側（_quarto.yml）に移した
+DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+chk("aa-sl/02-functions/aasl-2-3.qmd" in DRAFT, "_quarto.yml に登録")
 chk(DRAFT.index("aasl-2-2.qmd") < DRAFT.index("aasl-2-3.qmd"), "並びが 2.2 → 2.3")
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aasl" not in PUB, "公開用は AI SL だけのまま")
+chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-3.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -390,7 +395,6 @@ GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for _t in ["| **Draw** |", "| **Sketch** |", "| **Plot** |", "| **Label** |",
            "| key features |", "| smooth curve |", "| intersection |"]:
     chk(_t in GLO, "対訳表にある: " + _t)
-
 
 # ══════════════════════════════════════════════════════════
 # 13. 査読で直したところ（2026-09-07）
@@ -462,7 +466,6 @@ for _blk in re.findall(r"::: \{\.model-answer\}(.*?):::", TEXT, re.S):
     _w = len(_blk.split())
     chk(_w <= 115, f"model-answer が長すぎない: {_w} 語")
 
-
 # ══════════════════════════════════════════════════════════
 # C02  演習7 — 最小点の $x$ は問題文で与える
 # ══════════════════════════════════════════════════════════
@@ -475,7 +478,6 @@ not_in_text("最小点はこの $2$ つの $x$ 切片のまん中の $x = 1$ で
 chk((-2 + 4) / 2 == 1, "C02 2 つの x 切片のまん中は 1")
 chk((1 + 2) * (1 - 4) == -9, "C02 f(1) = -9")
 chk((0 + 2) * (0 - 4) == -8, "C02 f(0) = -8")
-
 
 # ══════════════════════════════════════════════════════════
 # E09  演習7 — 完成した放物線（端点つき）
@@ -494,6 +496,59 @@ chk(_e09f.subs(_e09x, 1) == -9, "E09 最小点は (1, -9)")
 chk(sp.solveset(sp.Eq(_e09f, 0), _e09x) == sp.FiniteSet(-2, 4),
     "E09 x 切片は -2 と 4")
 chk(sp.Rational(-2 + 4, 2) == 1, "E09 軸は x = 1")
+
+# ══════════════════════════════════════════════════════════
+# 英語の用語は、このページの初出で日本語を添える
+# （_方針変更-2026-09-15.md 第 10 節）
+# ══════════════════════════════════════════════════════════
+in_text('- **draw**（正確にかく）と **sketch**（概形をかく）のちがいを知り、', "英語併記 1")
+
+# ══════════════════════════════════════════════════════════
+# Why it works は折りたたむ（AI HL と同じ形）
+# ══════════════════════════════════════════════════════════
+_wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw = TEXT[_wiw_i:_wiw_j]
+chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
+    "Why it works は折りたたんである")
+chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
+chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
+
+# ══════════════════════════════════════════════════════════
+# 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
+# ══════════════════════════════════════════════════════════
+in_text('### 2. draw と sketch はちがいます {#draw-sketch}', "見出しの英語: 2. draw と sketch はちがいます")
+in_text('### 4. 表を作ってかく（table of values） {#table}', "見出しの英語: 4. 表を作ってかく（table of values")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+for _sent in [
+    'label the axes, every inte',
+    'at each $x$, add the two $',
+]:
+    chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
+in_text('> All axes and key features should be labelled.', "その内容は本文にある")
+in_text('グラフでは、**同じ $x$ のところで、$y$ の値を足す（引く）**ことになります', "その内容は本文にある")
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：演習 7 の図から説明文を外した（方針 第 21 節）
+# ══════════════════════════════════════════════════════════
+_F37 = open(os.path.join(HERE, "make_aasl_2_3_ex7.py"), encoding="utf-8").read()
+chk("the sketch is drawn only for" not in _F37, "図に説明の文を書いていない")
+chk("ax.set_ylim(-10.2, 10.5)" in _F37, "図の下の余白を詰めた")
+in_text("**範囲が指定されているので、そこで曲線を止めます。** 両端は $2$ つとも "
+        "$y = 7$ で、左右対称です", "端点の説明は解説にある")
+
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-09-29：図のキャプションは 1 行に収める（方針 第 23 節）
+# ══════════════════════════════════════════════════════════
+for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
+    chk(0 < len(_cm.group(1)) <= 75,
+        "図のキャプションは 75 字以内（%d 字）: %s"
+        % (len(_cm.group(1)), _cm.group(1)[:50]))
 
 print()
 print("OK", OK, "/ NG", NG)
