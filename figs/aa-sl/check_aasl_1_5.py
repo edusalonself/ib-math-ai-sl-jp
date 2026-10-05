@@ -378,8 +378,8 @@ chk("(01-number-and-algebra/aasl-1-5.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
 _ticked = re.findall(r"^\| \*\*SL [0-9.]+[ab]?\*\* \|.*✅", IDX, re.M)
 chk(len(_ticked) == len(_written), f"✅ {len(_ticked)} と ページ {len(_written)}")
-_m = re.search(r"いまのところ (\d+) ページです（全 (\d+) ページ）", IDX)
-chk(_m is not None and int(_m.group(1)) == len(_written), "「いまのところ N」")
+_m = re.search(r"\*\*全 (\d+) ページを公開しています\*\*", IDX)
+chk(_m is not None and int(_m.group(1)) == len(_written), "「全 N ページ」")
 GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for t in ["| exponent |", "| base |", "| laws of exponents |",
           "| logarithm |", "| natural logarithm ($\\ln$) |",

@@ -462,15 +462,16 @@ chk(DRAFT.index("aasl-1-1.qmd") < DRAFT.index("aasl-1-2.qmd"),
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
 chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
-chk("[SL 1.2 — Arithmetic sequences and series]"
-    "(01-number-and-algebra/aasl-1-2.qmd)" in IDX, "index の一覧にある")
+chk("**[Arithmetic sequences and series]"
+    "(01-number-and-algebra/aasl-1-2.qmd)** ✅" in IDX,
+    "index の一覧にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
 _ticked = re.findall(r"^\| \*\*SL [0-9.]+[ab]?\*\* \|.*✅", IDX, re.M)
 chk(len(_ticked) == len(_written),
     f"✅ の数 {len(_ticked)} と、書けたページ数 {len(_written)} が合う")
-_m = re.search(r"いまのところ (\d+) ページです（全 (\d+) ページ）", IDX)
+_m = re.search(r"\*\*全 (\d+) ページを公開しています\*\*", IDX)
 chk(_m is not None and int(_m.group(1)) == len(_written),
-    "index の「いまのところ N ページ」が合う")
+    "index の「全 N ページを公開しています」が合う")
 GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for t in ["| sequence |", "| term |", "| arithmetic sequence |",
           "| common difference |", "| series |", "| sigma notation |",

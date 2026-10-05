@@ -429,13 +429,14 @@ chk(DRAFT.index("aasl-1-2.qmd") < DRAFT.index("aasl-1-3.qmd"), "並びが 1.2 �
 PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
 chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
-chk("[SL 1.3 — Geometric sequences and series]"
-    "(01-number-and-algebra/aasl-1-3.qmd)" in IDX, "index の一覧にある")
+chk("**[Geometric sequences and series]"
+    "(01-number-and-algebra/aasl-1-3.qmd)** ✅" in IDX,
+    "index の一覧にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
 _ticked = re.findall(r"^\| \*\*SL [0-9.]+[ab]?\*\* \|.*✅", IDX, re.M)
 chk(len(_ticked) == len(_written), f"✅ {len(_ticked)} と ページ {len(_written)}")
-_m = re.search(r"いまのところ (\d+) ページです（全 (\d+) ページ）", IDX)
-chk(_m is not None and int(_m.group(1)) == len(_written), "「いまのところ N」が合う")
+_m = re.search(r"\*\*全 (\d+) ページを公開しています\*\*", IDX)
+chk(_m is not None and int(_m.group(1)) == len(_written), "「全 N ページ」が合う")
 GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for t in ["| geometric sequence |", "| common ratio |", "| population growth |",
           "| spread of disease |"]:

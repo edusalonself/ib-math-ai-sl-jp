@@ -599,19 +599,20 @@ PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
 chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
 chk("aa-hl" not in PUB, "AA HL はまだ下書きのまま")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
-chk("[SL 1.1 — Numbers in standard form](01-number-and-algebra/aasl-1-1.qmd)"
-    in IDX, "index の「いま読めるページ」にある")
+chk("**全 53 ページを公開しています**" in IDX,
+    "index は公開用の案内になっている")
+chk("いま読めるページ" not in IDX, "進捗リストは外した")
 chk("**[Numbers in standard form](01-number-and-algebra/aasl-1-1.qmd)** ✅"
     in IDX, "index の一覧に ✅ が付いている")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
 _ticked = re.findall(r"^\| \*\*SL [0-9.]+[ab]?\*\* \|.*✅", IDX, re.M)
 chk(len(_ticked) == len(_written),
     f"✅ の数 {len(_ticked)} と、書けたページ数 {len(_written)} が合う")
-_m = re.search(r"いまのところ (\d+) ページです（全 (\d+) ページ）", IDX)
-chk(_m is not None, "index に「いまのところ N ページ」がある")
+_m = re.search(r"\*\*全 (\d+) ページを公開しています\*\*", IDX)
+chk(_m is not None, "index に「全 N ページを公開しています」がある")
 if _m:
     chk(int(_m.group(1)) == len(_written), "その N が、書けたページ数と合う")
-    chk(int(_m.group(2)) == 53, "全体は 53 ページ（_AA-SL-PLAN.md と同じ）")
+    chk(int(_m.group(1)) == 53, "全体は 53 ページ（_AA-SL-PLAN.md と同じ）")
 PLAN = open(os.path.join(ROOT, "_AA-SL-PLAN.md"), encoding="utf-8").read()
 chk("**ページ数：53**" in PLAN, "計画も 53 ページ")
 GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()

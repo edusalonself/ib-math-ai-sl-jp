@@ -522,8 +522,8 @@ chk("(04-statistics-and-probability/aasl-4-2.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
 _ticked = re.findall(r"^\| \*\*SL [0-9.]+[ab]?\*\* \|.*✅", IDX, re.M)
 chk(len(_ticked) == len(_written), f"✅ {len(_ticked)} と ページ {len(_written)}")
-_mm = re.search(r"いまのところ (\d+) ページです（全 (\d+) ページ）", IDX)
-chk(_mm is not None and int(_mm.group(1)) == len(_written), "「いまのところ N」")
+_mm = re.search(r"\*\*全 (\d+) ページを公開しています\*\*", IDX)
+chk(_mm is not None and int(_mm.group(1)) == len(_written), "「全 N ページ」")
 GLO = open(os.path.join(ROOT, "glossary-aa.qmd"), encoding="utf-8").read()
 for _t in ["| histogram |", "| cumulative frequency |",
            "| box and whisker diagram |", "| percentile |"]:

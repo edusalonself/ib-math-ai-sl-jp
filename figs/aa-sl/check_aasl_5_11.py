@@ -338,7 +338,7 @@ for _p, _s, _m in (
     (os.path.join(ROOT, "_quarto.yml"),
      'text: "SL 5.11 — Definite integrals and areas"', "サイドバー"),
     (os.path.join(ROOT, "aa-sl", "index.qmd"),
-     "[SL 5.11 — Definite integrals and areas](05-calculus/aasl-5-11.qmd)",
+     "**[Definite integrals and areas](05-calculus/aasl-5-11.qmd)** ✅",
      "索引"),
     (os.path.join(ROOT, "_AA-SL-PLAN.md"), "`aasl-5-11.qmd`", "計画"),
 ):
