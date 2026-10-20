@@ -49,7 +49,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-e0d50d79aa2efe4d0670ad8ef271a423.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-29c9c25664dcc4feb615e966b28f20fb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -164,6 +164,10 @@ window.Quarto = {
   <li class="nav-item">
     <a class="nav-link active" href="../../aa-sl/index.html" aria-current="page"> 
 <span class="menu-text">AA SL</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../aa-hl/index.html"> 
+<span class="menu-text">AA HL</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../glossary-ai.html"> 
@@ -601,21 +605,20 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#the-idea" id="toc-the-idea" class="nav-link" data-scroll-target="#the-idea">The idea</a>
   <ul class="collapse">
-  <li><a href="#when" id="toc-when" class="nav-link" data-scroll-target="#when">1. 二項分布が使える <span class="math inline">\(4\)</span> つの条件</a></li>
-  <li><a href="#notation" id="toc-notation" class="nav-link" data-scroll-target="#notation">2. <span class="math inline">\(X \sim B(n, p)\)</span> という書き方</a></li>
-  <li><a href="#pmf" id="toc-pmf" class="nav-link" data-scroll-target="#pmf">3. <span class="math inline">\(P(X = x)\)</span> の形</a></li>
-  <li><a href="#range" id="toc-range" class="nav-link" data-scroll-target="#range">4. 「以下」「以上」の言いかえ</a></li>
-  <li><a href="#mean" id="toc-mean" class="nav-link" data-scroll-target="#mean">5. mean and variance（平均と分散）</a></li>
-  <li><a href="#read" id="toc-read" class="nav-link" data-scroll-target="#read">6. 答えの読み方</a></li>
+  <li><a href="#when" id="toc-when" class="nav-link" data-scroll-target="#when">1. Conditions for a binomial distribution（二項分布が使える <span class="math inline">\(4\)</span> つの条件）</a></li>
+  <li><a href="#notation" id="toc-notation" class="nav-link" data-scroll-target="#notation">2. Notation（<span class="math inline">\(X \sim B(n, p)\)</span> という書き方）</a></li>
+  <li><a href="#pmf" id="toc-pmf" class="nav-link" data-scroll-target="#pmf">3. Binomial probabilities（<span class="math inline">\(P(X = x)\)</span> の式）</a></li>
+  <li><a href="#range" id="toc-range" class="nav-link" data-scroll-target="#range">4. Ranges of values（「以下」「以上」の言いかえ）</a></li>
+  <li><a href="#mean" id="toc-mean" class="nav-link" data-scroll-target="#mean">5. Mean and variance（平均と分散）</a></li>
+  <li><a href="#read" id="toc-read" class="nav-link" data-scroll-target="#read">6. Checking your answers（答えの見当をつける）</a></li>
   </ul></li>
   <li><a href="#why-it-works" id="toc-why-it-works" class="nav-link" data-scroll-target="#why-it-works">Why it works</a></li>
-  <li><a href="#worked-examples" id="toc-worked-examples" class="nav-link" data-scroll-target="#worked-examples">Worked examples</a></li>
   <li><a href="#common-errors" id="toc-common-errors" class="nav-link" data-scroll-target="#common-errors">Common errors</a></li>
   <li><a href="#using-your-gdc-ti-nspire-cx-ii" id="toc-using-your-gdc-ti-nspire-cx-ii" class="nav-link" data-scroll-target="#using-your-gdc-ti-nspire-cx-ii">Using your GDC (TI-Nspire CX II)</a>
   <ul class="collapse">
-  <li><a href="#gdc-pdf" id="toc-gdc-pdf" class="nav-link" data-scroll-target="#gdc-pdf">1. ちょうど <span class="math inline">\(x\)</span> 回：<code>binomPdf</code></a></li>
-  <li><a href="#gdc-cdf" id="toc-gdc-cdf" class="nav-link" data-scroll-target="#gdc-cdf">2. 範囲：<code>binomCdf</code></a></li>
-  <li><a href="#gdc-check" id="toc-gdc-check" class="nav-link" data-scroll-target="#gdc-check">3. 入力を確かめる</a></li>
+  <li><a href="#gdc-pdf" id="toc-gdc-pdf" class="nav-link" data-scroll-target="#gdc-pdf">1. Exactly <span class="math inline">\(x\)</span> successes（ちょうど <span class="math inline">\(x\)</span> 回：<code>binomPdf</code>）</a></li>
+  <li><a href="#gdc-cdf" id="toc-gdc-cdf" class="nav-link" data-scroll-target="#gdc-cdf">2. A range of values（範囲：<code>binomCdf</code>）</a></li>
+  <li><a href="#gdc-check" id="toc-gdc-check" class="nav-link" data-scroll-target="#gdc-check">3. Checking the input（入力を確かめる）</a></li>
   </ul></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   </ul></li>
@@ -654,7 +657,7 @@ window.Quarto = {
 <section id="the-idea" class="level2">
 <h2 class="anchored" data-anchor-id="the-idea">The idea</h2>
 <section id="when" class="level3">
-<h3 class="anchored" data-anchor-id="when">1. 二項分布が使える <span class="math inline">\(4\)</span> つの条件</h3>
+<h3 class="anchored" data-anchor-id="when">1. Conditions for a binomial distribution（二項分布が使える <span class="math inline">\(4\)</span> つの条件）</h3>
 <p><strong>binomial distribution</strong>（二項分布）は、<strong>同じ試行を決まった回数くり返して、成功の回数を数える</strong>ときの分布です。次の <span class="math inline">\(4\)</span> つがそろっている必要があります。</p>
 <div id="tbl-aasl48-cond" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -695,7 +698,7 @@ window.Quarto = {
 <p><strong>「成功」は、うれしいこととはかぎりません。</strong> 「不良品である」を成功と呼ぶこともあります。数えたいほうを成功にします。</p>
 </section>
 <section id="notation" class="level3">
-<h3 class="anchored" data-anchor-id="notation">2. <span class="math inline">\(X \sim B(n, p)\)</span> という書き方</h3>
+<h3 class="anchored" data-anchor-id="notation">2. Notation（<span class="math inline">\(X \sim B(n, p)\)</span> という書き方）</h3>
 <p>条件がそろったら、成功の回数 <span class="math inline">\(X\)</span> について</p>
 <p><span id="eq-aasl48-not"><span class="math display">\[
 X \sim B(n, p)
@@ -718,8 +721,8 @@ X \sim B(n, p)
 <p><strong><span class="math inline">\(X\)</span> のとりうる値は <span class="math inline">\(0, 1, 2, \ldots, n\)</span> です。</strong> ぜんぶ失敗の <span class="math inline">\(0\)</span> から、ぜんぶ成功の <span class="math inline">\(n\)</span> までです。</p>
 </section>
 <section id="pmf" class="level3">
-<h3 class="anchored" data-anchor-id="pmf">3. <span class="math inline">\(P(X = x)\)</span> の形</h3>
-<p><span class="math inline">\(n\)</span> 回のうち、ちょうど <span class="math inline">\(x\)</span> 回成功する確率は</p>
+<h3 class="anchored" data-anchor-id="pmf">3. Binomial probabilities（<span class="math inline">\(P(X = x)\)</span> の式）</h3>
+<p>二項分布では、成功の回数ごとの確率を <span class="math inline">\(1\)</span> つの式で表せます。<span class="math inline">\(n\)</span> 回のうち、ちょうど <span class="math inline">\(x\)</span> 回成功する確率は</p>
 <p><span id="eq-aasl48-pmf"><span class="math display">\[
 P(X = x) = \binom{n}{x} p^{x} (1 - p)^{n - x}
 \tag{2}\]</span></span></p>
@@ -736,7 +739,7 @@ P(X = x) = \binom{n}{x} p^{x} (1 - p)^{n - x}
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p><strong><a href="#eq-aasl48-pmf" class="quarto-xref">式&nbsp;2</a> そのものは、公式集の 4.8 の欄にはありません。</strong> <span class="math inline">\(\binom{n}{r}\)</span> は Topic 1 の <strong>1.9</strong>（binomial theorem）の欄にあります。</p>
+<p><strong><a href="#eq-aasl48-pmf" class="quarto-xref">式&nbsp;2</a> そのものは、公式集の 4.8 の欄にはありません。</strong> <span class="math inline">\(\binom{n}{r}\)</span> は Topic 1 の <strong>1.9</strong> の欄（<strong>binomial theorem</strong>、二項定理）にあります。</p>
 <p>試験では確率を GDC で出すので、この式を使って手で計算する必要はありません。<strong>式は、何が起きているかを理解するためのものです。</strong></p>
 </div>
 </div>
@@ -744,18 +747,19 @@ P(X = x) = \binom{n}{x} p^{x} (1 - p)^{n - x}
 <p><strong><span class="math inline">\(\binom{n}{x}\)</span> を忘れると、答えが小さくなりすぎます。</strong> <span class="math inline">\(p^{x}(1-p)^{n-x}\)</span> は「決まった順番で」起こる確率で、順番のちがいを数えていません。</p>
 </section>
 <section id="range" class="level3">
-<h3 class="anchored" data-anchor-id="range">4. 「以下」「以上」の言いかえ</h3>
+<h3 class="anchored" data-anchor-id="range">4. Ranges of values（「以下」「以上」の言いかえ）</h3>
+<p>問題文のことばを、<span class="math inline">\(X\)</span> の値の範囲に直します（<a href="#fig-aasl48-idea-b" class="quarto-xref">図&nbsp;1</a>）。</p>
 <div id="fig-aasl48-idea-b" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-aasl48-idea-b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/aasl-4-8-idea-b.svg" class="img-fluid figure-img" style="width:100.0%">
+<img src="img/aasl-4-8-idea-b.svg" class="img-fluid figure-img" style="width:80.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-aasl48-idea-b-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;1: A binomial distribution with <span class="math inline">\(p = \tfrac{1}{2}\)</span>
+図&nbsp;1: <span class="math inline">\(p = \tfrac{1}{2}\)</span> の二項分布です。
 </figcaption>
 </figure>
 </div>
-<p>問題文のことばを、<span class="math inline">\(X\)</span> の値の範囲に直します（<a href="#fig-aasl48-idea-b" class="quarto-xref">図&nbsp;1</a>）。</p>
+<p><a href="#fig-aasl48-idea-b" class="quarto-xref">図&nbsp;1</a> は <span class="math inline">\(X \sim B(6,\ 0.5)\)</span> で、<span class="math inline">\(P(X \le 2)\)</span> は <span class="math inline">\(x = 0, 1, 2\)</span> の棒を足したものです。</p>
 <div id="tbl-aasl48-words" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-aasl48-words-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -800,8 +804,8 @@ P(X = x) = \binom{n}{x} p^{x} (1 - p)^{n - x}
 <p><strong>境目を含むかどうかを、必ず確かめてください。</strong> <code>at most 2</code> は <span class="math inline">\(2\)</span> を含み、<code>fewer than 2</code> は含みません。</p>
 </section>
 <section id="mean" class="level3">
-<h3 class="anchored" data-anchor-id="mean">5. mean and variance（平均と分散）</h3>
-<p><span class="math inline">\(X \sim B(n, p)\)</span> のとき</p>
+<h3 class="anchored" data-anchor-id="mean">5. Mean and variance（平均と分散）</h3>
+<p>二項分布の平均と分散は、<span class="math inline">\(n\)</span> と <span class="math inline">\(p\)</span> だけで決まります。<span class="math inline">\(X \sim B(n, p)\)</span> のとき</p>
 <p><span id="eq-aasl48-mean"><span class="math display">\[
 E(X) = np
 \tag{3}\]</span></span></p>
@@ -819,97 +823,11 @@ E(X) = np
 </div>
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\(E(X) = np\)</span> と <span class="math inline">\(\mathrm{Var}(X) = np(1-p)\)</span> は、公式集の <strong>4.8</strong> の欄に <em>Mean</em> と <em>Variance</em> として載っています。</p>
-<p><strong>分散から標準偏差を出すときは、平方根を取ります。</strong> <span class="math inline">\(\sigma = \sqrt{np(1-p)}\)</span> です。この式は公式集にありませんが、<a href="../../aa-sl/04-statistics-and-probability/aasl-4-3.html#sd">SL 4.3</a> のとおり分散は標準偏差の <span class="math inline">\(2\)</span> 乗です。</p>
+<p><strong>variance</strong>（分散）<strong>から standard deviation</strong>（標準偏差）<strong>を出すときは、平方根を取ります。</strong> <span class="math inline">\(\sigma = \sqrt{np(1-p)}\)</span> です。この式は公式集にありませんが、<a href="../../aa-sl/04-statistics-and-probability/aasl-4-3.html#sd">SL 4.3</a> のとおり分散は標準偏差の <span class="math inline">\(2\)</span> 乗です。</p>
 </div>
 </div>
-<blockquote class="blockquote">
-<p>Not required: Formal proof of mean and variance.</p>
-</blockquote>
-<p><strong>証明は求められません。</strong> ただし、<span class="math inline">\(E(X) = np\)</span> が自然なことは、<a href="../../aa-sl/04-statistics-and-probability/aasl-4-5.html#expected">SL 4.5 の期待される回数</a>と同じ形だと気づけば分かります。</p>
+<p><strong>この <span class="math inline">\(2\)</span> つの式の証明は求められません。</strong> ただし、<span class="math inline">\(E(X) = np\)</span> が自然なことは、<a href="../../aa-sl/04-statistics-and-probability/aasl-4-5.html#expected">SL 4.5 の期待される回数</a>と同じ形だと気づけば分かります。</p>
 <p><strong><span class="math inline">\(n\)</span> を決めておくと、<span class="math inline">\(\mathrm{Var}(X)\)</span> は <span class="math inline">\(p = 0.5\)</span> のとき最大になります。</strong> <span class="math inline">\(p(1-p)\)</span> が <span class="math inline">\(p = 0.5\)</span> で最大だからです。</p>
-</section>
-<section id="read" class="level3">
-<h3 class="anchored" data-anchor-id="read">6. 答えの読み方</h3>
-<div id="fig-aasl48-idea-a" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-aasl48-idea-a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/aasl-4-8-idea-a.svg" class="img-fluid figure-img" style="width:100.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-aasl48-idea-a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;2: A binomial distribution with <span class="math inline">\(p\)</span> below <span class="math inline">\(\tfrac{1}{2}\)</span>
-</figcaption>
-</figure>
-</div>
-<p><strong>確率は <span class="math inline">\(0\)</span> 以上 <span class="math inline">\(1\)</span> 以下です。</strong> ここを外したら、入力がまちがっています。</p>
-<p><strong><span class="math inline">\(P(X = x)\)</span> がいちばん大きくなるのは、<span class="math inline">\(np\)</span> の近くです</strong>（<a href="#fig-aasl48-idea-a" class="quarto-xref">図&nbsp;2</a>）。答えが <span class="math inline">\(np\)</span> から遠い <span class="math inline">\(x\)</span> で大きな値になっていたら、疑ってください。</p>
-<p><strong><span class="math inline">\(E(X) = np\)</span> は「<span class="math inline">\(n\)</span> 回のうち期待される成功の回数」です。</strong> <a href="../../aa-sl/04-statistics-and-probability/aasl-4-5.html#expected">SL 4.5</a> の期待される回数と同じものです。</p>
-<p><strong><span class="math inline">\(p = 0.5\)</span> のときだけ、分布は左右対称になります。</strong> それ以外は、どちらかに寄ります。</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">警告</span>この節の確率の数値は、GDC で出します
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>シラバスは、二項分布の確率を<strong>GDC で求める</strong>としています。だから、<strong>確率の数値を出す問題は Paper 2 で出ます。</strong></p>
-<p><strong>単元全体が Paper 1 の対象外というわけではありません。</strong> 二項分布として扱ってよいかの判断、<span class="math inline">\(E(X) = np\)</span>、<span class="math inline">\(p = 0.5\)</span> のときの対称性、確率の式の形は、電卓なしでも問われます。</p>
-<p><strong>答えの見当も、手でつけられます。</strong> <span class="math inline">\(0 \le P \le 1\)</span>、<span class="math inline">\(np\)</span> の近くが大きい、<span class="math inline">\(E(X) = np\)</span> ——この <span class="math inline">\(3\)</span> つで、入力ミスのほとんどは見つかります。</p>
-</div>
-</div>
-</section>
-</section>
-<section id="why-it-works" class="level2">
-<h2 class="anchored" data-anchor-id="why-it-works">Why it works</h2>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ヒント</span>クリックすると開きます
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p><strong>なぜ、<span class="math inline">\(\binom{n}{x}\)</span> をかけるのでしょうか。</strong> <span class="math inline">\(n\)</span> 回のうち、成功が起こる回を選ぶ選び方が何通りあるかを数えているからです。</p>
-<p>たとえば <span class="math inline">\(n = 4\)</span>、<span class="math inline">\(x = 2\)</span> なら、成功する回の選び方は <span class="math inline">\(\binom{4}{2} = 6\)</span> 通りです。どの <span class="math inline">\(1\)</span> 通りも、確率は <span class="math inline">\(p^{2}(1-p)^{2}\)</span> で同じです。<strong>同じ確率のものが <span class="math inline">\(6\)</span> 通りあるので、足すとかけ算になります。</strong></p>
-<p><strong>「決まった順番で」の確率が <span class="math inline">\(p^{x}(1-p)^{n-x}\)</span> になるのは、独立だからです。</strong> 各回が独立なので、枝に沿ってかけられます（<a href="../../aa-sl/04-statistics-and-probability/aasl-4-6.html#independent">SL 4.6</a>）。成功が <span class="math inline">\(x\)</span> 回、失敗が <span class="math inline">\(n - x\)</span> 回あるので、この形になります。</p>
-<p><strong>もどさない場合は、この議論が崩れます。</strong> <span class="math inline">\(2\)</span> 回目の確率が <span class="math inline">\(1\)</span> 回目によって変わるので、<span class="math inline">\(p^{x}(1-p)^{n-x}\)</span> の形になりません。</p>
-<p><strong>なぜ、全部足すと <span class="math inline">\(1\)</span> になるのでしょうか。</strong> <span class="math inline">\(x = 0\)</span> から <span class="math inline">\(n\)</span> まで足すと</p>
-<p><span class="math display">\[
-\sum_{x=0}^{n} \binom{n}{x} p^{x}(1-p)^{n-x} = \bigl(p + (1-p)\bigr)^{n} = 1^{n} = 1
-\]</span></p>
-<p>です。これは <a href="../../aa-sl/01-number-and-algebra/aasl-1-9.html">SL 1.9 の binomial theorem</a> そのものです。<strong>二項定理の展開が、そのまま確率の合計になっています。</strong></p>
-<p><strong>なぜ、<span class="math inline">\(E(X) = np\)</span> が自然なのでしょうか。</strong> <span class="math inline">\(1\)</span> 回あたり平均 <span class="math inline">\(p\)</span> 回成功する、と考えるからです。<span class="math inline">\(n\)</span> 回くり返せば、平均は <span class="math inline">\(n\)</span> 倍の <span class="math inline">\(np\)</span> になります。</p>
-<p><strong>この見方は、<a href="../../aa-sl/04-statistics-and-probability/aasl-4-5.html#expected">SL 4.5 の期待される回数</a>と同じです。</strong> <span class="math inline">\(1\)</span> 回あたりの確率に回数をかける、という形が共通しています。</p>
-<p><strong><span class="math inline">\(E(X) = np\)</span> そのものには、独立性は要りません。</strong> <span class="math inline">\(1\)</span> 回ごとの成功確率がどれも <span class="math inline">\(p\)</span> なら、回どうしに関係があっても、成功回数の期待値は <span class="math inline">\(np\)</span> です。赤 <span class="math inline">\(2\)</span> 個・白 <span class="math inline">\(2\)</span> 個から、もどさずに <span class="math inline">\(2\)</span> 個取るとき、<span class="math inline">\(1\)</span> 回目も <span class="math inline">\(2\)</span> 回目も赤が出る確率は <span class="math inline">\(\dfrac{1}{2}\)</span> なので、赤の個数の期待値は <span class="math inline">\(2 \times \dfrac{1}{2} = 1\)</span> です。</p>
-<p><strong>独立性が要るのは、ここで <span class="math inline">\(X\)</span> を二項分布として扱うためです。</strong> <a href="#eq-aasl48-pmf" class="quarto-xref">式&nbsp;2</a> の確率の式と、<a href="#eq-aasl48-var" class="quarto-xref">式&nbsp;4</a> の <span class="math inline">\(\mathrm{Var}(X) = np(1-p)\)</span> は、<a href="#tbl-aasl48-cond" class="quarto-xref">表&nbsp;1</a> の <span class="math inline">\(4\)</span> 条件がそろって初めて使えます。</p>
-<p><strong>なぜ、<span class="math inline">\(\mathrm{Var}(X)\)</span> が <span class="math inline">\(p = 0.5\)</span> で最大になるのでしょうか。</strong> <span class="math inline">\(p(1-p)\)</span> を平方完成すると</p>
-<p><span class="math display">\[
-p(1-p) = -\left(p - \frac{1}{2}\right)^{2} + \frac{1}{4}
-\]</span></p>
-<p>なので、<span class="math inline">\(p = \dfrac{1}{2}\)</span> で最大値 <span class="math inline">\(\dfrac{1}{4}\)</span> を取ります。<strong>結果が読みにくいのは、五分五分のときです。</strong> <span class="math inline">\(p\)</span> が <span class="math inline">\(0\)</span> や <span class="math inline">\(1\)</span> に近いと、結果はほぼ決まっているので、ばらつきが小さくなります。</p>
-</div>
-</div>
-</div>
-</section>
-<section id="worked-examples" class="level2">
-<h2 class="anchored" data-anchor-id="worked-examples">Worked examples</h2>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>問題文は英語です。意味が理解できなかったら、問題文の下の「<strong>日本語訳</strong>」を開いてください。解説は日本語です。</p>
-<p><strong>確率の数値は GDC で出します（Paper 2）。</strong> それ以外の判断や式の形は、電卓なしでも進めます。<strong>GDC を使うのは例題 <span class="math inline">\(1\)</span>・<span class="math inline">\(2\)</span>・<span class="math inline">\(4\)</span>(c) です。例題 <span class="math inline">\(3\)</span> と例題 <span class="math inline">\(4\)</span>(a)(b)(d) は電卓なしで解けます。</strong>答えは<strong>有効数字 <span class="math inline">\(3\)</span> 桁</strong>（<span class="math inline">\(3\)</span> significant figures）で書きます。<span class="math inline">\(0.0781\)</span> のように、<span class="math inline">\(0\)</span> が続く数では小数の桁数が増えます。</p>
-</div>
-</div>
-</div>
 <div id="exm-aasl48-basic" class="theorem example">
 <p><span class="theorem-title"><strong>例題 1</strong></span> <span class="q-en">The random variable <span class="math inline">\(X\)</span> follows the distribution <span class="math inline">\(X \sim B(8,\ 0.25)\)</span>.</span></p>
 <p><strong>(a)</strong> <span class="q-en">Find <span class="math inline">\(P(X = 2)\)</span>.</span></p>
@@ -926,7 +844,18 @@ p(1-p) = -\left(p - \frac{1}{2}\right)^{2} + \frac{1}{4}
 <p><strong>(c)</strong> <span class="math inline">\(P(X \ge 3)\)</span> を求めなさい。</p>
 <p><strong>(d)</strong> <span class="math inline">\(E(X)\)</span> と <span class="math inline">\(\mathrm{Var}(X)\)</span> を求めなさい。</p>
 </details>
-<hr>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <code>binomPdf(8, 0.25, 2)</code> を使います（<a href="#gdc-pdf">GDC の節</a>）。</p>
 <p><span class="math display">\[
 P(X = 2) = 0.311 \ (3 \text{ s.f.})
@@ -967,66 +896,11 @@ E(X) = 8 \times 0.25 = 2
 </div>
 </div>
 </div>
-<div id="exm-aasl48-context" class="theorem example">
-<p><span class="theorem-title"><strong>例題 2</strong></span> <span class="q-en">A basketball player scores from a free throw with probability <span class="math inline">\(0.8\)</span>, independently of all other throws. She takes <span class="math inline">\(10\)</span> free throws. Let <span class="math inline">\(X\)</span> be the number she scores.</span></p>
-<p><strong>(a)</strong> <span class="q-en">Find <span class="math inline">\(P(X = 9)\)</span>.</span></p>
-<p><strong>(b)</strong> <span class="q-en">Find <span class="math inline">\(P(X \ge 8)\)</span>.</span></p>
-<p><strong>(c)</strong> <span class="q-en">Find <span class="math inline">\(E(X)\)</span>.</span></p>
-<p><strong>(d)</strong> <span class="q-en">Interpret your answer to part (c) in the context of the question.</span></p>
-<details class="jp-trans">
-<summary>
-日本語訳
-</summary>
-<p>あるバスケットボール選手は、フリースローを確率 <span class="math inline">\(0.8\)</span> で決めます。各回は他の回と独立です。この選手が <span class="math inline">\(10\)</span> 回フリースローを打ちます。決めた回数を <span class="math inline">\(X\)</span> とします。</p>
-<p><strong>(a)</strong> <span class="math inline">\(P(X = 9)\)</span> を求めなさい。</p>
-<p><strong>(b)</strong> <span class="math inline">\(P(X \ge 8)\)</span> を求めなさい。</p>
-<p><strong>(c)</strong> <span class="math inline">\(E(X)\)</span> を求めなさい。</p>
-<p><strong>(d)</strong> (c) の答えを、この問題の文脈で解釈しなさい。</p>
-</details>
-<hr>
-<p><span class="math inline">\(4\)</span> 条件を確かめます（<a href="#tbl-aasl48-cond" class="quarto-xref">表&nbsp;1</a>）。回数は <span class="math inline">\(10\)</span> 回で決まっていて、各回は決めるか外すかの <span class="math inline">\(2\)</span> 通り、確率はいつも <span class="math inline">\(0.8\)</span>、各回は独立です。だから <span class="math inline">\(X \sim B(10,\ 0.8)\)</span> です。</p>
-<p><strong>(a)</strong> <code>binomPdf(10, 0.8, 9)</code> を使います。</p>
-<p><span class="math display">\[
-P(X = 9) = 0.268 \ (3 \text{ s.f.})
-\]</span></p>
-<p><strong>(b)</strong> <span class="math inline">\(X \ge 8\)</span> は <span class="math inline">\(X = 8, 9, 10\)</span> です。<code>binomCdf(10, 0.8, 8, 10)</code> を使います。</p>
-<p><span class="math display">\[
-P(X \ge 8) = 0.678 \ (3 \text{ s.f.})
-\]</span></p>
-<p><strong>(c)</strong> <a href="#eq-aasl48-mean" class="quarto-xref">式&nbsp;3</a> を使います。</p>
-<p><span class="math display">\[
-E(X) = 10 \times 0.8 = 8
-\]</span></p>
-<p><strong>(d)</strong> <code>Interpret</code> なので、英語で書きます。</p>
-<div class="model-answer">
-<p><strong>試験ではこう書く</strong></p>
-<p><em>If the player took <span class="math inline">\(10\)</span> free throws many times over, she would score <span class="math inline">\(8\)</span> of them on average. It is not a promise that she scores exactly <span class="math inline">\(8\)</span> in any one set of <span class="math inline">\(10\)</span>: the number scored varies from set to set.</em></p>
-</div>
-<p>（この選手が <span class="math inline">\(10\)</span> 回のセットを何度もくり返せば、平均して <span class="math inline">\(8\)</span> 回決めることになる。<span class="math inline">\(1\)</span> セットでちょうど <span class="math inline">\(8\)</span> 回決まる保証ではない。決まる回数はセットごとにばらつく、という意味です。）</p>
-<p><strong>検算（(a) について、<span class="math inline">\(np\)</span> との位置で）。</strong> <span class="math inline">\(np = 8\)</span> なので、<span class="math inline">\(x = 9\)</span> は山のすぐ右です。<span class="math inline">\(0.268\)</span> という大きめの値は自然です ✓</p>
-<p><strong>検算（(b) について、(a) との大小で）。</strong> <span class="math inline">\(P(X \ge 8)\)</span> は <span class="math inline">\(P(X = 9)\)</span> を含むので、<span class="math inline">\(0.268\)</span> より大きいはずです。<span class="math inline">\(0.678 &gt; 0.268\)</span> ✓</p>
-<p><strong>検算（(b) について、余事象で）。</strong> <code>binomCdf(10, 0.8, 0, 7)</code> は <span class="math inline">\(0.3222\ldots\)</span> で、<span class="math inline">\(1 - 0.3222\ldots = 0.678\)</span> ✓ 別の入力でも同じ値になりました。</p>
-<p><strong>検算（(c) について、<span class="math inline">\(0\)</span> と <span class="math inline">\(n\)</span> の間か）。</strong> <span class="math inline">\(0 \le 8 \le 10\)</span> ✓ <span class="math inline">\(p\)</span> が大きいので、<span class="math inline">\(E(X)\)</span> が <span class="math inline">\(n\)</span> の近くになるのは自然です。</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><em><span class="math inline">\(X \sim B(10,\ 0.8)\)</span></em></p>
-<p><strong>(a)</strong> <span class="math display">\[P(X = 9) = 0.268\]</span></p>
-<p><strong>(b)</strong> <span class="math display">\[P(X \ge 8) = 0.678\]</span></p>
-<p><strong>(c)</strong> <span class="math display">\[E(X) = 10(0.8) = 8\]</span></p>
-<p><strong>(d)</strong> <em>over many sets of <span class="math inline">\(10\)</span> throws she would score <span class="math inline">\(8\)</span> on average; any one set of <span class="math inline">\(10\)</span> can give a different number</em></p>
 </div>
 </div>
 </div>
 <div id="exm-aasl48-model" class="theorem example">
-<p><span class="theorem-title"><strong>例題 3</strong></span> <span class="q-en">A gardener plants <span class="math inline">\(15\)</span> seeds from a large packet. The packet states that each seed germinates with probability <span class="math inline">\(0.8\)</span>, and the seeds behave independently. Let <span class="math inline">\(X\)</span> be the number of seeds that germinate.</span></p>
+<p><span class="theorem-title"><strong>例題 2</strong></span> <span class="q-en">A gardener plants <span class="math inline">\(15\)</span> seeds from a large packet. The packet states that each seed germinates with probability <span class="math inline">\(0.8\)</span>, and the seeds behave independently. Let <span class="math inline">\(X\)</span> be the number of seeds that germinate.</span></p>
 <p><strong>(a)</strong> <span class="q-en">Explain why <span class="math inline">\(X\)</span> can be modelled by a binomial distribution, and state the values of <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span>.</span></p>
 <p><strong>(b)</strong> <span class="q-en">Find <span class="math inline">\(P(X = 13)\)</span>.</span></p>
 <p><strong>(c)</strong> <span class="q-en">Find <span class="math inline">\(P(X \ge 13)\)</span>.</span></p>
@@ -1041,11 +915,23 @@ E(X) = 10 \times 0.8 = 8
 <p><strong>(c)</strong> <span class="math inline">\(P(X \ge 13)\)</span> を求めなさい。</p>
 <p><strong>(d)</strong> <span class="math inline">\(E(X)\)</span> と <span class="math inline">\(\mathrm{Var}(X)\)</span> を求めなさい。</p>
 </details>
-<hr>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <code>Explain why</code> なので、英語で理由を書きます。</p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>There is a fixed number of <span class="math inline">\(15\)</span> seeds, each seed either germinates or does not, the probability of germinating is stated to be <span class="math inline">\(0.8\)</span> for every seed, and the seeds are stated to behave independently. All four conditions hold, so <span class="math inline">\(X \sim B(15,\ 0.8)\)</span>, with <span class="math inline">\(n = 15\)</span> and <span class="math inline">\(p = 0.8\)</span>.</em></p>
+<p><em>There is a fixed number of <span class="math inline">\(15\)</span> seeds, each seed either germinates or does not, the probability of germinating is stated to be <span class="math inline">\(0.8\)</span> for every seed, and the seeds are stated to behave independently.</em></p>
+<p><em>All four conditions hold, so <span class="math inline">\(X \sim B(15,\ 0.8)\)</span>, with <span class="math inline">\(n = 15\)</span> and <span class="math inline">\(p = 0.8\)</span>.</em></p>
 </div>
 <p>（<span class="math inline">\(15\)</span> 個という決まった回数があり、各種は発芽するかしないかの <span class="math inline">\(2\)</span> 通りで、確率はどの種も <span class="math inline">\(0.8\)</span> と書かれており、種どうしは独立と書かれている。<span class="math inline">\(4\)</span> 条件がそろうので <span class="math inline">\(X \sim B(15,\ 0.8)\)</span> である、という意味です。）</p>
 <p><strong>(b)</strong> <code>binomPdf(15, 0.8, 13)</code> を使います。</p>
@@ -1083,6 +969,116 @@ E(X) = 15 \times 0.8 = 12, \qquad \mathrm{Var}(X) = 15 \times 0.8 \times 0.2 = 2
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</section>
+<section id="read" class="level3">
+<h3 class="anchored" data-anchor-id="read">6. Checking your answers（答えの見当をつける）</h3>
+<p>電卓で出した確率が正しそうかは、分布の形から見当をつけられます。</p>
+<div id="fig-aasl48-idea-a" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-aasl48-idea-a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/aasl-4-8-idea-a.svg" class="img-fluid figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-aasl48-idea-a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+図&nbsp;2: <span class="math inline">\(p\)</span> が <span class="math inline">\(\tfrac{1}{2}\)</span> より小さい二項分布です。
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-aasl48-idea-a" class="quarto-xref">図&nbsp;2</a> は <span class="math inline">\(X \sim B(7,\ 0.4)\)</span> で、棒の高さを全部足すと <span class="math inline">\(1\)</span> になります。</p>
+<p><strong>確率は <span class="math inline">\(0\)</span> 以上 <span class="math inline">\(1\)</span> 以下です。</strong> ここを外したら、入力がまちがっています。</p>
+<p><strong><span class="math inline">\(P(X = x)\)</span> がいちばん大きくなるのは、<span class="math inline">\(np\)</span> の近くです</strong>（<a href="#fig-aasl48-idea-a" class="quarto-xref">図&nbsp;2</a>）。答えが <span class="math inline">\(np\)</span> から遠い <span class="math inline">\(x\)</span> で大きな値になっていたら、疑ってください。</p>
+<p><strong><span class="math inline">\(E(X) = np\)</span> は「<span class="math inline">\(n\)</span> 回のうち期待される成功の回数」です。</strong> <a href="../../aa-sl/04-statistics-and-probability/aasl-4-5.html#expected">SL 4.5</a> の期待される回数と同じものです。</p>
+<p><strong><span class="math inline">\(p = 0.5\)</span> のときだけ、分布は左右対称になります。</strong> それ以外は、どちらかに寄ります。</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>この節の確率の数値は、GDC で出します
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>二項分布の確率は <strong>GDC で求める</strong>ものです。だから、<strong>確率の数値を出す問題は Paper 2 で出ます。</strong></p>
+<p><strong>単元全体が Paper 1 の対象外というわけではありません。</strong> 二項分布として扱ってよいかの判断、<span class="math inline">\(E(X) = np\)</span>、<span class="math inline">\(p = 0.5\)</span> のときの対称性、確率の式の形は、電卓なしでも問われます。</p>
+<p><strong>答えの見当も、手でつけられます。</strong> <span class="math inline">\(0 \le P \le 1\)</span>、<span class="math inline">\(np\)</span> の近くが大きい、<span class="math inline">\(E(X) = np\)</span> ——この <span class="math inline">\(3\)</span> つで、入力ミスのほとんどは見つかります。</p>
+</div>
+</div>
+<div id="exm-aasl48-context" class="theorem example">
+<p><span class="theorem-title"><strong>例題 3</strong></span> <span class="q-en">A basketball player scores from a free throw with probability <span class="math inline">\(0.8\)</span>, independently of all other throws. She takes <span class="math inline">\(10\)</span> free throws. Let <span class="math inline">\(X\)</span> be the number she scores.</span></p>
+<p><strong>(a)</strong> <span class="q-en">Find <span class="math inline">\(P(X = 9)\)</span>.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Find <span class="math inline">\(P(X \ge 8)\)</span>.</span></p>
+<p><strong>(c)</strong> <span class="q-en">Find <span class="math inline">\(E(X)\)</span>.</span></p>
+<p><strong>(d)</strong> <span class="q-en">Interpret your answer to part (c) in the context of the question.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>あるバスケットボール選手は、フリースローを確率 <span class="math inline">\(0.8\)</span> で決めます。各回は他の回と独立です。この選手が <span class="math inline">\(10\)</span> 回フリースローを打ちます。決めた回数を <span class="math inline">\(X\)</span> とします。</p>
+<p><strong>(a)</strong> <span class="math inline">\(P(X = 9)\)</span> を求めなさい。</p>
+<p><strong>(b)</strong> <span class="math inline">\(P(X \ge 8)\)</span> を求めなさい。</p>
+<p><strong>(c)</strong> <span class="math inline">\(E(X)\)</span> を求めなさい。</p>
+<p><strong>(d)</strong> (c) の答えを、この問題の文脈で解釈しなさい。</p>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(4\)</span> 条件を確かめます（<a href="#tbl-aasl48-cond" class="quarto-xref">表&nbsp;1</a>）。回数は <span class="math inline">\(10\)</span> 回で決まっていて、各回は決めるか外すかの <span class="math inline">\(2\)</span> 通り、確率はいつも <span class="math inline">\(0.8\)</span>、各回は独立です。だから <span class="math inline">\(X \sim B(10,\ 0.8)\)</span> です。</p>
+<p><strong>(a)</strong> <code>binomPdf(10, 0.8, 9)</code> を使います。</p>
+<p><span class="math display">\[
+P(X = 9) = 0.268 \ (3 \text{ s.f.})
+\]</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(X \ge 8\)</span> は <span class="math inline">\(X = 8, 9, 10\)</span> です。<code>binomCdf(10, 0.8, 8, 10)</code> を使います。</p>
+<p><span class="math display">\[
+P(X \ge 8) = 0.678 \ (3 \text{ s.f.})
+\]</span></p>
+<p><strong>(c)</strong> <a href="#eq-aasl48-mean" class="quarto-xref">式&nbsp;3</a> を使います。</p>
+<p><span class="math display">\[
+E(X) = 10 \times 0.8 = 8
+\]</span></p>
+<p><strong>(d)</strong> <code>Interpret</code> なので、英語で書きます。</p>
+<div class="model-answer">
+<p><strong>試験ではこう書く</strong></p>
+<p><em>If the player took <span class="math inline">\(10\)</span> free throws many times over, she would score <span class="math inline">\(8\)</span> of them on average.</em></p>
+<p><em>It is not a promise that she scores exactly <span class="math inline">\(8\)</span> in any one set of <span class="math inline">\(10\)</span>: the number scored varies from set to set.</em></p>
+</div>
+<p>（この選手が <span class="math inline">\(10\)</span> 回のセットを何度もくり返せば、平均して <span class="math inline">\(8\)</span> 回決めることになる。<span class="math inline">\(1\)</span> セットでちょうど <span class="math inline">\(8\)</span> 回決まる保証ではない。決まる回数はセットごとにばらつく、という意味です。）</p>
+<p><strong>検算（(a) について、<span class="math inline">\(np\)</span> との位置で）。</strong> <span class="math inline">\(np = 8\)</span> なので、<span class="math inline">\(x = 9\)</span> は分布のいちばん高いところのすぐ右です。<span class="math inline">\(0.268\)</span> という大きめの値は自然です ✓</p>
+<p><strong>検算（(b) について、(a) との大小で）。</strong> <span class="math inline">\(P(X \ge 8)\)</span> は <span class="math inline">\(P(X = 9)\)</span> を含むので、<span class="math inline">\(0.268\)</span> より大きいはずです。<span class="math inline">\(0.678 &gt; 0.268\)</span> ✓</p>
+<p><strong>検算（(b) について、余事象で）。</strong> <code>binomCdf(10, 0.8, 0, 7)</code> は <span class="math inline">\(0.3222\ldots\)</span> で、<span class="math inline">\(1 - 0.3222\ldots = 0.678\)</span> ✓ 別の入力でも同じ値になりました。</p>
+<p><strong>検算（(c) について、<span class="math inline">\(0\)</span> と <span class="math inline">\(n\)</span> の間か）。</strong> <span class="math inline">\(0 \le 8 \le 10\)</span> ✓ <span class="math inline">\(p\)</span> が大きいので、<span class="math inline">\(E(X)\)</span> が <span class="math inline">\(n\)</span> の近くになるのは自然です。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙に書くこと）
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em><span class="math inline">\(X \sim B(10,\ 0.8)\)</span></em></p>
+<p><strong>(a)</strong> <span class="math display">\[P(X = 9) = 0.268\]</span></p>
+<p><strong>(b)</strong> <span class="math display">\[P(X \ge 8) = 0.678\]</span></p>
+<p><strong>(c)</strong> <span class="math display">\[E(X) = 10(0.8) = 8\]</span></p>
+<p><strong>(d)</strong> <em>over many sets of <span class="math inline">\(10\)</span> throws she would score <span class="math inline">\(8\)</span> on average; any one set of <span class="math inline">\(10\)</span> can give a different number</em></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <div id="exm-aasl48-find" class="theorem example">
 <p><span class="theorem-title"><strong>例題 4</strong></span> <span class="q-en">The random variable <span class="math inline">\(X\)</span> follows the distribution <span class="math inline">\(X \sim B(12,\ p)\)</span> and <span class="math inline">\(E(X) = 4.8\)</span>.</span></p>
 <p><strong>(a)</strong> <span class="q-en">Find the value of <span class="math inline">\(p\)</span>.</span></p>
@@ -1099,7 +1095,18 @@ E(X) = 15 \times 0.8 = 12, \qquad \mathrm{Var}(X) = 15 \times 0.8 \times 0.2 = 2
 <p><strong>(c)</strong> <span class="math inline">\(P(X = 5)\)</span> を求めなさい。</p>
 <p><strong>(d)</strong> <span class="math inline">\(X = 12\)</span> という値が意外かどうかについて述べなさい。</p>
 </details>
-<hr>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <a href="#eq-aasl48-mean" class="quarto-xref">式&nbsp;3</a> を <span class="math inline">\(p\)</span> について解きます。</p>
 <p><span class="math display">\[
 12p = 4.8, \qquad p = 0.4
@@ -1115,13 +1122,14 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p><strong>(d)</strong> <code>Comment on</code> なので、英語で書きます。</p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>The mean is <span class="math inline">\(4.8\)</span> and the standard deviation is <span class="math inline">\(\sqrt{2.88} \approx 1.70\)</span>, so <span class="math inline">\(X = 12\)</span> lies more than four standard deviations above the mean. Its probability is <code>binomPdf</code><span class="math inline">\((12, 0.4, 12) \approx 1.7 \times 10^{-5}\)</span>, which is very small, so a value of <span class="math inline">\(12\)</span> would be surprising.</em></p>
+<p><em>The mean is <span class="math inline">\(4.8\)</span> and the standard deviation is <span class="math inline">\(\sqrt{2.88} \approx 1.70\)</span>, so <span class="math inline">\(X = 12\)</span> lies more than four standard deviations above the mean.</em></p>
+<p><em>Its probability is <code>binomPdf</code><span class="math inline">\((12, 0.4, 12) \approx 1.7 \times 10^{-5}\)</span>, which is very small, so a value of <span class="math inline">\(12\)</span> would be surprising.</em></p>
 </div>
 <p>（平均は <span class="math inline">\(4.8\)</span>、標準偏差は約 <span class="math inline">\(1.70\)</span> なので、<span class="math inline">\(X = 12\)</span> は平均より <span class="math inline">\(4\)</span> 標準偏差以上大きい。その確率は約 <span class="math inline">\(1.7 \times 10^{-5}\)</span> で非常に小さいので、<span class="math inline">\(12\)</span> という値は意外である、という意味です。）</p>
 <p><strong>検算（(a) について、もどします）。</strong> <span class="math inline">\(12 \times 0.4 = 4.8\)</span> ✓ 与えられた <span class="math inline">\(E(X)\)</span> と一致します。</p>
 <p><strong>検算（(a) について、範囲で）。</strong> <span class="math inline">\(0 \le 0.4 \le 1\)</span> ✓ ここを外したら、<span class="math inline">\(n\)</span> と <span class="math inline">\(E(X)\)</span> を取りちがえています。</p>
 <p><strong>検算（(b) について、大小で）。</strong> <span class="math inline">\(\mathrm{Var}(X) = 2.88\)</span> は <span class="math inline">\(np = 4.8\)</span> より小さいはずです ✓ <span class="math inline">\(1 - p = 0.6 &lt; 1\)</span> をかけているからです。</p>
-<p><strong>検算（(c) について、<span class="math inline">\(np\)</span> との位置で）。</strong> <span class="math inline">\(np = 4.8\)</span> なので、<span class="math inline">\(x = 5\)</span> は山のてっぺんのすぐ近くです。<span class="math inline">\(0.227\)</span> という大きめの値は自然です ✓</p>
+<p><strong>検算（(c) について、<span class="math inline">\(np\)</span> との位置で）。</strong> <span class="math inline">\(np = 4.8\)</span> なので、<span class="math inline">\(x = 5\)</span> は分布のいちばん高いところのすぐ近くです。<span class="math inline">\(0.227\)</span> という大きめの値は自然です ✓</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1136,6 +1144,46 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p><strong>(b)</strong> <span class="math display">\[\mathrm{Var}(X) = 12(0.4)(0.6) = 2.88\]</span></p>
 <p><strong>(c)</strong> <span class="math display">\[P(X = 5) = 0.227\]</span></p>
 <p><strong>(d)</strong> <em><span class="math inline">\(\sqrt{2.88} \approx 1.70\)</span>, so <span class="math inline">\(12\)</span> is over four standard deviations above the mean of <span class="math inline">\(4.8\)</span>, and <span class="math inline">\(P(X = 12) \approx 1.7 \times 10^{-5}\)</span>: it would be surprising</em></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="why-it-works" class="level2">
+<h2 class="anchored" data-anchor-id="why-it-works">Why it works</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>クリックすると開きます
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>なぜ、<span class="math inline">\(\binom{n}{x}\)</span> をかけるのでしょうか。</strong> <span class="math inline">\(n\)</span> 回のうち、成功が起こる回を選ぶ選び方が何通りあるかを数えているからです。</p>
+<p>たとえば <span class="math inline">\(n = 4\)</span>、<span class="math inline">\(x = 2\)</span> なら、成功する回の選び方は <span class="math inline">\(\binom{4}{2} = 6\)</span> 通りです。どの <span class="math inline">\(1\)</span> 通りも、確率は <span class="math inline">\(p^{2}(1-p)^{2}\)</span> で同じです。<strong>同じ確率のものが <span class="math inline">\(6\)</span> 通りあるので、足すとかけ算になります。</strong></p>
+<p><strong>「決まった順番で」の確率が <span class="math inline">\(p^{x}(1-p)^{n-x}\)</span> になるのは、独立だからです。</strong> 各回が独立なので、枝に沿ってかけられます（<a href="../../aa-sl/04-statistics-and-probability/aasl-4-6.html#independent">SL 4.6</a>）。成功が <span class="math inline">\(x\)</span> 回、失敗が <span class="math inline">\(n - x\)</span> 回あるので、この形になります。</p>
+<p><strong>もどさない場合は、この議論が崩れます。</strong> <span class="math inline">\(2\)</span> 回目の確率が <span class="math inline">\(1\)</span> 回目によって変わるので、<span class="math inline">\(p^{x}(1-p)^{n-x}\)</span> の形になりません。</p>
+<p><strong>なぜ、全部足すと <span class="math inline">\(1\)</span> になるのでしょうか。</strong> <span class="math inline">\(x = 0\)</span> から <span class="math inline">\(n\)</span> まで足すと</p>
+<p><span class="math display">\[
+\sum_{x=0}^{n} \binom{n}{x} p^{x}(1-p)^{n-x} = \bigl(p + (1-p)\bigr)^{n} = 1^{n} = 1
+\]</span></p>
+<p>です。これは <a href="../../aa-sl/01-number-and-algebra/aasl-1-9.html">SL 1.9 の binomial theorem</a> そのものです。<strong>binomial theorem（二項定理）の展開が、そのまま確率の合計になっています。</strong></p>
+<p><strong>なぜ、<span class="math inline">\(E(X) = np\)</span> が自然なのでしょうか。</strong> <span class="math inline">\(1\)</span> 回あたり平均 <span class="math inline">\(p\)</span> 回成功する、と考えるからです。<span class="math inline">\(n\)</span> 回くり返せば、平均は <span class="math inline">\(n\)</span> 倍の <span class="math inline">\(np\)</span> になります。</p>
+<p><strong>この見方は、<a href="../../aa-sl/04-statistics-and-probability/aasl-4-5.html#expected">SL 4.5 の期待される回数</a>と同じです。</strong> <span class="math inline">\(1\)</span> 回あたりの確率に回数をかける、という形が共通しています。</p>
+<p><strong><span class="math inline">\(E(X) = np\)</span> そのものには、独立性は要りません。</strong> <span class="math inline">\(1\)</span> 回ごとの成功確率がどれも <span class="math inline">\(p\)</span> なら、回どうしに関係があっても、成功回数の <strong>expected value</strong>（期待値）は <span class="math inline">\(np\)</span> です。赤 <span class="math inline">\(2\)</span> 個・白 <span class="math inline">\(2\)</span> 個から、もどさずに <span class="math inline">\(2\)</span> 個取るとき、<span class="math inline">\(1\)</span> 回目も <span class="math inline">\(2\)</span> 回目も赤が出る確率は <span class="math inline">\(\dfrac{1}{2}\)</span> なので、赤の個数の期待値は <span class="math inline">\(2 \times \dfrac{1}{2} = 1\)</span> です。</p>
+<p><strong>独立性が要るのは、ここで <span class="math inline">\(X\)</span> を二項分布として扱うためです。</strong> <a href="#eq-aasl48-pmf" class="quarto-xref">式&nbsp;2</a> の確率の式と、<a href="#eq-aasl48-var" class="quarto-xref">式&nbsp;4</a> の <span class="math inline">\(\mathrm{Var}(X) = np(1-p)\)</span> は、<a href="#tbl-aasl48-cond" class="quarto-xref">表&nbsp;1</a> の <span class="math inline">\(4\)</span> 条件がそろって初めて使えます。</p>
+<p><strong>なぜ、<span class="math inline">\(\mathrm{Var}(X)\)</span> が <span class="math inline">\(p = 0.5\)</span> で最大になるのでしょうか。</strong> <span class="math inline">\(p(1-p)\)</span> を平方完成すると</p>
+<p><span class="math display">\[
+p(1-p) = -\left(p - \frac{1}{2}\right)^{2} + \frac{1}{4}
+\]</span></p>
+<p>なので、<span class="math inline">\(p = \dfrac{1}{2}\)</span> で最大値 <span class="math inline">\(\dfrac{1}{4}\)</span> を取ります。<strong>結果が読みにくいのは、五分五分のときです。</strong> <span class="math inline">\(p\)</span> が <span class="math inline">\(0\)</span> や <span class="math inline">\(1\)</span> に近いと、結果はほぼ決まっているので、ばらつきが小さくなります。</p>
 </div>
 </div>
 </div>
@@ -1235,13 +1283,13 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 </div>
 <section id="gdc-pdf" class="level3">
-<h3 class="anchored" data-anchor-id="gdc-pdf">1. ちょうど <span class="math inline">\(x\)</span> 回：<code>binomPdf</code></h3>
+<h3 class="anchored" data-anchor-id="gdc-pdf">1. Exactly <span class="math inline">\(x\)</span> successes（ちょうど <span class="math inline">\(x\)</span> 回：<code>binomPdf</code>）</h3>
 <p>計算画面で <code>menu → Statistics → Distributions</code> を開き、二項分布の Pdf を選びます。</p>
 <p><strong>入れるのは <span class="math inline">\(3\)</span> つです。</strong> <code>binomPdf(n, p, x)</code> の順に、試行の回数・成功の確率・成功の回数を入れます。</p>
 <p><strong><span class="math inline">\(x\)</span> を <span class="math inline">\(0, 1, 2, \ldots\)</span> と変えて入れれば、どの <span class="math inline">\(x\)</span> が大きいかが見られます。</strong></p>
 </section>
 <section id="gdc-cdf" class="level3">
-<h3 class="anchored" data-anchor-id="gdc-cdf">2. 範囲：<code>binomCdf</code></h3>
+<h3 class="anchored" data-anchor-id="gdc-cdf">2. A range of values（範囲：<code>binomCdf</code>）</h3>
 <p>同じ <code>Distributions</code> の中の、二項分布の Cdf を選びます。</p>
 <p><strong>入れるのは <span class="math inline">\(4\)</span> つです。</strong> <code>binomCdf(n, p, lower, upper)</code> の順に、回数・確率・下端・上端を入れます。</p>
 <div id="tbl-aasl48-gdc" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1279,7 +1327,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p><strong><span class="math inline">\(P(X \ge 3)\)</span> は <span class="math inline">\(1 -\)</span> <code>binomCdf(n, p, 0, 2)</code> でも出ます。</strong> どちらでもかまいません。</p>
 </section>
 <section id="gdc-check" class="level3">
-<h3 class="anchored" data-anchor-id="gdc-check">3. 入力を確かめる</h3>
+<h3 class="anchored" data-anchor-id="gdc-check">3. Checking the input（入力を確かめる）</h3>
 <p><strong>まず <span class="math inline">\(np\)</span> を暗算します。</strong> 出た確率が <span class="math inline">\(np\)</span> の近くの <span class="math inline">\(x\)</span> で小さすぎたら、<span class="math inline">\(p\)</span> を <span class="math inline">\(0.04\)</span> と <span class="math inline">\(0.4\)</span> のように桁ちがいで入れていないかを見ます。</p>
 <p><strong><span class="math inline">\(0 \le P \le 1\)</span> を見ます。</strong> これを外したら、入力の順番がちがいます。</p>
 <p><strong><code>binomPdf</code> の <span class="math inline">\(x\)</span> を <span class="math inline">\(1\)</span> つずつ変えて、いちばん大きくなる <span class="math inline">\(x\)</span> を見ます。</strong> それが <span class="math inline">\(np\)</span> の近くでなければ、<span class="math inline">\(p\)</span> の入力を疑います。</p>
@@ -1294,9 +1342,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>各問題に、折りたたみが <span class="math inline">\(3\)</span> つ付いています。<strong>日本語訳</strong>、<strong>解答例</strong>（答案用紙に書くべきこと。英語です。英語の答案例が付くものもあります）、<strong>解説</strong>（なぜそうなるか。日本語です）。</p>
-<p>まず自分で解いて、次に解答例と見くらべてください。<strong>解説は、合わなかったときだけ開けば十分です。</strong></p>
-<p><strong>GDC を使うのは <span class="math inline">\(1\)</span>・<span class="math inline">\(3\)</span>・<span class="math inline">\(4\)</span>・<span class="math inline">\(7\)</span> です。</strong> <span class="math inline">\(2\)</span>・<span class="math inline">\(5\)</span>・<span class="math inline">\(6\)</span>・<span class="math inline">\(8\)</span>・<span class="math inline">\(9\)</span>・<span class="math inline">\(10\)</span> は電卓なしで解けます。</p>
+<p><strong>GDC を使うのは <span class="math inline">\(1\)</span>・<span class="math inline">\(3\)</span>・<span class="math inline">\(4\)</span>・<span class="math inline">\(7\)</span> です。</strong> <span class="math inline">\(2\)</span>・<span class="math inline">\(5\)</span>・<span class="math inline">\(6\)</span>・<span class="math inline">\(8\)</span>・<span class="math inline">\(9\)</span>・<span class="math inline">\(10\)</span> は電卓なしで解けます。 答えは<strong>有効数字 <span class="math inline">\(3\)</span> 桁</strong>（<span class="math inline">\(3\)</span> significant figures）で書きます。</p>
 </div>
 </div>
 </div>
@@ -1309,7 +1355,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p>確率変数 <span class="math inline">\(X\)</span> は <span class="math inline">\(X \sim B(6,\ 0.3)\)</span> に従います。<span class="math inline">\(P(X = 2)\)</span> と <span class="math inline">\(P(X \le 1)\)</span> を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1318,7 +1364,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em>binomPdf</em><span class="math inline">\((6, 0.3, 2)\)</span> <span class="math display">\[P(X = 2) = 0.324\]</span></p>
 <p><em>binomCdf</em><span class="math inline">\((6, 0.3, 0, 1)\)</span> <span class="math display">\[P(X \le 1) = 0.420\]</span></p>
@@ -1326,7 +1372,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1335,10 +1381,10 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\(1\)</span> つ目は <code>binomPdf</code>、<span class="math inline">\(2\)</span> つ目は <code>binomCdf</code> です（<a href="#gdc-pdf">GDC の節</a>）。<span class="math inline">\(X \le 1\)</span> は <span class="math inline">\(X = 0\)</span> と <span class="math inline">\(X = 1\)</span> です。</p>
-<p><strong>検算（<span class="math inline">\(np\)</span> との位置で）。</strong> <span class="math inline">\(np = 6 \times 0.3 = 1.8\)</span> です。<span class="math inline">\(x = 2\)</span> は山のすぐ近くなので、<span class="math inline">\(0.324\)</span> という大きめの値は自然です ✓</p>
+<p><strong>検算（<span class="math inline">\(np\)</span> との位置で）。</strong> <span class="math inline">\(np = 6 \times 0.3 = 1.8\)</span> です。<span class="math inline">\(x = 2\)</span> は分布のいちばん高いところのすぐ近くなので、<span class="math inline">\(0.324\)</span> という大きめの値は自然です ✓</p>
 <p><strong>検算（範囲で）。</strong> どちらも <span class="math inline">\(0\)</span> 以上 <span class="math inline">\(1\)</span> 以下です ✓</p>
 <p><strong>検算（別の入力で）。</strong> <span class="math inline">\(P(X \le 1)\)</span> は <code>binomPdf(6, 0.3, 0)</code> と <code>binomPdf(6, 0.3, 1)</code> を足しても出ます。<span class="math inline">\(0.117649 + 0.302526 = 0.420175\)</span> ✓</p>
 </div>
@@ -1355,7 +1401,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p>大量の部品のうち <span class="math inline">\(15\%\)</span> が不良品です。その中から <span class="math inline">\(20\)</span> 個の標本を取り、不良品の個数を <span class="math inline">\(X\)</span> とします。バッチは標本にくらべて十分大きいので、各部品は独立とみなしてよいものとします。二項モデルを用いて <span class="math inline">\(E(X)\)</span> と <span class="math inline">\(\mathrm{Var}(X)\)</span> を求めなさい。このような標本を調べる人にとって <span class="math inline">\(E(X)\)</span> の値が何を意味するかを解釈しなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1364,7 +1410,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em>treating the components as independent, <span class="math inline">\(X \sim B(20,\ 0.15)\)</span></em></p>
 <p><span class="math display">\[E(X) = 20(0.15) = 3\]</span></p>
@@ -1374,7 +1420,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1383,17 +1429,18 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>取り出しは、ほんとうは非復元です。</strong> <span class="math inline">\(1\)</span> 個取るごとに、残りの中の不良品の割合は少し変わります。だから <span class="math inline">\(X\)</span> の分布は、厳密には二項分布ではありません。</p>
-<p><strong>「バッチは標本にくらべて十分大きい」ので、その変化は無視できます。</strong> 問題文がそう断っているので、独立とみなして<strong>二項モデルで近似</strong>します（<a href="#tbl-aasl48-cond" class="quarto-xref">表&nbsp;1</a>）。<a href="#eq-aasl48-mean" class="quarto-xref">式&nbsp;3</a> と <a href="#eq-aasl48-var" class="quarto-xref">式&nbsp;4</a> を使います。</p>
+<p><strong>「バッチは sample（標本）にくらべて十分大きい」ので、その変化は無視できます。</strong> 問題文がそう断っているので、独立とみなして<strong>二項モデルで近似</strong>します（<a href="#tbl-aasl48-cond" class="quarto-xref">表&nbsp;1</a>）。<a href="#eq-aasl48-mean" class="quarto-xref">式&nbsp;3</a> と <a href="#eq-aasl48-var" class="quarto-xref">式&nbsp;4</a> を使います。</p>
 <p><strong><span class="math inline">\(E(X) = np = 3\)</span> は、非復元でも成り立ちます</strong>（<a href="#mean">第 5 節</a>）。いっぽう <strong><span class="math inline">\(\mathrm{Var}(X) = 2.55\)</span> は、独立とみなしたモデルでの値</strong>です。<span class="math inline">\(2\)</span> つを混同しないでください。</p>
 <p><strong>検算（範囲で）。</strong> <span class="math inline">\(0 \le 3 \le 20\)</span> ✓ <span class="math inline">\(E(X)\)</span> は <span class="math inline">\(0\)</span> と <span class="math inline">\(n\)</span> の間にあります。</p>
 <p><strong>検算（<span class="math inline">\(\mathrm{Var}(X)\)</span> の大小）。</strong> <span class="math inline">\(2.55 &lt; 3 = np\)</span> ✓ <span class="math inline">\(1 - p = 0.85 &lt; 1\)</span> をかけているので、そうなります。</p>
 <p><strong>検算（標準偏差で）。</strong> <span class="math inline">\(\sqrt{2.55} \approx 1.60\)</span> です。<span class="math inline">\(3 \pm 1.6\)</span> はおよそ <span class="math inline">\(1.4\)</span> から <span class="math inline">\(4.6\)</span> で、<span class="math inline">\(20\)</span> 個中の不良品の個数として自然な幅です ✓</p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>Over many samples of <span class="math inline">\(20\)</span> components, the mean number of faulty ones is <span class="math inline">\(3\)</span>. It does not say that every sample contains exactly <span class="math inline">\(3\)</span>: the number varies from sample to sample, and the standard deviation <span class="math inline">\(\sqrt{2.55} \approx 1.60\)</span> shows that values a little above or below <span class="math inline">\(3\)</span> are common.</em></p>
+<p><em>Over many samples of <span class="math inline">\(20\)</span> components, the mean number of faulty ones is <span class="math inline">\(3\)</span>.</em></p>
+<p><em>It does not say that every sample contains exactly <span class="math inline">\(3\)</span>: the number varies from sample to sample, and the standard deviation <span class="math inline">\(\sqrt{2.55} \approx 1.60\)</span> shows that values a little above or below <span class="math inline">\(3\)</span> are common.</em></p>
 </div>
 </div>
 </div>
@@ -1409,7 +1456,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p>公平なコインを <span class="math inline">\(12\)</span> 回投げ、表の回数を <span class="math inline">\(X\)</span> とします。<span class="math inline">\(P(X = 7)\)</span> と <span class="math inline">\(P(X \ge 7)\)</span> を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1418,7 +1465,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em><span class="math inline">\(X \sim B(12,\ 0.5)\)</span></em></p>
 <p><em>binomPdf</em><span class="math inline">\((12, 0.5, 7)\)</span> <span class="math display">\[P(X = 7) = 0.193\]</span></p>
@@ -1427,7 +1474,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1436,7 +1483,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>公平なコインなので <span class="math inline">\(p = 0.5\)</span>、<span class="math inline">\(n = 12\)</span> です。<span class="math inline">\(X \ge 7\)</span> は <code>binomCdf(12, 0.5, 7, 12)</code> です。</p>
 <p><strong>検算（対称性で）。</strong> <span class="math inline">\(p = 0.5\)</span> なので分布は左右対称です（<a href="#read">第 6 節</a>）。だから <span class="math inline">\(P(X \ge 7) = P(X \le 5)\)</span> になるはずです。<code>binomCdf(12, 0.5, 0, 5)</code> は <span class="math inline">\(0.387\)</span> ✓</p>
@@ -1456,7 +1503,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p>ある機械が部品を作り、そのうち <span class="math inline">\(4\%\)</span> が不良品です。各部品は互いに独立です。箱に <span class="math inline">\(25\)</span> 個の部品が入っています。不良品が <span class="math inline">\(2\)</span> 個未満である確率を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1465,15 +1512,16 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p><em>Let</em> <span class="math inline">\(X\)</span> <em>be the number of faulty components in the box.</em></p>
 <p><em><span class="math inline">\(X \sim B(25,\ 0.04)\)</span></em></p>
 <p><em>binomCdf</em><span class="math inline">\((25, 0.04, 0, 1)\)</span> <span class="math display">\[P(X \le 1) = 0.736\]</span></p>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1482,10 +1530,10 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><code>fewer than two</code> は <span class="math inline">\(X \le 1\)</span> です（<a href="#tbl-aasl48-words" class="quarto-xref">表&nbsp;2</a>）。<span class="math inline">\(2\)</span> は含みません。<span class="math inline">\(4\%\)</span> は <span class="math inline">\(p = 0.04\)</span> です。</p>
-<p><strong>検算（<span class="math inline">\(np\)</span> との位置で）。</strong> <span class="math inline">\(np = 25 \times 0.04 = 1\)</span> です。<span class="math inline">\(X \le 1\)</span> は山をまるごと含むので、<span class="math inline">\(0.5\)</span> より大きくなるはずです。<span class="math inline">\(0.736 &gt; 0.5\)</span> ✓</p>
+<p><strong>検算（<span class="math inline">\(np\)</span> との位置で）。</strong> <span class="math inline">\(np = 25 \times 0.04 = 1\)</span> です。<span class="math inline">\(X \le 1\)</span> は分布のいちばん高い部分をまるごと含むので、<span class="math inline">\(0.5\)</span> より大きくなるはずです。<span class="math inline">\(0.736 &gt; 0.5\)</span> ✓</p>
 <p><strong>検算（分けて足します）。</strong> <code>binomPdf(25, 0.04, 0)</code> は <span class="math inline">\(0.3604\)</span>、<code>binomPdf(25, 0.04, 1)</code> は <span class="math inline">\(0.3754\)</span> です。<span class="math inline">\(0.3604 + 0.3754 = 0.7358\)</span> ✓</p>
 <p><strong><span class="math inline">\(4\%\)</span> を <span class="math inline">\(4\)</span> と入れないでください。</strong> <span class="math inline">\(p\)</span> は <span class="math inline">\(0\)</span> と <span class="math inline">\(1\)</span> の間の数です（<a href="#notation">第 2 節</a>）。</p>
 </div>
@@ -1502,7 +1550,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p><span class="math inline">\(52\)</span> 枚の標準的なトランプから、<span class="math inline">\(5\)</span> 枚をもどさずに配ります。その <span class="math inline">\(5\)</span> 枚のうちハートの枚数を <span class="math inline">\(X\)</span> とします。<span class="math inline">\(X\)</span> が二項分布で表せるかどうかを説明しなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1511,14 +1559,14 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em>no; the cards are dealt without replacement, so the probability of a heart changes after each card and the trials are not independent</em></p>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1527,14 +1575,16 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div id="callout-29" class="callout-29-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\(4\)</span> 条件のうち、どれが崩れるかを名指しします（<a href="#tbl-aasl48-cond" class="quarto-xref">表&nbsp;1</a>）。回数は <span class="math inline">\(5\)</span> で決まっていて、結果も <span class="math inline">\(2\)</span> 通りですが、各回が独立ではありません。</p>
 <p><strong>検算（実際に変わるか）。</strong> <span class="math inline">\(1\)</span> 枚目がハートである確率は <span class="math inline">\(\dfrac{13}{52} = \dfrac{1}{4}\)</span> です。<span class="math inline">\(1\)</span> 枚目がハートだったとき、<span class="math inline">\(2\)</span> 枚目がハートである確率は <span class="math inline">\(\dfrac{12}{51}\)</span> で、<span class="math inline">\(\dfrac{1}{4}\)</span> とちがいます ✓</p>
-<p><strong>検算（大きな山なら）。</strong> もし <span class="math inline">\(52\)</span> 枚ではなく <span class="math inline">\(52000\)</span> 枚から <span class="math inline">\(5\)</span> 枚取るなら、<span class="math inline">\(\dfrac{12999}{51999}\)</span> は <span class="math inline">\(\dfrac{1}{4}\)</span> にとても近くなります ✓ 母集団が大きければ、二項分布で近似できます。</p>
+<p><strong>検算（カードがとても多ければ）。</strong> もし <span class="math inline">\(52\)</span> 枚ではなく <span class="math inline">\(52000\)</span> 枚から <span class="math inline">\(5\)</span> 枚取るなら、<span class="math inline">\(\dfrac{12999}{51999}\)</span> は <span class="math inline">\(\dfrac{1}{4}\)</span> にとても近くなります ✓ <strong>population</strong>（母集団）が大きければ、二項分布で近似できます。</p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>No.&nbsp;The cards are dealt without replacement, so the probability that a card is a heart depends on the cards already dealt: it is <span class="math inline">\(\dfrac{13}{52}\)</span> for the first card but <span class="math inline">\(\dfrac{12}{51}\)</span> for the second if the first was a heart. The trials are therefore not independent, so the binomial model does not apply.</em></p>
+<p><em>No.</em></p>
+<p><em>The cards are dealt without replacement, so the probability that a card is a heart depends on the cards already dealt: it is <span class="math inline">\(\dfrac{13}{52}\)</span> for the first card but <span class="math inline">\(\dfrac{12}{51}\)</span> for the second if the first was a heart.</em></p>
+<p><em>The trials are therefore not independent, so the binomial model does not apply.</em></p>
 </div>
 </div>
 </div>
@@ -1550,7 +1600,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p>確率変数 <span class="math inline">\(X\)</span> は <span class="math inline">\(X \sim B(n,\ 0.6)\)</span> に従い、<span class="math inline">\(E(X) = 18\)</span> です。<span class="math inline">\(n\)</span> の値と <span class="math inline">\(\mathrm{Var}(X)\)</span> の値を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1559,7 +1609,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-26" class="callout-26-contents callout-collapse collapse">
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[0.6n = 18 \implies n = 30\]</span></p>
 <p><span class="math display">\[\mathrm{Var}(X) = 30(0.6)(0.4) = 7.2\]</span></p>
@@ -1567,7 +1617,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1576,7 +1626,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><a href="#eq-aasl48-mean" class="quarto-xref">式&nbsp;3</a> を <span class="math inline">\(n\)</span> について解き、次に <a href="#eq-aasl48-var" class="quarto-xref">式&nbsp;4</a> を使います。</p>
 <p><strong>検算（もどします）。</strong> <span class="math inline">\(30 \times 0.6 = 18\)</span> ✓ 与えられた <span class="math inline">\(E(X)\)</span> と一致します。</p>
@@ -1596,7 +1646,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p>ある小テストには <span class="math inline">\(10\)</span> 問の選択問題があり、各問に <span class="math inline">\(4\)</span> つの選択肢があって正解はちょうど <span class="math inline">\(1\)</span> つです。ある生徒がすべてを無作為に当てずっぽうで答えます。少なくとも <span class="math inline">\(5\)</span> 問正解する確率を求めなさい。「<span class="math inline">\(5\)</span> 問正解は知識があることの十分な証拠か」を判断しようとしている先生にとって、この確率が何を意味するかを解釈しなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1605,8 +1655,9 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-28" class="callout-28-contents callout-collapse collapse">
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p><em>Let</em> <span class="math inline">\(X\)</span> <em>be the number of questions the student gets right.</em></p>
 <p><em><span class="math inline">\(X \sim B(10,\ 0.25)\)</span></em></p>
 <p><em>binomCdf</em><span class="math inline">\((10, 0.25, 5, 10)\)</span> <span class="math display">\[P(X \ge 5) = 0.0781\]</span></p>
 <p><em>about <span class="math inline">\(7.8\%\)</span> of guessers reach <span class="math inline">\(5\)</span> correct, so <span class="math inline">\(5\)</span> correct is not strong evidence on its own</em></p>
@@ -1614,7 +1665,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1623,7 +1674,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div id="callout-33" class="callout-33-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\(4\)</span> 択なので <span class="math inline">\(p = \dfrac{1}{4} = 0.25\)</span>、<span class="math inline">\(n = 10\)</span> です。<code>at least 5</code> は <span class="math inline">\(X \ge 5\)</span> です。</p>
 <p><strong>検算（<span class="math inline">\(np\)</span> との位置で）。</strong> <span class="math inline">\(np = 2.5\)</span> なので、<span class="math inline">\(5\)</span> は平均よりかなり上です。だから確率は小さくなるはずです。<span class="math inline">\(0.0781 &lt; 0.5\)</span> ✓</p>
@@ -1631,7 +1682,9 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p><strong>検算（標準偏差で）。</strong> <span class="math inline">\(\sqrt{10 \times 0.25 \times 0.75} \approx 1.37\)</span> です。<span class="math inline">\(5\)</span> は平均 <span class="math inline">\(2.5\)</span> から約 <span class="math inline">\(1.8\)</span> 標準偏差上なので、「まれだが、ときどき起こる」くらいの位置です ✓ <span class="math inline">\(0.0781\)</span> は <span class="math inline">\(\dfrac{1}{2}\)</span> よりずっと小さく、<span class="math inline">\(0.001\)</span> ほど小さくもない、という大きさの見当と合っています。</p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>About <span class="math inline">\(7.8\%\)</span> of students who guess every answer would still get at least <span class="math inline">\(5\)</span> right. That is not a rare event, so reaching <span class="math inline">\(5\)</span> correct answers on its own is weak evidence that the student knows the material. A teacher wanting stronger evidence would need a higher score, more questions, or both.</em></p>
+<p><em>About <span class="math inline">\(7.8\%\)</span> of students who guess every answer would still get at least <span class="math inline">\(5\)</span> right.</em></p>
+<p><em>That is not a rare event, so reaching <span class="math inline">\(5\)</span> correct answers on its own is weak evidence that the student knows the material.</em></p>
+<p><em>A teacher wanting stronger evidence would need a higher score, more questions, or both.</em></p>
 </div>
 </div>
 </div>
@@ -1651,7 +1704,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p><strong>(b)</strong> <span class="math inline">\(P(X \ge 1) &gt; 0.95\)</span> となる最小の <span class="math inline">\(n\)</span> の値を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1660,7 +1713,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-30" class="callout-30-contents callout-collapse collapse">
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math display">\[P(X = 0) = \binom{n}{0}(0.2)^{0}(0.8)^{n} = 0.8^{n}\]</span> <em>there is only one way to have no successes, so <span class="math inline">\(\binom{n}{0} = 1\)</span></em></p>
 <p><strong>(b)</strong> <span class="math display">\[P(X \ge 1) = 1 - 0.8^{n} &gt; 0.95 \iff 0.8^{n} &lt; 0.05\]</span></p>
@@ -1669,7 +1722,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1678,12 +1731,13 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div id="callout-35" class="callout-35-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <a href="#eq-aasl48-pmf" class="quarto-xref">式&nbsp;2</a> に <span class="math inline">\(x = 0\)</span> を入れます。<span class="math inline">\(\binom{n}{0}\)</span> は「<span class="math inline">\(n\)</span> 回のうち成功する回を <span class="math inline">\(0\)</span> 個選ぶ選び方の数」なので、<span class="math inline">\(1\)</span> 通りです（<a href="#pmf">第 3 節</a>）。<span class="math inline">\((0.2)^{0} = 1\)</span> なので、残るのは <span class="math inline">\(0.8^{n}\)</span> だけです。</p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>Putting <span class="math inline">\(x = 0\)</span> into the binomial formula gives <span class="math inline">\(P(X = 0) = \binom{n}{0}(0.2)^{0}(0.8)^{n} = 0.8^{n}\)</span>. The coefficient <span class="math inline">\(\binom{n}{0}\)</span> counts the ways of choosing which trials are successes, and there is exactly one way to have no successes at all, so <span class="math inline">\(\binom{n}{0} = 1\)</span>.</em></p>
+<p><em>Putting <span class="math inline">\(x = 0\)</span> into the binomial formula gives <span class="math inline">\(P(X = 0) = \binom{n}{0}(0.2)^{0}(0.8)^{n} = 0.8^{n}\)</span>.</em></p>
+<p><em>The coefficient <span class="math inline">\(\binom{n}{0}\)</span> counts the ways of choosing which trials are successes, and there is exactly one way to have no successes at all, so <span class="math inline">\(\binom{n}{0} = 1\)</span>.</em></p>
 </div>
 <p><strong>(b)</strong> <span class="math inline">\(P(X \ge 1)\)</span> は余事象で書きかえます（<a href="#range">第 4 節</a>）。</p>
 <p><span class="math inline">\(0.8^{n}\)</span> は <span class="math inline">\(n\)</span> が大きくなるほど小さくなるので、<span class="math inline">\(0.05\)</span> をはじめて下回る <span class="math inline">\(n\)</span> を探します。表を作るか、<code>binomCdf(n, 0.2, 0, 0)</code> の <span class="math inline">\(n\)</span> を増やして調べます。</p>
@@ -1704,7 +1758,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p><span class="math inline">\(X \sim B(20,\ 0.35)\)</span> について <span class="math inline">\(E(X) = 7\)</span> です。ある生徒が、これは「<span class="math inline">\(20\)</span> 回のどのセットでもおよそ <span class="math inline">\(7\)</span> 回成功する」という意味だと言いました。この主張について述べなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1713,14 +1767,14 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-32" class="callout-32-contents callout-collapse collapse">
+<div id="callout-36" class="callout-36-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em><span class="math inline">\(7\)</span> is the mean over many sets of <span class="math inline">\(20\)</span>, not a value for every set; <span class="math inline">\(\sqrt{4.55} \approx 2.13\)</span>, so values from about <span class="math inline">\(3\)</span> to about <span class="math inline">\(11\)</span> are common</em></p>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1729,7 +1783,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div id="callout-37" class="callout-37-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><code>Comment on</code> なので、<strong>どこまで言えるか</strong>を書きます（<a href="../../aa-sl/04-statistics-and-probability/aasl-4-7.html#meaning">SL 4.7</a>）。計算自体は正しく、読み方だけがまちがっています。</p>
 <p><strong>検算（<span class="math inline">\(X = 7\)</span> の確率）。</strong> <code>binomPdf(20, 0.35, 7)</code> は <span class="math inline">\(0.184\)</span> です ✓ 「どのセットでも <span class="math inline">\(7\)</span> 前後」なら、もっと大きな値になるはずです。</p>
@@ -1737,7 +1791,9 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p><strong>検算（両端の確率）。</strong> <code>binomCdf(20, 0.35, 3, 11)</code> は <span class="math inline">\(0.968\)</span> です ✓ ほとんどが <span class="math inline">\(3\)</span> から <span class="math inline">\(11\)</span> に入りますが、「<span class="math inline">\(7\)</span> 前後」よりずっと広い範囲です。</p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>The calculation is correct but the reading is not. The value <span class="math inline">\(7\)</span> is the mean number of successes over many sets of <span class="math inline">\(20\)</span> trials, not the number in every set. The standard deviation is <span class="math inline">\(\sqrt{4.55} \approx 2.13\)</span>, and <span class="math inline">\(P(3 \le X \le 11) \approx 0.968\)</span>, so values from <span class="math inline">\(3\)</span> to <span class="math inline">\(11\)</span> are all common in a single set.</em></p>
+<p><em>The calculation is correct but the reading is not.</em></p>
+<p><em>The value <span class="math inline">\(7\)</span> is the mean number of successes over many sets of <span class="math inline">\(20\)</span> trials, not the number in every set.</em></p>
+<p><em>The standard deviation is <span class="math inline">\(\sqrt{4.55} \approx 2.13\)</span>, and <span class="math inline">\(P(3 \le X \le 11) \approx 0.968\)</span>, so values from <span class="math inline">\(3\)</span> to <span class="math inline">\(11\)</span> are all common in a single set.</em></p>
 </div>
 </div>
 </div>
@@ -1753,7 +1809,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p>ある先生が、<span class="math inline">\(25\)</span> 人のあるクラスで <span class="math inline">\(1\)</span> 日に欠席する生徒の人数は二項分布に従うと言いました。このモデルが適切でないかもしれない理由を <span class="math inline">\(1\)</span> つ述べなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1762,14 +1818,14 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-34" class="callout-34-contents callout-collapse collapse">
+<div id="callout-38" class="callout-38-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em>students in the same class can infect one another, so absences are not independent; one absence makes further absences more likely</em></p>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1778,7 +1834,7 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div id="callout-39" class="callout-39-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><code>Describe one reason</code> なので、<strong><span class="math inline">\(4\)</span> 条件のどれが崩れるかを <span class="math inline">\(1\)</span> つ選んで</strong>書きます（<a href="#tbl-aasl48-cond" class="quarto-xref">表&nbsp;1</a>）。<span class="math inline">\(n = 25\)</span> は決まっていて、結果も「休む・休まない」の <span class="math inline">\(2\)</span> 通りなので、疑うのは残りの <span class="math inline">\(2\)</span> つです。</p>
 <p><strong>検算（<span class="math inline">\(4\)</span> 条件のどれを名指ししたか）。</strong> 自分の答えが「回数が決まっていない」「結果が <span class="math inline">\(2\)</span> 通りでない」を理由にしていたら、まちがいです ✓ <span class="math inline">\(n = 25\)</span> は決まっており、「休む・休まない」は <span class="math inline">\(2\)</span> 通りだからです。残る <span class="math inline">\(2\)</span> つのどちらかを選んでいるかを確かめます。</p>
@@ -1786,7 +1842,9 @@ P(X = 5) = 0.227 \ (3 \text{ s.f.})
 <p><strong>答えは <span class="math inline">\(1\)</span> つでよい問題です。</strong> ただし、どの条件が崩れるかを名指しし、その理由まで書きます。</p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>Students in the same class are in contact with one another, so an illness can spread. One student being absent makes it more likely that others are absent on the same day. The absences are therefore not independent, which is one of the four conditions the binomial model requires.</em></p>
+<p><em>Students in the same class are in contact with one another, so an illness can spread.</em></p>
+<p><em>One student being absent makes it more likely that others are absent on the same day.</em></p>
+<p><em>The absences are therefore not independent, which is one of the four conditions the binomial model requires.</em></p>
 </div>
 </div>
 </div>

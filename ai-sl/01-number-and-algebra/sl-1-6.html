@@ -49,7 +49,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-e0d50d79aa2efe4d0670ad8ef271a423.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-29c9c25664dcc4feb615e966b28f20fb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -164,6 +164,10 @@ window.Quarto = {
   <li class="nav-item">
     <a class="nav-link" href="../../aa-sl/index.html"> 
 <span class="menu-text">AA SL</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../aa-hl/index.html"> 
+<span class="menu-text">AA HL</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../glossary-ai.html"> 
@@ -528,19 +532,18 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#the-idea" id="toc-the-idea" class="nav-link" data-scroll-target="#the-idea">The idea</a>
   <ul class="collapse">
-  <li><a href="#丸め方-2つのものさし" id="toc-丸め方-2つのものさし" class="nav-link" data-scroll-target="#丸め方-2つのものさし">1. 丸め方 ── 2つのものさし</a></li>
-  <li><a href="#upper-bound-と-lower-bound" id="toc-upper-bound-と-lower-bound" class="nav-link" data-scroll-target="#upper-bound-と-lower-bound">2. upper bound と lower bound</a></li>
-  <li><a href="#percentage-error誤差率" id="toc-percentage-error誤差率" class="nav-link" data-scroll-target="#percentage-error誤差率">3. percentage error（誤差率）</a></li>
-  <li><a href="#estimation-と答えが妥当か" id="toc-estimation-と答えが妥当か" class="nav-link" data-scroll-target="#estimation-と答えが妥当か">4. estimation と「答えが妥当か」</a></li>
+  <li><a href="#rounding" id="toc-rounding" class="nav-link" data-scroll-target="#rounding">1. Rounding（丸め方の <span class="math inline">\(2\)</span> つのものさし）</a></li>
+  <li><a href="#bounds" id="toc-bounds" class="nav-link" data-scroll-target="#bounds">2. Upper and lower bounds（上限と下限）</a></li>
+  <li><a href="#percentage-error" id="toc-percentage-error" class="nav-link" data-scroll-target="#percentage-error">3. Percentage error（誤差率）</a></li>
+  <li><a href="#estimation" id="toc-estimation" class="nav-link" data-scroll-target="#estimation">4. Estimation（概算と、答えが妥当かどうか）</a></li>
   </ul></li>
   <li><a href="#why-it-works" id="toc-why-it-works" class="nav-link" data-scroll-target="#why-it-works">Why it works</a></li>
-  <li><a href="#worked-examples" id="toc-worked-examples" class="nav-link" data-scroll-target="#worked-examples">Worked examples</a></li>
   <li><a href="#common-errors" id="toc-common-errors" class="nav-link" data-scroll-target="#common-errors">Common errors</a></li>
   <li><a href="#using-your-gdc-ti-nspire-cx-ii" id="toc-using-your-gdc-ti-nspire-cx-ii" class="nav-link" data-scroll-target="#using-your-gdc-ti-nspire-cx-ii">Using your GDC (TI-Nspire CX II)</a>
   <ul class="collapse">
-  <li><a href="#表示桁数を増やしておく" id="toc-表示桁数を増やしておく" class="nav-link" data-scroll-target="#表示桁数を増やしておく">表示桁数を増やしておく</a></li>
-  <li><a href="#丸めるのは答えを書くときだけ" id="toc-丸めるのは答えを書くときだけ" class="nav-link" data-scroll-target="#丸めるのは答えを書くときだけ">丸めるのは、答えを書くときだけ</a></li>
-  <li><a href="#答えが妥当かをその場で見る" id="toc-答えが妥当かをその場で見る" class="nav-link" data-scroll-target="#答えが妥当かをその場で見る">答えが妥当かを、その場で見る</a></li>
+  <li><a href="#showing-more-digits表示桁数を増やしておく" id="toc-showing-more-digits表示桁数を増やしておく" class="nav-link" data-scroll-target="#showing-more-digits表示桁数を増やしておく">Showing more digits（表示桁数を増やしておく）</a></li>
+  <li><a href="#rounding-only-at-the-end丸めるのは答えを書くときだけ" id="toc-rounding-only-at-the-end丸めるのは答えを書くときだけ" class="nav-link" data-scroll-target="#rounding-only-at-the-end丸めるのは答えを書くときだけ">Rounding only at the end（丸めるのは、答えを書くときだけ）</a></li>
+  <li><a href="#checking-that-answers-are-reasonable答えが妥当かをその場で見る" id="toc-checking-that-answers-are-reasonable答えが妥当かをその場で見る" class="nav-link" data-scroll-target="#checking-that-answers-are-reasonable答えが妥当かをその場で見る">Checking that answers are reasonable（答えが妥当かを、その場で見る）</a></li>
   </ul></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   </ul></li>
@@ -575,116 +578,17 @@ window.Quarto = {
 </ul>
 </div>
 </div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">重要</span>Formula booklet に載っているもの
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>SL 1.6 の欄には、次の1行だけが印刷されています。</p>
-<p><span class="math display">\[
-\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
-\]</span></p>
-<blockquote class="blockquote">
-<p>where <span class="math inline">\(v_E\)</span> is the <strong>exact</strong> value and <span class="math inline">\(v_A\)</span> is the <strong>approximate</strong> value of <span class="math inline">\(v\)</span></p>
-</blockquote>
-<p><strong><span class="math inline">\(\varepsilon\)</span>（イプシロン）が誤差率</strong>です。記号の意味も公式集に書かれています。</p>
-<p><strong>式の外側に <span class="math inline">\(|\ \ |\)</span> という記号が付いている</strong>ことに注目してください。これは <strong>absolute value</strong>（絶対値）の記号です。次の欄で説明します。</p>
-</div>
-</div>
-<div id="absolute-value" class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ノート</span><span class="math inline">\(|\ \ |\)</span> という記号について
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><span class="math inline">\(|\ \ |\)</span> は <strong>absolute value</strong>（絶対値）の記号です。<strong>中身のマイナスを外す</strong>、それだけの記号です。</p>
-<p><span class="math display">\[
-|7| = 7, \qquad |-7| = 7, \qquad |0| = 0
-\]</span></p>
-<ul>
-<li>中身が<strong>正</strong>なら … そのまま</li>
-<li>中身が<strong>負</strong>なら … マイナスを外す</li>
-<li>中身が <span class="math inline">\(0\)</span> なら … <span class="math inline">\(0\)</span></li>
-</ul>
-<p><strong>「<span class="math inline">\(0\)</span> からどれだけ離れているか」</strong>を表している、と考えると分かりやすくなります。<span class="math inline">\(7\)</span> も <span class="math inline">\(-7\)</span> も、<span class="math inline">\(0\)</span> からの距離は <span class="math inline">\(7\)</span> です。<strong>向きを捨てて、大きさだけを見る</strong>記号です。</p>
-<p><span class="math display">\[
-|-0.7| = 0.7, \qquad \left| \frac{-3}{5} \right| = \frac{3}{5} = 0.6
-\]</span></p>
-<p><strong>結果は必ず <span class="math inline">\(0\)</span> 以上になります。</strong> 絶対値が負になることはありません。</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ヒント</span>電卓での絶対値
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>TI-Nspire では、<strong><span class="math inline">\(9\)</span> キーの右にあるテンプレートのパレット</strong>から <span class="math inline">\(|\ \ |\)</span> を選びます。<strong>画面に見えるとおりの形</strong>で入れられます。</p>
-<p><span class="math display">\[
-\left| -0.7 \right| \quad \longrightarrow \quad 0.7
-\]</span></p>
-<p>関数名で <span class="math inline">\(\texttt{abs}(-0.7)\)</span> と打っても、同じ答えが返ります。</p>
-<p>ただし percentage error では、<strong>わざわざ電卓に入れなくても構いません。</strong> 出てきた答えが負だったら、<strong>マイナスを取って書けばよい</strong>だけです。</p>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">重要</span>絶対値が付いていることの意味
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>公式の外側に <span class="math inline">\(|\ \ |\)</span> が付いているので、<strong>percentage error は必ず <span class="math inline">\(0\)</span> 以上</strong>になります。負にはなりません。</p>
-<p>つまり、<strong>「<span class="math inline">\(5\%\)</span> 大きい」も「<span class="math inline">\(5\%\)</span> 小さい」も、どちらも <span class="math inline">\(\varepsilon = 5\%\)</span></strong> です。誤差率は「どちらにずれたか」ではなく、<strong>「どれだけずれたか」だけ</strong>を表しています。</p>
-<p>答えが <span class="math inline">\(-4\%\)</span> と出たら、<strong>マイナスを外して <span class="math inline">\(4\%\)</span> と書いてください。</strong></p>
-</div>
-</div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">警告</span>「丸め方」で点を落とす人が一番多い項目です
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>この項目は計算の手数は少ないのですが、<strong>書き方で失点しやすい</strong>ところです。</p>
-<ul>
-<li><span class="math inline">\(3.00\)</span> の <span class="math inline">\(0\)</span> を消して <span class="math inline">\(3\)</span> と書く</li>
-<li><span class="math inline">\(\leq\)</span> と <span class="math inline">\(&lt;\)</span> を逆にする</li>
-<li>分母に <strong>approximate value</strong> を入れてしまう</li>
-</ul>
-<p>どれも、<strong>知っていれば防げる</strong>ものばかりです。</p>
-</div>
-</div>
 <section id="the-idea" class="level2">
 <h2 class="anchored" data-anchor-id="the-idea">The idea</h2>
 <p>この項目には、<strong>4つの中身</strong>があります。順番に見ていきます。</p>
 <ol type="1">
-<li><strong>丸め方</strong>（decimal places と significant figures）</li>
-<li><strong>上限と下限</strong>（upper and lower bounds）</li>
-<li><strong>誤差率</strong>（percentage error）</li>
-<li><strong>概算と、答えの妥当性</strong>（estimation）</li>
+<li><strong>rounding</strong>（丸め方）：decimal places と significant figures</li>
+<li><strong>upper and lower bounds</strong>（上限と下限）</li>
+<li><strong>percentage error</strong>（誤差率）</li>
+<li><strong>estimation</strong>（概算）と、答えの妥当性</li>
 </ol>
-<section id="丸め方-2つのものさし" class="level3">
-<h3 class="anchored" data-anchor-id="丸め方-2つのものさし">1. 丸め方 ── 2つのものさし</h3>
+<section id="rounding" class="level3">
+<h3 class="anchored" data-anchor-id="rounding">1. Rounding（丸め方の <span class="math inline">\(2\)</span> つのものさし）</h3>
 <p>丸め方には<strong>2つのものさし</strong>があり、まったく別のものです。</p>
 <div id="tbl-dp-sf" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -786,16 +690,97 @@ window.Quarto = {
 <p><strong>この <span class="math inline">\(0\)</span> は「意味のある <span class="math inline">\(0\)</span>」</strong>です。「ちょうど <span class="math inline">\(3\)</span> に近い値だ」という情報を持っています。</p>
 </div>
 </div>
+<div id="exm-ap-round" class="theorem example">
+<p><span class="theorem-title"><strong>例題 1</strong></span> <strong>(a)</strong> <span class="q-en">Write <span class="math inline">\(0.004736\)</span> correct to three significant figures.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Write <span class="math inline">\(0.004736\)</span> correct to three decimal places.</span></p>
+<p><strong>(c)</strong> <span class="q-en">Write <span class="math inline">\(12\,049\)</span> correct to three significant figures.</span></p>
+<p><strong>(d)</strong> <span class="q-en">Write <span class="math inline">\(2.996\)</span> correct to three significant figures.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p><strong>(a)</strong> <span class="math inline">\(0.004736\)</span> を有効数字3桁で書きなさい。</p>
+<p><strong>(b)</strong> <span class="math inline">\(0.004736\)</span> を小数第3位まで書きなさい。</p>
+<p><strong>(c)</strong> <span class="math inline">\(12\,049\)</span> を有効数字3桁で書きなさい。</p>
+<p><strong>(d)</strong> <span class="math inline">\(2.996\)</span> を有効数字3桁で書きなさい。</p>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">重要</span>計算の前に：s.f. か d.p. か
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li>と (b) は<strong>同じ数</strong>ですが、ものさしが違います（<a href="#tbl-dp-sf" class="quarto-xref">表&nbsp;1</a>）。</li>
+</ol>
+<ul>
+<li><code>significant figures</code> … <strong>最初の <span class="math inline">\(0\)</span> でない数字</strong>から数える</li>
+<li><code>decimal places</code> … <strong>小数点</strong>から数える</li>
+</ul>
+<p>読み違えると、まったく違う答えになります。</p>
+</div>
+</div>
+<p><strong>(a)</strong> 最初の <span class="math inline">\(0\)</span> でない数字は <span class="math inline">\(4\)</span> です。そこから3桁は <span class="math inline">\(4, 7, 3\)</span>。次の桁 <span class="math inline">\(6\)</span> を見て切り上げます。</p>
+<p><span class="math display">\[
+0.004736 \approx 0.00474
+\]</span></p>
+<p><strong>(b)</strong> 小数点から3桁目までです。<span class="math inline">\(0.004\)</span> までを残し、次の桁 <span class="math inline">\(7\)</span> を見て切り上げます。</p>
+<p><span class="math display">\[
+0.004736 \approx 0.005
+\]</span></p>
+<p><strong>同じ数なのに <span class="math inline">\(0.00474\)</span> と <span class="math inline">\(0.005\)</span>。</strong> ものさしが違うと、これだけ変わります。</p>
+<p><strong>(c)</strong> 最初の数字は <span class="math inline">\(1\)</span> です。<span class="math inline">\(1, 2, 0\)</span> の3桁を残し、次の桁 <span class="math inline">\(4\)</span> を見て切り捨てます。</p>
+<p><span class="math display">\[
+12\,049 \approx 12\,000
+\]</span></p>
+<p><strong><span class="math inline">\(12\)</span> とは書きません。</strong> 桁を保つために <span class="math inline">\(0\)</span> を補います。</p>
+<p><strong>(d)</strong> <span class="math inline">\(2, 9, 9\)</span> の3桁。次の桁 <span class="math inline">\(6\)</span> を見て切り上げると、<span class="math inline">\(9\)</span> が繰り上がって</p>
+<p><span class="math display">\[
+2.996 \approx 3.00
+\]</span></p>
+<p><strong><span class="math inline">\(3\)</span> ではありません。</strong> <span class="math inline">\(0\)</span> を2つ書いて、有効数字3桁であることを示します。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(0.00474\)</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(0.005\)</span></p>
+<p><strong>(c)</strong> <span class="math inline">\(12\,000\)</span></p>
+<p><strong>(d)</strong> <span class="math inline">\(3.00\)</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 </section>
-<section id="upper-bound-と-lower-bound" class="level3">
-<h3 class="anchored" data-anchor-id="upper-bound-と-lower-bound">2. upper bound と lower bound</h3>
+<section id="bounds" class="level3">
+<h3 class="anchored" data-anchor-id="bounds">2. Upper and lower bounds（上限と下限）</h3>
 <p><span class="math inline">\(4.1\)</span> という数を見たとき、<strong>それが丸めた結果なら、本当の値は <span class="math inline">\(4.1\)</span> ちょうどとはかぎりません。</strong></p>
-<p>シラバスに、そのままの例が載っています。</p>
-<blockquote class="blockquote">
-<p>If <span class="math inline">\(x = 4.1\)</span> to one decimal place, <span class="math inline">\(4.05 \leq x &lt; 4.15\)</span>.</p>
-</blockquote>
-<p><strong><span class="math inline">\(4.05\)</span> から <span class="math inline">\(4.15\)</span> のあいだのどこかにある</strong>、ということです。</p>
+<p>たとえば <span class="math inline">\(x\)</span> を小数第 <span class="math inline">\(1\)</span> 位に丸めて <span class="math inline">\(4.1\)</span> になったなら、本当の値は <strong><span class="math inline">\(4.05\)</span> から <span class="math inline">\(4.15\)</span> のあいだのどこか</strong>にあります。</p>
 <p><span class="math display">\[
 4.05 \leq x &lt; 4.15
 \]</span></p>
@@ -872,258 +857,6 @@ window.Quarto = {
 <p>答案では、<span class="math inline">\(\leq\)</span> と <span class="math inline">\(&lt;\)</span> を書き分けてください。<strong>両方 <span class="math inline">\(\leq\)</span> にすると減点されることがあります。</strong></p>
 </div>
 </div>
-</section>
-</section>
-<section id="percentage-error誤差率" class="level3">
-<h3 class="anchored" data-anchor-id="percentage-error誤差率">3. percentage error（誤差率）</h3>
-<p>近い値を使って計算したとき、<strong>本当の値からどれだけずれているか</strong>を割合で表したものが percentage error です。</p>
-<p><span id="eq-pct-error"><span class="math display">\[
-\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
-\tag{1}\]</span></span></p>
-<div id="tbl-pct-symbols" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pct-symbols-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-表&nbsp;4: 記号の意味
-</figcaption>
-<div aria-describedby="tbl-pct-symbols-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>記号</th>
-<th>英語</th>
-<th>意味</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(v_E\)</span></td>
-<td><strong>exact</strong> value</td>
-<td><strong>本当の値</strong>（分母に来る）</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(v_A\)</span></td>
-<td><strong>approximate</strong> value</td>
-<td><strong>近似した値</strong>（測った値・丸めた値）</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(\varepsilon\)</span></td>
-<td>percentage error</td>
-<td>誤差率（パーセント）</td>
-</tr>
-</tbody>
-</table>
-</div>
-</figure>
-</div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">重要</span>分母は、いつも exact value
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><span class="math display">\[
-\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
-\]</span></p>
-<p><strong>分母の <span class="math inline">\(v_E\)</span> は「本当の値」</strong>です。<span class="math inline">\(v_A\)</span>（近似値）を分母に入れると、違う答えになります。</p>
-<p>見分け方は簡単で、<strong>問題文が <code>exact value</code> と呼んでいるほう</strong>が <span class="math inline">\(v_E\)</span> です。「真の値」「実際の値」と書いてあれば、それが <span class="math inline">\(v_E\)</span> です。</p>
-<p>分子には <span class="math inline">\(v_A - v_E\)</span>（近似 <span class="math inline">\(-\)</span> 本当）と書いてありますが、<strong><a href="#absolute-value">絶対値</a>が付いているので順番は気にしなくて大丈夫</strong>です。引き算の向きを逆にしても、マイナスを外せば同じになります。</p>
-</div>
-</div>
-<p><span class="math inline">\(\pi\)</span> を <span class="math inline">\(3.14\)</span> で計算した場合の誤差率を出してみましょう。</p>
-<p><span class="math display">\[
-\varepsilon = \left| \frac{3.14 - \pi}{\pi} \right| \times 100\% = 0.0507\% \ (3\text{ s.f.})
-\]</span></p>
-<p><span class="math inline">\(0.05\%\)</span> ほどのずれです。<strong><span class="math inline">\(3.14\)</span> はかなりよい近似</strong>だと分かります。</p>
-</section>
-<section id="estimation-と答えが妥当か" class="level3">
-<h3 class="anchored" data-anchor-id="estimation-と答えが妥当か">4. estimation と「答えが妥当か」</h3>
-<p>シラバスにこう書かれています。</p>
-<blockquote class="blockquote">
-<p>Students should be able to <strong>recognize whether the results of calculations are reasonable</strong>. For example <strong>lengths cannot be negative</strong>.</p>
-</blockquote>
-<p><strong>答えが出たら、1回だけ「これはありえる値か」と見てください。</strong></p>
-<div id="tbl-reasonable" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-reasonable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-表&nbsp;5: 答えの妥当性チェック
-</figcaption>
-<div aria-describedby="tbl-reasonable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>場面</th>
-<th>ありえないもの</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>長さ・面積・体積</td>
-<td><strong>負の値</strong></td>
-</tr>
-<tr class="even">
-<td>人数・個数</td>
-<td><strong>負の値、小数</strong></td>
-</tr>
-<tr class="odd">
-<td>確率</td>
-<td><strong><span class="math inline">\(0\)</span> 未満、<span class="math inline">\(1\)</span> より大きい値</strong></td>
-</tr>
-</tbody>
-</table>
-</div>
-</figure>
-</div>
-<p><strong>割合や変化率は、この表に入れていません。</strong> 負になることも、<span class="math inline">\(100\%\)</span> を超えることもあるからです。「前年比 <span class="math inline">\(-8\%\)</span>」も「<span class="math inline">\(250\%\)</span> 増加」も、どちらもありえる値です。<strong>ありえるかどうかは、問題の文脈で判断してください。</strong></p>
-<p>例外は<strong>確率をパーセントで表したとき</strong>だけで、これは <span class="math inline">\(0\%\)</span> 以上 <span class="math inline">\(100\%\)</span> 以下におさまります。</p>
-<p><strong>estimation</strong>（概算）は、そのための道具です。<strong>それぞれの数を1桁に丸めて掛ける</strong>だけで、答えのだいたいの大きさが分かります。</p>
-<p><span class="math display">\[
-47.3 \times 28.6 \quad \approx \quad 50 \times 30 = 1500
-\]</span></p>
-<p>電卓が <span class="math inline">\(1352.78\)</span> と出したなら、<span class="math inline">\(1500\)</span> に近いので妥当です。<strong><span class="math inline">\(135.278\)</span> や <span class="math inline">\(13527.8\)</span> が出たら、桁を間違えています。</strong></p>
-</section>
-</section>
-<section id="why-it-works" class="level2">
-<h2 class="anchored" data-anchor-id="why-it-works">Why it works</h2>
-<div class="callout callout-style-simple callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ノート</span>クリックすると開きます
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>ここでは、<strong>bounds がなぜ「半分」なのか</strong>だけを見ます。</p>
-<p><span class="math inline">\(4.1\)</span> という値は、<strong>1 d.p. に四捨五入した結果</strong>でした。どんな数が <span class="math inline">\(4.1\)</span> に丸まるでしょうか。</p>
-<p><span class="math display">\[
-4.05, \quad 4.08, \quad 4.10, \quad 4.13, \quad 4.149 \quad \longrightarrow \quad \text{すべて } 4.1
-\]</span></p>
-<p><span class="math display">\[
-4.04 \longrightarrow 4.0, \qquad 4.15 \longrightarrow 4.2
-\]</span></p>
-<p><strong>境目は、となりの値とのちょうど真ん中</strong>です。<span class="math inline">\(4.1\)</span> のとなりは <span class="math inline">\(4.0\)</span> と <span class="math inline">\(4.2\)</span> で、真ん中はそれぞれ <span class="math inline">\(4.05\)</span> と <span class="math inline">\(4.15\)</span>。</p>
-<p><span class="math display">\[
-\underbrace{4.0}_{\text{となり}} \quad \overbrace{\Big|}^{4.05} \quad \underbrace{4.1}_{\text{これ}} \quad \overbrace{\Big|}^{4.15} \quad \underbrace{4.2}_{\text{となり}}
-\]</span></p>
-<p>となりとの間隔が <span class="math inline">\(0.1\)</span> なので、<strong>真ん中までは <span class="math inline">\(0.05\)</span></strong>。これが「単位の半分」の正体です。</p>
-<section id="なぜ-4.15-は入らないのか" class="level3">
-<h3 class="anchored" data-anchor-id="なぜ-4.15-は入らないのか">なぜ <span class="math inline">\(4.15\)</span> は入らないのか</h3>
-<p><strong>ちょうど真ん中の数は、切り上げる</strong>というのが四捨五入のきまりです。</p>
-<ul>
-<li><span class="math inline">\(4.05\)</span> … 切り上げて <span class="math inline">\(4.1\)</span> になる → <strong><span class="math inline">\(x\)</span> の候補に入る</strong></li>
-<li><span class="math inline">\(4.15\)</span> … 切り上げて <span class="math inline">\(4.2\)</span> になる → <strong><span class="math inline">\(x\)</span> の候補に入らない</strong></li>
-</ul>
-<p>だから下は <span class="math inline">\(\leq\)</span>、上は <span class="math inline">\(&lt;\)</span> になります。<strong>きまりの非対称さが、そのまま不等号に出ている</strong>だけです。</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ノート</span>なぜ分母が exact value なのか
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>percentage error は「<strong>本当の値に対して、何パーセントずれたか</strong>」を表します。</p>
-<p><span class="math inline">\(100\)</span> に対する <span class="math inline">\(1\)</span> のずれ（<span class="math inline">\(1\%\)</span>）と、<span class="math inline">\(10\)</span> に対する <span class="math inline">\(1\)</span> のずれ（<span class="math inline">\(10\%\)</span>）では、後者のほうがずっと大きな間違いです。<strong>基準になるのは本当の値のほう</strong>なので、分母に来ます。</p>
-<p>近似値を分母にすると、<strong>基準が毎回変わってしまい、比べられなくなります。</strong></p>
-</div>
-</div>
-</section>
-</div>
-</div>
-</div>
-</section>
-<section id="worked-examples" class="level2">
-<h2 class="anchored" data-anchor-id="worked-examples">Worked examples</h2>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>問題文は英語です。意味が理解できなかったら、問題文の下の「<strong>日本語訳</strong>」を開いてください。解説は日本語です。</p>
-</div>
-</div>
-</div>
-<div id="exm-ap-round" class="theorem example">
-<p><span class="theorem-title"><strong>例題 1</strong></span> <strong>(a)</strong> <span class="q-en">Write <span class="math inline">\(0.004736\)</span> correct to three significant figures.</span></p>
-<p><strong>(b)</strong> <span class="q-en">Write <span class="math inline">\(0.004736\)</span> correct to three decimal places.</span></p>
-<p><strong>(c)</strong> <span class="q-en">Write <span class="math inline">\(12\,049\)</span> correct to three significant figures.</span></p>
-<p><strong>(d)</strong> <span class="q-en">Write <span class="math inline">\(2.996\)</span> correct to three significant figures.</span></p>
-<details class="jp-trans">
-<summary>
-日本語訳
-</summary>
-<p><strong>(a)</strong> <span class="math inline">\(0.004736\)</span> を有効数字3桁で書きなさい。</p>
-<p><strong>(b)</strong> <span class="math inline">\(0.004736\)</span> を小数第3位まで書きなさい。</p>
-<p><strong>(c)</strong> <span class="math inline">\(12\,049\)</span> を有効数字3桁で書きなさい。</p>
-<p><strong>(d)</strong> <span class="math inline">\(2.996\)</span> を有効数字3桁で書きなさい。</p>
-</details>
-<hr>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">重要</span>計算の前に：s.f. か d.p. か
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="a">
-<li>と (b) は<strong>同じ数</strong>ですが、ものさしが違います（<a href="#tbl-dp-sf" class="quarto-xref">表&nbsp;1</a>）。</li>
-</ol>
-<ul>
-<li><code>significant figures</code> … <strong>最初の <span class="math inline">\(0\)</span> でない数字</strong>から数える</li>
-<li><code>decimal places</code> … <strong>小数点</strong>から数える</li>
-</ul>
-<p>読み違えると、まったく違う答えになります。</p>
-</div>
-</div>
-<p><strong>(a)</strong> 最初の <span class="math inline">\(0\)</span> でない数字は <span class="math inline">\(4\)</span> です。そこから3桁は <span class="math inline">\(4, 7, 3\)</span>。次の桁 <span class="math inline">\(6\)</span> を見て切り上げます。</p>
-<p><span class="math display">\[
-0.004736 \approx 0.00474
-\]</span></p>
-<p><strong>(b)</strong> 小数点から3桁目までです。<span class="math inline">\(0.004\)</span> までを残し、次の桁 <span class="math inline">\(7\)</span> を見て切り上げます。</p>
-<p><span class="math display">\[
-0.004736 \approx 0.005
-\]</span></p>
-<p><strong>同じ数なのに <span class="math inline">\(0.00474\)</span> と <span class="math inline">\(0.005\)</span>。</strong> ものさしが違うと、これだけ変わります。</p>
-<p><strong>(c)</strong> 最初の数字は <span class="math inline">\(1\)</span> です。<span class="math inline">\(1, 2, 0\)</span> の3桁を残し、次の桁 <span class="math inline">\(4\)</span> を見て切り捨てます。</p>
-<p><span class="math display">\[
-12\,049 \approx 12\,000
-\]</span></p>
-<p><strong><span class="math inline">\(12\)</span> とは書きません。</strong> 桁を保つために <span class="math inline">\(0\)</span> を補います。</p>
-<p><strong>(d)</strong> <span class="math inline">\(2, 9, 9\)</span> の3桁。次の桁 <span class="math inline">\(6\)</span> を見て切り上げると、<span class="math inline">\(9\)</span> が繰り上がって</p>
-<p><span class="math display">\[
-2.996 \approx 3.00
-\]</span></p>
-<p><strong><span class="math inline">\(3\)</span> ではありません。</strong> <span class="math inline">\(0\)</span> を2つ書いて、有効数字3桁であることを示します。</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>(a)</strong> <span class="math inline">\(0.00474\)</span></p>
-<p><strong>(b)</strong> <span class="math inline">\(0.005\)</span></p>
-<p><strong>(c)</strong> <span class="math inline">\(12\,000\)</span></p>
-<p><strong>(d)</strong> <span class="math inline">\(3.00\)</span></p>
-</div>
-</div>
-</div>
 <div id="exm-ap-bounds" class="theorem example">
 <p><span class="theorem-title"><strong>例題 2</strong></span> <span class="q-en">Write down the lower bound and the upper bound of each of the following.</span></p>
 <p><strong>(a)</strong> <span class="q-en"><span class="math inline">\(x = 4.1\)</span>, correct to one decimal place.</span></p>
@@ -1138,7 +871,18 @@ window.Quarto = {
 <p><strong>(b)</strong> <span class="math inline">\(m = 350\)</span> g（<span class="math inline">\(10\)</span> g 単位）</p>
 <p><strong>(c)</strong> <span class="math inline">\(L = 6.0\)</span> cm（有効数字2桁）</p>
 </details>
-<hr>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(1\)</span> d.p. なので単位は <span class="math inline">\(0.1\)</span>、その半分は <span class="math inline">\(0.05\)</span>（<a href="#tbl-bounds" class="quarto-xref">表&nbsp;3</a>）。</p>
 <p><span class="math display">\[
 4.05 \leq x &lt; 4.15
@@ -1183,6 +927,77 @@ window.Quarto = {
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="percentage-error" class="level3">
+<h3 class="anchored" data-anchor-id="percentage-error">3. Percentage error（誤差率）</h3>
+<p>近い値を使って計算したとき、<strong>本当の値からどれだけずれているか</strong>を割合で表したものが percentage error です。式は次のとおりで、公式集の <strong>SL 1.6</strong> の欄に、記号の意味と一緒に載っています。</p>
+<p><span id="eq-pct-error"><span class="math display">\[
+\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
+\tag{1}\]</span></span></p>
+<div id="tbl-pct-symbols" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pct-symbols-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;4: 記号の意味
+</figcaption>
+<div aria-describedby="tbl-pct-symbols-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>記号</th>
+<th>英語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(v_E\)</span></td>
+<td><strong>exact</strong> value</td>
+<td><strong>本当の値</strong>（分母に来る）</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(v_A\)</span></td>
+<td><strong>approximate</strong> value</td>
+<td><strong>近似した値</strong>（測った値・丸めた値）</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\varepsilon\)</span></td>
+<td>percentage error</td>
+<td>誤差率（パーセント）</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><span id="absolute-value"></span>式の外側の <span class="math inline">\(|\ \ |\)</span> は <strong>absolute value</strong>（絶対値）の記号で、中身のマイナスを外します（<span class="math inline">\(|-7| = 7\)</span>、<span class="math inline">\(|7| = 7\)</span>）。電卓では、テンプレートのパレットの <span class="math inline">\(|\ \ |\)</span> か <code>abs(</code> で入れられます。</p>
+<p>絶対値が付いているので、<strong>percentage error は必ず <span class="math inline">\(0\)</span> 以上</strong>です。「<span class="math inline">\(5\%\)</span> 大きい」も「<span class="math inline">\(5\%\)</span> 小さい」も <span class="math inline">\(\varepsilon = 5\%\)</span> で、答えが <span class="math inline">\(-4\%\)</span> と出たらマイナスを外して <span class="math inline">\(4\%\)</span> と書きます。</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">重要</span>分母は、いつも exact value
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+\varepsilon = \left| \frac{v_A - v_E}{v_E} \right| \times 100\%
+\]</span></p>
+<p><strong>分母の <span class="math inline">\(v_E\)</span> は「本当の値」</strong>です。<span class="math inline">\(v_A\)</span>（近似値）を分母に入れると、違う答えになります。</p>
+<p>見分け方は簡単で、<strong>問題文が <code>exact value</code> と呼んでいるほう</strong>が <span class="math inline">\(v_E\)</span> です。「真の値」「実際の値」と書いてあれば、それが <span class="math inline">\(v_E\)</span> です。</p>
+<p>分子には <span class="math inline">\(v_A - v_E\)</span>（近似 <span class="math inline">\(-\)</span> 本当）と書いてありますが、<strong><a href="#absolute-value">絶対値</a>が付いているので順番は気にしなくて大丈夫</strong>です。引き算の向きを逆にしても、マイナスを外せば同じになります。</p>
+</div>
+</div>
+<p><span class="math inline">\(\pi\)</span> を <span class="math inline">\(3.14\)</span> で計算した場合の誤差率を出してみましょう。</p>
+<p><span class="math display">\[
+\varepsilon = \left| \frac{3.14 - \pi}{\pi} \right| \times 100\% = 0.0507\% \ (3\text{ s.f.})
+\]</span></p>
+<p><span class="math inline">\(0.05\%\)</span> ほどのずれです。<strong><span class="math inline">\(3.14\)</span> はかなりよい近似</strong>だと分かります。</p>
 <div id="exm-ap-error" class="theorem example">
 <p><span class="theorem-title"><strong>例題 3</strong></span> <strong>(a)</strong> <span class="q-en">A student uses <span class="math inline">\(3.14\)</span> as an approximation for <span class="math inline">\(\pi\)</span>. Find the percentage error, correct to three significant figures.</span></p>
 <p><strong>(b)</strong> <span class="q-en">The exact length of a rod is <span class="math inline">\(25\)</span> cm. A student measures it as <span class="math inline">\(24\)</span> cm. Find the percentage error.</span></p>
@@ -1193,7 +1008,18 @@ window.Quarto = {
 <p><strong>(a)</strong> ある生徒が <span class="math inline">\(\pi\)</span> の近似値として <span class="math inline">\(3.14\)</span> を使いました。誤差率を有効数字3桁で求めなさい。</p>
 <p><strong>(b)</strong> ある棒の正確な長さは <span class="math inline">\(25\)</span> cm です。ある生徒はそれを <span class="math inline">\(24\)</span> cm と測りました。誤差率を求めなさい。</p>
 </details>
-<hr>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <strong>どちらが exact かを決めます。</strong> <span class="math inline">\(\pi\)</span> が本当の値、<span class="math inline">\(3.14\)</span> が近似値です。</p>
 <p><span class="math display">\[
 v_E = \pi, \qquad v_A = 3.14
@@ -1238,6 +1064,9 @@ v_E = \pi, \qquad v_A = 3.14
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
 <div id="exm-ap-circle" class="theorem example">
 <p><span class="theorem-title"><strong>例題 4</strong></span> <span class="q-en">The radius of a circle is measured as <span class="math inline">\(2.5\)</span> cm, correct to one decimal place.</span></p>
 <p><strong>(a)</strong> <span class="q-en">Write down the lower bound and the upper bound of the radius.</span></p>
@@ -1252,7 +1081,18 @@ v_E = \pi, \qquad v_A = 3.14
 <p><strong>(b)</strong> 円の面積の下限と上限を、有効数字3桁で求めなさい。</p>
 <p><strong>(c)</strong> 正確な半径は <span class="math inline">\(2.47\)</span> cm です。測った半径から計算した面積の誤差率を、有効数字3桁で求めなさい。</p>
 </details>
-<hr>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(1\)</span> d.p. なので <span class="math inline">\(\pm 0.05\)</span>（<a href="#tbl-bounds" class="quarto-xref">表&nbsp;3</a>）。</p>
 <p><span class="math display">\[
 2.45 \leq r &lt; 2.55
@@ -1300,10 +1140,7 @@ v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>シラバスには、こういう問い方も挙げられています。</p>
-<blockquote class="blockquote">
-<p>finding the <strong>maximum</strong> percentage error in the area of a circle if the radius measured is 2.5 cm to one decimal place</p>
-</blockquote>
+<p>たとえば「半径を小数第 <span class="math inline">\(1\)</span> 位で測って <span class="math inline">\(2.5\)</span> cm だったとき、円の面積の <strong>maximum</strong> percentage error を求めなさい」という問いです。</p>
 <p>正確な値が分からず、<strong>bounds のどこかにある</strong>という場合です。このときは<strong>両端で計算して、大きいほうを答えます。</strong></p>
 <p><span class="math inline">\(v_A = \pi(2.5)^2 = 19.6349\ldots\)</span> として、</p>
 <ul>
@@ -1331,6 +1168,52 @@ v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</section>
+<section id="estimation" class="level3">
+<h3 class="anchored" data-anchor-id="estimation">4. Estimation（概算と、答えが妥当かどうか）</h3>
+<p>概算は、答えのだいたいの大きさを見積もることです。答えが出たら、それが現実に<strong>ありえる値かどうか</strong>も確かめます。たとえば、長さが負になることはありません。</p>
+<p><strong>答えが出たら、1回だけ「これはありえる値か」と見てください。</strong></p>
+<div id="tbl-reasonable" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-reasonable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;5: 答えの妥当性チェック
+</figcaption>
+<div aria-describedby="tbl-reasonable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>場面</th>
+<th>ありえないもの</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>長さ・面積・体積</td>
+<td><strong>負の値</strong></td>
+</tr>
+<tr class="even">
+<td>人数・個数</td>
+<td><strong>負の値、小数</strong></td>
+</tr>
+<tr class="odd">
+<td>確率</td>
+<td><strong><span class="math inline">\(0\)</span> 未満、<span class="math inline">\(1\)</span> より大きい値</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><strong>割合や変化率は、この表に入れていません。</strong> 負になることも、<span class="math inline">\(100\%\)</span> を超えることもあるからです。「前年比 <span class="math inline">\(-8\%\)</span>」も「<span class="math inline">\(250\%\)</span> 増加」も、どちらもありえる値です。<strong>ありえるかどうかは、問題の文脈で判断してください。</strong></p>
+<p>例外は<strong>確率をパーセントで表したとき</strong>だけで、これは <span class="math inline">\(0\%\)</span> 以上 <span class="math inline">\(100\%\)</span> 以下におさまります。</p>
+<p>概算は、そのための道具です。<strong>それぞれの数を1桁に丸めて掛ける</strong>だけで、答えのだいたいの大きさが分かります。</p>
+<p><span class="math display">\[
+47.3 \times 28.6 \quad \approx \quad 50 \times 30 = 1500
+\]</span></p>
+<p>電卓が <span class="math inline">\(1352.78\)</span> と出したなら、<span class="math inline">\(1500\)</span> に近いので妥当です。<strong><span class="math inline">\(135.278\)</span> や <span class="math inline">\(13527.8\)</span> が出たら、桁を間違えています。</strong></p>
 <div id="exm-ap-estimate" class="theorem example">
 <p><span class="theorem-title"><strong>例題 5</strong></span> <span class="q-en">A rectangular field measures <span class="math inline">\(47.3\)</span> m by <span class="math inline">\(28.6\)</span> m.</span></p>
 <p><strong>(a)</strong> <span class="q-en">By rounding each measurement to one significant figure, estimate the area of the field.</span></p>
@@ -1347,7 +1230,18 @@ v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
 <p><strong>(c)</strong> 概算の誤差率を、有効数字3桁で求めなさい。</p>
 <p><strong>(d)</strong> ある生徒が面積を計算して <span class="math inline">\(-1352.78\)</span> m<span class="math inline">\(^2\)</span> を得ました。この答えが間違いであるはずの理由を説明しなさい。</p>
 </details>
-<hr>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p><strong>(a)</strong> それぞれを1桁に丸めます。</p>
 <p><span class="math display">\[
 47.3 \approx 50, \qquad 28.6 \approx 30
@@ -1366,7 +1260,8 @@ v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
 <p><strong>(d)</strong> 数値ではなく、<strong>言葉で答える設問</strong>です。</p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>An area cannot be negative, so the answer must be wrong. The student has probably made a sign error, since the magnitude <span class="math inline">\(1352.78\)</span> is correct.</em></p>
+<p><em>An area cannot be negative, so the answer must be wrong.</em></p>
+<p><em>The student has probably made a sign error, since the magnitude <span class="math inline">\(1352.78\)</span> is correct.</em></p>
 </div>
 <p>（面積が負になることはないので、この答えは間違いです。大きさの <span class="math inline">\(1352.78\)</span> は正しいので、符号を間違えたと考えられます。）</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1403,6 +1298,65 @@ v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
 <p><strong>(b)</strong> <span class="math inline">\(47.3 \times 28.6 = 1352.78 \text{ m}^2\)</span></p>
 <p><strong>(c)</strong> <span class="math display">\[\varepsilon = \left|\frac{1500 - 1352.78}{1352.78}\right| \times 100\% = 10.9\%\]</span></p>
 <p><strong>(d)</strong> <em>An area cannot be negative, so the answer must be wrong.</em></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="why-it-works" class="level2">
+<h2 class="anchored" data-anchor-id="why-it-works">Why it works</h2>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>クリックすると開きます
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>ここでは、<strong>bounds がなぜ「半分」なのか</strong>だけを見ます。</p>
+<p><span class="math inline">\(4.1\)</span> という値は、<strong>1 d.p. に四捨五入した結果</strong>でした。どんな数が <span class="math inline">\(4.1\)</span> に丸まるでしょうか。</p>
+<p><span class="math display">\[
+4.05, \quad 4.08, \quad 4.10, \quad 4.13, \quad 4.149 \quad \longrightarrow \quad \text{すべて } 4.1
+\]</span></p>
+<p><span class="math display">\[
+4.04 \longrightarrow 4.0, \qquad 4.15 \longrightarrow 4.2
+\]</span></p>
+<p><strong>境目は、となりの値とのちょうど真ん中</strong>です。<span class="math inline">\(4.1\)</span> のとなりは <span class="math inline">\(4.0\)</span> と <span class="math inline">\(4.2\)</span> で、真ん中はそれぞれ <span class="math inline">\(4.05\)</span> と <span class="math inline">\(4.15\)</span>。</p>
+<p><span class="math display">\[
+\underbrace{4.0}_{\text{となり}} \quad \overbrace{\Big|}^{4.05} \quad \underbrace{4.1}_{\text{これ}} \quad \overbrace{\Big|}^{4.15} \quad \underbrace{4.2}_{\text{となり}}
+\]</span></p>
+<p>となりとの間隔が <span class="math inline">\(0.1\)</span> なので、<strong>真ん中までは <span class="math inline">\(0.05\)</span></strong>。これが「単位の半分」の正体です。</p>
+<section id="なぜ-4.15-は入らないのか" class="level4">
+<h4 class="anchored" data-anchor-id="なぜ-4.15-は入らないのか">なぜ <span class="math inline">\(4.15\)</span> は入らないのか</h4>
+<p><strong>ちょうど真ん中の数は、切り上げる</strong>というのが四捨五入のきまりです。</p>
+<ul>
+<li><span class="math inline">\(4.05\)</span> … 切り上げて <span class="math inline">\(4.1\)</span> になる → <strong><span class="math inline">\(x\)</span> の候補に入る</strong></li>
+<li><span class="math inline">\(4.15\)</span> … 切り上げて <span class="math inline">\(4.2\)</span> になる → <strong><span class="math inline">\(x\)</span> の候補に入らない</strong></li>
+</ul>
+<p>だから下は <span class="math inline">\(\leq\)</span>、上は <span class="math inline">\(&lt;\)</span> になります。<strong>きまりの非対称さが、そのまま不等号に出ている</strong>だけです。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>なぜ分母が exact value なのか
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>percentage error は「<strong>本当の値に対して、何パーセントずれたか</strong>」を表します。</p>
+<p><span class="math inline">\(100\)</span> に対する <span class="math inline">\(1\)</span> のずれ（<span class="math inline">\(1\%\)</span>）と、<span class="math inline">\(10\)</span> に対する <span class="math inline">\(1\)</span> のずれ（<span class="math inline">\(10\%\)</span>）では、後者のほうがずっと大きな間違いです。<strong>基準になるのは本当の値のほう</strong>なので、分母に来ます。</p>
+<p>近似値を分母にすると、<strong>基準が毎回変わってしまい、比べられなくなります。</strong></p>
+</div>
+</div>
+</section>
 </div>
 </div>
 </div>
@@ -1526,15 +1480,15 @@ v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
 </section>
 <section id="using-your-gdc-ti-nspire-cx-ii" class="level2">
 <h2 class="anchored" data-anchor-id="using-your-gdc-ti-nspire-cx-ii">Using your GDC (TI-Nspire CX II)</h2>
-<section id="表示桁数を増やしておく" class="level3">
-<h3 class="anchored" data-anchor-id="表示桁数を増やしておく">表示桁数を増やしておく</h3>
+<section id="showing-more-digits表示桁数を増やしておく" class="level3">
+<h3 class="anchored" data-anchor-id="showing-more-digits表示桁数を増やしておく">Showing more digits（表示桁数を増やしておく）</h3>
 <p>途中の値を目で確かめたいので、<strong>表示桁数を多めにしておく</strong>と便利です。</p>
 <pre><code>doc → Settings → Document Settings → Display Digits</code></pre>
 <p><code>Float 10</code> などにしておくと、<span class="math inline">\(19.16649\ldots\)</span> のように細かく見えます。</p>
 <p>試験の前に一度設定しておいてください。</p>
 </section>
-<section id="丸めるのは答えを書くときだけ" class="level3">
-<h3 class="anchored" data-anchor-id="丸めるのは答えを書くときだけ">丸めるのは、答えを書くときだけ</h3>
+<section id="rounding-only-at-the-end丸めるのは答えを書くときだけ" class="level3">
+<h3 class="anchored" data-anchor-id="rounding-only-at-the-end丸めるのは答えを書くときだけ">Rounding only at the end（丸めるのは、答えを書くときだけ）</h3>
 <p><strong>電卓は自動で丸めてくれません。</strong> 画面に <span class="math inline">\(19.17\)</span> と見えていても、中身は <span class="math inline">\(19.16649\ldots\)</span> です。</p>
 <p>計算の途中では、<strong><code>ans</code> を使って正確な値をそのまま渡します。</strong></p>
 <ul>
@@ -1558,8 +1512,8 @@ v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
 </div>
 </div>
 </section>
-<section id="答えが妥当かをその場で見る" class="level3">
-<h3 class="anchored" data-anchor-id="答えが妥当かをその場で見る">答えが妥当かを、その場で見る</h3>
+<section id="checking-that-answers-are-reasonable答えが妥当かをその場で見る" class="level3">
+<h3 class="anchored" data-anchor-id="checking-that-answers-are-reasonable答えが妥当かをその場で見る">Checking that answers are reasonable（答えが妥当かを、その場で見る）</h3>
 <p>計算が終わったら、<strong>画面の数を見て1回だけ考えてください。</strong></p>
 <div id="tbl-gdc-check" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1597,17 +1551,6 @@ v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
 </section>
 <section id="exercises" class="level2">
 <h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>各問題に、折りたたみが3つ付いています。<strong>日本語訳</strong>、<strong>解答例</strong>（答案用紙に書くべきこと。英語です）、<strong>解説</strong>（なぜそうなるか。日本語です）。</p>
-<p>まず自分で解いて、次に解答例と見くらべてください。<strong>解説は、合わなかったときだけ開けば十分です。</strong></p>
-</div>
-</div>
-</div>
 <div class="exercise-block">
 <p><span class="ex-no">1</span> <strong>(a)</strong> <span class="q-en">Write <span class="math inline">\(0.08067\)</span> correct to three significant figures.</span></p>
 <p><strong>(b)</strong> <span class="q-en">Write <span class="math inline">\(0.08067\)</span> correct to two decimal places.</span></p>
@@ -2051,11 +1994,7 @@ v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
 </div>
 <div id="callout-48" class="callout-48-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>シラバスにこう書かれています。</p>
-<blockquote class="blockquote">
-<p>Students should be able to recognize whether the results of calculations are reasonable. For example lengths cannot be negative.</p>
-</blockquote>
-<p><strong>わざわざ1行が用意されている</strong>ので、こういう問いは実際に出ます。</p>
+<p><strong>計算結果が妥当かどうかを見分ける</strong>ことも求められます。たとえば、長さは負になりません。こういう問いは実際に出ます。</p>
 <p>書くことは短くて構いません。<strong>「なぜありえないか」を1文で</strong>述べれば十分です（<a href="#tbl-reasonable" class="quarto-xref">表&nbsp;5</a>）。</p>
 <p>計算の途中でこういう値が出たら、<strong>そこで止まって見直してください。</strong> 先に進んでも、答えは合いません。</p>
 </div>
@@ -2109,13 +2048,13 @@ v_A = \pi (2.5)^2 = 19.6349\ldots, \qquad v_E = \pi (2.47)^2 = 19.1665\ldots
 </div>
 <div id="callout-50" class="callout-50-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>(b) で向きが逆になる</strong>ところが要です。<strong>時間が長いほど、速さは遅くなります。</strong> ですから</p>
+<p><strong>(b) で向きが逆になる</strong>ところがポイントです。<strong>時間が長いほど、速さは遅くなります。</strong> ですから</p>
 <ul>
 <li>時間の<strong>上限</strong> <span class="math inline">\(12.45\)</span> → 速さの<strong>下限</strong></li>
 <li>時間の<strong>下限</strong> <span class="math inline">\(12.35\)</span> → 速さの<strong>上限</strong></li>
 </ul>
 <p>割り算では、この入れ替わりが起きます。<strong>「大きいほうを入れたら大きくなる」とはかぎりません。</strong></p>
-<p><strong>(c)</strong> はシラバスの <code>choose an appropriate degree of accuracy based on given data</code> に当たります。</p>
+<p><strong>(c)</strong> は、与えられたデータに合わせて、答えの精度を選ぶ問題です。</p>
 <p>書くことは2つです。</p>
 <ol type="1">
 <li><strong>元のデータの精度</strong> — <em>The time is given to three significant figures.</em></li>

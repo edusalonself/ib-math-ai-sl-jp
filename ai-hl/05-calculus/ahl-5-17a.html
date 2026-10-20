@@ -49,7 +49,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-e0d50d79aa2efe4d0670ad8ef271a423.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-29c9c25664dcc4feb615e966b28f20fb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -164,6 +164,10 @@ window.Quarto = {
   <li class="nav-item">
     <a class="nav-link" href="../../aa-sl/index.html"> 
 <span class="menu-text">AA SL</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../aa-hl/index.html"> 
+<span class="menu-text">AA HL</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../glossary-ai.html"> 
@@ -606,22 +610,21 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#the-idea" id="toc-the-idea" class="nav-link" data-scroll-target="#the-idea">The idea</a>
   <ul class="collapse">
-  <li><a href="#idea" id="toc-idea" class="nav-link" data-scroll-target="#idea">1. 行列の形に書きます</a></li>
-  <li><a href="#straight" id="toc-straight" class="nav-link" data-scroll-target="#straight">2. eigenvector から、直線上を進む方向が分かります</a></li>
-  <li><a href="#general" id="toc-general" class="nav-link" data-scroll-target="#general">3. 一般解</a></li>
-  <li><a href="#initial" id="toc-initial" class="nav-link" data-scroll-target="#initial">4. 初期条件で <span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> を決めます</a></li>
-  <li><a href="#signs" id="toc-signs" class="nav-link" data-scroll-target="#signs">5. <span class="math inline">\(\lambda\)</span> の符号で、絵が決まります</a></li>
-  <li><a href="#saddle" id="toc-saddle" class="nav-link" data-scroll-target="#saddle">6. saddle point</a></li>
-  <li><a href="#longrun" id="toc-longrun" class="nav-link" data-scroll-target="#longrun">7. 長い目で見ると</a></li>
-  <li><a href="#sketch" id="toc-sketch" class="nav-link" data-scroll-target="#sketch">8. 軌道のかき方</a></li>
+  <li><a href="#idea" id="toc-idea" class="nav-link" data-scroll-target="#idea">1. Writing the system with a matrix（行列の形に書く）</a></li>
+  <li><a href="#straight" id="toc-straight" class="nav-link" data-scroll-target="#straight">2. Eigenvectors and straight-line solutions（固有ベクトルの方向にまっすぐ進む解）</a></li>
+  <li><a href="#general" id="toc-general" class="nav-link" data-scroll-target="#general">3. General solution（一般解）</a></li>
+  <li><a href="#initial" id="toc-initial" class="nav-link" data-scroll-target="#initial">4. Initial conditions（初期条件で <span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> を決める）</a></li>
+  <li><a href="#signs" id="toc-signs" class="nav-link" data-scroll-target="#signs">5. Signs of the eigenvalues（<span class="math inline">\(\lambda\)</span> の符号で絵が決まる）</a></li>
+  <li><a href="#saddle" id="toc-saddle" class="nav-link" data-scroll-target="#saddle">6. Saddle points（鞍点）</a></li>
+  <li><a href="#longrun" id="toc-longrun" class="nav-link" data-scroll-target="#longrun">7. Long-term behaviour（長い目で見たときの動き）</a></li>
+  <li><a href="#sketch" id="toc-sketch" class="nav-link" data-scroll-target="#sketch">8. Sketching trajectories（軌道のかき方）</a></li>
   </ul></li>
   <li><a href="#why-it-works" id="toc-why-it-works" class="nav-link" data-scroll-target="#why-it-works">Why it works</a></li>
-  <li><a href="#worked-examples" id="toc-worked-examples" class="nav-link" data-scroll-target="#worked-examples">Worked examples</a></li>
   <li><a href="#common-errors" id="toc-common-errors" class="nav-link" data-scroll-target="#common-errors">Common errors</a></li>
   <li><a href="#using-your-gdc-ti-nspire-cx-ii" id="toc-using-your-gdc-ti-nspire-cx-ii" class="nav-link" data-scroll-target="#using-your-gdc-ti-nspire-cx-ii">Using your GDC (TI-Nspire CX II)</a>
   <ul class="collapse">
-  <li><a href="#gdc-eig" id="toc-gdc-eig" class="nav-link" data-scroll-target="#gdc-eig">固有値を出して、場合分けを確かめる</a></li>
-  <li><a href="#gdc-plot" id="toc-gdc-plot" class="nav-link" data-scroll-target="#gdc-plot">軌道を描いてみる</a></li>
+  <li><a href="#gdc-eig" id="toc-gdc-eig" class="nav-link" data-scroll-target="#gdc-eig">Checking the eigenvalues（固有値を出して、場合分けを確かめる）</a></li>
+  <li><a href="#gdc-plot" id="toc-gdc-plot" class="nav-link" data-scroll-target="#gdc-plot">Plotting trajectories（軌道を描いてみる）</a></li>
   </ul></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   </ul></li>
@@ -647,56 +650,13 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>連立微分方程式を<strong>行列の形</strong> <span class="math inline">\(\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}\)</span> に書ける。</li>
+<li>連立 <strong>differential equation</strong>（微分方程式）を<strong>行列の形</strong> <span class="math inline">\(\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}\)</span> に書ける。</li>
 <li><strong>eigenvalue</strong>（固有値）と <strong>eigenvector</strong>（固有ベクトル）を求められる（<a href="../../ai-hl/01-number-and-algebra/ahl-1-15.html">AHL 1.15</a>）。</li>
 <li>公式集の<strong>厳密解</strong>を書き、初期条件から <span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> を決められる。</li>
 <li><span class="math inline">\(\lambda\)</span> の<strong>符号</strong>から、原点から離れるか近づくかを言える。</li>
 <li><strong>node</strong>（結節点）と <strong>saddle point</strong>（鞍点）を見分けられる。</li>
 <li><strong>phase portrait</strong>（相図）に <strong>trajectory</strong>（軌道）をかき込める。</li>
 </ul>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ノート</span>このページで扱う範囲
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<div id="tbl-ahl517a-two" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ahl517a-two-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-表&nbsp;1: AHL 5.17 の <span class="math inline">\(2\)</span> つの部分
-</figcaption>
-<div aria-describedby="tbl-ahl517a-two-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>固有値</th>
-<th>絵の形</th>
-<th>ページ</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>異なる <span class="math inline">\(2\)</span> つの実数</strong></td>
-<td>直線・node・<strong>saddle point</strong></td>
-<td>このページ</td>
-</tr>
-<tr class="even">
-<td><strong>複素数・純虚数</strong></td>
-<td><strong>spiral</strong>・円・楕円</td>
-<td><a href="../../ai-hl/05-calculus/ahl-5-17b.html">AHL 5.17b</a></td>
-</tr>
-</tbody>
-</table>
-</div>
-</figure>
-</div>
-<p>このページでは、シラバスで<strong>式による解法が求められている、異なる <span class="math inline">\(2\)</span> つの実固有値</strong>の場合を扱います。<a href="../../ai-hl/05-calculus/ahl-5-17b.html">AHL 5.17b</a> では式を書かず、<strong>絵の形だけ</strong>を読みます。</p>
 </div>
 </div>
 <section id="the-idea" class="level2">
@@ -706,6 +666,7 @@ window.Quarto = {
 \frac{dx}{dt} = 3x + 2y, \qquad \frac{dy}{dt} = 2x + 3y
 \]</span></p>
 <p>この <span class="math inline">\(2\)</span> 本の式は、<strong>点 <span class="math inline">\((x,\ y)\)</span> が、その場所から次にどちらへ動くか</strong>を表しています。動いた跡が <strong>trajectory</strong>（軌道）、軌道を何本もかいた絵が <strong>phase portrait</strong>（相図）です。</p>
+<p>このページで扱うのは、固有値が<strong>異なる <span class="math inline">\(2\)</span> つの実数</strong>になる場合です（絵は直線・node・saddle point）。この場合は、式で解くことまで求められます。固有値が複素数・純虚数になる場合（<strong>spiral</strong>（渦巻き）・円・楕円）は <a href="../../ai-hl/05-calculus/ahl-5-17b.html">AHL 5.17b</a> で扱い、そちらでは式を書かずに<strong>絵の形だけ</strong>を読みます。</p>
 <p>相図は、次の順で作ります。</p>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
@@ -725,7 +686,7 @@ window.Quarto = {
 </div>
 <p><strong>固有ベクトルが相図の基本となる方向を示し、固有値がその方向で増えるか減るかを示します。</strong> このページは、この <span class="math inline">\(1\)</span> 行を <span class="math inline">\(8\)</span> つの節に分けたものです。</p>
 <section id="idea" class="level3">
-<h3 class="anchored" data-anchor-id="idea">1. 行列の形に書きます</h3>
+<h3 class="anchored" data-anchor-id="idea">1. Writing the system with a matrix（行列の形に書く）</h3>
 <p><strong>この節ですること：<span class="math inline">\(2\)</span> 本の式を、<span class="math inline">\(1\)</span> 本の行列の式にまとめます。</strong></p>
 <p><a href="../../ai-hl/05-calculus/ahl-5-16b.html">AHL 5.16b</a> では、連立系を Euler 法で<strong>数値的に</strong>追いました。このページで扱うのは、<strong>右辺が <span class="math inline">\(x\)</span> と <span class="math inline">\(y\)</span> の一次式だけ</strong>という特別な場合です。この形なら、<strong>厳密な解の式</strong>が書けます。</p>
 <p><span class="math display">\[
@@ -758,7 +719,7 @@ M = \begin{pmatrix} 3 &amp; 2 \\ 2 &amp; 3 \end{pmatrix}
 <div id="tbl-ahl517a-symbols" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ahl517a-symbols-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-表&nbsp;2: <span class="math inline">\(\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}\)</span> の記号
+表&nbsp;1: <span class="math inline">\(\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}\)</span> の記号
 </figcaption>
 <div aria-describedby="tbl-ahl517a-symbols-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -823,12 +784,12 @@ M = \begin{pmatrix} 3 &amp; 2 \\ 2 &amp; 3 \end{pmatrix}
 </div>
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\(\dfrac{dx}{dt} = 3x + 2y + 5\)</span> のように<strong>定数が付いている</strong>と、<span class="math inline">\(M\mathbf{X}\)</span> の形には書けません。<span class="math inline">\(xy\)</span> の項も同じです。</p>
-<p>シラバスの形は <span class="math inline">\(ax + by\)</span> <strong>だけ</strong>です。</p>
+<p>この方法で扱うのは、右辺が <span class="math inline">\(ax + by\)</span> の形の系<strong>だけ</strong>です。</p>
 </div>
 </div>
 </section>
 <section id="straight" class="level3">
-<h3 class="anchored" data-anchor-id="straight">2. eigenvector から、直線上を進む方向が分かります</h3>
+<h3 class="anchored" data-anchor-id="straight">2. Eigenvectors and straight-line solutions（固有ベクトルの方向にまっすぐ進む解）</h3>
 <p><strong>この節ですること：なぜ相図に <span class="math inline">\(2\)</span> 本の直線が現れるのかを、見ておきます。</strong></p>
 <p><span class="math inline">\(\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}\)</span> でしたから、<strong><span class="math inline">\(M\mathbf{X}\)</span> は、点 <span class="math inline">\(\mathbf{X}\)</span> にいるときの速度ベクトル</strong>です。</p>
 <p>ふつう、<span class="math inline">\(\mathbf{X}\)</span> と <span class="math inline">\(M\mathbf{X}\)</span> は<strong>別の向き</strong>を向いています。進むたびに向きが変わるので、軌道は<strong>曲線</strong>になります。</p>
@@ -849,9 +810,7 @@ M\mathbf{p} = \lambda \mathbf{p}
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><span class="math display">\[
-\mathbf{X} \text{ の向き} \ = \ M\mathbf{X} \text{ の向き} \quad \Longrightarrow \quad \text{その直線の上を、まっすぐ進む}
-\]</span></p>
+<p><strong><span class="math inline">\(\mathbf{X}\)</span> の向きと <span class="math inline">\(M\mathbf{X}\)</span> の向きが同じなら、その直線の上を、まっすぐ進みます。</strong></p>
 <p>この <span class="math inline">\(2\)</span> 本の直線が、相図の<strong>骨組み</strong>になります。</p>
 </div>
 </div>
@@ -859,7 +818,7 @@ M\mathbf{p} = \lambda \mathbf{p}
 <div id="fig-ahl517a-eigen" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ahl517a-eigen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/ahl-5-17a-eigen.svg" class="img-fluid figure-img" style="width:58.0%">
+<img src="img/ahl-5-17a-eigen.svg" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ahl517a-eigen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 図&nbsp;1: 固有ベクトルの方向が、相図の骨組みになります
@@ -901,7 +860,7 @@ c'(t) = \lambda\, c(t)
 <div id="tbl-ahl517a-line" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ahl517a-line-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-表&nbsp;3: eigenvector の直線の上での動き
+表&nbsp;2: eigenvector の直線の上での動き
 </figcaption>
 <div aria-describedby="tbl-ahl517a-line-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -945,7 +904,7 @@ c'(t) = \lambda\, c(t)
 </div>
 </section>
 <section id="general" class="level3">
-<h3 class="anchored" data-anchor-id="general">3. 一般解</h3>
+<h3 class="anchored" data-anchor-id="general">3. General solution（一般解）</h3>
 <p><strong>この節ですること：<span class="math inline">\(2\)</span> 本の直線の動きを足して、解の式を作ります。</strong></p>
 <p><a href="#straight">第2節</a>で見たように、固有ベクトル <span class="math inline">\(\mathbf{p}\)</span> の方向では</p>
 <p><span class="math display">\[
@@ -1002,7 +961,7 @@ M = \begin{pmatrix} 3 &amp; 2 \\ 2 &amp; 3 \end{pmatrix}
 </div>
 <div class="callout-body-container callout-body">
 <p>いま解いた <span class="math inline">\(\lambda^{2} - 6\lambda + 5 = 0\)</span> を <strong>characteristic equation</strong>（特性方程式）といいます。</p>
-<p>対角に並ぶ <span class="math inline">\(2\)</span> つの数の和（<strong>trace</strong>）と <span class="math inline">\(\det M\)</span> を使えば、行列式を展開せずに書けます（<a href="../../ai-hl/01-number-and-algebra/ahl-1-15.html#expand">AHL 1.15</a>）。</p>
+<p><strong>trace</strong>（対角に並ぶ <span class="math inline">\(2\)</span> つの数の和）と <span class="math inline">\(\det M\)</span> を使えば、<strong>determinant</strong>（行列式）を展開せずに書けます（<a href="../../ai-hl/01-number-and-algebra/ahl-1-15.html#expand">AHL 1.15</a>）。</p>
 <p><span class="math display">\[
 \lambda^{2} - (\text{trace})\lambda + \det M = 0
 \]</span></p>
@@ -1039,7 +998,7 @@ x = Ae^{5t} + Be^{t}, \qquad y = Ae^{5t} - Be^{t}
 </section>
 </section>
 <section id="initial" class="level3">
-<h3 class="anchored" data-anchor-id="initial">4. 初期条件で <span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> を決めます</h3>
+<h3 class="anchored" data-anchor-id="initial">4. Initial conditions（初期条件で <span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> を決める）</h3>
 <p><strong>この節ですること：与えられた出発点から、<span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> を決めます。</strong></p>
 <p><span class="math inline">\(t = 0\)</span> を入れると <span class="math inline">\(e^{0} = 1\)</span> なので、</p>
 <p><span class="math display">\[
@@ -1079,7 +1038,7 @@ A = 2, \qquad B = -1
 </div>
 </section>
 <section id="signs" class="level3">
-<h3 class="anchored" data-anchor-id="signs">5. <span class="math inline">\(\lambda\)</span> の符号で、絵が決まります</h3>
+<h3 class="anchored" data-anchor-id="signs">5. Signs of the eigenvalues（<span class="math inline">\(\lambda\)</span> の符号で絵が決まる）</h3>
 <p><strong>この節ですること：固有値の符号で、原点のまわりの絵を <span class="math inline">\(3\)</span> つに分けます。</strong></p>
 <div id="fig-ahl517a-nodes" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1087,7 +1046,7 @@ A = 2, \qquad B = -1
 <img src="img/ahl-5-17a-nodes.svg" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ahl517a-nodes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;2: Both eigenvalues have the same sign
+図&nbsp;2: <span class="math inline">\(2\)</span> つの固有値が同じ符号の場合です。
 </figcaption>
 </figure>
 </div>
@@ -1095,7 +1054,7 @@ A = 2, \qquad B = -1
 <div id="tbl-ahl517a-signs" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ahl517a-signs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-表&nbsp;4: 異なる <span class="math inline">\(2\)</span> つの実固有値の <span class="math inline">\(3\)</span> つの場合
+表&nbsp;3: 異なる <span class="math inline">\(2\)</span> つの実固有値の <span class="math inline">\(3\)</span> つの場合
 </figcaption>
 <div aria-describedby="tbl-ahl517a-signs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -1131,7 +1090,7 @@ A = 2, \qquad B = -1
 </div>
 </figure>
 </div>
-<p><em>Describe the long-term behaviour</em> と問われたら、<strong>表の英語をそのまま使う</strong>のがいちばん安全です。シラバスの言い方だからです。</p>
+<p><em>Describe the long-term behaviour</em> と問われたら、<strong>表の英語をそのまま使う</strong>のがいちばん安全です。IB の試験で使われる言い方だからです。</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1149,15 +1108,15 @@ A = 2, \qquad B = -1
 </div>
 </section>
 <section id="saddle" class="level3">
-<h3 class="anchored" data-anchor-id="saddle">6. saddle point</h3>
+<h3 class="anchored" data-anchor-id="saddle">6. Saddle points（鞍点）</h3>
 <p><strong>この節ですること：符号が違うときの軌道を、くわしく見ます。</strong></p>
 <div id="fig-ahl517a-saddle" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ahl517a-saddle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/ahl-5-17a-saddle.svg" class="img-fluid figure-img" style="width:58.0%">
+<img src="img/ahl-5-17a-saddle.svg" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ahl517a-saddle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;3: The origin is a saddle point
+図&nbsp;3: 原点が saddle point になる場合です。
 </figcaption>
 </figure>
 </div>
@@ -1184,9 +1143,7 @@ A = 2, \qquad B = -1
 </div>
 <div class="callout-body-container callout-body">
 <p>前後は下がっていて、左右は上がっている——馬の鞍（saddle）の真ん中と同じです。</p>
-<p><span class="math display">\[
-\text{片方の向きには安定、もう片方には不安定}
-\]</span></p>
+<p><strong>片方の向きには安定、もう片方には不安定</strong></p>
 <p><em>State the nature of the equilibrium point</em> と問われたら、<strong><code>saddle point</code></strong> と書きます。</p>
 </div>
 </div>
@@ -1200,13 +1157,126 @@ A = 2, \qquad B = -1
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>「両方実数だから node」ではありません。<strong>符号を見てください</strong>（<a href="#tbl-ahl517a-signs" class="quarto-xref">表&nbsp;4</a>）。</p>
+<p>「両方実数だから node」ではありません。<strong>符号を見てください</strong>（<a href="#tbl-ahl517a-signs" class="quarto-xref">表&nbsp;3</a>）。</p>
 <p><span class="math inline">\(\det M &lt; 0\)</span> なら、<span class="math inline">\(\lambda\)</span> の積が負、つまり<strong>符号が違う</strong>ので saddle です。<strong>行列式だけで判定できます。</strong></p>
+</div>
+</div>
+<div id="exm-ahl517a-classify" class="theorem example">
+<p><span class="theorem-title"><strong>例題 1</strong></span> <span class="q-en">For each system, state whether the origin is a stable node, an unstable node or a saddle point. Do not find the eigenvectors.</span></p>
+<p><strong>(a)</strong> <span class="math inline">\(\dfrac{dx}{dt} = 4x + y\)</span>, <span class="math inline">\(\ \dfrac{dy}{dt} = x + 4y\)</span></p>
+<p><strong>(b)</strong> <span class="math inline">\(\dfrac{dx}{dt} = -2x + y\)</span>, <span class="math inline">\(\ \dfrac{dy}{dt} = x - 2y\)</span></p>
+<p><strong>(c)</strong> <span class="math inline">\(\dfrac{dx}{dt} = y\)</span>, <span class="math inline">\(\ \dfrac{dy}{dt} = 2x + y\)</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>それぞれの系について、原点が stable node、unstable node、saddle point のどれかを述べなさい。固有ベクトルは求めなくても構いません。</p>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>対角の和と <span class="math inline">\(\det\)</span> だけで判定できます</strong>（<a href="#saddle">第6節</a>）。</p>
+<p><strong>(a)</strong> <span class="math inline">\(M = \begin{pmatrix} 4 &amp; 1 \\ 1 &amp; 4 \end{pmatrix}\)</span>、和 <span class="math inline">\(8\)</span>、<span class="math inline">\(\det = 16 - 1 = 15\)</span>。</p>
+<p><span class="math display">\[
+\lambda^{2} - 8\lambda + 15 = 0 \ \Longrightarrow \ \lambda = 5,\ 3
+\]</span></p>
+<p>両方正なので <strong>unstable node</strong>。</p>
+<p><strong>(b)</strong> <span class="math inline">\(M = \begin{pmatrix} -2 &amp; 1 \\ 1 &amp; -2 \end{pmatrix}\)</span>、和 <span class="math inline">\(-4\)</span>、<span class="math inline">\(\det = 4 - 1 = 3\)</span>。</p>
+<p><span class="math display">\[
+\lambda^{2} + 4\lambda + 3 = 0 \ \Longrightarrow \ \lambda = -1,\ -3
+\]</span></p>
+<p>両方負なので <strong>stable node</strong>。</p>
+<p><strong>(c)</strong> <span class="math inline">\(M = \begin{pmatrix} 0 &amp; 1 \\ 2 &amp; 1 \end{pmatrix}\)</span>、和 <span class="math inline">\(1\)</span>、<span class="math inline">\(\det = 0 - 2 = -2\)</span>。</p>
+<p><span class="math display">\[
+\lambda^{2} - \lambda - 2 = 0 \ \Longrightarrow \ \lambda = 2,\ -1
+\]</span></p>
+<p>符号が違うので <strong>saddle point</strong>。</p>
+<p><strong>検算。</strong> (c) は <span class="math inline">\(\det M = -2 &lt; 0\)</span> です。<strong><span class="math inline">\(\det\)</span> が負なら必ず saddle</strong> なので、固有値を出す前に分かります ✓</p>
+<ol type="a">
+<li>と (b) は <span class="math inline">\(\det &gt; 0\)</span> なので <span class="math inline">\(\lambda\)</span> の符号は同じです。あとは<strong>対角の和の符号</strong>を見れば、正か負かが決まります。(a) は <span class="math inline">\(+8\)</span> で両方正、(b) は <span class="math inline">\(-4\)</span> で両方負 ✓</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span><span class="math inline">\(\det\)</span> と対角の和で、<span class="math inline">\(3\)</span> つを見分けられます
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(\Delta = (\text{対角の和})^{2} - 4\det M\)</span> とおきます。</p>
+<div id="tbl-ahl517a-quick" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ahl517a-quick-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;4: <span class="math inline">\(\Delta\)</span>・<span class="math inline">\(\det\)</span>・対角の和による見分け
+</figcaption>
+<div aria-describedby="tbl-ahl517a-quick-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>判定</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\Delta &lt; 0\)</span></td>
+<td><strong>複素数</strong> → <a href="../../ai-hl/05-calculus/ahl-5-17b.html">AHL 5.17b</a></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\Delta &gt; 0\)</span> かつ <span class="math inline">\(\det M &lt; 0\)</span></td>
+<td><strong>saddle point</strong></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\Delta &gt; 0\)</span> かつ <span class="math inline">\(\det M &gt; 0\)</span> かつ 対角の和 <span class="math inline">\(&gt; 0\)</span></td>
+<td><strong>unstable node</strong>（両方正）</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\Delta &gt; 0\)</span> かつ <span class="math inline">\(\det M &gt; 0\)</span> かつ 対角の和 <span class="math inline">\(&lt; 0\)</span></td>
+<td><strong>stable node</strong>（両方負）</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p><span class="math inline">\(\lambda\)</span> の<strong>積が <span class="math inline">\(\det M\)</span></strong>、<strong>和が対角の和</strong>だからです（<a href="../../ai-hl/01-number-and-algebra/ahl-1-15.html#expand">AHL 1.15</a>）。</p>
+<p><strong><span class="math inline">\(\Delta\)</span> を先に見てください。</strong> <span class="math inline">\(\det M &gt; 0\)</span> でも <span class="math inline">\(\Delta &lt; 0\)</span> なら <strong>complex number</strong>（複素数）で、node ではありません（<a href="../../ai-hl/05-calculus/ahl-5-17b.html">AHL 5.17b</a>）。</p>
+<p><strong>ただし、答案には固有値そのものを書いてください。</strong> この表は、検算と見当づけのためのものです。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(\lambda^{2} - 8\lambda + 15 = 0\)</span>, <span class="math inline">\(\ \lambda = 5,\ 3\)</span> — <em>both positive, so an unstable node.</em></p>
+<p><strong>(b)</strong> <span class="math inline">\(\lambda^{2} + 4\lambda + 3 = 0\)</span>, <span class="math inline">\(\ \lambda = -1,\ -3\)</span> — <em>both negative, so a stable node.</em></p>
+<p><strong>(c)</strong> <span class="math inline">\(\lambda^{2} - \lambda - 2 = 0\)</span>, <span class="math inline">\(\ \lambda = 2,\ -1\)</span> — <em>opposite signs, so a saddle point.</em></p>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </section>
 <section id="longrun" class="level3">
-<h3 class="anchored" data-anchor-id="longrun">7. 長い目で見ると</h3>
+<h3 class="anchored" data-anchor-id="longrun">7. Long-term behaviour（長い目で見たときの動き）</h3>
 <p><strong>この節ですること：一般解の <span class="math inline">\(2\)</span> つの項をくらべて、最後にどちらの向きが勝つかを見ます。</strong></p>
 <div id="fig-ahl517a-longrun" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1214,7 +1284,7 @@ A = 2, \qquad B = -1
 <img src="img/ahl-5-17a-longrun.svg" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ahl517a-longrun-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-図&nbsp;4: Which direction wins in the long run
+図&nbsp;4: 長い時間がたつと、どちらの向きが勝つかです。
 </figcaption>
 </figure>
 </div>
@@ -1237,9 +1307,7 @@ A = 2, \qquad B = -1
 </div>
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\(2\)</span> つとも負でも同じです。<span class="math inline">\(e^{-t}\)</span> と <span class="math inline">\(e^{-5t}\)</span> なら、<span class="math inline">\(e^{-5t}\)</span> のほうが速く <span class="math inline">\(0\)</span> になるので、<strong>残るのは <span class="math inline">\(e^{-t}\)</span> のほう</strong>です。</p>
-<p><span class="math display">\[
-\text{係数が } 0 \text{ でなければ、大きいほうの } \lambda \text{ の項が支配的になる}
-\]</span></p>
+<p><strong>係数が <span class="math inline">\(0\)</span> でなければ、大きいほうの <span class="math inline">\(\lambda\)</span> の項が支配的になります。</strong></p>
 <p>「大きい」は<strong>符号こみ</strong>です。<span class="math inline">\(-1\)</span> と <span class="math inline">\(-5\)</span> なら、<span class="math inline">\(-1\)</span> のほうが大きい数です。</p>
 <p><strong>ただし、その項の係数が <span class="math inline">\(0\)</span> の場合は例外です。</strong> たとえば初期条件がもう一方の固有ベクトルの上にあると、大きい固有値に対応する項は<strong>最初から現れません</strong>（その係数が <span class="math inline">\(0\)</span> だからです）。そのときは、軌道はもう一方の固有ベクトルの直線の上を動き続けます。</p>
 </div>
@@ -1262,131 +1330,8 @@ A &gt; 0 \ \Longrightarrow \ +\mathbf{p}_1 \text{ の向き}, \qquad A &lt; 0 \ 
 <p><strong><span class="math inline">\(A\)</span> の符号で決まります。</strong> 初期条件を分解すれば、計算で確かめられます。</p>
 </div>
 </div>
-</section>
-<section id="sketch" class="level3">
-<h3 class="anchored" data-anchor-id="sketch">8. 軌道のかき方</h3>
-<p><strong>この節ですること：ここまでを使って、実際に相図をかきます。</strong></p>
-<p><strong>手順は <span class="math inline">\(4\)</span> つです。</strong></p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<ol type="1">
-<li><strong><span class="math inline">\(2\)</span> 本の eigenvector の直線</strong>を、原点を通るように引く</li>
-<li>それぞれに、<span class="math inline">\(\lambda\)</span> の符号にしたがって<strong>矢印</strong>を付ける（正なら外向き、負なら内向き）</li>
-<li>与えられた<strong>出発点に印</strong>を付ける</li>
-<li><span class="math inline">\(2\)</span> 本の直線と矛盾しないように、<strong>なめらかな曲線</strong>をかく</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">重要</span>矢印を必ず付けてください
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>phase portrait では、<strong>曲線だけでは足りません。</strong> どちら向きに進むかが、この項目の中身だからです。</p>
-<p><strong>矢印の無い図は、点になりません。</strong></p>
-</div>
-</div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">警告</span>軌道どうしは交わりません
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><a href="../../ai-hl/05-calculus/ahl-5-15.html#read">AHL 5.15</a> と同じ理由です。ここで扱う系では、<strong>initial condition から解が <span class="math inline">\(1\)</span> つに定まる</strong>からです。</p>
-<p><strong>eigenvector の直線も、またげません。</strong> 直線そのものが軌道だからです。</p>
-</div>
-</div>
-</section>
-</section>
-<section id="why-it-works" class="level2">
-<h2 class="anchored" data-anchor-id="why-it-works">Why it works</h2>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ヒント</span>クリックすると開きます
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-16" class="callout-16-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<section id="why" class="level3">
-<h3 class="anchored" data-anchor-id="why">なぜ足し合わせてよいのか</h3>
-<p><span class="math inline">\(\mathbf{X}_1 = \mathbf{p}_1 e^{\lambda_1 t}\)</span> が解であることは、直接確かめられます。</p>
-<p><span class="math display">\[
-\frac{d\mathbf{X}_1}{dt} = \lambda_1 \mathbf{p}_1 e^{\lambda_1 t}, \qquad
-M\mathbf{X}_1 = (M\mathbf{p}_1) e^{\lambda_1 t} = \lambda_1 \mathbf{p}_1 e^{\lambda_1 t}
-\]</span></p>
-<p><strong>両方とも同じです</strong> ✓ 同じく <span class="math inline">\(\mathbf{X}_2 = \mathbf{p}_2 e^{\lambda_2 t}\)</span> も解です。</p>
-<p>では <span class="math inline">\(A\mathbf{X}_1 + B\mathbf{X}_2\)</span> はどうでしょうか。</p>
-<p><span class="math display">\[
-\frac{d}{dt}(A\mathbf{X}_1 + B\mathbf{X}_2) = A\frac{d\mathbf{X}_1}{dt} + B\frac{d\mathbf{X}_2}{dt} = AM\mathbf{X}_1 + BM\mathbf{X}_2 = M(A\mathbf{X}_1 + B\mathbf{X}_2)
-\]</span></p>
-<p><strong>これも解です。</strong> 微分も行列も、足し算と定数倍をそのまま通すからです。</p>
-</section>
-<section id="why-two" class="level3">
-<h3 class="anchored" data-anchor-id="why-two">なぜ <span class="math inline">\(2\)</span> つで足りるのか</h3>
-<p><span class="math inline">\(\mathbf{p}_1\)</span> と <span class="math inline">\(\mathbf{p}_2\)</span> が<strong>平行でなければ</strong>、平面上のどんなベクトルも <span class="math inline">\(A\mathbf{p}_1 + B\mathbf{p}_2\)</span> の形に書けます。</p>
-<p><span class="math inline">\(\lambda_1 \neq \lambda_2\)</span> なら、<span class="math inline">\(\mathbf{p}_1\)</span> と <span class="math inline">\(\mathbf{p}_2\)</span> は平行になりません。ですから、<strong>どんな初期条件でも <span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> が決まります。</strong></p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>シラバスが <em>“Systems will have <strong>distinct, non-zero</strong>, eigenvalues”</em> と限定しているのは、このためです。</p>
-<p><span class="math inline">\(\lambda\)</span> が重解のときは、この形では足りません。<strong>AI HL では出ません。</strong></p>
-</div>
-</div>
-</div>
-</section>
-<section id="why-saddle" class="level3">
-<h3 class="anchored" data-anchor-id="why-saddle">saddle の分かれ目</h3>
-<p><span class="math display">\[
-\mathbf{X} = A\mathbf{p}_1 e^{3t} + B\mathbf{p}_2 e^{-t}
-\]</span></p>
-<p><span class="math inline">\(t\)</span> が大きいとき、<span class="math inline">\(e^{-t} \to 0\)</span> なので <span class="math inline">\(2\)</span> つ目は消えます。残るのは <span class="math inline">\(A\mathbf{p}_1 e^{3t}\)</span> です。</p>
-<ul>
-<li><span class="math inline">\(A &gt; 0\)</span> … <span class="math inline">\(+\mathbf{p}_1\)</span> の向きへ</li>
-<li><span class="math inline">\(A &lt; 0\)</span> … <span class="math inline">\(-\mathbf{p}_1\)</span> の向きへ</li>
-<li><span class="math inline">\(A = 0\)</span> … <strong><span class="math inline">\(\mathbf{p}_1\)</span> の項が最初から無い</strong> ので、<span class="math inline">\(\mathbf{p}_2\)</span> の直線に沿って原点へ</li>
-</ul>
-<p><strong><span class="math inline">\(A = 0\)</span> になるのが、ちょうど <span class="math inline">\(\lambda &lt; 0\)</span> の直線の上</strong>です。だから、そこが分かれ目になります。</p>
-</section>
-</div>
-</div>
-</div>
-</section>
-<section id="worked-examples" class="level2">
-<h2 class="anchored" data-anchor-id="worked-examples">Worked examples</h2>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>問題文は英語です。意味が理解できなかったら、問題文の下の「<strong>日本語訳</strong>」を開いてください。解説は日本語です。</p>
-</div>
-</div>
-</div>
 <div id="exm-ahl517a-node" class="theorem example">
-<p><span class="theorem-title"><strong>例題 1</strong></span> <span class="q-en">Consider the system</span></p>
+<p><span class="theorem-title"><strong>例題 2</strong></span> <span class="q-en">Consider the system</span></p>
 <p><span class="math display">\[
 \frac{dx}{dt} = 3x + 2y, \qquad \frac{dy}{dt} = 2x + 3y
 \]</span></p>
@@ -1405,7 +1350,18 @@ M\mathbf{X}_1 = (M\mathbf{p}_1) e^{\lambda_1 t} = \lambda_1 \mathbf{p}_1 e^{\lam
 <p><strong>(c)</strong> <span class="math inline">\(t = 0\)</span> のとき <span class="math inline">\(x = 1\)</span>、<span class="math inline">\(y = 3\)</span> とします。特殊解を求めなさい。</p>
 <p><strong>(d)</strong> 解の長期的なふるまいを述べなさい。</p>
 </details>
-<hr>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p><strong>(a)</strong> 行列は <span class="math inline">\(M = \begin{pmatrix} 3 &amp; 2 \\ 2 &amp; 3 \end{pmatrix}\)</span> です。</p>
 <p>対角の和は <span class="math inline">\(6\)</span>、<span class="math inline">\(\det M = 9 - 4 = 5\)</span> なので</p>
 <p><span class="math display">\[
@@ -1451,7 +1407,8 @@ A = 2, \qquad B = -1
 <p><strong>(d)</strong></p>
 <div class="model-answer">
 <p><strong>試験ではこう書く</strong></p>
-<p><em>Both eigenvalues are positive, so all solutions move away from the origin. Since <span class="math inline">\(5 &gt; 1\)</span>, the term in <span class="math inline">\(e^{5t}\)</span> grows much faster, so for large <span class="math inline">\(t\)</span> the path becomes close to the direction of <span class="math inline">\(\begin{pmatrix} 1 \\ 1 \end{pmatrix}\)</span>, moving away into the first quadrant.</em></p>
+<p><em>Both eigenvalues are positive, so all solutions move away from the origin.</em></p>
+<p><em>Since <span class="math inline">\(5 &gt; 1\)</span>, the term in <span class="math inline">\(e^{5t}\)</span> grows much faster, so for large <span class="math inline">\(t\)</span> the path becomes close to the direction of <span class="math inline">\(\begin{pmatrix} 1 \\ 1 \end{pmatrix}\)</span>, moving away into the first quadrant.</em></p>
 </div>
 <p>（どちらの固有値も正なので、すべての解は原点から離れる。<span class="math inline">\(5 &gt; 1\)</span> なので <span class="math inline">\(e^{5t}\)</span> の項のほうがずっと速く増え、<span class="math inline">\(t\)</span> が大きいところでは経路は <span class="math inline">\(\begin{pmatrix} 1 \\ 1 \end{pmatrix}\)</span> の向きに近づき、第1象限へ離れていく、という意味です。）</p>
 <p><strong>検算。</strong> (c) の解に <span class="math inline">\(t = 0\)</span> を入れると <span class="math inline">\(2(1,1) - (1,-1) = (2-1,\ 2+1) = (1,\ 3)\)</span> ✓ 初期条件と一致しました。</p>
@@ -1497,13 +1454,168 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 \]</span></p>
 <p><strong>(d)</strong></p>
 <div class="model-answer">
-<p><em>Both eigenvalues are positive, so all solutions move away from the origin. As <span class="math inline">\(t\)</span> increases the <span class="math inline">\(e^{5t}\)</span> term dominates, so the path approaches the direction of <span class="math inline">\(\begin{pmatrix} 1 \\ 1 \end{pmatrix}\)</span>.</em></p>
+<p><em>Both eigenvalues are positive, so all solutions move away from the origin.</em></p>
+<p><em>As <span class="math inline">\(t\)</span> increases the <span class="math inline">\(e^{5t}\)</span> term dominates, so the path approaches the direction of <span class="math inline">\(\begin{pmatrix} 1 \\ 1 \end{pmatrix}\)</span>.</em></p>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="exm-ahl517a-stable" class="theorem example">
+<p><span class="theorem-title"><strong>例題 3</strong></span> <span class="q-en">Two neighbouring towns exchange residents. Let <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> be the differences (in thousands) between each town’s population and its long-term level, after <span class="math inline">\(t\)</span> years. They satisfy</span></p>
+<p><span class="math display">\[
+\frac{dx}{dt} = -3x + 2y, \qquad \frac{dy}{dt} = 2x - 3y,
+\]</span></p>
+<p><span class="q-en">with <span class="math inline">\(x = 4\)</span> and <span class="math inline">\(y = 0\)</span> when <span class="math inline">\(t = 0\)</span>.</span></p>
+<p><strong>(a)</strong> <span class="q-en">Find the eigenvalues.</span></p>
+<p><strong>(b)</strong> <span class="q-en">Find the particular solution.</span></p>
+<p><strong>(c)</strong> <span class="q-en">Comment on what the model predicts for the two towns in the long term.</span></p>
+<details class="jp-trans">
+<summary>
+日本語訳
+</summary>
+<p>隣りあう <span class="math inline">\(2\)</span> つの町が住民をやりとりしています。<span class="math inline">\(t\)</span> 年後の、それぞれの町の人口と長期的な水準との差（千人単位）を <span class="math inline">\(x\)</span>、<span class="math inline">\(y\)</span> とします。上の式を満たし、<span class="math inline">\(t = 0\)</span> のとき <span class="math inline">\(x = 4\)</span>、<span class="math inline">\(y = 0\)</span> です。</p>
+<p><code>neighbouring</code> は「隣りあう」、<code>residents</code> は「住民」、<code>long-term level</code> は「長期的な水準」という意味です。</p>
+<p><strong>(a)</strong> 固有値を求めなさい。</p>
+<p><strong>(b)</strong> 特殊解を求めなさい。</p>
+<p><strong>(c)</strong> このモデルが <span class="math inline">\(2\)</span> つの町について長期的に予測することをコメントしなさい。</p>
+</details>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math inline">\(M = \begin{pmatrix} -3 &amp; 2 \\ 2 &amp; -3 \end{pmatrix}\)</span>、対角の和 <span class="math inline">\(-6\)</span>、<span class="math inline">\(\det M = 9 - 4 = 5\)</span>。</p>
+<p><span class="math display">\[
+\lambda^{2} + 6\lambda + 5 = 0 \ \Longrightarrow \ (\lambda + 1)(\lambda + 5) = 0
+\]</span></p>
+<p><span class="math display">\[
+\lambda = -1, \qquad \lambda = -5
+\]</span></p>
+<p><strong>(b)</strong> eigenvector は <a href="#exm-ahl517a-node" class="quarto-xref">例&nbsp;2</a> と同じ形です。</p>
+<p><strong><span class="math inline">\(\lambda = -1\)</span>：</strong> <span class="math inline">\(-2p_1 + 2p_2 = 0\)</span> より <span class="math inline">\(\begin{pmatrix} 1 \\ 1 \end{pmatrix}\)</span></p>
+<p><strong><span class="math inline">\(\lambda = -5\)</span>：</strong> <span class="math inline">\(2p_1 + 2p_2 = 0\)</span> より <span class="math inline">\(\begin{pmatrix} 1 \\ -1 \end{pmatrix}\)</span></p>
+<p><span class="math display">\[
+\mathbf{X} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
+\]</span></p>
+<p><span class="math inline">\(t = 0\)</span> で <span class="math inline">\(\begin{pmatrix} 4 \\ 0 \end{pmatrix}\)</span> なので <span class="math inline">\(A + B = 4\)</span>、<span class="math inline">\(A - B = 0\)</span>、つまり <span class="math inline">\(A = B = 2\)</span>。</p>
+<p><span class="math display">\[
+\mathbf{X} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + 2\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
+\]</span></p>
+<p><strong>(c)</strong></p>
+<div class="model-answer">
+<p><strong>試験ではこう書く</strong></p>
+<p><em>Both eigenvalues are negative, so both <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> tend to zero as <span class="math inline">\(t\)</span> increases.</em></p>
+<p><em>The model predicts that each town’s population settles down to its long-term level, and the differences disappear.</em></p>
+<p><em>The <span class="math inline">\(e^{-5t}\)</span> term dies away much faster than the <span class="math inline">\(e^{-t}\)</span> term, so after a short time the two differences become almost equal to each other.</em></p>
+</div>
+<p>（どちらの固有値も負なので、<span class="math inline">\(t\)</span> が増えると <span class="math inline">\(x\)</span> も <span class="math inline">\(y\)</span> も <span class="math inline">\(0\)</span> に近づく。このモデルは、それぞれの町の人口が長期的な水準に落ち着き、差が消えることを予測している。<span class="math inline">\(e^{-5t}\)</span> の項は <span class="math inline">\(e^{-t}\)</span> の項よりずっと速く消えるので、しばらくすると <span class="math inline">\(2\)</span> つの差はほぼ等しくなる、という意味です。）</p>
+<p><strong>検算。</strong> <span class="math inline">\(t = 0\)</span> で <span class="math inline">\(2(1,1) + 2(1,-1) = (4,\ 0)\)</span> ✓</p>
+<p><span class="math inline">\(t\)</span> を大きくすると、成分は <span class="math inline">\(x = 2e^{-t} + 2e^{-5t}\)</span>、<span class="math inline">\(y = 2e^{-t} - 2e^{-5t}\)</span> です。<span class="math inline">\(t = 2\)</span> なら <span class="math inline">\(x = 0.271 + 0.0000908 = 0.271\)</span>、<span class="math inline">\(y = 0.271 - 0.0000908 = 0.271\)</span> ✓ <strong>ほぼ等しくなっています。</strong></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span><span class="math inline">\(x\)</span> と <span class="math inline">\(y\)</span> が「差」であることに注意してください
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>この問題の <span class="math inline">\(x\)</span> は人口そのものではなく、<strong>基準からのずれ</strong>です。ですから <span class="math inline">\(0\)</span> に近づくことが「落ち着く」を意味します。</p>
+<p><strong>問題文が何を <span class="math inline">\(x\)</span> と置いているか</strong>、必ず読んでください。この項目の形は <span class="math inline">\(\dfrac{dx}{dt} = ax + by\)</span> で定数項が付かないので、<strong>「ずれ」を変数にする問題文が多くなります</strong>（<a href="#idea">第1節</a>）。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <span class="math display">\[
+\lambda^{2} + 6\lambda + 5 = 0, \qquad \lambda = -1 \text{ or } -5
+\]</span></p>
+<p><strong>(b)</strong> <span class="math display">\[
+\lambda = -1: \begin{pmatrix} 1 \\ 1 \end{pmatrix}, \qquad \lambda = -5: \begin{pmatrix} 1 \\ -1 \end{pmatrix}
+\]</span> <span class="math display">\[
+\mathbf{X} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
+\]</span> <em>When <span class="math inline">\(t = 0\)</span>:</em> <span class="math inline">\(\ A + B = 4\)</span>, <span class="math inline">\(\ A - B = 0\)</span>, <em>so</em> <span class="math inline">\(A = B = 2\)</span>. <span class="math display">\[
+\mathbf{X} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + 2\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
+\]</span></p>
+<p><strong>(c)</strong></p>
+<div class="model-answer">
+<p><em>Both eigenvalues are negative, so <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> both tend to zero: each town settles to its long-term level.</em></p>
+<p><em>The <span class="math inline">\(e^{-5t}\)</span> term dies away faster, so the two differences soon become almost equal.</em></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sketch" class="level3">
+<h3 class="anchored" data-anchor-id="sketch">8. Sketching trajectories（軌道のかき方）</h3>
+<p><strong>この節ですること：ここまでを使って、実際に相図をかきます。</strong></p>
+<p><strong>手順は <span class="math inline">\(4\)</span> つです。</strong></p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<ol type="1">
+<li><strong><span class="math inline">\(2\)</span> 本の eigenvector の直線</strong>を、原点を通るように引く</li>
+<li>それぞれに、<span class="math inline">\(\lambda\)</span> の符号にしたがって<strong>矢印</strong>を付ける（正なら外向き、負なら内向き）</li>
+<li>与えられた<strong>出発点に印</strong>を付ける</li>
+<li><span class="math inline">\(2\)</span> 本の直線と矛盾しないように、<strong>なめらかな曲線</strong>をかく</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">重要</span>矢印を必ず付けてください
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>phase portrait では、<strong>曲線だけでは足りません。</strong> どちら向きに進むかが、この項目の中身だからです。</p>
+<p><strong>矢印の無い図は、点になりません。</strong></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">警告</span>軌道どうしは交わりません
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="../../ai-hl/05-calculus/ahl-5-15.html#read">AHL 5.15</a> と同じ理由です。ここで扱う系では、<strong>initial condition から解が <span class="math inline">\(1\)</span> つに定まる</strong>からです。</p>
+<p><strong>eigenvector の直線も、またげません。</strong> 直線そのものが軌道だからです。</p>
 </div>
 </div>
 <div id="exm-ahl517a-saddle" class="theorem example">
-<p><span class="theorem-title"><strong>例題 2</strong></span> <span class="q-en">Consider the system</span></p>
+<p><span class="theorem-title"><strong>例題 4</strong></span> <span class="q-en">Consider the system</span></p>
 <p><span class="math display">\[
 \frac{dx}{dt} = x + 2y, \qquad \frac{dy}{dt} = 2x + y
 \]</span></p>
@@ -1520,7 +1632,18 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 <p><strong>(b)</strong> 原点にある平衡点の種類を、理由を付けて述べなさい。</p>
 <p><strong>(c)</strong> <span class="math inline">\(2\)</span> つの固有ベクトルの向きと運動の向きを示して、相図をかきなさい。</p>
 </details>
-<hr>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">ヒント</span>解説と解答例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(M = \begin{pmatrix} 1 &amp; 2 \\ 2 &amp; 1 \end{pmatrix}\)</span>、対角の和 <span class="math inline">\(2\)</span>、<span class="math inline">\(\det M = 1 - 4 = -3\)</span>。</p>
 <p><span class="math display">\[
 \lambda^{2} - 2\lambda - 3 = 0 \ \Longrightarrow \ (\lambda - 3)(\lambda + 1) = 0
@@ -1586,188 +1709,68 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 </div>
 </div>
-<div id="exm-ahl517a-stable" class="theorem example">
-<p><span class="theorem-title"><strong>例題 3</strong></span> <span class="q-en">Two neighbouring towns exchange residents. Let <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> be the differences (in thousands) between each town’s population and its long-term level, after <span class="math inline">\(t\)</span> years. They satisfy</span></p>
-<p><span class="math display">\[
-\frac{dx}{dt} = -3x + 2y, \qquad \frac{dy}{dt} = 2x - 3y,
-\]</span></p>
-<p><span class="q-en">with <span class="math inline">\(x = 4\)</span> and <span class="math inline">\(y = 0\)</span> when <span class="math inline">\(t = 0\)</span>.</span></p>
-<p><strong>(a)</strong> <span class="q-en">Find the eigenvalues.</span></p>
-<p><strong>(b)</strong> <span class="q-en">Find the particular solution.</span></p>
-<p><strong>(c)</strong> <span class="q-en">Comment on what the model predicts for the two towns in the long term.</span></p>
-<details class="jp-trans">
-<summary>
-日本語訳
-</summary>
-<p>隣りあう <span class="math inline">\(2\)</span> つの町が住民をやりとりしています。<span class="math inline">\(t\)</span> 年後の、それぞれの町の人口と長期的な水準との差（千人単位）を <span class="math inline">\(x\)</span>、<span class="math inline">\(y\)</span> とします。上の式を満たし、<span class="math inline">\(t = 0\)</span> のとき <span class="math inline">\(x = 4\)</span>、<span class="math inline">\(y = 0\)</span> です。</p>
-<p><code>neighbouring</code> は「隣りあう」、<code>residents</code> は「住民」、<code>long-term level</code> は「長期的な水準」という意味です。</p>
-<p><strong>(a)</strong> 固有値を求めなさい。</p>
-<p><strong>(b)</strong> 特殊解を求めなさい。</p>
-<p><strong>(c)</strong> このモデルが <span class="math inline">\(2\)</span> つの町について長期的に予測することをコメントしなさい。</p>
-</details>
-<hr>
-<p><strong>(a)</strong> <span class="math inline">\(M = \begin{pmatrix} -3 &amp; 2 \\ 2 &amp; -3 \end{pmatrix}\)</span>、対角の和 <span class="math inline">\(-6\)</span>、<span class="math inline">\(\det M = 9 - 4 = 5\)</span>。</p>
-<p><span class="math display">\[
-\lambda^{2} + 6\lambda + 5 = 0 \ \Longrightarrow \ (\lambda + 1)(\lambda + 5) = 0
-\]</span></p>
-<p><span class="math display">\[
-\lambda = -1, \qquad \lambda = -5
-\]</span></p>
-<p><strong>(b)</strong> eigenvector は <a href="#exm-ahl517a-node" class="quarto-xref">例&nbsp;1</a> と同じ形です。</p>
-<p><strong><span class="math inline">\(\lambda = -1\)</span>：</strong> <span class="math inline">\(-2p_1 + 2p_2 = 0\)</span> より <span class="math inline">\(\begin{pmatrix} 1 \\ 1 \end{pmatrix}\)</span></p>
-<p><strong><span class="math inline">\(\lambda = -5\)</span>：</strong> <span class="math inline">\(2p_1 + 2p_2 = 0\)</span> より <span class="math inline">\(\begin{pmatrix} 1 \\ -1 \end{pmatrix}\)</span></p>
-<p><span class="math display">\[
-\mathbf{X} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
-\]</span></p>
-<p><span class="math inline">\(t = 0\)</span> で <span class="math inline">\(\begin{pmatrix} 4 \\ 0 \end{pmatrix}\)</span> なので <span class="math inline">\(A + B = 4\)</span>、<span class="math inline">\(A - B = 0\)</span>、つまり <span class="math inline">\(A = B = 2\)</span>。</p>
-<p><span class="math display">\[
-\mathbf{X} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + 2\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
-\]</span></p>
-<p><strong>(c)</strong></p>
-<div class="model-answer">
-<p><strong>試験ではこう書く</strong></p>
-<p><em>Both eigenvalues are negative, so both <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> tend to zero as <span class="math inline">\(t\)</span> increases. The model predicts that each town’s population settles down to its long-term level, and the differences disappear. The <span class="math inline">\(e^{-5t}\)</span> term dies away much faster than the <span class="math inline">\(e^{-t}\)</span> term, so after a short time the two differences become almost equal to each other.</em></p>
 </div>
-<p>（どちらの固有値も負なので、<span class="math inline">\(t\)</span> が増えると <span class="math inline">\(x\)</span> も <span class="math inline">\(y\)</span> も <span class="math inline">\(0\)</span> に近づく。このモデルは、それぞれの町の人口が長期的な水準に落ち着き、差が消えることを予測している。<span class="math inline">\(e^{-5t}\)</span> の項は <span class="math inline">\(e^{-t}\)</span> の項よりずっと速く消えるので、しばらくすると <span class="math inline">\(2\)</span> つの差はほぼ等しくなる、という意味です。）</p>
-<p><strong>検算。</strong> <span class="math inline">\(t = 0\)</span> で <span class="math inline">\(2(1,1) + 2(1,-1) = (4,\ 0)\)</span> ✓</p>
-<p><span class="math inline">\(t\)</span> を大きくすると、成分は <span class="math inline">\(x = 2e^{-t} + 2e^{-5t}\)</span>、<span class="math inline">\(y = 2e^{-t} - 2e^{-5t}\)</span> です。<span class="math inline">\(t = 2\)</span> なら <span class="math inline">\(x = 0.271 + 0.0000908 = 0.271\)</span>、<span class="math inline">\(y = 0.271 - 0.0000908 = 0.271\)</span> ✓ <strong>ほぼ等しくなっています。</strong></p>
+</div>
+</div>
+</section>
+</section>
+<section id="why-it-works" class="level2">
+<h2 class="anchored" data-anchor-id="why-it-works">Why it works</h2>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ヒント</span><span class="math inline">\(x\)</span> と <span class="math inline">\(y\)</span> が「差」であることに注意してください
+<span class="screen-reader-only">ヒント</span>クリックすると開きます
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>この問題の <span class="math inline">\(x\)</span> は人口そのものではなく、<strong>基準からのずれ</strong>です。ですから <span class="math inline">\(0\)</span> に近づくことが「落ち着く」を意味します。</p>
-<p><strong>問題文が何を <span class="math inline">\(x\)</span> と置いているか</strong>、必ず読んでください。この項目の形は <span class="math inline">\(\dfrac{dx}{dt} = ax + by\)</span> で定数項が付かないので、<strong>「ずれ」を変数にする問題文が多くなります</strong>（<a href="#idea">第1節</a>）。</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>(a)</strong> <span class="math display">\[
-\lambda^{2} + 6\lambda + 5 = 0, \qquad \lambda = -1 \text{ or } -5
-\]</span></p>
-<p><strong>(b)</strong> <span class="math display">\[
-\lambda = -1: \begin{pmatrix} 1 \\ 1 \end{pmatrix}, \qquad \lambda = -5: \begin{pmatrix} 1 \\ -1 \end{pmatrix}
-\]</span> <span class="math display">\[
-\mathbf{X} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
-\]</span> <em>When <span class="math inline">\(t = 0\)</span>:</em> <span class="math inline">\(\ A + B = 4\)</span>, <span class="math inline">\(\ A - B = 0\)</span>, <em>so</em> <span class="math inline">\(A = B = 2\)</span>. <span class="math display">\[
-\mathbf{X} = 2\begin{pmatrix} 1 \\ 1 \end{pmatrix}e^{-t} + 2\begin{pmatrix} 1 \\ -1 \end{pmatrix}e^{-5t}
-\]</span></p>
-<p><strong>(c)</strong></p>
-<div class="model-answer">
-<p><em>Both eigenvalues are negative, so <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> both tend to zero: each town settles to its long-term level. The <span class="math inline">\(e^{-5t}\)</span> term dies away faster, so the two differences soon become almost equal.</em></p>
-</div>
-</div>
-</div>
-</div>
-<div id="exm-ahl517a-classify" class="theorem example">
-<p><span class="theorem-title"><strong>例題 4</strong></span> <span class="q-en">For each system, state whether the origin is a stable node, an unstable node or a saddle point. Do not find the eigenvectors.</span></p>
-<p><strong>(a)</strong> <span class="math inline">\(\dfrac{dx}{dt} = 4x + y\)</span>, <span class="math inline">\(\ \dfrac{dy}{dt} = x + 4y\)</span></p>
-<p><strong>(b)</strong> <span class="math inline">\(\dfrac{dx}{dt} = -2x + y\)</span>, <span class="math inline">\(\ \dfrac{dy}{dt} = x - 2y\)</span></p>
-<p><strong>(c)</strong> <span class="math inline">\(\dfrac{dx}{dt} = y\)</span>, <span class="math inline">\(\ \dfrac{dy}{dt} = 2x + y\)</span></p>
-<details class="jp-trans">
-<summary>
-日本語訳
-</summary>
-<p>それぞれの系について、原点が stable node、unstable node、saddle point のどれかを述べなさい。固有ベクトルは求めなくても構いません。</p>
-</details>
-<hr>
-<p><strong>対角の和と <span class="math inline">\(\det\)</span> だけで判定できます</strong>（<a href="#saddle">第6節</a>）。</p>
-<p><strong>(a)</strong> <span class="math inline">\(M = \begin{pmatrix} 4 &amp; 1 \\ 1 &amp; 4 \end{pmatrix}\)</span>、和 <span class="math inline">\(8\)</span>、<span class="math inline">\(\det = 16 - 1 = 15\)</span>。</p>
+<section id="why" class="level4">
+<h4 class="anchored" data-anchor-id="why">なぜ足し合わせてよいのか</h4>
+<p><span class="math inline">\(\mathbf{X}_1 = \mathbf{p}_1 e^{\lambda_1 t}\)</span> が解であることは、直接確かめられます。</p>
 <p><span class="math display">\[
-\lambda^{2} - 8\lambda + 15 = 0 \ \Longrightarrow \ \lambda = 5,\ 3
+\frac{d\mathbf{X}_1}{dt} = \lambda_1 \mathbf{p}_1 e^{\lambda_1 t}, \qquad
+M\mathbf{X}_1 = (M\mathbf{p}_1) e^{\lambda_1 t} = \lambda_1 \mathbf{p}_1 e^{\lambda_1 t}
 \]</span></p>
-<p>両方正なので <strong>unstable node</strong>。</p>
-<p><strong>(b)</strong> <span class="math inline">\(M = \begin{pmatrix} -2 &amp; 1 \\ 1 &amp; -2 \end{pmatrix}\)</span>、和 <span class="math inline">\(-4\)</span>、<span class="math inline">\(\det = 4 - 1 = 3\)</span>。</p>
+<p><strong>両方とも同じです</strong> ✓ 同じく <span class="math inline">\(\mathbf{X}_2 = \mathbf{p}_2 e^{\lambda_2 t}\)</span> も解です。</p>
+<p>では <span class="math inline">\(A\mathbf{X}_1 + B\mathbf{X}_2\)</span> はどうでしょうか。</p>
 <p><span class="math display">\[
-\lambda^{2} + 4\lambda + 3 = 0 \ \Longrightarrow \ \lambda = -1,\ -3
+\frac{d}{dt}(A\mathbf{X}_1 + B\mathbf{X}_2) = A\frac{d\mathbf{X}_1}{dt} + B\frac{d\mathbf{X}_2}{dt} = AM\mathbf{X}_1 + BM\mathbf{X}_2 = M(A\mathbf{X}_1 + B\mathbf{X}_2)
 \]</span></p>
-<p>両方負なので <strong>stable node</strong>。</p>
-<p><strong>(c)</strong> <span class="math inline">\(M = \begin{pmatrix} 0 &amp; 1 \\ 2 &amp; 1 \end{pmatrix}\)</span>、和 <span class="math inline">\(1\)</span>、<span class="math inline">\(\det = 0 - 2 = -2\)</span>。</p>
-<p><span class="math display">\[
-\lambda^{2} - \lambda - 2 = 0 \ \Longrightarrow \ \lambda = 2,\ -1
-\]</span></p>
-<p>符号が違うので <strong>saddle point</strong>。</p>
-<p><strong>検算。</strong> (c) は <span class="math inline">\(\det M = -2 &lt; 0\)</span> です。<strong><span class="math inline">\(\det\)</span> が負なら必ず saddle</strong> なので、固有値を出す前に分かります ✓</p>
-<ol type="a">
-<li>と (b) は <span class="math inline">\(\det &gt; 0\)</span> なので <span class="math inline">\(\lambda\)</span> の符号は同じです。あとは<strong>対角の和の符号</strong>を見れば、正か負かが決まります。(a) は <span class="math inline">\(+8\)</span> で両方正、(b) は <span class="math inline">\(-4\)</span> で両方負 ✓</li>
-</ol>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
+<p><strong>これも解です。</strong> 微分も行列も、足し算と定数倍をそのまま通すからです。</p>
+</section>
+<section id="why-two" class="level4">
+<h4 class="anchored" data-anchor-id="why-two">なぜ <span class="math inline">\(2\)</span> つで足りるのか</h4>
+<p><span class="math inline">\(\mathbf{p}_1\)</span> と <span class="math inline">\(\mathbf{p}_2\)</span> が<strong>平行でなければ</strong>、平面上のどんなベクトルも <span class="math inline">\(A\mathbf{p}_1 + B\mathbf{p}_2\)</span> の形に書けます。</p>
+<p><span class="math inline">\(\lambda_1 \neq \lambda_2\)</span> なら、<span class="math inline">\(\mathbf{p}_1\)</span> と <span class="math inline">\(\mathbf{p}_2\)</span> は平行になりません。ですから、<strong>どんな初期条件でも <span class="math inline">\(A\)</span> と <span class="math inline">\(B\)</span> が決まります。</strong></p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ヒント</span><span class="math inline">\(\det\)</span> と対角の和で、<span class="math inline">\(3\)</span> つを見分けられます
+<div class="callout-body-container">
+<p>AI HL で扱う系が、<strong>異なる <span class="math inline">\(2\)</span> つの、<span class="math inline">\(0\)</span> でない固有値</strong>をもつものに限られているのは、このためです。</p>
+<p><span class="math inline">\(\lambda\)</span> が <strong>repeated root</strong>（重解）のときは、この形では足りません。<strong>AI HL では出ません。</strong></p>
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<p><span class="math inline">\(\Delta = (\text{対角の和})^{2} - 4\det M\)</span> とおきます。</p>
-<div id="tbl-ahl517a-quick" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ahl517a-quick-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-表&nbsp;5: <span class="math inline">\(\Delta\)</span>・<span class="math inline">\(\det\)</span>・対角の和による見分け
-</figcaption>
-<div aria-describedby="tbl-ahl517a-quick-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th></th>
-<th>判定</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(\Delta &lt; 0\)</span></td>
-<td><strong>複素数</strong> → <a href="../../ai-hl/05-calculus/ahl-5-17b.html">AHL 5.17b</a></td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(\Delta &gt; 0\)</span> かつ <span class="math inline">\(\det M &lt; 0\)</span></td>
-<td><strong>saddle point</strong></td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(\Delta &gt; 0\)</span> かつ <span class="math inline">\(\det M &gt; 0\)</span> かつ 対角の和 <span class="math inline">\(&gt; 0\)</span></td>
-<td><strong>unstable node</strong>（両方正）</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(\Delta &gt; 0\)</span> かつ <span class="math inline">\(\det M &gt; 0\)</span> かつ 対角の和 <span class="math inline">\(&lt; 0\)</span></td>
-<td><strong>stable node</strong>（両方負）</td>
-</tr>
-</tbody>
-</table>
 </div>
-</figure>
-</div>
-<p><span class="math inline">\(\lambda\)</span> の<strong>積が <span class="math inline">\(\det M\)</span></strong>、<strong>和が対角の和</strong>だからです（<a href="../../ai-hl/01-number-and-algebra/ahl-1-15.html#expand">AHL 1.15</a>）。</p>
-<p><strong><span class="math inline">\(\Delta\)</span> を先に見てください。</strong> <span class="math inline">\(\det M &gt; 0\)</span> でも <span class="math inline">\(\Delta &lt; 0\)</span> なら複素数で、node ではありません（<a href="../../ai-hl/05-calculus/ahl-5-17b.html">AHL 5.17b</a>）。</p>
-<p><strong>ただし、答案には固有値そのものを書いてください。</strong> この表は、検算と見当づけのためのものです。</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">ノート</span>解答例（答案用紙にはこう書く）
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>(a)</strong> <span class="math inline">\(\lambda^{2} - 8\lambda + 15 = 0\)</span>, <span class="math inline">\(\ \lambda = 5,\ 3\)</span> — <em>both positive, so an unstable node.</em></p>
-<p><strong>(b)</strong> <span class="math inline">\(\lambda^{2} + 4\lambda + 3 = 0\)</span>, <span class="math inline">\(\ \lambda = -1,\ -3\)</span> — <em>both negative, so a stable node.</em></p>
-<p><strong>(c)</strong> <span class="math inline">\(\lambda^{2} - \lambda - 2 = 0\)</span>, <span class="math inline">\(\ \lambda = 2,\ -1\)</span> — <em>opposite signs, so a saddle point.</em></p>
+</section>
+<section id="why-saddle" class="level4">
+<h4 class="anchored" data-anchor-id="why-saddle">saddle の分かれ目</h4>
+<p><span class="math display">\[
+\mathbf{X} = A\mathbf{p}_1 e^{3t} + B\mathbf{p}_2 e^{-t}
+\]</span></p>
+<p><span class="math inline">\(t\)</span> が大きいとき、<span class="math inline">\(e^{-t} \to 0\)</span> なので <span class="math inline">\(2\)</span> つ目は消えます。残るのは <span class="math inline">\(A\mathbf{p}_1 e^{3t}\)</span> です。</p>
+<ul>
+<li><span class="math inline">\(A &gt; 0\)</span> … <span class="math inline">\(+\mathbf{p}_1\)</span> の向きへ</li>
+<li><span class="math inline">\(A &lt; 0\)</span> … <span class="math inline">\(-\mathbf{p}_1\)</span> の向きへ</li>
+<li><span class="math inline">\(A = 0\)</span> … <strong><span class="math inline">\(\mathbf{p}_1\)</span> の項が最初から無い</strong> ので、<span class="math inline">\(\mathbf{p}_2\)</span> の直線に沿って原点へ</li>
+</ul>
+<p><strong><span class="math inline">\(A = 0\)</span> になるのが、ちょうど <span class="math inline">\(\lambda &lt; 0\)</span> の直線の上</strong>です。だから、そこが分かれ目になります。</p>
+</section>
 </div>
 </div>
 </div>
@@ -1836,7 +1839,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>符号を見てください。<strong>符号が違えば saddle</strong> です（<a href="#tbl-ahl517a-signs" class="quarto-xref">表&nbsp;4</a>）。</p>
+<p>符号を見てください。<strong>符号が違えば saddle</strong> です（<a href="#tbl-ahl517a-signs" class="quarto-xref">表&nbsp;3</a>）。</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1888,7 +1891,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>シラバスの形は <span class="math inline">\(ax + by\)</span> だけです（<a href="#idea">第1節</a>）。<strong><span class="math inline">\(xy\)</span> があるものは <a href="../../ai-hl/05-calculus/ahl-5-16b.html">AHL 5.16b</a> の Euler 法</strong>です。</p>
+<p>この方法で扱うのは <span class="math inline">\(ax + by\)</span> の形だけです（<a href="#idea">第1節</a>）。<strong><span class="math inline">\(xy\)</span> があるものは <a href="../../ai-hl/05-calculus/ahl-5-16b.html">AHL 5.16b</a> の Euler 法</strong>です。</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1922,7 +1925,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 </div>
 <section id="gdc-eig" class="level3">
-<h3 class="anchored" data-anchor-id="gdc-eig">固有値を出して、場合分けを確かめる</h3>
+<h3 class="anchored" data-anchor-id="gdc-eig">Checking the eigenvalues（固有値を出して、場合分けを確かめる）</h3>
 <pre><code>menu → Matrix &amp; Vector → Advanced → Eigenvalues</code></pre>
 <p><span class="math inline">\(\lambda\)</span> が <span class="math inline">\(2\)</span> つとも実数で返れば、このページの内容です。<strong>複素数（<code>i</code> が付いた形）で返れば、<a href="../../ai-hl/05-calculus/ahl-5-17b.html">AHL 5.17b</a></strong> に進んでください。</p>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1941,7 +1944,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 </section>
 <section id="gdc-plot" class="level3">
-<h3 class="anchored" data-anchor-id="gdc-plot">軌道を描いてみる</h3>
+<h3 class="anchored" data-anchor-id="gdc-plot">Plotting trajectories（軌道を描いてみる）</h3>
 <p>Graphs のパラメトリック表示で、<span class="math inline">\(x(t)\)</span> と <span class="math inline">\(y(t)\)</span> を入れると軌道が見えます。</p>
 <pre><code>Graphs → menu → Graph Entry/Edit → Parametric</code></pre>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1962,17 +1965,6 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </section>
 <section id="exercises" class="level2">
 <h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>各問題に、折りたたみが3つ付いています。<strong>日本語訳</strong>、<strong>解答例</strong>（答案用紙に書くべきこと。英語です）、<strong>解説</strong>（なぜそうなるか。日本語です）。</p>
-<p>まず自分で解いて、次に解答例と見くらべてください。<strong>解説は、合わなかったときだけ開けば十分です。</strong></p>
-</div>
-</div>
-</div>
 <div class="exercise-block">
 <p><span class="ex-no">1</span> <span class="q-en">Write the system <span class="math inline">\(\dfrac{dx}{dt} = 3x + 4y\)</span>, <span class="math inline">\(\ \dfrac{dy}{dt} = x\)</span> in the form <span class="math inline">\(\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}\)</span>, and find the eigenvalues.</span></p>
 <details class="jp-trans">
@@ -1982,7 +1974,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 <p>連立系 <span class="math inline">\(\dfrac{dx}{dt} = 3x + 4y\)</span>、<span class="math inline">\(\dfrac{dy}{dt} = x\)</span> を <span class="math inline">\(\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}\)</span> の形に書き、固有値を求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1991,7 +1983,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-38" class="callout-38-contents callout-collapse collapse">
+<div id="callout-41" class="callout-41-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math display">\[
 \frac{d}{dt}\begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 3 &amp; 4 \\ 1 &amp; 0 \end{pmatrix}\begin{pmatrix} x \\ y \end{pmatrix}
@@ -2002,7 +1994,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2011,7 +2003,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div id="callout-42" class="callout-42-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><span class="math inline">\(2\)</span> 行目に <span class="math inline">\(y\)</span> が出てこないので、<strong>そこは <span class="math inline">\(0\)</span></strong> です（<a href="#idea">第1節</a>）。</p>
 <p><span class="math display">\[
@@ -2044,7 +2036,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 <p><strong>(c)</strong> 原点の種類を述べなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-43-contents" aria-controls="callout-43" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2053,7 +2045,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-40" class="callout-40-contents callout-collapse collapse">
+<div id="callout-43" class="callout-43-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(M = \begin{pmatrix} 2 &amp; 1 \\ 1 &amp; 2 \end{pmatrix}\)</span> <span class="math display">\[
 \lambda^{2} - 4\lambda + 3 = 0, \qquad \lambda = 3 \text{ or } 1
@@ -2068,7 +2060,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-44-contents" aria-controls="callout-44" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2077,7 +2069,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-41" class="callout-41-contents callout-collapse collapse">
+<div id="callout-44" class="callout-44-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>対角の和 <span class="math inline">\(4\)</span>、<span class="math inline">\(\det = 4 - 1 = 3\)</span> です。</p>
 <p><span class="math display">\[
@@ -2107,7 +2099,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 <p><strong>(c)</strong> <span class="math inline">\(2\)</span> 本の直線、それぞれの上での運動の向き、およびほかの軌道 <span class="math inline">\(2\)</span> 本を示して、相図をかきなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-45-contents" aria-controls="callout-45" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2116,7 +2108,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-42" class="callout-42-contents callout-collapse collapse">
+<div id="callout-45" class="callout-45-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(M = \begin{pmatrix} -1 &amp; 3 \\ 3 &amp; -1 \end{pmatrix}\)</span> <span class="math display">\[
 \lambda^{2} + 2\lambda - 8 = 0, \qquad (\lambda - 2)(\lambda + 4) = 0, \qquad \lambda = 2 \text{ or } -4
@@ -2130,7 +2122,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-43-contents" aria-controls="callout-43" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-46-contents" aria-controls="callout-46" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2139,7 +2131,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-43" class="callout-43-contents callout-collapse collapse">
+<div id="callout-46" class="callout-46-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>対角の和 <span class="math inline">\(-2\)</span>、<span class="math inline">\(\det = 1 - 9 = -8\)</span> です。</p>
 <p><span class="math display">\[
@@ -2149,7 +2141,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 <p><strong>「eigenvector を答える」のではなく「直線の方程式を答える」問い</strong>なので、<span class="math inline">\(y = x\)</span> の形に直してください。</p>
 <p><strong>(c)</strong> かき方は <a href="#sketch">第8節</a> のとおりです。<strong>矢印の向きが、<span class="math inline">\(\lambda\)</span> の符号で決まる</strong>ところが要点です。</p>
 <p><a href="#fig-ahl517a-saddle" class="quarto-xref">図&nbsp;3</a> と、同じ形の絵になります。</p>
-<p><strong>検算。</strong> <span class="math inline">\(\Delta = (-2)^{2} - 4(-8) = 4 + 32 = 36 &gt; 0\)</span> で実数、<span class="math inline">\(\det M = -8 &lt; 0\)</span> なので saddle ✓（<a href="#tbl-ahl517a-quick" class="quarto-xref">表&nbsp;5</a>）。<span class="math inline">\(2 + (-4) = -2\)</span> ✓、<span class="math inline">\(2 \times (-4) = -8\)</span> ✓</p>
+<p><strong>検算。</strong> <span class="math inline">\(\Delta = (-2)^{2} - 4(-8) = 4 + 32 = 36 &gt; 0\)</span> で実数、<span class="math inline">\(\det M = -8 &lt; 0\)</span> なので saddle ✓（<a href="#tbl-ahl517a-quick" class="quarto-xref">表&nbsp;4</a>）。<span class="math inline">\(2 + (-4) = -2\)</span> ✓、<span class="math inline">\(2 \times (-4) = -8\)</span> ✓</p>
 </div>
 </div>
 </div>
@@ -2168,7 +2160,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 <p><strong>(b)</strong> 一般解を書きなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-44-contents" aria-controls="callout-44" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-47-contents" aria-controls="callout-47" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2177,7 +2169,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-44" class="callout-44-contents callout-collapse collapse">
+<div id="callout-47" class="callout-47-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(\lambda = 6\)</span>: <span class="math display">\[
 (5 - 6)p_1 - 2p_2 = 0 \ \Longrightarrow \ -p_1 = 2p_2 \ \Longrightarrow \ \mathbf{p}_1 = \begin{pmatrix} 2 \\ -1 \end{pmatrix}
@@ -2191,7 +2183,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-45-contents" aria-controls="callout-45" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-48-contents" aria-controls="callout-48" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2200,7 +2192,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-45" class="callout-45-contents callout-collapse collapse">
+<div id="callout-48" class="callout-48-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>eigenvector が <span class="math inline">\(\binom{1}{1}\)</span> や <span class="math inline">\(\binom{1}{-1}\)</span> とはかぎりません。</strong> これまでの例題は対称な行列だったので、たまたま同じ形でした。</p>
 <p><span class="math inline">\(\lambda = 6\)</span> のとき、<span class="math inline">\(1\)</span> 行目は <span class="math inline">\(-p_1 - 2p_2 = 0\)</span> です。<span class="math inline">\(p_2 = 1\)</span> と置くと <span class="math inline">\(p_1 = -2\)</span> で <span class="math inline">\(\binom{-2}{1}\)</span>、<span class="math inline">\(p_2 = -1\)</span> と置くと <span class="math inline">\(\binom{2}{-1}\)</span> です。<strong>どちらでも正解</strong>です（<a href="../../ai-hl/01-number-and-algebra/ahl-1-15.html#notunique">AHL 1.15</a>）。</p>
@@ -2227,7 +2219,7 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 <p><strong>(b)</strong> <span class="math inline">\(t\)</span> が増えるときに軌道がどうなるかを述べなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-46-contents" aria-controls="callout-46" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-49-contents" aria-controls="callout-49" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2236,20 +2228,22 @@ A = \frac{x_0 + y_0}{2}, \qquad B = \frac{x_0 - y_0}{2}
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-46" class="callout-46-contents callout-collapse collapse">
+<div id="callout-49" class="callout-49-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <em>When <span class="math inline">\(t = 0\)</span>:</em> <span class="math display">\[
 A + B = 5, \qquad 2A - B = 4
 \]</span> <em>Adding:</em> <span class="math inline">\(\ 3A = 9\)</span>, <em>so</em> <span class="math inline">\(A = 3\)</span> <em>and</em> <span class="math inline">\(B = 2\)</span>.</p>
 <p><strong>(b)</strong></p>
 <div class="model-answer">
-<p><em>The eigenvalues have opposite signs, so the origin is a saddle point. As <span class="math inline">\(t\)</span> increases the <span class="math inline">\(e^{-2t}\)</span> term dies away and the <span class="math inline">\(e^{4t}\)</span> term grows, so the trajectory moves away from the origin, approaching the direction of <span class="math inline">\(\begin{pmatrix} 1 \\ 2 \end{pmatrix}\)</span>. Since <span class="math inline">\(A = 3 &gt; 0\)</span> it leaves in the direction of <span class="math inline">\(+\begin{pmatrix} 1 \\ 2 \end{pmatrix}\)</span>, into the first quadrant.</em></p>
+<p><em>The eigenvalues have opposite signs, so the origin is a saddle point.</em></p>
+<p><em>As <span class="math inline">\(t\)</span> increases the <span class="math inline">\(e^{-2t}\)</span> term dies away and the <span class="math inline">\(e^{4t}\)</span> term grows, so the trajectory moves away from the origin, approaching the direction of <span class="math inline">\(\begin{pmatrix} 1 \\ 2 \end{pmatrix}\)</span>.</em></p>
+<p><em>Since <span class="math inline">\(A = 3 &gt; 0\)</span> it leaves in the direction of <span class="math inline">\(+\begin{pmatrix} 1 \\ 2 \end{pmatrix}\)</span>, into the first quadrant.</em></p>
 </div>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-47-contents" aria-controls="callout-47" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-50-contents" aria-controls="callout-50" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2258,14 +2252,14 @@ A + B = 5, \qquad 2A - B = 4
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-47" class="callout-47-contents callout-collapse collapse">
+<div id="callout-50" class="callout-50-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> 成分で書くと</p>
 <p><span class="math display">\[
 x = A + B = 5, \qquad y = 2A - B = 4
 \]</span></p>
 <p>足すと <span class="math inline">\(3A = 9\)</span>、<span class="math inline">\(A = 3\)</span>。<span class="math inline">\(B = 2\)</span> です。</p>
-<p><strong>(b)</strong> <span class="math inline">\(\lambda = 4\)</span> と <span class="math inline">\(-2\)</span> で符号が違うので saddle です（<a href="#tbl-ahl517a-signs" class="quarto-xref">表&nbsp;4</a>）。</p>
+<p><strong>(b)</strong> <span class="math inline">\(\lambda = 4\)</span> と <span class="math inline">\(-2\)</span> で符号が違うので saddle です（<a href="#tbl-ahl517a-signs" class="quarto-xref">表&nbsp;3</a>）。</p>
 <p><strong><span class="math inline">\(A\)</span> の符号を見るところ</strong>が、この問題の要点です（<a href="#longrun">第7節</a>）。<span class="math inline">\(A = 3 &gt; 0\)</span> なので、<span class="math inline">\(+\binom{1}{2}\)</span> の向き、つまり第1象限へ出ていきます。</p>
 <p><strong>検算。</strong> <span class="math inline">\(t = 0\)</span> を入れると <span class="math inline">\(3\binom{1}{2} + 2\binom{1}{-1} = \binom{3+2}{6-2} = \binom{5}{4}\)</span> ✓</p>
 </div>
@@ -2285,7 +2279,7 @@ x = A + B = 5, \qquad y = 2A - B = 4
 <p>それぞれの系について、原点が stable node、unstable node、saddle point のどれかを述べなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-48-contents" aria-controls="callout-48" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-51-contents" aria-controls="callout-51" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2294,7 +2288,7 @@ x = A + B = 5, \qquad y = 2A - B = 4
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-48" class="callout-48-contents callout-collapse collapse">
+<div id="callout-51" class="callout-51-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(\lambda^{2} + 7\lambda + 10 = 0\)</span>, <span class="math inline">\(\ \lambda = -2,\ -5\)</span> — <em>both negative, so a stable node.</em></p>
 <p><strong>(b)</strong> <span class="math inline">\(\lambda^{2} - 9 = 0\)</span>, <span class="math inline">\(\ \lambda = 3,\ -3\)</span> — <em>opposite signs, so a saddle point.</em></p>
@@ -2303,7 +2297,7 @@ x = A + B = 5, \qquad y = 2A - B = 4
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-49-contents" aria-controls="callout-49" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-52-contents" aria-controls="callout-52" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2312,10 +2306,10 @@ x = A + B = 5, \qquad y = 2A - B = 4
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-49" class="callout-49-contents callout-collapse collapse">
+<div id="callout-52" class="callout-52-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> 対角の和 <span class="math inline">\(-7\)</span>、<span class="math inline">\(\det = 12 - 2 = 10\)</span>。</p>
-<p><strong>(b)</strong> 対角の和 <span class="math inline">\(0\)</span>、<span class="math inline">\(\det = -1 - 8 = -9\)</span>。<strong><span class="math inline">\(\det &lt; 0\)</span> なので saddle</strong> です（<a href="#tbl-ahl517a-quick" class="quarto-xref">表&nbsp;5</a>）。</p>
+<p><strong>(b)</strong> 対角の和 <span class="math inline">\(0\)</span>、<span class="math inline">\(\det = -1 - 8 = -9\)</span>。<strong><span class="math inline">\(\det &lt; 0\)</span> なので saddle</strong> です（<a href="#tbl-ahl517a-quick" class="quarto-xref">表&nbsp;4</a>）。</p>
 <p><span class="math display">\[
 \lambda^{2} - 0\lambda + (-9) = \lambda^{2} - 9 = 0 \ \Longrightarrow \ \lambda = \pm 3
 \]</span></p>
@@ -2340,7 +2334,7 @@ x = A + B = 5, \qquad y = 2A - B = 4
 <p><strong>(b)</strong> <span class="math inline">\(t = 1\)</span> のときの <span class="math inline">\(y\)</span> の値を、有効数字 <span class="math inline">\(3\)</span> 桁で求めなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-50-contents" aria-controls="callout-50" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-53-contents" aria-controls="callout-53" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2349,7 +2343,7 @@ x = A + B = 5, \qquad y = 2A - B = 4
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-50" class="callout-50-contents callout-collapse collapse">
+<div id="callout-53" class="callout-53-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(M = \begin{pmatrix} -2 &amp; 1 \\ 1 &amp; -2 \end{pmatrix}\)</span> <span class="math display">\[
 \lambda^{2} + 4\lambda + 3 = 0, \qquad \lambda = -1 \text{ or } -3
@@ -2365,7 +2359,7 @@ y = 4e^{-1} - 2e^{-3} = 1.4715 - 0.0996 = 1.3719 = 1.37 \ (3 \text{ s.f.})
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-51-contents" aria-controls="callout-51" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-54-contents" aria-controls="callout-54" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2374,7 +2368,7 @@ y = 4e^{-1} - 2e^{-3} = 1.4715 - 0.0996 = 1.3719 = 1.37 \ (3 \text{ s.f.})
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-51" class="callout-51-contents callout-collapse collapse">
+<div id="callout-54" class="callout-54-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>対角の和 <span class="math inline">\(-4\)</span>、<span class="math inline">\(\det = 4 - 1 = 3\)</span> です。</p>
 <p><strong>(b)</strong> <span class="math inline">\(y\)</span> の成分は <span class="math inline">\(4e^{-t} - 2e^{-3t}\)</span> です。<strong><span class="math inline">\(\mathbf{p}_2\)</span> の <span class="math inline">\(2\)</span> 番目の成分が <span class="math inline">\(-1\)</span></strong> なので、マイナスが付きます。</p>
@@ -2405,7 +2399,7 @@ y = 4e^{-1} - 2e^{-3} = 1.4715 - 0.0996 = 1.3719
 <p><strong><span class="math inline">\(2\)</span> つの誤り</strong>を指摘し、正しい分類を述べなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-52-contents" aria-controls="callout-52" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-55-contents" aria-controls="callout-55" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2414,10 +2408,11 @@ y = 4e^{-1} - 2e^{-3} = 1.4715 - 0.0996 = 1.3719
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-52" class="callout-52-contents callout-collapse collapse">
+<div id="callout-55" class="callout-55-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="model-answer">
-<p><em>First, the constant term should be <span class="math inline">\(\det M = 1 \times 2 - 6 \times 1 = -4\)</span>, not <span class="math inline">\(+8\)</span>. The correct equation is <span class="math inline">\(\lambda^{2} - 3\lambda - 4 = 0\)</span>.</em></p>
+<p><em>First, the constant term should be <span class="math inline">\(\det M = 1 \times 2 - 6 \times 1 = -4\)</span>, not <span class="math inline">\(+8\)</span>.</em></p>
+<p><em>The correct equation is <span class="math inline">\(\lambda^{2} - 3\lambda - 4 = 0\)</span>.</em></p>
 <p><em>Second, “no real roots” would not give a saddle point in any case; a saddle point needs two real eigenvalues with opposite signs.</em></p>
 </div>
 <p><span class="math display">\[
@@ -2428,7 +2423,7 @@ y = 4e^{-1} - 2e^{-3} = 1.4715 - 0.0996 = 1.3719
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-54-contents" aria-controls="callout-54" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-57-contents" aria-controls="callout-57" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2437,7 +2432,7 @@ y = 4e^{-1} - 2e^{-3} = 1.4715 - 0.0996 = 1.3719
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-54" class="callout-54-contents callout-collapse collapse">
+<div id="callout-57" class="callout-57-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong><span class="math inline">\(\det\)</span> の計算間違いです。</strong> <span class="math inline">\(ad - bc = 1 \times 2 - 6 \times 1 = 2 - 6 = -4\)</span> です。生徒は <span class="math inline">\(6 \times 1\)</span> を足してしまったようです。</p>
 <p><strong><span class="math inline">\(2\)</span> つ目は、理由づけの間違いです。</strong> 「実数解がない」なら固有値は複素数で、そのときは spiral か円・楕円です（<a href="../../ai-hl/05-calculus/ahl-5-17b.html">AHL 5.17b</a>）。<strong>saddle にはなりません。</strong></p>
@@ -2454,7 +2449,7 @@ y = 4e^{-1} - 2e^{-3} = 1.4715 - 0.0996 = 1.3719
 </div>
 <div class="callout-body-container callout-body">
 <p><code>Identify the errors</code> のような問いは、<strong>過程を見る</strong>ためのものです。</p>
-<p>日ごろから、<strong>対角の和と <span class="math inline">\(\det\)</span> で検算する</strong>習慣を付けてください（<a href="#tbl-ahl517a-quick" class="quarto-xref">表&nbsp;5</a>）。</p>
+<p>日ごろから、<strong>対角の和と <span class="math inline">\(\det\)</span> で検算する</strong>習慣を付けてください（<a href="#tbl-ahl517a-quick" class="quarto-xref">表&nbsp;4</a>）。</p>
 </div>
 </div>
 </div>
@@ -2476,7 +2471,7 @@ y = 4e^{-1} - 2e^{-3} = 1.4715 - 0.0996 = 1.3719
 <p><strong>(b)</strong> ちょうど直線 <span class="math inline">\(y = -x\)</span> の上から出発した軌道がどうなるかを説明しなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-55-contents" aria-controls="callout-55" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-58-contents" aria-controls="callout-58" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2485,7 +2480,7 @@ y = 4e^{-1} - 2e^{-3} = 1.4715 - 0.0996 = 1.3719
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-55" class="callout-55-contents callout-collapse collapse">
+<div id="callout-58" class="callout-58-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <em>Writing</em> <span class="math inline">\(\begin{pmatrix} 2 \\ -1 \end{pmatrix} = A\begin{pmatrix} 1 \\ 1 \end{pmatrix} + B\begin{pmatrix} 1 \\ -1 \end{pmatrix}\)</span>: <span class="math display">\[
 A + B = 2, \qquad A - B = -1, \qquad A = 0.5, \qquad B = 1.5
@@ -2495,13 +2490,14 @@ A + B = 2, \qquad A - B = -1, \qquad A = 0.5, \qquad B = 1.5
 </div>
 <p><strong>(b)</strong></p>
 <div class="model-answer">
-<p><em>On the line <span class="math inline">\(y = -x\)</span> the point is a multiple of <span class="math inline">\(\begin{pmatrix} 1 \\ -1 \end{pmatrix}\)</span>, so <span class="math inline">\(A = 0\)</span> and only the term with the negative eigenvalue is present. The trajectory therefore stays on that line and moves towards the origin, getting closer without ever reaching it.</em></p>
+<p><em>On the line <span class="math inline">\(y = -x\)</span> the point is a multiple of <span class="math inline">\(\begin{pmatrix} 1 \\ -1 \end{pmatrix}\)</span>, so <span class="math inline">\(A = 0\)</span> and only the term with the negative eigenvalue is present.</em></p>
+<p><em>The trajectory therefore stays on that line and moves towards the origin, getting closer without ever reaching it.</em></p>
 </div>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-56-contents" aria-controls="callout-56" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-59-contents" aria-controls="callout-59" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2510,7 +2506,7 @@ A + B = 2, \qquad A - B = -1, \qquad A = 0.5, \qquad B = 1.5
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-56" class="callout-56-contents callout-collapse collapse">
+<div id="callout-59" class="callout-59-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <a href="#longrun">第7節</a>のとおり、<strong><span class="math inline">\(A\)</span> の符号</strong>が行き先を決めます。</p>
 <p><span class="math inline">\((2,\ -1)\)</span> は <span class="math inline">\(y = -x\)</span> の<strong>上</strong>（<span class="math inline">\(-1 &gt; -2\)</span>）なので、右上へ出ていきます。</p>
@@ -2543,7 +2539,7 @@ A + B = 2, \qquad A - B = -1, \qquad A = 0.5, \qquad B = 1.5
 <p><strong>(d)</strong> このモデルが <span class="math inline">\(t\)</span> が大きいときに現実的かどうかコメントしなさい。</p>
 </details>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-57-contents" aria-controls="callout-57" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-60-contents" aria-controls="callout-60" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2552,7 +2548,7 @@ A + B = 2, \qquad A - B = -1, \qquad A = 0.5, \qquad B = 1.5
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-57" class="callout-57-contents callout-collapse collapse">
+<div id="callout-60" class="callout-60-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(M = \begin{pmatrix} -5 &amp; 3 \\ 3 &amp; -5 \end{pmatrix}\)</span> <span class="math display">\[
 \lambda^{2} + 10\lambda + 16 = 0, \qquad (\lambda + 2)(\lambda + 8) = 0, \qquad \lambda = -2 \text{ or } -8
@@ -2570,13 +2566,14 @@ A + B = 2, \qquad A - B = -1, \qquad A = 0.5, \qquad B = 1.5
 \]</span> <em>This has no solution, so <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are never exactly equal.</em></p>
 <p><strong>(d)</strong></p>
 <div class="model-answer">
-<p><em>The model predicts that both amounts approach zero, so eventually almost none of either substance is left. In a real reaction the total mass cannot simply disappear, so the model is not realistic for large <span class="math inline">\(t\)</span> unless the substances are being converted into something else that is not counted here.</em></p>
+<p><em>The model predicts that both amounts approach zero, so eventually almost none of either substance is left.</em></p>
+<p><em>In a real reaction the total mass cannot simply disappear, so the model is not realistic for large <span class="math inline">\(t\)</span> unless the substances are being converted into something else that is not counted here.</em></p>
 </div>
 </div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-59-contents" aria-controls="callout-59" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-62-contents" aria-controls="callout-62" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -2585,7 +2582,7 @@ A + B = 2, \qquad A - B = -1, \qquad A = 0.5, \qquad B = 1.5
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-59" class="callout-59-contents callout-collapse collapse">
+<div id="callout-62" class="callout-62-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>対角の和 <span class="math inline">\(-10\)</span>、<span class="math inline">\(\det = 25 - 9 = 16\)</span> です。</p>
 <p><strong>(c) が引っかけです。</strong> 差を計算すると</p>
