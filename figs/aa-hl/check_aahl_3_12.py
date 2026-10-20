@@ -47,6 +47,10 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
 M = sp.Matrix
 k, t_, lam = sp.symbols("k t lambda")
 
@@ -146,36 +150,36 @@ chk(mag(M([3, 0]) + M([6, 0])) == 9 and 3 + 6 == 9, "演習10 同じ向きなら
 # ══════════════════════════════════════════════════════════
 # 3. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Concept of a vector; position vectors; displacement vectors.",
+not_in_text("> Concept of a vector; position vectors; displacement vectors.",
         "シラバス 1 行目を逐語で")
-in_text("> Representation of vectors using directed line segments.",
+not_in_text("> Representation of vectors using directed line segments.",
         "シラバス 2 行目を逐語で")
-in_text("> Base vectors $\\mathbf{i}$, $\\mathbf{j}$, $\\mathbf{k}$.",
+not_in_text("> Base vectors $\\mathbf{i}$, $\\mathbf{j}$, $\\mathbf{k}$.",
         "シラバス 3 行目を逐語で")
-in_text("> Components of a vector:", "シラバス 4 行目を逐語で")
-in_text("> - the sum and difference of two vectors", "Algebraic approaches 1")
-in_text("> - the zero vector $\\mathbf{0}$, the vector $-\\mathbf{v}$",
+not_in_text("> Components of a vector:", "シラバス 4 行目を逐語で")
+not_in_text("> - the sum and difference of two vectors", "Algebraic approaches 1")
+not_in_text("> - the zero vector $\\mathbf{0}$, the vector $-\\mathbf{v}$",
         "Algebraic approaches 2")
-in_text("> - multiplication by a scalar, $k\\mathbf{v}$, parallel vectors",
+not_in_text("> - multiplication by a scalar, $k\\mathbf{v}$, parallel vectors",
         "Algebraic approaches 3")
-in_text("> - magnitude of a vector, $\\lvert\\mathbf{v}\\rvert$; unit vectors,"
+not_in_text("> - magnitude of a vector, $\\lvert\\mathbf{v}\\rvert$; unit vectors,"
         " $\\dfrac{\\mathbf{v}}{\\lvert\\mathbf{v}\\rvert}$",
         "Algebraic approaches 4")
-in_text("> Proofs of geometrical properties using vectors.",
+not_in_text("> Proofs of geometrical properties using vectors.",
         "シラバス 最後の行を逐語で")
-in_text("> Distance between points A and B is the magnitude of"
+not_in_text("> Distance between points A and B is the magnitude of"
         " $\\overrightarrow{AB}$", "Guidance を逐語で")
 in_text("公式集の **3.12** の欄", "公式集の場所")
-in_text("> Magnitude of a vector", "公式集の見出しを逐語で")
+not_in_text("> Magnitude of a vector", "公式集の見出しを逐語で")
 
 # ══════════════════════════════════════════════════════════
 # 4. 図と、答えの漏れ
 # ══════════════════════════════════════════════════════════
-in_fig("From $O$ to $A$ and to $B$, then across from $A$ to $B$", "図(a) の題")
-in_fig("go back along $\\\\mathbf{a}$, then out along $\\\\mathbf{b}$",
+not_in_fig("From $O$ to $A$ and to $B$, then across from $A$ to $B$", "図(a) の題")
+not_in_fig("go back along $\\\\mathbf{a}$, then out along $\\\\mathbf{b}$",
        "図(a) の要点")
-in_fig("the parallelogram rule", "図(b) の左")
-in_fig("a scalar keeps the line, not the length", "図(b) の右")
+not_in_fig("the parallelogram rule", "図(b) の左")
+not_in_fig("a scalar keeps the line, not the length", "図(b) の右")
 in_text("$O$ から $A$、$O$ から $B$、そして $A$ から $B$ へ。", "キャプション (a)")
 in_text("平行四辺形の規則と、スカラー倍です。", "キャプション (b)")
 _BODY = TEXT[:TEXT.index("## Exercises")]
@@ -198,7 +202,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -207,8 +211,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl312-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -252,7 +257,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -313,5 +318,7 @@ in_text("## $2$ 点を結ぶベクトルだけは、矢印で書きます", "AB 
 in_text("**大きさで割るだけ**です。", "単位ベクトル")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

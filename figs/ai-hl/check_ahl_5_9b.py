@@ -191,7 +191,7 @@ in_text(r"y = g(u), \ \text{where} \ u = f(x) \ \Rightarrow \ "
 in_text(r"y = uv \ \Rightarrow \ \frac{dy}{dx} = u\frac{dv}{dx} + v\frac{du}{dx}")
 in_text(r"y = \frac{u}{v} \ \Rightarrow \ \frac{dy}{dx} = "
         r"\frac{v\dfrac{du}{dx} - u\dfrac{dv}{dx}}{v^{2}}")
-in_text("**試験中に配られるので、覚える必要はありません。**")
+in_text("$3$ つとも公式集の **5.9** の欄にあるので、公式を覚える必要はありません。")
 
 # ══════════════════════════════════════════════════════════════
 # 8. レビューで直した点の見張り
@@ -216,8 +216,8 @@ not_in_text("nSolve(x*e^(x)*(x+2)=0, x, -5, 5)")
 in_text(r"v\frac{\delta u}{\delta x} \ + \ u\frac{\delta v}{\delta x} \ + \ "
         r"\delta u\frac{\delta v}{\delta x}")
 not_in_text("この角の部分だけが先に消えます")
-# 6: 見出しは英語のまま
-in_text("### 3. stationary point を確かめる {#gdc-stat}")
+# 6: 見出しは「English（日本語）」の形
+in_text("### 3. Stationary points（停留点を確かめる） {#gdc-stat}")
 not_in_text("### 3. 停留点を確かめる")
 # 8: cos(x^2) の誤り例
 in_text("**誤り**：$y = \\cos(x^{2})$ を微分して $-2x\\sin x$ と書く")
@@ -245,15 +245,20 @@ top = [h for h in h2 if h in ("What you should be able to do", "The idea",
                               "Why it works", "Worked examples",
                               "Common errors",
                               "Using your GDC (TI-Nspire CX II)", "Exercises")]
-eq("テンプレートの 7 見出しが順に並ぶ", top,
+eq("テンプレートの 6 見出しが順に並ぶ（Worked examples は廃止）", top,
    ["What you should be able to do", "The idea", "Why it works",
-    "Worked examples", "Common errors",
+    "Common errors",
     "Using your GDC (TI-Nspire CX II)", "Exercises"])
-eq("例題は 9 つ（5.9b 5 つ + 統合した related rates 4 つ）", len(re.findall(r"::: \{#exm-", TXT)), 9)
+not_in_text("## Worked examples")
+_exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(TXT.index("## The idea") < p < TXT.index("## Why it works")
+       for p in _exm), True)
+eq("例題は 9 つ（5.9b 5 つ + 統合した related rates 4 つ）", len(_exm), 9)
 eq("演習は 20 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 20)
 eq("model-answer は 5 つ", TXT.count("::: {.model-answer}"), 5)
 eq("ex-sep は 19 個", TXT.count(".ex-sep"), 19)
-eq("例題の下の区切り線は 9 本（+ YAML の 1 本）", TXT.count("\n---\n"), 10)
+eq("区切り線は YAML の 1 本だけ", TXT.count("\n---\n"), 1)
 for w in ("誰でもできる", "簡単です", "当然", "明らか", "もちろん", "当たり前",
           "そのとおり", "ご指摘", "確かめ。"):
     not_in_text(w)

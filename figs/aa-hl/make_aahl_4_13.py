@@ -40,8 +40,6 @@ PALE = "#f1f5f9"
 # (a) 樹形図
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(5.8, 3.4))
-ax1.set_title("two paths lead to $A$; their sum is the denominator",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 
 ROOT = (0.2, 2.0)
 B = (2.2, 3.1)
@@ -84,8 +82,6 @@ for _k, _lab, _col in (("BA", "$A$", ACCENT), ("BA2", "$A'$", GREY),
 
 ax1.text(5.35, 3.60, "$P(B)P(A|B)$", fontsize=9.5, color=ACCENT)
 ax1.text(5.35, 1.40, "$P(B')P(A|B')$", fontsize=9.5, color=ACCENT)
-ax1.text(0.0, -0.55, "the numerator is the path through $B$ only",
-         fontsize=9, color=GREY)
 ax1.set_xlim(-0.2, 9.4)
 ax1.set_ylim(-0.9, 4.3)
 ax1.axis("off")
@@ -94,8 +90,6 @@ ax1.axis("off")
 # (b) 面積図
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(5.4, 3.6))
-ax2.set_title("$P(B|A)$ is the share of the shaded area on the left",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 
 w = 0.35          # P(B)
 h1 = 0.70         # P(A|B)
@@ -117,8 +111,6 @@ ax2.text((1 + w) / 2, h2 / 2, "$A$", fontsize=12, color=INK, ha="center",
 ax2.text(-0.03, h1 / 2, "$P(A|B)$", fontsize=9.5, color=INK, ha="right",
          va="center")
 ax2.text(1.03, h2 / 2, "$P(A|B')$", fontsize=9.5, color=INK, va="center")
-ax2.text(0.0, 1.14, "a narrow left column can still hold less shaded area"
-         " than a wide right one", fontsize=9, color=GREY)
 ax2.set_xlim(-0.34, 1.42)
 ax2.set_ylim(-0.22, 1.30)
 ax2.axis("off")

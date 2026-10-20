@@ -76,8 +76,8 @@ in_text("- 傾き $= \\log 2 = 0.301$")
 # 2026-09: 4 面図を 2 枚に分け、説明のすぐ近くへ移動
 in_text("**傾きは $3$、切片は $\\log 2 = 0.301$** です。")
 # ★ レビュー8: 条件
-in_text("指数の関係 $y = ka^{x}$（$k > 0$、$a > 0$）の両辺の $\\log$ をとります。", "レビュー8")
-in_text("累乗の関係 $y = ax^{n}$（$a > 0$、$x > 0$）の両辺の $\\log$ をとります。", "レビュー8")
+in_text("**exponential**（指数）の関係 $y = ka^{x}$（$k > 0$、$a > 0$）の両辺の $\\log$ をとります。", "レビュー8")
+in_text("**power**（累乗）の関係 $y = ax^{n}$（$a > 0$、$x > 0$）の両辺の $\\log$ をとります。", "レビュー8")
 in_text(": どちらが直線になるか（$x > 0$、$y > 0$、$k > 0$、$a > 0$ のとき）", "レビュー8")
 x3 = np.arange(0, 8.0)
 r3 = np.corrcoef(x3, L(3 + 2 ** x3))[0, 1]
@@ -202,7 +202,7 @@ in_text("## $r$ は、どちらがより直線に近いかを比べる材料で�
 not_in_text("## 判定は $r$ の値でします", "r だけで決まると読める見出し")
 in_text("- **$\\lvert r \\rvert$ が $1$ に近い** … 変換したあとの点が、直線に近く並んでいる")
 in_text("- **それだけでは**、元のデータが本当に exponential model や power model に従うとは**断定できません**")
-in_text("- 判断には、**散布図の形、residual（残差）の並び方、文脈、変数の意味**も要ります")
+in_text("- 判断には、**scatter diagram（散布図）の形、residual（残差）の並び方、文脈、変数の意味**も要ります")
 in_text("- このページでは、$r$ を **semi-log と log-log のどちらがより直線に近いかを比べる補助**として使います")
 in_text("**実際にはどちらのモデルでもありません。**")
 not_in_text("それがこの項目の正しいやり方です。", "レビュー5")
@@ -241,15 +241,23 @@ for cas in ["expand(", "factor(", "solve(", "csolve("]:
 # 8. シラバス・公式集
 # ══════════════════════════════════════════════════════════
 # 2026-09: 公式が無い欄なので callout ごと削除し、要点を 1 文にして The idea の前へ
+# 2026-10: The idea の前の段落も消し、第 2 節（対数法則のあと）へ。シラバスの引用は日本語にした
 not_in_text("## 公式集の AHL 2.10 の欄")
-in_text("**このページに、新しい公式はありません。**", "公式が無いことは 1 文で書く")
-in_text("Content 欄は $3$ 行です。")
-in_text("Guidance 欄には $3$ つあります。")
-in_text("Connections 欄には $4$ つ挙がっています。")
-in_text("Scaling very large or small numbers using logarithms.")
-in_text("In examinations, students will not be expected to draw or sketch these graphs.")
-in_text("**対数目盛りのグラフを、自分で描くことは求められません。**")
-in_text("**Links to websites:** Gapminder makes use of log-log graphs: www.gapminder.org")
+in_text("の対数法則 $\\log xy = \\log x + \\log y$ と $\\log x^{m} = m\\log x$ だけです（公式集にあります）。"
+        "このページに新しい公式はありません。", "公式が無いことは 1 文で書く")
+chk(TEXT.index("このページに新しい公式はありません。") > TEXT.index("## The idea"),
+    "公式が無いことは The idea の中（第 2 節）")
+not_in_text("**このページに、新しい公式はありません。**", "The idea の前の段落は消した")
+for _q in ("Content 欄は $3$ 行です。", "Guidance 欄には $3$ つあります。",
+           "Connections 欄には $4$ つ挙がっています。",
+           "Scaling very large or small numbers using logarithms.",
+           "In examinations, students will not be expected to draw or sketch these graphs.",
+           "**Links to websites:** Gapminder makes use of log-log graphs: www.gapminder.org"):
+    not_in_text(_q, "シラバスの引用は本文から外した")
+chk(re.findall(r"^> (?!\[)", TEXT, re.M) == [], "シラバスの引用（> ...）は残っていない")
+in_text("桁が大きくちがうデータは、ふつうの目盛りでは読めません。そこで、**logarithm**（対数）の目盛りを使います。",
+        "大きな数・小さな数を対数で扱う理由を日本語で")
+in_text("試験では、対数目盛りのグラフを自分でかくことは求められません。", "かくことは求められない")
 in_text("$10^{\\log x} = x$", "レビュー14: 元に戻すには対数の定義も使う")
 not_in_text("**この $2$ つがあれば、このページの中身はすべて出てきます**", "レビュー14")
 not_in_text("これが $2$ 番目に多い誤りです", "レビュー22")
@@ -261,12 +269,25 @@ not_in_text("試験で問われるのは、**読むこと**と**式に戻すこ�
 # ══════════════════════════════════════════════════════════
 heads = re.findall(r"(?m)^## (.+)$", TEXT)
 need = ["What you should be able to do", "The idea", "Why it works",
-        "Worked examples", "Common errors",
+        "Common errors",
         "Using your GDC (TI-Nspire CX II)", "Exercises"]
 for hh in need:
     chk(hh in heads, "見出しがない: " + hh)
-chk([hh for hh in heads if hh in need] == need, "7 つの見出しの順序")
-chk(len(re.findall(r"(?m)^---$", TEXT)) == 6, "--- は 6 個")
+chk([hh for hh in heads if hh in need] == need, "6 つの見出しの順序（Worked examples は 2026-10 に削除）")
+# 2026-10 新レイアウト：例題は The idea の各節の後ろ
+not_in_text("## Worked examples", "Worked examples の節は消した")
+_iw = TEXT.index("\n## Why it works")
+chk(all(TEXT.index("## The idea") < m.start() < _iw
+        for m in re.finditer(r"::: \{#exm-", TEXT)), "例題はすべて The idea の中")
+chk(re.findall(r"::: \{#(exm-[a-z0-9-]+)\}", TEXT)
+    == ["exm-ahl210-semi", "exm-ahl210-loglog", "exm-ahl210-bacteria",
+        "exm-ahl210-planets"], "例題の並び")
+for _e, _s in (("exm-ahl210-semi", "back"), ("exm-ahl210-loglog", "back"),
+               ("exm-ahl210-bacteria", "steps"), ("exm-ahl210-planets", "steps")):
+    _hs = re.findall(r"^### \d+\. .*?\{#([a-z0-9-]+)\}$",
+                     TEXT[:TEXT.index("::: {#" + _e + "}")], re.M)
+    chk(_hs[-1:] == [_s], "%s は %s の節の中: %s" % (_e, _s, _hs[-1:]))
+chk(len(re.findall(r"(?m)^---$", TEXT)) == 2, "--- は 6 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳は 14 個")
 chk(TEXT.count("::: {.ex-sep}") == 9, ".ex-sep は 9 個")
 chk(len(re.findall(r"::: \{#exm-ahl210-[\w-]+\}", TEXT)) == 4, "worked example は 4 個")
@@ -287,11 +308,11 @@ chk(TEXT.count("**検算。**") == 12, "検算。の個数: " + str(TEXT.count("
 for term in ["**semi-log**（片対数）", "**log-log**（両対数）",
              "**linearize**（線形化）", "growth factor（増加倍率）"]:
     in_text(term, "英語→日本語の順")
-in_text("![Why a logarithmic scale helps](img/ahl-2-10-scale.svg)")
+in_text("![対数目盛りが役に立つ理由です。](img/ahl-2-10-scale.svg)")
 # 2026-09: 4 面図を 2 枚に分け、説明のすぐ近くへ移動
-in_text("![Exponential data comes out straight on a semi-log graph]"
+in_text("![指数関数のデータは、片対数グラフでは直線になります。]"
         "(img/ahl-2-10-semilog.svg)")
-in_text("![Power data comes out straight on a log-log graph]"
+in_text("![べき関数のデータは、両対数グラフでは直線になります。]"
         "(img/ahl-2-10-loglog.svg)")
 not_in_text("ahl-2-10-which.svg")
 for svg in ["ahl-2-10-semilog.svg", "ahl-2-10-loglog.svg", "ahl-2-10-scale.svg"]:
@@ -314,7 +335,8 @@ in_text("[AHL 4.13](../04-statistics-and-probability/ahl-4-13.qmd#gdc-curve)")
 
 
 # レビューで追加: GDC の節も「r で決める」と読めないようにした
-in_text("### 4. $r$ で、どちらが直線に近いかを比べます {#gdc-r}")
+in_text("### 4. Comparing $r$ values（$r$ の比べ方） {#gdc-r}")
+in_text("$r$ を使って、semi-log と log-log のどちらが直線に近いかを比べます。")
 not_in_text("### 4. $r$ で、どちらが直線かを決めます {#gdc-r}")
 in_text("- $\\lvert r \\rvert$ が $1$ に近いほう … **そちらのほうが直線に近い**。"
         "モデルの断定は、散布図の形と文脈で裏づけてからです（[第4節](#which)）")

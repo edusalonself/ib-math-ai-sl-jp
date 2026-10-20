@@ -34,7 +34,7 @@ WARM = "#b45309"
 FILL = "#dbe8f5"
 
 
-fig, ax = plt.subplots(figsize=(7.6, 3.2))
+fig, ax = plt.subplots(figsize=(7.0, 2.4))
 
 MIN, Q1, MED, Q3, WHIS, OUTLIER = 12, 20, 26, 30, 33, 48
 YC, HH = 0.0, 0.34
@@ -57,15 +57,12 @@ for _v, _lab in [(MIN, "$12$"), (Q1, "$20$"), (MED, "$26$"), (Q3, "$30$"),
     ax.text(_v, YC - HH - 0.30, _lab, fontsize=11, color=INK, ha="center")
 
 ax.set_xlim(8, 52)
-ax.set_ylim(-1.15, 1.05)
+ax.set_ylim(-0.92, 0.92)
 ax.set_xticks(range(10, 51, 10))
 ax.set_xticklabels(["$%d$" % _v for _v in range(10, 51, 10)], fontsize=11)
 ax.set_yticks([])
 for _s in ("top", "right", "left"):
     ax.spines[_s].set_visible(False)
-ax.set_title("the whisker stops at $33$, the largest value that is not an "
-             "outlier; $48$ is plotted as a cross", fontsize=10, color=INK,
-             loc="left", pad=10)
 
 fig.tight_layout()
 path = os.path.join(OUT, "aasl-4-2-ex5.svg")

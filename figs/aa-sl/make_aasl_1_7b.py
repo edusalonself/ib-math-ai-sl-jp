@@ -33,15 +33,13 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig1, ax1 = plt.subplots(figsize=(5.4, 4.0))
-fig2, ax2 = plt.subplots(figsize=(5.4, 4.0))
+fig1, ax1 = plt.subplots(figsize=(4.6, 2.8))
+fig2, ax2 = plt.subplots(figsize=(4.6, 3.4))
 # ══════════════════════════════════════════════════════════
 # (a) 掛け算 → 足し算
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Multiplying below, adding above (base $2$)",
-              fontsize=11, color=INK, loc="left", pad=10)
 ax1.set_xlim(0.0, 1.0)
-ax1.set_ylim(0.10, 1.0)
+ax1.set_ylim(0.10, 0.88)
 ax1.axis("off")
 
 COLS = [(0.14, "$8$", "$3$"), (0.50, "$4$", "$2$"), (0.86, "$32$", "$5$")]
@@ -70,10 +68,8 @@ ax1.text(0.02, 0.76, "$\\log_{2}$", ha="left", va="center", fontsize=9.5,
 # ══════════════════════════════════════════════════════════
 # (b) 底の変換
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Change of base: pick $b$ you can do by hand",
-              fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(0.0, 1.0)
-ax2.set_ylim(0.0, 1.0)
+ax2.set_ylim(0.0, 0.92)
 ax2.axis("off")
 
 ax2.text(0.50, 0.82, r"$\log_{25} 125$", ha="center", va="center",

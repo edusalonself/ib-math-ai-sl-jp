@@ -59,10 +59,7 @@ label(ax, u[0] + 0.15, u[1] - 0.45, "$\\mathbf{u}$", color=LINE, fs=14,
       ha="left")
 label(ax, Mu[0] - 0.25, Mu[1] + 0.40, "$M\\mathbf{u}$", color=ACC, fs=14,
       ha="right")
-ax.set_title("an ordinary vector:  the DIRECTION changes",
-             fontsize=12.5, color=ACC, pad=8)
-label(ax, 2.9, -0.85, "$M\\mathbf{u}$ is off the dotted line", color=GREY,
-      fs=11.5)
+ax.set_title("ordinary vector", fontsize=12.5, color=ACC, pad=8)
 
 # 右：固有ベクトル（向きは同じ、長さだけ変わる）
 ax = axs[1]
@@ -76,37 +73,31 @@ label(ax, v[0] + 0.28, v[1] - 0.28, "$\\mathbf{v}$", color=LINE, fs=14,
       ha="left")
 label(ax, Mv[0] - 0.30, Mv[1] + 0.35, "$M\\mathbf{v} = 5\\mathbf{v}$",
       color=GREEN, fs=14, ha="right")
-ax.set_title("an EIGENVECTOR:  same line, $5$ times as long",
-             fontsize=12.5, color=GREEN, pad=8)
-label(ax, 2.9, -0.85, "the number $5$ is the EIGENVALUE", color=GOLD,
-      fs=11.5)
+ax.set_title("eigenvector", fontsize=12.5, color=GREEN, pad=8)
 
 fig.tight_layout()
 save(fig, "ahl-1-15-idea.svg")
 
 
 # ══════════════ 2. characteristic equation ══════════════
-fig, ax = plt.subplots(figsize=(8.6, 5.2))
-blank(ax, (-0.8, 10.4), (-3.95, 3.4))
+fig, ax = plt.subplots(figsize=(8.6, 4.5))
+blank(ax, (-0.8, 10.4), (-3.95, 2.55))
 ax.set_aspect("auto")
 
-ax.text(4.8, 3.0, "$M\\mathbf{v} = \\lambda\\mathbf{v}$   with   "
+ax.text(4.8, 2.2, "$M\\mathbf{v} = \\lambda\\mathbf{v}$   with   "
                   "$\\mathbf{v} \\neq \\mathbf{0}$",
         fontsize=17, ha="center", va="center", color=INK)
-arrow(ax, (4.8, 2.55), (4.8, 1.95), color=GOLD, lw=1.8)
+arrow(ax, (4.8, 1.80), (4.8, 1.25), color=GOLD, lw=1.8)
 
-ax.text(4.8, 1.50, "$\\det(M - \\lambda I) = 0$", fontsize=19, ha="center",
+ax.text(4.8, 0.85, "$\\det(M - \\lambda I) = 0$", fontsize=19, ha="center",
         va="center", color=ACC)
-ax.text(4.8, 0.80, "NOT in the formula booklet  —  learn this one",
-        fontsize=12.5, ha="center", va="center", color=GOLD)
-
-arrow(ax, (4.8, 0.30), (4.8, -0.35), color=GREY, lw=1.6)
+arrow(ax, (4.8, 0.42), (4.8, -0.35), color=GREY, lw=1.6)
 
 # 一般形
 ax.text(4.8, -0.85,
         "$\\lambda^{2} - (a+d)\\,\\lambda + (ad-bc) = 0$",
         fontsize=17, ha="center", va="center", color=INK)
-ax.text(2.05, -1.80, "sum of the diagonal", fontsize=11.5, ha="center",
+ax.text(2.05, -1.80, "diagonal sum", fontsize=11.5, ha="center",
         va="center", color=GREEN)
 ax.text(7.45, -1.80, "$\\det M$", fontsize=12.5, ha="center", va="center",
         color=GREEN)
@@ -132,15 +123,15 @@ save(fig, "ahl-1-15-char.svg")
 
 
 # ══════════════ 3. 手順は4つ ══════════════
-fig, ax = plt.subplots(figsize=(9.0, 3.0))
-blank(ax, (-0.5, 12.2), (-1.35, 1.35))
+fig, ax = plt.subplots(figsize=(9.0, 2.3))
+blank(ax, (-0.5, 11.3), (-1.15, 1.35))
 ax.set_aspect("auto")
 
-steps = [("1", "find the\nEIGENVALUES", "$\\det(M-\\lambda I)=0$", ACC),
-         ("2", "find an\nEIGENVECTOR", "for each $\\lambda$", GREEN),
-         ("3", "build\n$P$ and $D$", "columns $\\leftrightarrow$ diagonal",
+steps = [("1", "eigenvalues", "$\\det(M-\\lambda I)=0$", ACC),
+         ("2", "eigenvectors", "for each $\\lambda$", GREEN),
+         ("3", "$P$ and $D$", "columns $\\leftrightarrow$ diagonal",
           LINE),
-         ("4", "use\n$M^{n}=PD^{n}P^{-1}$", "booklet", GOLD)]
+         ("4", "$M^{n}=PD^{n}P^{-1}$", "booklet", GOLD)]
 xs = [1.1, 4.0, 6.9, 9.8]
 for (n, t, sub, col), x in zip(steps, xs):
     ax.text(x, 0.92, n, fontsize=12, ha="center", va="center", color="white",
@@ -157,35 +148,32 @@ save(fig, "ahl-1-15-steps.svg")
 
 
 # ══════════════ 4. P と D の並べ方 ══════════════
-fig, ax = plt.subplots(figsize=(8.2, 4.4))
-blank(ax, (-0.9, 9.5), (-2.5, 2.7))
+fig, ax = plt.subplots(figsize=(6.0, 3.0))
+blank(ax, (0.2, 7.2), (-1.05, 2.4))
 
 cP, _ = matrix(ax, 1.6, 0.75, [["1", "1"], ["1", "$-2$"]], cw=0.74, ch=0.66,
                fs=15, cell_color={(0, 0): ACC, (1, 0): ACC,
                                   (0, 1): GREEN, (1, 1): GREEN})
 ax.text(1.6, 1.85, "$P$", fontsize=15, ha="center", va="center", color=INK)
-ax.text(1.6, -0.55, "eigenvectors as COLUMNS", fontsize=11.5, ha="center",
+ax.text(1.6, -0.55, "eigenvectors", fontsize=11.5, ha="center",
         va="center", color=INK)
 
 cD, _ = matrix(ax, 5.8, 0.75, [["5", "0"], ["0", "2"]], cw=0.74, ch=0.66,
                fs=15, cell_color={(0, 0): ACC, (1, 1): GREEN})
 ax.text(5.8, 1.85, "$D$", fontsize=15, ha="center", va="center", color=INK)
-ax.text(5.8, -0.55, "eigenvalues on the DIAGONAL", fontsize=11.5,
+ax.text(5.8, -0.55, "eigenvalues", fontsize=11.5,
         ha="center", va="center", color=INK)
 
 arrow(ax, (cP[(0, 0)][0], 1.35), (cD[(0, 0)][0], 1.35), color=ACC, lw=1.5,
       rad=-0.22)
-ax.text(3.7, 2.25, "$\\lambda = 5$  goes with the FIRST column",
+ax.text(3.7, 2.05, "$\\lambda = 5$",
         fontsize=11.5, ha="center", va="center", color=ACC)
 
 arrow(ax, (cP[(0, 1)][0], 0.05), (cD[(1, 1)][0], 0.05), color=GREEN, lw=1.5,
       rad=0.16)
-ax.text(3.7, -1.35, "$\\lambda = 2$  goes with the SECOND column",
+ax.text(3.7, -0.72, "$\\lambda = 2$",
         fontsize=11.5, ha="center", va="center", color=GREEN)
 
-ax.text(4.0, -2.10, "swap one and not the other, and $PDP^{-1}$ "
-                    "is no longer $M$",
-        fontsize=12.5, ha="center", va="center", color=GOLD)
 fig.tight_layout()
 save(fig, "ahl-1-15-pd.svg")
 
@@ -201,7 +189,7 @@ for _ in range(yrs):
     B.append(s[1])
 t = np.arange(yrs + 1)
 
-fig, ax = plt.subplots(figsize=(8.4, 4.6))
+fig, ax = plt.subplots(figsize=(7.0, 4.0))
 ax.set_xlim(-1.2, 27.2)
 ax.set_ylim(0, 26000)
 for y in range(0, 26001, 5000):
@@ -217,12 +205,6 @@ for sp in ax.spines.values():
     sp.set_visible(False)
 ax.set_xlabel("years", fontsize=11, color=INK)
 ax.set_ylabel("population", fontsize=11, color=INK, labelpad=8)
-ax.text(13.0, 24200, "whatever we start with, the split settles at "
-                     "$1 : 2$", fontsize=12.5, ha="center", va="center",
-        color=GOLD)
-ax.text(18.0, 15000, "that ratio is the eigenvector for $\\lambda = 1$",
-        fontsize=11.5, ha="center", va="center", color=INK, bbox=BOX,
-        zorder=10)
 ax.legend(loc="lower right", fontsize=10.5, frameon=False,
           bbox_to_anchor=(0.99, 0.06))
 fig.tight_layout()

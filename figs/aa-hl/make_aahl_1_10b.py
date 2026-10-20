@@ -41,8 +41,6 @@ fig2, ax2 = plt.subplots(figsize=(6.0, 4.0))
 # ══════════════════════════════════════════════════════════
 # (a) 係数の鎖：止まる n と、止まらない n
 # ══════════════════════════════════════════════════════════
-ax1.set_title("The chain of factors $n,\\ n-1,\\ n-2,\\ \\ldots$",
-              fontsize=11, color=INK, loc="left", pad=10)
 ax1.set_xlim(0.0, 1.0)
 ax1.set_ylim(0.0, 1.0)
 ax1.axis("off")
@@ -71,16 +69,10 @@ ax1.text(0.84, 0.80, "$\\cdots$", ha="left", va="center",
          fontsize=13, color=GREY)
 ax1.text(0.84, 0.34, "$\\cdots$", ha="left", va="center",
          fontsize=13, color=GREY)
-ax1.text(0.50, 0.60, "a factor of $0$ arrives, so the expansion stops",
-         ha="center", va="center", fontsize=10, color=WARM)
-ax1.text(0.50, 0.12, "no factor is ever $0$, so the expansion never stops",
-         ha="center", va="center", fontsize=10, color=INK)
 
 # ══════════════════════════════════════════════════════════
 # (b) 部分和が、|x| < 1 でだけ近づく
 # ══════════════════════════════════════════════════════════
-ax2.set_title("$(1+x)^{-1}$ and its partial sums", fontsize=11,
-              color=INK, loc="left", pad=10)
 ax2.axvspan(-1.0, 1.0, color="#eef3f8", zorder=0)
 _xl = np.linspace(-1.60, -1.04, 400)
 _xr = np.linspace(-0.96, 1.60, 700)

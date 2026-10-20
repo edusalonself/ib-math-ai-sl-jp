@@ -49,6 +49,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 def unique(eqs, want, msg):
     """解がただ 1 つで、その値が want であること。"""
     sol = sp.solve(eqs, (x, y, z), dict=True)
@@ -197,18 +201,18 @@ chk(sp.solve(_D, (x, y, z), dict=True) != sp.solve(_A, (x, y, z), dict=True),
 # ══════════════════════════════════════════════════════════
 # 5. シラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Solutions of systems of linear equations (a maximum of three equations"
+not_in_text("> Solutions of systems of linear equations (a maximum of three equations"
         " in three unknowns), including cases where there is a unique solution,"
         " an infinite number of solutions or no solution.",
         "シラバス本体を逐語で")
-in_text("> These systems should be solved using both algebraic and technological"
+not_in_text("> These systems should be solved using both algebraic and technological"
         " methods, for example row reduction or matrices.",
         "Guidance（解き方）を逐語で")
-in_text("> Systems which have no solution(s) are inconsistent.",
+not_in_text("> Systems which have no solution(s) are inconsistent.",
         "Guidance（inconsistent）を逐語で")
-in_text("> Finding a general solution for a system with an infinite number"
+not_in_text("> Finding a general solution for a system with an infinite number"
         " of solutions.", "Guidance（general solution）を逐語で")
-in_text("> Link to: intersection of lines and planes (AHL 3.18).",
+not_in_text("> Link to: intersection of lines and planes (AHL 3.18).",
         "Link to を逐語で")
 in_text("## 公式集には、この項目の欄がありません", "公式集にないことを書く")
 not_in_text("公式集の **1.16**", "ありもしない欄を書かない")
@@ -229,7 +233,7 @@ in_text("`Solve System of Linear Equations`", "TI-Nspire のメニュー名")
 for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -238,8 +242,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl116-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -283,7 +288,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -322,9 +327,9 @@ for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("After row reduction, the last row decides everything", "図(a) の題")
+not_in_fig("After row reduction, the last row decides everything", "図(a) の題")
 in_fig("the last row says $0=0$", "図(a) の 0 = 0")
-in_fig("Two equations in two unknowns: the same three cases", "図(b) の題")
+not_in_fig("Two equations in two unknowns: the same three cases", "図(b) の題")
 in_fig("the two lines coincide", "図(b) の重なる場合")
 in_text("row reduction のあと、いちばん下の行だけを見ます。", "キャプション (a)")
 in_text("$2$ 変数でも、$3$ つの場合は同じように起こります。", "キャプション (b)")
@@ -374,5 +379,165 @@ in_text("なお、この本では行列そのものは扱いません。", "行�
 in_text("**平面としての見方は、Topic 3 で扱います。**", "3.18 は先の話")
 
 print()
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-13 の手直し（表 1 を数字の例に）
+# ══════════════════════════════════════════════════════════
+in_text("| $2$ つの式を入れかえる | $R_{1} \\leftrightarrow R_{2}$ | "
+        "$\\begin{aligned} 2x - y + z &= 3 \\\\ x + y + z &= 6 \\\\ "
+        "x + 2y - z &= 2 \\end{aligned}$ |", "表 1 の 1 行目")
+in_text("| $1$ つの式を $0$ でない数倍する | $R_{2} \\to 3R_{2}$ | "
+        "$\\begin{aligned} x + y + z &= 6 \\\\ 6x - 3y + 3z &= 9 \\\\ "
+        "x + 2y - z &= 2 \\end{aligned}$ |", "表 1 の 2 行目")
+in_text("| $1$ つの式に、別の式の何倍かを足す | $R_{2} \\to R_{2} - 2R_{1}$ | "
+        "$\\begin{aligned} x + y + z &= 6 \\\\ -3y - z &= -9 \\\\ "
+        "x + 2y - z &= 2 \\end{aligned}$ |", "表 1 の 3 行目")
+# 例の列は式だけ（日本語を混ぜない）
+for _row in re.findall(r"^\| \$\d\$ つの式[^\n]*$", TEXT, re.M):
+    _cell = _row.split("|")[3]
+    chk(not re.search(r"[ぁ-んァ-ヴ一-龥]", _cell), "表 1 の例に日本語: " + _cell[:40])
+not_in_text("| $1$ 行目と $2$ 行目を交換 |", "前の抽象的な例は消した")
+in_text("$2x-y+z=3$ を $0$ 倍すると $0 = 0$ になり", "0 倍の例も数字で")
+not_in_text("$R_{2} \\to 0 \\times R_{2}$ とすると", "前の書き方は消した")
+# 表 1 の数値が @eq-aahl116-system と合っていること
+_x16, _y16, _z16 = sp.symbols("x y z")
+_r1 = _x16 + _y16 + _z16 - 6
+_r2 = 2 * _x16 - _y16 + _z16 - 3
+_r3 = _x16 + 2 * _y16 - _z16 - 2
+chk(sp.expand(3 * _r2 - (6 * _x16 - 3 * _y16 + 3 * _z16 - 9)) == 0,
+    "3R2 は 6x-3y+3z=9")
+chk(sp.expand(_r2 - 2 * _r1 - (-3 * _y16 - _z16 + 9)) == 0,
+    "R2-2R1 は -3y-z=-9")
+chk(sp.solve([_r1, _r2, _r3], [_x16, _y16, _z16]) == {_x16: 1, _y16: 2, _z16: 3},
+    "もとの連立の解は (1, 2, 3)")
+
+
+# code span の中に数式を入れない（$ がそのまま表示されてしまう）
+for _cs in re.findall(r"`([^`\n]+)`", TEXT):
+    chk("$" not in _cs, "code span の中に数式: " + _cs[:50])
+in_text("*Let $x$, $y$, $z$ be ...* の $1$ 行です。", "文字の宣言は italic")
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-13 の手直し（§3〜§5 を 3 つの式セットで書く）
+# ══════════════════════════════════════════════════════════
+in_text("**$3$ つの式は、いつもセットで書き直します。**", "セットで書く方針")
+in_text("R_{2} \\to R_{2} - 2R_{1}, \\qquad R_{3} \\to R_{3} - R_{1}", "§3 の操作")
+in_text("x + y + z &= 6 \\\\\n-3y - z &= -9 \\\\\ny - 2z &= -4", "§3 の 1 回目")
+in_text("x + y + z &= 6 \\\\\n3y + z &= 9 \\\\\ny - 2z &= -4", "§3 の 2 回目")
+in_text("R_{2} \\to -R_{2}", "§3 の -1 倍")
+_idea16 = TEXT[TEXT.index("## The idea"):TEXT.index("## Why it works")]
+chk(": \\qquad" not in _idea16, "The idea に 1 本だけ書く形は残っていない")
+chk("$2$ 行目は、両辺に $-1$ を掛けておきます。" in _idea16, "§3 の -1 倍の説明")
+in_text("x + y + z &= 6 \\\\\ny + 2z &= 8 \\\\\ny + 2z &= 8", "§4 の 1 回目")
+in_text("x + y + z &= 6 \\\\\ny + 2z &= 8 \\\\\n0 &= 0", "§4 の 2 回目")
+in_text("x + y + z &= 6 \\\\\ny + 2z &= 8 \\\\\ny + 2z &= 9", "§5 の 1 回目")
+in_text("x + y + z &= 6 \\\\\ny + 2z &= 8 \\\\\n0 &= 1", "§5 の 2 回目")
+# 書き直した 3 つの式が、もとの連立と同じ解をもつこと
+_x6, _y6, _z6 = sp.symbols("x y z")
+_sys3 = [_x6 + _y6 + _z6 - 6, 2 * _x6 - _y6 + _z6 - 3, _x6 + 2 * _y6 - _z6 - 2]
+_step1 = [_x6 + _y6 + _z6 - 6, -3 * _y6 - _z6 + 9, _y6 - 2 * _z6 + 4]
+_step2 = [_x6 + _y6 + _z6 - 6, 3 * _y6 + _z6 - 9, _y6 - 2 * _z6 + 4]
+for _nm, _sy in (("§3 の 1 回目", _step1), ("§3 の 2 回目", _step2)):
+    chk(sp.solve(_sy, [_x6, _y6, _z6]) == {_x6: 1, _y6: 2, _z6: 3},
+        _nm + " の解も (1, 2, 3)")
+_inf = [_x6 + _y6 + _z6 - 6, _x6 + 2 * _y6 + 3 * _z6 - 14,
+        2 * _x6 + 3 * _y6 + 4 * _z6 - 20]
+chk(sp.expand(_inf[1] - _inf[0] - (_y6 + 2 * _z6 - 8)) == 0, "§4 R2-R1")
+chk(sp.expand(_inf[2] - 2 * _inf[0] - (_y6 + 2 * _z6 - 8)) == 0, "§4 R3-2R1")
+_bad = 2 * _x6 + 3 * _y6 + 4 * _z6 - 21
+chk(sp.expand(_bad - 2 * _inf[0] - (_y6 + 2 * _z6 - 9)) == 0, "§5 R3-2R1 は y+2z=9")
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-13 の手直し（例題・演習も 3 つの式セットで書く）
+# ══════════════════════════════════════════════════════════
+_X, _Y, _Z, _K = sp.symbols("x y z k")
+
+
+def _aug(rows):
+    """[左辺 - 右辺] の並びを拡大係数行列にして、既約行階段形で返す。"""
+    M = []
+    for _e in rows:
+        _p = sp.Poly(sp.expand(_e), _X, _Y, _Z)
+        M.append([_p.coeff_monomial(_X), _p.coeff_monomial(_Y),
+                  _p.coeff_monomial(_Z), -_p.coeff_monomial(1)])
+    return sp.Matrix(M).rref()[0]
+
+
+def same_system(orig, shown, msg):
+    chk(_aug(orig) == _aug(shown), "同じ連立になっていない: " + msg)
+
+
+# 例題 1
+_o1 = [_X + _Y + _Z - 4, 2 * _X - _Y + 3 * _Z - 14, 3 * _X + 2 * _Y - _Z - 1]
+same_system(_o1, [_X + _Y + _Z - 4, -3 * _Y + _Z - 6, -_Y - 4 * _Z + 11],
+            "例題1 の 1 回目")
+same_system(_o1, [_X + _Y + _Z - 4, -3 * _Y + _Z - 6, _Y + 4 * _Z - 11],
+            "例題1 の 2 回目")
+chk(sp.solve(_o1, [_X, _Y, _Z]) == {_X: 2, _Y: -1, _Z: 3}, "例題1 の解")
+# 例題 2（解は無数）
+_o2 = [_X + 2 * _Y - _Z - 3, 2 * _X + 5 * _Y + _Z - 10, 3 * _X + 7 * _Y - 13]
+same_system(_o2, [_X + 2 * _Y - _Z - 3, _Y + 3 * _Z - 4, _Y + 3 * _Z - 4],
+            "例題2 の 1 回目")
+same_system(_o2, [_X + 2 * _Y - _Z - 3, _Y + 3 * _Z - 4, sp.Integer(0)],
+            "例題2 の 2 回目（0 = 0）")
+# 例題 3（解なし）: 3 行目の右辺だけ 14
+_o3 = [_X + 2 * _Y - _Z - 3, 2 * _X + 5 * _Y + _Z - 10, 3 * _X + 7 * _Y - 14]
+chk(sp.solve(_o3, [_X, _Y, _Z]) == [], "例題3 に解はない")
+chk(sp.expand((3 * _X + 7 * _Y - 14) - 3 * (_X + 2 * _Y - _Z - 3)
+              - (_Y + 3 * _Z - 5)) == 0, "例題3 R3-3R1 は y+3z=5")
+# 例題 4（k 入り）
+for _kv in (0, 1, 5, 8, 9):
+    _o4 = [_X + 2 * _Y + 3 * _Z - 4, 2 * _X + 5 * _Y + 4 * _Z - 7,
+           3 * _X + 7 * _Y + _kv * _Z - 11]
+    _s4 = [_X + 2 * _Y + 3 * _Z - 4, _Y - 2 * _Z + 1,
+           (_kv - 7) * _Z]
+    same_system(_o4, _s4, "例題4（k = %d）" % _kv)
+# 演習 1〜7, 9
+_ex = [
+    ("演習1", [_X + _Y + _Z - 5, 2 * _X - _Y + _Z - 7, _X + 2 * _Y - _Z + 1],
+     [_X + _Y + _Z - 5, 3 * _Y + _Z - 3, _Y - 2 * _Z + 6]),
+    ("演習2", [_X + _Y + _Z - 6, 2 * _X + _Y - _Z - 1, _X - _Y + 2 * _Z - 5],
+     [_X + _Y + _Z - 6, _Y + 3 * _Z - 11, -2 * _Y + _Z + 1]),
+    ("演習3a", [_X + _Y + _Z - 4, 2 * _X + 3 * _Y + _Z - 9,
+                3 * _X + 5 * _Y + _Z - 14],
+     [_X + _Y + _Z - 4, _Y - _Z - 1, 2 * _Y - 2 * _Z - 2]),
+    ("演習3b", [_X + _Y + _Z - 4, 2 * _X + 3 * _Y + _Z - 9,
+                3 * _X + 5 * _Y + _Z - 14],
+     [_X + _Y + _Z - 4, _Y - _Z - 1, sp.Integer(0)]),
+    ("演習4", [_X + 2 * _Y + _Z - 3, 2 * _X + 3 * _Y - _Z - 5,
+               3 * _X + 5 * _Y - 9],
+     [_X + 2 * _Y + _Z - 3, -_Y - 3 * _Z + 1, -_Y - 3 * _Z]),
+    ("演習6a", [_X + _Y + _Z - 2, 2 * _X + 3 * _Y + _Z - 5,
+                _X - _Y + 3 * _Z],
+     [_X + _Y + _Z - 2, _Y - _Z - 1, -2 * _Y + 2 * _Z + 2]),
+    ("演習6b", [_X + _Y + _Z - 2, 2 * _X + 3 * _Y + _Z - 5,
+                _X - _Y + 3 * _Z],
+     [_X + _Y + _Z - 2, _Y - _Z - 1, sp.Integer(0)]),
+    ("演習7", [_X + _Y + _Z - 6, 2 * _X + _Y - _Z - 3],
+     [_X + _Y + _Z - 6, _Y + 3 * _Z - 9]),
+    ("演習9a", [_X + _Y + _Z - 12, 2 * _X + 3 * _Y + _Z - 22,
+                _X + 2 * _Y + 3 * _Z - 28],
+     [_X + _Y + _Z - 12, _Y - _Z + 2, _Y + 2 * _Z - 16]),
+    ("演習9b", [_X + _Y + _Z - 12, 2 * _X + 3 * _Y + _Z - 22,
+                _X + 2 * _Y + 3 * _Z - 28],
+     [_X + _Y + _Z - 12, _Y - _Z + 2, 3 * _Z - 18]),
+]
+for _nm, _o, _sh in _ex:
+    same_system(_o, _sh, _nm)
+# 演習 5（k 入り）
+for _kv in (-1, 0, 1, 3):
+    _o5 = [_X + _Y + _Z - 2, 2 * _X + 3 * _Y + _Z - 5, _X + _kv * _Y + 3 * _Z - 4]
+    _s5 = [_X + _Y + _Z - 2, _Y - _Z - 1, (_kv + 1) * _Z - (3 - _kv)]
+    same_system(_o5, _s5, "演習5（k = %d）" % _kv)
+# 1 本だけ書く形は、ページのどこにも残っていない
+not_in_text(": \\qquad", "1 本だけ書く形は残っていない（本文）")
+not_in_text(": \\quad", "1 本だけ書く形は残っていない（解答例）")
+chk(TEXT.count("\\begin{aligned}") >= 30,
+    "3 式セットの表示が十分ある: %d" % TEXT.count("\\begin{aligned}"))
+
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

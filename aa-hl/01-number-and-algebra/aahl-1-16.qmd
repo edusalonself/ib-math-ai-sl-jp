@@ -6,20 +6,18 @@ sidebar: aa-hl
 
 ::: {.callout-note}
 ## What you should be able to do
-- $3$ つの文字の連立 $1$ 次方程式を、**row reduction** で解ける。
+- $3$ つの文字の **system of linear equations**（連立 $1$ 次方程式）を、**row reduction** で解ける。
 - 解が **$1$ つに決まる場合・無数にある場合・ない場合**の $3$ つがあることを知っている。
 - 解が無数にあるとき、**general solution** を文字を使って書ける。
 - 解がないとき、**inconsistent** であると書ける。
-- 文字を含む係数について、どの場合になるかを調べられる。
+- 文字を含む **coefficient**（係数）について、どの場合になるかを調べられる。
 :::
 
 ## The idea
 
 ### 1. Systems of linear equations and their solutions（連立 $1$ 次方程式とその解） {#idea}
 
-シラバスは、次のように書いています。
-
-> Solutions of systems of linear equations (a maximum of three equations in three unknowns), including cases where there is a unique solution, an infinite number of solutions or no solution.
+連立 $1$ 次方程式の解には、**$1$ つだけ**・**無数にある**・**ない**の $3$ つの場合があります。
 
 **最大で「$3$ つの式・$3$ つの文字」です。** それ以上は出ません。
 
@@ -54,19 +52,19 @@ $$
 
 ### 2. Row reduction: the three operations（row reduction：$3$ つの操作） {#operations}
 
-シラバスは、解き方についても書いています。
-
-> These systems should be solved using both algebraic and technological methods, for example row reduction or matrices.
+解き方は、**式の row reduction（計算）**と**電卓**の両方を使えるようにしておきます。
 
 **row reduction** は、次の $3$ つの操作だけを使って、式を簡単にしていく方法です。
 
-: 使ってよい $3$ つの操作 {#tbl-aahl116-ops}
+@eq-aahl116-system の $3$ つの式に、実際にかけてみます。$R_{1}$、$R_{2}$、$R_{3}$ は、上から $1$、$2$、$3$ 行目の式のことです。
 
-| 操作 | 書き方 | 例 |
+: 使ってよい $3$ つの操作 {#tbl-aahl116-ops tbl-colwidths="[38,17,45]"}
+
+| 操作 | 書き方 | @eq-aahl116-system での例 |
 |---|---|---|
-| $2$ つの式を入れかえる | $R_{1} \leftrightarrow R_{2}$ | $1$ 行目と $2$ 行目を交換 |
-| $1$ つの式を $0$ でない数倍する | $R_{2} \to 3R_{2}$ | $2$ 行目を $3$ 倍 |
-| $1$ つの式に、別の式の何倍かを足す | $R_{2} \to R_{2} - 2R_{1}$ | $2$ 行目から $1$ 行目の $2$ 倍を引く |
+| $2$ つの式を入れかえる | $R_{1} \leftrightarrow R_{2}$ | $\begin{aligned} 2x - y + z &= 3 \\ x + y + z &= 6 \\ x + 2y - z &= 2 \end{aligned}$ |
+| $1$ つの式を $0$ でない数倍する | $R_{2} \to 3R_{2}$ | $\begin{aligned} x + y + z &= 6 \\ 6x - 3y + 3z &= 9 \\ x + 2y - z &= 2 \end{aligned}$ |
+| $1$ つの式に、別の式の何倍かを足す | $R_{2} \to R_{2} - 2R_{1}$ | $\begin{aligned} x + y + z &= 6 \\ -3y - z &= -9 \\ x + 2y - z &= 2 \end{aligned}$ |
 
 **この $3$ つは、解を変えません。** どれも「両辺に同じことをする」か「同じ式を並べかえる」だけだからです（[Why it works](#why-it-works)）。
 
@@ -74,33 +72,42 @@ $$
 
 ::: {.callout-warning}
 ## $0$ 倍はできません
-$R_{2} \to 0 \times R_{2}$ とすると、式が $1$ つ消えてしまいます。**情報が減るので、解が変わります。**
+$2x-y+z=3$ を $0$ 倍すると $0 = 0$ になり、式が $1$ つ消えてしまいます。**情報が減るので、解が変わります。**
 
 $2$ 番目の操作は、**$0$ でない数**に限ります。
 :::
 
 ### 3. A unique solution（解が $1$ つに決まる場合） {#unique}
 
-@eq-aahl116-system を解きます。$1$ 行目を使って、下の $2$ 行から $x$ を消します。
+@eq-aahl116-system を解きます。$1$ 行目を使って、下の $2$ 行から $x$ を消します。**$3$ つの式は、いつもセットで書き直します。**
 
 $$
-R_{2} \to R_{2} - 2R_{1}: \qquad -3y - z = -9
+R_{2} \to R_{2} - 2R_{1}, \qquad R_{3} \to R_{3} - R_{1}
 $$
-
-$$
-R_{3} \to R_{3} - R_{1}: \qquad y - 2z = -4
-$$
-
-$1$ 行目の $-3y-z = -9$ は、両辺に $-1$ を掛けて $3y+z = 9$ としておきます。残ったのは $2$ 文字の連立方程式です。
 
 $$
 \begin{aligned}
+x + y + z &= 6 \\
+-3y - z &= -9 \\
+y - 2z &= -4
+\end{aligned}
+$$
+
+$2$ 行目は、両辺に $-1$ を掛けておきます。
+
+$$
+R_{2} \to -R_{2}
+$$
+
+$$
+\begin{aligned}
+x + y + z &= 6 \\
 3y + z &= 9 \\
 y - 2z &= -4
 \end{aligned}
 $$
 
-下の式から $y = 2z - 4$ です。上に入れます。
+**下の $2$ 行が、$y$ と $z$ だけの連立方程式です。** $3$ 行目から $y = 2z - 4$ です。$2$ 行目に入れます。
 
 $$
 3(2z-4) + z = 9 \ \Rightarrow \ 7z - 12 = 9 \ \Rightarrow \ z = 3
@@ -121,6 +128,97 @@ $2$ つの式だけで確かめると、$3$ つ目を使いまちがえていて
 $1+2+3 = 6$、$2-2+3 = 3$、$1+4-3 = 2$。**$3$ つとも合いました。**
 :::
 
+::: {#exm-aahl116-unique}
+[Solve the system of equations]{.q-en}
+
+$$
+\begin{aligned}
+x + y + z &= 4 \\
+2x - y + 3z &= 14 \\
+3x + 2y - z &= 1
+\end{aligned}
+$$
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次の連立方程式を解きなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+[第 3 節](#unique) の手順どおりです。$1$ 行目を使って、$x$ を消します。
+
+$$
+R_{2} \to R_{2} - 2R_{1}, \qquad R_{3} \to R_{3} - 3R_{1}
+$$
+
+$$
+\begin{aligned}
+x + y + z &= 4 \\
+-3y + z &= 6 \\
+-y - 4z &= -11
+\end{aligned}
+$$
+
+$3$ 行目は、両辺に $-1$ を掛けておきます。
+
+$$
+R_{3} \to -R_{3}
+$$
+
+$$
+\begin{aligned}
+x + y + z &= 4 \\
+-3y + z &= 6 \\
+y + 4z &= 11
+\end{aligned}
+$$
+
+$2$ 行目から $z = 6 + 3y$ なので、$3$ 行目に入れます。
+
+$$
+y + 4(6+3y) = 11 \ \Rightarrow \ 13y + 24 = 11 \ \Rightarrow \ y = -1
+$$
+
+**back substitution で戻ります。**
+
+$$
+z = 6 + 3(-1) = 3, \qquad x = 4 - (-1) - 3 = 2
+$$
+
+**解は $(x,\ y,\ z) = (2,\ -1,\ 3)$ です。**
+
+**検算。** **$3$ つの式すべてに入れます。**
+
+$$
+2 + (-1) + 3 = 4, \qquad 4 - (-1) + 9 = 14, \qquad 6 + (-2) - 3 = 1
+$$
+
+$3$ つとも合いました ✓
+
+**検算（消した式のほうで）。** $-3y + z = -3(-1) + 3 = 6$ ✓ **途中の式でも合っているので、引き算のところでまちがえていません。**
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{3} \to R_{3} - 3R_{1}, \quad R_{3} \to -R_{3}$$
+
+$$\begin{aligned} x + y + z &= 4 \\ -3y + z &= 6 \\ y + 4z &= 11 \end{aligned}$$
+
+*From the second row, $z = 6+3y$. Substituting into the third row:*
+
+$$y + 4(6+3y) = 11, \quad 13y = -13, \quad y = -1$$
+
+$$z = 6+3(-1) = 3, \qquad x = 4-(-1)-3 = 2$$
+
+*The solution is $x = 2$, $y = -1$, $z = 3$.*
+:::
+:::
+:::
+
 ### 4. Infinitely many solutions: the general solution（解が無数にある場合） {#infinite}
 
 次の連立方程式を見ます。
@@ -136,20 +234,32 @@ $$ {#eq-aahl116-infinite}
 同じように $x$ を消します。
 
 $$
-R_{2} \to R_{2} - R_{1}: \qquad y + 2z = 8
+R_{2} \to R_{2} - R_{1}, \qquad R_{3} \to R_{3} - 2R_{1}
 $$
 
 $$
-R_{3} \to R_{3} - 2R_{1}: \qquad y + 2z = 8
+\begin{aligned}
+x + y + z &= 6 \\
+y + 2z &= 8 \\
+y + 2z &= 8
+\end{aligned}
 $$
 
-**$2$ つが同じ式になりました。** $3$ 行目から $2$ 行目を引くと
+**$2$ 行目と $3$ 行目が、同じ式になりました。** $3$ 行目から $2$ 行目を引きます。
 
 $$
-R_{3} \to R_{3} - R_{2}: \qquad 0 = 0
+R_{3} \to R_{3} - R_{2}
 $$
 
-です。**これは「いつでも正しい」式で、何も決めません。** 式が実質 $2$ つしかないのに、文字は $3$ つあります。
+$$
+\begin{aligned}
+x + y + z &= 6 \\
+y + 2z &= 8 \\
+0 &= 0
+\end{aligned}
+$$
+
+**$0 = 0$ は「いつでも正しい」式で、何も決めません。** 式が実質 $2$ つしかないのに、文字は $3$ つあります。
 
 **このときは、$1$ つの文字を自由に決めます。** $z = \lambda$ と置きます（$\lambda$ はギリシャ文字のラムダで、どんな実数でもよい、という意味です）。
 
@@ -161,9 +271,7 @@ $$
 (x,\ y,\ z) = (-2+\lambda,\ 8-2\lambda,\ \lambda), \qquad \lambda \in \mathbb{R}
 $$ {#eq-aahl116-general}
 
-これを **general solution** と呼びます。シラバスにも書かれています。
-
-> Finding a general solution for a system with an infinite number of solutions.
+これを **general solution** と呼びます。
 
 **$\lambda$ に数を入れるたびに、解が $1$ つ出ます。** $\lambda = 0$ なら $(-2,\ 8,\ 0)$、$\lambda = 3$ なら $(1,\ 2,\ 3)$ です。どちらも $3$ つの式を満たします。
 
@@ -172,6 +280,97 @@ $$ {#eq-aahl116-general}
 答案には、**$x$ と $y$ を $\lambda$ で表した式**まで書いてください。
 
 $\lambda$ の代わりに $t$ や $s$ を使ってもかまいませんが、**$1$ 文字を新しく置いた**ことが分かるように書きます。
+:::
+
+::: {#exm-aahl116-infinite}
+[Show that the system]{.q-en}
+
+$$
+\begin{aligned}
+x + 2y - z &= 3 \\
+2x + 5y + z &= 10 \\
+3x + 7y \phantom{{}+ 0z} &= 13
+\end{aligned}
+$$
+
+[has an infinite number of solutions, and find the general solution.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次の連立方程式の解が無数にあることを示し、general solution を求めなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+$3$ 行目に $z$ がないので、**係数は $0$** です。$x$ を消します。
+
+$$
+R_{2} \to R_{2} - 2R_{1}, \qquad R_{3} \to R_{3} - 3R_{1}
+$$
+
+$$
+\begin{aligned}
+x + 2y - z &= 3 \\
+y + 3z &= 4 \\
+y + 3z &= 4
+\end{aligned}
+$$
+
+**$2$ 行目と $3$ 行目が、同じ式になりました。**
+
+$$
+R_{3} \to R_{3} - R_{2}
+$$
+
+$$
+\begin{aligned}
+x + 2y - z &= 3 \\
+y + 3z &= 4 \\
+0 &= 0
+\end{aligned}
+$$
+
+いちばん下が $0 = 0$ なので、**解は無数にあります**（[第 6 節](#classify)）。
+
+**$z = \lambda$ と置きます。**
+
+$$
+y = 4 - 3\lambda, \qquad x = 3 - 2y + z = 3 - 2(4-3\lambda) + \lambda = -5 + 7\lambda
+$$
+
+$$
+(x,\ y,\ z) = (-5+7\lambda,\ 4-3\lambda,\ \lambda), \qquad \lambda \in \mathbb{R}
+$$
+
+**検算。** **$\lambda = 1$ で、$3$ つの式に入れます。** $(x,\ y,\ z) = (2,\ 1,\ 1)$ です。
+
+$$
+2 + 2 - 1 = 3, \qquad 4 + 5 + 1 = 10, \qquad 6 + 7 = 13
+$$
+
+$3$ つとも合いました ✓
+
+**検算（別の $\lambda$ で）。** $\lambda = 0$ なら $(-5,\ 4,\ 0)$ で、$-5+8-0 = 3$、$-10+20+0 = 10$、$-15+28 = 13$ ✓ **$2$ つの $\lambda$ で合えば、式の組み立てはまず正しいです。**
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{3} \to R_{3} - 3R_{1}, \quad R_{3} \to R_{3} - R_{2}$$
+
+$$\begin{aligned} x + 2y - z &= 3 \\ y + 3z &= 4 \\ 0 &= 0 \end{aligned}$$
+
+*The last row places no restriction, so there are infinitely many solutions.*
+
+*Let $z = \lambda$, $\lambda \in \mathbb{R}$. Then $y = 4-3\lambda$ and*
+
+$$x = 3 - 2(4-3\lambda) + \lambda = -5 + 7\lambda$$
+
+*The general solution is $x = -5+7\lambda$, $y = 4-3\lambda$, $z = \lambda$, $\lambda \in \mathbb{R}$.*
+:::
+:::
 :::
 
 ### 5. No solution: inconsistent systems（解がない場合） {#inconsistent}
@@ -189,28 +388,119 @@ $$
 同じ操作をします。
 
 $$
-R_{2} \to R_{2} - R_{1}: \qquad y + 2z = 8
+R_{2} \to R_{2} - R_{1}, \qquad R_{3} \to R_{3} - 2R_{1}
 $$
 
 $$
-R_{3} \to R_{3} - 2R_{1}: \qquad y + 2z = 9
+\begin{aligned}
+x + y + z &= 6 \\
+y + 2z &= 8 \\
+y + 2z &= 9
+\end{aligned}
 $$
 
 $$
-R_{3} \to R_{3} - R_{2}: \qquad 0 = 1
+R_{3} \to R_{3} - R_{2}
+$$
+
+$$
+\begin{aligned}
+x + y + z &= 6 \\
+y + 2z &= 8 \\
+0 &= 1
+\end{aligned}
 $$
 
 **$0 = 1$ は、あり得ません。** ですから、$3$ つの式を同時に満たす $(x,\ y,\ z)$ はありません。
 
-シラバスは、この場合の呼び名を決めています。
-
-> Systems which have no solution(s) are inconsistent.
+このような連立方程式を **inconsistent** といいます。
 
 **答案には `The system is inconsistent, so there is no solution.` と書きます。** 「解なし」で止めず、**どの行から $0 = 1$ が出たか**も書いてください。
 
+::: {#exm-aahl116-inconsistent}
+[Show that the system]{.q-en}
+
+$$
+\begin{aligned}
+x + 2y - z &= 3 \\
+2x + 5y + z &= 10 \\
+3x + 7y \phantom{{}+ 0z} &= 14
+\end{aligned}
+$$
+
+[has no solution.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+次の連立方程式に解がないことを示しなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+[例題 2](#exm-aahl116-infinite) と、$3$ 行目の右辺だけがちがいます。同じ操作をします。
+
+$$
+R_{2} \to R_{2} - 2R_{1}, \qquad R_{3} \to R_{3} - 3R_{1}
+$$
+
+$$
+\begin{aligned}
+x + 2y - z &= 3 \\
+y + 3z &= 4 \\
+y + 3z &= 5
+\end{aligned}
+$$
+
+**左辺は同じで、右辺だけがちがいます。** 引きます。
+
+$$
+R_{3} \to R_{3} - R_{2}
+$$
+
+$$
+\begin{aligned}
+x + 2y - z &= 3 \\
+y + 3z &= 4 \\
+0 &= 1
+\end{aligned}
+$$
+
+**$0 = 1$ はあり得ません。** ですから、$3$ つの式を同時に満たす組はありません。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*After the row operations $R_{2} \to R_{2}-2R_{1}$ and $R_{3} \to R_{3}-3R_{1}$ the second and third equations become $y+3z = 4$ and $y+3z = 5$.*
+
+*Subtracting one from the other gives $0 = 1$, which is impossible.*
+
+*So no values of $x$, $y$ and $z$ can satisfy all three equations at once: the system is inconsistent and has no solution.*
+:::
+
+（$2$ 行目と $3$ 行目の左辺が同じで右辺がちがうので、引くと $0 = 1$ になる。これはあり得ないので解はない、という意味です。）
+
+**検算。** **左辺が本当に同じかを見ます。** $y+3z$ と $y+3z$ で、係数が一致しています ✓ **ここがずれていたら、$0 = 1$ にはなりません。**
+
+**検算（$1$ つ試してみる）。** [例題 2](#exm-aahl116-infinite) の解の $1$ つ $(2,\ 1,\ 1)$ を入れると、$3$ 行目は $6+7 = 13$ で、$14$ になりません ✓ **$3$ 行目だけが合わない形になっています。**
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{3} \to R_{3} - 3R_{1}, \quad R_{3} \to R_{3} - R_{2}$$
+
+$$\begin{aligned} x + 2y - z &= 3 \\ y + 3z &= 4 \\ 0 &= 1 \end{aligned}$$
+
+*This is impossible, so the system is inconsistent and has no solution.*
+:::
+:::
+:::
+
 ### 6. Telling the three cases apart（$3$ つの場合の見分け方） {#classify}
 
-![row reduction のあと、いちばん下の行だけを見ます。](img/aahl-1-16-idea-a.svg){#fig-aahl116-idea-a width=100%}
+![row reduction のあと、いちばん下の行だけを見ます。](img/aahl-1-16-idea-a.svg){#fig-aahl116-idea-a width=95%}
 
 @fig-aahl116-idea-a のとおり、**いちばん下の行が $3$ つの場合を決めます。**
 
@@ -237,9 +527,128 @@ TI-Nspire CX II には、連立 $1$ 次方程式を解く機能があります�
 **Paper 1 では使えません。** このページの例題と演習は、すべて手で解けるようにしてあります。
 :::
 
+::: {#exm-aahl116-parameter}
+[Consider the system]{.q-en}
+
+$$
+\begin{aligned}
+x + 2y + 3z &= 4 \\
+2x + 5y + 4z &= 7 \\
+3x + 7y + kz &= 11
+\end{aligned}
+$$
+
+[where $k$ is a real number.]{.q-en}
+
+**(a)** [Find the value of $k$ for which the system does not have a unique solution.]{.q-en}
+
+**(b)** [For that value of $k$, find the general solution.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$k$ を実数として、上の連立方程式を考えます。
+
+**(a)** 解が $1$ つに決まらなくなる $k$ の値を求めなさい。
+
+**(b)** その $k$ について、general solution を求めなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** $k$ が入っていても、手順は同じです。$x$ を消します。
+
+$$
+R_{2} \to R_{2} - 2R_{1}, \qquad R_{3} \to R_{3} - 3R_{1}
+$$
+
+$$
+\begin{aligned}
+x + 2y + 3z &= 4 \\
+y - 2z &= -1 \\
+y + (k-9)z &= -1
+\end{aligned}
+$$
+
+$2$ 行目と $3$ 行目から、$y$ を消します。
+
+$$
+R_{3} \to R_{3} - R_{2}
+$$
+
+$$
+\begin{aligned}
+x + 2y + 3z &= 4 \\
+y - 2z &= -1 \\
+(k-7)z &= 0
+\end{aligned}
+$$
+
+**$k \neq 7$ なら $z = 0$ に決まり、解は $1$ つです。** ですから、$1$ つに決まらないのは
+
+$$
+k = 7
+$$
+
+のときです。
+
+**(b)** $k = 7$ を入れると、いちばん下の行は $0 = 0$ です。**解は無数にあります。** $z = \lambda$ と置きます。
+
+$$
+y = 2\lambda - 1, \qquad x = 4 - 2y - 3z = 4 - 2(2\lambda-1) - 3\lambda = 6 - 7\lambda
+$$
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*After $R_{2} \to R_{2}-2R_{1}$ and $R_{3} \to R_{3}-3R_{1}$, then $R_{3} \to R_{3}-R_{2}$, the last row becomes $(k-7)z = 0$.*
+
+*If $k \neq 7$ this forces $z = 0$ and back substitution then determines $y$ and $x$, so the solution is unique.*
+
+*Hence the system fails to have a unique solution only when $k = 7$.*
+
+*When $k = 7$ the last row is $0 = 0$, which places no restriction on $z$, so there are infinitely many solutions.*
+
+*Putting $z = \lambda$ gives $y = 2\lambda - 1$ and $x = 6 - 7\lambda$.*
+:::
+
+（最後の行が $(k-7)z = 0$ になるので、$k \neq 7$ なら $z = 0$ に決まる。$k = 7$ のときだけ $0 = 0$ になり、解が無数になる、という意味です。）
+
+**検算。** **$k = 7$、$\lambda = 1$ で、$3$ つの式に入れます。** $(x,\ y,\ z) = (-1,\ 1,\ 1)$ です。
+
+$$
+-1 + 2 + 3 = 4, \qquad -2 + 5 + 4 = 7, \qquad -3 + 7 + 7 = 11
+$$
+
+$3$ つとも合いました ✓
+
+**検算（$k \neq 7$ のほう）。** $k = 8$ とすると $z = 0$、$y = -1$、$x = 4-2(-1) = 6$ です。$3$ 行目は $18 - 7 + 0 = 11$ ✓ **確かに $1$ つに決まりました。**
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+
+**(a)**
+
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{3} \to R_{3} - 3R_{1}, \quad R_{3} \to R_{3} - R_{2}$$
+
+$$\begin{aligned} x + 2y + 3z &= 4 \\ y - 2z &= -1 \\ (k-7)z &= 0 \end{aligned}$$
+
+*If $k \neq 7$ then $z = 0$ and the solution is unique, so $k = 7$.*
+
+**(b)** *When $k = 7$ the last row is $0 = 0$. Let $z = \lambda$, $\lambda \in \mathbb{R}$.*
+
+$$y = 2\lambda - 1, \qquad x = 4 - 2(2\lambda-1) - 3\lambda = 6 - 7\lambda$$
+
+*The general solution is $x = 6-7\lambda$, $y = 2\lambda-1$, $z = \lambda$, $\lambda \in \mathbb{R}$.*
+:::
+:::
+:::
+
 ### 7. A picture in two variables（$2$ 変数の図で見る） {#picture}
 
-![$2$ 変数でも、$3$ つの場合は同じように起こります。](img/aahl-1-16-idea-b.svg){#fig-aahl116-idea-b width=100%}
+![$2$ 変数でも、$3$ つの場合は同じように起こります。](img/aahl-1-16-idea-b.svg){#fig-aahl116-idea-b width=95%}
 
 $3$ 変数の図はかきにくいので、**$2$ 変数で見ます。** $1$ つの $1$ 次方程式は、$1$ 本の直線です（[SL 2.1](../../aa-sl/02-functions/aasl-2-1.qmd)）。
 
@@ -247,11 +656,9 @@ $3$ 変数の図はかきにくいので、**$2$ 変数で見ます。** $1$ つ
 
 - **$1$ 点で交わる** → 解が $1$ つ
 - **重なっている** → 解が無数（直線上のすべての点）
-- **平行で交わらない** → 解なし
+- **parallel（平行）で交わらない** → 解なし
 
-**$3$ 変数でも同じです。** $1$ つの $1$ 次方程式は平面を表し、$3$ つの平面が $1$ 点で交わるか、直線や平面を共有するか、まったく共有しないかに分かれます。シラバスも、そのつながりを書いています。
-
-> Link to: intersection of lines and planes (AHL 3.18).
+**$3$ 変数でも同じです。** $1$ つの $1$ 次方程式は平面を表し、$3$ つの平面が $1$ 点で交わるか、直線や平面を共有するか、まったく共有しないかに分かれます。
 
 **平面としての見方は、Topic 3 で扱います。** ここでは、**式の計算だけで $3$ つを見分けられる**ようにしておけば十分です。
 
@@ -292,328 +699,6 @@ row reduction が終わった形では、$3$ 行目には $z$ しか残ってい
 ですから、**解は無数にあるか、$1$ つもないか**のどちらかです。$1$ 組だけ、ということは起こりません（[演習 8](#exercises)）。
 
 **同じことが、式が $3$ 本でも起こります。** $3$ 本のうち $1$ 本が、他の $2$ 本から作れてしまう場合です（[第 4 節](#infinite) が、その形でした）。**本数ではなく、「新しいことを言っている式が何本あるか」が効きます。**
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-
-**例題も演習も、すべて電卓なしで解けます。** Paper 1 のつもりで解いてください。
-:::
-
-::: {#exm-aahl116-unique}
-[Solve the system of equations]{.q-en}
-
-$$
-\begin{aligned}
-x + y + z &= 4 \\
-2x - y + 3z &= 14 \\
-3x + 2y - z &= 1
-\end{aligned}
-$$
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-次の連立方程式を解きなさい。
-
-</details>
-
----
-
-[第 3 節](#unique) の手順どおりです。$1$ 行目を使って、$x$ を消します。
-
-$$
-R_{2} \to R_{2} - 2R_{1}: \qquad -3y + z = 6
-$$
-
-$$
-R_{3} \to R_{3} - 3R_{1}: \qquad -y - 4z = -11
-$$
-
-$3$ 行目は、両辺に $-1$ を掛けて $y + 4z = 11$ とします。$2$ 行目から $z = 6 + 3y$ なので、これを入れます。
-
-$$
-y + 4(6+3y) = 11 \ \Rightarrow \ 13y + 24 = 11 \ \Rightarrow \ y = -1
-$$
-
-**back substitution で戻ります。**
-
-$$
-z = 6 + 3(-1) = 3, \qquad x = 4 - (-1) - 3 = 2
-$$
-
-**解は $(x,\ y,\ z) = (2,\ -1,\ 3)$ です。**
-
-**検算。** **$3$ つの式すべてに入れます。**
-
-$$
-2 + (-1) + 3 = 4, \qquad 4 - (-1) + 9 = 14, \qquad 6 + (-2) - 3 = 1
-$$
-
-$3$ つとも合いました ✓
-
-**検算（消した式のほうで）。** $-3y + z = -3(-1) + 3 = 6$ ✓ **途中の式でも合っているので、引き算のところでまちがえていません。**
-
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-
-$$R_{2} \to R_{2} - 2R_{1}: \quad -3y + z = 6$$
-
-$$R_{3} \to R_{3} - 3R_{1}: \quad -y - 4z = -11, \ \text{ that is } \ y + 4z = 11$$
-
-*From the first of these, $z = 6+3y$. Substituting:*
-
-$$y + 4(6+3y) = 11, \quad 13y = -13, \quad y = -1$$
-
-$$z = 6+3(-1) = 3, \qquad x = 4-(-1)-3 = 2$$
-
-*The solution is $x = 2$, $y = -1$, $z = 3$.*
-:::
-:::
-
-::: {#exm-aahl116-infinite}
-[Show that the system]{.q-en}
-
-$$
-\begin{aligned}
-x + 2y - z &= 3 \\
-2x + 5y + z &= 10 \\
-3x + 7y \phantom{{}+ 0z} &= 13
-\end{aligned}
-$$
-
-[has an infinite number of solutions, and find the general solution.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-次の連立方程式の解が無数にあることを示し、general solution を求めなさい。
-
-</details>
-
----
-
-$3$ 行目に $z$ がないので、**係数は $0$** です。$x$ を消します。
-
-$$
-R_{2} \to R_{2} - 2R_{1}: \qquad y + 3z = 4
-$$
-
-$$
-R_{3} \to R_{3} - 3R_{1}: \qquad y + 3z = 4
-$$
-
-**$2$ つが同じ式になりました。**
-
-$$
-R_{3} \to R_{3} - R_{2}: \qquad 0 = 0
-$$
-
-いちばん下が $0 = 0$ なので、**解は無数にあります**（[第 6 節](#classify)）。
-
-**$z = \lambda$ と置きます。**
-
-$$
-y = 4 - 3\lambda, \qquad x = 3 - 2y + z = 3 - 2(4-3\lambda) + \lambda = -5 + 7\lambda
-$$
-
-$$
-(x,\ y,\ z) = (-5+7\lambda,\ 4-3\lambda,\ \lambda), \qquad \lambda \in \mathbb{R}
-$$
-
-**検算。** **$\lambda = 1$ で、$3$ つの式に入れます。** $(x,\ y,\ z) = (2,\ 1,\ 1)$ です。
-
-$$
-2 + 2 - 1 = 3, \qquad 4 + 5 + 1 = 10, \qquad 6 + 7 = 13
-$$
-
-$3$ つとも合いました ✓
-
-**検算（別の $\lambda$ で）。** $\lambda = 0$ なら $(-5,\ 4,\ 0)$ で、$-5+8-0 = 3$、$-10+20+0 = 10$、$-15+28 = 13$ ✓ **$2$ つの $\lambda$ で合えば、式の組み立てはまず正しいです。**
-
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-
-$$R_{2} \to R_{2} - 2R_{1}: \quad y + 3z = 4$$
-
-$$R_{3} \to R_{3} - 3R_{1}: \quad y + 3z = 4$$
-
-$$R_{3} \to R_{3} - R_{2}: \quad 0 = 0$$
-
-*The last row places no restriction, so there are infinitely many solutions.*
-
-*Let $z = \lambda$, $\lambda \in \mathbb{R}$. Then $y = 4-3\lambda$ and*
-
-$$x = 3 - 2(4-3\lambda) + \lambda = -5 + 7\lambda$$
-
-*The general solution is $x = -5+7\lambda$, $y = 4-3\lambda$, $z = \lambda$, $\lambda \in \mathbb{R}$.*
-:::
-:::
-
-::: {#exm-aahl116-inconsistent}
-[Show that the system]{.q-en}
-
-$$
-\begin{aligned}
-x + 2y - z &= 3 \\
-2x + 5y + z &= 10 \\
-3x + 7y \phantom{{}+ 0z} &= 14
-\end{aligned}
-$$
-
-[has no solution.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-次の連立方程式に解がないことを示しなさい。
-
-</details>
-
----
-
-[例題 2](#exm-aahl116-infinite) と、$3$ 行目の右辺だけがちがいます。同じ操作をします。
-
-$$
-R_{2} \to R_{2} - 2R_{1}: \qquad y + 3z = 4
-$$
-
-$$
-R_{3} \to R_{3} - 3R_{1}: \qquad y + 3z = 5
-$$
-
-**左辺は同じで、右辺だけがちがいます。** 引きます。
-
-$$
-R_{3} \to R_{3} - R_{2}: \qquad 0 = 1
-$$
-
-**$0 = 1$ はあり得ません。** ですから、$3$ つの式を同時に満たす組はありません。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*After the row operations $R_{2} \to R_{2}-2R_{1}$ and $R_{3} \to R_{3}-3R_{1}$ the second and third equations become $y+3z = 4$ and $y+3z = 5$. Subtracting one from the other gives $0 = 1$, which is impossible. So no values of $x$, $y$ and $z$ can satisfy all three equations at once: the system is inconsistent and has no solution.*
-:::
-
-（$2$ 行目と $3$ 行目の左辺が同じで右辺がちがうので、引くと $0 = 1$ になる。これはあり得ないので解はない、という意味です。）
-
-**検算。** **左辺が本当に同じかを見ます。** $y+3z$ と $y+3z$ で、係数が一致しています ✓ **ここがずれていたら、$0 = 1$ にはなりません。**
-
-**検算（$1$ つ試してみる）。** [例題 2](#exm-aahl116-infinite) の解の $1$ つ $(2,\ 1,\ 1)$ を入れると、$3$ 行目は $6+7 = 13$ で、$14$ になりません ✓ **$3$ 行目だけが合わない形になっています。**
-
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-
-$$R_{2} \to R_{2} - 2R_{1}: \quad y + 3z = 4$$
-
-$$R_{3} \to R_{3} - 3R_{1}: \quad y + 3z = 5$$
-
-$$R_{3} \to R_{3} - R_{2}: \quad 0 = 1$$
-
-*This is impossible, so the system is inconsistent and has no solution.*
-:::
-:::
-
-::: {#exm-aahl116-parameter}
-[Consider the system]{.q-en}
-
-$$
-\begin{aligned}
-x + 2y + 3z &= 4 \\
-2x + 5y + 4z &= 7 \\
-3x + 7y + kz &= 11
-\end{aligned}
-$$
-
-[where $k$ is a real number.]{.q-en}
-
-**(a)** [Find the value of $k$ for which the system does not have a unique solution.]{.q-en}
-
-**(b)** [For that value of $k$, find the general solution.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-$k$ を実数として、上の連立方程式を考えます。
-
-**(a)** 解が $1$ つに決まらなくなる $k$ の値を求めなさい。
-
-**(b)** その $k$ について、general solution を求めなさい。
-
-</details>
-
----
-
-**(a)** $k$ が入っていても、手順は同じです。$x$ を消します。
-
-$$
-R_{2} \to R_{2} - 2R_{1}: \qquad y - 2z = -1
-$$
-
-$$
-R_{3} \to R_{3} - 3R_{1}: \qquad y + (k-9)z = -1
-$$
-
-$2$ つの左辺から $y$ を消します。
-
-$$
-R_{3} \to R_{3} - R_{2}: \qquad (k-9+2)z = 0, \ \text{ つまり } \ (k-7)z = 0
-$$
-
-**$k \neq 7$ なら $z = 0$ に決まり、解は $1$ つです。** ですから、$1$ つに決まらないのは
-
-$$
-k = 7
-$$
-
-のときです。
-
-**(b)** $k = 7$ を入れると、いちばん下の行は $0 = 0$ です。**解は無数にあります。** $z = \lambda$ と置きます。
-
-$$
-y = 2\lambda - 1, \qquad x = 4 - 2y - 3z = 4 - 2(2\lambda-1) - 3\lambda = 6 - 7\lambda
-$$
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*After $R_{2} \to R_{2}-2R_{1}$ and $R_{3} \to R_{3}-3R_{1}$, then $R_{3} \to R_{3}-R_{2}$, the last row becomes $(k-7)z = 0$. If $k \neq 7$ this forces $z = 0$ and back substitution then determines $y$ and $x$, so the solution is unique. Hence the system fails to have a unique solution only when $k = 7$. When $k = 7$ the last row is $0 = 0$, which places no restriction on $z$, so there are infinitely many solutions. Putting $z = \lambda$ gives $y = 2\lambda - 1$ and $x = 6 - 7\lambda$.*
-:::
-
-（最後の行が $(k-7)z = 0$ になるので、$k \neq 7$ なら $z = 0$ に決まる。$k = 7$ のときだけ $0 = 0$ になり、解が無数になる、という意味です。）
-
-**検算。** **$k = 7$、$\lambda = 1$ で、$3$ つの式に入れます。** $(x,\ y,\ z) = (-1,\ 1,\ 1)$ です。
-
-$$
--1 + 2 + 3 = 4, \qquad -2 + 5 + 4 = 7, \qquad -3 + 7 + 7 = 11
-$$
-
-$3$ つとも合いました ✓
-
-**検算（$k \neq 7$ のほう）。** $k = 8$ とすると $z = 0$、$y = -1$、$x = 4-2(-1) = 6$ です。$3$ 行目は $18 - 7 + 0 = 11$ ✓ **確かに $1$ つに決まりました。**
-
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-
-**(a)**
-
-$$R_{2} \to R_{2} - 2R_{1}: \quad y - 2z = -1$$
-
-$$R_{3} \to R_{3} - 3R_{1}: \quad y + (k-9)z = -1$$
-
-$$R_{3} \to R_{3} - R_{2}: \quad (k-7)z = 0$$
-
-*If $k \neq 7$ then $z = 0$ and the solution is unique, so $k = 7$.*
-
-**(b)** *When $k = 7$ the last row is $0 = 0$. Let $z = \lambda$, $\lambda \in \mathbb{R}$.*
-
-$$y = 2\lambda - 1, \qquad x = 4 - 2(2\lambda-1) - 3\lambda = 6 - 7\lambda$$
-
-*The general solution is $x = 6-7\lambda$, $y = 2\lambda-1$, $z = \lambda$, $\lambda \in \mathbb{R}$.*
-:::
 :::
 
 ## Common errors
@@ -662,12 +747,6 @@ $R_{3} \to R_{3} - R_{3}$ のように、行を丸ごと消す操作はできま
 
 ## Exercises
 
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが $3$ つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
-
 ::: {.exercise-block}
 
 [1]{.ex-no} [Solve the system $x+y+z = 5$, $2x-y+z = 7$, $x+2y-z = -1$.]{.q-en}
@@ -682,11 +761,11 @@ $R_{3} \to R_{3} - R_{3}$ のように、行を丸ごと消す操作はできま
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
-$$R_{2} \to R_{2} - 2R_{1}: \quad -3y - z = -3, \ \text{ that is } \ 3y + z = 3$$
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{3} \to R_{3} - R_{1}, \quad R_{2} \to -R_{2}$$
 
-$$R_{3} \to R_{3} - R_{1}: \quad y - 2z = -6$$
+$$\begin{aligned} x + y + z &= 5 \\ 3y + z &= 3 \\ y - 2z &= -6 \end{aligned}$$
 
-*From the second of these, $y = 2z-6$. Substituting:*
+*From the third row, $y = 2z-6$. Substituting into the second row:*
 
 $$3(2z-6) + z = 3, \quad 7z = 21, \quad z = 3$$
 
@@ -722,11 +801,11 @@ $$y = 2(3)-6 = 0, \qquad x = 5 - 0 - 3 = 2$$
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
-$$R_{2} \to R_{2} - 2R_{1}: \quad -y - 3z = -11, \ \text{ that is } \ y + 3z = 11$$
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{3} \to R_{3} - R_{1}, \quad R_{2} \to -R_{2}$$
 
-$$R_{3} \to R_{3} - R_{1}: \quad -2y + z = -1$$
+$$\begin{aligned} x + y + z &= 6 \\ y + 3z &= 11 \\ -2y + z &= -1 \end{aligned}$$
 
-*From the first of these, $y = 11-3z$. Substituting:*
+*From the second row, $y = 11-3z$. Substituting into the third row:*
 
 $$-2(11-3z) + z = -1, \quad 7z = 21, \quad z = 3$$
 
@@ -760,11 +839,13 @@ $2$ 行目を $-1$ 倍して $y+3z = 11$ にしておくと、代入が楽にな
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
-$$R_{2} \to R_{2} - 2R_{1}: \quad y - z = 1$$
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{3} \to R_{3} - 3R_{1}$$
 
-$$R_{3} \to R_{3} - 3R_{1}: \quad 2y - 2z = 2$$
+$$\begin{aligned} x + y + z &= 4 \\ y - z &= 1 \\ 2y - 2z &= 2 \end{aligned}$$
 
-$$R_{3} \to R_{3} - 2R_{2}: \quad 0 = 0$$
+$$R_{3} \to R_{3} - 2R_{2}$$
+
+$$\begin{aligned} x + y + z &= 4 \\ y - z &= 1 \\ 0 &= 0 \end{aligned}$$
 
 *The last row places no restriction, so there are infinitely many solutions.*
 
@@ -800,11 +881,13 @@ $3$ 行目は $2y-2z = 2$ で、$2$ 行目 $y-z = 1$ の $2$ 倍です。**新�
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
-$$R_{2} \to R_{2} - 2R_{1}: \quad -y - 3z = -1$$
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{3} \to R_{3} - 3R_{1}$$
 
-$$R_{3} \to R_{3} - 3R_{1}: \quad -y - 3z = 0$$
+$$\begin{aligned} x + 2y + z &= 3 \\ -y - 3z &= -1 \\ -y - 3z &= 0 \end{aligned}$$
 
-$$R_{3} \to R_{3} - R_{2}: \quad 0 = 1$$
+$$R_{3} \to R_{3} - R_{2}$$
+
+$$\begin{aligned} x + 2y + z &= 3 \\ -y - 3z &= -1 \\ 0 &= 1 \end{aligned}$$
 
 *This is impossible, so the system is inconsistent and has no solution.*
 :::
@@ -836,11 +919,13 @@ $k$ を実数として、連立方程式 $x+y+z = 2$、$2x+3y+z = 5$、$x+ky+3z 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
-$$R_{2} \to R_{2} - 2R_{1}: \quad y - z = 1$$
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{3} \to R_{3} - R_{1}$$
 
-$$R_{3} \to R_{3} - R_{1}: \quad (k-1)y + 2z = 2$$
+$$\begin{aligned} x + y + z &= 2 \\ y - z &= 1 \\ (k-1)y + 2z &= 2 \end{aligned}$$
 
-$$R_{3} \to R_{3} - (k-1)R_{2}: \quad (k+1)z = 3-k$$
+$$R_{3} \to R_{3} - (k-1)R_{2}$$
+
+$$\begin{aligned} x + y + z &= 2 \\ y - z &= 1 \\ (k+1)z &= 3-k \end{aligned}$$
 
 *If $k \neq -1$ this gives a single value of $z$, so the solution is unique. Hence $k = -1$.*
 
@@ -874,11 +959,13 @@ $k$ が入っていても、手順は [例題 4](#exm-aahl116-parameter) と同�
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
-$$R_{2} \to R_{2} - 2R_{1}: \quad y - z = 1$$
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{3} \to R_{3} - R_{1}$$
 
-$$R_{3} \to R_{3} - R_{1}: \quad -2y + 2z = -2, \ \text{ that is } \ y - z = 1$$
+$$\begin{aligned} x + y + z &= 2 \\ y - z &= 1 \\ -2y + 2z &= -2 \end{aligned}$$
 
-$$R_{3} \to R_{3} - R_{2}: \quad 0 = 0$$
+$$R_{3} \to -\frac{1}{2}R_{3}, \quad R_{3} \to R_{3} - R_{2}$$
+
+$$\begin{aligned} x + y + z &= 2 \\ y - z &= 1 \\ 0 &= 0 \end{aligned}$$
 
 *The last row places no restriction, so there are infinitely many solutions.*
 
@@ -914,7 +1001,9 @@ $-2y+2z = -2$ を $-2$ で割って $y-z = 1$ にすると、$2$ 行目とまっ
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
-$$R_{2} \to R_{2} - 2R_{1}: \quad -y - 3z = -9, \ \text{ that is } \ y + 3z = 9$$
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{2} \to -R_{2}$$
+
+$$\begin{aligned} x + y + z &= 6 \\ y + 3z &= 9 \end{aligned}$$
 
 *There are only two equations in three unknowns, so $z$ is not determined.*
 
@@ -969,7 +1058,15 @@ $3$ つの文字についての $1$ 次方程式が $2$ つしかないとき、
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Row reduction leaves at most two rows, one for each equation, and two rows cannot pin down three unknowns: at least one unknown remains free. If the system is inconsistent it has no solution at all. If it is consistent, choose a solution and then change the value of the free unknown; solving the two rows for the remaining unknowns gives a different solution of the same system. So a consistent system of this shape has infinitely many solutions, and an inconsistent one has none. Exactly one solution is therefore impossible.*
+*Row reduction leaves at most two rows, one for each equation, and two rows cannot pin down three unknowns: at least one unknown remains free.*
+
+*If the system is inconsistent it has no solution at all.*
+
+*If it is consistent, choose a solution and then change the value of the free unknown; solving the two rows for the remaining unknowns gives a different solution of the same system.*
+
+*So a consistent system of this shape has infinitely many solutions, and an inconsistent one has none.*
+
+*Exactly one solution is therefore impossible.*
 :::
 :::
 
@@ -992,11 +1089,15 @@ $3$ つの文字についての $1$ 次方程式が $2$ つしかないとき、
 
 $$x+y+z = 12, \qquad 2x+3y+z = 22, \qquad x+2y+3z = 28$$
 
-$$R_{2} \to R_{2} - 2R_{1}: \quad y - z = -2$$
+$$R_{2} \to R_{2} - 2R_{1}, \quad R_{3} \to R_{3} - R_{1}$$
 
-$$R_{3} \to R_{3} - R_{1}: \quad y + 2z = 16$$
+$$\begin{aligned} x + y + z &= 12 \\ y - z &= -2 \\ y + 2z &= 16 \end{aligned}$$
 
-$$R_{3} \to R_{3} - R_{2}: \quad 3z = 18, \quad z = 6$$
+$$R_{3} \to R_{3} - R_{2}$$
+
+$$\begin{aligned} x + y + z &= 12 \\ y - z &= -2 \\ 3z &= 18 \end{aligned}$$
+
+*So $z = 6$.*
 
 $$y = -2 + 6 = 4, \qquad x = 12 - 4 - 6 = 2$$
 
@@ -1006,7 +1107,7 @@ $$y = -2 + 6 = 4, \qquad x = 12 - 4 - 6 = 2$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-**まず、文字が何を表すかを書いてください。** `Let $x$, $y$, $z$ be ...` の $1$ 行です。これがないと、あとの式が読めません。
+**まず、文字が何を表すかを書いてください。** *Let $x$, $y$, $z$ be ...* の $1$ 行です。これがないと、あとの式が読めません。
 
 $3$ つの条件が、そのまま $3$ つの式になります。**個数・$1$ つ目の得点・$2$ つ目の得点**の順です。
 
@@ -1051,7 +1152,13 @@ $0 = 0$ は「制限がない」、$0 = b$ は「満たせない」です。
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The row $0 = 0$ is satisfied by every choice of $x$, $y$ and $z$, so it imposes no condition at all; it tells us only that one of the original equations was a combination of the others and carried no new information. A system is called inconsistent when row reduction produces a row of the form $0 = b$ with $b \neq 0$, since no values can satisfy such a row. That has not happened here. The correct conclusion is that the system has an infinite number of solutions, and the student should set $z = \lambda$ and express $x$ and $y$ in terms of $\lambda$ to give the general solution.*
+*The row $0 = 0$ is satisfied by every choice of $x$, $y$ and $z$, so it imposes no condition at all; it tells us only that one of the original equations was a combination of the others and carried no new information.*
+
+*A system is called inconsistent when row reduction produces a row of the form $0 = b$ with $b \neq 0$, since no values can satisfy such a row.*
+
+*That has not happened here.*
+
+*The correct conclusion is that the system has an infinite number of solutions, and the student should set $z = \lambda$ and express $x$ and $y$ in terms of $\lambda$ to give the general solution.*
 :::
 :::
 

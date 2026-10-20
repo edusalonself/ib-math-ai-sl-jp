@@ -44,7 +44,28 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
-BODY = TEXT.split("## Worked examples")[0]
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
+
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
@@ -62,7 +83,7 @@ in_text("# SL 4.6 — Combined events: Venn diagrams, tree diagrams and tables"
         "（事象の組み合わせ） {#sec-aasl-4-6}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea", "## Why it works",
-           "## Worked examples", "## Common errors", "## Exercises"):
+           "## Common errors", "## Exercises"):
     in_text(_h, "節 " + _h)
 
 _secs = re.findall(r"^### (\d)\. .*\{#([a-z-]+)\}$", TEXT, re.M)
@@ -79,7 +100,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 6, "callout-warning 6（誤り 6）")
 chk(TEXT.count("{.callout-important}") == 3, "callout-important 3（公式集 4.6 の 3 式）")
 chk(TEXT.count("**検算") >= 12, "検算 12 以上: %d" % TEXT.count("**検算"))
@@ -108,8 +129,8 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
         "model answer %d に日本語がない" % _i)
 
 # 図の参照
-in_text("(img/aasl-4-6-idea-a.svg){#fig-aasl46-idea-a width=100%}", "図 (a) の埋め込み")
-in_text("(img/aasl-4-6-idea-b.svg){#fig-aasl46-idea-b width=100%}", "図 (b) の埋め込み")
+in_text("(img/aasl-4-6-idea-a.svg){#fig-aasl46-idea-a width=80%}", "図 (a) の埋め込み")
+in_text("(img/aasl-4-6-idea-b.svg){#fig-aasl46-idea-b width=80%}", "図 (b) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-6-idea.svg")),
     "分割前の SVG は消してある")
 in_text("@fig-aasl46-idea-a", "図 (a) の参照")
@@ -519,7 +540,7 @@ chk(sum(1 for s in DICE if s[0] == 6) == 6, "1 個目が 6 のマスは 6 個")
 chk(sum(1 for s in DICE if s[1] == 6) == 6, "2 個目が 6 のマスは 6 個")
 
 # --- m6 用語 -------------------------------------------------------------
-in_text("sample space（標本空間）$U$ を長方形で表し", "m6 sample space")
+in_text("**sample space**（標本空間）$U$ を長方形で表し", "m6 sample space")
 in_text("**with replacement**（復元、玉をもどす）場合", "m6 with replacement")
 in_text("$1$ 本の道すじ（始点から端まで）", "m6 始点")
 chk(TEXT.count("（標本空間の表）") == 0, "table of outcomes の訳をそろえた")
@@ -587,7 +608,7 @@ in_text('- **combined events**（複合事象）の式', "英語併記 1")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -597,12 +618,12 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. and・or・not {#and-or}', "見出しの英語: 1. and・or・not")
+in_text('### 1. And, or and not（積事象・和事象・余事象） {#and-or}', "見出しの英語: 1. and・or・not")
 not_in_text("and・or・not のことば", "「のことば」は外した")
-in_text('### 2. Venn diagram で数える {#venn}', "見出しの英語: 2. Venn diagram で数える")
-in_text('### 3. 足しすぎた分を引く（the addition rule） {#addition}', "見出しの英語: 3. 足しすぎた分を引く（the addition ")
-in_text('### 4. mutually exclusive（互いに排反） {#exclusive}', "見出しの英語: 4. mutually exclusive（互いに排")
-in_text('### 6. tree diagram（樹形図） {#tree}', "見出しの英語: 6. tree diagram（樹形図）")
+in_text('### 2. Venn diagrams（ベン図で数える） {#venn}', "見出しの英語: 2. Venn diagram で数える")
+in_text('### 3. The addition rule（足しすぎた分を引く） {#addition}', "見出しの英語: 3. 足しすぎた分を引く（the addition ")
+in_text('### 4. Mutually exclusive events（互いに排反な事象） {#exclusive}', "見出しの英語: 4. mutually exclusive（互いに排")
+in_text('### 6. Tree diagrams（樹形図） {#tree}', "見出しの英語: 6. tree diagram（樹形図）")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
@@ -611,7 +632,7 @@ for _sent in [
     'the first result does no',
 ]:
     chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
-in_text('### 6. tree diagram（樹形図） {#tree}', "その内容は本文にある")
+in_text('### 6. Tree diagrams（樹形図） {#tree}', "その内容は本文にある")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：図から説明の文を外した（方針 第 21 節）
@@ -625,13 +646,11 @@ for _s46 in ("splits $U$ into four parts",
              "for the event",
              "ends that contain a $W$"):
     chk(_s46 not in FIG, "図に説明の文を書いていない: " + _s46[:28])
-in_fig("A Venn diagram", "図 (a) の題は短い")
-in_fig("A tree diagram", "図 (b) の題は短い")
-chk('"A Venn diagram"' in FIG, "図 (a) の題は A Venn diagram だけ")
-chk('"A tree diagram"' in FIG, "図 (b) の題は A tree diagram だけ")
-chk("ax1.set_ylim(-1.35, 4.7)" in FIG, "図 (a) の下の余白を詰めた")
+not_in_fig("A Venn diagram", "図 (a) に題は置かない")
+not_in_fig("A tree diagram", "図 (b) に題は置かない")
+chk("ax1.set_ylim(-0.5, 4.1)" in FIG, "図 (a) の下の余白を詰めた")
 # 絵を指す注記は残してよい（方針 第 21 節の (B)）
-in_fig("this part is in $A$ and in $B$", "重なりを指す注記は残す")
+not_in_fig("this part is in $A$ and in $B$", "重なりの説明文は図に置かない")
 
 # --- 外した文の中身は、本文にある ----------------------------------------
 in_text("円が $2$ つ**重なっているとき**、$U$ は $4$ つの部分に分かれます",
@@ -660,12 +679,12 @@ chk(F(1, 9) + F(2, 9) + F(2, 9) == 1 - F(4, 9), "W を含む 3 つは 1 − 4/9"
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：第 5 節の見出しと、第 7 節の削除
 # ══════════════════════════════════════════════════════════
-in_text("### 5. table of outcomes（表で書き出す） {#table}", "第 5 節の見出し")
+in_text("### 5. Tables of outcomes（結果を表で書き出す） {#table}", "第 5 節の見出し")
 not_in_text("### 5. 表で書き出す（table of outcomes）", "前の見出しは消した")
 # 見出しはすべて 英語（日本語）の形（方針 第 17 節）
-in_text("### 1. and・or・not {#and-or}", "第 1 節")
-in_text("### 3. 足しすぎた分を引く（the addition rule） {#addition}", "第 3 節")
-in_text("### 6. tree diagram（樹形図） {#tree}", "第 6 節")
+in_text("### 1. And, or and not（積事象・和事象・余事象） {#and-or}", "第 1 節")
+in_text("### 3. The addition rule（足しすぎた分を引く） {#addition}", "第 3 節")
+in_text("### 6. Tree diagrams（樹形図） {#tree}", "第 6 節")
 
 # --- 第 7 節は消した -----------------------------------------------------
 not_in_text("### 7. どの図を使うか", "第 7 節の見出しは無い")
@@ -676,11 +695,10 @@ not_in_text("## この項目に電卓は要りません", "電卓の callout も
 not_in_text("$\\dfrac{15}{36}$ は $\\dfrac{5}{12}$ まで約分します。", "約分の例も無い")
 _idea46 = [int(m) for m in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea46 == list(range(1, 9)), f"The idea が 1..8 で連番: {_idea46}")
-# 電卓のことは、Worked examples の前書きに残っている
-in_text("**例題も演習も、すべて電卓なしで解けます。** 答えは分数のままで"
-        "書いてかまいません。", "電卓なしは前書きにある")
+# 例題の前の案内（電卓のこと）は置かない
+not_in_text("**例題も演習も、すべて電卓なしで解けます。**", "例題の前の案内は置かない")
 # 3 つの図は、それぞれの節に残っている
-in_text("### 2. Venn diagram で数える {#venn}", "Venn は第 2 節")
+in_text("### 2. Venn diagrams（ベン図で数える） {#venn}", "Venn は第 2 節")
 in_text("**table of outcomes**（結果の表）が使えます。", "表は第 5 節")
 in_text("**tree diagram**（樹形図）は、段階のある試行を枝で表した図です",
         "樹形図は第 6 節")
@@ -718,8 +736,8 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 # 2026-10-05：SL 4.6b を統合した
 # ══════════════════════════════════════════════════════════
 not_in_text("aasl-4-6b", "4.6b への参照は残っていない")
-in_text("### 7. 条件によって確率が変わる {#conditional}", "第 7 節")
-in_text("### 8. independent events（独立な事象） {#independent}", "第 8 節")
+in_text("### 7. Conditional probability（条件によって確率が変わるとき） {#conditional}", "第 7 節")
+in_text("### 8. Independent events（独立な事象） {#independent}", "第 8 節")
 in_text("**条件が分かったら、その条件に合う場合だけを見て確率を考えます。**",
         "第 7 節の書き出し")
 in_text("たとえば、赤玉 $3$ 個・青玉 $2$ 個の袋から、玉をもどさずに $2$ 個"
@@ -739,6 +757,16 @@ chk(F(3, 5) * F(2, 4) == F(6, 20), "3/5 × 2/4 = 6/20")
 chk(F(2, 5) * F(1, 4) == F(2, 20), "2/5 × 1/4 = 2/20")
 # さいころの例：排反だが独立ではない
 chk(F(1, 6) * F(1, 6) != 0, "P(1)P(2) ≠ 0 なのに P(1∩2) = 0")
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

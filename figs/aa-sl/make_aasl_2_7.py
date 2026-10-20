@@ -38,31 +38,29 @@ WARM = "#b45309"
 GREEN = "#15803d"
 PALE = "#e8f0f8"
 
-fig1, ax1 = plt.subplots(figsize=(5.3, 4.6))
+fig1, ax1 = plt.subplots(figsize=(5.3, 3.6))
 fig2, ax2 = plt.subplots(figsize=(5.3, 4.6))
 fig3, ax3 = plt.subplots(figsize=(5.3, 4.6))
 fig4, ax4 = plt.subplots(figsize=(5.3, 4.6))
 # ══════════════════════════════════════════════════════════
 # (a) 3 つの道すじ
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Three routes to the solutions", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(0, 10)
-ax1.set_ylim(0, 10)
+ax1.set_ylim(1.9, 9.7)
 ax1.axis("off")
 
 ax1.add_patch(FancyBboxPatch((1.2, 8.0), 7.6, 1.4,
                              boxstyle="round,pad=0.06,rounding_size=0.2",
                              linewidth=1.6, edgecolor=INK, facecolor=PALE))
-ax1.text(5.0, 8.7, "make one side $0$", ha="center", va="center",
+ax1.text(5.0, 8.7, "$ax^{2}+bx+c = 0$", ha="center", va="center",
          fontsize=12, color=INK)
 
 routes = [
-    (2.0, "factorising", ACCENT, "when the factors\nare easy to see"),
-    (5.0, "completing\nthe square", GREEN, "when the answer\nis wanted exactly"),
-    (8.0, "the quadratic\nformula", WARM, "always works"),
+    (2.0, "factorising", ACCENT),
+    (5.0, "completing\nthe square", GREEN),
+    (8.0, "the quadratic\nformula", WARM),
 ]
-for cx, name, col, note in routes:
+for cx, name, col in routes:
     ax1.annotate("", xy=(cx, 6.4), xytext=(5.0, 7.9),
                  arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.2))
     ax1.add_patch(FancyBboxPatch((cx - 1.25, 4.9), 2.5, 1.5,
@@ -71,25 +69,22 @@ for cx, name, col, note in routes:
                                  facecolor="none"))
     ax1.text(cx, 5.65, name, ha="center", va="center", fontsize=11,
              color=col)
-    ax1.text(cx, 4.3, note, ha="center", va="top", fontsize=9.5, color=INK)
 
-ax1.annotate("", xy=(5.0, 2.1), xytext=(2.0, 3.2),
+ax1.annotate("", xy=(5.0, 3.65), xytext=(2.0, 4.75),
              arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.2))
-ax1.annotate("", xy=(5.0, 2.1), xytext=(5.0, 3.2),
+ax1.annotate("", xy=(5.0, 3.65), xytext=(5.0, 4.75),
              arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.2))
-ax1.annotate("", xy=(5.0, 2.1), xytext=(8.0, 3.2),
+ax1.annotate("", xy=(5.0, 3.65), xytext=(8.0, 4.75),
              arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.2))
-ax1.add_patch(FancyBboxPatch((2.6, 0.7), 4.8, 1.4,
+ax1.add_patch(FancyBboxPatch((2.6, 2.2), 4.8, 1.4,
                              boxstyle="round,pad=0.06,rounding_size=0.2",
                              linewidth=1.6, edgecolor=INK, facecolor=PALE))
-ax1.text(5.0, 1.4, "the same solutions", ha="center", va="center",
+ax1.text(5.0, 2.9, "the same solutions", ha="center", va="center",
          fontsize=12, color=INK)
 
 # ══════════════════════════════════════════════════════════
 # (b) 2 次不等式
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Reading a quadratic inequality", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax2.set_xlim(-3.6, 4.6)
 ax2.set_ylim(-3.0, 5.8)
 ax2.axis("off")
@@ -125,8 +120,6 @@ ax2.text(4.45, 3.95, "$f(x) > 0$", fontsize=10, color=WARM,
 # ══════════════════════════════════════════════════════════
 # (c) 判別式の符号と交わる回数（第 6 節）
 # ══════════════════════════════════════════════════════════
-ax3.set_title("The sign of the discriminant", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax3.set_xlim(-1.2, 11.2)
 ax3.set_ylim(-3.4, 4.6)
 ax3.axis("off")
@@ -156,8 +149,6 @@ ax3.text(5.4, -3.3, "$\\Delta = b^{2} - 4ac$", ha="center", va="bottom",
 # ══════════════════════════════════════════════════════════
 # (b) 直線と曲線
 # ══════════════════════════════════════════════════════════
-ax4.set_title("A line and a curve", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax4.set_xlim(-3.4, 3.4)
 ax4.set_ylim(-3.0, 6.6)
 ax4.axis("off")

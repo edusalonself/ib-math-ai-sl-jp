@@ -32,19 +32,17 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig1, ax1 = plt.subplots(figsize=(5.4, 4.0))
-fig2, ax2 = plt.subplots(figsize=(5.4, 4.0))
+fig1, ax1 = plt.subplots(figsize=(5.0, 3.0))
+fig2, ax2 = plt.subplots(figsize=(5.4, 3.1))
 # ══════════════════════════════════════════════════════════
 # (a) 27^(2/3) への 2 つの道
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Two routes to $27^{\\frac{2}{3}}$",
-              fontsize=11, color=INK, loc="left", pad=10)
-ax1.set_xlim(0.0, 1.0)
-ax1.set_ylim(0.0, 1.0)
+ax1.set_xlim(0.0, 0.93)
+ax1.set_ylim(0.14, 0.9)
 ax1.axis("off")
 
 
-def route(y, mid, step1, step2, note, colour):
+def route(y, mid, step1, step2, colour):
     ax1.text(0.06, y, "$27$", ha="center", va="center", fontsize=13, color=INK)
     ax1.text(0.45, y, mid, ha="center", va="center", fontsize=13, color=colour)
     ax1.text(0.86, y, "$9$", ha="center", va="center", fontsize=13, color=INK)
@@ -56,22 +54,18 @@ def route(y, mid, step1, step2, note, colour):
              fontsize=9.5, color=colour)
     ax1.text(0.67, y + 0.075, step2, ha="center", va="bottom",
              fontsize=9.5, color=colour)
-    ax1.text(0.50, y - 0.16, note, ha="center", va="center",
-             fontsize=9.5, color=colour)
 
 
-route(0.72, "$3$", "cube root", "square", "small numbers all the way", ACCENT)
-route(0.26, "$729$", "square", "cube root", "a hard root to do by hand", WARM)
+route(0.72, "$3$", "cube root", "square", ACCENT)
+route(0.26, "$729$", "square", "cube root", WARM)
 
 ax1.plot([0.0, 1.0], [0.49, 0.49], color="#e5e7eb", linewidth=1.0)
 
 # ══════════════════════════════════════════════════════════
 # (b) 指数を 1/2 きざみで動かす（底 9）
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Half-steps in the exponent, base $9$",
-              fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(-0.45, 2.45)
-ax2.set_ylim(-1.10, 1.55)
+ax2.set_ylim(-1.10, 0.95)
 ax2.axis("off")
 
 POINTS = [(0.0, "$9^{0}$", "$1$"),
@@ -96,7 +90,7 @@ for i in range(len(POINTS) - 1):
     ax2.text((a + b) / 2, -0.93, r"$\times 3$", ha="center", va="center",
              fontsize=9, color=WARM)
 
-ax2.text(1.0, 1.25, "exponent", ha="center", va="center",
+ax2.text(1.0, 0.72, "exponent", ha="center", va="center",
          fontsize=9.5, color=GREY)
 
 for _fig, _name in ((fig1, "aasl-1-7a-idea-a.svg"), (fig2, "aasl-1-7a-idea-b.svg")):

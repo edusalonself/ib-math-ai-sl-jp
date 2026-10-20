@@ -85,7 +85,7 @@ FINE = np.linspace(0, XEND, 400)
 
 
 # ═════════════ 1. Euler の 1 歩 → 折れ線（2×2） ═════════════
-fig, axs = plt.subplots(1, 3, figsize=(15.6, 5.1))
+fig, axs = plt.subplots(1, 3, figsize=(13.2, 4.6))
 H = 0.3
 
 # (a) 出発点と、そこでの傾き
@@ -94,11 +94,9 @@ frame(ax, XR, YR, xticks=XT)
 ax.plot(FINE, EXACT(FINE), color=GREY, lw=2.0, alpha=0.45, zorder=3)
 ax.plot([0], [1], "o", color=ACC, ms=9, zorder=6)
 ax.plot([0, 0.42], [1, 1 + 0.42 * F(0, 1)], color=ACC, lw=2.6, zorder=5)
-ax.text(0.05, 3.10, "at $(0,\\ 1)$ the equation gives\n"
-                    "$\\dfrac{dy}{dx} = 0 + 1 = 1$",
+ax.text(0.05, 3.10, "$(0,\\ 1)$:   $\\dfrac{dy}{dx} = 0 + 1 = 1$",
         fontsize=12, color=ACC, bbox=BOX, zorder=7, va="top")
-ax.set_title("(a)  start at the given point,\nread the slope off the equation",
-             fontsize=12.5, color=ACC, pad=10)
+ax.set_title("(a)", fontsize=12.5, color=ACC, pad=8)
 
 # (b) 1 歩進む
 ax = axs[1]
@@ -114,8 +112,7 @@ ax.text(H + 0.03, (1 + ye[1]) / 2, "$h \\times 1 = 0.3$", ha="left",
         va="center", fontsize=11.5, color=GOLD, bbox=BOX, zorder=7)
 ax.text(0.40, 2.95, "new point $(0.3,\\ 1.3)$", fontsize=12, color=ACC,
         bbox=BOX, zorder=7)
-ax.set_title("(b)  step along that slope by $h$", fontsize=12.5, color=ACC,
-             pad=10)
+ax.set_title("(b)", fontsize=12.5, color=ACC, pad=8)
 
 # (c) 4 歩
 ax = axs[2]
@@ -125,16 +122,11 @@ xe, ye = euler(F, 0.0, 1.0, H, 3)
 ax.plot(xe, ye, "-o", color=ACC, lw=2.8, ms=8, zorder=6)
 for xx, yy in zip(xe, ye):
     ax.plot([xx], [yy], "o", color=ACC, ms=8, zorder=7)
-ax.set_title("(c)  repeat — the answer is a POLYGON,\nnot a curve",
-             fontsize=12.5, color=ACC, pad=10)
+ax.set_title("(c)", fontsize=12.5, color=ACC, pad=8)
 
-fig.suptitle("$\\dfrac{dy}{dx} = x + y$,   $y(0) = 1$", fontsize=16, y=0.995)
-fig.text(0.5, -0.04,
-         "Euler's method walks along the TANGENT for a short distance $h$, "
-         "then reads a new slope and turns.   The result is a chain of "
-         "straight pieces, so it is an APPROXIMATION.",
-         fontsize=12.5, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0, 1, 0.955))
+fig.tight_layout()
+fig.suptitle("$\\dfrac{dy}{dx} = x + y$,   $y(0) = 1$", fontsize=16, y=1.0,
+             va="bottom")
 save(fig, "ahl-5-16a-step.svg")
 
 
@@ -146,15 +138,13 @@ ax.plot(FINE, EXACT(FINE), color=LINE, lw=2.8, zorder=5,
 ax.plot(xe, ye, "-o", color=ACC, lw=2.6, ms=7, zorder=6,
         label="Euler,  $h = 0.3$")
 ax.plot([XEND, XEND], [ye[-1], EXACT(XEND)], color=GOLD, lw=2.6, zorder=7)
-ax.annotate("the gap is the ERROR", xy=(XEND, (ye[-1] + EXACT(XEND)) / 2),
-            xytext=(0.05, 3.05), fontsize=11.5, color=GOLD,
+ax.annotate("error", xy=(XEND, (ye[-1] + EXACT(XEND)) / 2),
+            xytext=(0.52, 3.05), fontsize=11.5, color=GOLD,
             arrowprops=dict(arrowstyle="->", color=GOLD, lw=1.6), bbox=BOX,
             zorder=8, va="top")
 # ★ 凡例は右下へ。左上は注記の場所なので、重ねると凡例の1行目が
 #    注記に置きかわったように見える。
 ax.legend(loc="lower right", fontsize=10.5, framealpha=0.92)
-ax.set_title("the polygon always cuts the CORNERS",
-             fontsize=12.5, color=INK, pad=10)
 
 fig.tight_layout()
 save(fig, "ahl-5-16a-gap.svg")
@@ -174,13 +164,7 @@ for ax, (hh, nn, col) in zip(axs.ravel(),
     ax.set_title("$h = %g$   (%d steps)\nerror at $x = 0.9$:  $%.3f$"
                  % (hh, nn, gap), fontsize=12.5, color=col, pad=10)
 
-fig.suptitle("Halving $h$ roughly halves the error", fontsize=15, y=0.995)
-fig.text(0.5, -0.02,
-         "The grey curve is the exact solution.   Smaller steps follow it more "
-         "closely, but need more rows of working — that is why a spreadsheet "
-         "or a calculator is used.",
-         fontsize=12.5, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0, 1, 0.972))
+fig.tight_layout()
 save(fig, "ahl-5-16a-h.svg")
 
 
@@ -193,8 +177,7 @@ frame(ax, XR, YR, xticks=XT)
 ax.plot(FINE, EXACT(FINE), color=LINE, lw=2.8, zorder=5)
 xe, ye = euler(F, 0.0, 1.0, 0.3, 3)
 ax.plot(xe, ye, "-o", color=ACC, lw=2.6, ms=7, zorder=6)
-ax.text(0.05, 3.10, "exact curve bends UPWARDS\n(convex)\n"
-                    "→ tangents pass BELOW\n→ Euler UNDERestimates",
+ax.text(0.05, 3.10, "concave up\nunderestimate",
         fontsize=11.5, color=ACC, bbox=BOX, zorder=8, va="top")
 ax.set_title("(a)  $\\dfrac{dy}{dx} = x + y$", fontsize=13, color=ACC, pad=10)
 
@@ -212,8 +195,7 @@ frame(ax, XR2, YR2, xticks=[0, 0.5, 1.0, 1.5, 2.0])
 ax.plot(fine2, 2 - 2 * np.exp(-fine2), color=LINE, lw=2.8, zorder=5)
 xe2, ye2 = euler(F2, 0.0, 0.0, 0.5, 4)
 ax.plot(xe2, ye2, "-o", color=GREEN, lw=2.6, ms=7, zorder=6)
-ax.text(0.60, 0.78, "exact curve bends DOWNWARDS\n(concave)\n"
-                    "→ tangents pass ABOVE\n→ Euler OVERestimates",
+ax.text(0.60, 0.78, "concave down\noverestimate",
         fontsize=11.5, color=GREEN, bbox=BOX, zorder=8, va="top")
 ax.set_title("(b)  $\\dfrac{dy}{dx} = 2 - y$", fontsize=13, color=GREEN,
              pad=10)
@@ -238,8 +220,7 @@ for sp in ("bottom", "left"):
     ax.spines[sp].set_color(GREY)
 ax.set_xlabel("step length $h$", fontsize=12)
 ax.set_ylabel("error at $x = 0.9$", fontsize=12)
-ax.set_title("(c)  the error is roughly PROPORTIONAL to $h$",
-             fontsize=12.5, color=GOLD, pad=10)
+ax.set_title("(c)", fontsize=12.5, color=GOLD, pad=8)
 
 # (d) h を半分にすると誤差も半分（棒）
 ax = axs[1, 1]
@@ -258,17 +239,9 @@ ax.set_axisbelow(True)
 for sp in ("top", "right", "left"):
     ax.spines[sp].set_visible(False)
 ax.spines["bottom"].set_color(GREY)
-ax.set_title("(d)  halving $h$ cuts the error by about half\n($0.3 \\to 0.15 \\to 0.075$)",
-             fontsize=12.5, color=INK, pad=10)
+ax.set_title("(d)", fontsize=12.5, color=INK, pad=8)
 
-fig.suptitle("Which way is Euler's answer wrong, and by how much?",
-             fontsize=15, y=0.995)
-fig.text(0.5, -0.02,
-         "The DIRECTION comes from the way the exact curve bends.   The SIZE "
-         "comes from $h$.   Both panels (a) and (b) use the same method — only "
-         "the curvature is different.",
-         fontsize=12.5, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0, 1, 0.972))
+fig.tight_layout()
 save(fig, "ahl-5-16a-error.svg")
 
 
@@ -284,13 +257,6 @@ for ax, (hh, nn, col) in zip(axs, ((0.45, 2, ACC), (0.15, 6, GREEN))):
     ax.plot(xe, ye, "-o", color=col, lw=2.6, ms=6, zorder=6)
     ax.set_title("Euler with $h = %g$" % hh, fontsize=13, color=col, pad=10)
 
-fig.suptitle("Euler's method is a slope field, walked one step at a time",
-             fontsize=14.5, y=1.02)
-fig.text(0.5, -0.05,
-         "AHL 5.15 draws the segments; AHL 5.16 follows them with numbers.   "
-         "With a big $h$ the walk drifts off the segments it meets; with a "
-         "small $h$ it stays on them.",
-         fontsize=12.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-5-16a-field.svg")
 

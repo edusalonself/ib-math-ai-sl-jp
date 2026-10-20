@@ -34,7 +34,7 @@ WARM = "#b45309"
 FILL = "#dbe8f5"
 
 
-fig, ax = plt.subplots(figsize=(7.2, 4.6))
+fig, ax = plt.subplots(figsize=(6.4, 4.0))
 
 EDGES = [40, 50, 60, 70, 80, 90]
 FREQ = [6, 14, 22, 12, 6]
@@ -55,9 +55,6 @@ for _s in ("top", "right"):
     ax.spines[_s].set_visible(False)
 ax.set_xlabel("mass $m$ (g)", fontsize=11, color=INK)
 ax.set_ylabel("frequency", fontsize=11, color=INK)
-ax.set_title("the bars touch, because the data are continuous; all five "
-             "classes have width $10$", fontsize=10, color=INK, loc="left",
-             pad=10)
 
 fig.tight_layout()
 path = os.path.join(OUT, "aasl-4-2-ex2.svg")

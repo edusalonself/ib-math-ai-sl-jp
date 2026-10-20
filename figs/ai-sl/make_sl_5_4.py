@@ -74,9 +74,6 @@ ax.plot([3], [2], "o", color=INK, ms=8, zorder=11)
 ax.text(2.55, 2.86, "$P(3,\\,2)$", fontsize=12.5, ha="center", va="bottom",
         zorder=12, bbox=BOX)
 
-ax.text(0.55, 5.9, "the tangent touches the curve at $P$\n"
-                   "the normal is perpendicular to it",
-        fontsize=11.5, ha="left", va="center", color=INK, zorder=10, bbox=BOX)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-4-idea.svg"), bbox_inches="tight")
@@ -104,7 +101,7 @@ for i, (px, no, lab, eq, col, half) in enumerate(steps):
         ax.annotate("", xy=(px - half - 0.035, 0.44),
                     xytext=(px0 + half0 + 0.035, 0.44),
                     arrowprops=dict(arrowstyle="-|>", color=GREY, lw=1.8))
-ax.text(0.50, 0.14, "for the normal, only step 3 changes:   use   "
+ax.text(0.50, 0.14, "normal:   "
                     r"$m_{\mathrm{normal}}=-\dfrac{1}{m_{\mathrm{tangent}}}$",
         fontsize=12.5, ha="center", va="center", color=GOLD)
 ax.set_xlim(0.0, 1.0)
@@ -130,9 +127,6 @@ ax.text(-0.16, 3.0, r"$f(4)=3$", color=ACC, fontsize=12, ha="right",
         va="center", zorder=10, bbox=BOX)
 ax.text(4.28, 3.35, "$(4,\\,3)$", fontsize=12.5, ha="left", va="bottom",
         zorder=10, bbox=BOX)
-ax.text(2.85, 5.6, "the question gives only $x=4$\n"
-                   r"put it into $f$ to get the $y$-coordinate",
-        fontsize=11.5, ha="center", va="center", color=INK, zorder=10, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-4-point.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -140,7 +134,7 @@ plt.close(fig)
 
 # ══════════════ 4. 傾きの三角形は 90 度まわしただけ ══════════════
 fig, ax = plt.subplots(figsize=(7.6, 6.0))
-blank(ax, (-3.5, 2.7), (-3.0, 3.5))
+blank(ax, (-3.5, 2.7), (-2.4, 3.5))
 ax.set_aspect("equal")
 
 # tangent through the origin, gradient 2
@@ -169,9 +163,7 @@ ax.text(-3.95, 1.80, r"$m_{\mathrm{normal}}=-\dfrac{1}{2}$", color=GREEN, fontsi
 right_angle(ax, (0, 0), (1, 2), (-2, 1), s=0.34)
 ax.plot([0], [0], "o", color=INK, ms=8, zorder=11)
 
-ax.text(-3.4, -1.15, "the same triangle,\nturned through $90^\\circ$",
-        fontsize=12, ha="left", va="center", color=INK, zorder=10, bbox=BOX)
-ax.text(-3.4, -2.2, r"$m_{\mathrm{tangent}}\times m_{\mathrm{normal}}"
+ax.text(-3.4, -1.6, r"$m_{\mathrm{tangent}}\times m_{\mathrm{normal}}"
                     r"=2\times\left(-\frac{1}{2}\right)=-1$", fontsize=13,
         ha="left", va="center", color=INK, zorder=10, bbox=BOX)
 fig.tight_layout()
@@ -201,7 +193,7 @@ ax.text(-1.12, -1.5, "normal\n$x=-1$", color=GREEN, fontsize=11.5, ha="right",
         va="center", zorder=10, bbox=BOX)
 ax.text(1.12, 1.5, "normal\n$x=1$", color=GREEN, fontsize=11.5, ha="left",
         va="center", zorder=10, bbox=BOX)
-ax.text(-2.4, 3.25, r"at both points $f'(a)=0$", fontsize=12.5, ha="left",
+ax.text(-2.4, 3.25, r"$f'(a)=0$", fontsize=12.5, ha="left",
         va="center", color=INK, zorder=10, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-4-special.svg"), bbox_inches="tight")

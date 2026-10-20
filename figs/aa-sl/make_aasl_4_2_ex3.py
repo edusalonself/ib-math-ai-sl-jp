@@ -34,7 +34,7 @@ WARM = "#b45309"
 FILL = "#dbe8f5"
 
 
-fig, ax = plt.subplots(figsize=(7.2, 5.0))
+fig, ax = plt.subplots(figsize=(6.4, 4.4))
 
 XS = [0, 5, 10, 15, 20]
 CF = [0, 8, 28, 44, 50]
@@ -48,7 +48,8 @@ ax.plot([9.25, 9.25], [25, 0], color=WARM, linewidth=1.4,
 ax.plot([9.25], [25], marker="o", markersize=7, color=WARM, zorder=6)
 ax.annotate("median $\\approx 9.25$", (9.25, 0), textcoords="offset points",
             xytext=(8, 14), fontsize=11, color=WARM)
-ax.text(0.3, 26.2, "$\\dfrac{n}{2} = 25$", fontsize=11, color=WARM)
+ax.text(0.3, 26.6, "$\\dfrac{n}{2} = 25$", fontsize=11, color=WARM,
+        va="bottom")
 
 ax.set_xlim(0, 21)
 ax.set_ylim(0, 55)
@@ -62,8 +63,6 @@ for _s in ("top", "right"):
     ax.spines[_s].set_visible(False)
 ax.set_xlabel("time $t$ (minutes)", fontsize=11, color=INK)
 ax.set_ylabel("cumulative frequency", fontsize=11, color=INK)
-ax.set_title("the graph starts at $(0,\\ 0)$, the lower boundary of the "
-             "first class", fontsize=10, color=INK, loc="left", pad=10)
 
 fig.tight_layout()
 path = os.path.join(OUT, "aasl-4-2-ex3.svg")

@@ -6,74 +6,88 @@ sidebar: aa-hl
 
 ::: {.callout-note}
 ## What you should be able to do
-- $\displaystyle\int kg'(x)f(g(x))\,\mathrm{d}x$ の形を**見て気づく**ことができる。
-- **置換積分**（integration by substitution）の手順を書ける。
-- 置換が**与えられた**ときに、それを使える。
-- 定積分では、**上端・下端も変える**ことができる。
-- **部分積分**（integration by parts）の公式を使える。
+- SL の置換積分に、HL で何が加わるかを言える。
+- 問題文で**与えられた置換**を使って、積分を求められる。
+- 置換したあとに残った $x$ を、$u$ で書き直せる。
+- **integration by parts**（部分積分）の公式を使える。
 - $u$ を選ぶ基準を言える。
 - 部分積分を**くり返す**問題を解ける。
 :::
 
 ## The idea
 
-### 1. Recognising the chain rule backwards（連鎖律を逆に読む） {#recognise}
+### 1. What HL adds（SL からのつながり） {#from-sl}
 
-連鎖律で $f(g(x))$ を微分すると $g'(x)f'(g(x))$ でした。逆に読むと
+[SL 5.10](../../aa-sl/05-calculus/aasl-5-10.qmd#inspection) では、$\displaystyle\int k\,g'(x)\,f(g(x))\,\mathrm{d}x$ の形の積分を、**inspection**（見て気づく方法）と **integration by substitution**（置換積分）で求めました。定積分で上端・下端を $u$ の値に変える方法も、[SL 5.11](../../aa-sl/05-calculus/aasl-5-11.qmd#sub) で学びました。
 
-$$
-\int k\,g'(x)\,f'(g(x))\,\mathrm{d}x = k\,f(g(x))+C
-$$ {#eq-aahl516-recognise}
+HL で新しく加わるのは、次の $2$ つです。
 
-です。**「中身の微分が、外にかかっている」形**を探します（[SL 5.10](../../aa-sl/05-calculus/aasl-5-10.qmd)）。
+- この形で**ない**積分を、**問題文で与えられた置換**を使って求める（[第 2 節](#given)）
+- **integration by parts**（部分積分）（[第 3 節](#parts)）
 
-$\displaystyle\int 2x\left(x^{2}+1\right)^{5}\mathrm{d}x$ なら、中身 $x^{2}+1$ の微分 $2x$ が前にあります。ですから答えは $\dfrac{\left(x^{2}+1\right)^{6}}{6}+C$ です。
+### 2. When a substitution is given（置換が与えられるとき） {#given}
 
-### 2. Integration by substitution（置換積分） {#substitution}
+$\displaystyle\int k\,g'(x)\,f(g(x))\,\mathrm{d}x$ の形でない積分では、**試験の問題文に置きかえ方が書いてあります**。「use the substitution $u = \ldots$」です。
 
-気づけないときは、**文字を置きかえます**。
+与えられたら、**素直にそれを使います**。手順は SL と同じ $4$ つです。
 
-> Integration by substitution.
+![手順は $4$ つです。](img/aahl-5-16-idea-a.svg){#fig-aahl516-idea-a width=85%}
 
-![手順は $4$ つです。](img/aahl-5-16-idea-a.svg){#fig-aahl516-idea-a width=100%}
-
-**$\mathrm{d}x$ も置きかえる**のが要です。$u = g(x)$ なら $\dfrac{\mathrm{d}u}{\mathrm{d}x} = g'(x)$ なので
+**$\mathrm{d}x$ も置きかえる**のがポイントです。$u = g(x)$ なら
 
 $$
 \mathrm{d}u = g'(x)\,\mathrm{d}x
 $$ {#eq-aahl516-du}
 
-と書きます。**$x$ が $1$ つでも残っていたら、まだ終わっていません。**
+と書きます。
 
-### 3. When a substitution is given（置換が与えられるとき） {#given}
+SL とちがうのは、**$x$ が残りやすい**ことです。そのときは、$u$ の式を $x$ について解いて（たとえば $x = u-1$）、残った $x$ も $u$ で書きます。**$x$ が $1$ つでも残っていたら、まだ終わっていません。**
 
-シラバスは、こう約束しています。
+::: {#exm-aahl516-given}
+[Use the substitution $u = x+1$ to find $\displaystyle\int x\sqrt{x+1}\,\mathrm{d}x$.]{.q-en}
 
-> On examination papers, substitutions will be provided if the integral is not of the form $\int kg'(x) f (g(x))\mathrm{d}x$.
->
-> Link to: integration by substitution (SL5.10).
+<details class="jp-trans">
+<summary>日本語訳</summary>
 
-つまり、**自分で思いつかなければならないのは @eq-aahl516-recognise の形だけ**です。それ以外は問題文に「use the substitution $u = \ldots$」と書いてあります。
+置換 $u = x+1$ を使って $\displaystyle\int x\sqrt{x+1}\,\mathrm{d}x$ を求めなさい。
 
-与えられたら、**素直にそれを使います**。$x$ を $u$ で表す式（たとえば $x = u-1$）が必要になることもあります。
+</details>
 
-### 4. Definite integrals: change the limits（定積分：上端・下端も変える） {#limits}
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
-定積分では、$x$ にもどさずに**上端・下端を $u$ の値に変える**ほうが速いです（[SL 5.11](../../aa-sl/05-calculus/aasl-5-11.qmd#sub)）。
+$u = x+1$ なら $\mathrm{d}u = \mathrm{d}x$ です。**$x$ も $u$ で書きます。** $x = u-1$ です。
 
 $$
-\int_{a}^{b} f(g(x))g'(x)\,\mathrm{d}x = \int_{g(a)}^{g(b)} f(u)\,\mathrm{d}u
-$$ {#eq-aahl516-limits}
+\int x\sqrt{x+1}\,\mathrm{d}x = \int (u-1)\sqrt{u}\,\mathrm{d}u
+= \int\left(u^{\frac{3}{2}}-u^{\frac{1}{2}}\right)\mathrm{d}u
+$$
 
-**変えたら、$x$ にもどす必要はありません。** もどすなら、上端・下端はもとのままにします。**どちらか一方**です。
+$$
+= \frac{2}{5}u^{\frac{5}{2}}-\frac{2}{3}u^{\frac{3}{2}}+C
+= \frac{2}{5}(x+1)^{\frac{5}{2}}-\frac{2}{3}(x+1)^{\frac{3}{2}}+C
+$$
 
-### 5. Integration by parts（部分積分） {#parts}
+**検算。** **微分してもどします。** $(x+1)^{\frac{3}{2}}-(x+1)^{\frac{1}{2}} = (x+1)^{\frac{1}{2}}\left[(x+1)-1\right] = x\sqrt{x+1}$ ✓
 
-> Integration by parts.
+**検算（$x$ が残っていないか）。** 置きかえの途中で $x = u-1$ を使いました ✓ $u$ だけの式になっています。
 
-公式集の **5.16** の欄にあります。
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
 
-> Integration by parts
+*Let* $u = x+1$, *so* $\mathrm{d}u = \mathrm{d}x$ *and* $x = u-1$.
+
+$$\int x\sqrt{x+1}\,\mathrm{d}x = \int\left(u^{\frac{3}{2}}-u^{\frac{1}{2}}\right)\mathrm{d}u
+= \frac{2}{5}u^{\frac{5}{2}}-\frac{2}{3}u^{\frac{3}{2}}+C$$
+
+$$= \frac{2}{5}(x+1)^{\frac{5}{2}}-\frac{2}{3}(x+1)^{\frac{3}{2}}+C$$
+:::
+:::
+:::
+
+### 3. Integration by parts（部分積分） {#parts}
+
+$x\sin x$ や $x^{2}e^{x}$ のような**積**の積分は、置換ではうまくいきません。そこで、**product rule**（積の微分公式）を逆に使います。これを **integration by parts**（部分積分）といい、公式集の **5.16** の欄にあります。
 
 $$
 \int u\,\frac{\mathrm{d}v}{\mathrm{d}x}\,\mathrm{d}x = uv-\int v\,\frac{\mathrm{d}u}{\mathrm{d}x}\,\mathrm{d}x
@@ -81,19 +95,30 @@ $$
 \int u\,\mathrm{d}v = uv-\int v\,\mathrm{d}u
 $$ {#eq-aahl516-parts}
 
-![長方形 $uv$ が $2$ つに分かれます。](img/aahl-5-16-idea-b.svg){#fig-aahl516-idea-b width=100%}
+![長方形 $uv$ が $2$ つに分かれます。](img/aahl-5-16-idea-b.svg){#fig-aahl516-idea-b width=70%}
 
-もとは**積の微分公式**です（[第 1 節](#why-parts)）。**マイナスの符号**を落とさないでください。
+もとは**積の微分公式**です（[Why it works](#why-parts)）。**マイナスの符号**を落とさないでください。
 
-### 6. Choosing $u$（$u$ の選び方） {#choosing}
+### 4. Choosing $u$（$u$ の選び方） {#choosing}
 
-$u$ に選ぶのは、**微分すると簡単になるほう**です。$\dfrac{\mathrm{d}v}{\mathrm{d}x}$ に選ぶのは、**積分できるほう**です。
+$u$ の選び方には、**LIATE ルール**という目安があります。
 
-> Examples: $\int x\sin x\,\mathrm{d}x$, $\int \ln x\,\mathrm{d}x$, $\int \arcsin x\,\mathrm{d}x$
+| | 種類 | 例 |
+|:--|:--|:--|
+| **L** | **Logarithmic**（対数関数） | $\ln x$ |
+| **I** | **Inverse trigonometric**（逆三角関数） | $\arcsin x$、$\arctan x$ |
+| **A** | **Algebraic**（多項式） | $x$、$x^{2}$ |
+| **T** | **Trigonometric**（三角関数） | $\sin x$、$\cos x$ |
+| **E** | **Exponential**（指数関数） | $e^{x}$ |
 
-- $\displaystyle\int x\sin x\,\mathrm{d}x$ … $u = x$（微分すると $1$）
-- $\displaystyle\int \ln x\,\mathrm{d}x$ … $u = \ln x$、$\dfrac{\mathrm{d}v}{\mathrm{d}x} = 1$
-- $\displaystyle\int \arcsin x\,\mathrm{d}x$ … $u = \arcsin x$、$\dfrac{\mathrm{d}v}{\mathrm{d}x} = 1$
+: LIATE ルール（上ほど $u$ に選ぶ） {#tbl-aahl516-liate tbl-colwidths="[8,52,40]"}
+
+上にあるものほど、**微分すると簡単になります**。下にあるものほど、**積分しやすい**ものです（[Why it works](#why-choose)）。与えられた式の中で、**この表で上にあるものを $u$** にして、それにかけられているものを $\dfrac{\mathrm{d}v}{\mathrm{d}x}$ とします。
+
+- $\displaystyle\int x\sin x\,\mathrm{d}x$ … A と T なので、$u = x$
+- $\displaystyle\int x^{2}e^{x}\,\mathrm{d}x$ … A と E なので、$u = x^{2}$
+- $\displaystyle\int \ln x\,\mathrm{d}x$ … $\ln x \times 1$ と見ます。L なので、$u = \ln x$、$\dfrac{\mathrm{d}v}{\mathrm{d}x} = 1$
+- $\displaystyle\int \arcsin x\,\mathrm{d}x$ … I なので、$u = \arcsin x$、$\dfrac{\mathrm{d}v}{\mathrm{d}x} = 1$
 
 ::: {.callout-important}
 ## $\ln x$ と $\arcsin x$ は、積分できないほうです
@@ -102,15 +127,136 @@ $\ln x$ や $\arcsin x$ は、そのままでは積分できません。です�
 残った $\dfrac{\mathrm{d}v}{\mathrm{d}x}$ は $1$ です。$v = x$ として使います。
 :::
 
-### 7. Repeated integration by parts（くり返す部分積分） {#repeated}
+::: {#exm-aahl516-parts}
+[Find $\displaystyle\int x\sin x\,\mathrm{d}x$.]{.q-en}
 
-> Repeated integration by parts.
->
-> Examples: $\int x^{2}e^{x}\mathrm{d}x$ and $\int e^{x}\sin x\,\mathrm{d}x$.
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$\displaystyle\int x\sin x\,\mathrm{d}x$ を求めなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**$u = x$、$\dfrac{\mathrm{d}v}{\mathrm{d}x} = \sin x$** と選びます（[第 4 節](#choosing)）。
+
+$$
+u = x, \quad \frac{\mathrm{d}u}{\mathrm{d}x} = 1, \qquad
+\frac{\mathrm{d}v}{\mathrm{d}x} = \sin x, \quad v = -\cos x
+$$
+
+@eq-aahl516-parts に入れます。
+
+$$
+\int x\sin x\,\mathrm{d}x
+= x(-\cos x)-\int (-\cos x)(1)\,\mathrm{d}x
+$$
+
+$$
+= -x\cos x+\int \cos x\,\mathrm{d}x
+= -x\cos x+\sin x+C
+$$
+
+**検算。** **微分してもどします。** $-\cos x+x\sin x+\cos x = x\sin x$ ✓
+
+**検算（選び方）。** $u = \sin x$ にすると $\displaystyle\int \dfrac{x^{2}}{2}\cos x\,\mathrm{d}x$ が残ります ✓ もとより難しくなります。
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+
+*Let* $u = x$ *and* $\dfrac{\mathrm{d}v}{\mathrm{d}x} = \sin x$, *so* $\dfrac{\mathrm{d}u}{\mathrm{d}x} = 1$ *and* $v = -\cos x$.
+
+$$\int x\sin x\,\mathrm{d}x = -x\cos x+\int \cos x\,\mathrm{d}x
+= -x\cos x+\sin x+C$$
+:::
+:::
+:::
+
+### 5. Repeated integration by parts（くり返す部分積分） {#repeated}
+
+$\int x^{2}e^{x}\,\mathrm{d}x$ や $\int e^{x}\sin x\,\mathrm{d}x$ のように、**$1$ 回では終わらない**ものがあります。
 
 $x^{2}$ のように、**$1$ 回では $1$ にならない**ときはくり返します。$x^{2} \to 2x \to 2$ と $2$ 回です。
 
-$e^{x}\sin x$ は、$2$ 回使うと**もとの積分がもどってきます**。そこで、もとの積分を $I$ と置いて方程式として解きます（[第 4 節](#why-circular)）。
+$e^{x}\sin x$ は、$2$ 回使うと**もとの積分がもどってきます**。そこで、もとの積分を $I$ と置いて方程式として解きます（[Why it works](#why-circular)）。
+
+::: {#exm-aahl516-repeated}
+[Find $\displaystyle\int x^{2}e^{x}\,\mathrm{d}x$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$\displaystyle\int x^{2}e^{x}\,\mathrm{d}x$ を求めなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**$1$ 回目。** $u = x^{2}$、$\dfrac{\mathrm{d}v}{\mathrm{d}x} = e^{x}$ です。
+
+$$
+\int x^{2}e^{x}\,\mathrm{d}x = x^{2}e^{x}-\int 2xe^{x}\,\mathrm{d}x
+$$
+
+**$2$ 回目。** 残った積分に、もう一度使います。$u = 2x$、$\dfrac{\mathrm{d}v}{\mathrm{d}x} = e^{x}$ です。
+
+$$
+\int 2xe^{x}\,\mathrm{d}x = 2xe^{x}-\int 2e^{x}\,\mathrm{d}x = 2xe^{x}-2e^{x}
+$$
+
+合わせます。
+
+$$
+\int x^{2}e^{x}\,\mathrm{d}x = x^{2}e^{x}-2xe^{x}+2e^{x}+C
+= e^{x}\left(x^{2}-2x+2\right)+C
+$$
+
+**検算。** **微分してもどします。** $e^{x}\left(x^{2}-2x+2\right)+e^{x}(2x-2) = e^{x}x^{2}$ ✓
+
+**検算（回数）。** $x^{2} \to 2x \to 2$ で、$2$ 回で $x$ が消えました ✓ $x^{3}$ なら $3$ 回です。
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+
+$$\int x^{2}e^{x}\,\mathrm{d}x = x^{2}e^{x}-\int 2xe^{x}\,\mathrm{d}x$$
+
+$$\int 2xe^{x}\,\mathrm{d}x = 2xe^{x}-2e^{x}$$
+
+$$\int x^{2}e^{x}\,\mathrm{d}x = e^{x}\left(x^{2}-2x+2\right)+C$$
+:::
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*Integration by parts is applied twice, because the polynomial factor* $x^{2}$ *needs two differentiations before it disappears.*
+
+*First application: take* $u = x^{2}$ *and* $\dfrac{\mathrm{d}v}{\mathrm{d}x} = e^{x}$, *so that* $\dfrac{\mathrm{d}u}{\mathrm{d}x} = 2x$ *and* $v = e^{x}$.
+
+*Then*
+
+$$\int x^{2}e^{x}\,\mathrm{d}x = x^{2}e^{x}-\int 2xe^{x}\,\mathrm{d}x$$
+
+*The remaining integral is simpler, since the power of* $x$ *has dropped from* $2$ *to* $1$.
+
+*Second application, on that integral: take* $u = 2x$ *and* $\dfrac{\mathrm{d}v}{\mathrm{d}x} = e^{x}$, *so* $\dfrac{\mathrm{d}u}{\mathrm{d}x} = 2$ *and* $v = e^{x}$.
+
+*Then*
+
+$$\int 2xe^{x}\,\mathrm{d}x = 2xe^{x}-\int 2e^{x}\,\mathrm{d}x = 2xe^{x}-2e^{x}$$
+
+*Combining, and writing the constant only once at the end,*
+
+$$\int x^{2}e^{x}\,\mathrm{d}x = x^{2}e^{x}-2xe^{x}+2e^{x}+C = e^{x}\left(x^{2}-2x+2\right)+C$$
+
+*Differentiating the answer returns the integrand, which confirms it.*
+
+*Note that the same choice of* $u$ *must be kept at each stage: switching to* $u = e^{x}$ *at the second step would undo the first and return to the original integral.*
+:::
+:::
+:::
 
 ::: {.callout-tip collapse="true"}
 ## Paper 2 では、電卓で積分が出せます
@@ -128,24 +274,6 @@ TI-Nspire CX II の積分テンプレートに入れれば、置換も部分積�
 
 ::: {.callout-tip collapse="true"}
 ## クリックすると開きます
-
-#### なぜ、置換積分が成り立つのか {#why-sub}
-
-連鎖律を逆に読んでいるだけです。$F' = f$ とすると
-
-$$
-\frac{\mathrm{d}}{\mathrm{d}x}F(g(x)) = f(g(x))\,g'(x)
-$$
-
-です。両辺を $x$ で積分すると
-
-$$
-\int f(g(x))\,g'(x)\,\mathrm{d}x = F(g(x))+C
-$$
-
-になります。$u = g(x)$ と書けば、右辺は $F(u)+C$、つまり $\displaystyle\int f(u)\,\mathrm{d}u$ です。
-
-**$\mathrm{d}u = g'(x)\mathrm{d}x$ は、この対応を短く書いたもの**です。
 
 #### なぜ、部分積分が成り立つのか {#why-parts}
 
@@ -188,203 +316,6 @@ $$
 **$+C$ は最後に付けます。** 方程式を解いてから書き足してください。
 :::
 
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-
-**例題も演習も、すべて電卓なしで解けます。** Paper 1 のつもりで解いてください。
-:::
-
-::: {#exm-aahl516-recognise}
-[Find $\displaystyle\int 2x\left(x^{2}+1\right)^{5}\mathrm{d}x$.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-$\displaystyle\int 2x\left(x^{2}+1\right)^{5}\mathrm{d}x$ を求めなさい。
-
-</details>
-
----
-
-**中身は $x^{2}+1$、その微分は $2x$** です。ちょうど前に付いています（@eq-aahl516-recognise）。
-
-$u = x^{2}+1$ と置くと $\mathrm{d}u = 2x\,\mathrm{d}x$ なので
-
-$$
-\int 2x\left(x^{2}+1\right)^{5}\mathrm{d}x
-= \int u^{5}\,\mathrm{d}u = \frac{u^{6}}{6}+C
-= \frac{\left(x^{2}+1\right)^{6}}{6}+C
-$$
-
-**検算。** **微分してもどします。** $\dfrac{6\left(x^{2}+1\right)^{5}}{6}\times 2x = 2x\left(x^{2}+1\right)^{5}$ ✓
-
-**検算（$\mathrm{d}x$）。** $2x\,\mathrm{d}x$ がまるごと $\mathrm{d}u$ になりました ✓ $x$ は残っていません。
-
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-
-*Let* $u = x^{2}+1$, *so* $\mathrm{d}u = 2x\,\mathrm{d}x$.
-
-$$\int 2x\left(x^{2}+1\right)^{5}\mathrm{d}x = \int u^{5}\,\mathrm{d}u
-= \frac{u^{6}}{6}+C = \frac{\left(x^{2}+1\right)^{6}}{6}+C$$
-:::
-:::
-
-::: {#exm-aahl516-given}
-[Use the substitution $u = x+1$ to find $\displaystyle\int x\sqrt{x+1}\,\mathrm{d}x$.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-置換 $u = x+1$ を使って $\displaystyle\int x\sqrt{x+1}\,\mathrm{d}x$ を求めなさい。
-
-</details>
-
----
-
-$u = x+1$ なら $\mathrm{d}u = \mathrm{d}x$ です。**$x$ も $u$ で書きます。** $x = u-1$ です。
-
-$$
-\int x\sqrt{x+1}\,\mathrm{d}x = \int (u-1)\sqrt{u}\,\mathrm{d}u
-= \int\left(u^{3/2}-u^{1/2}\right)\mathrm{d}u
-$$
-
-$$
-= \frac{2}{5}u^{5/2}-\frac{2}{3}u^{3/2}+C
-= \frac{2}{5}(x+1)^{5/2}-\frac{2}{3}(x+1)^{3/2}+C
-$$
-
-**検算。** **微分してもどします。** $(x+1)^{3/2}-(x+1)^{1/2} = (x+1)^{1/2}\left[(x+1)-1\right] = x\sqrt{x+1}$ ✓
-
-**検算（$x$ が残っていないか）。** 置きかえの途中で $x = u-1$ を使いました ✓ $u$ だけの式になっています。
-
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-
-*Let* $u = x+1$, *so* $\mathrm{d}u = \mathrm{d}x$ *and* $x = u-1$.
-
-$$\int x\sqrt{x+1}\,\mathrm{d}x = \int\left(u^{3/2}-u^{1/2}\right)\mathrm{d}u
-= \frac{2}{5}u^{5/2}-\frac{2}{3}u^{3/2}+C$$
-
-$$= \frac{2}{5}(x+1)^{5/2}-\frac{2}{3}(x+1)^{3/2}+C$$
-:::
-:::
-
-::: {#exm-aahl516-parts}
-[Find $\displaystyle\int x\sin x\,\mathrm{d}x$.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-$\displaystyle\int x\sin x\,\mathrm{d}x$ を求めなさい。
-
-</details>
-
----
-
-**$u = x$、$\dfrac{\mathrm{d}v}{\mathrm{d}x} = \sin x$** と選びます（[第 6 節](#choosing)）。
-
-$$
-u = x, \quad \frac{\mathrm{d}u}{\mathrm{d}x} = 1, \qquad
-\frac{\mathrm{d}v}{\mathrm{d}x} = \sin x, \quad v = -\cos x
-$$
-
-@eq-aahl516-parts に入れます。
-
-$$
-\int x\sin x\,\mathrm{d}x
-= x(-\cos x)-\int (-\cos x)(1)\,\mathrm{d}x
-$$
-
-$$
-= -x\cos x+\int \cos x\,\mathrm{d}x
-= -x\cos x+\sin x+C
-$$
-
-**検算。** **微分してもどします。** $-\cos x+x\sin x+\cos x = x\sin x$ ✓
-
-**検算（選び方）。** $u = \sin x$ にすると $\displaystyle\int \dfrac{x^{2}}{2}\cos x\,\mathrm{d}x$ が残ります ✓ もとより難しくなります。
-
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-
-*Let* $u = x$ *and* $\dfrac{\mathrm{d}v}{\mathrm{d}x} = \sin x$, *so* $\dfrac{\mathrm{d}u}{\mathrm{d}x} = 1$ *and* $v = -\cos x$.
-
-$$\int x\sin x\,\mathrm{d}x = -x\cos x+\int \cos x\,\mathrm{d}x
-= -x\cos x+\sin x+C$$
-:::
-:::
-
-::: {#exm-aahl516-repeated}
-[Find $\displaystyle\int x^{2}e^{x}\,\mathrm{d}x$.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-$\displaystyle\int x^{2}e^{x}\,\mathrm{d}x$ を求めなさい。
-
-</details>
-
----
-
-**$1$ 回目。** $u = x^{2}$、$\dfrac{\mathrm{d}v}{\mathrm{d}x} = e^{x}$ です。
-
-$$
-\int x^{2}e^{x}\,\mathrm{d}x = x^{2}e^{x}-\int 2xe^{x}\,\mathrm{d}x
-$$
-
-**$2$ 回目。** 残った積分に、もう一度使います。$u = 2x$、$\dfrac{\mathrm{d}v}{\mathrm{d}x} = e^{x}$ です。
-
-$$
-\int 2xe^{x}\,\mathrm{d}x = 2xe^{x}-\int 2e^{x}\,\mathrm{d}x = 2xe^{x}-2e^{x}
-$$
-
-合わせます。
-
-$$
-\int x^{2}e^{x}\,\mathrm{d}x = x^{2}e^{x}-2xe^{x}+2e^{x}+C
-= e^{x}\left(x^{2}-2x+2\right)+C
-$$
-
-**検算。** **微分してもどします。** $e^{x}\left(x^{2}-2x+2\right)+e^{x}(2x-2) = e^{x}x^{2}$ ✓
-
-**検算（回数）。** $x^{2} \to 2x \to 2$ で、$2$ 回で $x$ が消えました ✓ $x^{3}$ なら $3$ 回です。
-
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-
-$$\int x^{2}e^{x}\,\mathrm{d}x = x^{2}e^{x}-\int 2xe^{x}\,\mathrm{d}x$$
-
-$$\int 2xe^{x}\,\mathrm{d}x = 2xe^{x}-2e^{x}$$
-
-$$\int x^{2}e^{x}\,\mathrm{d}x = e^{x}\left(x^{2}-2x+2\right)+C$$
-:::
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*Integration by parts is applied twice, because the polynomial factor* $x^{2}$ *needs two differentiations before it disappears.*
-
-*First application: take* $u = x^{2}$ *and* $\dfrac{\mathrm{d}v}{\mathrm{d}x} = e^{x}$, *so that* $\dfrac{\mathrm{d}u}{\mathrm{d}x} = 2x$ *and* $v = e^{x}$. *Then*
-
-$$\int x^{2}e^{x}\,\mathrm{d}x = x^{2}e^{x}-\int 2xe^{x}\,\mathrm{d}x$$
-
-*The remaining integral is simpler, since the power of* $x$ *has dropped from* $2$ *to* $1$.
-
-*Second application, on that integral: take* $u = 2x$ *and* $\dfrac{\mathrm{d}v}{\mathrm{d}x} = e^{x}$, *so* $\dfrac{\mathrm{d}u}{\mathrm{d}x} = 2$ *and* $v = e^{x}$. *Then*
-
-$$\int 2xe^{x}\,\mathrm{d}x = 2xe^{x}-\int 2e^{x}\,\mathrm{d}x = 2xe^{x}-2e^{x}$$
-
-*Combining, and writing the constant only once at the end,*
-
-$$\int x^{2}e^{x}\,\mathrm{d}x = x^{2}e^{x}-2xe^{x}+2e^{x}+C = e^{x}\left(x^{2}-2x+2\right)+C$$
-
-*Differentiating the answer returns the integrand, which confirms it. Note that the same choice of* $u$ *must be kept at each stage: switching to* $u = e^{x}$ *at the second step would undo the first and return to the original integral.*
-:::
-:::
-
 ## Common errors
 
 ::: {.callout-warning}
@@ -396,14 +327,14 @@ $u$ だけ置きかえて $\mathrm{d}x$ をそのままにすると、式が合�
 
 ::: {.callout-warning}
 ## $x$ を残したまま積分する
-置換したあとの式に $x$ が残っていたら、まだ終わりではありません（[第 2 節](#substitution)）。
+置換したあとの式に $x$ が残っていたら、まだ終わりではありません（[第 2 節](#given)）。
 
 $x = u-1$ のように、**$x$ を $u$ で表す**必要があることもあります。
 :::
 
 ::: {.callout-warning}
 ## 定積分で、上端・下端を変えたのに $x$ にもどす
-**どちらか一方**です（[第 4 節](#limits)）。
+**どちらか一方**です（[SL 5.11](../../aa-sl/05-calculus/aasl-5-11.qmd#sub)）。
 
 上端・下端を $u$ の値にしたら、そのまま $u$ で計算します。$x$ にもどすなら、上端・下端はもとのままです。
 :::
@@ -412,154 +343,145 @@ $x = u-1$ のように、**$x$ を $u$ で表す**必要があることもあり
 ## 部分積分のマイナスを落とす
 @eq-aahl516-parts は $uv-\displaystyle\int v\,\mathrm{d}u$ です。
 
-**プラスにすると、符号が全部ずれます。** 移項から出た符号だと覚えておくと落としません（[第 2 節](#why-parts)）。
+**プラスにすると、符号が全部ずれます。** 移項から出た符号だと覚えておくと落としません（[Why it works](#why-parts)）。
 :::
 
 ::: {.callout-warning}
 ## $u$ の選び方をまちがえる
-微分して簡単になるほうを $u$ にします（[第 3 節](#why-choose)）。
+微分して簡単になるほうを $u$ にします（[Why it works](#why-choose)）。
 
 残った積分がもとより難しくなったら、**選び方が逆**です。やり直してください。
 :::
 
 ::: {.callout-warning}
 ## $\ln x$ や $\arcsin x$ を $\dfrac{\mathrm{d}v}{\mathrm{d}x}$ に選ぶ
-どちらも、そのままでは積分できません（[第 6 節](#choosing)）。
+どちらも、そのままでは積分できません（[第 4 節](#choosing)）。
 
 **かならず $u$ のほう**です。残りの $\dfrac{\mathrm{d}v}{\mathrm{d}x}$ は $1$ になります。
 :::
 
 ## Exercises
 
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが $3$ つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
-
 ::: {.exercise-block}
 
-[1]{.ex-no} [Find $\displaystyle\int 3x^{2}\left(x^{3}+2\right)^{4}\mathrm{d}x$.]{.q-en}
+[1]{.ex-no} [Use the substitution $u = x-2$ to find $\displaystyle\int x(x-2)^{5}\,\mathrm{d}x$.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-$\displaystyle\int 3x^{2}\left(x^{3}+2\right)^{4}\mathrm{d}x$ を求めなさい。
+置換 $u = x-2$ を使って、$\displaystyle\int x(x-2)^{5}\,\mathrm{d}x$ を求めなさい。
 
 </details>
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
-*Let* $u = x^{3}+2$, *so* $\mathrm{d}u = 3x^{2}\,\mathrm{d}x$.
+*Let* $u = x-2$, *so* $\mathrm{d}u = \mathrm{d}x$ *and* $x = u+2$.
 
-$$\int 3x^{2}\left(x^{3}+2\right)^{4}\mathrm{d}x = \int u^{4}\,\mathrm{d}u
-= \frac{u^{5}}{5}+C = \frac{\left(x^{3}+2\right)^{5}}{5}+C$$
+$$\int x(x-2)^{5}\,\mathrm{d}x = \int (u+2)u^{5}\,\mathrm{d}u = \int\left(u^{6}+2u^{5}\right)\mathrm{d}u
+= \frac{u^{7}}{7}+\frac{u^{6}}{3}+C$$
+
+$$= \frac{(x-2)^{7}}{7}+\frac{(x-2)^{6}}{3}+C$$
 :::
 
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-中身の微分が、そのまま前に付いています（@eq-aahl516-recognise）。**置換を書かずに答えてもかまいません。**
+**$x$ が残ります。** $u = x-2$ を $x$ について解いて、$x = u+2$ とします（[第 2 節](#given)）。かっこを展開してから積分します。
 
-**検算。** 微分すると $\dfrac{5\left(x^{3}+2\right)^{4}}{5}\times 3x^{2}$ ✓
-
-**検算（係数）。** $3x^{2}$ がちょうど $\mathrm{d}u$ ✓ 余分な数が出ません。
+**検算。** 微分すると $(x-2)^{6}+2(x-2)^{5} = (x-2)^{5}\left[(x-2)+2\right] = x(x-2)^{5}$ ✓
 :::
 
 ::: {.ex-sep}
 :::
 
-[2]{.ex-no} [Find $\displaystyle\int \sin^{3}x\cos x\,\mathrm{d}x$.]{.q-en}
+[2]{.ex-no} [Use the substitution $u = 2x+1$ to find $\displaystyle\int \frac{x}{\sqrt{2x+1}}\,\mathrm{d}x$.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-$\displaystyle\int \sin^{3}x\cos x\,\mathrm{d}x$ を求めなさい。
+置換 $u = 2x+1$ を使って、$\displaystyle\int \frac{x}{\sqrt{2x+1}}\,\mathrm{d}x$ を求めなさい。
 
 </details>
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
-*Let* $u = \sin x$, *so* $\mathrm{d}u = \cos x\,\mathrm{d}x$.
+*Let* $u = 2x+1$, *so* $\mathrm{d}u = 2\,\mathrm{d}x$ *and* $x = \dfrac{u-1}{2}$.
 
-$$\int \sin^{3}x\cos x\,\mathrm{d}x = \int u^{3}\,\mathrm{d}u
-= \frac{u^{4}}{4}+C = \frac{\sin^{4}x}{4}+C$$
+$$\int \frac{x}{\sqrt{2x+1}}\,\mathrm{d}x = \int \frac{u-1}{2}\cdot u^{-\frac{1}{2}}\cdot\frac{1}{2}\,\mathrm{d}u
+= \frac{1}{4}\int\left(u^{\frac{1}{2}}-u^{-\frac{1}{2}}\right)\mathrm{d}u$$
+
+$$= \frac{1}{4}\left(\frac{2}{3}u^{\frac{3}{2}}-2u^{\frac{1}{2}}\right)+C
+= \frac{1}{6}(2x+1)^{\frac{3}{2}}-\frac{1}{2}(2x+1)^{\frac{1}{2}}+C$$
 :::
 
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-**$\cos x$ が $\sin x$ の微分**です。@eq-aahl516-recognise の形です。
+$\mathrm{d}x = \dfrac{1}{2}\mathrm{d}u$ と $x = \dfrac{u-1}{2}$ から、**$\dfrac{1}{2}$ が $2$ つ**出ます。かけて $\dfrac{1}{4}$ です。
 
-**検算。** 微分すると $\dfrac{4\sin^{3}x}{4}\times\cos x$ ✓
-
-**検算（$x = \dfrac{\pi}{2}$）。** 答えは $\dfrac{1}{4}$、被積分関数は $0$ ✓ そこで傾きが $0$ です。
+**検算。** 微分すると $\dfrac{1}{2}(2x+1)^{\frac{1}{2}}-\dfrac{1}{2}(2x+1)^{-\frac{1}{2}} = \dfrac{1}{2}(2x+1)^{-\frac{1}{2}}\left[(2x+1)-1\right] = \dfrac{x}{\sqrt{2x+1}}$ ✓
 :::
 
 ::: {.ex-sep}
 :::
 
-[3]{.ex-no} [Find $\displaystyle\int x e^{x^{2}}\,\mathrm{d}x$.]{.q-en}
+[3]{.ex-no} [Use the substitution $u = e^{x}$ to find $\displaystyle\int \frac{e^{x}}{1+e^{2x}}\,\mathrm{d}x$.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-$\displaystyle\int x e^{x^{2}}\,\mathrm{d}x$ を求めなさい。
+置換 $u = e^{x}$ を使って、$\displaystyle\int \frac{e^{x}}{1+e^{2x}}\,\mathrm{d}x$ を求めなさい。
 
 </details>
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
-*Let* $u = x^{2}$, *so* $\mathrm{d}u = 2x\,\mathrm{d}x$ *and* $x\,\mathrm{d}x = \dfrac{1}{2}\mathrm{d}u$.
+*Let* $u = e^{x}$, *so* $\mathrm{d}u = e^{x}\,\mathrm{d}x$ *and* $e^{2x} = u^{2}$.
 
-$$\int x e^{x^{2}}\,\mathrm{d}x = \frac{1}{2}\int e^{u}\,\mathrm{d}u
-= \frac{1}{2}e^{u}+C = \frac{1}{2}e^{x^{2}}+C$$
+$$\int \frac{e^{x}}{1+e^{2x}}\,\mathrm{d}x = \int \frac{1}{1+u^{2}}\,\mathrm{d}u
+= \arctan u+C = \arctan\left(e^{x}\right)+C$$
 :::
 
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-$\mathrm{d}u = 2x\,\mathrm{d}x$ ですが、式にあるのは $x\,\mathrm{d}x$ です。**$\dfrac{1}{2}$ が出ます。**
+**$e^{2x} = \left(e^{x}\right)^{2} = u^{2}$** と見るのがポイントです。分母が $1+u^{2}$ になり、[HL 5.15](aahl-5-15.qmd) の $\arctan$ の形になります。
 
-**検算。** 微分すると $\dfrac{1}{2}e^{x^{2}}\times 2x = xe^{x^{2}}$ ✓
-
-**検算（$\dfrac{1}{2}$ の出どころ）。** $x\,\mathrm{d}x = \dfrac{1}{2}\mathrm{d}u$ ✓ ここから来ています。
+**検算。** 微分すると $\dfrac{1}{1+\left(e^{x}\right)^{2}}\times e^{x} = \dfrac{e^{x}}{1+e^{2x}}$ ✓
 :::
 
 ::: {.ex-sep}
 :::
 
-[4]{.ex-no} [Find $\displaystyle\int \frac{x}{x^{2}+1}\,\mathrm{d}x$.]{.q-en}
+[4]{.ex-no} [Use the substitution $u = x+1$ to find $\displaystyle\int_{0}^{3} \frac{x}{\sqrt{x+1}}\,\mathrm{d}x$.]{.q-en}
 
 <details class="jp-trans">
 <summary>日本語訳</summary>
 
-$\displaystyle\int \frac{x}{x^{2}+1}\,\mathrm{d}x$ を求めなさい。
+置換 $u = x+1$ を使って、$\displaystyle\int_{0}^{3} \frac{x}{\sqrt{x+1}}\,\mathrm{d}x$ を求めなさい。
 
 </details>
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
-*Let* $u = x^{2}+1$, *so* $\mathrm{d}u = 2x\,\mathrm{d}x$.
+*Let* $u = x+1$, *so* $\mathrm{d}u = \mathrm{d}x$ *and* $x = u-1$. *When* $x = 0$, $u = 1$; *when* $x = 3$, $u = 4$.
 
-$$\int \frac{x}{x^{2}+1}\,\mathrm{d}x = \frac{1}{2}\int \frac{1}{u}\,\mathrm{d}u
-= \frac{1}{2}\ln\lvert u \rvert+C = \frac{1}{2}\ln\left(x^{2}+1\right)+C$$
+$$\int_{0}^{3} \frac{x}{\sqrt{x+1}}\,\mathrm{d}x = \int_{1}^{4}\left(u^{\frac{1}{2}}-u^{-\frac{1}{2}}\right)\mathrm{d}u
+= \left[\frac{2}{3}u^{\frac{3}{2}}-2u^{\frac{1}{2}}\right]_{1}^{4}$$
+
+$$= \left(\frac{16}{3}-4\right)-\left(\frac{2}{3}-2\right) = \frac{8}{3}$$
 :::
 
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-**分子が分母の微分の $\dfrac{1}{2}$ 倍**です。ですから $\ln$ になります。
+上端・下端を $u$ の値に変えたので、$x$ にもどす必要はありません（[SL 5.11](../../aa-sl/05-calculus/aasl-5-11.qmd#sub)）。
 
-$x^{2}+1 > 0$ なので、絶対値は外してかまいません。
-
-**検算。** 微分すると $\dfrac{1}{2}\cdot\dfrac{2x}{x^{2}+1} = \dfrac{x}{x^{2}+1}$ ✓
-
-**検算（分子が $1$ なら）。** $\arctan x$ になります ✓ 分子で見分けます。
+**検算。** $x$ にもどして計算します。$F(x) = \dfrac{2}{3}(x+1)^{\frac{3}{2}}-2(x+1)^{\frac{1}{2}}$ なら $F(3)-F(0) = \dfrac{4}{3}-\left(-\dfrac{4}{3}\right) = \dfrac{8}{3}$ ✓
 :::
 
 ::: {.ex-sep}
@@ -586,7 +508,7 @@ $$\int \ln x\,\mathrm{d}x = x\ln x-\int x\cdot\frac{1}{x}\,\mathrm{d}x
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-**積に見えなくても、$1$ をかけたと思えば部分積分が使えます**（[第 6 節](#choosing)）。
+**積に見えなくても、$1$ をかけたと思えば部分積分が使えます**（[第 4 節](#choosing)）。
 
 $\ln x$ は積分できないので、$u$ のほうです。
 
@@ -653,7 +575,7 @@ $$\int_{0}^{1} x e^{x}\,\mathrm{d}x
 
 **定積分でも、角かっこを付ければ同じ**です。$uv$ の部分にも上端・下端が付きます。
 
-**検算（不定積分から）。** $e^{x}(x-1)$ を $0$ から $1$ で $0-(-1) = 1$ ✓
+**検算（indefinite integral（不定積分）から）。** $e^{x}(x-1)$ を $0$ から $1$ で $0-(-1) = 1$ ✓
 
 **検算（大きさ）。** 被積分関数は $0$ から $e$ まで増えるので、面積が $1$ 前後なのは自然 ✓
 :::
@@ -689,7 +611,7 @@ I = \frac{e^{x}\left(\sin x-\cos x\right)}{2}+C$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-**もとの積分がもどってきます**（[第 4 節](#why-circular)）。そこで $I$ についての方程式として解きます。
+**もとの積分がもどってきます**（[Why it works](#why-circular)）。そこで $I$ についての方程式として解きます。
 
 **$2$ 回とも同じ側を $u$ にする**のが大切です。$1$ 回目に $\sin$、$2$ 回目に $e^{x}$ を $u$ にすると、もとにもどるだけで進みません。
 
@@ -700,13 +622,17 @@ I = \frac{e^{x}\left(\sin x-\cos x\right)}{2}+C$$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Write* $I = \displaystyle\int e^{x}\sin x\,\mathrm{d}x$. *Neither factor becomes simpler on differentiation, so the aim is to recover* $I$ *and solve for it.*
+*Write* $I = \displaystyle\int e^{x}\sin x\,\mathrm{d}x$.
+
+*Neither factor becomes simpler on differentiation, so the aim is to recover* $I$ *and solve for it.*
 
 *Apply integration by parts with* $u = \sin x$ *and* $\dfrac{\mathrm{d}v}{\mathrm{d}x} = e^{x}$, *so* $\dfrac{\mathrm{d}u}{\mathrm{d}x} = \cos x$ *and* $v = e^{x}$:
 
 $$I = e^{x}\sin x-\int e^{x}\cos x\,\mathrm{d}x$$
 
-*Apply parts a second time to* $\displaystyle\int e^{x}\cos x\,\mathrm{d}x$, *keeping the trigonometric factor as* $u$ *so that the process moves forward rather than reversing. With* $u = \cos x$ *and* $v = e^{x}$,
+*Apply parts a second time to* $\displaystyle\int e^{x}\cos x\,\mathrm{d}x$, *keeping the trigonometric factor as* $u$ *so that the process moves forward rather than reversing.*
+
+*With* $u = \cos x$ *and* $v = e^{x}$,
 
 $$\int e^{x}\cos x\,\mathrm{d}x = e^{x}\cos x-\int e^{x}(-\sin x)\,\mathrm{d}x
 = e^{x}\cos x+I$$
@@ -716,7 +642,9 @@ $$\int e^{x}\cos x\,\mathrm{d}x = e^{x}\cos x-\int e^{x}(-\sin x)\,\mathrm{d}x
 $$I = e^{x}\sin x-\left(e^{x}\cos x+I\right)
 = e^{x}\sin x-e^{x}\cos x-I$$
 
-*This is a linear equation in* $I$. *Adding* $I$ *to both sides gives* $2I = e^{x}\left(\sin x-\cos x\right)$, *so*
+*This is a linear equation in* $I$.
+
+*Adding* $I$ *to both sides gives* $2I = e^{x}\left(\sin x-\cos x\right)$, *so*
 
 $$I = \frac{e^{x}\left(\sin x-\cos x\right)}{2}+C$$
 
@@ -749,7 +677,7 @@ $$I = \frac{e^{x}\left(\sin x-\cos x\right)}{2}+C$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-**残る積分が易しくなるか**、が判断の基準です（[第 3 節](#why-choose)）。
+**残る積分が易しくなるか**、が判断の基準です（[Why it works](#why-choose)）。
 
 $x^{n}$ は微分すると次数が下がるので $u$ 向きです。$e^{x}$、$\sin x$、$\cos x$ は積分しても形が変わらないので $\dfrac{\mathrm{d}v}{\mathrm{d}x}$ 向きです。
 
@@ -760,13 +688,27 @@ $x^{n}$ は微分すると次数が下がるので $u$ 向きです。$e^{x}$、
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The formula* $\displaystyle\int u\frac{\mathrm{d}v}{\mathrm{d}x}\mathrm{d}x = uv-\int v\frac{\mathrm{d}u}{\mathrm{d}x}\mathrm{d}x$ *does not evaluate an integral by itself: it trades the original integral for a different one. The choice of* $u$ *is therefore made so that the new integral is easier than the old.*
+*The formula* $\displaystyle\int u\frac{\mathrm{d}v}{\mathrm{d}x}\mathrm{d}x = uv-\int v\frac{\mathrm{d}u}{\mathrm{d}x}\mathrm{d}x$ *does not evaluate an integral by itself: it trades the original integral for a different one.*
 
-*Since* $u$ *is differentiated and* $\dfrac{\mathrm{d}v}{\mathrm{d}x}$ *is integrated, two conditions guide the choice. First,* $u$ *should become simpler on differentiation. A power of* $x$ *is ideal, because each differentiation lowers the degree by one and after enough steps it disappears. Second,* $\dfrac{\mathrm{d}v}{\mathrm{d}x}$ *must be something that can actually be integrated, such as* $e^{x}$, $\sin x$ *or* $\cos x$, *whose integrals are no harder than themselves.*
+*The choice of* $u$ *is therefore made so that the new integral is easier than the old.*
 
-*Some functions force the choice. Neither* $\ln x$ *nor* $\arcsin x$ *has an elementary antiderivative that is known in advance, so neither can serve as* $\dfrac{\mathrm{d}v}{\mathrm{d}x}$. *They must be taken as* $u$, *and the remaining factor is then* $1$, *giving* $v = x$.
+*Since* $u$ *is differentiated and* $\dfrac{\mathrm{d}v}{\mathrm{d}x}$ *is integrated, two conditions guide the choice.*
 
-*A practical test is to look at the integral that remains. If it is simpler than the original, the choice was right; if it is more complicated, swapping the two factors usually fixes it.*
+*First,* $u$ *should become simpler on differentiation.*
+
+*A power of* $x$ *is ideal, because each differentiation lowers the degree by one and after enough steps it disappears.*
+
+*Second,* $\dfrac{\mathrm{d}v}{\mathrm{d}x}$ *must be something that can actually be integrated, such as* $e^{x}$, $\sin x$ *or* $\cos x$, *whose integrals are no harder than themselves.*
+
+*Some functions force the choice.*
+
+*Neither* $\ln x$ *nor* $\arcsin x$ *has an elementary antiderivative that is known in advance, so neither can serve as* $\dfrac{\mathrm{d}v}{\mathrm{d}x}$.
+
+*They must be taken as* $u$, *and the remaining factor is then* $1$, *giving* $v = x$.
+
+*A practical test is to look at the integral that remains.*
+
+*If it is simpler than the original, the choice was right; if it is more complicated, swapping the two factors usually fixes it.*
 :::
 :::
 
@@ -795,7 +737,7 @@ $x^{n}$ は微分すると次数が下がるので $u$ 向きです。$e^{x}$、
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-**符号は移項から出ています**（[第 2 節](#why-parts)）。プラスにすると、積の微分公式にもどりません。
+**符号は移項から出ています**（[Why it works](#why-parts)）。プラスにすると、積の微分公式にもどりません。
 
 **検算（正しい答え）。** $xe^{x}-e^{x}$ を微分すると $e^{x}+xe^{x}-e^{x} = xe^{x}$ ✓
 
@@ -816,7 +758,11 @@ $$\int u\,\mathrm{d}v = uv-\int v\,\mathrm{d}u$$
 
 *Applying it to* $\displaystyle\int xe^{x}\mathrm{d}x$ *with* $u = x$ *and* $\mathrm{d}v = e^{x}\mathrm{d}x$, *so* $\mathrm{d}u = \mathrm{d}x$ *and* $v = e^{x}$, *the incorrect formula gives* $xe^{x}+\displaystyle\int e^{x}\mathrm{d}x = xe^{x}+e^{x}+C$.
 
-*Differentiating this result gives* $e^{x}+xe^{x}+e^{x} = xe^{x}+2e^{x}$, *which is not the integrand* $xe^{x}$. *The correct formula gives* $xe^{x}-\displaystyle\int e^{x}\mathrm{d}x = xe^{x}-e^{x}+C$, *whose derivative is* $e^{x}+xe^{x}-e^{x} = xe^{x}$ *as required. The two answers differ by* $2e^{x}$, *which is not a constant, so this is a genuine error and not merely a different choice of constant.*
+*Differentiating this result gives* $e^{x}+xe^{x}+e^{x} = xe^{x}+2e^{x}$, *which is not the integrand* $xe^{x}$.
+
+*The correct formula gives* $xe^{x}-\displaystyle\int e^{x}\mathrm{d}x = xe^{x}-e^{x}+C$, *whose derivative is* $e^{x}+xe^{x}-e^{x} = xe^{x}$ *as required.*
+
+*The two answers differ by* $2e^{x}$, *which is not a constant, so this is a genuine error and not merely a different choice of constant.*
 :::
 :::
 

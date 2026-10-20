@@ -49,6 +49,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
+
+
 X = sp.Symbol("x", real=True)
 P = sp.Symbol("p", real=True)
 
@@ -67,7 +71,7 @@ def d2(e, v=X):
 in_text("# SL 5.8 — Maximum and minimum points, concavity and optimization"
         "（極大・極小・凹凸・変曲点と最適化） {#sec-aasl-5-8}", "ページの題")
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
@@ -86,7 +90,7 @@ chk(TEXT.count("::: {#exm-") == 4, "例題 4 つ")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14 個")
 chk(TEXT.count("## 解答例") == 14, "解答例 14 個")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭の --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭の --- は 6 本")
 chk(TEXT.count("**検算") >= 12, "検算は 12 本以上: %d" % TEXT.count("**検算"))
 chk(TEXT.count(":::") % 2 == 0, "::: の数が偶数: %d" % TEXT.count(":::"))
 chk("\n\n\n" not in TEXT, "空行が 2 つ続いていない")
@@ -109,16 +113,21 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
 in_text("{#eq-aasl58-inflexion}", "変曲点の条件の式")
 for _t in ("{#tbl-aasl58-kinds}", "{#tbl-aasl58-second}"):
     in_text(_t, "表 " + _t)
-for _f, _i in (("aasl-5-8-idea-a.svg", "fig-aasl58-idea-a"),
-               ("aasl-5-8-concavity.svg", "fig-aasl58-concavity"),
-               ("aasl-5-8-box.svg", "fig-aasl58-box")):
-    in_text("(img/%s){#%s width=100%%}" % (_f, _i), "図 " + _f)
+for _f, _i, _w in (("aasl-5-8-idea-a.svg", "fig-aasl58-idea-a", 90),
+                   ("aasl-5-8-concavity.svg", "fig-aasl58-concavity", 100),
+                   ("aasl-5-8-box.svg", "fig-aasl58-box", 90)):
+    in_text("(img/%s){#%s width=%d%%}" % (_f, _i, _w), "図 " + _f)
     in_text("@" + _i, "図の参照 @" + _i)
     chk(os.path.exists(os.path.join(os.path.dirname(QMD), "img", _f)),
         "SVG がある: " + _f)
 for _bad in ("\\le ", "\\ge ", "\\lvert", "\\rvert", "\\begin{pmatrix}"):
     chk(_bad not in FIGCODE, "図に mathtext が読めない記法: " + _bad)
-in_fig('"Maximum, minimum and point of inflexion"', "図 (a) の題")
+not_in_fig('"Maximum, minimum and point of inflexion"', "図 (a) の題は外した")
+not_in_fig("the tangents turn", "図 concavity の説明文は外した")
+not_in_fig('"An open box made from a square sheet"', "図 box の題は外した")
+not_in_fig("height $x$", "図 box の説明文は本文へ")
+in_text("箱の底面は $1$ 辺 $a - 2x$ の正方形、高さは $x$ です。", "箱の底面と高さ")
+in_text("接線は concave-up では反時計回りに、concave-down では時計回りに", "接線の回り方")
 in_fig('"concave-up:  $f\'\' > 0$"', "図 concavity の左の題")
 in_fig('"concave-down:  $f\'\' < 0$"', "図 concavity の右の題")
 in_fig('"aasl-5-8-box.svg"', "図 box を書き出している")
@@ -140,13 +149,14 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 # 3. 2026-09-29：5.8a + 5.8b をまとめたときの決めごと
 # ══════════════════════════════════════════════════════════
 # 5.8b は第 1 節だけ残した
-in_text("### 6. optimization（最適化）とは {#what}", "第 6 節の見出し")
-in_text("**optimization（最適化）は、ある量をいちばん大きく（小さく）する場面を"
-        "求めることです。**", "第 6 節の書き出し")
+in_text("### 6. Optimization（最適化とは） {#what}", "第 6 節の見出し")
+in_text("**optimization**（最適化）は、ある量をいちばん大きく（小さく）する場面を"
+        "求めることです。", "第 6 節の書き出し")
 in_text("**やることは第 1〜5 節と同じで、極大・極小を求めるだけです。**",
         "第 1〜5 節と同じだと言う")
 in_text("**式の作り方と進め方は、例題で具体的に見てください。** "
-        "例題 $3$ と例題 $4$ が、この形の問題です。", "例題で見せる")
+        "このあとの[例題 3](#exm-aasl58-area) と[例題 4](#exm-aasl58-volume) が、"
+        "この形の問題です。", "例題で見せる")
 for _s in ("{#steps}", "{#onevariable}", "{#domain}", "{#justify}",
            "{#context}", "{#common}", "### 7."):
     not_in_text(_s, "5.8b の第 2〜7 節は消した: " + _s)
@@ -159,7 +169,7 @@ for _p in ("aasl-5-8a.qmd", "aasl-5-8b.qmd"):
     chk(not os.path.exists(os.path.join(os.path.dirname(QMD), _p)),
         "もとのページは消した: " + _p)
 # 箱の図は、例題 4 で使うので残した
-_i6 = TEXT.index("### 6. optimization（最適化）とは {#what}")
+_i6 = TEXT.index("### 6. Optimization（最適化とは） {#what}")
 _iw = TEXT.index(chr(10) + "## Why it works")
 _s6 = TEXT[_i6:_iw]
 chk("(img/aasl-5-8-box.svg)" in _s6, "箱の図は第 6 節に")
@@ -180,15 +190,15 @@ in_text("**$f'(a) = 0$ のとき、$a$ の左右で $f'$ の符号を調べる�
         "$-$ から $+$ に変われば **local minimum**（極小）です。",
         "第 2 節: 極大・極小の判定")
 in_text("**符号の並びと停留点の種類の対応は、[SL 5.2](aasl-5-2.qmd#zero) に"
-        "まとめてあります。** sign diagram のかき方も、そちらを見て"
+        "まとめてあります。** **sign diagram**（符号表）のかき方も、そちらを見て"
         "ください。", "第 2 節は 5.2 への参照")
-in_text("**$f''$ の符号は、そこでの concavity を表していました**"
+in_text("$f''$ の符号は、そこでの **concavity**（凹凸）を表していました"
         "（[第 3 節](#concavity)）。停留点ではグラフが水平になっているので、"
         "そのまわりが concave-down なら山の形、concave-up なら谷の形です。"
         "**だから、$f''(a)$ の符号が分かれば極大か極小かが決まります。**",
         "第 4 節の書き出しは concavity からの流れ")
-in_text("**接線をならべると、傾きの変わり方が見えます**", "第 4 節：図への参照")
-in_text("**$f''$ の sign diagram（符号表）をかくのがいちばん確かです**",
+in_text("**tangent**（接線）をならべると、傾きの変わり方が見えます（@fig-aasl58-concavity）。", "第 4 節：図への参照")
+in_text("**$f''$ の符号表をかくのがいちばん確かです**",
         "第 5 節: sign diagram")
 in_text("**$f''(a) = 0$ だけでは足りません。**", "x^4 の注意")
 in_text("**変曲点は、停留点とはかぎりません。**", "傾きのある変曲点の注意")
@@ -333,11 +343,11 @@ chk([2 * -0.42 * _x for _x in _xs]
 # ══════════════════════════════════════════════════════════
 # 2026-09-29（その 2）：表 2 の列を英語に／第 3・4 節を入れかえ
 # ══════════════════════════════════════════════════════════
-in_text("### 3. concave-up と concave-down {#concavity}", "第 3 節は concavity")
-in_text("### 4. second derivative test（第 2 次導関数による判定） {#secondtest}",
+in_text("### 3. Concave-up and concave-down（下に凸と上に凸） {#concavity}", "第 3 節は concavity")
+in_text("### 4. Second derivative test（第 2 次導関数による判定） {#secondtest}",
         "第 4 節は second derivative test")
-chk(TEXT.index("### 3. concave-up と concave-down")
-    < TEXT.index("### 4. second derivative test"),
+chk(TEXT.index("### 3. Concave-up and concave-down")
+    < TEXT.index("### 4. Second derivative test"),
     "concavity が second derivative test より前")
 # 表 2 の判定は英語
 for _r in ("| $f''(a) < 0$ | *a local maximum* |",
@@ -382,6 +392,25 @@ for _r58 in _rows58:
 # 図そのものは、表の前の文から参照している
 in_text("停留点は次の $3$ 種類のどれかになります（@fig-aasl58-idea-a）。",
         "図は表の前の文で参照")
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：新レイアウト（例題を The idea の各節の後ろへ）
+# ══════════════════════════════════════════════════════════
+not_in_text("## Worked examples", "Worked examples の節は消した")
+_iwhy = TEXT.index("\n## Why it works")
+chk(all(m.start() < _iwhy for m in re.finditer(r"::: \{#exm-", TEXT)),
+    "例題はすべて Why it works より前（The idea の中）")
+chk(TEXT.index("## The idea") < TEXT.index("::: {#exm-"), "例題は The idea の後ろ")
+chk(re.findall(r"::: \{#(exm-[a-z0-9-]+)\}", TEXT)
+    == ["exm-aasl58-maxmin", "exm-aasl58-inflexion", "exm-aasl58-area",
+        "exm-aasl58-volume"], "例題 4 つの並び")
+for _e, _h in (("exm-aasl58-maxmin", "{#secondtest}"),
+               ("exm-aasl58-inflexion", "{#inflexion}"),
+               ("exm-aasl58-area", "{#what}"),
+               ("exm-aasl58-volume", "{#what}")):
+    _ie = TEXT.index("::: {#" + _e + "}")
+    _hs = re.findall(r"^### \d\. .*?(\{#[a-z0-9-]+\})$", TEXT[:_ie], re.M)
+    chk(_hs and _hs[-1] == _h, "%s は %s の節の中: %s" % (_e, _h, _hs[-1:]))
 
 print()
 print("OK", OK, "/ NG", NG)

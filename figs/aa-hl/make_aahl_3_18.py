@@ -59,8 +59,6 @@ def arrow(ax, p, q, col, lw=1.8):
 # (a) 直線と平面の 3 通り
 # ══════════════════════════════════════════════════════════
 fig1, axs = plt.subplots(1, 3, figsize=(7.4, 2.6))
-fig1.suptitle("a line and a plane: three possibilities", fontsize=11,
-              color=INK, x=0.01, ha="left", y=1.02)
 
 C = np.array([0.2, 0.6])
 mid = C + 1.3 * E1 + 1.0 * E2
@@ -81,9 +79,6 @@ off = np.array([0.0, 1.5])
 ax.plot([mid[0] - 1.15 * E1[0] + off[0], mid[0] + 1.15 * E1[0] + off[0]],
         [mid[1] - 1.15 * E1[1] + off[1], mid[1] + 1.15 * E1[1] + off[1]],
         color=ACCENT, linewidth=2.0, zorder=3)
-ax.set_title("no point: parallel", fontsize=9.5, color=INK, loc="left", pad=4)
-ax.text(0.0, -1.35, "$b \\cdot n = 0$, point not in the plane",
-        fontsize=8.6, color=GREY)
 
 # 平面の中
 ax = axs[2]
@@ -91,8 +86,6 @@ plane(ax, C)
 ax.plot([mid[0] - 1.05 * E1[0], mid[0] + 1.05 * E1[0]],
         [mid[1] - 1.05 * E1[1], mid[1] + 1.05 * E1[1]],
         color=ACCENT, linewidth=2.0, zorder=3)
-ax.set_title("every point: the line is in the plane", fontsize=8.6, color=INK,
-             loc="left", pad=4)
 ax.text(0.0, -1.35, "$b \\cdot n = 0$, point in the plane",
         fontsize=8.6, color=GREY)
 
@@ -106,8 +99,6 @@ for _ax in axs:
 # (b) 2 平面のなす角
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(5.8, 3.4))
-ax2.set_title("two planes meet in a line; their angle is the angle between"
-              " the normals", fontsize=9.8, color=INK, loc="left", pad=10)
 
 L0 = np.array([0.5, 1.6])
 L1 = np.array([5.3, 1.6])
@@ -140,8 +131,6 @@ ax2.text(B[0] - 0.28, B[1] + 0.95, "$\\theta$", fontsize=11, color=INK)
 ax2.text(L1[0] - 3.05, L1[1] - 0.52, "line of intersection", fontsize=9,
          color=INK)
 
-ax2.text(-0.4, -1.1, "take the acute angle: use $|n_{1} \\cdot n_{2}|$ in"
-         " the formula", fontsize=9, color=GREY)
 ax2.set_xlim(-0.6, 8.0)
 ax2.set_ylim(-1.6, 4.4)
 ax2.set_aspect("equal")

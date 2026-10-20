@@ -52,7 +52,30 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
 
-BODY = TEXT.split("## Worked examples")[0]
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
+
+
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 
 def not_in_body(sub, msg=""):
@@ -84,7 +107,7 @@ in_text("# SL 4.12 — Standardization and unknown $\\mu$, $\\sigma$"
         "（標準化と、未知の平均・標準偏差） {#sec-aasl-4-12}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Using your GDC (TI-Nspire CX II)", "## Exercises"):
     in_text(_h, "節 " + _h)
 
@@ -108,7 +131,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + Paper 2）")
 chk(TEXT.count("{.callout-important}") == 1,
     "callout-important 1（公式集 4.12 の z）")
@@ -134,8 +157,8 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-4-12-idea-a.svg){#fig-aasl412-idea-a width=100%}", "図 (a) の埋め込み")
-in_text("(img/aasl-4-12-idea-b.svg){#fig-aasl412-idea-b width=100%}", "図 (b) の埋め込み")
+in_text("(img/aasl-4-12-idea-a.svg){#fig-aasl412-idea-a width=85%}", "図 (a) の埋め込み")
+in_text("(img/aasl-4-12-idea-b.svg){#fig-aasl412-idea-b width=85%}", "図 (b) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-12-idea.svg")),
     "分割前の SVG は消してある")
 in_text("@fig-aasl412-idea-a", "図 (a) の参照")
@@ -183,10 +206,10 @@ for _bad in ("Add Calculator", "Binomial Pdf", "X List", "Y List",
 # 4. 図
 # ══════════════════════════════════════════════════════════
 in_fig(r'r"$z = \frac{x - \mu}{\sigma}$"', "図 (a) の z の式")
-in_fig(r'r"$x = \mu + z\sigma$ goes the other way"', "図 (a) の逆向き")
+not_in_fig(r'r"$x = \mu + z\sigma$ goes the other way"', "図 (a) の逆向き")
 in_fig(r'r"$a = \mu + z_1\sigma$    and    $b = \mu + z_2\sigma$"',
        "図 (b) の連立")
-in_fig("two equations, two unknowns", "図 (b) の説明")
+not_in_fig("two equations, two unknowns", "図 (b) の説明")
 # 図に数値の答えを出していないこと（座標の数は数えないよう、$...$ の中だけ見る）
 _figmath = " ".join(re.findall(r"\$([^$]*)\$", FIGCODE))
 for _v in ("1.5", "1.4", "1.1", "46.2", "9.42", "42.1", "13.7", "498",
@@ -422,16 +445,15 @@ print("  （計算 %d 本）" % _nstmt)
 # --- B1: 許されていないシラバスの引用を貼らない -----------------
 chk("Probabilities and values of the variable must be found using technology"
     not in TEXT, "許可されていないシラバスの引用がない")
-chk("シラバスは、正規分布の確率と値を**GDC で求める**としています。"
-    in TEXT, "引用ではなく言いかえになっている")
+chk("シラバスは、正規分布の確率と値を" not in TEXT, "シラバスへの言及は本文から外した")
+chk("正規分布の確率と値は**GDC で求めます**。"
+    in TEXT, "引用ではなく、内容を直接書いている")
 
 # --- M4: z は手でも出せる、と正しく書いてある -------------------
 chk("$z$ の値も GDC で出します" not in TEXT, "「z も GDC で」は消えている")
 chk("$z$ の値も答えも GDC で出します" not in TEXT, "同上（例題の前書き）")
 chk("**GDC を使うのは、面積から $z$ を出すところです。**" in TEXT,
     "GDC を使うのは面積から z を出すところだと書いている")
-chk("**GDC を使うのは、面積から $z$ を出すところです（Paper 2）。**" in TEXT,
-    "例題の前書きも同じ")
 chk("**単元全体が Paper 1 の対象外というわけではありません。**" in TEXT,
     "C10 4.12 単元全体ではない")
 chk("## この項目は Paper 2 です" not in TEXT, "C10 4.12 断定が消えている")
@@ -441,8 +463,6 @@ chk("**GDC を使うのは $4$・$5$・$6$・$9$・$10$（面積から $z$ を"
 # --- M5: 3 桁の言いかたが IB の規則に合っている -----------------
 chk("**最後の答えは、割り切れるときはその値を、割り切れないときは"
     "有効数字 $3$ 桁で書きます。**" in TEXT, "第7節の丸めの規則")
-chk("割り切れるときはその値を、割り切れないときは**有効数字 $3$ 桁**"
-    in TEXT, "例題の前書きの丸めの規則")
 
 # --- m3: 標準正規分布と Z を使う前に定義している -----------------
 chk("これを **standard normal distribution**（標準正規分布）といい、"
@@ -553,7 +573,7 @@ _figcol("tbl-aasl412-read", "@fig-aasl412-idea-a")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -564,8 +584,8 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. $z$-score（$z$ 値）とは {#zvalue}', "見出しの英語: 1. $z$-score（$z$ 値）とは")
-in_text('### 3. 答えを `normCdf` で確かめる {#gdc-check}', "見出しの英語: 3. 答えを `normCdf` で確かめる")
+in_text('### 1. Standardized value（標準化した値 $z$） {#zvalue}', "見出しの英語: 1. Standardized value（標準化した値 $")
+in_text('### 3. Checking with `normCdf`（答えを `normCdf` で確かめる） {#gdc-check}', "見出しの英語: 3. Checking with `normCdf`（答えを")
 
 
 
@@ -577,8 +597,8 @@ for _sent in [
     'each given area fixes on',
 ]:
     chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
-in_text('### 2. $z$ の読み方 {#meaning}', "その内容は本文にある")
-in_text('### 6. 両方が未知のとき {#both}', "その内容は本文にある")
+in_text('### 2. Reading a $z$-value（$z$ の読み方） {#meaning}', "その内容は本文にある")
+in_text('### 6. Both unknown（両方が未知のとき） {#both}', "その内容は本文にある")
 
 
 
@@ -589,6 +609,18 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

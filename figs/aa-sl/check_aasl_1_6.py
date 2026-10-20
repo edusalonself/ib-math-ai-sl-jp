@@ -61,6 +61,10 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている（消したはず）: " + msg + " :: " + sub[:70])
+
 # ══════════════════════════════════════════════════════════
 # 1. The idea
 # ══════════════════════════════════════════════════════════
@@ -242,12 +246,14 @@ eq(4 + 9, 13, "x=2 の右辺")
 # ══════════════════════════════════════════════════════════
 not_in_text("公式集の Topic 1 に、**1.6 の欄はありません。**",
             "公式集の囲みは置かない")
-in_text("> LHS to RHS proofs require students to begin with the left-hand side"
-        " expression and transform this using known algebraic steps into the"
-        " expression on the right-hand side (or vice versa).",
-        "LHS→RHS の Guidance を逐語で")
-in_text("> Students will be expected to show how they can check a result"
-        " including a check of their own results.", "検算の Guidance を逐語で")
+not_in_text("> LHS to RHS proofs require students",
+            "シラバス（Guidance）の引用は本文から外した")
+in_text("**LHS**（左辺）から出発して **RHS**（右辺）へ進むか、その逆向きに進みます。",
+        "LHS→RHS の内容は日本語で直接書いた")
+not_in_text("> Students will be expected to show how they can check a result",
+            "シラバス（Guidance）の引用は本文から外した")
+in_text("AA SL では、証明や計算のあとで、自分の結果を確かめることまで求められます。",
+        "検算の内容は日本語で直接書いた")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
 # ══════════════════════════════════════════════════════════
@@ -265,7 +271,7 @@ in_text("**これは確かめであって、証明ではありません。**", "
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -273,9 +279,16 @@ chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
 chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aasl16-", TEXT, re.M)) == 4, "例題が 4")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
@@ -325,11 +338,11 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("The safe layout: down one side only", "図(a) の題")
+not_in_fig("The safe layout", "図(a) の題は外した（本文が言う）")
 in_fig("start here", "図(a) の出発点")
 in_fig("arrive here", "図(a) の行き先")
-in_fig("avoid starting\\nfrom the answer", "図(a) の注意")
-in_fig("Where the statement is true", "図(b) の題")
+not_in_fig("from the answer", "図(a) の注意の文は外した（本文の注意の枠が言う）")
+not_in_fig("Where the statement is true", "図(b) の題は外した")
 in_fig("true\\neverywhere", "図(b) の恒等式")
 in_fig("true at\\none value", "図(b) の方程式")
 # 図の数値が本文と合っているか
@@ -343,11 +356,15 @@ for leak in ["29", "37", "13", "42", "110", "4(n+1)", "4(n+2)", "3(n+1)",
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-6.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-1-5.qmd") < DRAFT.index("aasl-1-6.qmd"), "並びが 1.5 → 1.6")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/01-number-and-algebra/aasl-1-6.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-1-5.qmd") < DRAFT.index("aasl-1-6.qmd"), "並びが 1.5 → 1.6")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-6.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -393,7 +410,7 @@ not_in_text("出発点は決まっています。", "言い切りを直した")
 in_text("**途中で向きを変えてはいけません。**", "向きは変えない")
 # = と ≡ の表
 in_text("$\\equiv$ が使える場面で $=$ を書くことはできます。**逆はできません。**", "表の下の注意")
-in_text("| $=$ | equation（方程式）として |", "表の見出しを直した")
+in_text("| $=$ | **equation**（方程式）として |", "表の見出しを直した（English（日本語））")
 # 小数の警告
 not_in_text("$0.333 + 0.167 = 0.5$", "たまたま合う例は消した")
 not_in_text("$0.17 - 0.14 = 0.03$ です。", "数の証明の節は置かない")
@@ -527,7 +544,7 @@ in_text("足りないのは、**その変形が逆向きにも成り立つとい
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -543,7 +560,7 @@ in_text("このページでは、LHS → RHS の向きで書きます（@fig-aas
 not_in_text("ふつうの向き", "「ふつうの向き」は消した")
 
 # §4 の証明は LHS → RHS で最後まで
-in_text("**LHS から出発して、\nRHS にたどり着くまで書きます。**", "§4 は LHS→RHS")
+in_text("**LHS から出発して、RHS にたどり着くまで書きます。**", "§4 は LHS→RHS（1 行にした）")
 in_text("= \\frac{1}{n(n+1)} = \\text{RHS}", "§4 は = RHS で終わる")
 ident(1 / n - 1 / (n + 1), 1 / (n * (n + 1)), "§4 の恒等式")
 
@@ -579,10 +596,10 @@ not_in_text("「任意の $\\ldots$」と問われたら", "古い言い方は�
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. Show that は、答えを出す問題ではない {#idea}', "見出しの英語: 1. Show that は、答えを出す問題では")
-in_text('### 2. LHS から RHS へ {#lhs-rhs}', "見出しの英語: 2. LHS から RHS へ")
-in_text('### 3. $=$ と $\\equiv$（equation and identity） {#equality-identity}', "見出しの英語: 3. $=$ と $\equiv$（equation")
-in_text('### 4. algebraic generalisation（文字の証明）：数の例から一般化する {#algebraic}', "見出しの英語: 4. algebraic generalisatio")
+in_text('### 1. Show that questions（答えではなく、道すじを示す問題） {#idea}', "見出しの英語: 1. Show that は、答えを出す問題では")
+in_text('### 2. LHS to RHS proofs（左辺から右辺へ） {#lhs-rhs}', "見出しの英語: 2. LHS から RHS へ")
+in_text('### 3. Equations and identities（方程式と恒等式） {#equality-identity}', "見出しの英語: 3. $=$ と $\equiv$（equation")
+in_text('### 4. Algebraic generalisation（数の例から、文字の証明へ） {#algebraic}', "見出しの英語: 4. algebraic generalisatio")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：「いじる」→「変形する」
@@ -610,7 +627,7 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 not_in_text("`Show that`", "Show that はコードの書体にしない")
 in_text("- Show that の問題で、**答えではなく道すじ**が問われていることが"
         "分かる。", "できるようになること")
-in_text("### 1. Show that は、答えを出す問題ではない {#idea}", "第 1 節の見出し")
+in_text('### 1. Show that questions（答えではなく、道すじを示す問題） {#idea}', "第 1 節の見出し")
 in_text("Show that の問題では、**答えは問題文にもう書いてあります。**",
         "第 1 節の本文")
 in_text("ですから、Show that を見たら、次の $2$ つを考えてください。", "同上")

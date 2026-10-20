@@ -16,7 +16,25 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "04-statistics-and-probability")
 QMD = os.path.join(BASE, "aasl-4-4.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_4_4.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 FIGSTR = "\n".join(t for t in re.findall(r'r?"((?:[^"\\]|\\.)*)"', _NODOC)
@@ -48,6 +66,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 # ══════════════════════════════════════════════════════════
 # 0. 道具 —— 回帰と相関を第一原理から
@@ -331,7 +352,7 @@ for _bad in ["Num of Lists", "Plot Type", "solve(", "binomPdf"]:
 # ══════════════════════════════════════════════════════════
 # 12. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -345,7 +366,7 @@ chk(len(re.findall(r"^::: \{#exm-aasl44-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 chk(TEXT.count("::: {.callout-warning}") == 8, "Common errors 6 + 本文 1 + GDC 1 で 8")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Using your GDC (TI-Nspire CX II)", "Exercises"]
 chk([h_ for h_ in _h2 if h_ in _want] == _want, "6 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
@@ -408,12 +429,12 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Direction and strength", "図(a) の題")
+not_in_fig("Direction and strength", "図(a) の題")
 in_fig("strong positive", "図(a) のパネル 1")
 in_fig("weak positive", "図(a) のパネル 2")
 in_fig("on a curve", "図(a) のパネル 3")
 in_fig("strong negative", "図(a) のパネル 4")
-in_fig("Where the line can be trusted", "図(b) の題")
+not_in_fig("Where the line can be trusted", "図(b) の題")
 in_fig("range of the data", "図(b) の範囲")
 in_fig("extrapolation", "図(b) の外挿")
 in_fig("mean point", "図(b) の平均の点")
@@ -444,11 +465,15 @@ for _lab, _ys in _PANELS.items():
 # 14. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/04-statistics-and-probability/aasl-4-4.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-4-3.qmd") < DRAFT.index("aasl-4-4.qmd"), "並びが 4.3 → 4.4")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/04-statistics-and-probability/aasl-4-4.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-4-3.qmd") < DRAFT.index("aasl-4-4.qmd"), "並びが 4.3 → 4.4")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(04-statistics-and-probability/aasl-4-4.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -482,7 +507,8 @@ chk(abs(abs(corr([1, 2], [9, 5])) - 1) < 1e-12, "n=2 では下がっても |r| =
 # --- r の目安の表 -------------------------------------------------------
 in_text("| $0.5$ 以上 $0.8$ 未満 | moderate |", "境目が重ならない")
 not_in_text("| $0.5$ 〜 $0.8$ | moderate |", "重なる書き方は消した")
-in_text("シラバスが使う語は **strong・weak・no correlation** で、", "シラバスの語")
+in_text("IB の問題でよく使う語は **strong・weak・no correlation** です。", "IB で使う語（シラバスを引かずに直接書く）")
+not_in_text("シラバスが使う語は", "シラバスを引いて説明する文は直した")
 not_in_text("問題文が critical value を与えていれば、それに従います。", "古い hedge は消した")
 
 # --- mean point の「公式集にない」の書き方 -------------------------------
@@ -491,9 +517,9 @@ in_text("平均そのものの式 $\\bar{x} = \\dfrac{\\sum f_i x_i}{n}$ は **4
 in_text("（[SL 4.3](aasl-4-3.qmd#mean)）", "SL 4.3 を参照")
 
 # --- Why it works の mean point の議論 -----------------------------------
-in_text("ずれ（residual）の **$2$ 乗の合計**がいちばん小さくなるように決めます。",
+in_text("ずれ（**residual**、残差）の **$2$ 乗の合計**がいちばん小さくなるように決めます。",
         "2 乗の合計")
-in_text("直線を $\\dfrac{S}{n}$ だけ上下に平行移動すると、ずれの $2$ 乗の合計は"
+in_text("直線を $\\dfrac{S}{n}$ だけ上下に **translation**（平行移動）すると、ずれの $2$ 乗の合計は"
         "**かならず小さくなります**。", "平行移動の議論")
 not_in_text("$y$ の方向のずれ（residual）を全体として小さくするように決めます。"
             "そのとき、**ずれの合計がちょうど $0$ になる**ように決まります。",
@@ -615,7 +641,7 @@ in_text("[Use your calculator to find the equation of the regression line "
 in_text("$$r = 0.949 \\quad (3 \\text{ s.f.})$$", "E08 r の答え")
 in_text("$$y = 1.2x + 1.8$$", "E08 回帰直線の答え")
 in_text("**入力の数は、画面の $n$ で確かめます。**", "E08 入力件数の確認")
-in_text("(img/aasl-4-4-ex1.svg){#fig-aasl44-ex1 width=100%}",
+in_text("(img/aasl-4-4-ex1.svg){#fig-aasl44-ex1 width=95%}",
         "E09 演習1 の解答図")
 # x = 1..6, y = 3,5,4,7,8,9 から r と y on x を出し直す
 _xs = [1, 2, 3, 4, 5, 6]
@@ -648,7 +674,7 @@ in_text('点が直線に近く並んでいるほど **strong**（強い相関）
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -658,13 +684,13 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. bivariate data と scatter diagram {#scatter}', "見出しの英語: 1. bivariate data と scatte")
-in_text('### 2. correlation の向きと強さ {#correlation}', "見出しの英語: 2. correlation の向きと強さ")
-in_text('### 3. Pearson の $r$ {#r}', "見出しの英語: 3. Pearson の $r$")
-in_text('### 4. correlation は causation ではありません {#causation}', "見出しの英語: 4. correlation は causation")
-in_text('### 5. line of best fit と mean point {#bestfit}', "見出しの英語: 5. line of best fit と mean")
-in_text('### 6. regression line of $y$ on $x$ {#regression}', "見出しの英語: 6. regression line of $y$ ")
-in_text('### 7. 予測に使うときの注意（interpolation and extrapolation） {#prediction}', "見出しの英語: 7. 予測に使うときの注意（interpolatio")
+in_text('### 1. Bivariate data and scatter diagrams（$2$ 変量データと散布図） {#scatter}', "見出しの英語: 1. bivariate data と scatte")
+in_text('### 2. Direction and strength of correlation（相関の向きと強さ） {#correlation}', "見出しの英語: 2. correlation の向きと強さ")
+in_text('### 3. Pearson\'s correlation coefficient $r$（ピアソンの相関係数） {#r}', "見出しの英語: 3. Pearson の $r$")
+in_text('### 4. Correlation and causation（相関と因果） {#causation}', "見出しの英語: 4. correlation は causation")
+in_text('### 5. Line of best fit and the mean point（最もよく当てはまる直線と平均の点） {#bestfit}', "見出しの英語: 5. line of best fit と mean")
+in_text('### 6. Regression line of $y$ on $x$（$y$ の $x$ への回帰直線） {#regression}', "見出しの英語: 6. regression line of $y$ ")
+in_text('### 7. Interpolation and extrapolation（予測に使うときの注意） {#prediction}', "見出しの英語: 7. 予測に使うときの注意（interpolatio")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
@@ -674,8 +700,8 @@ for _sent in [
     'outside the range of the',
 ]:
     chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:24])
-in_text('### 3. Pearson の $r$ {#r}', "その内容は本文にある")
-in_text('### 7. 予測に使うときの注意（interpolation and extrapolation） {#prediction}', "その内容は本文にある")
+in_text('### 3. Pearson\'s correlation coefficient $r$（ピアソンの相関係数） {#r}', "その内容は本文にある")
+in_text('### 7. Interpolation and extrapolation（予測に使うときの注意） {#prediction}', "その内容は本文にある")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-24：SL 4.4 の直し
@@ -698,8 +724,8 @@ in_text("$x$ を $y$ から予測したいときは、**別の直線**"
 # --- 2)「原因のほう」の一文を削除 ----------------------------------------
 not_in_text("**「原因のほう」ではありません**", "「原因のほう」の一文は消した")
 not_in_text("ふつう、「原因になりそうなほう」", "古い言い方も無いまま")
-in_text("「こちらを動かして、もう一方がどうなるかを見たいほう」が $x$"
-        "（independent variable）です。", "x の決め方は残っている")
+in_text("「こちらを動かして、もう一方がどうなるかを見たいほう」が $x$ です。"
+        "この $x$ を **independent variable**（独立変数）といいます。", "x の決め方は残っている")
 # 第 4 節の見出しは残っている（ほかから指されていないか）
 chk("{#causation}" in TEXT, "#causation の見出しはある")
 chk("$x$（independent variable）です。**「原因のほう」" not in TEXT,
@@ -709,7 +735,7 @@ chk(TEXT.count("#causation") >= 4,
 
 # --- 3) critical value の段落を削除 --------------------------------------
 not_in_text("critical value", "critical value の話は消した")
-in_text("シラバスが使う語は **strong・weak・no correlation** で、", "シラバスの語は残っている")
+in_text("IB の問題でよく使う語は **strong・weak・no correlation** です。", "IB で使う語は残っている")
 
 # --- 4)「相関は因果を示さない」に英語 ------------------------------------
 in_text("答案では、**「相関は因果を示さない」"
@@ -767,13 +793,23 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 # 2026-10-05：第 7 節に interpolation の 1 文
 # ══════════════════════════════════════════════════════════
 in_text("データのある範囲の**中**で予測することを "
-        "**interpolation（内挿）** といい、こちらは回帰直線をそのまま"
+        "**interpolation**（内挿）といい、こちらは回帰直線をそのまま"
         "使ってかまいません。", "interpolation の説明")
-chk(TEXT.index("**interpolation（内挿）**")
-    < TEXT.index("**(1) extrapolation（外挿）。**"),
+chk(TEXT.index("**interpolation**（内挿）")
+    < TEXT.index("**(1) extrapolation**（外挿）**。**"),
     "interpolation の説明は (1) より前")
 chk(TEXT.index("](img/aasl-4-4-idea-b.svg)")
-    < TEXT.index("**interpolation（内挿）**"), "図のあとに置いている")
+    < TEXT.index("**interpolation**（内挿）"), "図のあとに置いている")
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

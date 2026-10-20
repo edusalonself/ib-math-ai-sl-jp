@@ -44,7 +44,7 @@ def axes_box(ax, lim=1.45):
 
 
 # ══════════ fig 1a: cos, sin は点の座標 ══════════
-fig, ax = plt.subplots(figsize=(5.9, 5.4))
+fig, ax = plt.subplots(figsize=(5.0, 5.0))
 TH = 2.2
 CX, CY = np.cos(TH), np.sin(TH)
 circle(ax, color=GREY, lw=1.8)
@@ -72,19 +72,13 @@ ax.text(-0.10, 0.66, "radius $= 1$", fontsize=11.5, color=LINE, ha="center",
         va="center", bbox=BOX, zorder=8)
 ax.text(1.06, -0.10, "start here", fontsize=10.5, color=GREY, ha="left",
         va="top")
-ax.text(0, -1.36, "the angle is measured from the positive $x$-axis,\n"
-                  "anticlockwise; $\\cos\\theta$ and $\\sin\\theta$ are the\n"
-                  "coordinates of $P$",
-        fontsize=11.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-axes_box(ax, 1.58)
-ax.set_title("what $\\cos\\theta$ and $\\sin\\theta$ mean", fontsize=12.5,
-             color=INK, pad=6)
+axes_box(ax, 1.38)
 fig.tight_layout()
 save(fig, "ahl-3-8-unit-circle.svg")
 
 
 # ══════════ fig 1b: 象限ごとの符号 ══════════
-fig, ax = plt.subplots(figsize=(5.9, 5.4))
+fig, ax = plt.subplots(figsize=(5.0, 5.0))
 circle(ax, color=GREY, lw=1.8)
 QUAD = [(np.pi / 4, "I", "$\\cos +$\n$\\sin +$\n$\\tan +$", GREEN),
         (3 * np.pi / 4, "II", "$\\cos -$\n$\\sin +$\n$\\tan -$", ACC),
@@ -97,12 +91,7 @@ for a, name, txt, col in QUAD:
             color=col, ha="center", va="center", linespacing=1.45, zorder=6)
     ax.text(1.24 * np.cos(a), 1.24 * np.sin(a), name, fontsize=12.5,
             color=GREY, ha="center", va="center")
-ax.text(0, -1.34, "$\\tan\\theta = \\dfrac{\\sin\\theta}{\\cos\\theta}$, so its "
-                  "sign is\nthe two signs divided",
-        fontsize=11.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-axes_box(ax, 1.52)
-ax.set_title("the signs in each quadrant", fontsize=12.5, color=INK,
-             pad=6)
+axes_box(ax, 1.38)
 fig.tight_layout()
 save(fig, "ahl-3-8-quadrants.svg")
 
@@ -144,8 +133,7 @@ for sp in ("top", "right"):
     ax.spines[sp].set_visible(False)
 for sp in ("bottom", "left"):
     ax.spines[sp].set_color(GREY)
-ax.set_title("$y = \\sin x$: the height, unrolled", fontsize=11.5, color=INK,
-             pad=4)
+ax.set_title("$y = \\sin x$", fontsize=11.5, color=INK, pad=4)
 
 # ── 左下: 単位円（cos 用）
 ax = fig.add_subplot(gs[1, 0])
@@ -177,11 +165,8 @@ for sp in ("top", "right"):
     ax.spines[sp].set_visible(False)
 for sp in ("bottom", "left"):
     ax.spines[sp].set_color(GREY)
-ax.set_title("$y = \\cos x$: the across, unrolled", fontsize=11.5, color=INK,
-             pad=4)
+ax.set_title("$y = \\cos x$", fontsize=11.5, color=INK, pad=4)
 
-fig.suptitle("One trip round the circle is one period of the graph",
-             fontsize=13.5, y=1.0)
 save(fig, "ahl-3-8-graphs.svg")
 
 
@@ -214,8 +199,7 @@ for sp in ("top", "right"):
     ax.spines[sp].set_visible(False)
 for sp in ("bottom", "left"):
     ax.spines[sp].set_color(GREY)
-ax.set_title("(a)  two angles share one sine", fontsize=12.5, color=INK,
-             pad=8)
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=8)
 
 # ── (b) 2 つの三角形
 ax = axs[1]
@@ -250,14 +234,11 @@ ax.add_patch(Wedge((Ax, Ay), 1.30, 0, 32, fc="none", ec=ACC, lw=1.6,
                    zorder=6))
 ax.text(1.55, 0.34, "$A = 32^{\\circ}$", fontsize=11.5, color=ACC, ha="left",
         va="bottom")
-ax.text(6.2, -1.65, "swinging $a = 5.4$ from $C$ meets the base line twice",
-        fontsize=11, color=GREY, ha="center", va="center", bbox=BOX, zorder=8)
 ax.set_xlim(-1.5, 13.0)
-ax.set_ylim(-2.3, 5.7)
+ax.set_ylim(-1.3, 5.7)
 ax.set_aspect("equal")
 ax.axis("off")
-ax.set_title("(b)  so two different triangles fit", fontsize=12.5, color=INK,
-             pad=8)
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=8)
 
 fig.tight_layout(w_pad=1.8)
 save(fig, "ahl-3-8-ambiguous.svg")

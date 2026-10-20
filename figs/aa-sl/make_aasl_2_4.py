@@ -38,8 +38,6 @@ fig2, ax2 = plt.subplots(figsize=(5.3, 4.4))
 # ══════════════════════════════════════════════════════════
 # (a) key features
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Key features of a graph", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-3.4, 4.2)
 ax1.set_ylim(-4.4, 5.0)
 ax1.axis("off")
@@ -86,8 +84,6 @@ ax1.annotate("", xy=(2.6, 0), xytext=(-1.7, 1.45),
 # ══════════════════════════════════════════════════════════
 # (b) 漸近線
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Vertical and horizontal asymptotes", fontsize=11,
-              color=INK, loc="left", pad=10)
 ax2.set_xlim(-2.6, 5.4)
 ax2.set_ylim(-1.6, 6.4)
 ax2.axis("off")
@@ -110,8 +106,8 @@ right = np.linspace(VA + 0.13, 5.1, 300)
 ax2.plot(left, 1.0 / (left - VA) + HA, color=ACCENT, linewidth=2.2)
 ax2.plot(right, 1.0 / (right - VA) + HA, color=ACCENT, linewidth=2.2)
 
-ax2.text(VA + 0.16, 6.0, "vertical asymptote", fontsize=10, color=WARM,
-         ha="left", va="top")
+ax2.text(VA - 0.12, 6.0, "vertical asymptote", fontsize=10, color=WARM,
+         ha="right", va="top", rotation=90)
 ax2.text(5.1, HA - 0.22, "horizontal asymptote", fontsize=10, color=WARM,
          ha="right", va="top")
 

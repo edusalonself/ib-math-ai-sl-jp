@@ -68,7 +68,6 @@ ax.plot(xs, 0.6 * xs ** 3 - 1.2 * xs, color=LINE, linewidth=2.4, zorder=5)
 ax.axvline(1.3, color=ACC, linestyle="--", linewidth=1.6, zorder=4)
 ax.scatter([1.3], [0.6 * 1.3 ** 3 - 1.2 * 1.3], s=62, color=ACC,
            edgecolor=INK, linewidth=0.9, zorder=6)
-ax.set_title("a function:  one input, one output", fontsize=12, pad=10)
 axes_through_origin(ax, (-3.0, 3.0), (-3.0, 3.0))
 ax.set_xticks([-2, 2]); ax.set_yticks([-2, 2])
 
@@ -80,7 +79,6 @@ for s in (+1, -1):
     yy = s * np.sqrt((1.3 + 1.6) / 0.55)
     ax.scatter([1.3], [yy], s=62, color=ACC, edgecolor=INK, linewidth=0.9, zorder=6)
 ax.annotate("two outputs", (1.45, 0.15), color=ACC, fontsize=11.5)
-ax.set_title("not a function:  one input, two outputs", fontsize=12, pad=10)
 axes_through_origin(ax, (-3.0, 3.0), (-3.0, 3.0))
 ax.set_xticks([-2, 2]); ax.set_yticks([-2, 2])
 
@@ -90,7 +88,7 @@ fig.savefig(os.path.join(OUT, "sl-2-2-function-test.svg"), format="svg",
 plt.close(fig)
 
 # ---------- 3. inverse as a reflection in y = x ----------
-fig, ax = plt.subplots(figsize=(6.4, 6.0))
+fig, ax = plt.subplots(figsize=(5.4, 5.2))
 xs = np.linspace(-4.6, 4.6, 200)
 ax.plot(xs, xs, color="#909aa4", linestyle="--", linewidth=1.6, zorder=3)
 ax.plot(xs, 2 * xs + 1, color=LINE, linewidth=2.4, zorder=5)
@@ -111,8 +109,6 @@ ax.annotate("$y = x$", (3.5, 4.0), color="#5b656f", fontsize=12)
 axes_through_origin(ax, (-4.6, 4.6), (-4.6, 4.6))
 ax.set_xticks([-2, 2, 4]); ax.set_yticks([-2, 2, 4])
 ax.set_aspect("equal", adjustable="box")
-ax.set_title("$f^{-1}$ is the reflection of $f$ in the line $y = x$",
-             fontsize=12.5, pad=10)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-2-2-inverse.svg"), format="svg", bbox_inches="tight")
 plt.close(fig)
@@ -129,7 +125,6 @@ xr = np.roots([0.25, 0, 1, -2])
 xr = float([r.real for r in xr if abs(r.imag) < 1e-9][0])
 ax.scatter([xr], [2.0], s=62, color=ACC, edgecolor=INK, linewidth=0.9, zorder=6)
 ax.annotate("one crossing", (xr + 0.25, 2.35), color=ACC, fontsize=11.5)
-ax.set_title("one-to-one:  it HAS an inverse", fontsize=12, pad=10)
 axes_through_origin(ax, (-3.0, 3.0), (-5.4, 5.4))
 ax.set_xticks([-2, 2]); ax.set_yticks([-4, 4])
 
@@ -143,7 +138,6 @@ for xv in (-2.0, 2.0):
 ax.annotate("two crossings", (-0.95, 4.45), color=ACC, fontsize=11.5)
 ax.annotate("$f(-2) = f(2) = 4$", (1.05, -1.2), color=INK, fontsize=11.5,
             ha="center")
-ax.set_title("not one-to-one:  NO inverse", fontsize=12, pad=10)
 axes_through_origin(ax, (-3.0, 3.0), (-1.6, 6.6))
 ax.set_xticks([-2, 2]); ax.set_yticks([2, 4, 6])
 

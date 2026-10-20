@@ -61,8 +61,6 @@ def pieces(f, lo, hi, breaks, ylim):
 # (a) 分母が 2 次
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(6.2, 4.0))
-ax1.set_title("A quadratic denominator: two vertical asymptotes, and $y=0$",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 for _xa in (-2.0, 3.0):
     ax1.axvline(_xa, color=WARM, linestyle="--", linewidth=1.1)
 ax1.axhline(0.0, color=WARM, linestyle="--", linewidth=1.1)
@@ -73,9 +71,6 @@ ax1.text(-2.15, 2.6, "$x=-2$", ha="right", va="center", fontsize=9.5, color=WARM
 ax1.text(3.15, -2.5, "$x=3$", ha="left", va="center", fontsize=9.5,
          color=WARM)
 ax1.text(6.6, 0.35, "$y=0$", ha="right", va="bottom", fontsize=9.5, color=WARM)
-ax1.text(-5.8, -2.4, "the degree on top is smaller, so $y \\to 0$ far out",
-         ha="left", va="center", fontsize=9, color=GREY,
-         bbox=dict(facecolor="white", edgecolor="none", pad=1.5))
 ax1.set_xlim(-6.2, 7.2)
 ax1.set_ylim(-3.0, 3.0)
 frame(ax1)
@@ -84,8 +79,6 @@ frame(ax1)
 # (b) 分子が 2 次：斜め漸近線
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(6.2, 4.2))
-ax2.set_title("A quadratic on top: one vertical asymptote, and a slanted one",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 ax2.axvline(3.0, color=WARM, linestyle="--", linewidth=1.1)
 _t = np.linspace(-7.0, 12.0, 400)
 ax2.plot(_t, _t + 2.0, color=WARM, linestyle="--", linewidth=1.1)
@@ -95,10 +88,6 @@ for _t2, _y2 in pieces(lambda t: (t * t - t - 2.0) / (t - 3.0),
 ax2.text(3.15, -10.0, "$x=3$", ha="left", va="center", fontsize=9.5, color=WARM)
 ax2.text(-2.0, 8.0, "$y=x+2$", ha="center", va="center", fontsize=9.5,
          color=WARM, bbox=dict(facecolor="white", edgecolor="none", pad=1.5))
-ax2.text(-6.6, -11.5,
-         "divide first: the quotient is the slanted asymptote",
-         ha="left", va="center", fontsize=9, color=GREY,
-         bbox=dict(facecolor="white", edgecolor="none", pad=1.5))
 ax2.set_xlim(-7.2, 12.2)
 ax2.set_ylim(-13.0, 15.0)
 frame(ax2)

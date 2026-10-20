@@ -49,6 +49,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 def roots_of(poly):
     return sorted(sp.roots(sp.Poly(poly, x)).items(), key=lambda t: sp.re(t[0]))
 
@@ -199,17 +203,17 @@ eq(sp.factor(_Q10), (x + 2) * (x ** 2 + 3), "演習10 因数分解")
 # ══════════════════════════════════════════════════════════
 # 4. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Polynomial functions, their graphs and equations;"
+not_in_text("> Polynomial functions, their graphs and equations;"
         " zeros, roots and factors.", "シラバス（多項式）を逐語で")
-in_text("> The factor and remainder theorems.", "シラバス（2 つの定理）を逐語で")
-in_text("> Sum and product of the roots of polynomial equations.",
+not_in_text("> The factor and remainder theorems.", "シラバス（2 つの定理）を逐語で")
+not_in_text("> Sum and product of the roots of polynomial equations.",
         "シラバス（和と積）を逐語で")
-in_text("> Link to: complex roots of quadratic and polynomial equations"
+not_in_text("> Link to: complex roots of quadratic and polynomial equations"
         " (AHL 1.14).", "Link to を逐語で")
 in_text("公式集の **2.12** の欄", "公式集の場所")
-in_text("> Sum and product of the roots of polynomial equations of the form"
+not_in_text("> Sum and product of the roots of polynomial equations of the form"
         " $\\sum\\limits_{r=0}^{n} a_{r}x^{r} = 0$", "公式集の見出しを逐語で")
-in_text("> Sum is $\\dfrac{-a_{n-1}}{a_{n}}$ ;"
+not_in_text("> Sum is $\\dfrac{-a_{n-1}}{a_{n}}$ ;"
         " product is $\\dfrac{(-1)^{n}a_{0}}{a_{n}}$", "公式集の式を逐語で")
 in_text("**ただし公式集には載っていません。**", "真ん中の対称式は公式集にない")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
@@ -229,7 +233,7 @@ in_text("`menu` → `Analyze Graph` → `Zero`", "TI-Nspire のメニュー")
 for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve", "polyRoots"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -238,8 +242,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl212-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -284,7 +289,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -299,8 +304,8 @@ for _hh in re.findall(r"^### \d+\. (.+?) \{#", TEXT, re.M):
     chk(not re.search(r"[ぁ-んァ-ヶ一-龥]", _en),
         "見出しの英語の側に日本語がある: " + _hh)
 in_text("### 1. Polynomial functions（多項式関数） {#polynomials}", "見出し 1")
-in_text("### 2. Zeros, roots and factors: three names for one "
-        "thing（同じことの $3$ つの言い方） {#zeros-roots-factors}", "見出し 2")
+in_text("### 2. Zeros, roots and factors（$3$ 通りの表し方） "
+        "{#zeros-roots-factors}", "見出し 2")
 in_text("### 3. The remainder theorem（剰余定理） {#remainder}", "見出し 3")
 in_text("### 4. The factor theorem（因数定理） {#factor}", "見出し 4")
 in_text("### 5. How to factorise a cubic（因数分解の進め方） {#factorising}", "見出し 5")
@@ -321,9 +326,9 @@ for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Each crossing of the $x$-axis is one factor", "図(a) の題")
-in_fig("three zeros, three linear factors", "図(a) の要点")
-in_fig("How many times the factor appears decides the shape at $x=a$",
+not_in_fig("Each crossing of the $x$-axis is one factor", "図(a) の題")
+not_in_fig("three zeros, three linear factors", "図(a) の要点")
+not_in_fig("How many times the factor appears decides the shape at $x=a$",
        "図(b) の題")
 in_fig("touches and turns back", "図(b) の重解")
 in_text("$x$ 軸との交点が $1$ つあれば、$1$ 次の因数が $1$ つあります。",
@@ -379,5 +384,21 @@ in_text("**$n$ 次式の解は、複素数まで数えれば重解を込めて�
         "解の個数")
 
 print()
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-13 の手直し（英語（日本語）の書き方）
+# ══════════════════════════════════════════════════════════
+in_text("$P(x)$ を $(x-a)$ で割ったときの **remainder（余り）** は、"
+        "割り算をしなくても出せます。", "§3 の remainder")
+in_text("**factor theorem（因数定理）** は、**remainder theorem（剰余定理）** の"
+        "**余りが $0$ の場合**です。", "§4 の 2 つの定理")
+not_in_text("因数定理は、剰余定理の", "前の書き方は消した")
+not_in_text("three names for one thing", "見出しは短くした")
+# code span の中に数式を入れない（$ がそのまま表示されてしまう）
+for _cs in re.findall(r"`([^`\n]+)`", TEXT):
+    chk("$" not in _cs, "code span の中に数式: " + _cs[:50])
+
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

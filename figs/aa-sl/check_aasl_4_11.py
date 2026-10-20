@@ -50,7 +50,26 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
 
-BODY = TEXT.split("## Worked examples")[0]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 
 def not_in_body(sub, msg=""):
@@ -74,7 +93,7 @@ in_text("# SL 4.11 — Formal conditional probability and independence"
         "（条件付き確率の定義と独立性の判定） {#sec-aasl-4-11}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea {#idea}",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "4.11 に GDC の節は置かない")
@@ -92,7 +111,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 6, "callout-warning 6（誤り 6）")
 not_in_text("## この項目に電卓は要りません", "電卓の callout は削除した")
 chk(TEXT.count("{.callout-important}") == 2,
@@ -120,7 +139,7 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
         "model answer %d に日本語がない" % _i)
 
 not_in_text("aasl-4-11-idea-a", "図 (a) は削除した（2026-10-05）")
-in_text("(img/aasl-4-11-idea-b.svg){#fig-aasl411-idea-b width=100%}", "図 (b) の埋め込み")
+in_text("(img/aasl-4-11-idea-b.svg){#fig-aasl411-idea-b width=65%}", "図 (b) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-11-idea.svg")),
     "分割前の SVG は消してある")
 not_in_text("@fig-aasl411-idea-a", "図 (a) への参照もない")
@@ -145,7 +164,8 @@ in_text("公式集の **4.6** の欄に *Conditional probability* として載�
         "公式集 4.6 conditional")
 in_text("公式集の **4.6** の欄に *Independent events* として載っています",
         "公式集 4.6 independent")
-in_text("シラバスの **4.11** に出てきます。公式集にはありません。",
+not_in_text("シラバスの **4.11** に出てきます。", "シラバスへの言及は本文から外した")
+in_text("$P(A \\mid B) = P(A) = P(A \\mid B')$ という書き方のほうは、公式集にはありません。",
         "3 つの言い方は公式集にない")
 in_text("{#tbl-aasl411-formulae}", "式の使い分けの表")
 in_text("{#tbl-aasl411-choose}", "式の選び方の表")
@@ -451,7 +471,7 @@ chk('facecolor=SHADE if _i == 0 else "white"' not in FIGCODE,
     "図(b): B と B' の両方の行に同じ色がついている")
 
 # --- 答えのもれ: 演習の答えが The idea / Why it works にない ----
-_head = TEXT[:TEXT.index("## Worked examples")]
+_head = BODY
 for _leak in ["$0.5$ です", "何でもありえます", "$0$ から $1$ まで"]:
     chk(_leak not in _head, "前半に演習の答えがもれていない: %s" % _leak)
 
@@ -473,7 +493,7 @@ chk(sp.Rational(1, 5) / _pb != _pa, "第4節 検算 その2 はちがう")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -484,8 +504,8 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 4. the multiplication rule（かけ算の形） {#multiply}', "見出しの英語: 2. the multiplication rule")
-in_text('### 7. $P(A)$ を組み立てる（the law of total probability） {#total}', "見出しの英語: 6. $P(A)$ を組み立てる（the law o")
+in_text('### 4. The multiplication rule（かけ算の形） {#multiply}', "見出しの英語: 4. The multiplication rule（かけ算")
+in_text('### 7. The law of total probability（$P(A)$ を組み立てる） {#total}', "見出しの英語: 7. The law of total probabilit")
 
 
 
@@ -500,7 +520,7 @@ for _sent in [
 ]:
     chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
 not_in_text('### 3. 独立の $3$ つの言い方 {#three}', "独立の言い方は第 5 節へ")
-in_text('### 5. testing for independence（独立性の判定） {#test}',
+in_text('### 5. Testing for independence（独立性の判定） {#test}',
         "第 5 節の見出し（英語）")
 
 
@@ -545,10 +565,10 @@ in_text("**[SL 4.6](aasl-4-6.qmd) では、樹形図を使って、条件によ�
         "変わることを学びました。**", "導入")
 in_text("このページでは、**条件付き確率を記号と公式で表し、計算する方法**を"
         "学びます。", "導入の 2 文目")
-in_text("### 1. conditional probability（条件付き確率）の意味と記号 {#formal}",
+in_text("### 1. Conditional probability and its notation（条件付き確率の意味と記号） {#formal}",
         "第 1 節")
-in_text("### 2. 表から求める {#table}", "第 2 節")
-in_text("### 3. 条件付き確率の公式 {#formula}", "第 3 節")
+in_text("### 2. Reading from a two-way table（表から求める） {#table}", "第 2 節")
+in_text("### 3. The formula for conditional probability（条件付き確率の公式） {#formula}", "第 3 節")
 in_text("(img/aasl-4-11-idea-c.svg){#fig-aasl411-idea-c", "表の図")
 in_text("(img/aasl-4-11-idea-d.svg){#fig-aasl411-idea-d", "樹形図")
 for _n411 in ("aasl-4-11-idea-c.svg", "aasl-4-11-idea-d.svg"):
@@ -563,6 +583,18 @@ in_text("P(A \\cap B) = \\frac{1}{3} \\times \\frac{3}{5} = \\frac{1}{5}", "樹�
 chk(F(1, 3) * F(3, 5) == F(1, 5), "1/3 × 3/5 = 1/5")
 in_text("**$P(A \\mid B)$ と $P(B \\mid A)$ は、ふつう別のものです。**",
         "P(A|B) と P(B|A) のちがい")
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

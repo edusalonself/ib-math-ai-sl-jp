@@ -38,8 +38,6 @@ WARM = "#b45309"
 # (a) どの方法を使うか
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(6.4, 3.4))
-ax1.set_title("which method for a first order equation?", fontsize=10.5,
-              color=INK, loc="left", pad=10)
 
 
 def box(x, y, w, h, text, col, fs=9.0):
@@ -74,8 +72,6 @@ for _y in (4.7, 2.9, 1.1):
 link((1.8, 4.3), (1.8, 3.4), "no", dx=0.30, dy=0.0)
 link((1.8, 2.5), (1.8, 1.6), "no", dx=0.30, dy=0.0)
 
-ax1.text(0.0, -0.35, "check them in this order: the first test that passes"
-         " gives the method", fontsize=9, color=GREY)
 ax1.set_xlim(-0.2, 8.8)
 ax1.set_ylim(-0.8, 5.5)
 ax1.axis("off")
@@ -84,9 +80,6 @@ ax1.axis("off")
 # (b) 解の族
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(5.4, 3.2))
-ax2.set_title("solutions of a linear equation: different $C$, same"
-              " long-run behaviour", fontsize=9.8, color=INK, loc="left",
-              pad=10)
 
 t = np.linspace(0, 4.0, 400)
 for _c, _col in ((-1.0, GREY), (0.0, ACCENT), (2.0, WARM), (4.0, GREY)):
@@ -95,8 +88,6 @@ ax2.plot(t, t - 1, color=INK, linewidth=1.3, linestyle=(0, (4, 3)), zorder=4)
 ax2.text(3.15, 3.40, "$y = x-1$", fontsize=9.5, color=INK)
 ax2.text(0.06, 3.45, "each curve is $y = x-1+Ce^{-x}$", fontsize=9,
          color=GREY)
-ax2.text(0.06, -2.65, "the term with $C$ dies away, so all solutions"
-         " approach the same line", fontsize=9, color=GREY)
 ax2.set_xlim(-0.15, 4.5)
 ax2.set_ylim(-3.15, 4.0)
 ax2.set_xlabel("$x$", fontsize=10, color=INK)

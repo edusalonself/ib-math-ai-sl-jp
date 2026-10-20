@@ -56,8 +56,6 @@ def axes(ax, xlo, xhi, ylo, yhi):
 # ══════════════════════════════════════════════════════════
 # (a) 累乗：角が増え、長さが伸びる
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Each power turns by $\\theta$ and stretches by $r$",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 axes(ax1, -3.5, 3.6, -0.8, 3.2)
 RR, TH = 1.25, np.pi / 6.0
 _t = np.linspace(0.0, 5.2 * TH, 400)
@@ -76,15 +74,10 @@ _ta = np.linspace(0.0, TH, 100)
 ax1.plot(0.55 * np.cos(_ta), 0.55 * np.sin(_ta), color=WARM, linewidth=1.3)
 ax1.text(0.78 * np.cos(TH / 2), 0.78 * np.sin(TH / 2), "$\\theta$",
          ha="center", va="center", fontsize=11, color=WARM)
-ax1.text(-3.35, 2.75, "the argument becomes $n\\theta$\n"
-                     "and the modulus becomes $r^{n}$",
-         ha="left", va="center", fontsize=10, color=INK)
 
 # ══════════════════════════════════════════════════════════
 # (b) n 乗根：円の上に等しい間隔で
 # ══════════════════════════════════════════════════════════
-ax2.set_title("The cube roots of a number, on one circle",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 axes(ax2, -3.2, 3.6, -3.0, 3.4)
 _c = np.linspace(0.0, 2.0 * np.pi, 400)
 ax2.plot(2.0 * np.cos(_c), 2.0 * np.sin(_c), color=GREY, linewidth=1.0,

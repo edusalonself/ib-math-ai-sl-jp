@@ -51,7 +51,7 @@ ax.annotate("$P(0) = \\dfrac{L}{1+C} = 200$", xy=(0, 200), xytext=(3.2, 430),
             fontsize=11, color=ACC, ha="left", va="center", bbox=BOX, zorder=8,
             arrowprops=dict(arrowstyle="->", color=ACC, lw=1.4,
                             shrinkA=2, shrinkB=5))
-ax.annotate("steepest at $\\dfrac{L}{2} = 1000$,\nhere $t = 7.32$",
+ax.annotate("steepest,  $t = 7.32$",
             xy=(th, 1000), xytext=(11.5, 780), fontsize=11, color=GREEN,
             ha="left", va="center", bbox=BOX, zorder=8,
             arrowprops=dict(arrowstyle="->", color=GREEN, lw=1.4,
@@ -60,7 +60,6 @@ ax.set_xlim(-1.2, 30.5)
 ax.set_ylim(-120, 2320)
 ax.set_xlabel("$t$")
 ax.legend(fontsize=11, frameon=False, loc="center right")
-ax.set_title("reading $L$, $C$ and $k$", fontsize=12, color=INK, pad=9)
 tidy(ax)
 fig.tight_layout()
 save(fig, "ahl-2-9b-logistic.svg")
@@ -75,21 +74,11 @@ ax.plot(T2, 200 * np.exp(0.3 * T2), color=ACC, lw=2.8, ls="-.",
 ax.axhline(2000, color=GOLD, lw=1.8, ls="--")
 ax.text(0.2, 2080, "$L = 2000$", fontsize=11, color=GOLD, ha="left",
         va="bottom")
-ax.annotate("the same at first", xy=(2.0, logistic(2.0)), xytext=(0.3, 1450),
-            fontsize=11, color=INK, ha="left", va="center", bbox=BOX, zorder=8,
-            arrowprops=dict(arrowstyle="->", color=INK, lw=1.4,
-                            shrinkA=2, shrinkB=6))
-ax.annotate("the logistic bends over;\nthe exponential does not",
-            xy=(9.5, logistic(9.5)), xytext=(4.6, 700), fontsize=11,
-            color=LINE, ha="left", va="center", bbox=BOX, zorder=8,
-            arrowprops=dict(arrowstyle="->", color=LINE, lw=1.4,
-                            shrinkA=2, shrinkB=6))
 ax.axhline(0, color=GREY, lw=1.2)
 ax.set_xlim(-0.5, 12.5)
 ax.set_ylim(-160, 3400)
 ax.set_xlabel("$t$")
 ax.legend(fontsize=11, frameon=False, loc="upper left")
-ax.set_title("a ceiling, or no ceiling", fontsize=12, color=INK, pad=9)
 tidy(ax)
 fig.tight_layout()
 save(fig, "ahl-2-9b-vs-exp.svg")
@@ -108,11 +97,6 @@ ax.plot([3, 9], [20, 32], "o", color=ACC, ms=8, zorder=7)
 ax.text(3, 17.6, "$C(3) = 20$", fontsize=11, color=ACC, ha="center", va="top")
 ax.text(8.7, 33.4, "$C(9) = 32$", fontsize=11, color=ACC, ha="right",
         va="bottom")
-ax.annotate("the pieces meet here,\nso the cost has no jump",
-            xy=(5, 20), xytext=(5.6, 13.0), fontsize=11, color=INK,
-            ha="left", va="center", bbox=BOX, zorder=8,
-            arrowprops=dict(arrowstyle="->", color=INK, lw=1.4,
-                            shrinkA=2, shrinkB=6))
 ax.axhline(0, color=GREY, lw=1.2)
 ax.axvline(0, color=GREY, lw=1.2)
 ax.set_xlim(-0.6, 12.6)
@@ -120,7 +104,6 @@ ax.set_ylim(-2.5, 46)
 ax.set_xlabel("$x$ (GB of data)")
 ax.set_ylabel("cost")
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("a piecewise model in context", fontsize=12, color=INK, pad=9)
 tidy(ax)
 fig.tight_layout()
 save(fig, "ahl-2-9b-tariff.svg")
@@ -141,18 +124,14 @@ ax.plot([2], [3], "o", color=GREEN, ms=8, zorder=7)
 ax.plot([2], [6], "o", color=ACC, ms=9, zorder=7)
 ax.annotate("", xy=(2, 6), xytext=(2, 3),
             arrowprops=dict(arrowstyle="<->", color=ACC, lw=1.6))
-ax.text(2.2, 4.5, "a jump of $3$", fontsize=11, color=ACC, ha="left",
+ax.text(2.2, 4.5, "jump $3$", fontsize=11, color=ACC, ha="left",
         va="center", bbox=BOX, zorder=8)
-ax.text(0.25, 12.4, "$a = \\dfrac{1}{4}$ makes the two pieces\nmeet at $(2,\\ 3)$",
-        fontsize=11, color=GREEN, ha="left", va="top", bbox=BOX, zorder=8)
 ax.axhline(0, color=GREY, lw=1.2)
 ax.axvline(0, color=GREY, lw=1.2)
 ax.set_xlim(-0.4, 6.4)
 ax.set_ylim(-1.2, 16.5)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=10, frameon=False, loc="lower right")
-ax.set_title("choosing $a$ so the graph joins up", fontsize=12,
-             color=INK, pad=9)
 tidy(ax)
 fig.tight_layout()
 save(fig, "ahl-2-9b-continuity.svg")

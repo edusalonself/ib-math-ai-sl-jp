@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "02-functions")
 QMD = os.path.join(BASE, "aasl-2-5.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+
+def _strip_exm(s):
+    """例題ブロック（::: {#exm-...} から対応する ::: まで）を外す。"""
+    out, depth, skip = [], 0, False
+    for _l in s.split(chr(10)):
+        if not skip and _l.startswith("::: {#exm-"):
+            skip, depth = True, 0
+        if skip:
+            if re.match(r"^:{3,}\s*\{", _l):
+                depth += 1
+            elif re.match(r"^:{3,}\s*$", _l):
+                depth -= 1
+                if depth == 0:
+                    skip = False
+            continue
+        out.append(_l)
+    return chr(10).join(out)
+
+
+BODY = _strip_exm(TEXT[:TEXT.index("## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_2_5.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 # 色コード・ファイル名・キーワードはラベルではないので外す
@@ -64,6 +83,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 # ══════════════════════════════════════════════════════════
 # 0. The idea
@@ -241,7 +263,7 @@ not_in_text("シラバスは、記号をこう定めています。", "同上")
 not_in_text("シラバスは、次の関係を挙げています。", "同上")
 in_text("合成関数の記号は、次のように決まっています。", "§2 の前置き")
 in_text("$f$ と $f^{-1}$ を続けて通すと、どちらの順でも $x$ に戻ります。", "§5 の前置き")
-in_text("### 4. inverse function（逆関数）$f^{-1}(x)$ の式を求める {#find-inverse}",
+in_text('### 4. Finding an inverse function（逆関数 $f^{-1}(x)$ の式を求める） {#find-inverse}',
         "§4 の見出しに inverse function")
 chk(TEXT.count("\n> ") == 0,
     f"シラバスの引用は置かない: {TEXT.count(chr(10) + '> ')}")
@@ -279,7 +301,7 @@ in_text("**Paper 1 では使えません。**", "Paper 1 では手で解くと�
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -288,9 +310,16 @@ chk(TEXT.count("{.model-answer}") == 5, "model-answer が 5")
 chk(len(re.findall(r"^::: \{#exm-aasl25-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
@@ -355,10 +384,10 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("$(f \\\\circ g)(x) = f(g(x))$: $g$ acts first", "図(a) の題")
+not_in_fig("$(f \\\\circ g)(x) = f(g(x))$: $g$ acts first", "図(a) の題")
 in_fig("$g(x)$", "図(a) の途中")
 in_fig("$f(g(x))$", "図(a) の出口")
-in_fig("$(f^{-1} \\\\circ f)(x) = x$: the inverse undoes $f$", "図(b) の題")
+not_in_fig("$(f^{-1} \\\\circ f)(x) = x$: the inverse undoes $f$", "図(b) の題")
 in_fig("$x$ again", "図(b) の出口")
 # 図に具体的な式を書いていない
 chk(not re.search(r"\d\s*x", FIGSTR), "図に具体的な式を書いていない")
@@ -369,11 +398,15 @@ for leak in ["3x + 4", "4x - 12", "x+5", "x-9", "x+3"]:
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-5.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-2-4.qmd") < DRAFT.index("aasl-2-5.qmd"), "並びが 2.4 → 2.5")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/02-functions/aasl-2-5.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-2-4.qmd") < DRAFT.index("aasl-2-5.qmd"), "並びが 2.4 → 2.5")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-5.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -448,8 +481,10 @@ in_text("$f$ が one-to-one なら、$f$ が出した $y$ から、もとの $x$
         "決まります。", "one-to-one の条件")
 in_text("つまり、$x$ が $f$ の domain に、$y$ が $f$ の range にあるとき", "範囲の条件")
 # 所見 9 — 第 7 節を一般論にとどめた
-in_text("実際の例は、例題 $3$ で見ます。", "例題に譲った")
-in_text("たとえば $f(x) = \\sqrt{x+2}$（domain $x \\ge -2$）の逆関数の式は $x^{2}-2$",
+in_text("実際の例は、このあとの[例題 4](#exm-aasl25-root) で見ます。", "例題に譲った（新しい番号 4）")
+chk(TEXT.index("このあとの[例題 4](#exm-aasl25-root)") < TEXT.index("::: {#exm-aasl25-root}"),
+    "案内のあとに例題 4 が来る")
+in_text("たとえば $f(x) = \\sqrt{x+2}$（domain $x \\ge -2$）の **inverse function**（逆関数）の式は $x^{2}-2$",
         "第 6 節の例も変えた")
 # 所見 10 — 演習 9 の解説
 in_text("この $f$、$g$ では $2x+2 = 2x+1$ に解がないので、どの $x$ でも一致しません。",
@@ -473,7 +508,7 @@ not_in_text("**ここで $x \\ge 0$ が効きます**", "古い言い方は残�
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -483,9 +518,9 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. composite function（合成関数）は、機械を $2$ 台つないだもの {#idea}', "見出しの英語: 1. composite function（合成関数")
-in_text('### 3. 合成関数の domain {#comp-domain}', "見出しの英語: 3. 合成関数の domain")
-in_text('### 6. $f^{-1}$ の domain と range {#dom-range}', "見出しの英語: 6. $f^{-1}$ の domain と ran")
+in_text('### 1. Composite functions（合成関数は、機械を $2$ 台つないだもの） {#idea}', "見出しの英語: 1. composite function（合成関数")
+in_text('### 3. Domain of a composite function（合成関数の定義域） {#comp-domain}', "見出しの英語: 3. 合成関数の domain")
+in_text('### 6. Domain and range of $f^{-1}$（逆関数の定義域と値域） {#dom-range}', "見出しの英語: 6. $f^{-1}$ の domain と ran")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-17：恒等関数の節をやめ、domain の結論を足した
@@ -497,7 +532,7 @@ in_text("2. **$g$ の range**（$g$ が出す値 $g(x)$）が **$f$ の domain**
         "入っていること", "条件 2 は g の range")
 in_text("**ですから $(f \\circ g)(x) = \\sqrt{2x-6}$ の domain は $x \\ge 3$ です。**",
         "§3 の結論")
-in_text("### 5. $f \\circ f^{-1}$ と $f^{-1} \\circ f$ で、$x$ に戻る {#check}",
+in_text('### 5. Checking with $f \\circ f^{-1}$（$f$ と $f^{-1}$ を続けると $x$ に戻る） {#check}',
         "§5 の見出し")
 in_text("$x$ そのものになりました ✓ **$f^{-1}$ の式が正しければ、必ずこうなります。**",
         "検算の締め")
@@ -535,7 +570,7 @@ for _sent in [
 ]:
     chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
 in_text('$f(g(x))$ と書き直せば、**かっこの内側が先**だとすぐ分かります。', "その内容は本文にある")
-in_text('### 5. $f \\circ f^{-1}$ と $f^{-1} \\circ f$ で、$x$ に戻る {#check}', "その内容は本文にある")
+in_text('### 5. Checking with $f \\circ f^{-1}$（$f$ と $f^{-1}$ を続けると $x$ に戻る） {#check}', "その内容は本文にある")
 
 
 

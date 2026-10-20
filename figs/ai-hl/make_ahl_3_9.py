@@ -99,15 +99,12 @@ for p, nm in zip(img, ["O'", "A'", "B'"]):
     dot(axes_[1], p, ACC)
     tag(axes_[1], p, nm, ACC, dx=0.35, dy=0.35)
 axes_[1].set_title("image", fontsize=13, color=ACC, pad=8)
-fig.text(0.5, 0.03, "every point is multiplied by the same "
-                    "$2 \\times 2$ matrix", fontsize=13, ha="center",
-         color=INK)
-fig.tight_layout(rect=(0, 0.06, 1, 1))
+fig.tight_layout()
 save(fig, "ahl-3-9-idea.svg")
 
 # ══════════════ 2. Why it works：列は i と j の行き先 ══════════════
-fig, ax = plt.subplots(figsize=(7.6, 5.4))
-plane(ax, (-0.9, 5.4), (-0.9, 4.4))
+fig, ax = plt.subplots(figsize=(7.6, 4.4))
+plane(ax, (-0.9, 5.4), (-0.9, 3.4))
 sq = [(0, 0), (1, 0), (1, 1), (0, 1)]
 shape(ax, sq, LINE, FILL)
 par = apply(Mid, sq)
@@ -128,9 +125,6 @@ for v, nm, dx, dy in (((3, 1), "first column $(3,1)$", 0.25, 0.10),
     ax.text(v[0] + dx, v[1] + dy, nm, fontsize=11.5, color=ACC, ha="left",
             va="bottom", zorder=11, bbox=BOX)
 
-ax.text(0.42, 3.85, "the unit square goes to the parallelogram\n"
-                    "made by the two columns", fontsize=11.5, color=INK,
-        ha="left", va="center", zorder=11, bbox=BOX)
 fig.tight_layout()
 save(fig, "ahl-3-9-columns.svg")
 
@@ -169,24 +163,22 @@ plane(axs[0], (-2.8, 3.2), (-1.6, 3.4))
 shape(axs[0], apply([[0, -1], [1, 0]], small), ACC, PALE, lw=2.0)
 shape(axs[0], small, LINE, "none", lw=1.7, ls=(0, (4, 3)), z=6)
 dot(axs[0], (0, 0), ACC, ms=8)
-axs[0].text(0.28, -1.05, "the origin never moves", fontsize=11.5, color=ACC,
-            ha="left", va="center", zorder=11, bbox=BOX)
-axs[0].set_title("a matrix on its own", fontsize=12.5, color=INK, pad=8)
+axs[0].set_title("matrix only", fontsize=12.5, color=INK, pad=8)
 
 plane(axs[1], (-1.4, 5.0), (-1.6, 3.4))
 shape(axs[1], small, LINE, FILL, lw=2.0)
 mv = apply([[1, 0], [0, 1]], small, t=(3, 1))
 shape(axs[1], mv, GREEN, "#e9f6ee", lw=2.0)
 curved(axs[1], (1.0, 1.0), (3.9, 2.0), GREEN, rad=-0.25)
-axs[1].text(0.9, 3.0, "add $(3,1)$ to every point", fontsize=11.5,
+axs[1].text(0.9, 3.0, "$+(3,1)$", fontsize=11.5,
             color=GREEN, ha="left", va="center", zorder=11, bbox=BOX)
 axs[1].set_title("translation", fontsize=12.5, color=GREEN, pad=8)
 fig.tight_layout()
 save(fig, "ahl-3-9-translation.svg")
 
 # ══════════════ 5. 図形は頂点を並べて 1 つの行列に ══════════════
-fig, ax = plt.subplots(figsize=(8.2, 3.1))
-blank(ax, (0, 8.2), (0, 3.1))
+fig, ax = plt.subplots(figsize=(8.2, 2.5))
+blank(ax, (0, 8.2), (0.6, 3.1))
 ax.set_aspect("auto")
 matrix(ax, 1.5, 1.55, [["0", "-1"], ["1", "0"]], cw=0.62, ch=0.5, color=ACC)
 matrix(ax, 3.5, 1.55, [["1", "4", "1"], ["1", "1", "3"]], cw=0.62, ch=0.5,
@@ -197,7 +189,6 @@ matrix(ax, 6.3, 1.55, [["-1", "-1", "-3"], ["1", "4", "1"]], cw=0.72, ch=0.5,
 label(ax, 1.5, 2.62, "transformation", color=ACC, fs=11.5)
 label(ax, 3.5, 2.62, "$A$    $B$    $C$", color=LINE, fs=11.5)
 label(ax, 6.3, 2.62, "$A'$    $B'$    $C'$", color=GREEN, fs=11.5)
-label(ax, 3.5, 0.48, "one column for each vertex", color=GREY, fs=11)
 fig.tight_layout()
 save(fig, "ahl-3-9-shape.svg")
 
@@ -215,8 +206,7 @@ shape(axs[1], apply(np.array(Q90) @ np.array(Prefl), FSHAPE), ACC, PALE,
       lw=1.9)
 axs[1].plot([-5.2, 5.2], [-5.2, 5.2], color=GOLD, lw=1.4, ls=(0, (5, 4)),
             zorder=2)
-axs[1].set_title("$QP$ : reflect first, then rotate", fontsize=11.5,
-                 color=ACC, pad=6)
+axs[1].set_title("$QP$", fontsize=11.5, color=ACC, pad=6)
 
 plane(axs[2], (-5.4, 5.4), (-5.4, 5.4), ticks=False)
 shape(axs[2], FSHAPE, GREY, "none", lw=1.2, ls=(0, (4, 3)))
@@ -224,8 +214,7 @@ shape(axs[2], apply(np.array(Prefl) @ np.array(Q90), FSHAPE), GREEN,
       "#e9f6ee", lw=1.9)
 axs[2].plot([-5.2, 5.2], [5.2, -5.2], color=GOLD, lw=1.4, ls=(0, (5, 4)),
             zorder=2)
-axs[2].set_title("$PQ$ : rotate first, then reflect", fontsize=11.5,
-                 color=GREEN, pad=6)
+axs[2].set_title("$PQ$", fontsize=11.5, color=GREEN, pad=6)
 fig.tight_layout()
 save(fig, "ahl-3-9-compose.svg")
 
@@ -242,7 +231,7 @@ shape(axs[1], img, ACC, PALE)
 axs[1].text(4.6, 2.6, "area $=20$", fontsize=12, color=ACC, ha="center",
             va="center", zorder=11, bbox=BOX)
 axs[1].set_title("image", fontsize=12.5, color=ACC, pad=8)
-fig.text(0.5, 0.03, r"$\det A = 5$,   so   $20 = 5 \times 4$", fontsize=13,
+fig.text(0.5, 0.03, r"$\det A = 5$,   $20 = 5 \times 4$", fontsize=13,
          ha="center", color=INK)
 fig.tight_layout(rect=(0, 0.06, 1, 1))
 save(fig, "ahl-3-9-det.svg")

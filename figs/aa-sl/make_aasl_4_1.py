@@ -35,15 +35,13 @@ GREY = "#6b7280"
 WARM = "#b45309"
 PALE = "#c7d7e8"
 
-fig1, ax1 = plt.subplots(figsize=(5.4, 4.4))
-fig2, ax2 = plt.subplots(figsize=(5.4, 4.4))
+fig1, ax1 = plt.subplots(figsize=(5.4, 3.3))
+fig2, ax2 = plt.subplots(figsize=(6.4, 2.0))
 # ══════════════════════════════════════════════════════════
 # (a) population と sample
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Population and sample", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-0.4, 10.4)
-ax1.set_ylim(-1.5, 7.9)
+ax1.set_ylim(0.9, 7.4)
 ax1.axis("off")
 
 rng = np.random.default_rng(7)
@@ -64,24 +62,21 @@ ax1.scatter(_pts[_inside, 0], _pts[_inside, 1], s=52, color=ACCENT, zorder=3,
             marker="o", edgecolors="white", linewidths=0.8)
 
 _top = max(_inside, key=lambda i: (_pts[i][1], _pts[i][0]))
-ax1.annotate("sample: spread over the whole population",
+ax1.text(0.0, 6.12, "population", fontsize=10, color=GREY, ha="left",
+         va="bottom")
+ax1.annotate("sample",
              xy=(_pts[_top, 0], _pts[_top, 1] + 0.16),
-             xytext=(1.7, 6.95), fontsize=10, color=ACCENT, ha="left",
+             xytext=(_pts[_top, 0] + 1.2, 6.85), fontsize=10, color=ACCENT, ha="left",
              arrowprops=dict(arrowstyle="->", color=ACCENT, linewidth=1.1,
                              shrinkB=2))
 
-ax1.text(0.05, 0.62, "measure the sample", fontsize=9.5, color=WARM)
-ax1.annotate("", xy=(6.5, 0.55), xytext=(4.4, 0.55),
-             arrowprops=dict(arrowstyle="->", color=WARM, linewidth=1.5))
 
 
 # ══════════════════════════════════════════════════════════
 # (b) 外れ値の境目
 # ══════════════════════════════════════════════════════════
-ax2.set_title("The two outlier boundaries", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax2.set_xlim(-0.6, 13.6)
-ax2.set_ylim(-1.5, 4.2)
+ax2.set_ylim(0.45, 3.55)
 ax2.axis("off")
 
 Q1, Q3 = 4.6, 7.0
@@ -118,8 +113,6 @@ ax2.text((Q3 + HI) / 2, 3.22, "$1.5\\,IQR$", fontsize=9.5, color=WARM,
 ax2.plot([12.2], [1.6], marker="x", markersize=9, markeredgewidth=2.0,
          color=INK, zorder=4)
 ax2.text(12.2, 1.95, "outlier", fontsize=9.5, color=INK, ha="center")
-ax2.text(12.2, 0.40, "marked with\na cross", fontsize=9.0, color=GREY,
-         ha="center", va="top")
 
 
 for _fig, _name in ((fig1, "aasl-4-1-idea-a.svg"), (fig2, "aasl-4-1-idea-b.svg")):

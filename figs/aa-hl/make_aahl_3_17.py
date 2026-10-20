@@ -54,9 +54,7 @@ PLANE = [CORNER, CORNER + 3.0 * E1, CORNER + 3.0 * E1 + 2.4 * E2,
 # ══════════════════════════════════════════════════════════
 # (a) r = a + λb + μc
 # ══════════════════════════════════════════════════════════
-fig1, ax1 = plt.subplots(figsize=(5.8, 3.8))
-ax1.set_title("$r = a + \\lambda b + \\mu c$: one point, two directions",
-              fontsize=10.5, color=INK, loc="left", pad=10)
+fig1, ax1 = plt.subplots(figsize=(5.8, 3.0))
 ax1.add_patch(Polygon(PLANE, closed=True, facecolor=FILL, edgecolor=GREY,
                       linewidth=1.1, zorder=1))
 
@@ -83,19 +81,15 @@ ax1.text(A[0] + 0.9 * E1[0], A[1] + 0.9 * E1[1] - 0.42, "$\\lambda b$",
          fontsize=11, color=WARM)
 ax1.text(A[0] + 0.55 * E2[0] - 0.55, A[1] + 0.55 * E2[1] + 0.08, "$\\mu c$",
          fontsize=11, color=GREEN)
-ax1.text(0.0, -1.75, "$b$ and $c$ must lie in the plane and must not be"
-         " parallel to each other", fontsize=9, color=GREY)
-ax1.set_xlim(-0.7, 12.0)
-ax1.set_ylim(-2.3, 4.6)
+ax1.set_xlim(0.8, 12.8)
+ax1.set_ylim(-1.4, 4.6)
 ax1.set_aspect("equal")
 ax1.axis("off")
 
 # ══════════════════════════════════════════════════════════
 # (b) 法線 n
 # ══════════════════════════════════════════════════════════
-fig2, ax2 = plt.subplots(figsize=(5.8, 3.6))
-ax2.set_title("every point of the plane has the same scalar product"
-              " with $n$", fontsize=10.5, color=INK, loc="left", pad=10)
+fig2, ax2 = plt.subplots(figsize=(5.8, 3.0))
 ax2.add_patch(Polygon(PLANE, closed=True, facecolor=FILL, edgecolor=GREY,
                       linewidth=1.1, zorder=1))
 A2 = CORNER + 1.1 * E1 + 1.0 * E2
@@ -116,10 +110,8 @@ ax2.plot([A2[0] + 0.30 * _d[0], A2[0] + 0.30 * _d[0] + 0.30 * _n[0],
           A2[0] + 0.30 * _n[0]],
          [A2[1] + 0.30 * _d[1], A2[1] + 0.30 * _d[1] + 0.30 * _n[1],
           A2[1] + 0.30 * _n[1]], color=INK, linewidth=1.0, zorder=4)
-ax2.text(0.0, -1.75, "$r - a$ lies in the plane, so $(r - a) \\cdot n = 0$,"
-         " that is $r \\cdot n = a \\cdot n$", fontsize=9, color=GREY)
-ax2.set_xlim(-0.7, 12.0)
-ax2.set_ylim(-2.3, 5.2)
+ax2.set_xlim(0.8, 12.8)
+ax2.set_ylim(-1.4, 4.6)
 ax2.set_aspect("equal")
 ax2.axis("off")
 

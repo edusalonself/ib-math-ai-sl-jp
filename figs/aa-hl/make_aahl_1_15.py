@@ -40,8 +40,6 @@ fig2, ax2 = plt.subplots(figsize=(5.8, 4.2))
 # ══════════════════════════════════════════════════════════
 # (a) 帰納法：はしご
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Induction: reach the first rung, then always the next one",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 ax1.set_xlim(0.0, 1.0)
 ax1.set_ylim(0.0, 1.0)
 ax1.axis("off")
@@ -57,8 +55,6 @@ ax1.plot([0.09, 0.86], [0.30, 0.30], color="#e9eef4", linewidth=2.0, zorder=1)
 
 ax1.annotate("", xy=(0.14, 0.36), xytext=(0.14, 0.58),
              arrowprops=dict(arrowstyle="->", color=ACCENT, linewidth=1.8))
-ax1.text(0.14, 0.62, "base case:\nthe statement is\ntrue for $n=1$",
-         ha="center", va="bottom", fontsize=9.5, color=ACCENT)
 
 for _i in range(3):
     _a = RUNGS[_i][0] + 0.055
@@ -66,17 +62,10 @@ for _i in range(3):
     ax1.annotate("", xy=(_b, 0.40), xytext=(_a, 0.40),
                  arrowprops=dict(arrowstyle="->", color=WARM, linewidth=1.5,
                                  connectionstyle="arc3,rad=-0.45"))
-ax1.text(0.66, 0.72, "inductive step:\nif it is true for $n=k$,\n"
-                     "it is true for $n=k+1$",
-         ha="center", va="bottom", fontsize=9.5, color=WARM)
-ax1.text(0.50, 0.08, "both parts are needed: neither one alone is enough",
-         ha="center", va="center", fontsize=9.5, color=INK)
 
 # ══════════════════════════════════════════════════════════
 # (b) 背理法の流れ
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Proof by contradiction", fontsize=10.5, color=INK,
-              loc="left", pad=10)
 ax2.set_xlim(0.0, 1.0)
 ax2.set_ylim(0.0, 1.0)
 ax2.axis("off")

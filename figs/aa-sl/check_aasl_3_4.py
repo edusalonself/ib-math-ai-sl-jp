@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "03-geometry")
 QMD = os.path.join(BASE, "aasl-3-4.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_3_4.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 FIGSTR = "\n".join(t for t in re.findall(r'r?"((?:[^"\\]|\\.)*)"', _NODOC)
@@ -47,6 +66,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 def arc(r, t):
     return r * t
@@ -213,14 +235,9 @@ for _lk, _m in [("3\\pi}{4}", "例題1(a)"), ("150°", "例題1(b)"),
 # ══════════════════════════════════════════════════════════
 # 7. 公式集とシラバス
 # ══════════════════════════════════════════════════════════
-in_text("公式集の **3.4** の欄に `Length of an arc` として印刷されています。", "弧の欄")
-in_text("> $l = r\\theta$, where $r$ is the radius, $\\theta$ is the angle measured "
-        "in radians", "弧を逐語で")
-in_text("公式集の **3.4** の欄に `Area of a sector` として印刷されています。", "扇形の欄")
-in_text("> $A = \\dfrac{1}{2}r^2\\theta$, where $r$ is the radius, $\\theta$ is the "
-        "angle measured in radians", "扇形を逐語で")
-# ★ 答案の書き方を縛る一文だけを引く
-chk(TEXT.count("\n> ") == 2, f"引用は公式集の 2 つだけ: {TEXT.count(chr(10) + '> ')}")
+in_text("弧の長さの式 $l = r\\theta$ は、公式集の **3.4** の欄にあります。$r$ は半径、$\\theta$ はラジアンで測った角です。", "弧の欄")
+in_text("扇形の面積の式 $A = \\dfrac{1}{2}r^2\\theta$ も、公式集の **3.4** の欄にあります。", "扇形の欄")
+chk(TEXT.count("\n> ") == 0, "公式集の英文は引用しない")
 chk(TEXT.count("::: {.callout-important}") == 2, "公式集の callout は 2 つ")
 not_in_text("The circle: radian measure of angles", "シラバス本文は引かない")
 not_in_text("Radian measure may be expressed as exact multiples", "Guidance は引かない")
@@ -261,7 +278,7 @@ not_in_text("solve(", "CAS 前提の solve( は書いていない")
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -271,9 +288,8 @@ chk(len(re.findall(r"^::: \{#exm-aasl34-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 chk(TEXT.count("::: {.callout-warning}") == 7, "Common errors 6 + 本文の注意 1 で 7")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
@@ -349,9 +365,9 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("One radian", "図(a) の題")
+not_in_fig("One radian", "図(a) の題")
 in_fig("arc of length $r$", "図(a) のラベル")
-in_fig("Sector and segment", "図(b) の題")
+not_in_fig("Sector and segment", "図(b) の題")
 in_fig("arc $l = r\\\\theta$", "図(b) の弧")
 in_fig("sector $A = \\\\frac{1}{2}r^{2}\\\\theta$", "図(b) の面積")
 in_fig("segment", "図(b) の弓形")
@@ -362,11 +378,16 @@ chk(set(re.findall(r"\d+", FIGSTR)) <= {"1", "2"},
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-4.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-3-3.qmd") < DRAFT.index("aasl-3-4.qmd"), "並びが 3.3 → 3.4")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+DRAFT = None
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/03-geometry/aasl-3-4.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-3-3.qmd") < DRAFT.index("aasl-3-4.qmd"), "並びが 3.3 → 3.4")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("（注）_quarto.yml がないので、登録のチェックは飛ばした")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-4.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -499,7 +520,7 @@ not_in_text("$3$ くらいの数が出たら、かけ算の向きが逆です。
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -509,7 +530,7 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 6. area of a segment（弓形の面積） {#segment}', "見出しの英語: 6. area of a segment（弓形の面積")
+in_text('### 6. Area of a segment（弓形の面積） {#segment}', "見出しの英語: 6. Area of a segment（弓形の面積）")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義や説明の文を、図から本文へ移した
@@ -545,12 +566,12 @@ in_text("扇形の $2$ 本の半径の端を結ぶと、**chord**（弦）がで
 # ══════════════════════════════════════════════════════════
 # 2026-09-22（2）：見出しの英語と、第 7 節の削除
 # ══════════════════════════════════════════════════════════
-in_text("### 1. radian（ラジアンとは） {#radian}", "見出しの英語: 1. radian")
-in_text("### 2. converting between degrees and radians（度とラジアンの変換）"
-        " {#convert}", "見出しの英語: 2. converting between")
-in_text("### 4. arc length（弧の長さ） {#arc}", "見出しの英語: 4. arc length")
-in_text("### 5. area of a sector（扇形の面積） {#sector}",
-        "見出しの英語: 5. area of a sector")
+in_text("### 1. Radian measure（ラジアンとは） {#radian}", "見出しの英語: 1. Radian measure（ラジアンとは）")
+in_text("### 2. Converting between degrees and radians（度とラジアンの変換）"
+        " {#convert}", "見出しの英語: 2. Converting between")
+in_text("### 4. Arc length（弧の長さ） {#arc}", "見出しの英語: 4. Arc length（弧の長さ）")
+in_text("### 5. Area of a sector（扇形の面積） {#sector}",
+        "見出しの英語: 5. Area of a sector")
 
 # 第 7 節は無い。節は 1..6
 not_in_text("### 7. 試験での約束", "第 7 節の見出しは無い")
@@ -579,6 +600,18 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -39,8 +39,6 @@ fig2, ax2 = plt.subplots(figsize=(5.4, 3.9))
 # ══════════════════════════════════════════════════════════
 # (a) rise / run
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Gradient $=$ rise $\\div$ run", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-0.6, 6.4)
 ax1.set_ylim(-0.9, 5.4)
 ax1.axis("off")
@@ -78,8 +76,6 @@ ax1.text(0.55, 4.55, "$m = \\dfrac{y_{2}-y_{1}}{x_{2}-x_{1}}$",
 # ══════════════════════════════════════════════════════════
 # (b) 平行と垂直
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Parallel and perpendicular", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax2.set_xlim(-2.5, 3.7)
 ax2.set_ylim(-2.3, 2.8)
 ax2.set_aspect("equal")

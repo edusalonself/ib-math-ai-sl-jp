@@ -50,10 +50,8 @@ fig3, ax3 = plt.subplots(figsize=(4.9, 4.6))
 # ══════════════════════════════════════════════════════════
 # (a) 直方体の対角線
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Pythagoras twice", fontsize=11, color=INK, loc="left",
-              pad=10)
 ax1.set_xlim(-0.9, 6.6)
-ax1.set_ylim(-0.75, 5.2)
+ax1.set_ylim(-0.75, 4.7)
 ax1.set_aspect("equal")
 ax1.axis("off")
 
@@ -95,10 +93,8 @@ ax1.text(2.40, 2.76, "$\\sqrt{a^{2}+b^{2}+c^{2}}$", fontsize=11,
 # ══════════════════════════════════════════════════════════
 # (b) 直線と平面のなす角
 # ══════════════════════════════════════════════════════════
-ax2.set_title("A line and a plane", fontsize=11, color=INK, loc="left",
-              pad=10)
-ax2.set_xlim(-0.9, 6.6)
-ax2.set_ylim(-0.75, 5.2)
+ax2.set_xlim(-0.3, 6.6)
+ax2.set_ylim(-0.3, 4.2)
 ax2.set_aspect("equal")
 ax2.axis("off")
 
@@ -135,15 +131,13 @@ ax2.text(FOOT[0] + 1.22, FOOT[1] + 0.34, "$\\theta$", fontsize=12,
 
 ax2.plot([FOOT[0]], [FOOT[1]], marker="o", markersize=5, color=INK, zorder=3)
 ax2.text(1.85, 2.75, "the line", fontsize=10, color=ACCENT)
-ax2.text(2.60, 0.32, "its shadow on the plane", fontsize=10, color=WARM)
+ax2.text(2.60, 0.32, "shadow", fontsize=10, color=WARM)
 
 # ══════════════════════════════════════════════════════════
 # (c) 円錐の母線
 # ══════════════════════════════════════════════════════════
-ax3.set_title("Slant height of a cone", fontsize=11, color=INK, loc="left",
-              pad=10)
 ax3.set_xlim(-3.4, 3.4)
-ax3.set_ylim(-1.75, 4.6)
+ax3.set_ylim(-1.75, 4.1)
 ax3.set_aspect("equal")
 ax3.axis("off")
 

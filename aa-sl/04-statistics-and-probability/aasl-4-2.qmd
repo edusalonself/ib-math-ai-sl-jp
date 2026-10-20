@@ -7,16 +7,16 @@ sidebar: aa-sl
 ::: {.callout-note}
 ## What you should be able to do
 - **frequency distribution**（度数分布表）を読み、**class interval**（階級）の書き方が分かる。
-- **histogram**（ヒストグラム）と棒グラフ（bar chart）のちがいを言え、**なぜ棒をくっつけるのか**を説明できる。
+- **histogram**（ヒストグラム）と **bar chart**（棒グラフ）のちがいを言え、**なぜ棒をくっつけるのか**を説明できる。
 - **cumulative frequency**（累積度数）の表をつくり、グラフから **median**（中央値）・**quartile**（四分位数）・**percentile**（百分位数）を読める。
 - **range**（範囲）と **interquartile range**（四分位範囲）を求められる。
-- **box and whisker diagram**（箱ひげ図）をかき、外れ値を $\times$ で示せる。
-- $2$ つの箱ひげ図を比べ、**左右対称かどうか**から正規分布らしさを述べられる。
+- **box and whisker diagram**（箱ひげ図）をかき、**outlier**（外れ値）を $\times$ で示せる。
+- $2$ つの箱ひげ図を比べ、**左右対称かどうか**から **normal distribution**（正規分布）らしさを述べられる。
 :::
 
 ## The idea
 
-### 1. frequency distribution（度数分布表） {#table}
+### 1. Frequency distribution（度数分布表） {#table}
 
 **frequency distribution**（度数分布表）は、値ごと、または階級ごとに個数を数えた表です。
 
@@ -38,19 +38,17 @@ $$
 
 **上の端は入りません。** $10 \le t < 20$ に $20$ は入りません。$20$ は次の階級です。
 
-### 2. histogram {#histogram}
+### 2. Histogram（ヒストグラム） {#histogram}
 
 **histogram**（ヒストグラム）は、階級ごとの度数を棒の**高さ**で表した図です。
 
 - **棒と棒のあいだをあけません。** 階級がすき間なくつながっているからです。
 - 横軸は**連続な量**で、目盛りは階級の境目に置きます。
-- **棒グラフ（bar chart）とは別物です。** 棒グラフの横軸は「種類」で、棒ははなします。
+- **bar chart（棒グラフ）とは別物です。** 棒グラフの横軸は「種類」で、棒ははなします。
 
-シラバスは、SL のヒストグラムを**階級の幅がすべて同じもの**に限っています。幅が違うときに縦軸を度数密度に直す話も、次のとおり出ません。
+SL のヒストグラムは、**階級の幅がすべて同じもの**だけです。幅が違うときに縦軸を度数密度に直す話も、出ません。
 
-> Not required: Frequency density histograms.
-
-### 3. cumulative frequency（累積度数） {#cf}
+### 3. Cumulative frequency（累積度数） {#cf}
 
 **cumulative frequency**（累積度数）は、**その値まで（その階級の上の端まで）に何個あるか**です。上から順に足していきます。
 
@@ -72,9 +70,11 @@ $$
 グラフをかくときも、点を打つのは**階級の上の端**です。$(20, 15)$ に打ちます。$(10, 15)$ でも $(15, 15)$ でもありません。
 :::
 
-### 4. cumulative frequency graph の読み方 {#cfgraph}
+### 4. Reading a cumulative frequency graph（累積度数グラフの読み方） {#cfgraph}
 
-![Reading a cumulative frequency graph](img/aasl-4-2-idea-a.svg){#fig-aasl42-idea-a width=100%}
+累積度数をグラフにすると、median や四分位数をグラフから読み取れます。
+
+![累積度数のグラフの読み方です。](img/aasl-4-2-idea-a.svg){#fig-aasl42-idea-a width=80%}
 
 点を折れ線や滑らかな曲線でつなぐと、**cumulative frequency graph**（累積度数グラフ）になります。
 
@@ -91,9 +91,110 @@ $$
 
 **この表は、累積度数グラフと、階級にまとめられた表から読むときのものです。**
 
+**グラフがなく、階級にまとめた表だけのときは、階級の中で値が等間隔に並んでいると考えて計算します。** これを **linear interpolation**（線形補間）といいます。位置 $k$ がある階級について、その階級の手前までの累積度数を $c$、その階級の度数を $f$ とすると、値の推定は
+
+$$
+(\text{階級の下端}) + \frac{k - c}{f} \times (\text{階級の幅})
+$$ {#eq-aasl42-interp}
+
+です。グラフの上で $2$ つの点を直線で結んで読むのと同じことです。階級の中の本当の値は分からないので、答えは**推定値**になります。
+
 **値が $1$ つずつ分かっているときは別です。** 離散データの度数分布表や、並べたデータがこれにあたります。[SL 4.1](aasl-4-1.qmd#outlier) と同じで、**小さい順に並べて数えます**。$n$ が奇数なら median は $\dfrac{n+1}{2}$ 番目、偶数なら $\dfrac{n}{2}$ 番目と $\dfrac{n}{2}+1$ 番目の平均です。$Q_1$ と $Q_3$ は、median で下半分と上半分に分け（$n$ が奇数なら median は除く）、それぞれの中央値です。
 
-### 5. range と interquartile range {#iqr}
+::: {#exm-aasl42-percentile}
+[The heights, in centimetres, of $50$ plants are grouped in this table.]{.q-en}
+
+| height $h$ | $10 \le h < 20$ | $20 \le h < 30$ | $30 \le h < 40$ | $40 \le h < 50$ | $50 \le h < 60$ |
+|:--|--:|--:|--:|--:|--:|
+| frequency | $3$ | $9$ | $18$ | $15$ | $5$ |
+
+**(a)** [Write down the number of plants with a height less than $40$ cm.]{.q-en}
+
+**(b)** [Write down the cumulative frequency at the end of each class.]{.q-en}
+
+**(c)** [Estimate the $90$th percentile.]{.q-en}
+
+**(d)** [Explain why the answer to part (c) is an estimate rather than an exact value.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$50$ 本の植物の高さ（cm）が、次の表にまとめられています。
+
+| 高さ $h$ | $10 \le h < 20$ | $20 \le h < 30$ | $30 \le h < 40$ | $40 \le h < 50$ | $50 \le h < 60$ |
+|:--|--:|--:|--:|--:|--:|
+| 度数 | $3$ | $9$ | $18$ | $15$ | $5$ |
+
+**(a)** 高さが $40$ cm 未満の植物の本数を書きなさい。
+
+**(b)** 各階級の終わりにおける累積度数を書きなさい。
+
+**(c)** $90$ パーセンタイルを推定しなさい。
+
+**(d)** (c) の答えが正確な値ではなく推定値である理由を説明しなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** 「$40$ cm 未満」は、$30 \le h < 40$ までの累積度数です。
+
+$$
+3 + 9 + 18 = 30
+$$
+
+**(b)**
+
+$$
+3, \quad 12, \quad 30, \quad 45, \quad 50
+$$
+
+**(c)** $90$ パーセンタイルの位置は $\dfrac{90}{100} \times 50 = 45$ です（@tbl-aasl42-read）。累積度数がちょうど $45$ になるのは $h = 50$ のところです。
+
+$$
+90\text{th percentile} = 50 \ \text{cm}
+$$
+
+**(d)** `Explain why` なので、英語で理由を書きます。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The table records only how many plants fall in each class, not the individual heights, so the heights within a class are no longer known.*
+
+*Any value read from the table assumes that the values are evenly spread across each class, which need not be true.*
+
+*The answer is therefore an estimate, and it would change if the original heights were used.*
+:::
+
+（表は各階級に何本入るかだけを記録していて、$1$ 本ずつの高さは記録していないので、階級の中の高さはもう分からない。表から読んだ値は、階級の中で値が等間隔に並んでいると仮定しており、それが成り立つとはかぎらない。よって答えは推定値であり、もとの高さを使えば変わりうる、という意味です。）
+
+**検算（(b) について）。** **最後を見ます。** $3 + 9 + 18 + 15 + 5 = 50$ ✓
+
+**検算（(c) について、位置）。** **$50$ の $90\%$ で見ます。** 上から $10\%$、つまり $5$ 本が $90$ パーセンタイルより上にあるはずです。$50 \le h < 60$ の度数はちょうど $5$ です ✓
+
+**検算（(c) について、階級）。** **median と比べます。** median の位置は $25$ で、$30 \le h < 40$ の中に入ります。$90$ パーセンタイルは median より大きくなければなりません。$50 > 40$ ✓
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$3 + 9 + 18 = 30$$
+
+**(b)**
+$$3, \ 12, \ 30, \ 45, \ 50$$
+
+**(c)** position $= 0.9 \times 50 = 45$
+$$90\text{th percentile} = 50 \text{ cm}$$
+
+**(d)** *the table gives only the class of each plant, so the values inside a class are unknown and are assumed to be evenly spread*
+:::
+:::
+:::
+
+### 5. Range and interquartile range（範囲と四分位範囲） {#iqr}
+
+データの散らばりの大きさを、$1$ つの数で表します。
 
 - **range**（範囲）$= (\text{最大値}) - (\text{最小値})$。**$2$ つの値だけで決まります。**
 - **interquartile range**（四分位範囲）$= Q_3 - Q_1$。**まん中の半分がどれだけ広がっているか**です。
@@ -111,9 +212,127 @@ $\mathrm{IQR} = Q_3 - Q_1$ は、公式集の **4.2** の欄にあります。�
 
 **外れ値に強いのは $\mathrm{IQR}$ のほうです。** range は最大値と最小値だけで決まるので、外れ値が $1$ つあるだけで大きく変わります（[SL 4.1](aasl-4-1.qmd#outlier)）。
 
-### 6. box and whisker diagram {#box}
+::: {#exm-aasl42-grouped}
+[The table shows the times, in minutes, taken by $40$ people to complete a task.]{.q-en}
 
-![A box and whisker diagram, with an outlier](img/aasl-4-2-idea-b.svg){#fig-aasl42-idea-b width=100%}
+| time $t$ | $0 \le t < 10$ | $10 \le t < 20$ | $20 \le t < 30$ | $30 \le t < 40$ | $40 \le t < 50$ |
+|:--|--:|--:|--:|--:|--:|
+| frequency | $5$ | $10$ | $15$ | $8$ | $2$ |
+
+**(a)** [Write down the cumulative frequency at the end of each class.]{.q-en}
+
+**(b)** [Find $Q_1$ and $Q_3$, and hence the interquartile range.]{.q-en}
+
+**(c)** [Estimate the median, giving your answer correct to three significant figures.]{.q-en}
+
+**(d)** [Explain why the median is estimated at $20 + \dfrac{5}{15} \times 10$ rather than at the middle of its class.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+表は、$40$ 人がある作業を終えるのにかかった時間（分）を示しています。
+
+| 時間 $t$ | $0 \le t < 10$ | $10 \le t < 20$ | $20 \le t < 30$ | $30 \le t < 40$ | $40 \le t < 50$ |
+|:--|--:|--:|--:|--:|--:|
+| 度数 | $5$ | $10$ | $15$ | $8$ | $2$ |
+
+**(a)** 各階級の終わりにおける累積度数を書きなさい。
+
+**(b)** $Q_1$ と $Q_3$ を求め、それをもとに四分位範囲を求めなさい。
+
+**(c)** 中央値を推定し、有効数字 $3$ 桁で答えなさい。
+
+**(d)** 中央値を階級のまん中ではなく $20 + \dfrac{5}{15} \times 10$ で推定する理由を説明しなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** 上から足していきます（[第 3 節](#cf)）。
+
+$$
+5, \quad 15, \quad 30, \quad 38, \quad 40
+$$
+
+**(b)** 階級にまとめられた表なので、位置は $\dfrac{n}{4}$ と $\dfrac{3n}{4}$ です（@tbl-aasl42-read）。$n = 40$ なので $10$ と $30$ です。
+
+**グラフがないので、階級の中で直線とみなして計算します。** 位置 $k$ がある階級について、その階級の手前までの累積度数を $c$、その階級の度数を $f$ とすると（@eq-aasl42-interp）
+
+$$
+(\text{階級の下端}) + \frac{k - c}{f} \times (\text{階級の幅})
+$$
+
+です。これは、**その階級の中で値が等間隔に並んでいると考える**ということです。だから答えは**推定値**になります。
+
+$10$ 番目は $10 \le t < 20$ の中にあります。この階級の手前までに $5$ 個あるので、階級の中では $5$ 番目です。
+
+$$
+Q_1 = 10 + \frac{5}{10} \times 10 = 15
+$$
+
+$30$ 番目は、累積度数がちょうど $30$ になるところです。それは $t = 30$ です。
+
+$$
+Q_3 = 30
+$$
+
+$$
+\mathrm{IQR} = 30 - 15 = 15
+$$
+
+**(c)** 位置は $\dfrac{n}{2} = 20$ です。$20$ 番目は $20 \le t < 30$ の中にあり、手前までに $15$ 個あるので、階級の中では $5$ 番目です（@eq-aasl42-interp）。
+
+$$
+\text{median} = 20 + \frac{5}{15} \times 10 = 20 + \frac{10}{3} = \frac{70}{3} = 23.3 \ (3 \text{ s.f.})
+$$
+
+**(d)** `Explain why` なので、英語で理由を書きます。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The position of the median is $\dfrac{40}{2} = 20$.*
+
+*Fifteen values lie below the class $20 \le t < 30$, so the median lies $5$ of the $15$ values into that class, one third of the way through it, not halfway.*
+
+*The middle of the class would be correct only if the median were halfway through it.*
+
+*Assuming the values are evenly spread across the class gives $20 + \dfrac{5}{15} \times 10$.*
+:::
+
+（中央値の位置は $\dfrac{40}{2} = 20$ である。階級 $20 \le t < 30$ より下に $15$ 個あるので、中央値はその階級の $15$ 個のうち $5$ 番目、つまり階級の $3$ 分の $1$ のところにあり、半分のところではない。階級のまん中を使ってよいのは、中央値がちょうど半分のところにあるときだけである。階級の中で値が等間隔に並んでいると考えると $20 + \dfrac{5}{15} \times 10$ になる、という意味です。）
+
+**検算（(a) について）。** **最後を見ます。** $5 + 10 + 15 + 8 + 2 = 40$ ✓
+
+**検算（(b) について）。** **階級で見当をつけます。** $Q_1 = 15$ は $10 \le t < 20$ の中、$Q_3 = 30$ は $20 \le t < 30$ の上端です ✓ どちらも、累積度数が $10$ と $30$ をまたぐ階級と合っています。
+
+**検算（(c) について）。** **median が $Q_1$ と $Q_3$ のあいだにあるか見ます。** $15 < 23.3 < 30$ ✓ 外れていたら、位置か階級を取りちがえています。
+
+**検算（(c) について、階級のまん中と比べます）。** 階級のまん中なら $25$ です。$23.3$ はそれより小さく、$20$ 番目が階級の前のほうにあることと合っています ✓ どちらでも同じ値になるのは、ちょうど半分のときだけです。
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$5, \ 15, \ 30, \ 38, \ 40$$
+
+**(b)** positions $\dfrac{n}{4} = 10$ and $\dfrac{3n}{4} = 30$
+$$Q_1 = 10 + \frac{5}{10} \times 10 = 15, \qquad Q_3 = 30$$
+$$\mathrm{IQR} = 15$$
+
+**(c)** position $\dfrac{n}{2} = 20$
+$$\text{median} = 20 + \frac{5}{15} \times 10 = 23.3 \ (3 \text{ s.f.})$$
+
+**(d)** *position $\dfrac{n}{2} = 20$ and $15$ values lie below the class, so the median is $5$ of the $15$ values into the class, one third of the way, not halfway*
+:::
+:::
+:::
+
+### 6. Box and whisker diagram（箱ひげ図） {#box}
+
+データの分布を、$5$ つの数を使って $1$ つの図にまとめます。
+
+![外れ値のある箱ひげ図です。](img/aasl-4-2-idea-b.svg){#fig-aasl42-idea-b width=100%}
 
 **box and whisker diagram**（箱ひげ図）は、$5$ つの数でかきます。外れ値がないときは、次の $5$ つです。
 
@@ -123,67 +342,7 @@ $$
 
 箱の左右が $Q_1$ と $Q_3$、箱の中の線が median、両側のひげが最小値と最大値までのびます（@fig-aasl42-idea-b）。
 
-**外れ値があるときは、別あつかいです。** シラバスは、答案の書き方をこう決めています。
-
-> Outliers should be indicated with a cross.
-
-つまり、**外れ値は $\times$ で打ちます**。そして、**ひげは外れ値まではのばしません**。ひげの先は、**外れ値でないもののうち、いちばん外側の値**です。$5$ つの数のうち両はしの $2$ つが、最小値・最大値からこの値に変わります。
-
-### 7. 左右対称かどうかを見る {#symmetry}
-
-箱ひげ図から、**分布が正規分布らしいかどうか**を述べることができます。見るのは対称性です。
-
-1. **median が箱のまん中にあるか。** $\text{median} - Q_1$ と $Q_3 - \text{median}$ を比べます。
-2. **$2$ 本のひげの長さが同じくらいか。**
-
-$2$ つとも「はい」なら、**may be normally distributed** と書けます。どちらかが崩れていれば、**対称ではないので、正規分布とは考えにくい**と書きます。
-
-**「正規分布である」と断定しないでください。** 箱ひげ図が示すのは対称性だけです。答案でも `may be` を使います。
-
-::: {.callout-tip collapse="true"}
-## Paper 2 では、$5$ つの数を電卓で出せます
-`ctrl + doc → Add Lists & Spreadsheet` にデータを入れ、
-
-```
-menu → Statistics → Stat Calculations → One-Variable Statistics
-```
-
-の `MedianX`・`Q1X`・`Q3X` を読みます。`ctrl + doc → Add Data & Statistics` で列を横軸に置けば、散らばりを図にできます。
-
-**答案に写すときは、外れ値を自分で $\times$ にし、ひげをその手前で止めてください。** 画面の見た目をそのまま写さないことです。
-
-**手で出した四分位数と、電卓の値がちがうことがあります**（[SL 4.1](aasl-4-1.qmd#outlier)）。
-
-**Paper 1 では使えません。** このページの例題と演習は、すべて手で解ける数にしてあります。
-:::
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-**なぜ、累積度数の点を階級の上の端に打つのでしょうか。** 階級にまとめた表では、累積度数が「**その階級の上の端より小さいものの個数**」だからです。$10 \le t < 20$ の階級を足し終えた時点で分かっているのは、「$t < 20$ であるものが $15$ 個」ということだけです。$t < 15$ が何個かは、表からは分かりません。だから、$15$ という値を保証できるのは $t = 20$ のところだけです。
-
-下端に打つと、**階級 $1$ つぶん左にずれます**。すべての読み取りが階級の幅だけ小さく出ます。
-
-**なぜ、$\dfrac{n}{2}$ で読むのでしょうか。** 累積度数グラフは、**個々の値ではなく、なめらかな増え方**を表しています。$n$ 個の値が連続的に並んでいると考えるので、まん中は $\dfrac{n}{2}$ 番目です。
-
-$\dfrac{n+1}{2}$ を使うのは、**値を $1$ つずつ並べて数えるとき**です。データを小さい順に書き出して中央値を探すなら $\dfrac{n+1}{2}$ 番目、グラフから読むなら $\dfrac{n}{2}$ です。$n$ が大きいほど、$2$ つの差は問題になりません。
-
-**なぜ、階級の中で直線とみなしてよいのでしょうか**（@eq-aasl42-interp）**。** よいわけではありません。**それしか情報がないから**です。度数分布表に直した時点で、階級の中のどこに値があったかは失われています。「等間隔に並んでいる」と考えるのは、いちばん公平な当て方であって、正しい値ではありません。
-
-だから、グループ化された表から出した median は、必ず **estimate**（推定値）です。もとのデータから直接求めた median とは、ふつう一致しません。
-
-**なぜ、ひげを外れ値までのばさないのでしょうか。** のばすと、**外れ値が図から消えます**。ひげの先が $90$ になってしまえば、「$90$ は $1$ つだけ遠く離れた値だ」という情報が図から読み取れません。$\times$ で別に打てば、「本体はここまで、$1$ つだけ外にある」と一目で分かります。
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-
-**例題も演習も、すべて電卓なしで解けます。** Paper 1 のつもりで解いてください。
-:::
+**外れ値があるときは、別あつかいです。** 答案では、**外れ値は $\times$ で打ちます**。そして、**ひげは外れ値まではのばしません**。ひげの先は、**外れ値でないもののうち、いちばん外側の値**です。$5$ つの数のうち両はしの $2$ つが、最小値・最大値からこの値に変わります。
 
 ::: {#exm-aasl42-discrete}
 [The table shows the number of pets owned by each of $40$ students.]{.q-en}
@@ -219,7 +378,8 @@ $\dfrac{n+1}{2}$ を使うのは、**値を $1$ つずつ並べて数えると�
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 値が $1$ つずつ分かっている表なので、**小さい順に並べて数える**方法を使います（[SL 4.1](aasl-4-1.qmd#outlier)）。@tbl-aasl42-read の $\dfrac{n}{2}$ は、累積度数グラフや階級にまとめた表から読むときのものです。まず累積度数を出します（[第 3 節](#cf)）。
 
@@ -285,113 +445,34 @@ $$4 > 3.5$$
 *the value $4$ is plotted as a cross*
 :::
 :::
-
-::: {#exm-aasl42-grouped}
-[The table shows the times, in minutes, taken by $40$ people to complete a task.]{.q-en}
-
-| time $t$ | $0 \le t < 10$ | $10 \le t < 20$ | $20 \le t < 30$ | $30 \le t < 40$ | $40 \le t < 50$ |
-|:--|--:|--:|--:|--:|--:|
-| frequency | $5$ | $10$ | $15$ | $8$ | $2$ |
-
-**(a)** [Write down the cumulative frequency at the end of each class.]{.q-en}
-
-**(b)** [Find $Q_1$ and $Q_3$, and hence the interquartile range.]{.q-en}
-
-**(c)** [Estimate the median, giving your answer correct to three significant figures.]{.q-en}
-
-**(d)** [Explain why the median is estimated at $20 + \dfrac{5}{15} \times 10$ rather than at the middle of its class.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-表は、$40$ 人がある作業を終えるのにかかった時間（分）を示しています。
-
-| 時間 $t$ | $0 \le t < 10$ | $10 \le t < 20$ | $20 \le t < 30$ | $30 \le t < 40$ | $40 \le t < 50$ |
-|:--|--:|--:|--:|--:|--:|
-| 度数 | $5$ | $10$ | $15$ | $8$ | $2$ |
-
-**(a)** 各階級の終わりにおける累積度数を書きなさい。
-
-**(b)** $Q_1$ と $Q_3$ を求め、それをもとに四分位範囲を求めなさい。
-
-**(c)** 中央値を推定し、有効数字 $3$ 桁で答えなさい。
-
-**(d)** 中央値を階級のまん中ではなく $20 + \dfrac{5}{15} \times 10$ で推定する理由を説明しなさい。
-
-</details>
-
----
-
-**(a)** 上から足していきます（[第 3 節](#cf)）。
-
-$$
-5, \quad 15, \quad 30, \quad 38, \quad 40
-$$
-
-**(b)** 階級にまとめられた表なので、位置は $\dfrac{n}{4}$ と $\dfrac{3n}{4}$ です（@tbl-aasl42-read）。$n = 40$ なので $10$ と $30$ です。
-
-**グラフがないので、階級の中で直線とみなして計算します。** 位置 $k$ がある階級について、その階級の手前までの累積度数を $c$、その階級の度数を $f$ とすると
-
-$$
-(\text{階級の下端}) + \frac{k - c}{f} \times (\text{階級の幅})
-$$ {#eq-aasl42-interp}
-
-です。これは、**その階級の中で値が等間隔に並んでいると考える**ということです。だから答えは**推定値**になります。
-
-$10$ 番目は $10 \le t < 20$ の中にあります。この階級の手前までに $5$ 個あるので、階級の中では $5$ 番目です。
-
-$$
-Q_1 = 10 + \frac{5}{10} \times 10 = 15
-$$
-
-$30$ 番目は、累積度数がちょうど $30$ になるところです。それは $t = 30$ です。
-
-$$
-Q_3 = 30
-$$
-
-$$
-\mathrm{IQR} = 30 - 15 = 15
-$$
-
-**(c)** 位置は $\dfrac{n}{2} = 20$ です。$20$ 番目は $20 \le t < 30$ の中にあり、手前までに $15$ 個あるので、階級の中では $5$ 番目です（@eq-aasl42-interp）。
-
-$$
-\text{median} = 20 + \frac{5}{15} \times 10 = 20 + \frac{10}{3} = \frac{70}{3} = 23.3 \ (3 \text{ s.f.})
-$$
-
-**(d)** `Explain why` なので、英語で理由を書きます。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*The position of the median is $\dfrac{40}{2} = 20$. Fifteen values lie below the class $20 \le t < 30$, so the median lies $5$ of the $15$ values into that class, one third of the way through it, not halfway. The middle of the class would be correct only if the median were halfway through it. Assuming the values are evenly spread across the class gives $20 + \dfrac{5}{15} \times 10$.*
 :::
 
-（中央値の位置は $\dfrac{40}{2} = 20$ である。階級 $20 \le t < 30$ より下に $15$ 個あるので、中央値はその階級の $15$ 個のうち $5$ 番目、つまり階級の $3$ 分の $1$ のところにあり、半分のところではない。階級のまん中を使ってよいのは、中央値がちょうど半分のところにあるときだけである。階級の中で値が等間隔に並んでいると考えると $20 + \dfrac{5}{15} \times 10$ になる、という意味です。）
+### 7. Symmetry of the distribution（左右対称かどうかを見る） {#symmetry}
 
-**検算（(a) について）。** **最後を見ます。** $5 + 10 + 15 + 8 + 2 = 40$ ✓
+箱ひげ図から、**分布が正規分布らしいかどうか**を述べることができます。見るのは対称性です。
 
-**検算（(b) について）。** **階級で見当をつけます。** $Q_1 = 15$ は $10 \le t < 20$ の中、$Q_3 = 30$ は $20 \le t < 30$ の上端です ✓ どちらも、累積度数が $10$ と $30$ をまたぐ階級と合っています。
+1. **median が箱のまん中にあるか。** $\text{median} - Q_1$ と $Q_3 - \text{median}$ を比べます。
+2. **$2$ 本のひげの長さが同じくらいか。**
 
-**検算（(c) について）。** **median が $Q_1$ と $Q_3$ のあいだにあるか見ます。** $15 < 23.3 < 30$ ✓ 外れていたら、位置か階級を取りちがえています。
+$2$ つとも「はい」なら、**may be normally distributed** と書けます。どちらかが崩れていれば、**対称ではないので、正規分布とは考えにくい**と書きます。
 
-**検算（(c) について、階級のまん中と比べます）。** 階級のまん中なら $25$ です。$23.3$ はそれより小さく、$20$ 番目が階級の前のほうにあることと合っています ✓ どちらでも同じ値になるのは、ちょうど半分のときだけです。
+**「正規分布である」と断定しないでください。** 箱ひげ図が示すのは対称性だけです。答案でも `may be` を使います。
 
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-**(a)**
-$$5, \ 15, \ 30, \ 38, \ 40$$
+::: {.callout-tip collapse="true"}
+## Paper 2 では、$5$ つの数を電卓で出せます
+`ctrl + doc → Add Lists & Spreadsheet` にデータを入れ、
 
-**(b)** positions $\dfrac{n}{4} = 10$ and $\dfrac{3n}{4} = 30$
-$$Q_1 = 10 + \frac{5}{10} \times 10 = 15, \qquad Q_3 = 30$$
-$$\mathrm{IQR} = 15$$
+```
+menu → Statistics → Stat Calculations → One-Variable Statistics
+```
 
-**(c)** position $\dfrac{n}{2} = 20$
-$$\text{median} = 20 + \frac{5}{15} \times 10 = 23.3 \ (3 \text{ s.f.})$$
+の `MedianX`・`Q1X`・`Q3X` を読みます。`ctrl + doc → Add Data & Statistics` で列を横軸に置けば、散らばりを図にできます。
 
-**(d)** *position $\dfrac{n}{2} = 20$ and $15$ values lie below the class, so the median is $5$ of the $15$ values into the class, one third of the way, not halfway*
-:::
+**答案に写すときは、外れ値を自分で $\times$ にし、ひげをその手前で止めてください。** 画面の見た目をそのまま写さないことです。
+
+**手で出した四分位数と、電卓の値がちがうことがあります**（[SL 4.1](aasl-4-1.qmd#outlier)）。
+
+**Paper 1 では使えません。** このページの例題と演習は、すべて手で解ける数にしてあります。
 :::
 
 ::: {#exm-aasl42-compare}
@@ -430,7 +511,8 @@ $2$ つのクラスのテストの点数の箱ひげ図は、次の $5$ つの�
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)**
 
@@ -453,7 +535,11 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*For Class B the median is $6$ above $Q_1$ and $6$ below $Q_3$, so the box is symmetric about the median. The lower whisker has length $48 - 35 = 13$ and the upper whisker has length $70 - 60 = 10$, which are close to each other. The diagram is therefore roughly symmetric, so the scores of Class B may be normally distributed.*
+*For Class B the median is $6$ above $Q_1$ and $6$ below $Q_3$, so the box is symmetric about the median.*
+
+*The lower whisker has length $48 - 35 = 13$ and the upper whisker has length $70 - 60 = 10$, which are close to each other.*
+
+*The diagram is therefore roughly symmetric, so the scores of Class B may be normally distributed.*
 :::
 
 （Class B では中央値が $Q_1$ より $6$ 大きく、$Q_3$ より $6$ 小さいので、箱は中央値について対称である。下のひげの長さは $48 - 35 = 13$、上のひげの長さは $70 - 60 = 10$ で、たがいに近い。よって図はおおむね左右対称なので、Class B の点数は正規分布に従うと考えられる、という意味です。）
@@ -476,90 +562,26 @@ $$\text{A}: \ 61 - 38 = 23, \qquad \text{B}: \ 60 - 48 = 12$$
 **(d)** *the box is symmetric ($6$ each side of the median) and the whiskers, $13$ and $10$, are close, so the scores may be normally distributed*
 :::
 :::
-
-::: {#exm-aasl42-percentile}
-[The heights, in centimetres, of $50$ plants are grouped in this table.]{.q-en}
-
-| height $h$ | $10 \le h < 20$ | $20 \le h < 30$ | $30 \le h < 40$ | $40 \le h < 50$ | $50 \le h < 60$ |
-|:--|--:|--:|--:|--:|--:|
-| frequency | $3$ | $9$ | $18$ | $15$ | $5$ |
-
-**(a)** [Write down the number of plants with a height less than $40$ cm.]{.q-en}
-
-**(b)** [Write down the cumulative frequency at the end of each class.]{.q-en}
-
-**(c)** [Estimate the $90$th percentile.]{.q-en}
-
-**(d)** [Explain why the answer to part (c) is an estimate rather than an exact value.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-$50$ 本の植物の高さ（cm）が、次の表にまとめられています。
-
-| 高さ $h$ | $10 \le h < 20$ | $20 \le h < 30$ | $30 \le h < 40$ | $40 \le h < 50$ | $50 \le h < 60$ |
-|:--|--:|--:|--:|--:|--:|
-| 度数 | $3$ | $9$ | $18$ | $15$ | $5$ |
-
-**(a)** 高さが $40$ cm 未満の植物の本数を書きなさい。
-
-**(b)** 各階級の終わりにおける累積度数を書きなさい。
-
-**(c)** $90$ パーセンタイルを推定しなさい。
-
-**(d)** (c) の答えが正確な値ではなく推定値である理由を説明しなさい。
-
-</details>
-
----
-
-**(a)** 「$40$ cm 未満」は、$30 \le h < 40$ までの累積度数です。
-
-$$
-3 + 9 + 18 = 30
-$$
-
-**(b)**
-
-$$
-3, \quad 12, \quad 30, \quad 45, \quad 50
-$$
-
-**(c)** $90$ パーセンタイルの位置は $\dfrac{90}{100} \times 50 = 45$ です（@tbl-aasl42-read）。累積度数がちょうど $45$ になるのは $h = 50$ のところです。
-
-$$
-90\text{th percentile} = 50 \ \text{cm}
-$$
-
-**(d)** `Explain why` なので、英語で理由を書きます。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*The table records only how many plants fall in each class, not the individual heights, so the heights within a class are no longer known. Any value read from the table assumes that the values are evenly spread across each class, which need not be true. The answer is therefore an estimate, and it would change if the original heights were used.*
 :::
 
-（表は各階級に何本入るかだけを記録していて、$1$ 本ずつの高さは記録していないので、階級の中の高さはもう分からない。表から読んだ値は、階級の中で値が等間隔に並んでいると仮定しており、それが成り立つとはかぎらない。よって答えは推定値であり、もとの高さを使えば変わりうる、という意味です。）
+## Why it works
 
-**検算（(b) について）。** **最後を見ます。** $3 + 9 + 18 + 15 + 5 = 50$ ✓
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
 
-**検算（(c) について、位置）。** **$50$ の $90\%$ で見ます。** 上から $10\%$、つまり $5$ 本が $90$ パーセンタイルより上にあるはずです。$50 \le h < 60$ の度数はちょうど $5$ です ✓
+**なぜ、累積度数の点を階級の上の端に打つのでしょうか。** 階級にまとめた表では、累積度数が「**その階級の上の端より小さいものの個数**」だからです。$10 \le t < 20$ の階級を足し終えた時点で分かっているのは、「$t < 20$ であるものが $15$ 個」ということだけです。$t < 15$ が何個かは、表からは分かりません。だから、$15$ という値を保証できるのは $t = 20$ のところだけです。
 
-**検算（(c) について、階級）。** **median と比べます。** median の位置は $25$ で、$30 \le h < 40$ の中に入ります。$90$ パーセンタイルは median より大きくなければなりません。$50 > 40$ ✓
+下端に打つと、**階級 $1$ つぶん左にずれます**。すべての読み取りが階級の幅だけ小さく出ます。
 
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-**(a)**
-$$3 + 9 + 18 = 30$$
+**なぜ、$\dfrac{n}{2}$ で読むのでしょうか。** 累積度数グラフは、**個々の値ではなく、なめらかな増え方**を表しています。$n$ 個の値が連続的に並んでいると考えるので、まん中は $\dfrac{n}{2}$ 番目です。
 
-**(b)**
-$$3, \ 12, \ 30, \ 45, \ 50$$
+$\dfrac{n+1}{2}$ を使うのは、**値を $1$ つずつ並べて数えるとき**です。データを小さい順に書き出して中央値を探すなら $\dfrac{n+1}{2}$ 番目、グラフから読むなら $\dfrac{n}{2}$ です。$n$ が大きいほど、$2$ つの差は問題になりません。
 
-**(c)** position $= 0.9 \times 50 = 45$
-$$90\text{th percentile} = 50 \text{ cm}$$
+**なぜ、階級の中で直線とみなしてよいのでしょうか**（@eq-aasl42-interp）**。** よいわけではありません。**それしか情報がないから**です。度数分布表に直した時点で、階級の中のどこに値があったかは失われています。「等間隔に並んでいる」と考えるのは、いちばん公平な当て方であって、正しい値ではありません。
 
-**(d)** *the table gives only the class of each plant, so the values inside a class are unknown and are assumed to be evenly spread*
-:::
+だから、グループ化された表から出した median は、必ず **estimate**（推定値）です。もとのデータから直接求めた median とは、ふつう一致しません。
+
+**なぜ、ひげを外れ値までのばさないのでしょうか。** のばすと、**外れ値が図から消えます**。ひげの先が $90$ になってしまえば、「$90$ は $1$ つだけ遠く離れた値だ」という情報が図から読み取れません。$\times$ で別に打てば、「本体はここまで、$1$ つだけ外にある」と一目で分かります。
 :::
 
 ## Common errors
@@ -595,12 +617,6 @@ $$90\text{th percentile} = 50 \text{ cm}$$
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが $3$ つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -677,7 +693,7 @@ $60$ 個のりんごの質量（g）が、次のようにまとめられてい�
 
 **(a)** *five bars of equal width that touch, with frequency on the vertical axis and mass on the horizontal axis*
 
-![The histogram of 演習 $2$](img/aasl-4-2-ex2.svg){#fig-aasl42-ex2 width=100%}
+![演習 $2$ のヒストグラムです。](img/aasl-4-2-ex2.svg){#fig-aasl42-ex2 width=95%}
 
 **(b)** cumulative frequency: $6, \ 20, \ 42, \ 54, \ 60$
 
@@ -737,7 +753,7 @@ $$60 \le m < 70$$
 
 **(a)** points $(0, \ 0), \ (5, \ 8), \ (10, \ 28), \ (15, \ 44), \ (20, \ 50)$
 
-![The cumulative frequency graph of 演習 $3$](img/aasl-4-2-ex3.svg){#fig-aasl42-ex3 width=100%}
+![演習 $3$ の累積度数のグラフです。](img/aasl-4-2-ex3.svg){#fig-aasl42-ex3 width=95%}
 
 **(b)**
 
@@ -858,7 +874,7 @@ $$Q_3 + 1.5 \times 10 = 45, \qquad 48 > 45$$
 
 **(b)**
 
-![The box and whisker diagram of 演習 $5$](img/aasl-4-2-ex5.svg){#fig-aasl42-ex5 width=100%}
+![演習 $5$ の箱ひげ図です。](img/aasl-4-2-ex5.svg){#fig-aasl42-ex5 width=100%}
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -916,7 +932,11 @@ Q を選ぶなら IQR と最大値を、P を選ぶなら median と $Q_{1}$ を
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Shop P has the smaller median, $8$ against $9$, so a typical wait is shorter there. However Shop P is much less consistent: its interquartile range is $7$ against $4$, and its longest recorded wait is $20$ minutes against $15$. A customer who dislikes waiting cares about the long waits rather than the typical one, so Shop Q is the better choice.*
+*Shop P has the smaller median, $8$ against $9$, so a typical wait is shorter there.*
+
+*However Shop P is much less consistent: its interquartile range is $7$ against $4$, and its longest recorded wait is $20$ minutes against $15$.*
+
+*A customer who dislikes waiting cares about the long waits rather than the typical one, so Shop Q is the better choice.*
 :::
 :::
 
@@ -951,7 +971,9 @@ Q を選ぶなら IQR と最大値を、P を選ぶなら median と $Q_{1}$ を
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Continuous data can take any value between the whole numbers, so a class written as $10$–$19$ does not say where a value such as $19.4$ belongs. Writing the classes as inequalities with no gaps, such as $10 \le t < 20$ and $20 \le t < 30$, means that every possible value lies in exactly one class, with no gap and no overlap at the boundaries.*
+*Continuous data can take any value between the whole numbers, so a class written as $10$–$19$ does not say where a value such as $19.4$ belongs.*
+
+*Writing the classes as inequalities with no gaps, such as $10 \le t < 20$ and $20 \le t < 30$, means that every possible value lies in exactly one class, with no gap and no overlap at the boundaries.*
 :::
 :::
 
@@ -986,7 +1008,11 @@ Q を選ぶなら IQR と最大値を、P を選ぶなら median と $Q_{1}$ を
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The number $45$ is a position in the ordered data, not a value of the variable, so it does not belong on the horizontal axis. It should be found on the vertical axis, which measures cumulative frequency. From there the student should read across to the curve and then down to the horizontal axis; the value read off there is the estimate of $Q_3$.*
+*The number $45$ is a position in the ordered data, not a value of the variable, so it does not belong on the horizontal axis.*
+
+*It should be found on the vertical axis, which measures cumulative frequency.*
+
+*From there the student should read across to the curve and then down to the horizontal axis; the value read off there is the estimate of $Q_3$.*
 :::
 :::
 
@@ -1021,7 +1047,11 @@ Q を選ぶなら IQR と最大値を、P を選ぶなら median と $Q_{1}$ を
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The two whiskers have the same length, $44 - 30 = 14$ and $70 - 56 = 14$, which suggests symmetry. However the median is only $3$ above $Q_1$ and $9$ below $Q_3$, so the middle half of the data is not symmetric about the median. Since symmetry fails inside the box, the data are unlikely to be normally distributed.*
+*The two whiskers have the same length, $44 - 30 = 14$ and $70 - 56 = 14$, which suggests symmetry.*
+
+*However the median is only $3$ above $Q_1$ and $9$ below $Q_3$, so the middle half of the data is not symmetric about the median.*
+
+*Since symmetry fails inside the box, the data are unlikely to be normally distributed.*
 :::
 :::
 
@@ -1058,7 +1088,11 @@ Q を選ぶなら IQR と最大値を、P を選ぶなら median と $Q_{1}$ を
 ::: {.model-answer}
 **試験ではこう書く**
 
-*In a histogram the bars touch, so the eye reads the area of each bar as the amount of data in that class. If one class is twice as wide as another and both bars have the same height, the wider bar has twice the area, and looks as though it contains twice as much data, when in fact the two classes contain the same number of values. Equal class widths remove this problem.*
+*In a histogram the bars touch, so the eye reads the area of each bar as the amount of data in that class.*
+
+*If one class is twice as wide as another and both bars have the same height, the wider bar has twice the area, and looks as though it contains twice as much data, when in fact the two classes contain the same number of values.*
+
+*Equal class widths remove this problem.*
 :::
 :::
 

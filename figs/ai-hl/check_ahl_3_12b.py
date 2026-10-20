@@ -279,23 +279,28 @@ not_in_text("keeps the same direction.", "向きそのものが変わらない�
 rev = vec(t - t**2 / 2, t - t**2 / 2)
 chk(sp.simplify(rev[0] - rev[1]) == 0, "反例は y=x の上を動く")
 same(sp.diff(rev, t), vec(1 - t, 1 - t), "その v は t=1 で反転する")
-in_text("**試験で問われる「速度が変わる運動」は $2$ 次元だけ**です",
-        "2 次元だけ、がシラバスの話だと書いてある")
-in_text("計算のしかた自体は $3$ 次元でも同じですが、シラバスの範囲外です。", "その補足")
+in_text("**問われるのは $2$ 次元だけ**です。", "2 次元だけ、と書いてある")
+in_text("$3$ 次元が出てくるのは、等速度のときだけでした", "その補足")
 
 # ══════════════════════════════════════════════════════════
 # 6. シラバス・公式集
 # ══════════════════════════════════════════════════════════
 # 2026-09: 公式集 callout は削除
 not_in_text("## 公式集の AHL 3.12 の欄", "公式集 callout が残っていない")
-in_text("> Motion with variable velocity in two dimensions.", "Content 2 行目の逐語引用")
+not_in_text("> Motion with variable velocity in two dimensions.", "シラバスの引用は本文から外した")
 for g in ["$\\begin{pmatrix} v_x \\\\ v_y \\end{pmatrix} = "
           "\\begin{pmatrix} 7 \\\\ 6-4t \\end{pmatrix}$.",
           "> Projectile motion and circular motion are special cases.",
           "> $f(t-a)$ to indicate a time-shift of $a$.",
           "> **Link to:** kinematics (AHL 5.13) and phase shift (AHL 1.13)."]:
-    in_text(g, "Guidance の逐語引用")
-in_text("**AHL 3.12 の Connections 欄は、空です。**", "Connections が空")
+    not_in_text(g, "Guidance の引用は本文から外した")
+not_in_text("**AHL 3.12 の Connections 欄は、空です。**", "シラバスの Connections 欄の話は外した")
+# 引用の代わりに、内容が日本語で書かれている
+in_text("\\begin{pmatrix} 7 \\\\ 6-4t \\end{pmatrix}\n$$ {#eq-ahl312b-example}", "例の速度 (7, 6-4t)")
+in_text("### 6. Projectile motion（放物運動） {#projectile}", "放物運動の節")
+in_text("### 7. Circular motion（円運動） {#circular}", "円運動の節")
+in_text("これは phase shift（AHL 1.13）とつながっています。", "phase shift とのつながり")
+in_text("[AHL 5.13](../05-calculus/ahl-5-13.qmd#gdc-rest)", "kinematics (AHL 5.13) へのリンク")
 in_text("**新しく覚える式はありません。**", "暗記させていない")
 # 2 次元の弧長（範囲外）を要求していない
 chk("弧長" not in TEXT and "arc length" not in TEXT, "2 次元の弧長を持ち出していない")
@@ -327,14 +332,14 @@ chk("[1.5], [7]" in FIG, "図1(b) の最小点 (1.5,7)")
 chk("5 * np.cos(th)" in FIG and "5 * np.sin(th)" in FIG, "図2(b) の円")
 chk("0.30 * vx" in FIG, "図2(b) の速度矢印は縮尺 0.30")
 chk("4 - 2 * tt" in FIG and "14 - 2 * tt" in FIG, "図3 の 2 本のグラフ")
-chk("shift of $5$ seconds" in FIG, "図3 の注記")
-chk("$Q$ does at $t = 7$ what $P$ did at $t = 2$" in FIG, "図3 の見出し")
+chk("shift of $5$ seconds" not in FIG, "図3 の文の注記を外した")
+chk("$Q$ does at $t = 7$ what $P$ did at $t = 2$" not in FIG, "図3 の見出しを外した")
 in_text("$P$ の $v_y$ が $0$ になるのは $t = 2$、$Q$ は $t = 7$ です。", "本文も同じ")
 
 # ══════════════════════════════════════════════════════════
 # 9. 体裁の不変量
 # ══════════════════════════════════════════════════════════
-chk(len(re.findall(r"(?m)^---\s*$", TEXT)) == 6, "--- は front matter 2 + 例題 4")
+chk(len(re.findall(r"(?m)^---\s*$", TEXT)) == 2, "--- は front matter 2 + 例題 4")
 chk(TEXT.count('<details class="jp-trans"') == 14, "日本語訳の折りたたみが 14")
 chk(TEXT.count(".ex-sep") == 9, "演習の区切りが 9")
 chk(TEXT.count("model-answer") == 6, "model-answer が 6")
@@ -349,9 +354,14 @@ heads = [h for h in re.findall(r"(?m)^## (.*)", TEXT)
                   "Worked examples", "Common errors",
                   "Using your GDC (TI-Nspire CX II)", "Exercises")]
 chk(heads == ["What you should be able to do", "The idea", "Why it works",
-              "Worked examples", "Common errors",
+              "Common errors",
               "Using your GDC (TI-Nspire CX II)", "Exercises"],
-    "7 つの見出しの順序")
+    "6 つの見出しの順序（Worked examples は無い）")
+chk("## Worked examples" not in TEXT, "## Worked examples の節は無い")
+_why = TEXT.index("\n## Why it works")
+_ex = [m.start() for m in re.finditer(r"(?m)^::: \{#exm-", TEXT)]
+chk(len(_ex) == 4 and all(TEXT.index("\n## The idea") < p < _why for p in _ex),
+    "例題 4 つがすべて The idea の中（Why it works より前）")
 chk(TEXT.count("**検算") >= 14, "検算が 14 か所以上: %d" % TEXT.count("**検算"))
 chk("**確かめ" not in TEXT and "確かめます。" not in TEXT,
     "検算のラベルに「確かめ」を使っていない")
@@ -407,15 +417,18 @@ for rel, an in re.findall(r"\]\((\.\./[a-z0-9-]+/[a-z0-9-]+\.qmd|ahl-3-[0-9a-z]+
 #    登録先は _quarto-draft.yml ではなく _quarto.yml です。
 #    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
 #    「index の一覧にある」「残りの N 項目」は、もう検査しません。
-PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"),
-           encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-12b.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
-chk(PUB.index("ahl-3-12a.qmd") < PUB.index("ahl-3-12b.qmd")
-    < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.12a → 3.12b → 3.14")
-DRAFT = open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
-             encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-12b.qmd" not in DRAFT,
-    "下書き用の _quarto-draft.yml には残っていない")
+# _quarto.yml / _quarto-draft.yml が無い作業用コピーでは、登録の検査は飛ばす
+_PUBF = os.path.join(HERE, "..", "..", "_quarto.yml")
+if os.path.exists(_PUBF):
+    PUB = open(_PUBF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-12b.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
+    chk(PUB.index("ahl-3-12a.qmd") < PUB.index("ahl-3-12b.qmd")
+        < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.12a → 3.12b → 3.14")
+_DRF = os.path.join(HERE, "..", "..", "_quarto-draft.yml")
+if os.path.exists(_DRF):
+    DRAFT = open(_DRF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-12b.qmd" not in DRAFT,
+        "下書き用の _quarto-draft.yml には残っていない")
 
 GLO = open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
            encoding="utf-8").read()

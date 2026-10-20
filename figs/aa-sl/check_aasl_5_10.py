@@ -16,6 +16,22 @@ QMD = os.path.join(ROOT, "aa-sl", "05-calculus", "aasl-5-10.qmd")
 FIGP = os.path.join(HERE, "make_aasl_5_10.py")
 
 TEXT = open(QMD, encoding="utf-8").read()
+
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
 FIG = open(FIGP, encoding="utf-8").read()
 FIGCODE = FIG.split('"""', 2)[-1]
 
@@ -60,7 +76,7 @@ def anti(F, f, v=X, msg=""):
 in_text("# SL 5.10 — Standard integrals, reverse chain rule and substitution"
         "（標準的な不定積分・逆連鎖律・置換積分） {#sec-aasl-5-10}", "ページの題")
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
@@ -73,7 +89,8 @@ chk([s[2] for s in _secs] == ["standard", "rational", "linear",
                               "substitution", "choose"],
     "アンカー: %s" % [s[2] for s in _secs])
 for _n, _t, _ in _secs:
-    chk(re.match(r"^[a-z]", _t), "見出し %s は英語で始まる: %s" % (_n, _t))
+    chk(re.match(r"^[A-Z][^（]*（[^（）]*(?:（[^）]*）[^（）]*)*）$", _t),
+        "見出し %s は「English（日本語）」の形（英語は大文字で始まる）: %s" % (_n, _t))
 
 chk(len(re.findall(r"^\[\d+\]\{\.ex-no\}", TEXT, re.M)) == 10, "演習 10 問")
 chk([int(x) for x in re.findall(r"^\[(\d+)\]\{\.ex-no\}", TEXT, re.M)]
@@ -82,7 +99,7 @@ chk(TEXT.count("::: {#exm-") == 4, "例題 4 つ")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14 個")
 chk(TEXT.count("## 解答例") == 14, "解答例 14 個")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭の --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭の --- は 6 本")
 chk(TEXT.count("**検算") >= 12, "検算は 12 本以上: %d" % TEXT.count("**検算"))
 chk(TEXT.count(":::") % 2 == 0, "::: の数が偶数")
 chk("\n\n\n" not in TEXT, "空行が 2 つ続いていない")
@@ -107,8 +124,8 @@ for _e in ("{#eq-aasl510-power}", "{#eq-aasl510-ln}", "{#eq-aasl510-trig}",
 for _t in ("{#tbl-aasl510-rational}", "{#tbl-aasl510-linear}",
            "{#tbl-aasl510-constant}"):
     in_text(_t, "表 " + _t)
-for _f, _i in (("aasl-5-10-linear.svg", "fig-aasl510-linear"),):
-    in_text("(img/%s){#%s width=100%%}" % (_f, _i), "図 " + _f)
+for _f, _i, _w in (("aasl-5-10-linear.svg", "fig-aasl510-linear", 95),):
+    in_text("(img/%s){#%s width=%d%%}" % (_f, _i, _w), "図 " + _f)
     chk(os.path.exists(os.path.join(os.path.dirname(QMD), "img", _f)),
         "SVG がある: " + _f)
 for _bad in ("\\le ", "\\ge ", "\\lvert", "\\rvert", "\\begin{pmatrix}"):
@@ -136,24 +153,20 @@ for _p in ("aasl-5-10a.qmd", "aasl-5-10b.qmd"):
     chk(not os.path.exists(os.path.join(os.path.dirname(QMD), _p)),
         "もとのページは消した: " + _p)
 # 1/x の注意は第 1 節に 1 つだけ
-in_text("**$\\dfrac{1}{x}$ だけは @eq-aasl510-power が使えません**"
-        "（$n = -1$ とすると $0$ で割ることになります）。"
-        "**絶対値が付いているのは $x < 0$ の側もふくめるためで、"
-        "定義域が $x > 0$ と分かっているときは $\\ln x$ と書いてかまいません。**",
+in_text("**$\\dfrac{1}{x}$ だけは @eq-aasl510-power が使えません**（$n = -1$ とすると $0$ で割ることになります）。**絶対値が付いているのは $x < 0$ の側もふくめるためで、**domain**（定義域）が $x > 0$ と分かっているときは $\\ln x$ と書いてかまいません。**",
         "1/x の注意")
 chk(TEXT.index("**$\\dfrac{1}{x}$ だけは @eq-aasl510-power が使えません**")
-    < TEXT.index("### 2. rational exponents"), "1/x の注意は第 1 節の中")
+    < TEXT.index("### 2. Rational exponents（指数が分数のとき）"), "1/x の注意は第 1 節の中")
 # 「最後に微分して確かめる」は第 3 節の終わりに
 in_text("**最後に、必ず微分して確かめてください。**", "微分して確かめる")
-_i3 = TEXT.index("### 3. composing with $ax + b$")
-_i4 = TEXT.index("### 4. reverse chain rule")
+_i3 = TEXT.index("### 3. Composites with $ax + b$（$ax + b$ との合成）")
+_i4 = TEXT.index("### 4. Reverse chain rule（逆連鎖律）")
 chk(_i3 < TEXT.index("**最後に、必ず微分して確かめてください。**") < _i4,
     "第 3 節の終わりにある")
 # 5.10b はそのままつないである
-in_text("### 4. reverse chain rule（chain rule の逆を考える） "
-        "{#inspection}", "第 4 節")
-in_text("### 8. choosing $u$（$u$ の選び方） {#choose}", "第 8 節")
-_i10 = TEXT.index("### 8. choosing $u$（$u$ の選び方） {#choose}")
+in_text("### 4. Reverse chain rule（逆連鎖律） {#inspection}", "第 4 節")
+in_text("### 8. Choosing $u$（$u$ の選び方） {#choose}", "第 8 節")
+_i10 = TEXT.index("### 8. Choosing $u$（$u$ の選び方） {#choose}")
 _iw = TEXT.index(chr(10) + "## Why it works")
 _s10 = TEXT[_i10:_iw]
 chk("## この項目は電卓なしで解きます" in _s10, "Paper の callout は第 8 節に")
@@ -253,9 +266,8 @@ in_text("$$\n\\int g'(x)\\,f(g(x))\\,dx\n$$ {#eq-aasl510-form}",
 not_in_text("\\int k\\,g'(x)", "k つきの形は消した")
 in_text("**この形は、chain rule で微分したあとの姿です**",
         "chain rule の逆だと言っている")
-_i4a = TEXT.index("### 4. reverse chain rule（chain rule の逆を考える）"
-                  " {#inspection}")
-_i5a = TEXT.index("### 5. the $\\dfrac{g'(x)}{g(x)}$ form")
+_i4a = TEXT.index("### 4. Reverse chain rule（逆連鎖律） {#inspection}")
+_i5a = TEXT.index("### 5. The $\\dfrac{g'(x)}{g(x)}$ form（対数になる形）")
 _s4 = TEXT[_i4a:_i5a]
 for _s in ("{#eq-aasl510-form}",
            "**だから、外側だけを積分して、中身はそのままにします。**"):
@@ -266,15 +278,13 @@ chk(TEXT.count("[第 4 節](#inspection)") >= 2,
 
 
 # --- 2026-09-29：第 4 節の書き出しに具体例を 2 つ ------------------------
-in_text("**たとえば、次の $2$ つです。**", "第 4 節の書き出し")
+in_text("たとえば、次の $2$ つの積分を見てください。", "第 4 節の書き出し")
 in_text("$$\n\\int 3x^{2}\\,\\bigl(x^{3} - 4\\bigr)^{5}dx, \\qquad "
         "\\int 4x\\,\\sin\\bigl(x^{2}\\bigr)\\,dx\n$$", "具体例 2 つ")
-in_text("**$1$ つ目は、合成関数の中身が $x^{3} - 4$ で、その derivative"
-        "（導関数）$3x^{2}$ がかけてあります。** $2$ つ目は、"
-        "合成関数の中身が $x^{2}$ で、その導関数 $2x$ が、"
-        "$2$ 倍された $4x$ の形でかけてあります。", "2 つの説明")
-chk(TEXT.count("derivative（導関数）") == 1, "英語の併記は初出の 1 回だけ")
-chk(TEXT.index("**たとえば、次の $2$ つです。**")
+in_text("**$1$ つ目は、composite function**（合成関数）**の中身が $x^{3} - 4$ で、その derivative**（導関数）**$3x^{2}$ がかけてあります。** $2$ つ目は、合成関数の中身が $x^{2}$ で、その導関数 $2x$ が、$2$ 倍された $4x$ の形でかけてあります。", "2 つの説明")
+chk(TEXT.count("derivative（導関数）") + TEXT.count("derivative**（導関数）") == 1,
+    "英語の併記は初出の 1 回だけ")
+chk(TEXT.index("たとえば、次の $2$ つの積分を見てください。")
     < TEXT.index("{#eq-aasl510-form}"), "具体例は一般形より前")
 # 具体例が本当にこの形であること（原始関数を微分してもどるか）
 _E1 = (XR ** 3 - 4) ** 6 / 6
@@ -292,8 +302,8 @@ chk(sp.simplify(4 * XR - 2 * sp.diff(XR ** 2, XR)) == 0,
 # 2026-09-29（その 3）：第 4 節から F を外し、対数の節を第 4 節の直後に
 # ══════════════════════════════════════════════════════════
 # --- F と式 7 は第 4 節から消えた（Why it works にだけ残る） -------------
-_i4b = TEXT.index("### 4. reverse chain rule")
-_i5b = TEXT.index("### 5. the $\\dfrac{g'(x)}{g(x)}$ form")
+_i4b = TEXT.index("### 4. Reverse chain rule（逆連鎖律）")
+_i5b = TEXT.index("### 5. The $\\dfrac{g'(x)}{g(x)}$ form（対数になる形）")
 _s4b = TEXT[_i4b:_i5b]
 for _bad in ("$F$", "F(g(x))", "$F' = f$", "**やり方は $2$ 歩です。**"):
     chk(_bad not in _s4b, "第 4 節に F まわりは残っていない: " + _bad)
@@ -321,15 +331,15 @@ chk(sp.expand(6 * (XR ** 3 - 4) ** 5 * 3 * XR ** 2 / 6)
     == sp.expand(3 * XR ** 2 * (XR ** 3 - 4) ** 5), "検算の途中も正しい")
 
 # --- 対数になる形は第 5 節（第 4 節の直後） ------------------------------
-in_text("### 5. the $\\dfrac{g'(x)}{g(x)}$ form（対数になる形） {#logform}",
+in_text("### 5. The $\\dfrac{g'(x)}{g(x)}$ form（対数になる形） {#logform}",
         "第 5 節は対数になる形")
-in_text("### 7. integration by substitution（置換積分） {#substitution}",
+in_text("### 7. Integration by substitution（置換積分） {#substitution}",
         "第 7 節は置換積分")
 chk(TEXT.index("{#logform}") < TEXT.index("{#substitution}"),
     "対数の節は置換の節より前")
 # 移した節の中に置換積分は出てこない（置換の説明より前になるため）
-_i5c = TEXT.index("### 5. the $\\dfrac{g'(x)}{g(x)}$ form")
-_i6c = TEXT.index("### 6. adjusting the constant")
+_i5c = TEXT.index("### 5. The $\\dfrac{g'(x)}{g(x)}$ form（対数になる形）")
+_i6c = TEXT.index("### 6. Adjusting the constant（定数を合わせる）")
 _s5c = TEXT[_i5c:_i6c]
 for _bad in ("置換", "$u$ を置", "du", "substitution"):
     chk(_bad not in _s5c, "第 5 節に置換積分は出てこない: " + _bad)
@@ -374,7 +384,7 @@ not_in_text("#steps", "手順の節のアンカーは消した")
 not_in_text("the four steps", "手順の見出しは消した")
 not_in_text("tbl-aasl510-steps", "手順の表は消した")
 not_in_text("置換積分の手順", "手順の表の題も消した")
-in_text("### 6. adjusting the constant（定数を合わせる） {#constant}",
+in_text("### 6. Adjusting the constant（定数を合わせる） {#constant}",
         "第 6 節は定数を合わせる")
 chk(TEXT.index("{#constant}") < TEXT.index("{#substitution}"),
     "定数を合わせるは置換積分より前")
@@ -382,8 +392,8 @@ chk(TEXT.index("{#logform}") < TEXT.index("{#constant}"),
     "対数になる形は定数を合わせるより前")
 
 # --- 置換積分の節は、第 4 節と同じ例でたどる -----------------------------
-_i7d = TEXT.index("### 7. integration by substitution")
-_i8d = TEXT.index("### 8. choosing $u$")
+_i7d = TEXT.index("### 7. Integration by substitution（置換積分）")
+_i8d = TEXT.index("### 8. Choosing $u$（$u$ の選び方）")
 _s7d = TEXT[_i7d:_i8d]
 in_text("同じ例 $\\displaystyle\\int 3x^{2}\\bigl(x^{3} - 4\\bigr)^{5}dx$ で"
         "やってみます。中身が $x^{3} - 4$ なので、$u = x^{3} - 4$ と置きます。"
@@ -437,6 +447,16 @@ for _g, _seen, _lab in ((XR ** 2 + 1, XR, "1 行目"),
     chk(sp.simplify(sp.diff(_g, XR) / _seen) != 1,
         "表 3 の " + _lab + " はそのままでは合わない")
 chk(sp.minimum(XR ** 2 + 3, XR) > 0, "x^2+3 はつねに正")
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

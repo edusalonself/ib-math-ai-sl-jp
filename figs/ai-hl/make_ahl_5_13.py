@@ -45,7 +45,7 @@ def af(t):
 T = np.linspace(0, 4, 800)
 
 # ══════════════ 1. s, v, a はつながっている ══════════════
-fig, axs = plt.subplots(2, 2, figsize=(11.4, 8.4))
+fig, axs = plt.subplots(2, 2, figsize=(11.0, 7.6))
 
 ax = axs[0, 0]
 ax.plot(T, sf(T), color=LINE, lw=2.6)
@@ -97,7 +97,7 @@ tidy(ax)
 # (d) 実際にどこにいるか
 ax = axs[1, 1]
 ax.set_xlim(-0.35, 1.75)
-ax.set_ylim(-1.05, 1.55)
+ax.set_ylim(-0.6, 1.55)
 ax.axis("off")
 ax.annotate("", xy=(1.72, 0), xytext=(-0.32, 0),
             arrowprops=dict(arrowstyle="-|>", color=GREY, lw=1.6))
@@ -113,21 +113,14 @@ for x0, x1, y, col, lab, note in LEGS:
                 arrowprops=dict(arrowstyle="-|>", color=col, lw=2.6))
     ax.text((x0 + x1) / 2, y + 0.11, "%s  %s" % (lab, note), fontsize=11,
             ha="center", va="bottom", color=col)
-ax.text(0.7, -0.78,
-        "moved $\\dfrac{4}{3} + \\dfrac{4}{3} + \\dfrac{4}{3} = 4$,   "
-        "but ended only $\\dfrac{4}{3}$ from the start",
-        fontsize=11.5, ha="center", va="center", color=INK, bbox=BOX)
-ax.set_title("(d)  where the particle actually is",
-             fontsize=12.5, color=INK, pad=10)
+ax.set_title("(d)", fontsize=12.5, color=INK, pad=10)
 
-fig.suptitle("One motion, three graphs: differentiate to go down, "
-             "integrate to go back up", fontsize=14, y=0.995)
-fig.tight_layout(rect=(0, 0, 1, 0.97))
+fig.tight_layout()
 save(fig, "ahl-5-13-links.svg")
 
 
 # ══════════════ 2. displacement と total distance ══════════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.4))
+fig, axs = plt.subplots(1, 2, figsize=(10.6, 4.0))
 PARTS = [(0.0, 1.0, GREEN, "$+\\dfrac{4}{3}$"),
          (1.0, 3.0, ACC, "$-\\dfrac{4}{3}$"),
          (3.0, 4.0, GREEN, "$+\\dfrac{4}{3}$")]
@@ -141,13 +134,11 @@ for x0, x1, col, lab in PARTS:
             ha="center", va="center", color=col)
 ax.axhline(0, color=GREY, lw=1.2)
 ax.set_xlim(0, 4)
-ax.set_ylim(-1.7, 3.4)
+ax.set_ylim(-1.3, 3.2)
 ax.set_xlabel("$t$")
 ax.set_ylabel("$v$")
 ax.set_title("displacement $= \\int_{0}^{4} v \\, dt = \\dfrac{4}{3}$",
              fontsize=12.5, color=INK, pad=10)
-ax.text(2.0, 2.8, "areas below the axis count as NEGATIVE",
-        fontsize=11, ha="center", color=ACC, bbox=BOX)
 tidy(ax)
 
 ax = axs[1]
@@ -160,19 +151,13 @@ for x0, x1, col, lab in PARTS:
             color=GREEN)
 ax.axhline(0, color=GREY, lw=1.2)
 ax.set_xlim(0, 4)
-ax.set_ylim(-1.7, 3.4)
+ax.set_ylim(-0.3, 3.2)
 ax.set_xlabel("$t$")
 ax.set_ylabel("$|v|$")
 ax.set_title("total distance $= \\int_{0}^{4} |v| \\, dt = 4$",
              fontsize=12.5, color=INK, pad=10)
-ax.text(2.0, 2.8, "taking $|v|$ folds them all ABOVE the axis",
-        fontsize=11, ha="center", color=GREEN, bbox=BOX)
 tidy(ax)
 
-fig.text(0.5, -0.05,
-         "Same $v = t^{2} - 4t + 3$ in both pictures.   The only difference is "
-         "the modulus sign, and it changes $\\dfrac{4}{3}$ into $4$.",
-         fontsize=12.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-5-13-area.svg")
 

@@ -59,7 +59,7 @@ for (x, y, lab, dx, dy, ha) in [
 
 ax.set_xticks([]); ax.set_yticks([])
 origin_axes(ax, (-1.6, 8.4), (-6.4, 8.6))
-ax.set_title("A quadratic:  symmetry, vertex, intercepts", fontsize=11.5, pad=10)
+ax.set_title("quadratic", fontsize=11.5, pad=8)
 
 # --- 右：cubic  g(x) = x^3 - 3x^2 - x + 3 = (x-1)(x+1)(x-3) ---
 ax = axes[1]
@@ -81,8 +81,7 @@ for (x, y, lab, dx, dy, ha) in [
 
 ax.set_xticks([]); ax.set_yticks([])
 origin_axes(ax, (-2.5, 4.4), (-6.2, 7.6))
-ax.set_title("A cubic:  zeros, local maximum, local minimum",
-             fontsize=11.5, pad=10)
+ax.set_title("cubic", fontsize=11.5, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-2-4-features.svg"), format="svg",
@@ -100,15 +99,13 @@ ax.plot(ts, T(ts), color=LINE, linewidth=2.4, zorder=5)
 ax.plot([-2, 62], [22, 22], color=ACC, linestyle="--", linewidth=1.8, zorder=4)
 ax.annotate("horizontal asymptote  $y = 22$", (66, 14), fontsize=10.5,
             color=ACC, ha="right", bbox=BOX, zorder=8)
-ax.annotate("the curve gets closer and closer,\nbut never reaches it",
-            (40, 42), fontsize=9.5, color=GREY, ha="center", bbox=BOX, zorder=8)
 ax.scatter([0], [T(0)], s=52, color=LINE, edgecolor=INK, linewidth=0.9, zorder=7)
 ax.annotate("$(0,\\ 87)$", (0, T(0)), textcoords="offset points", xytext=(9, 2),
             fontsize=10, color=LINE, bbox=BOX, zorder=8)
 ax.set_xticks([20, 40, 60]); ax.set_yticks([22, 50, 80])
 origin_axes(ax, (-6, 68), (-6, 100))
-ax.set_title("Horizontal asymptote:  $y = 65(0.93)^{x} + 22$",
-             fontsize=11.5, pad=10)
+ax.annotate("$y = 65(0.93)^{x} + 22$", (62, 80), fontsize=12, color=LINE,
+            ha="right", bbox=BOX, zorder=8)
 
 # --- 右：vertical asymptote  x = 0 ---
 ax = axes[1]
@@ -128,8 +125,8 @@ ax.annotate("$(-4,\\ 0)$", (-4, 0), textcoords="offset points", xytext=(0, -38),
             fontsize=10, color=GREEN, ha="center", bbox=BOX, zorder=8)
 ax.set_xticks([-8, -4, 4, 8]); ax.set_yticks([3, 10, 20])
 origin_axes(ax, (-10.5, 11.5), (-22, 27))
-ax.set_title("Vertical asymptote:  $y = \\dfrac{12}{x} + 3$",
-             fontsize=11.5, pad=10)
+ax.annotate("$y = \\dfrac{12}{x} + 3$", (9.5, 19), fontsize=12, color=GREEN,
+            ha="right", bbox=BOX, zorder=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-2-4-asymptotes.svg"), format="svg",
@@ -154,12 +151,8 @@ ax.annotate("$y = x^{2} - 4x + 5$", (4.55, 7.4), color=LINE, fontsize=11.5,
             ha="center", bbox=BOX, zorder=8)
 ax.annotate("$y = x + 1$", (0.35, 3.4), color=GREEN, fontsize=11.5,
             ha="left", bbox=BOX, zorder=8)
-ax.annotate("two curves can cross more than once",
-            (2.6, -1.6), fontsize=10, color=GREY, ha="center", bbox=BOX, zorder=8)
-
 ax.set_xticks([1, 2, 3, 4, 5]); ax.set_yticks([2, 4, 6, 8])
-origin_axes(ax, (-1.2, 6.4), (-2.6, 9.4), grid=True)
-ax.set_title("Points of intersection", fontsize=12.5, pad=10)
+origin_axes(ax, (-1.2, 6.4), (-0.9, 9.4), grid=True)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-2-4-intersection.svg"), format="svg",
             bbox_inches="tight")

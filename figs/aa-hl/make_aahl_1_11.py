@@ -73,8 +73,6 @@ ax.set_xlim(-5.0, 7.0)
 ax.set_ylim(-5.0, 5.0)
 ax.set_xlabel("$x$", fontsize=10)
 ax.set_ylabel("$y$", fontsize=10)
-ax.set_title("A single fraction, seen as a sum of two simple ones",
-             fontsize=11, color=INK, loc="left", pad=10)
 # 漸近線は、目盛りの数字で示す（曲線と重なる位置に文字を置かない）
 ax.set_xticks([-4, -1, 0, 3, 6])
 ax.legend(loc="lower right", fontsize=9.5, frameon=False)

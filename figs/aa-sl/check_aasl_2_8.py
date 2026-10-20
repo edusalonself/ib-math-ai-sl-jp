@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "02-functions")
 QMD = os.path.join(BASE, "aasl-2-8.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_2_8.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 # 色コード・ファイル名・キーワードはラベルではないので外す
@@ -51,6 +70,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 def va(expr):
     """垂直漸近線（分母の零点）"""
@@ -102,8 +124,8 @@ eq(1 + 7 / (x - 2), RUN, "通して使う例 = 1 + 7/(x-2)")
 in_text(r"f(x) = \frac{x+5}{x-2}", "通して使う例の式")
 in_text("**垂直漸近線 $x = 2$**", "通して使う例の垂直漸近線")
 # 用語は初出で英語（日本語）（第 10 節）
-in_text("→ **$x = 0$ が vertical asymptote（垂直漸近線）**。", "垂直漸近線の併記")
-in_text("→ **$y = 0$ が horizontal asymptote（水平漸近線）**。", "水平漸近線の併記")
+in_text("→ **$x = 0$ が vertical asymptote**（垂直漸近線）。", "垂直漸近線の併記")
+in_text("→ **$y = 0$ が horizontal asymptote**（水平漸近線）。", "水平漸近線の併記")
 not_in_text("走る例", "「走る例」という言い方は使わない")
 in_text("このページでは、通して使う例として", "言いかえ")
 in_text("**水平漸近線 $y = 1$**", "通して使う例の水平漸近線")
@@ -251,10 +273,12 @@ for _lk, _m in [(r"\frac{2x+1}{x-3}", "例題2"), (r"\frac{3x-6}{x+2}", "例題3
 chk("::: {.callout-important}" not in TEXT,
     "2.8 は公式集に何もないので、公式集の callout は置かない")
 not_in_text("公式集の **2.8**", "公式集に 2.8 の欄はない")
-# ★ 答案の書き方を縛る Guidance の一文だけを引く
-in_text("> Sketches should include all horizontal and vertical asymptotes "
-        "and any intercepts with the axes.", "答案の書き方の一文")
-chk(TEXT.count("\n> ") == 1, f"引用は 1 つだけ: {TEXT.count(chr(10) + '> ')}")
+# 2026-10：答案の書き方を縛る Guidance の引用は外し、日本語で直接書いた
+not_in_text("Sketches should include all horizontal and vertical asymptotes",
+            "シラバスの引用は本文から外した")
+in_text("**sketch**（概形をかく）の問題では、**漸近線 $2$ 本と、軸との交点をすべて**かき入れることが求められます。",
+        "答案の書き方を日本語で")
+chk(TEXT.count("\n> ") == 0, f"引用はない: {TEXT.count(chr(10) + '> ')}")
 not_in_text("The reciprocal function $f(x)=\\frac1x", "シラバス本文は引かない")
 not_in_text("Rational functions of the form", "シラバス本文は引かない")
 not_in_text("Link to:", "Link to の行は引かない")
@@ -289,7 +313,7 @@ not_in_text("solve(", "CAS 前提の solve( は書いていない")
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -300,9 +324,8 @@ chk(TEXT.count("{.model-answer}") == 7, f"model-answer が 7: {TEXT.count('{.mod
 chk(len(re.findall(r"^::: \{#exm-aasl28-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -369,12 +392,12 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("The reciprocal function", "図(a) の題")
+not_in_fig("The reciprocal function", "図(a) の題")
 in_fig("$y = \\\\dfrac{1}{x}$", "図(a) の式")
 in_fig("asymptote $x = 0$", "図(a) の垂直漸近線")
 in_fig("asymptote $y = 0$", "図(a) の水平漸近線")
 in_fig("$y = x$", "図(a) の対称の線")
-in_fig("A rational function", "図(b) の題")
+not_in_fig("A rational function", "図(b) の題")
 in_fig("$x = -\\\\dfrac{d}{c}$", "図(b) の垂直漸近線")
 in_fig("$y = \\\\dfrac{a}{c}$", "図(b) の水平漸近線")
 in_fig("axis intercepts", "図(b) の切片")
@@ -386,11 +409,16 @@ for leak in ["= 3", "= 2", "= -2", "\\frac{15}{4}", "x+5", "2x+1"]:
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-8.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-2-7.qmd") < DRAFT.index("aasl-2-8.qmd"), "並びが 2.7 → 2.8")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+DRAFT = None
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/02-functions/aasl-2-8.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-2-7.qmd") < DRAFT.index("aasl-2-8.qmd"), "並びが 2.7 → 2.8")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("（注）_quarto.yml がないので、登録のチェックは飛ばした")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-8.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -434,13 +462,13 @@ not_in_text(r"たとえば $f(x) = \dfrac{3}{x+1}$ では $3 = 0$ が解けな�
 in_text("つまり $x = -\\dfrac{b}{a}$（$a \\neq 0$ のとき）", "x 切片の条件")
 not_in_text("シラバスが **any** intercepts と書いているのは、このためです。",
             "同上")
-in_text("- **$y$ 切片**（$y$-intercept）", "y-intercept の英語")
-in_text("- **$x$ 切片**（$x$-intercept）", "x-intercept の英語")
+in_text("- **$y$-intercept**（$y$ 切片）", "y-intercept の英語")
+in_text("- **$x$-intercept**（$x$ 切片）", "x-intercept の英語")
 
 # --- 例題1(b)・演習5 の答えが本文に先出ししていない ----------------------
 not_in_body(r"f(f(x)) = \frac{1}{\left(\dfrac{1}{x}\right)} = x",
             "例題1(b) の計算が本文にない")
-in_text("$f(f(x)) = x$ という式でも確かめられます（例題 1 の (b) でやってみてください）。",
+in_text("$f(f(x)) = x$ という式でも確かめられます（このあとの [例題 1](#exm-aasl28-recip) の (b) でやってみます）。",
         "第 2 節は例題に送る")
 
 # --- 変換の順序 ---------------------------------------------------------
@@ -507,7 +535,7 @@ chk(_e02f.subs(_e02x, -99) < 2, "E02 左の枝は y = 2 の下")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -517,18 +545,18 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
 # ══════════════════════════════════════════════════════════
-in_text('このページで扱う分数関数は、次の形の関数です。', "公式の前置き 1")
+in_text('$1$ 次式を $1$ 次式で割った形の関数を、このページでは **rational function**（分数関数）として扱います。次の形です。', "公式の前置き 1")
 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. reciprocal function（逆数関数）$f(x) = \\dfrac{1}{x}$ {#reciprocal}', "見出しの英語: 1. reciprocal function（逆数関")
-in_text('### 2. $\\dfrac{1}{x}$ は自分自身が逆関数（self-inverse） {#selfinverse}', "見出しの英語: 2. $\dfrac{1}{x}$ は自分自身が逆関")
-in_text('### 3. rational function（分数関数）$f(x) = \\dfrac{ax+b}{cx+d}$ {#rational}', "見出しの英語: 3. rational function（分数関数）")
-in_text('### 4. $2$ 本の漸近線（asymptotes） {#asymptotes}', "見出しの英語: 4. $2$ 本の漸近線（asymptotes）")
-in_text('### 5. intercepts（軸との交点） {#intercepts}', "見出しの英語: 5. intercepts（軸との交点）")
-in_text('### 6. domain と range {#domainrange}', "見出しの英語: 6. domain と range")
-in_text('### 7. sketch のかき方 {#sketch}', "見出しの英語: 7. sketch のかき方")
+in_text('### 1. The reciprocal function（逆数関数） {#reciprocal}', "見出しの英語: 1. The reciprocal function")
+in_text('### 2. A self-inverse function（自分自身が逆関数になる関数） {#selfinverse}', "見出しの英語: 2. A self-inverse function")
+in_text('### 3. Rational functions（分数関数） {#rational}', "見出しの英語: 3. Rational functions")
+in_text('### 4. Vertical and horizontal asymptotes（垂直漸近線と水平漸近線） {#asymptotes}', "見出しの英語: 4. Vertical and horizontal asymptotes")
+in_text('### 5. Intercepts with the axes（軸との交点） {#intercepts}', "見出しの英語: 5. Intercepts with the axes")
+in_text('### 6. Domain and range（定義域と値域） {#domainrange}', "見出しの英語: 6. Domain and range")
+in_text('### 7. Sketching the graph（グラフの概形のかき方） {#sketch}', "見出しの英語: 7. Sketching the graph")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
@@ -538,8 +566,8 @@ for _sent in [
     'the two asymptotes and bot',
 ]:
     chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
-in_text('- $\\dfrac{1}{x}$ が**自分自身の逆関数**（self-inverse）だと分かる。', "その内容は本文にある")
-in_text('つまり、**漸近線 $2$ 本と、軸との交点をすべて**かき入れます。', "その内容は本文にある")
+in_text('- $\\dfrac{1}{x}$ が **self-inverse**（自分自身の逆関数）だと分かる。', "その内容は本文にある")
+in_text('**漸近線 $2$ 本と、軸との交点をすべて**かき入れることが求められます。', "その内容は本文にある")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：演習 9 の図から説明文を外した（方針 第 21 節）
@@ -585,6 +613,18 @@ not_in_text("4. **$2$ つの枝**を、", "前の言い方は消した")
 # 消した段落の中身は正しかった（値は検算しておく）
 _xx = sp.Symbol("x")
 chk(sp.solve(sp.Eq(3, 0), _xx) == [], "3/(x+1) に x 切片はない")
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -60,9 +60,7 @@ axs[0].set_title("drawing 1", fontsize=12.5, color=INK, pad=6)
 board(axs[1], (-0.9, 4.9), (-0.7, 3.5))
 draw_G(axs[1], pos=Q)
 axs[1].set_title("drawing 2", fontsize=12.5, color=INK, pad=6)
-fig.text(0.5, 0.02, "same vertices, same edges — the same graph",
-         fontsize=12, ha="center", color=ACC)
-fig.tight_layout(rect=(0, 0.05, 1, 1))
+fig.tight_layout()
 save(fig, "ahl-3-14-same.svg")
 
 # ══════════════ 3. degree と handshake ══════════════
@@ -201,8 +199,7 @@ for u, v in TREE:
     edge(axs[2], P[u], P[v], color=GREEN, lw=2.6)
 for k in P:
     node(axs[2], P[k], k, color=GREEN)
-axs[2].set_title("a tree: $5$ vertices, $4$ edges, no cycle",
-                 fontsize=11.5, color=GREEN, pad=6)
+axs[2].set_title("a tree", fontsize=11.5, color=GREEN, pad=6)
 fig.tight_layout()
 save(fig, "ahl-3-14-tree.svg")
 
@@ -224,7 +221,6 @@ for k, p in towns.items():
     axs[0].plot([p[0]], [p[1]], "o", color=LINE, ms=9, zorder=6)
     axs[0].text(p[0], p[1] - 0.42, k, fontsize=9.5, ha="center", va="top",
                 color=INK, zorder=7, bbox=BOX)
-axs[0].set_title("roads between towns", fontsize=12, color=INK, pad=6)
 
 board(axs[1], (-0.9, 5.9), (-0.6, 3.6))
 for (u, v), (_, _, w) in zip(E6, roads):
@@ -232,8 +228,6 @@ for (u, v), (_, _, w) in zip(E6, roads):
     wlabel(axs[1], P[u], P[v], w, GOLD, 10)
 for k, p in P.items():
     node(axs[1], p, k)
-axs[1].set_title("the same information as a weighted graph",
-                 fontsize=12, color=ACC, pad=6)
 fig.tight_layout()
 save(fig, "ahl-3-14-map.svg")
 
@@ -364,7 +358,7 @@ X = {"A": (0.2, 2.6), "B": (2.6, 2.6), "C": (0.2, 0.3), "D": (2.6, 0.3)}
 for u, v in [("A", "D"), ("B", "C"), ("A", "B"), ("C", "D")]:
     edge(axs[0], X[u], X[v])
 axs[0].plot([1.4], [1.45], "x", color=ACC, mew=2.6, ms=12, zorder=8)
-note(axs[0], 1.4, -0.55, "this crossing is NOT a vertex", ACC, 11)
+note(axs[0], 1.4, -0.55, "not a vertex", ACC, 11)
 axs[0].annotate("", xy=(1.4, 1.15), xytext=(1.4, -0.28),
                 arrowprops=dict(arrowstyle="-|>", color=ACC, lw=1.6),
                 zorder=9)
@@ -379,49 +373,45 @@ for u, v in [("A", "B"), ("B", "D"), ("D", "C"), ("C", "A")]:
     edge(axs[1], Y[u], Y[v])
 for k, p in Y.items():
     node(axs[1], p, k)
-note(axs[1], 1.4, -0.55, "the same graph, drawn without a crossing",
-     GREEN, 11)
 axs[1].set_title("$4$ vertices, $4$ edges", fontsize=12, color=INK, pad=6)
 fig.tight_layout()
 save(fig, "ahl-3-14-crossing.svg")
 
 # ══════════════ 10. unweighted と weighted ══════════════
-fig, axs = plt.subplots(1, 2, figsize=(10.6, 3.8))
+fig, axs = plt.subplots(1, 2, figsize=(8.4, 3.6))
 U = {"P": (0.2, 0.4), "Q": (0.2, 2.6), "R": (2.4, 2.6), "T": (2.4, 0.4)}
 UE = [("P", "Q"), ("Q", "R"), ("R", "T"), ("P", "R")]
 
-board(axs[0], (-0.8, 4.4), (-1.0, 3.4))
+board(axs[0], (-0.8, 3.4), (-0.4, 3.4))
 for u, v in UE:
     edge(axs[0], U[u], U[v])
 for k, p in U.items():
     node(axs[0], p, k)
-note(axs[0], 1.3, -0.65, "asks only: joined, or not?", GREY, 11)
 axs[0].set_title("unweighted graph", fontsize=12, color=INK, pad=6)
 
-board(axs[1], (-0.8, 4.4), (-1.0, 3.4))
+board(axs[1], (-0.8, 3.4), (-0.4, 3.4))
 UW = [("P", "Q", "4"), ("Q", "R", "7"), ("R", "T", "5"), ("P", "R", "9")]
 for u, v, w in UW:
     edge(axs[1], U[u], U[v])
     wlabel(axs[1], U[u], U[v], w)
 for k, p in U.items():
     node(axs[1], p, k)
-note(axs[1], 1.3, -0.65, "each edge also carries a number", GOLD, 11)
 axs[1].set_title("weighted graph", fontsize=12, color=INK, pad=6)
 fig.tight_layout()
 save(fig, "ahl-3-14-weighted.svg")
 
 # ══════════════ 11. adjacent と connected ══════════════
-fig, ax = plt.subplots(figsize=(9.4, 3.4))
-board(ax, (-0.8, 8.0), (-1.5, 2.2))
+fig, ax = plt.subplots(figsize=(7.6, 3.0))
+board(ax, (-0.8, 7.2), (-1.3, 2.1))
 Z = {"A": (0.2, 0.9), "B": (2.2, 0.9), "C": (4.2, 0.9), "D": (6.2, 0.9)}
 for u, v in [("A", "B"), ("B", "C"), ("C", "D")]:
     edge(ax, Z[u], Z[v])
 edge(ax, Z["A"], Z["B"], color=GREEN, lw=3.4)
 for k, p in Z.items():
     node(ax, p, k)
-note(ax, 1.2, 1.75, "$A$ and $B$: adjacent  ($1$ edge)", GREEN, 11.5)
+note(ax, 1.2, 1.75, "adjacent", GREEN, 11.5)
 note(ax, 3.2, -0.85,
-     "$A$ and $D$: not adjacent, but connected  ($A \\to B \\to C \\to D$)",
+     "connected:  $A \\to B \\to C \\to D$",
      LINE, 11.5)
 ax.annotate("", xy=(6.0, 0.55), xytext=(0.4, 0.55),
             arrowprops=dict(arrowstyle="-|>", color=LINE, lw=1.5,
@@ -439,22 +429,19 @@ for u, v in [("A", "B"), ("B", "C"), ("C", "A")]:
 for k, p in T1.items():
     node(axs[0], p, k, color=(ACC if k != "D" else GREY),
          tc=(ACC if k != "D" else GREY))
-note(axs[0], 1.7, -0.75, "$4$ vertices, $3$ edges — but NOT a tree",
-     ACC, 11.5)
+note(axs[0], 1.7, -0.75, "$4$ vertices, $3$ edges", ACC, 11.5)
 note(axs[0], 1.5, 1.15, "cycle", ACC, 10.5)
-note(axs[0], 4.0, 0.55, "$D$ is cut off", GREY, 10.5)
-axs[0].set_title("counting is not enough", fontsize=12, color=ACC, pad=6)
+note(axs[0], 4.0, 0.55, "cut off", GREY, 10.5)
+axs[0].set_title("not a tree", fontsize=12, color=ACC, pad=6)
 
 board(axs[1], (-0.9, 4.6), (-1.2, 3.4))
 for u, v in [("A", "B"), ("B", "C"), ("C", "D")]:
     edge(axs[1], T1[u], T1[v], color=GREEN, lw=2.6)
 for k, p in T1.items():
     node(axs[1], p, k, color=GREEN, tc=GREEN)
-note(axs[1], 1.7, -0.75, "$4$ vertices, $3$ edges — and it IS a tree",
-     GREEN, 11.5)
-note(axs[1], 2.0, 1.15, "connected, no cycle", GREEN, 10.5)
-axs[1].set_title("check connected, and no cycle", fontsize=12,
-                 color=GREEN, pad=6)
+note(axs[1], 1.7, -0.75, "$4$ vertices, $3$ edges", GREEN, 11.5)
+note(axs[1], 3.3, 2.7, "connected, no cycle", GREEN, 10.5)
+axs[1].set_title("a tree", fontsize=12, color=GREEN, pad=6)
 fig.tight_layout()
 save(fig, "ahl-3-14-nottree.svg")
 
@@ -481,11 +468,11 @@ for i, has_loop in enumerate((False, True)):
 
 axs[0].set_title("no loop", fontsize=12, color=INK, pad=8)
 note(axs[0], 0.6, -1.75, r"$\deg(P) = 2$", color=INK, fs=13)
-note(axs[0], 0.6, 1.78, "$2$ edge ends at $P$", color=GREY, fs=11)
+note(axs[0], 0.6, 1.78, "$2$ edge ends", color=GREY, fs=11)
 
 axs[1].set_title("one loop at $P$", fontsize=12, color=ACC, pad=8)
 note(axs[1], 0.6, -1.75, r"$\deg(P) = 2 + 2 = 4$", color=ACC, fs=13)
-note(axs[1], 1.15, 1.78, "$2 + 2 = 4$ edge ends at $P$", color=ACC, fs=11)
+note(axs[1], 1.15, 1.78, "$2 + 2 = 4$ edge ends", color=ACC, fs=11)
 for _a in (145, 215):
     _t = np.radians(_a)
     axs[1].annotate("", xy=(R * np.cos(_t), R * np.sin(_t)),
@@ -494,8 +481,8 @@ for _a in (145, 215):
                                     shrinkB=3,
                                     connectionstyle="arc3,rad=0.15"),
                     zorder=16)
-note(axs[1], -1.55, 1.28, "both ends", color=ACC, fs=10.5)
-note(axs[1], -1.55, -1.28, "of the loop", color=ACC, fs=10.5)
+note(axs[1], -1.55, 1.28, "loop end", color=ACC, fs=10.5)
+note(axs[1], -1.55, -1.28, "loop end", color=ACC, fs=10.5)
 fig.tight_layout()
 save(fig, "ahl-3-14-loop.svg")
 
@@ -508,9 +495,7 @@ for u, v in TREE2:
     edge(ax, P[u], P[v], color=GREEN, lw=2.6)
 for k in P:
     node(ax, P[k], k, color=GREEN)
-note(ax, 2.4, -0.15,
-     "connected, and no cycle:  $5$ vertices, $4$ edges",
-     color=GREEN, fs=11.5)
+note(ax, 2.4, -0.15, "$5$ vertices, $4$ edges", color=GREEN, fs=11.5)
 ax.set_title("a tree", fontsize=12.5, color=GREEN, pad=6)
 fig.tight_layout()
 save(fig, "ahl-3-14-treeonly.svg")

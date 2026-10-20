@@ -34,15 +34,13 @@ GREY = "#6b7280"
 WARM = "#b45309"
 GREEN = "#15803d"
 
-fig1, ax1 = plt.subplots(figsize=(5.4, 4.4))
-fig2, ax2 = plt.subplots(figsize=(5.4, 4.4))
+fig1, ax1 = plt.subplots(figsize=(5.4, 4.0))
+fig2, ax2 = plt.subplots(figsize=(5.4, 4.0))
 PIL = ["$-2\\pi$", "$-\\pi$", "$0$", "$\\pi$", "$2\\pi$"]
 
 # ══════════════════════════════════════════════════════════
 # (a) sin と cos
 # ══════════════════════════════════════════════════════════
-ax1.set_title("$y = \\sin x$ and $y = \\cos x$", fontsize=11, color=INK,
-              loc="left", pad=10)
 x = np.linspace(-2 * np.pi, 2 * np.pi, 800)
 ax1.plot(x, np.sin(x), color=ACCENT, linewidth=2.2, label="$y = \\sin x$")
 ax1.plot(x, np.cos(x), color=WARM, linewidth=2.0, linestyle=(0, (6, 3)),
@@ -66,7 +64,6 @@ ax1.legend(loc="upper center", ncol=2, frameon=False, fontsize=10,
 # ══════════════════════════════════════════════════════════
 # (b) tan
 # ══════════════════════════════════════════════════════════
-ax2.set_title("$y = \\tan x$", fontsize=11, color=INK, loc="left", pad=10)
 for k in (-2, -1, 0, 1):
     lo = (k + 0.5) * np.pi + 0.02
     hi = (k + 1.5) * np.pi - 0.02
@@ -87,7 +84,6 @@ for _sp in ("top", "right", "left", "bottom"):
     ax2.spines[_sp].set_visible(False)
 ax2.tick_params(length=0, colors=GREY)
 ax2.text(np.pi / 2 + 0.14, 5.2, "asymptote", fontsize=9.5, color=WARM)
-ax2.text(-1.7 * np.pi, 5.9, "repeats every $\\pi$", fontsize=10, color=INK)
 
 for _fig, _name in ((fig1, "aasl-3-7a-idea-a.svg"), (fig2, "aasl-3-7a-idea-b.svg")):
     _fig.tight_layout()

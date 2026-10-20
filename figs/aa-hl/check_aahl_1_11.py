@@ -57,6 +57,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 def split_ok(num, p, q, a, b, tag):
     """num/((x-p)(x-q)) = a/(x-p) + b/(x-q) を、第一原理から確かめる。"""
     lhs = num / ((x - p) * (x - q))
@@ -278,13 +282,13 @@ chk((7 * (-1) + 1) != 0, "生徒の式では左辺が 0 でない")
 # ══════════════════════════════════════════════════════════
 # 4. シラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Maximum of two distinct linear terms in the denominator,"
+not_in_text("> Maximum of two distinct linear terms in the denominator,"
         " with degree of numerator less than the degree of the denominator.",
         "範囲の Guidance を逐語で")
-in_text("> Example: $\\dfrac{2x+1}{x^{2}+x-2} \\equiv \\dfrac{1}{(x-1)}"
+not_in_text("> Example: $\\dfrac{2x+1}{x^{2}+x-2} \\equiv \\dfrac{1}{(x-1)}"
         " + \\dfrac{1}{(x+2)}$", "シラバスの例を逐語で")
-in_text("`Link to: use of partial fractions to rearrange the integrand`",
-        "積分への Link を引用")
+not_in_text("`Link to: use of partial fractions", "Link の英文は引用しない")
+in_text("積分する式を部分分数に直すところで使います。", "積分へのつながり")
 in_text("## この項目に、公式集の欄はありません", "公式集にないと書く")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 # シラバスの例は、例題・演習で使い回していない
@@ -310,7 +314,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "expand(", "propFrac"]:
 # ══════════════════════════════════════════════════════════
 # 6. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -319,8 +323,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl111-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), "The idea が 1..7 で連番: %s" % _idea)
@@ -381,7 +386,7 @@ for _line in TEXT.splitlines():
 # 7. Why it works は折りたたむ
 # ══════════════════════════════════════════════════════════
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -426,7 +431,7 @@ for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("A single fraction, seen as a sum of two simple ones", "図の題")
+not_in_fig("A single fraction, seen as a sum of two simple ones", "図の題")
 in_fig("their sum", "図の凡例")
 in_fig("POLES = (-1.0, 3.0)", "図の漸近線は x=-1, x=3")
 in_text("$2$ つの点線を足すと、実線になります。点線は $x = -1$ と $x = 3$ で切れています。",
@@ -484,7 +489,7 @@ chk(_pm is not None and int(_pm.group(1)) == len(_written),
 # ══════════════════════════════════════════════════════════
 # 12. 見張り
 # ══════════════════════════════════════════════════════════
-in_text("**ですから $p \\neq q$、つまり $2$ つの因数が別のものであることが要ります。**",
+in_text("**ですから $p \\neq q$、つまり $2$ つの因数が別のものであることが必要です。**",
         "distinct の理由")
 in_text("**これが `degree of numerator less than the degree of the denominator`"
         " の意味です。**", "分子の次数の理由")
@@ -495,5 +500,7 @@ chk(TEXT.count("足し算に戻します") + TEXT.count("足し算に戻す") >=
     "足し戻しの検算を何度も使っている")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

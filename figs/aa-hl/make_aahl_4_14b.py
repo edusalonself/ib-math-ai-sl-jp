@@ -45,9 +45,7 @@ def dens(t):
 # ══════════════════════════════════════════════════════════
 # (a) 確率は面積
 # ══════════════════════════════════════════════════════════
-fig1, ax1 = plt.subplots(figsize=(5.8, 3.0))
-ax1.set_title("for a continuous variable, probability is area under the"
-              " curve", fontsize=10.2, color=INK, loc="left", pad=10)
+fig1, ax1 = plt.subplots(figsize=(5.8, 2.8))
 
 T = np.linspace(0, 4.4, 600)
 Y = dens(T)
@@ -59,26 +57,25 @@ ax1.plot([_a, _a], [0, dens(_a)], color=GREY, linewidth=1.0,
          linestyle=(0, (3, 3)), zorder=3)
 ax1.plot([_b, _b], [0, dens(_b)], color=GREY, linewidth=1.0,
          linestyle=(0, (3, 3)), zorder=3)
-ax1.text(_a - 0.06, -0.035, "$a$", fontsize=10.5, color=INK)
-ax1.text(_b - 0.05, -0.035, "$b$", fontsize=10.5, color=INK)
 ax1.text(1.28, 0.10, "$P(a \\leq X \\leq b)$", fontsize=10, color=INK)
 ax1.text(3.0, 0.24, "total area $= 1$", fontsize=10, color=GREY)
 ax1.text(1.45, 0.40, "$y = f(x)$", fontsize=11, color=ACCENT)
 ax1.set_xlim(-0.15, 4.5)
-ax1.set_ylim(-0.08, 0.50)
+ax1.set_ylim(0, 0.50)
+ax1.set_xticks([_a, _b])
+ax1.set_xticklabels(["$a$", "$b$"], fontsize=10.5, color=INK)
 ax1.set_xlabel("$x$", fontsize=10, color=INK)
 ax1.set_yticks([])
 ax1.spines["top"].set_visible(False)
 ax1.spines["right"].set_visible(False)
 ax1.spines["left"].set_visible(False)
 ax1.tick_params(labelsize=9, colors=GREY)
+ax1.tick_params(axis="x", labelsize=11, labelcolor=INK)
 
 # ══════════════════════════════════════════════════════════
 # (b) 最頻値と中央値
 # ══════════════════════════════════════════════════════════
-fig2, ax2 = plt.subplots(figsize=(5.8, 3.2))
-ax2.set_title("the mode is the peak; the median splits the area in half",
-              fontsize=10.2, color=INK, loc="left", pad=10)
+fig2, ax2 = plt.subplots(figsize=(5.8, 2.9))
 
 ax2.plot(T, Y, color=INK, linewidth=2.0, zorder=4)
 MODE = 1.0 / 1.6
@@ -99,10 +96,8 @@ ax2.text(MED + 0.06, dens(MED) + 0.045, "median", fontsize=10, color=INK)
 ax2.text(0.38, 0.055, "area $0.5$", fontsize=9.5, color=INK,
          bbox=dict(facecolor="white", edgecolor="none", pad=1.0))
 ax2.text(MED + 0.45, 0.055, "area $0.5$", fontsize=9.5, color=INK)
-ax2.text(0.02, -0.105, "they are different unless the curve is symmetric",
-         fontsize=9, color=GREY)
 ax2.set_xlim(-0.15, 4.5)
-ax2.set_ylim(-0.14, 0.52)
+ax2.set_ylim(0, 0.52)
 ax2.set_xlabel("$x$", fontsize=10, color=INK)
 ax2.set_yticks([])
 ax2.spines["top"].set_visible(False)

@@ -406,23 +406,33 @@ in_text("$\\mathbf{v}$ と $\\mathbf{w}$ が $\\mathbf{0}$ でなければ"
 # ══════════════════════════════════════════════════════════
 # 7. 公式集とシラバスの引用が正しいか
 # ══════════════════════════════════════════════════════════
-in_text("$\\mathbf{v} \\cdot \\mathbf{w} = v_1w_1 + v_2w_2 + v_3w_3$",
-        "公式集の成分形")
+in_text("\\mathbf{v} \\cdot \\mathbf{w} = v_1w_1 + v_2w_2 + v_3w_3,",
+        "公式集の成分形（第2節の表示数式）")
+in_text("公式集の **AHL 3.13** の欄の式も、はじめから $3$ 成分で書かれています。",
+        "成分形が公式集にあることを本文で書いている")
 in_text("$\\mathbf{v} \\cdot \\mathbf{w} = \\lvert \\mathbf{v} \\rvert"
         " \\lvert \\mathbf{w} \\rvert \\cos\\theta$", "公式集の幾何形")
-in_text("Definition and calculation of the scalar product of two vectors.",
-        "Content の 1 行目")
-in_text("The angle between two vectors; the acute angle between two lines.",
-        "Content の 2 行目")
-in_text("ascertain whether the vectors are perpendicular", "Guidance の引用")
-in_text("Not required:", "Not required の引用")
-in_text("The component of vector $\\mathbf{a}$ acting in the direction of"
-        " vector $\\mathbf{b}$", "Components of vectors の Guidance")
+not_in_text("Definition and calculation of the scalar product of two vectors.",
+            "シラバスの引用は本文から外した")
+not_in_text("The angle between two vectors; the acute angle between two lines.",
+            "シラバスの引用は本文から外した")
+not_in_text("ascertain whether the vectors are perpendicular", "Guidance の引用は本文から外した")
+not_in_text("Not required:", "Not required の引用は本文から外した")
+not_in_text("The component of vector $\\mathbf{a}$ acting in the direction of"
+            " vector $\\mathbf{b}$", "Guidance の引用は本文から外した")
+# 引用の代わりに日本語で直接書いてある
+in_text("**perpendicular**（垂直）かどうかを $\\mathbf{v} \\cdot \\mathbf{w} = 0$ で判定できる。",
+        "垂直の判定が到達目標にある")
+in_text("**証明は問われません**が、次の $3$ つは計算で使います。", "証明は問われないことを日本語で")
+in_text("### 8. Component in the direction of a vector（$\\mathbf{b}$ の向きの成分） {#component}",
+        "b の向きの成分の節")
 in_text("公式集にありません", "(a・b)/|b| が公式集にないこと")
-in_text("On HL examination papers radian measure should be assumed unless"
-        " otherwise indicated.", "Topic 3 の前置き")
-in_text("Guidance 欄のうち、角についての行は次の $1$ 行です。",
-        "Guidance の行数の言い方（レビュー9）")
+not_in_text("On HL examination papers radian measure should be assumed unless"
+            " otherwise indicated.", "シラバスの引用は本文から外した")
+in_text("HL の試験では、特に指示がなければ、角は **radian**（弧度法。[AHL 3.7](ahl-3-7.qmd#which)）で考えるのが決まりです。",
+        "radian が既定であることを日本語で書いている")
+not_in_text("Guidance 欄のうち、角についての行は次の $1$ 行です。",
+            "Guidance 欄の話は本文から外した")
 not_in_text("Guidance 欄は、次の $1$ 行です。", "Guidance を 1 行と言い切る文")
 # 3.13b に回すものを、このページで説明していないこと
 for banned in ["right-hand screw", "unit normal"]:
@@ -435,7 +445,8 @@ for _ln in TEXT.splitlines():
 for _ln in TEXT.splitlines():
     if "\\times \\mathbf{w}" in _ln:
         chk("3-13b" in _ln, "× を 3.13b の案内以外で使っている: " + _ln[:50])
-chk(TEXT.count("ahl-3-13b.qmd") >= 3, "3.13b への前方リンクがある")
+# 2026-10: 冒頭の公式集ボックスを消したので、3.13b へのリンクは GDC 第1節の 1 か所
+chk(TEXT.count("ahl-3-13b.qmd") >= 1, "3.13b への前方リンクがある")
 
 # ══════════════════════════════════════════════════════════
 # 8. GDC の記述
@@ -465,7 +476,7 @@ not_in_text("演習 $5$ で $k = 6$ と $k = -6$ が出たら", "答えを先に
 # ══════════════════════════════════════════════════════════
 # 9. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6,
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2,
     "--- は 6 本（front matter 2 + 例題 4）")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -473,9 +484,14 @@ chk(TEXT.count("{.model-answer}") == 6, "model-answer が 6")
 chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
 chk(len(re.findall(r"^::: \{#exm-ahl313a-", TEXT, re.M)) == 4, "例題が 4")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Using your GDC (TI-Nspire CX II)", "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "7 つの見出しが所定の順")
+chk([h for h in _h2 if h in _want] == _want, "見出しが所定の順（Worked examples は無い）")
+chk("## Worked examples" not in TEXT, "## Worked examples の節は無い")
+_why = TEXT.index("\n## Why it works")
+_exs = [m.start() for m in re.finditer(r"(?m)^::: \{#exm-", TEXT)]
+chk(len(_exs) == 4 and all(TEXT.index("\n## The idea") < p < _why for p in _exs),
+    "例題 4 つがすべて The idea の中（Why it works より前）")
 _idea = [int(m) for m in re.findall(r"^### (\d+)\. .*\{#(?!gdc-)", TEXT, re.M)]
 chk(_idea == list(range(1, 10)), f"The idea が 1..9 で連番: {_idea}")
 _gdc = [int(m) for m in re.findall(r"^### (\d+)\. .*\{#gdc-", TEXT, re.M)]
@@ -547,15 +563,18 @@ for leak in ["8.4", "82.9", "42.8", "82.2", "59.5", "10.3", "4.4",
 #    登録先は _quarto-draft.yml ではなく _quarto.yml です。
 #    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
 #    「index の一覧にある」「残りの N 項目」は、もう検査しません。
-PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"),
-           encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-13a.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
-chk(PUB.index("ahl-3-12b.qmd") < PUB.index("ahl-3-13a.qmd")
-    < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.12b → 3.13a → 3.14")
-DRAFT = open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
-             encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-13a.qmd" not in DRAFT,
-    "下書き用の _quarto-draft.yml には残っていない")
+# _quarto.yml / _quarto-draft.yml が無い作業用コピーでは、登録の検査は飛ばす
+_PUBF = os.path.join(HERE, "..", "..", "_quarto.yml")
+if os.path.exists(_PUBF):
+    PUB = open(_PUBF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-13a.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
+    chk(PUB.index("ahl-3-12b.qmd") < PUB.index("ahl-3-13a.qmd")
+        < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.12b → 3.13a → 3.14")
+_DRF = os.path.join(HERE, "..", "..", "_quarto-draft.yml")
+if os.path.exists(_DRF):
+    DRAFT = open(_DRF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-13a.qmd" not in DRAFT,
+        "下書き用の _quarto-draft.yml には残っていない")
 
 GLO = open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
            encoding="utf-8").read()

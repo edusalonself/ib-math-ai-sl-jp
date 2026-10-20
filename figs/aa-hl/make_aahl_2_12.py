@@ -50,8 +50,6 @@ fig1, ax1 = plt.subplots(figsize=(6.2, 4.0))
 _x = np.linspace(-2.8, 3.8, 400)
 _y = _x ** 3 - 2 * _x ** 2 - 5 * _x + 6
 ax1.plot(_x, _y, color=ACCENT, linewidth=1.8)
-ax1.set_title("Each crossing of the $x$-axis is one factor",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 for _r, _lab in ((-2.0, "$x+2$"), (1.0, "$x-1$"), (3.0, "$x-3$")):
     ax1.plot([_r], [0.0], "o", color=WARM, markersize=6)
     ax1.annotate(_lab, xy=(_r, 0.0), xytext=(_r, -7.0), ha="center",
@@ -60,8 +58,6 @@ for _r, _lab in ((-2.0, "$x+2$"), (1.0, "$x-1$"), (3.0, "$x-3$")):
     ax1.text(_r, 1.4, "$%d$" % int(_r), ha="center", va="bottom",
              fontsize=9.5, color=GREY)
 ax1.text(-2.6, 13.0, "$y = x^{3}-2x^{2}-5x+6$", fontsize=10, color=ACCENT)
-ax1.text(3.0, -13.5, "three zeros, three linear factors",
-         ha="right", va="center", fontsize=9, color=GREY)
 ax1.set_xlim(-3.2, 4.0)
 ax1.set_ylim(-15.0, 16.0)
 ax1.set_xticks([])
@@ -89,8 +85,6 @@ for _ax, (_lab, _yv, _note, _col) in zip(axes2, PANELS):
     _ax.set_xticks([])
     _ax.set_yticks([])
     frame(_ax)
-fig2.suptitle("How many times the factor appears decides the shape at $x=a$",
-              fontsize=10.5, color=INK, x=0.02, ha="left", y=1.02)
 
 for _fig, _name in ((fig1, "a"), (fig2, "b")):
     _fig.tight_layout()

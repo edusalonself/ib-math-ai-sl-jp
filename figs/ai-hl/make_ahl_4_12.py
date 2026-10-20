@@ -81,11 +81,7 @@ for ax, (title, pts) in zip(axs, SHOTS.items()):
     for x, y in pts:
         ax.plot([x], [y], "o", ms=8, mfc=col, mec="white", mew=1.2, zorder=5)
     ax.set_title(title, fontsize=11.5, color=col, pad=8)
-fig.text(0.5, 0.015, "the bullseye is the true value: "
-                     "reliable = the shots agree with each other,   "
-                     "valid = they are aimed at the right target",
-         fontsize=11.5, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0.06, 1, 1))
+fig.tight_layout()
 save(fig, "ahl-4-12-target.svg")
 
 # ══════════════ 3. 期待度数が 5 未満のクラスをまとめる ══════════════
@@ -98,21 +94,19 @@ E6 = [13.68, 24.19, 37.13, 37.13, 24.19, 13.68]
 fig, axs = plt.subplots(1, 2, figsize=(14.4, 4.2),
                         gridspec_kw={"width_ratios": [1.2, 1.0]})
 for ax, LAB, E, title, col in (
-        (axs[0], LAB8, E8, "8 classes: two are below 5", ACC),
-        (axs[1], LAB6, E6, "combine the tails: 6 classes, all above 5",
+        (axs[0], LAB8, E8, "8 classes", ACC),
+        (axs[1], LAB6, E6, "6 classes",
          GREEN)):
     xs = np.arange(len(E))
     cols = [ACC if e < 5 else LINE for e in E]
     ax.bar(xs, E, color=cols, width=0.66, zorder=3)
     ax.axhline(5, color=GOLD, lw=1.8, ls="--", zorder=4)
-    ax.text(-0.45, 41.5, "the dashed line is expected frequency $=5$",
-            fontsize=10.5, ha="left", va="center", color=GOLD)
     for x, e in zip(xs, E):
         ax.text(x, (7.0 if e < 5 else e + 1.1), f"{e:.2f}", fontsize=10,
                 ha="center", va="bottom", color=(ACC if e < 5 else INK))
     ax.set_xticks(xs)
     ax.set_xticklabels(LAB, fontsize=10)
-    ax.set_ylim(0, 45)
+    ax.set_ylim(0, 41)
     ax.set_ylabel("expected frequency", fontsize=11)
     ax.set_title(title, fontsize=12.5, color=col, pad=8)
     ax.grid(True, axis="y", color=GRID, lw=0.8)
@@ -123,14 +117,14 @@ fig.tight_layout()
 save(fig, "ahl-4-12-combine.svg")
 
 # ══════════════ 4. 自由度の数え方 ══════════════
-fig, ax = plt.subplots(figsize=(12.4, 2.9))
+fig, ax = plt.subplots(figsize=(12.4, 2.1))
 ax.set_xlim(0, 13.4)
-ax.set_ylim(-1.15, 3.5)
+ax.set_ylim(0.6, 3.5)
 ax.axis("off")
 BOXES = [
     (0.3, 3.1, LINE, "classes\nAFTER combining", "$6$"),
     (4.3, 2.0, GREY, "always\nsubtract $1$", "$1$"),
-    (7.6, 3.6, ACC, "parameters estimated\nfrom the data", "$2$"),
+    (7.6, 3.6, ACC, "estimated\nparameters", "$2$"),
 ]
 for x, w, col, label, val in BOXES:
     ax.add_patch(FancyBboxPatch((x, 0.9), w, 1.5,
@@ -146,8 +140,5 @@ ax.text(11.6, 1.65, "$= 3$", fontsize=16, ha="left", va="center",
         color=GREEN, weight="bold")
 ax.text(6.0, 2.95, "$\\nu = k - 1 - q$", fontsize=15, ha="center",
         va="center", color=INK)
-ax.text(6.0, -0.35, "count the classes you actually test, "
-                    "not the classes you started with",
-        fontsize=11.5, ha="center", va="center", color=ACC)
 fig.tight_layout()
 save(fig, "ahl-4-12-df.svg")

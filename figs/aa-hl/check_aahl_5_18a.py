@@ -48,6 +48,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 
 _x = sp.Symbol("x")
 _t = sp.Symbol("t")
@@ -176,28 +180,28 @@ chk(sp.simplify(sp.factor(_x * sp.Symbol("yy"))
 # ══════════════════════════════════════════════════════════
 # 3. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> First order differential equations.", "シラバス 1 行目を逐語で")
-in_text("> Numerical solution of $\\dfrac{\\mathrm{d}y}{\\mathrm{d}x}"
+not_in_text("> First order differential equations.", "シラバス 1 行目を逐語で")
+not_in_text("> Numerical solution of $\\dfrac{\\mathrm{d}y}{\\mathrm{d}x}"
         " = f(x, y)$ using Euler's method.", "Euler 法を逐語で")
-in_text("> $x_{n+1} = x_{n}+h$, where $h$ is a constant.",
+not_in_text("> $x_{n+1} = x_{n}+h$, where $h$ is a constant.",
         "刻み幅を逐語で")
-in_text("> Variables separable.", "変数分離を逐語で")
-in_text("> Example: the logistic equation $\\dfrac{\\mathrm{d}n}"
+not_in_text("> Variables separable.", "変数分離を逐語で")
+not_in_text("> Example: the logistic equation $\\dfrac{\\mathrm{d}n}"
         "{\\mathrm{d}t} = kn(a-n)$, $a$, $k \\in \\mathbb{R}$",
         "ロジスティック方程式を逐語で")
-in_text("> Link to: partial fractions (AHL1.11) and use of partial fractions"
+not_in_text("> Link to: partial fractions (AHL1.11) and use of partial fractions"
         " to rearrange the integrand (AHL5.15).", "Link を逐語で")
 in_text("公式集の **5.18** の欄", "公式集の場所")
-in_text("> Euler's method", "公式集の見出しを逐語で")
+not_in_text("> Euler's method", "公式集の見出しを逐語で")
 
 # ══════════════════════════════════════════════════════════
 # 4. 図と、答えの漏れ
 # ══════════════════════════════════════════════════════════
-in_fig("Euler's method follows the slope field", "図(a) の題")
-in_fig("each step uses the gradient at the point it starts", "図(a) の注")
-in_fig("the logistic curve", "図(b) の題")
-in_fig("growth slows as $n$ approaches $a$", "図(b) の注")
-in_text("Euler 法は、傾きの場の上を直線でたどります。", "キャプション (a)")
+not_in_fig("Euler's method follows the slope field", "図(a) の題")
+not_in_fig("each step uses the gradient at the point it starts", "図(a) の注")
+not_in_fig("the logistic curve", "図(b) の題")
+not_in_fig("growth slows as $n$ approaches $a$", "図(b) の注")
+in_text("各点に、その点での傾きの短い線分をかきます。解の曲線は、線分の向きに沿って進みます。", "キャプション (a)")
 in_text("ロジスティック曲線は S 字で、上限に近づきます。", "キャプション (b)")
 _BODY = TEXT[:TEXT.index("## Exercises")]
 for leak, where in [("1.48", "演習1"), ("2.41", "演習2")]:
@@ -218,7 +222,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -227,8 +231,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl518a-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -271,7 +276,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -331,5 +336,7 @@ in_text("## $\\ln(a-n)$ の符号を落とす", "マイナス")
 in_text("**解は、数ではなく関数**です。", "解は関数")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

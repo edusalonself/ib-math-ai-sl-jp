@@ -236,7 +236,7 @@ in_text("menu → Analyze Graph → Intersection", "交点")
 in_text("`ctrl` を押してから `var` キーで入ります", "レビュー9: sto キー")
 not_in_text("**sto** キー（`ctrl` の下あたりの矢印キー）", "レビュー9")
 in_text("## `e` と `π` は、キーで入れてください", "レビュー18")
-in_text("### 3. 方程式は、graph の交点で解くのが確実です", "レビュー17")
+in_text("### 3. Solving with intersections（グラフの交点で方程式を解く） {#gdc-solve}", "レビュー17")
 # 2026-09: 生徒は全員 TI-Nspire CX II なので、CAS／非CAS の区別には触れない
 in_text("CX II に `solve(` はありません", "レビュー17")
 not_in_text("CAS")
@@ -249,16 +249,23 @@ in_text("電卓に $k$ という名前で保存しておく", "レビュー19: �
 # ══════════════════════════════════════════════════════════
 # 5. シラバス・公式集
 # ══════════════════════════════════════════════════════════
-in_text("## 公式集の AHL 2.9 の欄\n**$1$ 行だけあります。**")
-in_text("**このページの $3$ つのモデルは、$1$ つも印刷されていません。**")
-in_text("Content 欄は、導入の $1$ 行と、$5$ つのモデルからできています。")
-in_text("Guidance 欄のうち、このページに関わるのは次の $5$ つです。")
-in_text("Exponential models to calculate half-life.")
-in_text("Natural logarithmic models: $f(x) = a + b\\ln x$")
-in_text("Sinusoidal models: $f(x) = a\\sin\\bigl(b(x-c)\\bigr)+d$")
-in_text("In radians, period is $\\dfrac{2\\pi}{b}$.")
-in_text("**Natural logarithmic models の行は、Guidance 欄に対応する記述がありません。**")
-in_text("Guidance の `Link to: modelling skills (SL2.6)` は、この項目全体にかかっています",
+# 2026-10: 公式集のボックスとシラバスの引用は外し、各節の本文で 1 文ずつ言う
+not_in_text("## 公式集の AHL 2.9 の欄", "公式集のボックスは外した")
+in_text("公式集の **AHL 2.9** の欄にあるのは、logistic の式（[AHL 2.9b](ahl-2-9b.qmd)）だけです。"
+        "**このページの $3$ つのモデルの式は、どれも載っていません。**", "3 つのモデルは公式集にない")
+in_text("この式は公式集にないので、上の流れで自分で導けるようにしておいてください。", "half-life の式は公式集にない")
+in_text("この形も公式集には載っていません。", "a + b ln x は公式集にない")
+in_text("**この式は公式集に載っていないので、覚えておく必要があります。**", "period 2π/b は覚える")
+for _q in ("Content 欄は、導入の $1$ 行と、$5$ つのモデルからできています。",
+           "Guidance 欄のうち、このページに関わるのは次の $5$ つです。",
+           "Exponential models to calculate half-life.",
+           "Natural logarithmic models: $f(x) = a + b\\ln x$",
+           "Sinusoidal models: $f(x) = a\\sin\\bigl(b(x-c)\\bigr)+d$",
+           "In radians, period is $\\dfrac{2\\pi}{b}$.",
+           "**Natural logarithmic models の行は、Guidance 欄に対応する記述がありません。**"):
+    not_in_text(_q, "シラバスの引用は本文から外した")
+chk(re.findall(r"^> (?!\[)", TEXT, re.M) == [], "シラバスの引用（> ...）は残っていない")
+not_in_text("Guidance の `Link to: modelling skills (SL2.6)` は、この項目全体にかかっています",
         "レビュー13")
 not_in_text("シラバスの Guidance が `Link to: modelling skills (SL2.6)` と書いているとおり",
             "レビュー13")
@@ -269,12 +276,28 @@ not_in_text("Connections 欄が挙げている pH scale", "レビュー3: 帰属
 # ══════════════════════════════════════════════════════════
 heads = re.findall(r"(?m)^## (.+)$", TEXT)
 need = ["What you should be able to do", "The idea", "Why it works",
-        "Worked examples", "Common errors",
+        "Common errors",
         "Using your GDC (TI-Nspire CX II)", "Exercises"]
 for hh in need:
     chk(hh in heads, "見出しがない: " + hh)
-chk([hh for hh in heads if hh in need] == need, "7 つの見出しの順序")
-chk(len(re.findall(r"(?m)^---$", TEXT)) == 6, "--- は 6 個")
+chk([hh for hh in heads if hh in need] == need, "6 つの見出しの順序（Worked examples は 2026-10 に削除）")
+# 2026-10 新レイアウト：例題は The idea の各節の後ろ
+not_in_text("## Worked examples", "Worked examples の節は消した")
+_iw = TEXT.index("\n## Why it works")
+chk(all(TEXT.index("## The idea") < m.start() < _iw
+        for m in re.finditer(r"::: \{#exm-", TEXT)), "例題はすべて The idea の中")
+_exm_want = [
+        ("exm-ahl29a-decay", "half-life"),
+        ("exm-ahl29a-caffeine", "k-and-T"),
+        ("exm-ahl29a-log", "fit-log"),
+        ("exm-ahl29a-tide", "four-letters")]
+chk(re.findall(r"::: \{#(exm-[a-z0-9-]+)\}", TEXT) == [e for e, _ in _exm_want],
+    "例題の並び")
+for _e, _s in _exm_want:
+    _hs = re.findall(r"^### \d+\. .*?\{#([A-Za-z0-9-]+)\}$",
+                     TEXT[:TEXT.index("::: {#" + _e + "}")], re.M)
+    chk(_hs[-1:] == [_s], "%s は %s の節の中: %s" % (_e, _s, _hs[-1:]))
+chk(len(re.findall(r"(?m)^---$", TEXT)) == 2, "--- は 6 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳は 14 個")
 chk(TEXT.count("::: {.ex-sep}") == 9, ".ex-sep は 9 個")
 chk(len(re.findall(r"::: \{#exm-ahl29a-[\w-]+\}", TEXT)) == 4, "worked example は 4 個")
@@ -295,10 +318,10 @@ for term in ["**half-life**（半減期）", "**natural logarithmic model**（�
              "**vertical asymptote**（垂直漸近線）", "period（周期）",
              "domain（定義域）"]:
     in_text(term, "英語→日本語の順")
-in_text("![Half-life: equal steps, equal halving](img/ahl-2-9a-halflife.svg)")
-in_text("![A natural logarithmic model](img/ahl-2-9a-log.svg)")
-in_text("![The rule needs neighbouring turning points](img/ahl-2-9a-period.svg)")
-in_text("![The four letters of a sinusoidal model](img/ahl-2-9a-sine.svg)")
+in_text("![半減期：同じ時間がたつごとに、量が半分になります。](img/ahl-2-9a-halflife.svg)")
+in_text("![自然対数のモデルです。](img/ahl-2-9a-log.svg)")
+in_text("![この決まりは、となり合う最大と最小にだけ使えます。](img/ahl-2-9a-period.svg)")
+in_text("![正弦波モデルの $4$ つの文字が決めるものです。](img/ahl-2-9a-sine.svg)")
 for svg in ["ahl-2-9a-halflife.svg", "ahl-2-9a-log.svg",
             "ahl-2-9a-period.svg", "ahl-2-9a-sine.svg"]:
     chk(os.path.exists(os.path.join(HERE, "..", "..", "ai-hl", "02-functions",

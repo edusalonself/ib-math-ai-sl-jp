@@ -71,13 +71,9 @@ ax.text(0.15, 1.15, "$\\mathbf{a}$", fontsize=14, color=GREEN, ha="right",
         va="center")
 ax.text(2.9, 1.75, "$\\mathbf{b}$", fontsize=14, color=ACC, ha="left",
         va="bottom")
-ax.text(3.6, -3.4, "$\\mathbf{r} = \\binom{1}{2} + \\lambda\\binom{3}{-1}$\n"
-                   "get on at $\\mathbf{a}$, then walk $\\lambda$ steps of "
-                   "$\\mathbf{b}$",
+ax.text(3.6, -2.3, "$\\mathbf{r} = \\binom{1}{2} + \\lambda\\binom{3}{-1}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-4.4, 8.6), (-4.6, 5.0))
-ax.set_title("one point on the line, and one direction", fontsize=12.5,
-             color=INK, pad=6)
+grid(ax, (-4.4, 8.6), (-3.1, 5.0))
 fig.tight_layout()
 save(fig, "ahl-3-11-idea.svg")
 
@@ -99,13 +95,9 @@ ax.text(3.6, -0.55, "new $\\mathbf{a}$", fontsize=12, color=GOLD, ha="center",
         va="top")
 ax.text(4.0, 1.35, "new $\\mathbf{b}$", fontsize=12, color=LINE, ha="center",
         va="bottom")
-ax.text(3.6, -3.4, "$\\mathbf{r} = \\binom{7}{0} + \\mu\\binom{-6}{2}$\n"
-                   "different $\\mathbf{a}$, different $\\mathbf{b}$, "
-                   "SAME line",
+ax.text(3.6, -2.3, "$\\mathbf{r} = \\binom{7}{0} + \\mu\\binom{-6}{2}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-4.4, 8.6), (-4.6, 5.0))
-ax.set_title("the equation of a line is not unique", fontsize=12.5,
-             color=INK, pad=6)
+grid(ax, (-4.4, 8.6), (-3.1, 5.0))
 fig.tight_layout()
 save(fig, "ahl-3-11-notunique.svg")
 
@@ -129,13 +121,11 @@ for P, lab, dy in [(PA, "$A$  $(\\lambda = 0)$", 0.35),
             va="bottom")
 ax.text(4.0, -0.55, "$\\overrightarrow{AB} = \\binom{4}{2}$", fontsize=12.5,
         color=ACC, ha="center", va="top")
-ax.text(5.4, -3.6, "$\\mathbf{r} = \\binom{2}{-1} + "
-                   "\\lambda\\binom{4}{2}$\n"
-                   "$\\mathbf{a}$ is either point; "
-                   "$\\mathbf{b}$ is $\\overrightarrow{AB}$",
+ax.text(5.4, -3.4, "$\\mathbf{r} = \\binom{2}{-1} + "
+                   "\\lambda\\binom{4}{2}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-1.6, 12.4), (-4.8, 5.0))
-ax.set_title("(a)  through two points", fontsize=12.5, color=INK, pad=6)
+grid(ax, (-1.6, 12.4), (-4.4, 5.0))
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) 線上かどうか
 ax = axs[1]
@@ -146,18 +136,12 @@ ax.plot([ONP[0]], [ONP[1]], "o", color=GREEN, ms=9, zorder=8)
 ax.plot([OFFP[0]], [OFFP[1]], "o", color=ACC, ms=9, zorder=8)
 ax.plot([OFFP[0], ONP[0]], [OFFP[1], ONP[1]], color=ACC, lw=2.0, ls=":",
         zorder=5)
-ax.text(ONP[0] + 0.3, ONP[1] - 0.3, "$(8,\\ 2)$ is on the line\n"
-                                    "$\\lambda = 1.5$ works for both",
+ax.text(ONP[0] + 0.3, ONP[1] - 0.3, "$(8,\\ 2)$,  $\\lambda = 1.5$",
         fontsize=11, color=GREEN, ha="left", va="top")
 ax.text(OFFP[0] - 0.35, OFFP[1] + 0.25, "$D(8,\\ 3)$", fontsize=12, color=ACC,
         ha="right", va="bottom")
-ax.text(5.4, -3.6, "for $D$: $x$ gives $\\lambda = 1.5$, "
-                   "but then $y = 2$, not $3$\n"
-                   "one $\\lambda$ must work in EVERY component",
-        fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-1.6, 12.4), (-4.8, 5.0))
-ax.set_title("(b)  testing whether a point is on the line", fontsize=12.5,
-             color=INK, pad=6)
+grid(ax, (-1.6, 12.4), (-4.4, 5.0))
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=1.8)
 save(fig, "ahl-3-11-point.svg")
@@ -181,18 +165,14 @@ ax.text(L1a[0] - 0.25, L1a[1] + 0.3, "$\\lambda = 0$", fontsize=10.5,
 ax.text(L2a[0] - 0.3, L2a[1] - 0.2, "$\\mu = 0$", fontsize=10.5, color=GREEN,
         ha="right", va="top")
 ax.plot([4.6, 5.2], [0.6, -1.6], color=ACC, lw=1.2, ls=":", zorder=4)
-ax.text(5.4, -2.6, "meeting point $(4,\\ 1)$\n"
+ax.text(5.4, -2.6, "$(4,\\ 1)$\n"
                    "$\\lambda = 1$ on $L_1$\n"
                    "$\\mu = 2$ on $L_2$",
         fontsize=11, color=ACC, ha="center", va="center", bbox=BOX, zorder=9)
 ax.text(-3.2, 3.6, "$L_1$", fontsize=13, color=LINE, ha="left", va="bottom")
 ax.text(4.9, 3.2, "$L_2$", fontsize=13, color=GREEN, ha="center", va="center")
-ax.text(3.0, -5.5, "the two parameters need NOT be equal\n"
-                   "solve $\\mathbf{a}_1+\\lambda\\mathbf{b}_1 = "
-                   "\\mathbf{a}_2+\\mu\\mathbf{b}_2$ for both",
-        fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-3.4, 8.0), (-6.8, 5.4))
-ax.set_title("(a)  where two lines meet", fontsize=12.5, color=INK, pad=6)
+grid(ax, (-3.4, 8.0), (-4.0, 5.4))
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) 平行
 ax = axs[1]
@@ -202,16 +182,12 @@ full_line(ax, np.array([1.0, -2.0]), np.array([-3.0, 1.0]), -1.4, 2.4,
 ax.plot([1.0], [-2.0], "o", color=GOLD, ms=8, zorder=8)
 ax.text(-3.2, 3.6, "$L_1$", fontsize=13, color=LINE, ha="left", va="bottom")
 ax.text(-2.2, -1.5, "$L_3$", fontsize=13, color=GOLD, ha="left", va="top")
-ax.text(1.5, -3.1, "$(1,\\ -2)$ is on $L_3$,\nbut not on $L_1$",
-        fontsize=10.5, color=GOLD, ha="left", va="top", bbox=BOX, zorder=9)
+ax.text(0.7, -2.3, "$(1,\\ -2)$",
+        fontsize=10.5, color=GOLD, ha="right", va="top", bbox=BOX, zorder=9)
 ax.text(5.0, -1.2, "direction $\\binom{-3}{1} = -\\binom{3}{-1}$",
         fontsize=11, color=GOLD, ha="center", va="center")
-ax.text(3.0, -5.5, "parallel directions, and $L_3$ has a point\n"
-                   "that is not on $L_1$: they never meet",
-        fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-3.4, 8.0), (-6.8, 5.4))
-ax.set_title("(b)  parallel, and different: no meeting point", fontsize=12.5,
-             color=INK, pad=6)
+grid(ax, (-3.4, 8.0), (-4.0, 5.4))
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=1.8)
 save(fig, "ahl-3-11-intersect.svg")

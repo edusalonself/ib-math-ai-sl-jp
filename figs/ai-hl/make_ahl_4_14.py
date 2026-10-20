@@ -40,16 +40,16 @@ SD = math.sqrt(VAR)
 
 PANELS = [
     ("$X$", XS, LINE, ""),
-    ("$X + 3$   (add $3$)", XS + 3, GREEN, "  — unchanged"),
-    ("$2X$   (multiply by $2$)", 2 * XS, ACC, "  — doubled"),
+    ("$X + 3$", XS + 3, GREEN, ""),
+    ("$2X$", 2 * XS, ACC, ""),
 ]
 
-fig, axs = plt.subplots(1, 3, figsize=(13.0, 3.9), sharey=True)
+fig, axs = plt.subplots(1, 3, figsize=(12.0, 3.6), sharey=True)
 for ax, (title, vals, col, sub) in zip(axs, PANELS):
     ax.bar(vals, PS, width=0.42, color=col, alpha=0.85, zorder=3)
     m = float((vals * PS).sum())
     s = math.sqrt(float((((vals - m) ** 2) * PS).sum()))
-    ax.axvline(m, color=GOLD, lw=2.0, ls="--", zorder=4)
+    ax.axvline(m, ymax=0.70, color=GOLD, lw=2.0, ls="--", zorder=4)
     ax.annotate("", xy=(m - s, 0.455), xytext=(m + s, 0.455),
                 arrowprops=dict(arrowstyle="<->", color=GREY, lw=1.5),
                 zorder=6)
@@ -85,7 +85,7 @@ for v1, p1 in zip(BV, BP):
 SV = np.array(sorted(sums))
 SP = np.array([sums[k] for k in SV])
 
-fig, axs = plt.subplots(1, 2, figsize=(12.4, 4.2), sharex=True, sharey=True)
+fig, axs = plt.subplots(1, 2, figsize=(10.4, 3.8), sharex=True, sharey=True)
 
 ax = axs[0]
 ax.bar(TV, TP, width=0.22, color=ACC, alpha=0.85, zorder=3)
@@ -95,8 +95,7 @@ ax.annotate("", xy=(10 - sd2, 0.44), xytext=(10 + sd2, 0.44),
             arrowprops=dict(arrowstyle="<->", color=ACC, lw=1.8), zorder=6)
 ax.text(10, 0.465, "sd $= %.3g$" % sd2, fontsize=11.5, ha="center",
         va="bottom", color=ACC, bbox=BOX, zorder=12)
-ax.set_title("$2X$   —   weigh ONE bag, double the reading",
-             fontsize=12, color=ACC, pad=10)
+ax.set_title("$2X$", fontsize=12.5, color=ACC, pad=10)
 ax.set_xlabel("mass (kg)")
 tidy(ax)
 
@@ -108,17 +107,12 @@ ax.annotate("", xy=(10 - sds, 0.44), xytext=(10 + sds, 0.44),
             arrowprops=dict(arrowstyle="<->", color=GREEN, lw=1.8), zorder=6)
 ax.text(10, 0.465, "sd $= %.3g$" % sds, fontsize=11.5, ha="center",
         va="bottom", color=GREEN, bbox=BOX, zorder=12)
-ax.set_title("$X_{1} + X_{2}$   —   weigh TWO bags, add them",
-             fontsize=12, color=GREEN, pad=10)
+ax.set_title("$X_{1} + X_{2}$", fontsize=12.5, color=GREEN, pad=10)
 ax.set_xlabel("mass (kg)")
 ax.set_xlim(8.8, 11.2)
 ax.set_ylim(0, 0.56)
 tidy(ax)
 
-fig.text(0.5, -0.03,
-         "same mean ($10$ kg), different spread:   two bags can cancel each "
-         "other out, one doubled bag cannot",
-         fontsize=11.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-4-14-2x.svg")
 
@@ -126,7 +120,7 @@ save(fig, "ahl-4-14-2x.svg")
 # ══════════════ 3. なぜ n - 1 で割るのか ══════════════
 rng = np.random.default_rng(7)
 POPMU, POPSD = 50.0, 10.0
-fig, axs = plt.subplots(1, 2, figsize=(12.4, 4.3))
+fig, axs = plt.subplots(1, 2, figsize=(11.6, 3.8))
 
 # 左：同じ標本でも、x-bar から測ると μ から測るより必ず近い
 ax = axs[0]
@@ -136,8 +130,8 @@ SSmu = float(((smp - POPMU) ** 2).sum())     # 398
 SSxb = float(((smp - sm) ** 2).sum())        # 74
 
 for row, centre, col, lab, ss in (
-        (1.72, POPMU, GREY, "measured from $\\mu = 50$", SSmu),
-        (0.62, sm, ACC, "measured from $\\bar{x} = 59$", SSxb)):
+        (1.72, POPMU, GREY, "from $\\mu = 50$", SSmu),
+        (0.62, sm, ACC, "from $\\bar{x} = 59$", SSxb)):
     ax.axvline(centre, ymin=0.06, ymax=0.94, color=col, lw=2.0,
                ls="--", zorder=2)
     for v in smp:
@@ -150,14 +144,9 @@ for row, centre, col, lab, ss in (
     ax.text(35.5, row - 0.30, "sum of squares $= %g$" % ss, fontsize=11,
             ha="left", va="center", color=col, weight="bold")
 
-ax.text(52, -0.30, "the lower distances are shorter — and they are as\n"
-                   "short as any centre could possibly make them",
-        fontsize=10.5, ha="center", va="center", color=INK)
 ax.set_xlim(34, 70)
-ax.set_ylim(-0.72, 2.25)
+ax.set_ylim(0.12, 2.12)
 ax.set_yticks([])
-ax.set_title("the same sample, measured two ways",
-             fontsize=12, color=INK, pad=10)
 for sp in ("top", "right", "left"):
     ax.spines[sp].set_visible(False)
 ax.spines["bottom"].set_color(GREY)
@@ -174,15 +163,13 @@ ax.axhline(POPSD ** 2, color=GREY, lw=2.0, ls="--", zorder=2)
 ax.text(20, POPSD ** 2 + 5, "$\\sigma^{2} = 100$", fontsize=11.5,
         ha="right", va="bottom", color=GREY)
 ax.plot(NS, vn, "o-", color=ACC, lw=2.2, ms=7,
-        label="divide by $n$   — too small")
+        label="divide by $n$")
 ax.plot(NS, vn1, "s-", color=GREEN, lw=2.2, ms=7,
-        label="divide by $n-1$   — on target")
+        label="divide by $n-1$")
 ax.set_xlabel("sample size $n$")
 ax.set_ylabel("average value over many samples")
 ax.set_ylim(0, 130)
 ax.legend(fontsize=10.5, loc="lower right", frameon=False)
-ax.set_title("what each formula gives, averaged over many samples",
-             fontsize=12, color=INK, pad=10)
 ax.grid(True, color=GRID, lw=0.8)
 ax.set_axisbelow(True)
 for sp in ("top", "right"):

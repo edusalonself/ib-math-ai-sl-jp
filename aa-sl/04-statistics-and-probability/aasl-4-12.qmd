@@ -7,7 +7,7 @@ sidebar: aa-sl
 ::: {.callout-note}
 ## What you should be able to do
 - **standardized value**（$z$ 値）の定義 $z = \dfrac{x - \mu}{\sigma}$ を書ける。
-- $z$ が「平均から標準偏差いくつぶん離れているか」を表すことを説明できる。
+- $z$ が「平均から **standard deviation**（標準偏差）いくつぶん離れているか」を表すことを説明できる。
 - $x$ から $z$ を、$z$ から $x$ を、どちらの向きにも出せる。
 - $z$ を使って、**平均や散らばりのちがう $2$ つの量**を比べられる。
 - $P(X < a)$ が与えられて $\mu$ が未知のとき、$z$ から $\mu$ を求められる。
@@ -17,9 +17,9 @@ sidebar: aa-sl
 
 ## The idea
 
-### 1. $z$-score（$z$ 値）とは {#zvalue}
+### 1. Standardized value（標準化した値 $z$） {#zvalue}
 
-$X \sim N(\mu,\ \sigma^{2})$ のとき、値 $x$ の **standardized value**（標準化した値、$z$ 値）は
+正規分布の値を、平均と標準偏差を基準にした数に直します。$X \sim N(\mu,\ \sigma^{2})$ のとき、値 $x$ の **standardized value**（標準化した値、$z$ 値）は
 
 $$
 z = \frac{x - \mu}{\sigma}
@@ -36,9 +36,11 @@ $$ {#eq-aasl412-z}
 
 **分母でそのずれを $\sigma$ で測ります。** 割ることで、単位が消えます。$z$ は**単位のない数**です。
 
-### 2. $z$ の読み方 {#meaning}
+### 2. Reading a $z$-value（$z$ の読み方） {#meaning}
 
-![A normal curve with two scales: values above, $z$-values below](img/aasl-4-12-idea-a.svg){#fig-aasl412-idea-a width=100%}
+$z$ の値から、その値が分布の中のどこにあるかが分かります。
+
+![目盛りが $2$ 段ある正規分布の曲線です。上がもとの値、下が $z$ の値です。](img/aasl-4-12-idea-a.svg){#fig-aasl412-idea-a width=85%}
 
 $z$ は、**平均から標準偏差いくつぶん離れているか**を表します（@fig-aasl412-idea-a）。
 
@@ -55,9 +57,9 @@ $z$ は、**平均から標準偏差いくつぶん離れているか**を表し
 
 **大きさが「めずらしさ」の目やすになります。** $|z|$ が $2$ をこえると、$68$–$95$–$99.7$ のめやす（[SL 4.9](aasl-4-9.qmd#empirical)）から、外側 $5\%$ ほどの領域に入っていることが分かります。
 
-### 3. 逆向きに読む {#back}
+### 3. From $z$ back to $x$（逆向きに読む） {#back}
 
-@eq-aasl412-z を $x$ について解くと
+$z$ から、もとの値 $x$ にもどすこともできます。@eq-aasl412-z を $x$ について解くと
 
 $$
 x = \mu + z\sigma
@@ -69,137 +71,6 @@ $$ {#eq-aasl412-x}
 
 ::: {.callout-note appearance="simple"}
 **@eq-aasl412-x は公式集にありません。** @eq-aasl412-z を移項しただけなので、その場で作れます。
-:::
-
-### 4. $z$ でくらべる {#compare}
-
-**単位のちがう $2$ つの量は、そのままでは比べられません。** 数学のテスト（$100$ 点満点）と、走った時間（秒）を並べても意味がありません。
-
-**$z$ に直すと比べられます。** どちらも「そのグループの中で平均から $\sigma$ いくつぶん離れているか」という同じものさしになるからです。
-
-**同じ種類の量でも、平均や散らばりがちがえば $z$ で比べます。** テスト A とテスト B の点をそのまま比べても、難しさがちがえば意味がありません。
-
-**大きいほうがよいとはかぎりません。** 走った時間のように「小さいほどよい」量では、$z$ が小さい（負で絶対値が大きい）ほうがよい成績です。**何がよいのかを、問題文から読み取ってください。**
-
-### 5. $\mu$ か $\sigma$ が未知のとき {#unknown}
-
-「$P(X < a) = p$ で、$\mu$ が未知」という問題は、次の $3$ 歩で解けます。
-
-| 歩 | すること |
-|:--|:--|
-| $1$ | 面積 $p$ から $z$ を出す（`invNorm(p, 0, 1)`） |
-| $2$ | @eq-aasl412-x に $a$、$z$、分かっているほうを代入する |
-| $3$ | $1$ 次方程式を解く |
-
-: 未知の $\mu$ または $\sigma$ を求める手順 {#tbl-aasl412-steps}
-
-**$1$ 歩目で使うのは、平均 $0$、標準偏差 $1$ の正規分布です。** これを **standard normal distribution**（標準正規分布）といい、その変数をふつう $Z$ と書きます。
-
-**$\mu$ が分からないので、$\mu$ を入れずに済ませる必要があります。** $z$ は単位のない数なので、これができます。
-
-**$2$ 歩目の代入で、未知数は $1$ つだけ残ります。** $\mu$ が未知なら $a = \mu + z\sigma$ を $\mu$ について、$\sigma$ が未知なら $\sigma$ について解きます。
-
-**面積は左からで入れます。** $P(X > a) = p$ と書かれていたら、$1 - p$ を入れます（[SL 4.9](aasl-4-9.qmd#inverse)）。
-
-### 6. 両方が未知のとき {#both}
-
-![Two given areas, two $z$-values, two equations](img/aasl-4-12-idea-b.svg){#fig-aasl412-idea-b width=100%}
-
-$\mu$ も $\sigma$ も分からないときは、**面積が $2$ つ与えられます**（@fig-aasl412-idea-b）。
-
-それぞれから $z_{1}$、$z_{2}$ を出すと
-
-$$
-a = \mu + z_{1}\sigma, \qquad b = \mu + z_{2}\sigma
-$$ {#eq-aasl412-pair}
-
-という、$\mu$ と $\sigma$ についての連立 $1$ 次方程式になります。
-
-**引くと $\mu$ が消えます。** $b - a = (z_{2} - z_{1})\sigma$ なので
-
-$$
-\sigma = \frac{b - a}{z_{2} - z_{1}}
-$$ {#eq-aasl412-sigma}
-
-です。$\sigma$ が出たら、どちらかの式にもどして $\mu$ を出します。
-
-**$z_{1} \ne z_{2}$ でなければ解けません。** 同じ面積が $2$ 回与えられても、式が $1$ 本しかないのと同じです。
-
-**GDC に `solve(` はありません。** この連立は手で解きます（[GDC の節](#gdc-nosolve)）。
-
-### 7. 答案の書きかた {#writing}
-
-**使った $z$ の値を書いてください。** GDC が出した値を、小数第 $4$ 位くらいまで書き写します。これが「$z$ を使って解いた」という証拠になります。
-
-**丸めるのは最後です。** 途中の $z$ を $3$ 桁に丸めてから代入すると、答えの $3$ 桁目がずれることがあります。GDC の値をそのまま使ってください。
-
-**最後の答えは、割り切れるときはその値を、割り切れないときは有効数字 $3$ 桁で書きます。**
-
-**$\sigma$ は必ず正です。** 負の $\sigma$ が出たら、どこかで符号を取りちがえています。
-
-::: {.callout-warning}
-## この節で GDC を使うのは、面積から $z$ を出すところです
-シラバスは、正規分布の確率と値を**GDC で求める**としています。だから、**その数値を出す問題は Paper 2 で出ます。**
-
-**単元全体が Paper 1 の対象外というわけではありません。** 与えられた $x$、$\mu$、$\sigma$ からの $z$ の計算、標準化の意味、$z$ の符号の読み方は、電卓なしでも問われます。
-
-**GDC を使うのは、面積から $z$ を出すところです。** $x$、$\mu$、$\sigma$ が分かっているときの $z$ は、引き算と割り算だけなので手で出せます。
-
-**それでも、答えの見当は手でつけられます。** 面積が $0.5$ より大きいか小さいかで $z$ の符号が決まり、そこから $\mu$ が $a$ より上か下かが決まります。
-:::
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-**なぜ、$z$ に直すと比べられるのでしょうか。** どの正規分布も、同じ曲線を平行移動して拡大・縮小したものだからです（[SL 4.9](aasl-4-9.qmd#empirical)）。
-
-$\mu$ を引くと中心が $0$ に移り、$\sigma$ で割ると広がりが $1$ になります。**残るのは「$\sigma$ いくつぶん離れているか」だけです。**
-
-だから、$\mu$ も $\sigma$ もちがう $2$ つの分布でも、$z$ に直せば同じものさしの上に並びます。
-
-**なぜ、$z$ の分布は $\mu$ にも $\sigma$ にもよらないのでしょうか。** $X \sim N(\mu,\ \sigma^{2})$ のとき
-
-$$
-P(X < a) = P\!\left(\frac{X - \mu}{\sigma} < \frac{a - \mu}{\sigma}\right)
-$$
-
-だからです。左辺の不等式の両辺に同じ操作（$\mu$ を引いて、正の数 $\sigma$ で割る）をしただけなので、確率は変わりません。
-
-**$\sigma > 0$ がはたらいています。** 正の数で割るので、不等号の向きが変わりません。ここが、$\sigma$ が必ず正であることを使っている場所です。
-
-**書きかえで変わったのは、変数と境目だけです。** 変数は $Z = \dfrac{X - \mu}{\sigma}$ に、境目は $\dfrac{a - \mu}{\sigma}$ になりました。
-
-**この $Z$ は、$\mu$ と $\sigma$ が何であっても同じ分布に従います。** $\mu$ を引くと中心が $0$ に移り、正の数 $\sigma$ で割ると広がりが $1$ になります。正規分布を平行移動して拡大・縮小したものはやはり正規分布なので、$Z \sim N(0,\ 1^{2})$ です。これが[第 5 節](#unknown)の標準正規分布です。
-
-**$\mu$ と $\sigma$ が残るのは、境目のほうだけです。** だから面積 $p$ に対応する $z$ は、$\mu$ や $\sigma$ を知らなくても出せます。
-
-**なぜ、$\mu$ が未知でも解けるのでしょうか。** いま見たとおり、$z$ の側は $\mu$ を含まないからです。
-
-面積から $z$ を出したあと、@eq-aasl412-z の分子・分母にもどると
-
-$$
-z = \frac{a - \mu}{\sigma}
-$$
-
-で、$a$、$z$、$\sigma$ が分かっていれば $\mu$ についての $1$ 次方程式です。両辺に $\sigma$ をかけて $\mu = a - z\sigma$ です。
-
-**$\sigma$ が未知のときも同じです。** $z\sigma = a - \mu$ から $\sigma = \dfrac{a - \mu}{z}$ です。**ただし $z \ne 0$ が要ります。** $z = 0$ は面積が $0.5$ のときで、そのときは $a = \mu$ という情報しか得られず、$\sigma$ は決まりません。
-
-**なぜ、両方が未知だと面積が $2$ つ要るのでしょうか。** 未知数が $2$ つあるからです。
-
-@eq-aasl412-pair は $\mu$ と $\sigma$ についての $1$ 次の連立方程式です。引き算で $\mu$ を消すと @eq-aasl412-sigma が出ます。$z_{2} \ne z_{1}$ なら、この分母は $0$ でないので $\sigma$ が決まり、そこから $\mu$ も決まります。
-
-**$b > a$ と $z_{2} > z_{1}$ は同時に起こります。** だから @eq-aasl412-sigma の分子と分母は同じ符号で、$\sigma > 0$ が出ます。**負の $\sigma$ が出たら、$2$ つの面積のどちらかを取りちがえています。**
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-
-**GDC を使うのは、面積から $z$ を出すところです（Paper 2）。** $x$、$\mu$、$\sigma$ からの $z$ の計算は、電卓なしでも進めます。**どの問題で GDC を使うかは、演習のまえがきに書きました。**答えは、割り切れるときはその値を、割り切れないときは**有効数字 $3$ 桁**（$3$ significant figures）で書きます。
 :::
 
 ::: {#exm-aasl412-basic}
@@ -224,7 +95,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 $\mu = 54$、$\sigma = 8$ です。
 
@@ -270,6 +142,17 @@ $$x = 54 + (-0.75)(8) = 48$$
 
 :::
 :::
+:::
+
+### 4. Comparing with $z$-values（$z$ でくらべる） {#compare}
+
+**単位のちがう $2$ つの量は、そのままでは比べられません。** 数学のテスト（$100$ 点満点）と、走った時間（秒）を並べても意味がありません。
+
+**$z$ に直すと比べられます。** どちらも「そのグループの中で平均から $\sigma$ いくつぶん離れているか」という同じものさしになるからです。
+
+**同じ種類の量でも、平均や散らばりがちがえば $z$ で比べます。** テスト A とテスト B の点をそのまま比べても、難しさがちがえば意味がありません。
+
+**大きいほうがよいとはかぎりません。** 走った時間のように「小さいほどよい」量では、$z$ が小さい（負で絶対値が大きい）ほうがよい成績です。**何がよいのかを、問題文から読み取ってください。**
 
 ::: {#exm-aasl412-compare}
 [In a mathematics test the marks are normally distributed with mean $58$ and standard deviation $5$. In a science test the marks are normally distributed with mean $72$ and standard deviation $10$. Aiko scores $65$ in mathematics and $83$ in science.]{.q-en}
@@ -289,7 +172,8 @@ $$x = 54 + (-0.75)(8) = 48$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** それぞれの $\mu$ と $\sigma$ を使います。
 
@@ -308,7 +192,11 @@ $1.4 > 1.1$ なので、**数学のほうが、集団の中での位置は上**�
 ::: {.model-answer}
 **試験ではこう書く**
 
-*In mathematics $z = 1.4$ and in science $z = 1.1$. Both are positive, so Aiko was above the mean in both tests, but $1.4 > 1.1$, so she was further above the mean, measured in standard deviations, in mathematics. Aiko performed better in mathematics relative to the other candidates.*
+*In mathematics $z = 1.4$ and in science $z = 1.1$.*
+
+*Both are positive, so Aiko was above the mean in both tests, but $1.4 > 1.1$, so she was further above the mean, measured in standard deviations, in mathematics.*
+
+*Aiko performed better in mathematics relative to the other candidates.*
 :::
 
 （数学では $z = 1.4$、理科では $z = 1.1$ である。どちらも正なので両方で平均より上だが、$1.4 > 1.1$ なので、標準偏差で測ると数学のほうが平均から上に離れている。だから、他の受験者と比べた成績は数学のほうがよい、という意味です。）
@@ -328,6 +216,27 @@ $$z_{\text{maths}} = \frac{65 - 58}{5} = 1.4, \qquad z_{\text{science}} = \frac{
 
 :::
 :::
+:::
+
+### 5. Unknown mean or standard deviation（$\mu$ か $\sigma$ が未知のとき） {#unknown}
+
+「$P(X < a) = p$ で、$\mu$ が未知」という問題は、次の $3$ 歩で解けます。
+
+| 歩 | すること |
+|:--|:--|
+| $1$ | 面積 $p$ から $z$ を出す（`invNorm(p, 0, 1)`） |
+| $2$ | @eq-aasl412-x に $a$、$z$、分かっているほうを代入する |
+| $3$ | $1$ 次方程式を解く |
+
+: 未知の $\mu$ または $\sigma$ を求める手順 {#tbl-aasl412-steps}
+
+**$1$ 歩目で使うのは、平均 $0$、標準偏差 $1$ の正規分布です。** これを **standard normal distribution**（標準正規分布）といい、その変数をふつう $Z$ と書きます。
+
+**$\mu$ が分からないので、$\mu$ を入れずに済ませる必要があります。** $z$ は単位のない数なので、これができます。
+
+**$2$ 歩目の代入で、未知数は $1$ つだけ残ります。** $\mu$ が未知なら $a = \mu + z\sigma$ を $\mu$ について、$\sigma$ が未知なら $\sigma$ について解きます。
+
+**面積は左からで入れます。** $P(X > a) = p$ と書かれていたら、$1 - p$ を入れます（[SL 4.9](aasl-4-9.qmd#inverse)）。
 
 ::: {#exm-aasl412-mu}
 [The random variable $X$ follows the distribution $X \sim N(\mu,\ 6^{2})$, where $\mu$ is unknown. It is given that $P(X < 40) = 0.15$.]{.q-en}
@@ -351,7 +260,8 @@ $$z_{\text{maths}} = \frac{65 - 58}{5} = 1.4, \qquad z_{\text{science}} = \frac{
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** `invNorm(0.15, 0, 1)` を使います。
 
@@ -378,7 +288,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Since $P(X < 40) = 0.15 < 0.5$, less than half of the area lies to the left of $40$. The mean splits the area into two halves, so $40$ must lie to the left of the mean, that is $\mu > 40$.*
+*Since $P(X < 40) = 0.15 < 0.5$, less than half of the area lies to the left of $40$.*
+
+*The mean splits the area into two halves, so $40$ must lie to the left of the mean, that is $\mu > 40$.*
 :::
 
 （$P(X < 40) = 0.15$ は $0.5$ より小さいので、$40$ の左側の面積は全体の半分に満たない。平均は面積を半分ずつに分けるので、$40$ は平均より左にある、つまり $\mu > 40$ である、という意味です。）
@@ -404,6 +316,35 @@ $$\mu = 46.2$$
 
 :::
 :::
+:::
+
+### 6. Both unknown（両方が未知のとき） {#both}
+
+$\mu$ と $\sigma$ の両方が分からないときは、式を $2$ 本立てて解きます。
+
+![面積が $2$ つ、$z$ の値が $2$ つ、方程式が $2$ つです。](img/aasl-4-12-idea-b.svg){#fig-aasl412-idea-b width=85%}
+
+$\mu$ も $\sigma$ も分からないときは、**面積が $2$ つ与えられます**（@fig-aasl412-idea-b）。
+
+それぞれから $z_{1}$、$z_{2}$ を出すと
+
+$$
+a = \mu + z_{1}\sigma, \qquad b = \mu + z_{2}\sigma
+$$ {#eq-aasl412-pair}
+
+という、$\mu$ と $\sigma$ についての **system of linear equations**（連立 $1$ 次方程式）になります。
+
+**引くと $\mu$ が消えます。** $b - a = (z_{2} - z_{1})\sigma$ なので
+
+$$
+\sigma = \frac{b - a}{z_{2} - z_{1}}
+$$ {#eq-aasl412-sigma}
+
+です。$\sigma$ が出たら、どちらかの式にもどして $\mu$ を出します。
+
+**$z_{1} \ne z_{2}$ でなければ解けません。** 同じ面積が $2$ 回与えられても、式が $1$ 本しかないのと同じです。
+
+**GDC に `solve(` はありません。** この連立は手で解きます（[GDC の節](#gdc-nosolve)）。
 
 ::: {#exm-aasl412-both}
 [The random variable $X$ follows the distribution $X \sim N(\mu,\ \sigma^{2})$, where $\mu$ and $\sigma$ are both unknown. It is given that $P(X < 30) = 0.1$ and $P(X > 50) = 0.2$. Find the values of $\mu$ and $\sigma$.]{.q-en}
@@ -415,7 +356,8 @@ $$\mu = 46.2$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **$2$ つの面積を、どちらも左からに直します。** $P(X > 50) = 0.2$ は $P(X < 50) = 0.8$ です。
 
@@ -479,6 +421,74 @@ $$\sigma = \frac{20}{2.1231\ldots} = 9.42, \qquad \mu = 42.1$$
 
 :::
 :::
+:::
+
+### 7. Writing the answer（答案の書きかた） {#writing}
+
+**使った $z$ の値を書いてください。** GDC が出した値を、小数第 $4$ 位くらいまで書き写します。これが「$z$ を使って解いた」という証拠になります。
+
+**丸めるのは最後です。** 途中の $z$ を $3$ 桁に丸めてから代入すると、答えの $3$ 桁目がずれることがあります。GDC の値をそのまま使ってください。
+
+**最後の答えは、割り切れるときはその値を、割り切れないときは有効数字 $3$ 桁で書きます。**
+
+**$\sigma$ は必ず正です。** 負の $\sigma$ が出たら、どこかで符号を取りちがえています。
+
+::: {.callout-warning}
+## この節で GDC を使うのは、面積から $z$ を出すところです
+正規分布の確率と値は**GDC で求めます**。だから、**その数値を出す問題は Paper 2 で出ます。**
+
+**単元全体が Paper 1 の対象外というわけではありません。** 与えられた $x$、$\mu$、$\sigma$ からの $z$ の計算、標準化の意味、$z$ の符号の読み方は、電卓なしでも問われます。
+
+**GDC を使うのは、面積から $z$ を出すところです。** $x$、$\mu$、$\sigma$ が分かっているときの $z$ は、引き算と割り算だけなので手で出せます。
+
+**それでも、答えの見当は手でつけられます。** 面積が $0.5$ より大きいか小さいかで $z$ の符号が決まり、そこから $\mu$ が $a$ より上か下かが決まります。
+:::
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+**なぜ、$z$ に直すと比べられるのでしょうか。** どの正規分布も、同じ曲線を **translation**（平行移動）して拡大・縮小したものだからです（[SL 4.9](aasl-4-9.qmd#empirical)）。
+
+$\mu$ を引くと中心が $0$ に移り、$\sigma$ で割ると広がりが $1$ になります。**残るのは「$\sigma$ いくつぶん離れているか」だけです。**
+
+だから、$\mu$ も $\sigma$ もちがう $2$ つの分布でも、$z$ に直せば同じものさしの上に並びます。
+
+**なぜ、$z$ の分布は $\mu$ にも $\sigma$ にもよらないのでしょうか。** $X \sim N(\mu,\ \sigma^{2})$ のとき
+
+$$
+P(X < a) = P\!\left(\frac{X - \mu}{\sigma} < \frac{a - \mu}{\sigma}\right)
+$$
+
+だからです。左辺の不等式の両辺に同じ操作（$\mu$ を引いて、正の数 $\sigma$ で割る）をしただけなので、確率は変わりません。
+
+**$\sigma > 0$ がはたらいています。** 正の数で割るので、不等号の向きが変わりません。ここが、$\sigma$ が必ず正であることを使っている場所です。
+
+**書きかえで変わったのは、変数と境目だけです。** 変数は $Z = \dfrac{X - \mu}{\sigma}$ に、境目は $\dfrac{a - \mu}{\sigma}$ になりました。
+
+**この $Z$ は、$\mu$ と $\sigma$ が何であっても同じ分布に従います。** $\mu$ を引くと中心が $0$ に移り、正の数 $\sigma$ で割ると広がりが $1$ になります。正規分布を平行移動して拡大・縮小したものはやはり正規分布なので、$Z \sim N(0,\ 1^{2})$ です。これが[第 5 節](#unknown)の標準正規分布です。
+
+**$\mu$ と $\sigma$ が残るのは、境目のほうだけです。** だから面積 $p$ に対応する $z$ は、$\mu$ や $\sigma$ を知らなくても出せます。
+
+**なぜ、$\mu$ が未知でも解けるのでしょうか。** いま見たとおり、$z$ の側は $\mu$ を含まないからです。
+
+面積から $z$ を出したあと、@eq-aasl412-z の分子・分母にもどると
+
+$$
+z = \frac{a - \mu}{\sigma}
+$$
+
+で、$a$、$z$、$\sigma$ が分かっていれば $\mu$ についての $1$ 次方程式です。両辺に $\sigma$ をかけて $\mu = a - z\sigma$ です。
+
+**$\sigma$ が未知のときも同じです。** $z\sigma = a - \mu$ から $\sigma = \dfrac{a - \mu}{z}$ です。**ただし $z \ne 0$ が要ります。** $z = 0$ は面積が $0.5$ のときで、そのときは $a = \mu$ という情報しか得られず、$\sigma$ は決まりません。
+
+**なぜ、両方が未知だと面積が $2$ つ要るのでしょうか。** 未知数が $2$ つあるからです。
+
+@eq-aasl412-pair は $\mu$ と $\sigma$ についての $1$ 次の連立方程式です。引き算で $\mu$ を消すと @eq-aasl412-sigma が出ます。$z_{2} \ne z_{1}$ なら、この分母は $0$ でないので $\sigma$ が決まり、そこから $\mu$ も決まります。
+
+**$b > a$ と $z_{2} > z_{1}$ は同時に起こります。** だから @eq-aasl412-sigma の分子と分母は同じ符号で、$\sigma > 0$ が出ます。**負の $\sigma$ が出たら、$2$ つの面積のどちらかを取りちがえています。**
+:::
 
 ## Common errors
 
@@ -520,7 +530,7 @@ $\sigma$ は必ず正です（[第 6 節](#both)）。負が出たら、$2$ つ�
 **手順は答案に書きません。** 書くのは、使った関数と入れた数（`invNorm(0.15, 0, 1)` など）と、出た $z$ の値、そして立てた式です。
 :::
 
-### 1. 面積から $z$ を出す {#gdc-invnorm01}
+### 1. Finding $z$ from an area（面積から $z$ を出す） {#gdc-invnorm01}
 
 `menu → Statistics → Distributions` から正規分布の逆（inverse）を選びます。
 
@@ -537,7 +547,7 @@ $\sigma$ は必ず正です（[第 6 節](#both)）。負が出たら、$2$ つ�
 
 **画面に出た値を、丸めずに書きとめてください。** 小数第 $4$ 位まで書いておけば、あとの計算で $3$ 桁目がずれません。
 
-### 2. 出た式は手で解く {#gdc-nosolve}
+### 2. Solving the equations by hand（出た式は手で解く） {#gdc-nosolve}
 
 **TI-Nspire CX II に `solve(` はありません。** @eq-aasl412-x や @eq-aasl412-pair は、紙の上で解きます。
 
@@ -545,7 +555,7 @@ $\sigma$ は必ず正です（[第 6 節](#both)）。負が出たら、$2$ つ�
 
 **$2$ つが未知のときは、引き算で $\mu$ を消します。** @eq-aasl412-sigma の形にしてから、電卓で割り算をします。
 
-### 3. 答えを `normCdf` で確かめる {#gdc-check}
+### 3. Checking with `normCdf`（答えを `normCdf` で確かめる） {#gdc-check}
 
 **出た $\mu$、$\sigma$ をもとの問題にもどします。** `normCdf(-10^9, a, μ, σ)` が、与えられた面積になるか見ます。
 
@@ -558,10 +568,6 @@ $\sigma$ は必ず正です（[第 6 節](#both)）。負が出たら、$2$ つ�
 ## Exercises
 
 ::: {.callout-note appearance="simple"}
-各問題に、折りたたみが $3$ つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です。英語の答案例が付くものもあります）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-
 **GDC を使うのは $4$・$5$・$6$・$9$・$10$（面積から $z$ を出す問題）です。** $1$・$2$・$3$・$7$・$8$ は、標準化の計算と読み取りだけなので、電卓なしで解けます。
 :::
 
@@ -663,7 +669,13 @@ $$z_{\text{swim}} = \frac{46 - 52}{4} = -1.5, \qquad z_{\text{test}} = \frac{90 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*For the swim, $z = \dfrac{46 - 52}{4} = -1.5$. For the fitness test, $z = \dfrac{90 - 75}{12} = 1.25$. The two z-values have no units, so they can be compared even though one result is a time and the other a score. Since $|-1.5| = 1.5 > 1.25$, the swim time is further from its mean, measured in standard deviations.*
+*For the swim, $z = \dfrac{46 - 52}{4} = -1.5$.*
+
+*For the fitness test, $z = \dfrac{90 - 75}{12} = 1.25$.*
+
+*The two z-values have no units, so they can be compared even though one result is a time and the other a score.*
+
+*Since $|-1.5| = 1.5 > 1.25$, the swim time is further from its mean, measured in standard deviations.*
 :::
 :::
 
@@ -823,7 +835,11 @@ $1$ つ目から $\mu$ が出ます（[第 2 節](#meaning)）。$2$ つ目を @
 ::: {.model-answer}
 **試験ではこう書く**
 
-*A standardized value of $0$ means $x - \mu = 0$, so $\mu = 44$. Then $62 = 44 + 2.4\sigma$ gives $\sigma = \dfrac{18}{2.4} = 7.5$. If the second standardized value were $1.2$, the same distance of $18$ above the mean would be worth only half as many standard deviations, so each standard deviation would have to be twice as large: $\sigma = \dfrac{18}{1.2} = 15$.*
+*A standardized value of $0$ means $x - \mu = 0$, so $\mu = 44$.*
+
+*Then $62 = 44 + 2.4\sigma$ gives $\sigma = \dfrac{18}{2.4} = 7.5$.*
+
+*If the second standardized value were $1.2$, the same distance of $18$ above the mean would be worth only half as many standard deviations, so each standard deviation would have to be twice as large: $\sigma = \dfrac{18}{1.2} = 15$.*
 :::
 :::
 
@@ -864,7 +880,11 @@ $1$ つ目から $\mu$ が出ます（[第 2 節](#meaning)）。$2$ つ目を @
 ::: {.model-answer}
 **試験ではこう書く**
 
-*It is true that about $99.7\%$ of the area lies within three standard deviations of the mean, so a standardized value greater than $3$ is rare. It is not impossible: $P(Z > 3) \approx 0.00135$, which is small but not zero. Since $z = \dfrac{x - \mu}{\sigma}$, any value of $z$ can be reached by taking $x$ far enough above the mean, so there is no upper limit on $z$.*
+*It is true that about $99.7\%$ of the area lies within three standard deviations of the mean, so a standardized value greater than $3$ is rare.*
+
+*It is not impossible: $P(Z > 3) \approx 0.00135$, which is small but not zero.*
+
+*Since $z = \dfrac{x - \mu}{\sigma}$, any value of $z$ can be reached by taking $x$ far enough above the mean, so there is no upper limit on $z$.*
 :::
 :::
 
@@ -910,7 +930,11 @@ $P(X > 100) = 0.75$ なので $P(X < 100) = 0.25$ です（[第 5 節](#unknown)
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Here $100 - \mu = -8.09\ldots$, which is negative. Writing $P(X < 100) = P\!\left(Z < \dfrac{100 - \mu}{\sigma}\right)$, a larger $\sigma$ makes this negative quotient closer to $0$, and the standard normal curve gives a larger area to the left of a larger value. So $P(X < 100)$ increases, approaching $0.5$ as $\sigma$ grows.*
+*Here $100 - \mu = -8.09\ldots$, which is negative.*
+
+*Writing $P(X < 100) = P\!\left(Z < \dfrac{100 - \mu}{\sigma}\right)$, a larger $\sigma$ makes this negative quotient closer to $0$, and the standard normal curve gives a larger area to the left of a larger value.*
+
+*So $P(X < 100)$ increases, approaching $0.5$ as $\sigma$ grows.*
 :::
 :::
 
@@ -959,7 +983,11 @@ $5\%$ が $520$ g より上なので、左の面積は $0.95$ です（[第 5 �
 ::: {.model-answer}
 **試験ではこう書く**
 
-*From invNorm, $z_{1} = -1.2815\ldots$ and $z_{2} = 1.6448\ldots$, giving $480 = \mu - 1.2815\ldots\sigma$ and $520 = \mu + 1.6448\ldots\sigma$. Subtracting, $\sigma = \dfrac{40}{2.9264\ldots} = 13.7$ g and $\mu = 498$ g. The standard deviation of about $13.7$ g measures how spread out the packet masses are: about $68\%$ of packets have a mass between $484$ g and $511$ g.*
+*From invNorm, $z_{1} = -1.2815\ldots$ and $z_{2} = 1.6448\ldots$, giving $480 = \mu - 1.2815\ldots\sigma$ and $520 = \mu + 1.6448\ldots\sigma$.*
+
+*Subtracting, $\sigma = \dfrac{40}{2.9264\ldots} = 13.7$ g and $\mu = 498$ g.*
+
+*The standard deviation of about $13.7$ g measures how spread out the packet masses are: about $68\%$ of packets have a mass between $484$ g and $511$ g.*
 :::
 :::
 

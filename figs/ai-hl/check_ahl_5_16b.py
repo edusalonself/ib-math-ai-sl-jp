@@ -173,7 +173,7 @@ eq("x が最大の点で y は増加（反時計回り）", Y[i + 1] > Y[i], Tru
 eq("x が最大の点で y ≈ 200（平衡と同じ高さ）", round(Y[i], -1), 200.0, 1e-9)
 in_text("周期およそ19", "**周期はおよそ $19$ 年**です。")
 in_text("反時計回り", "**反時計回り**です。")
-in_text("右端で上向き", "\\text{右端で上向き} \\ \\Longrightarrow \\ \\text{反時計回り}")
+in_text("右端で上向き", "**右端で上向きなら、反時計回りです。**")
 
 print()
 print("=" * 78)
@@ -291,7 +291,7 @@ eq("表のキャプション数", len(re.findall(r"^: .*\{#tbl-", TXT, re.M)),
 for w in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん", "当たり前"]:
     not_in_text("禁止語 %s" % w, w)
 bad_k = [TXT[m.start():m.start() + 6]
-         for m in re.finditer(r"確かめ(?![方らてるればよな])", TXT)]
+         for m in re.finditer(r"確かめ(?![方らてるればよなま])", TXT)]  # 「確かめます」は動詞なので可
 eq("「確かめ」の単独名詞用法が無い", bad_k, [])
 eq("**検算。** が 8 個以上", TXT.count("**検算。**") >= 8, True)
 eq("model-answer が 14 個以上", TXT.count("::: {.model-answer}") >= 14, True)
@@ -308,9 +308,7 @@ eq("fence の開閉が一致",
    len([l for l in L if re.match(r"^:{3,} *\{", l)]),
    len([l for l in L if re.match(r"^:{3,} *$", l)]))
 
-in_text("Worked examples の定型 callout",
-        "問題文は英語です。意味が理解できなかったら、問題文の下の"
-        "「**日本語訳**」を開いてください。解説は日本語です。")
+not_in_text("例題の前の案内は置かない", "問題文は英語です。意味が")
 in_text("例題の解答例の見出し", "## 解答例（答案用紙にはこう書く）")
 in_text("演習の解答例の見出し", "## 解答例（答案用紙に書くこと）")
 in_text("GDC の見出し", "## Using your GDC (TI-Nspire CX II)")
@@ -319,9 +317,11 @@ in_text("GDC の見出し", "## Using your GDC (TI-Nspire CX II)")
 in_text("公式集の x の式", "x_{n+1} &= x_n + h \\times f_1(x_n,\\ y_n,\\ t_n)")
 in_text("公式集の y の式", "y_{n+1} &= y_n + h \\times f_2(x_n,\\ y_n,\\ t_n)")
 in_text("公式集の t の式", "t_{n+1} &= t_n + h")
-in_text("公式集に載っている旨", "この $3$ 本の式も**公式集に載っています（5.16 の欄、$2$ つ目）。覚える必要はありません。**")
+in_text("公式集に載っている旨", "公式集の **5.16** の欄の $2$ つ目にあるので、**覚える必要はありません。**")
 in_text("5.16 の 2 つの部分の表", ": AHL 5.16 の $2$ つの部分 {#tbl-ahl516b-two}")
-in_text("シラバス Guidance", "Contexts could include predator-prey models.")
+not_in_text("シラバス Guidance の引用は本文から外した", "Contexts could include predator-prey models.")
+in_text("predator–prey が代表的な場面だと日本語で書いている",
+        "連立系がよく使われる場面の $1$ つが、**predator–prey model**（捕食者・被食者モデル）です。")
 in_text("Runge-Kutta は試験に出ない", "**試験には出ません。**")
 
 # レビュー修正の固定（回帰防止）
@@ -337,12 +337,12 @@ in_text("タイトルの訳", "（連立系のオイラー法）")
 in_text("prey/predator を English first で",
         "$x$ を **prey**（被食者、餌になる動物）、$y$ を **predator**（捕食者）とします。")
 in_text("glossary に合わせた訳", "**predator–prey model**（捕食者・被食者モデル）")
-in_text("equilibrium point は 5.17 の語だと断っている",
-        "シラバルでは" if False else "シラバスでは **AHL 5.17**")
+in_text("equilibrium point は 5.17 でくわしく扱うと断っている",
+        "平衡点は、[AHL 5.17a](ahl-5-17a.qmd) の **phase portrait**（相図）のところで、くわしく扱います。")
 in_text("入れ替わりは predator–prey に限定", "**この predator–prey の形では**")
 in_text("ほかの形では違うと書いている", "演習8 では $\\dfrac{da}{dt} = 0$ から $b = 2a$")
 in_text("列は 3 つ", "列は $3$ つ（$t$、$x$、$y$）で足ります。")
-in_text("周期は time(b) で測る", "@fig-ahl516b-time の (b) には山が $2$ つ見えています。")
+in_text("周期は time(b) で測る", "@fig-ahl516b-time の (b) にはピークが $2$ つ見えています。")
 in_text("cycle の左では測れないと断っている", "周期はこちらでは測れません。")
 in_text("演習8 の正しい検算", "\\frac{d}{dt}(a + b) = (-0.2a + 0.1b) + (0.2a - 0.3b) = -0.2b")
 in_text("演習8 の 0.2b", "**残りの $0.2b$ が系の外へ出ていきます。**")
@@ -353,6 +353,14 @@ in_text("Fill の但し書き", "**列ごとに $1$ つずつ** `Fill` してく
 # 存在しないページへのリンクが無い
 for dead in ["ahl-5-10.qmd", "ahl-5-11.qmd", "ahl-5-17.qmd", "ahl-5-18.qmd"]:
     not_in_text("存在しないページ %s へのリンクが無い" % dead, "](%s" % dead)
+
+# ★ レイアウト：Worked examples の節は無く、例題は The idea の中にある
+not_in_text("## Worked examples が無い", "## Worked examples")
+_exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(TXT.index("## The idea") < p < TXT.index("## Why it works")
+       for p in _exm), True)
+eq("例題の数は変わらない", len(_exm), 4)
 
 print()
 print("=" * 78)

@@ -56,8 +56,6 @@ ax.set_xlim(-2.6, 4.6)
 ax.set_ylim(-38, 36)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=9.5, frameon=False, loc="lower left")
-ax.set_title("the sign of $f''$ at a stationary point",
-             fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()
@@ -66,7 +64,7 @@ save(fig, "ahl-5-10-graph.svg")
 
 # ══════════ 5.10-1b  山と谷の形 ══════════
 #  本文の「f'' は f' の変化を表す」の節に置く図。
-fig, ax = plt.subplots(figsize=(6.2, 4.6))
+fig, ax = plt.subplots(figsize=(5.6, 3.8))
 XL = np.linspace(-2.9, -0.1, 300)
 XR = np.linspace(0.1, 2.9, 300)
 ax.plot(XL, -(XL + 1.5) ** 2 + 2.2, color=LINE, lw=3.0)
@@ -83,47 +81,37 @@ ax.text(1.5, -3.15, "minimum", fontsize=12.5, ha="center", va="top",
         color=INK, weight="bold")
 ax.text(1.5, 0.05, "bends UP\n$f'' > 0$\nconcave-up", fontsize=11,
         ha="center", va="bottom", color=GREEN)
-ax.text(0, 4.35, "at both points the tangent is flat:  $f' = 0$",
-        fontsize=11, ha="center", color=GREY)
 ax.set_xlim(-3.1, 3.1)
-ax.set_ylim(-4.5, 4.9)
+ax.set_ylim(-4.0, 3.7)
 ax.axis("off")
-ax.set_title("what the sign of $f''$ means", fontsize=12, color=INK,
-             pad=10)
 
 fig.tight_layout()
 save(fig, "ahl-5-10-shape.svg")
 
 
 # ══════════ 5.10-2  f' と f'' の 4 つの組み合わせ ══════════
-fig, axs = plt.subplots(2, 2, figsize=(11.0, 7.4))
+fig, axs = plt.subplots(2, 2, figsize=(10.0, 6.4))
 
 panels = [
     (axs[0, 0], lambda u: np.exp(0.95 * u), (0.0, 2.0),
-     "$f' > 0$  and  $f'' > 0$   (concave-up)",
-     "going up, and getting STEEPER", GREEN),
+     "$f' > 0$  and  $f'' > 0$   (concave-up)"),
     (axs[0, 1], lambda u: 2.6 * np.log(u + 1.0), (0.0, 2.0),
-     "$f' > 0$  and  $f'' < 0$   (concave-down)",
-     "going up, but FLATTENING OUT", ACC),
+     "$f' > 0$  and  $f'' < 0$   (concave-down)"),
     (axs[1, 0], lambda u: 3.9 - 0.9 * u ** 2, (0.3, 2.0),
-     "$f' < 0$  and  $f'' < 0$   (concave-down)",
-     "going down, and getting STEEPER", ACC),
+     "$f' < 0$  and  $f'' < 0$   (concave-down)"),
     (axs[1, 1], lambda u: 3.4 * np.exp(-1.1 * u), (0.0, 2.0),
-     "$f' < 0$  and  $f'' > 0$   (concave-up)",
-     "going down, but FLATTENING OUT", GREEN),
+     "$f' < 0$  and  $f'' > 0$   (concave-up)"),
 ]
-for ax, fn, (a, b), title, reading, col in panels:
+for ax, fn, (a, b), title in panels:
     U = np.linspace(a, b, 400)
     ax.plot(U, fn(U), color=LINE, lw=3.2)
     ax.plot([a], [fn(np.array([a]))[0]], "o", color=GOLD, ms=7, zorder=6)
     ax.plot([b], [fn(np.array([b]))[0]], "o", color=GOLD, ms=7, zorder=6)
     ax.set_xlim(-0.15, 2.15)
-    ax.set_ylim(-0.4, 7.0)
+    ax.set_ylim(-0.3, 7.0)
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_title(title, fontsize=12, color=INK, pad=8)
-    ax.text(1.0, -0.05, reading, fontsize=11.5, ha="center", va="top",
-            color=col)
     ax.grid(True, color=GRID, lw=0.8)
     ax.set_axisbelow(True)
     for sp in ("top", "right"):
@@ -131,9 +119,7 @@ for ax, fn, (a, b), title, reading, col in panels:
     for sp in ("bottom", "left"):
         ax.spines[sp].set_color(GREY)
 
-fig.suptitle("$f'$ says which way it is going.  $f''$ says whether that "
-             "is speeding up or slowing down.", fontsize=13, y=1.0)
-fig.tight_layout(rect=(0, 0, 1, 0.965))
+fig.tight_layout()
 save(fig, "ahl-5-10-four.svg")
 
 print("figures written to", os.path.normpath(OUT))

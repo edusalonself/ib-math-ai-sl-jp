@@ -45,12 +45,10 @@ ax.text(4.12, 2.0, "$4^{\\frac{1}{2}} = 2$", fontsize=11.5, color=GREEN,
         ha="left", va="center", zorder=8)
 ax.text(4.12, 8.0, "$4^{\\frac{3}{2}} = 8$", fontsize=11.5, color=ACC,
         ha="left", va="center", zorder=8)
-ax.set_xlim(0, 6.3)
+ax.set_xlim(0, 5.5)
 ax.set_ylim(0, 17.5)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("a rational exponent is still just a power",
-             fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()
@@ -60,7 +58,7 @@ save(fig, "ahl-1-10-powers.svg")
 # ══════════ 1.10 (b)  2 通りの道 ══════════
 fig, ax = plt.subplots(figsize=(6.6, 4.6))
 ax.set_xlim(0, 10)
-ax.set_ylim(-0.9, 7.2)
+ax.set_ylim(0.35, 6.75)
 ax.axis("off")
 
 
@@ -91,10 +89,6 @@ box(7.4, 1.2, 3.3, 0.95, "$\\sqrt[5]{32768} = 8$", ACC)
 arrow((7.4, 5.5), (7.4, 4.15), ACC, "cube first")
 arrow((7.4, 3.1), (7.4, 1.75), ACC, "then root")
 
-ax.text(4.7, -0.35, "same answer — but the left route keeps the numbers small",
-        fontsize=11.5, color=GREY, ha="center", va="center", zorder=6)
-ax.set_title("two routes to $32^{\\frac{3}{5}}$", fontsize=12, color=INK,
-             pad=10)
 
 fig.tight_layout()
 save(fig, "ahl-1-10-routes.svg")
@@ -117,15 +111,12 @@ ax.text(14.6, 18, "$S_\\infty = 18$", fontsize=11.5, color=LINE,
         va="bottom", ha="left")
 ax.text(14.6, 24 / 1.75, "$S_\\infty = 13.7$", fontsize=11.5, color=ACC,
         va="bottom", ha="left")
-ax.text(1.2, 32.5, "the partial sums settle down\nwhen $|r| < 1$",
-        fontsize=11.5, color=INK, ha="left", va="top", bbox=BOX, zorder=8)
 ax.set_xlim(0.4, 18.4)
-ax.set_ylim(0, 36)
+ax.set_ylim(0, 27)
 ax.set_xlabel("$n$  (number of terms added)")
 ax.set_ylabel("$S_n$")
 ax.legend(fontsize=10.5, frameon=False, loc="lower right")
-ax.set_title("(a)  partial sums approach a limit", fontsize=12, color=INK,
-             pad=10)
+ax.set_title("(a)", fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 ax = axs[1]
@@ -155,18 +146,14 @@ for i, h in enumerate(heights[:4]):
     ax.plot([xi, xi], [0, h], color=GOLD, lw=1.4, ls=":", zorder=3)
     ax.text(xi, h + 0.09, lab, fontsize=11, color=GOLD, ha="center",
             va="bottom", zorder=7)
-ax.text(0.06, 2.72, "drop $2$, then each bounce reaches\n"
-        "$60\\%$ of the height before it",
-        fontsize=11.5, color=INK, ha="left", va="top", bbox=BOX, zorder=8)
 ax.text(2.90, 1.55, "total distance\n$= 2 + 2\\left(\\dfrac{1.2}{1-0.6}\\right)"
         " = 8$ m", fontsize=12, color=GREEN, ha="left", va="center",
         bbox=BOX, zorder=8)
 ax.set_xlim(-0.15, 5.6)
-ax.set_ylim(-0.12, 3.15)
+ax.set_ylim(-0.12, 2.45)
 ax.set_xlabel("horizontal position (not to scale)")
 ax.set_ylabel("height (m)")
-ax.set_title("(b)  a bouncing ball travels a finite distance",
-             fontsize=12, color=INK, pad=10)
+ax.set_title("(b)", fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()

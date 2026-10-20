@@ -76,8 +76,6 @@ def fu(t):
 
 
 TU = np.linspace(-2.05, 2.05, 600)
-axU.set_title("Reading the graph from left to right", fontsize=11,
-              color=INK, loc="left", pad=12)
 axU.set_xlim(-2.45, 2.65)
 axU.set_ylim(-1.75, 1.95)
 axU.axis("off")

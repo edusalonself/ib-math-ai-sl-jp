@@ -57,10 +57,8 @@ def arc(ax, V, U, W, r, color, lw=1.4):
 # ══════════════════════════════════════════════════════════
 # (a) 名前のつけ方
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Naming sides and angles", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-1.0, 7.2)
-ax1.set_ylim(-0.95, 5.0)
+ax1.set_ylim(-0.95, 4.4)
 ax1.set_aspect("equal")
 ax1.axis("off")
 
@@ -91,9 +89,8 @@ for V, U, W, col in [(PA, PB, PC, GREEN), (PB, PC, PA, WARM),
 # ══════════════════════════════════════════════════════════
 # (b) どちらの定理か
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Which rule?", fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(-0.6, 9.4)
-ax2.set_ylim(-0.95, 5.0)
+ax2.set_ylim(-0.35, 3.45)
 ax2.set_aspect("equal")
 ax2.axis("off")
 
@@ -107,8 +104,7 @@ ax2.plot([QB[0], QC[0]], [QB[1], QC[1]], color=ACCENT, linewidth=3.0)
 p = arc(ax2, QA, QB, QC, 0.48, ACCENT, 1.6)
 ax2.text(p[0] - 0.05, p[1] - 0.12, "$A$", fontsize=11, color=ACCENT)
 ax2.text(3.18, 1.30, "$a$", fontsize=11, color=ACCENT)
-ax2.text(0.05, 3.30, "a side and the angle", fontsize=10, color=INK)
-ax2.text(0.05, 2.85, "facing it: sine rule", fontsize=10, color=INK)
+ax2.text(0.05, 3.00, "sine rule", fontsize=10, color=INK)
 
 # 右：余弦定理（はさむ角）
 RA = (5.4, 0.0)
@@ -120,18 +116,14 @@ ax2.plot([RA[0], RB[0]], [RA[1], RB[1]], color=WARM, linewidth=3.0)
 ax2.plot([RB[0], RC[0]], [RB[1], RC[1]], color=WARM, linewidth=3.0)
 q = arc(ax2, RB, RA, RC, 0.48, WARM, 1.6)
 ax2.text(q[0] - 0.10, q[1] - 0.12, "$B$", fontsize=11, color=WARM)
-ax2.text(5.45, 3.30, "two sides and the", fontsize=10, color=INK)
-ax2.text(5.45, 2.85, "angle between them:", fontsize=10, color=INK)
-ax2.text(5.45, 2.40, "cosine rule", fontsize=10, color=INK)
+ax2.text(5.45, 3.00, "cosine rule", fontsize=10, color=INK)
 
 
 # ══════════════════════════════════════════════════════════
 # (c) θ から見た 3 辺の名前
 # ══════════════════════════════════════════════════════════
-ax3.set_title(r"Naming the sides from $\theta$", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax3.set_xlim(-1.1, 6.6)
-ax3.set_ylim(-1.55, 4.2)
+ax3.set_ylim(-1.55, 3.6)
 ax3.set_aspect("equal")
 ax3.axis("off")
 

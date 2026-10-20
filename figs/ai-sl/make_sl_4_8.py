@@ -74,8 +74,6 @@ for ax, (lo, hi, lab, val) in zip(
     ax.set_xlim(-0.8, 12.8)
     tidy(ax)
 axes[0].set_ylabel("$\\mathrm{P}(X = x)$")
-fig.suptitle("$X \\sim B(20,\\ 0.15)$    the two shaded parts add to $1$",
-             fontsize=12, y=1.0)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-4-8-ranges.svg"), format="svg", bbox_inches="tight")
 plt.close(fig)

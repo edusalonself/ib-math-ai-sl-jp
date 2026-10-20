@@ -47,7 +47,29 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
 
-BODY = TEXT.split("## Worked examples")[0]
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
+
+
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 
 def not_in_body(sub, msg=""):
@@ -83,7 +105,7 @@ in_text("# SL 5.2 — Increasing and decreasing functions"
         "（増加・減少と導関数の符号） {#sec-aasl-5-2}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
@@ -100,7 +122,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + Paper 1）")
 chk(TEXT.count("{.callout-important}") == 0,
     "callout-important 0（5.2 に公式集の欄はない）")
@@ -138,8 +160,8 @@ in_fig("figB, ax2 = plt.subplots", "図 (b) は 1 枚で作る")
 in_text("次の $2$ つは、同じ関数の $f$ と $f'$ のグラフです。$x$ をそろえて、"
         "**上下に見くらべてください**。",
         "第 2 節から (a)(b) の両方を参照")
-_i2 = TEXT.index("### 2. sign of the derivative（符号で読む）")
-_i3 = TEXT.index("### 3. stationary points（停留点）")
+_i2 = TEXT.index("### 2. Sign of the derivative（導関数の符号で読む）")
+_i3 = TEXT.index("### 3. Stationary points（停留点）")
 chk(_i2 < TEXT.index("](img/aasl-5-2-idea-a.svg)") < _i3,
     "図は、最初に説明する第 2 節に置く")
 in_text("@fig-aasl52-idea-b", "図 (b) の参照")
@@ -507,7 +529,7 @@ _figcol("tbl-aasl52-sign", "@fig-aasl52-idea-a・@fig-aasl52-idea-b")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -539,7 +561,7 @@ in_text("- **符号が変わらない** … 極大でも極小でもありませ
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：第 1 節を書き直し、図（増加は赤・減少は青）を足した
 # ══════════════════════════════════════════════════════════
-in_text("### 1. increasing and decreasing（増加と減少） {#meaning}", "第 1 節の見出し")
+in_text("### 1. Increasing and decreasing（増加と減少） {#meaning}", "第 1 節の見出し")
 not_in_text("### 1. 増加と減少", "前の見出しは消した")
 not_in_text("| **increasing**（増加） | 上がっていく |", "表の行も消した")
 
@@ -550,7 +572,7 @@ in_text("- **increasing**（増加）… 左から右へたどると、グラフ
         "@fig-aasl52-updown の赤い部分です。", "increasing は赤")
 in_text("- **decreasing**（減少）… 左から右へたどると、グラフが**下がっていく**。"
         "青い部分です。", "decreasing は青")
-in_text("**どちらなのかを決めるのが derivative（導関数）です。**", "derivative が決める")
+in_text("どちらなのかを決めるのは、**derivative**（導関数）です。", "derivative が決める")
 in_text("**「増加」と「減少」は、区間についての言葉です。**", "区間の言葉（残す）")
 in_text("**このページでは $f'(x)$ が与えられます。**", "f' は与えられる（残す）")
 
@@ -558,9 +580,9 @@ in_text("**このページでは $f'(x)$ が与えられます。**", "f' は与
 SVG_U = os.path.join(ROOT, "aa-sl", "05-calculus", "img", "aasl-5-2-updown.svg")
 chk(os.path.exists(SVG_U), "図（増加と減少）がある")
 chk(not os.path.exists(SVG_U[:-4] + ".png"), "その PNG は消してある")
-in_text("(img/aasl-5-2-updown.svg){#fig-aasl52-updown width=78%}", "図を貼っている")
+in_text("(img/aasl-5-2-updown.svg){#fig-aasl52-updown width=100%}", "図を貼っている")
 chk(TEXT.count("@fig-aasl52-updown") >= 2, "図を 2 か所以上参照している")
-chk(TEXT.index("(img/aasl-5-2-updown.svg)") < TEXT.index("### 2. sign of the derivative（符号で読む）"),
+chk(TEXT.index("(img/aasl-5-2-updown.svg)") < TEXT.index("### 2. Sign of the derivative（導関数の符号で読む）"),
     "図は第 1 節にある")
 # 図は増加を赤、減少を青でかいている
 chk('RED = "#c0392b"' in FIG and 'BLUE = "#1f5fa8"' in FIG, "赤と青を定義している")
@@ -569,6 +591,7 @@ chk("((-2.05, -1.0, RED), (-1.0, 1.0, BLUE),\n                       (1.0, 2.05,
 in_fig('"increasing"', "図のラベル increasing")
 in_fig('"decreasing"', "図のラベル decreasing")
 in_fig('"$x$ increasing"', "x が増加する向きの矢印")
+not_in_fig("Reading the graph from left to right", "図 updown の題は外した")
 # 図に説明の文は書かない（方針 第 21 節）
 for _s52 in ("the curve rises", "so the derivative", "from left to right the"):
     chk(_s52 not in FIG, "図に説明の文を書いていない: " + _s52[:22])
@@ -588,7 +611,7 @@ for _x52, _want in ((sp.Rational(-3, 2), 1), (sp.Integer(0), -1),
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：第 2 節の図を 2 枚に分けた
 # ══════════════════════════════════════════════════════════
-in_text("### 2. sign of the derivative（符号で読む） {#sign}", "第 2 節の見出し")
+in_text("### 2. Sign of the derivative（導関数の符号で読む） {#sign}", "第 2 節の見出し")
 not_in_text("### 2. 符号で読む", "前の見出しは消した")
 _IMG52 = os.path.join(ROOT, "aa-sl", "05-calculus", "img")
 for _n in ("a", "b"):
@@ -649,7 +672,7 @@ in_text("次の $2$ つは、同じ関数の $f$ と $f'$ のグラフです。$
         "**上下に見くらべてください**。", "上下に見くらべる")
 
 # --- 第 3 節 ------------------------------------------------------------
-in_text("### 3. stationary points（停留点） {#zero}", "第 3 節の見出し")
+in_text("### 3. Stationary points（停留点） {#zero}", "第 3 節の見出し")
 not_in_text("### 3. $f'(x) = 0$ のところ", "前の見出しは消した")
 in_text("**$f'(x) = 0$ となる $x$ では、$f$ のグラフは stationary point（停留点）"
         "です。** 接線が水平になる点のことです。", "停留点の定義を明記")
@@ -694,9 +717,9 @@ in_text("**符号が変わらないとき、その点がどういう点なのか
 chk(TEXT.index("**符号の並び方は") < TEXT.index("(img/aasl-5-2-stat.svg)")
     < TEXT.index("- $+$ **から** $-$ **に変わる**"), "導入 → 図 → 読み方 の順")
 # 図は第 3 節の中
-chk(TEXT.index("### 3. stationary points（停留点）")
+chk(TEXT.index("### 3. Stationary points（停留点）")
     < TEXT.index("(img/aasl-5-2-stat.svg)")
-    < TEXT.index("### 4. 区間で答える"), "停留点の図は第 3 節の中")
+    < TEXT.index("### 4. Answering with intervals（区間で答える）"), "停留点の図は第 3 節の中")
 
 # --- 図（make_aasl_5_2.py）----------------------------------------------
 in_fig("aasl-5-2-stat.svg", "図 stat を書き出している")
@@ -730,7 +753,7 @@ in_text("答えは、**$x$ の範囲**で書きます。$f'(x) > 0$ を解いた
 in_text("たとえば $f'(x) = 3x^{2} - 3$ だったとします。", "第 4 節の具体例")
 in_text("- 増加する区間 … $x < -1$ と $x > 1$", "第 4 節: 増加する区間")
 in_text("- 減少する区間 … $-1 < x < 1$", "第 4 節: 減少する区間")
-_i4 = TEXT.index("### 4. 区間で答える {#interval}")
+_i4 = TEXT.index("### 4. Answering with intervals（区間で答える） {#interval}")
 _iw = TEXT.index(chr(10) + "## Why it works")
 _s4 = TEXT[_i4:_iw]
 chk("## この項目は Paper 1 に出ます" in _s4, "Paper 1 の callout は第 4 節に")
@@ -757,6 +780,16 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

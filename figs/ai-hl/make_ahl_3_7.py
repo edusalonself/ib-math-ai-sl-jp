@@ -57,11 +57,10 @@ ax.text(1.10 * np.cos(0.5), 1.10 * np.sin(0.5),
         "arc length\n$= r$", fontsize=12.5, color=ACC, ha="left", va="center")
 ax.text(0.40, 0.16, "$1$ radian", fontsize=12.5, color=GOLD, ha="left",
         va="center")
-ax.text(0, -1.30, "the angle whose arc is one radius long\n"
-                  "$1\\ \\mathrm{rad} \\approx 57.3^{\\circ}$",
+ax.text(0, -1.25, "$1\\ \\mathrm{rad} \\approx 57.3^{\\circ}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=8)
 blank(ax, 1.55)
-ax.set_title("(a)  what one radian is", fontsize=12.5, color=INK, pad=6)
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) 円周には半径が 2π 本ぶん
 ax = axs[1]
@@ -80,12 +79,10 @@ ax.plot([0, 1], [0, 0], color=GREY, lw=1.8, ls="--", zorder=3)
 ax.text(0.5, 0.09, "$r$", fontsize=13, color=GREY, ha="center", va="bottom")
 ax.text(np.cos(6.15) * 1.42, np.sin(6.15) * 1.42 - 0.10,
         "$0.28$ left over", fontsize=11.5, color=GREEN, ha="left", va="center")
-ax.text(0, -1.42, "the circumference is $2\\pi r$,\n"
-                  "so a full turn is $2\\pi = 6.28$ radians",
+ax.text(0, -1.45, "$2\\pi \\approx 6.28$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=8)
 blank(ax, 1.72)
-ax.set_title("(b)  how many radii fit round the circle", fontsize=12.5,
-             color=INK, pad=6)
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=1.4)
 save(fig, "ahl-3-7-radian.svg")
@@ -119,7 +116,7 @@ ax.text(0, -1.32, "$l = r\\theta$        $A = \\dfrac{1}{2}r^{2}\\theta$"
                   "\n$\\theta$ in radians",
         fontsize=13, color=INK, ha="center", va="center", bbox=BOX, zorder=8)
 blank(ax, 1.62)
-ax.set_title("(a)  the two formulas", fontsize=12.5, color=INK, pad=6)
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) 円全体の θ/(2π) 倍
 ax = axs[1]
@@ -139,8 +136,7 @@ ax.text(0, -1.34,
         "$A = \\dfrac{\\theta}{2\\pi}\\times \\pi r^{2} = \\dfrac{1}{2}r^{2}\\theta$",
         fontsize=12.5, color=INK, ha="center", va="center", bbox=BOX, zorder=8)
 blank(ax, 1.72)
-ax.set_title("(b)  a sector is a fraction of the whole circle", fontsize=12.5,
-             color=INK, pad=6)
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=1.4)
 save(fig, "ahl-3-7-sector.svg")

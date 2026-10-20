@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "02-functions")
 QMD = os.path.join(BASE, "aasl-2-6.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_2_6.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 # 色コード・ファイル名・キーワードはラベルではないので外す
@@ -63,6 +82,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 # ══════════════════════════════════════════════════════════
 # 0. 公式そのもの
@@ -283,7 +305,7 @@ in_text("**Paper 1 では使えません。**", "Paper 1 では手で解くと�
 # ══════════════════════════════════════════════════════════
 # 11. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -292,9 +314,8 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aasl26-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -360,12 +381,12 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Each form shows a different feature", "図(a) の題")
+not_in_fig("Each form shows a different feature", "図(a) の題")
 in_fig("$a(x-p)(x-q)$", "図(a) factorised form")
 in_fig("$ax^{2}+bx+c$", "図(a) standard form")
 in_fig("$a(x-h)^{2}+k$", "図(a) vertex form")
 in_fig("axis of\\nsymmetry", "図(a) の軸")
-in_fig("The sign and size of $a$", "図(b) の題")
+not_in_fig("The sign and size of $a$", "図(b) の題")
 in_fig("large $a > 0$:\\nnarrow", "図(b) 細い")
 in_fig("small $a > 0$:\\nwide", "図(b) 広い")
 in_fig("$a < 0$:\\nopens downwards", "図(b) 上に凸")
@@ -378,11 +399,16 @@ for leak in ["= -8", "= 9", "(0, 11)", "x = -4", "x = 2"]:
 # 13. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-6.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-2-5.qmd") < DRAFT.index("aasl-2-6.qmd"), "並びが 2.5 → 2.6")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+DRAFT = None
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/02-functions/aasl-2-6.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-2-5.qmd") < DRAFT.index("aasl-2-6.qmd"), "並びが 2.5 → 2.6")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("（注）_quarto.yml がないので、登録のチェックは飛ばした")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-6.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -509,10 +535,10 @@ not_in_text("| $f(x) = ax^{2}+bx+c$ | standard form（一般形） | $y$ 切片 
             "図の列つきの古い行は残っていない")
 in_text("| $y$-intercept（$y$ 切片）$(0, c)$ |", "表 1 の y 切片に英語")
 in_text("| $x$-intercepts（$x$ 切片）$(p,0)$、$(q,0)$ |", "表 1 の x 切片に英語")
-in_text("### 2. standard form と、axis of symmetry（対称の軸） {#standard}",
+in_text("### 2. Standard form and the axis of symmetry（一般形と対称の軸） {#standard}",
         "§2 の見出し")
-in_text("axis of symmetry（対称の軸）は、次の式で求められます。", "§2 の前置き")
-in_text("### 3. factorised form と $x$-intercepts（$x$ 切片） {#factorised}",
+in_text("この直線を **axis of symmetry**（対称の軸）といい、次の式で求められます。", "§2 の前置き")
+in_text("### 3. Factorised form and $x$-intercepts（因数分解した形と $x$ 切片） {#factorised}",
         "§3 の見出しに英語")
 _figcol("tbl-aasl26-a", "@fig-aasl26-idea-b")
 
@@ -520,7 +546,7 @@ _figcol("tbl-aasl26-a", "@fig-aasl26-idea-b")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -530,8 +556,8 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
 # ══════════════════════════════════════════════════════════
-in_text('$2$ 次関数を、展開した形（standard form）で書くと、次のようになります。', "公式の前置き 1")
-in_text('$2$ 次関数を、頂点が読める形（vertex form）で書くと、次のようになります。', "公式の前置き 2")
+in_text('かっこを使わずに、展開した形で書いた $2$ 次関数を **standard form**（一般形）といいます。次の形です。', "公式の前置き 1")
+in_text('頂点がそのまま読める書き方を **vertex form**（頂点形）といいます。次の形です。', "公式の前置き 2")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：図を、説明している節に合わせた
@@ -542,15 +568,15 @@ chk(os.path.exists(SVG_C), "図 (c) がある")
 chk(not os.path.exists(SVG_C[:-4] + ".png"), "図 (c) の PNG は消してある")
 in_text("](img/aasl-2-6-idea-c.svg){#fig-aasl26-idea-c", "本文が図 (c) を貼っている")
 chk(TEXT.count("@fig-aasl26-idea-c") >= 2, "図 (c) を本文から参照している")
-in_fig("Factorised form shows the $x$-intercepts", "図 (c) の題")
+not_in_fig("Factorised form shows the $x$-intercepts", "図 (c) の題")
 in_fig("$f(x) = a(x-p)(x-q)$", "図 (c) の式")
 in_fig("$x = \\\\dfrac{p+q}{2}$", "図 (c) の軸")
-in_fig("halfway between", "図 (c) の注記")
+not_in_fig("halfway between", "図 (c) の注記")
 # 置き場所：(c) は第 3 節、(b) は第 6 節
-_i3 = TEXT.index("### 3. factorised form")
-_i4 = TEXT.index("### 4. vertex form")
-_i6 = TEXT.index("### 6. $a$ の符号と大きさ")
-_i7 = TEXT.index("### 7. 情報から式を組み立てる")
+_i3 = TEXT.index("### 3. Factorised form")
+_i4 = TEXT.index("### 4. Vertex form")
+_i6 = TEXT.index("### 6. The sign and size of $a$")
+_i7 = TEXT.index("### 7. Finding the equation")
 chk(_i3 < TEXT.index("](img/aasl-2-6-idea-c.svg)") < _i4,
     "図 (c) は第 3 節にある")
 chk(_i6 < TEXT.index("](img/aasl-2-6-idea-b.svg)") < _i7,
@@ -574,6 +600,18 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -50,6 +50,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 # ══════════════════════════════════════════════════════════
 # 0. 和の公式（記号のまま）と、帰納法の一歩
 # ══════════════════════════════════════════════════════════
@@ -180,18 +184,18 @@ for _r in range(1, 7):
 # ══════════════════════════════════════════════════════════
 # 6. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Proof by mathematical induction.", "シラバス 1 行目を逐語で")
-in_text("> Proof by contradiction.", "シラバス 2 行目を逐語で")
-in_text("> Use of a counterexample to show that a statement is not always true.",
+not_in_text("> Proof by mathematical induction.", "シラバス 1 行目を逐語で")
+not_in_text("> Proof by contradiction.", "シラバス 2 行目を逐語で")
+not_in_text("> Use of a counterexample to show that a statement is not always true.",
         "シラバス 3 行目を逐語で")
-in_text("> It is not sufficient to state the counterexample alone."
+not_in_text("> It is not sufficient to state the counterexample alone."
         " Students must explain why their example is a counterexample.",
         "Guidance を逐語で")
-in_text("> Example: Consider the set $P$ of numbers of the form"
+not_in_text("> Example: Consider the set $P$ of numbers of the form"
         " $n^{2} + 41n + 41$, $n \\in \\mathbb{N}$,"
         " show that not all elements of $P$ are prime.",
         "シラバスの例（素数）を逐語で")
-in_text("> Examples: Irrationality of $\\sqrt{3}$; irrationality of the cube root"
+not_in_text("> Examples: Irrationality of $\\sqrt{3}$; irrationality of the cube root"
         " of $5$; Euclid's proof of an infinite number of prime numbers;"
         " if $a$ is a rational number and $b$ is an irrational number,"
         " then $a + b$ is an irrational number.",
@@ -215,7 +219,7 @@ in_text("**ただし、これは証明ではありません。**", "電卓は証
 for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -224,8 +228,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl115-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -269,7 +274,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -304,9 +309,9 @@ for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Induction: reach the first rung, then always the next one", "図(a) の題")
-in_fig("both parts are needed: neither one alone is enough", "図(a) の要点")
-in_fig("Proof by contradiction", "図(b) の題")
+not_in_fig("Induction: reach the first rung, then always the next one", "図(a) の題")
+not_in_fig("both parts are needed: neither one alone is enough", "図(a) の要点")
+not_in_fig("Proof by contradiction", "図(b) の題")
 in_fig("Arrive at something impossible", "図(b) の要点")
 in_text("はしごを $1$ 段目までのぼれて、どの段からも次の段にのぼれるなら、"
         "すべての段にのぼれます。", "キャプション (a)")
@@ -359,9 +364,60 @@ in_text("## $2$ つの両方が要ります", "base case と inductive step の�
 in_text("`Assume` か `Suppose` を使ってください。", "Assume の書き方")
 in_text("ですから $n_{0} \\geq 2$ で、$n_{0} - 1$ も正の整数です。",
         "Why it works の最小反例")
-in_text("見つからなくても、正しい証明にはならない", "反例の向き")
+in_text("見つからなくても、正しい証明にはなりません", "反例の向き")
 in_text("**base case が $n = 1$ ではありません**", "演習5 の base case")
 
 print()
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-13 の手直し（表示の崩れ）
+# ══════════════════════════════════════════════════════════
+# 1) 行頭の (i) が箇条書きの番号として読まれないようにした
+in_text("この (i) を **base case**、"
+        "(ii) を **inductive step** と呼びます。", "(i) の行頭を避ける")
+for _ln in TEXT.splitlines():
+    chk(not re.match(r"\(i{1,3}\)\s", _ln), "行頭の (i)/(ii)/(iii): " + _ln[:40])
+# 2) □（\square）は空の四角で表示されるので使わない
+not_in_text("\\square", "□ は使わない")
+in_text("「**ある整数で割り切れる**」ことを、帰納法で証明できる。", "冒頭の言いかえ")
+in_text("もう $1$ つ出やすいのが、「ある整数で割り切れる」型です。", "§5 の言いかえ")
+# 3) 数式を code span に入れない（$ がそのまま表示されてしまう）
+for _cs in re.findall(r"`([^`\n]+)`", TEXT):
+    chk("$" not in _cs, "code span の中に数式: " + _cs[:50])
+in_text("| *for all* $n \\in \\mathbb{Z}^{+}$ |", "表 1 は italic")
+in_text("*prove that*、*show that ... is irrational*", "表 1 の 2 行目も italic")
+in_text("*is not always true*、*disprove*", "表 1 の 3 行目も italic")
+in_text("*Let $P(n)$ be the statement ...*", "表 2 の 1 行目")
+in_text("*When $n = 1$:*", "表 2 の 2 行目")
+in_text("*Assume $P(k)$ is true for some $k \\in \\mathbb{Z}^{+}$*", "表 2 の 3 行目")
+in_text("*Then for $n = k+1$:*", "表 2 の 4 行目")
+in_text("ここで *Since $P(k)$ is true* と書くと、", "§3 の警告")
+in_text("結論の $1$ 文も *for all $n \\geq 4$* に変えます。", "Why it works の言いかえ")
+in_text("**問題文が *for $n \\geq 4$* と書いていたら、", "Why it works の 2 つ目")
+in_text("問題文が *for all integers $n \\geq 4$* なので、", "演習 5 の解説")
+# 4) 行の列が広がらないように幅を指定した
+in_text(': 帰納法の答案の型 {#tbl-aahl115-layout tbl-colwidths="[8,92]"}',
+        "表 2 の列幅")
+# 5) 表 3 の「素数か」の行は ○/× でそろえる
+in_text("| 素数か | ○ | ○ | ○ | ○ | ×（$13 \\times 17$） |", "表 3 の素数か")
+# 6) 「式 2 の式」という重なりを直した
+not_in_text("@eq-aahl115-sum の式とします", "「式の式」は直した")
+in_text("**@eq-aahl115-sum の右辺と左辺が等しい、という命題を $P(n)$ とします。**",
+        "P(n) の決め方")
+
+
+in_text("**ここが、帰納法で一番大切なところです。**", "§4 の言いかえ")
+not_in_text("帰納法の要です", "「要です」は直した")
+in_text("$$\\n\\frac{(k+1)\\bigl((k+1)+1\\bigr)}{2} = "
+        "\\frac{(k+1)(k+2)}{2}\\n$$".replace("\\n", "\n"),
+        "§4 の確認は表示数式にした")
+not_in_text("$\\dfrac{(k+1)\\bigl((k+1)+1\\bigr)}{2} = "
+            "\\dfrac{(k+1)(k+2)}{2}$ だからです", "行内の長い式は残っていない")
+not_in_text("こつ", "「こつ」は「コツ」に統一")
+in_text("この型のコツです", "§5 のコツ")
+in_text("のが、コツです", "演習 8 のコツ")
+
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

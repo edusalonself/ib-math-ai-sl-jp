@@ -6,24 +6,22 @@ sidebar: aa-hl
 
 ::: {.callout-note}
 ## What you should be able to do
-- **数学的帰納法**の $2$ つの部分（base case と inductive step）が、それぞれ何を示すものかを言える。
+- **mathematical induction**（数学的帰納法）の $2$ つの部分（base case と inductive step）が、それぞれ何を示すものかを言える。
 - 和の公式を、帰納法で証明できる。
-- 「$\square$ で割り切れる」ことを、帰納法で証明できる。
-- **背理法**の形（否定を仮定する → 矛盾を出す → 結論）で証明を書ける。
-- **反例**を $1$ つ挙げて、命題が正しくないことを示せる。そのとき、**なぜそれが反例なのかを説明できる**。
+- 「**ある整数で割り切れる**」ことを、帰納法で証明できる。
+- **proof by contradiction**（背理法）の形（否定を仮定する → 矛盾を出す → 結論）で証明を書ける。
+- **counterexample**（反例）を $1$ つ挙げて、命題が正しくないことを示せる。そのとき、**なぜそれが反例なのかを説明できる**。
 :::
 
 ## The idea
 
 ### 1. Three kinds of proof（証明の $3$ つの型） {#three-kinds}
 
-[SL 1.6](../../aa-sl/01-number-and-algebra/aasl-1-6.qmd#lhs-rhs) では、左辺を変形して右辺にたどり着く **deductive proof** を扱いました。HL では、これに $3$ つの型が加わります。シラバスは、次の $3$ 行だけです。
+[SL 1.6](../../aa-sl/01-number-and-algebra/aasl-1-6.qmd#lhs-rhs) では、左辺を変形して右辺にたどり着く **deductive proof** を扱いました。HL では、これに次の $3$ つの型が加わります。
 
-> Proof by mathematical induction.
->
-> Proof by contradiction.
->
-> Use of a counterexample to show that a statement is not always true.
+- **proof by mathematical induction**（数学的帰納法）
+- **proof by contradiction**（背理法）
+- **counterexample**（反例）を使って、主張がいつも正しいとは限らないことを示す
 
 **公式集には、この項目の欄がありません。** 覚えるのは式ではなく、**書き方の型**です。
 
@@ -33,15 +31,15 @@ $3$ つは、使いどころがはっきり分かれています。
 
 | 型 | 何を示すか | 合図になる言葉 |
 |---|---|---|
-| 帰納法（induction） | **すべての正の整数 $n$** で成り立つ | `for all $n \in \mathbb{Z}^{+}$` |
-| 背理法（contradiction） | $1$ つの命題が正しい | `prove that`、`show that ... is irrational` |
-| 反例（counterexample） | $1$ つの命題が**正しくない** | `is not always true`、`disprove` |
+| induction（帰納法） | **すべての正の整数 $n$** で成り立つ | *for all* $n \in \mathbb{Z}^{+}$ |
+| contradiction（背理法） | $1$ つの命題が正しい | *prove that*、*show that ... is irrational* |
+| counterexample（反例） | $1$ つの命題が**正しくない** | *is not always true*、*disprove* |
 
 **$3$ 行目だけ、向きが逆です。** 反例は「正しい」ことを示す道具ではなく、**「正しくない」ことを示す道具**です。
 
 ### 2. Proof by mathematical induction（数学的帰納法） {#induction}
 
-![はしごを $1$ 段目までのぼれて、どの段からも次の段にのぼれるなら、すべての段にのぼれます。](img/aahl-1-15-idea-a.svg){#fig-aahl115-idea-a width=100%}
+![はしごを $1$ 段目までのぼれて、どの段からも次の段にのぼれるなら、すべての段にのぼれます。](img/aahl-1-15-idea-a.svg){#fig-aahl115-idea-a width=85%}
 
 「すべての正の整数 $n$ で成り立つ」ことを示したいとします。$n = 1, 2, 3, \ldots$ と $1$ つずつ確かめても、**いつまでたっても終わりません。**
 
@@ -52,11 +50,10 @@ $3$ つは、使いどころがはっきり分かれています。
 
 このとき、$1$ 段目から $2$ 段目、$2$ 段目から $3$ 段目、と進めるので、**どの段にもたどり着けます。** 命題についても同じで、次の $2$ つを示せば十分です。
 
-$$
-\text{(i) } n = 1 \text{ で成り立つ} \qquad \text{(ii) } n = k \text{ で成り立つなら } n = k+1 \text{ でも成り立つ}
-$$ {#eq-aahl115-two-parts}
+- **(i)** $n = 1$ で成り立つ
+- **(ii)** $n = k$ で成り立つなら、$n = k+1$ でも成り立つ
 
-(i) を **base case**、(ii) を **inductive step** と呼びます。
+この (i) を **base case**、(ii) を **inductive step** と呼びます。
 
 ::: {.callout-important}
 ## $2$ つの両方が要ります
@@ -72,14 +69,14 @@ $$ {#eq-aahl115-two-parts}
 
 帰納法は、**書き方が採点されます。** 次の $5$ 行を、いつも同じ順で書いてください。
 
-: 帰納法の答案の型 {#tbl-aahl115-layout}
+: 帰納法の答案の型 {#tbl-aahl115-layout tbl-colwidths="[8,92]"}
 
 | 行 | 書くこと |
 |---|---|
-| $1$ | `Let $P(n)$ be the statement ...`（示したい式を $P(n)$ と名づける） |
-| $2$ | `When $n = 1$:` 左辺と右辺を別々に計算して、等しいと書く |
-| $3$ | `Assume $P(k)$ is true for some $k \in \mathbb{Z}^{+}$`（仮定を式で書く） |
-| $4$ | `Then for $n = k+1$:` 仮定を使って、$P(k+1)$ の式を導く |
+| $1$ | *Let $P(n)$ be the statement ...*（示したい式を $P(n)$ と名づける） |
+| $2$ | *When $n = 1$:* 左辺と右辺を別々に計算して、等しいと書く |
+| $3$ | *Assume $P(k)$ is true for some $k \in \mathbb{Z}^{+}$*（仮定を式で書く） |
+| $4$ | *Then for $n = k+1$:* 仮定を使って、$P(k+1)$ の式を導く |
 | $5$ | 結論の $1$ 文（下の型をそのまま使う） |
 
 $5$ 行目は、いつも同じ文です。
@@ -96,7 +93,7 @@ $5$ 行目は、いつも同じ文です。
 ## `Assume` を「示す」と書かない
 $3$ 行目は**仮定**です。`Assume` か `Suppose` を使ってください。
 
-ここで `Since $P(k)$ is true` と書くと、示したいことを前提にしたことになります。**$P(k)$ が正しいかどうかは、まだ分かっていません。**
+ここで *Since $P(k)$ is true* と書くと、示したいことを前提にしたことになります。**$P(k)$ が正しいかどうかは、まだ分かっていません。**
 :::
 
 ### 4. Proving a formula for a sum（和の公式を示す） {#sums}
@@ -107,9 +104,9 @@ $$
 \sum_{r=1}^{n} r = 1 + 2 + \cdots + n = \frac{n(n+1)}{2}
 $$ {#eq-aahl115-sum}
 
-を、帰納法で示します（[SL 1.8](../../aa-sl/01-number-and-algebra/aasl-1-8.qmd#formula) では、等差数列の和として出しました。ここでは別の道で出します）。
+を、帰納法で示します（[SL 1.8](../../aa-sl/01-number-and-algebra/aasl-1-8.qmd#formula) では、等差 **sequence**（数列）の和として出しました。ここでは別の道で出します）。
 
-**$P(n)$ を、@eq-aahl115-sum の式とします。**
+**@eq-aahl115-sum の右辺と左辺が等しい、という命題を $P(n)$ とします。**
 
 **$n = 1$ のとき。** 左辺は $1$ です。右辺は $\dfrac{1 \times 2}{2} = 1$ です。等しいので、$P(1)$ は正しいです。
 
@@ -125,13 +122,19 @@ $$
 \sum_{r=1}^{k+1} r = \underbrace{\sum_{r=1}^{k} r}_{\text{仮定が使える}} + (k+1) = \frac{k(k+1)}{2} + (k+1)
 $$
 
-**ここが、帰納法の要です。** 仮定を使えるのは、この $1$ か所だけです。あとは式の整理です。$k+1$ でくくります。
+**ここが、帰納法で一番大切なところです。** 仮定を使えるのは、この $1$ か所だけです。あとは式の整理です。$k+1$ でくくります。
 
 $$
 \frac{k(k+1)}{2} + (k+1) = (k+1)\left(\frac{k}{2} + 1\right) = \frac{(k+1)(k+2)}{2}
 $$
 
-**これは、@eq-aahl115-sum の $n$ に $k+1$ を入れた式そのものです。** $\dfrac{(k+1)\bigl((k+1)+1\bigr)}{2} = \dfrac{(k+1)(k+2)}{2}$ だからです。$P(k+1)$ が示せました。
+**これは、@eq-aahl115-sum の $n$ に $k+1$ を入れた式そのものです。**
+
+$$
+\frac{(k+1)\bigl((k+1)+1\bigr)}{2} = \frac{(k+1)(k+2)}{2}
+$$
+
+だからです。$P(k+1)$ が示せました。
 
 **目標の形を、先に書いておいてください。** 「何にたどり着けばよいか」が分かっていないと、整理の途中で迷います。
 
@@ -150,188 +153,6 @@ $$
 **Paper 1 では使えません。** このページの例題と演習は、すべて手で解けるようにしてあります。
 :::
 
-### 5. Proving divisibility（割り切れることを示す） {#divisibility}
-
-もう $1$ つ出やすいのが、「$\square$ で割り切れる」型です。
-
-**$5^{n} - 1$ は、すべての正の整数 $n$ で $4$ で割り切れる**ことを示します。
-
-**$P(n)$ を「$5^{n}-1$ が $4$ の倍数である」とします。**
-
-**$n = 1$ のとき。** $5^{1} - 1 = 4$ で、$4$ の倍数です。
-
-**$P(k)$ を正しいと仮定します。** 「$4$ の倍数である」を式にすると
-
-$$
-5^{k} - 1 = 4m \qquad (m \in \mathbb{Z}^{+})
-$$ {#eq-aahl115-assume}
-
-です。**文字を $1$ つ置くのが、この型のこつです。** 「割り切れる」のままでは、次の行で使えません。
-
-**$n = k+1$ のときを見ます。** @eq-aahl115-assume から $5^{k} = 4m+1$ なので
-
-$$
-5^{k+1} - 1 = 5 \times 5^{k} - 1 = 5(4m+1) - 1 = 20m + 4 = 4(5m+1)
-$$
-
-です。$5m+1$ は整数なので、**$5^{k+1}-1$ も $4$ の倍数です。**
-
-$$
-\text{割り切れる型は、} \ 4 \times (\text{整数}) \ \text{の形にして終わる}
-$$ {#eq-aahl115-divisible-form}
-
-::: {.callout-important}
-## $5 \times 5^{k}$ と書き直すところが山です
-$5^{k+1}$ を $5 \times 5^{k}$ と書き直さないと、仮定が使えません。**指数法則です**（[SL 1.7a](../../aa-sl/01-number-and-algebra/aasl-1-7a.qmd#negative)）。
-
-$a^{n} - 1$ の型では、いつも **$a \times a^{k}$** に分けてください。
-:::
-
-### 6. Proof by contradiction（背理法） {#contradiction}
-
-![否定を仮定して、正しい変形だけで進み、あり得ないことにたどり着きます。](img/aahl-1-15-idea-b.svg){#fig-aahl115-idea-b width=100%}
-
-@fig-aahl115-idea-b が、背理法の形です。**示したいことの「逆」を仮定して、矛盾を出します。**
-
-「**いちばん大きい整数は存在しない**」を示します。
-
-**存在すると仮定します。** それを $N$ とします。$N$ は整数で、どの整数よりも大きいか等しいとします。
-
-$N$ が整数なら $N+1$ も整数です。ところが
-
-$$
-N + 1 > N
-$$
-
-なので、$N$ より大きい整数が見つかりました。**これは「$N$ がいちばん大きい」という仮定に反します。**
-
-**矛盾が出たので、仮定がまちがっていました。** つまり、いちばん大きい整数は存在しません。
-
-::: {.callout-important}
-## 矛盾は、「仮定との矛盾」でなくてもかまいません
-上では、仮定そのものと矛盾しました。ほかに、**すでに正しいと分かっていること**と矛盾する形もあります。
-
-- $2$ つの整数について「偶数であり、かつ奇数でもある」
-- $0$ でない数について $x = 0$
-- 「これ以上約分できない分数」なのに、約分できる
-
-**どれでも証明は成り立ちます。** 大事なのは、**あり得ないことにたどり着いた**と、はっきり書くことです。
-:::
-
-シラバスは、背理法の例をいくつも挙げています。
-
-> Examples: Irrationality of $\sqrt{3}$; irrationality of the cube root of $5$; Euclid's proof of an infinite number of prime numbers; if $a$ is a rational number and $b$ is an irrational number, then $a + b$ is an irrational number.
-
-**「無理数である」型は、ほとんどが背理法です。** 「無理数である」をそのまま示すのは難しいのに、**「有理数だとすると」と書いた瞬間に $\dfrac{p}{q}$ と置ける**からです。式にできる形になります。
-
-### 7. Counterexamples（反例） {#counterexample}
-
-$3$ つ目は、向きが逆です。**「正しくない」ことを示すには、合わない例を $1$ つ挙げれば済みます。**
-
-シラバスの例を見ます。
-
-> Example: Consider the set $P$ of numbers of the form $n^{2} + 41n + 41$, $n \in \mathbb{N}$, show that not all elements of $P$ are prime.
-
-いくつか計算してみます。
-
-: $n^{2} + 41n + 41$ の値 {#tbl-aahl115-primes}
-
-| $n$ | $0$ | $1$ | $2$ | $3$ | $4$ |
-|---|---|---|---|---|---|
-| 値 | $41$ | $83$ | $127$ | $173$ | $221$ |
-| 素数か | ○ | ○ | ○ | ○ | $221 = 13 \times 17$ |
-
-**$n = 4$ で崩れました。** $221$ は $13 \times 17$ なので、素数ではありません。**これで「すべてが素数」は正しくないと示せました。**
-
-::: {.callout-important}
-## 例を挙げるだけでは、点になりません
-シラバスは、はっきり書いています。
-
-> It is not sufficient to state the counterexample alone. Students must explain why their example is a counterexample.
-
-**$n = 4$ と書くだけでは足りません。** 次の $3$ つを書いてください。
-
-- その $n$ を**代入した値**（ここでは $221$）
-- その値が**条件を満たさない理由**（$221 = 13 \times 17$ なので素数ではない）
-- だから**命題は正しくない**、という $1$ 文
-:::
-
-**反例は、小さい値から探してください。** $n = 0, 1, 2, \ldots$ と順に入れるのがふつうで、$x$ が実数なら $0$、$1$、$-1$、$\dfrac{1}{2}$ の $4$ つをまず試します。**分数と負の数で崩れる命題が多い**からです。
-
-$$
-\text{反例が } 1 \text{ つ見つかれば終わり。見つからなくても、正しい証明にはならない}
-$$ {#eq-aahl115-counter}
-
-**逆向きには使えません。** $n = 0$ から $n = 3$ まで素数だったからといって、**すべてが素数だとは言えません。** いま見たとおりです。
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-#### なぜ、$2$ つ示すだけで「すべての $n$」が言えるのか {#why-induction}
-
-@fig-aahl115-idea-a のはしごは、たとえ話です。**なぜ本当に言えるのか**を、背理法で見ます。
-
-base case と inductive step の $2$ つが示せたのに、**成り立たない $n$ がある**と仮定します。そのような $n$ を集めた集合を $S$ とします。
-
-$S$ は正の整数の集合で、空ではないと仮定したので、**その中にいちばん小さいものがあります。** それを $n_{0}$ とします。
-
-- $n_{0} = 1$ ではありません。base case で $n = 1$ は成り立つと示したからです。
-- ですから $n_{0} \geq 2$ で、$n_{0} - 1$ も正の整数です。
-- $n_{0}$ は $S$ の最小なので、$n_{0}-1$ は $S$ に入っていません。つまり **$n = n_{0}-1$ では成り立ちます。**
-- ところが inductive step から、$n_{0}-1$ で成り立てば $n_{0}$ でも成り立ちます。
-
-**$n_{0}$ は $S$ に入っているのに、成り立つことになりました。** 矛盾です。ですから $S$ は空で、すべての正の整数で成り立ちます。
-
-**「正の整数の空でない集合には、最小のものがある」**ところを使いました。実数ではこれが言えません（$0 < x < 1$ の実数に最小はありません）。**帰納法が整数の話である理由が、ここにあります。**
-
-#### Euclid の証明：素数は無限にある {#why-euclid}
-
-シラバスが挙げている例です。背理法の使い方が、よく分かる形をしています。
-
-**素数が有限個しかないと仮定します。** それを $p_{1}, p_{2}, \ldots, p_{r}$ と、すべて書き並べます。ここで
-
-$$
-N = p_{1}p_{2}\cdots p_{r} + 1
-$$
-
-という数をつくります。$N$ は $2$ より大きい整数です。
-
-$N$ をどの $p_{i}$ で割っても、**$1$ 余ります。** 積の部分は $p_{i}$ で割り切れるのに、$+1$ が残るからです。
-
-ところが、$2$ 以上のどの整数も、素数の積に分けられます。$N$ を割り切る素数が $1$ つはあるはずですが、**それは $p_{1}, \ldots, p_{r}$ のどれでもありません。**
-
-**「すべての素数を書き並べた」という仮定に反します。** ですから、素数は無限にあります。
-
-#### $n = 1$ 以外から始めることもあります {#why-start}
-
-命題によっては、小さい $n$ で成り立たないことがあります。たとえば $n! > 2^{n}$ は $n = 1, 2, 3$ では成り立たず、**$n = 4$ から成り立ちます**（[演習 5](#exercises)）。
-
-このときは、**base case を $n = 4$ にします。** 結論の $1$ 文も `for all $n \geq 4$` に変えます。はしごの $1$ 段目が $4$ 段目に移るだけで、考え方は同じです。
-
-**問題文が `for $n \geq 4$` と書いていたら、base case は $n = 4$ です。** $n = 1$ で始めると、そこで止まります。
-
-#### 証明と反例の、向きのちがい {#why-asymmetry}
-
-「すべての $n$ で成り立つ」という命題について、$2$ つの向きは**つり合っていません。**
-
-- **正しいと示す**には、すべての $n$ を扱う必要があります。例をいくつ挙げても足りません。
-- **正しくないと示す**には、合わない $n$ が $1$ つあれば済みます。
-
-@tbl-aahl115-primes は、$n = 0$ から $3$ まで素数でした。**$4$ つ合っていても、何も証明できていません。** 一方、$n = 4$ の $1$ つだけで、命題は崩れました。
-
-**この非対称が、反例という道具がある理由です。**
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-
-**例題も演習も、すべて電卓なしで解けます。** Paper 1 のつもりで解いてください。
-:::
-
 ::: {#exm-aahl115-squares}
 [Prove by mathematical induction that $\displaystyle\sum_{r=1}^{n} r^{2} = \frac{n(n+1)(2n+1)}{6}$ for all $n \in \mathbb{Z}^{+}$.]{.q-en}
 
@@ -342,7 +163,8 @@ $N$ をどの $p_{i}$ で割っても、**$1$ 余ります。** 積の部分は 
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 [第 4 節](#sums) の型に当てはめます。
 
@@ -404,6 +226,42 @@ $$= \frac{(k+1)\left(2k^{2}+7k+6\right)}{6} = \frac{(k+1)(k+2)(2k+3)}{6}$$
 *Since $P(1)$ is true, and $P(k)$ true implies $P(k+1)$ true, by the principle of mathematical induction $P(n)$ is true for all $n \in \mathbb{Z}^{+}$.*
 :::
 :::
+:::
+
+### 5. Proving divisibility（割り切れることを示す） {#divisibility}
+
+もう $1$ つ出やすいのが、「ある整数で割り切れる」型です。
+
+**$5^{n} - 1$ は、すべての正の整数 $n$ で $4$ で割り切れる**ことを示します。
+
+**$P(n)$ を「$5^{n}-1$ が $4$ の倍数である」とします。**
+
+**$n = 1$ のとき。** $5^{1} - 1 = 4$ で、$4$ の倍数です。
+
+**$P(k)$ を正しいと仮定します。** 「$4$ の倍数である」を式にすると
+
+$$
+5^{k} - 1 = 4m \qquad (m \in \mathbb{Z}^{+})
+$$ {#eq-aahl115-assume}
+
+です。**文字を $1$ つ置くのが、この型のコツです。** 「割り切れる」のままでは、次の行で使えません。
+
+**$n = k+1$ のときを見ます。** @eq-aahl115-assume から $5^{k} = 4m+1$ なので
+
+$$
+5^{k+1} - 1 = 5 \times 5^{k} - 1 = 5(4m+1) - 1 = 20m + 4 = 4(5m+1)
+$$
+
+です。$5m+1$ は整数なので、**$5^{k+1}-1$ も $4$ の倍数です。**
+
+**割り切れる型は、$4 \times (\text{整数})$ の形にして終わります。**
+
+::: {.callout-important}
+## $5 \times 5^{k}$ と書き直すところがポイントです
+$5^{k+1}$ を $5 \times 5^{k}$ と書き直さないと、仮定が使えません。**指数法則です**（[SL 1.7a](../../aa-sl/01-number-and-algebra/aasl-1-7a.qmd#negative)）。
+
+$a^{n} - 1$ の型では、いつも **$a \times a^{k}$** に分けてください。
+:::
 
 ::: {#exm-aahl115-div6}
 [Prove by mathematical induction that $7^{n}-1$ is divisible by $6$ for all $n \in \mathbb{Z}^{+}$.]{.q-en}
@@ -415,7 +273,8 @@ $$= \frac{(k+1)\left(2k^{2}+7k+6\right)}{6} = \frac{(k+1)(k+2)(2k+3)}{6}$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 [第 5 節](#divisibility) の型です。**まず、仮定を文字の式にします。**
 
@@ -423,7 +282,7 @@ $$= \frac{(k+1)\left(2k^{2}+7k+6\right)}{6} = \frac{(k+1)(k+2)(2k+3)}{6}$$
 
 **$P(k)$ を仮定します。** $7^{k}-1 = 6m$（$m$ は整数）と置きます。ここから $7^{k} = 6m+1$ です。
 
-**$n = k+1$ のときを見ます。** $7^{k+1} = 7 \times 7^{k}$ と分けるのが要です。
+**$n = k+1$ のときを見ます。** $7^{k+1} = 7 \times 7^{k}$ と分けるのがポイントです。
 
 $$
 7^{k+1} - 1 = 7\left(6m+1\right) - 1 = 42m + 7 - 1 = 42m + 6 = 6(7m+1)
@@ -453,6 +312,47 @@ $$7^{k+1}-1 = 7 \times 7^{k} - 1 = 7(6m+1) - 1 = 42m + 6 = 6(7m+1)$$
 *Since $P(1)$ is true, and $P(k)$ true implies $P(k+1)$ true, by the principle of mathematical induction $P(n)$ is true for all $n \in \mathbb{Z}^{+}$.*
 :::
 :::
+:::
+
+### 6. Proof by contradiction（背理法） {#contradiction}
+
+![否定を仮定して、正しい変形だけで進み、あり得ないことにたどり着きます。](img/aahl-1-15-idea-b.svg){#fig-aahl115-idea-b width=85%}
+
+@fig-aahl115-idea-b が、背理法の形です。**示したいことの「逆」を仮定して、矛盾を出します。**
+
+「**いちばん大きい整数は存在しない**」を示します。
+
+**存在すると仮定します。** それを $N$ とします。$N$ は整数で、どの整数よりも大きいか等しいとします。
+
+$N$ が整数なら $N+1$ も整数です。ところが
+
+$$
+N + 1 > N
+$$
+
+なので、$N$ より大きい整数が見つかりました。**これは「$N$ がいちばん大きい」という仮定に反します。**
+
+**矛盾が出たので、仮定がまちがっていました。** つまり、いちばん大きい整数は存在しません。
+
+::: {.callout-important}
+## 矛盾は、「仮定との矛盾」でなくてもかまいません
+上では、仮定そのものと矛盾しました。ほかに、**すでに正しいと分かっていること**と矛盾する形もあります。
+
+- $2$ つの整数について「偶数であり、かつ奇数でもある」
+- $0$ でない数について $x = 0$
+- 「これ以上約分できない分数」なのに、約分できる
+
+**どれでも証明は成り立ちます。** 大事なのは、**あり得ないことにたどり着いた**と、はっきり書くことです。
+:::
+
+背理法を使う代表的な例は、次のようなものです。
+
+- $\sqrt{3}$ が無理数であること
+- $5$ の立方根が無理数であること
+- 素数が無限にあること（Euclid の証明）
+- $a$ が有理数、$b$ が無理数なら、$a+b$ は無理数であること
+
+**「無理数である」型は、ほとんどが背理法です。** 「無理数である」をそのまま示すのは難しいのに、**「有理数だとすると」と書いた瞬間に $\dfrac{p}{q}$ と置ける**からです。式にできる形になります。
 
 ::: {#exm-aahl115-sumirrational}
 [Let $a$ be a rational number and let $b$ be an irrational number. Prove by contradiction that $a+b$ is irrational.]{.q-en}
@@ -464,7 +364,8 @@ $a$ を有理数、$b$ を無理数とします。$a+b$ が無理数であるこ
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 [第 6 節](#contradiction) の型です。**示したいことの否定から始めます。**
 
@@ -508,6 +409,41 @@ $$b = c - a = \frac{s}{t} - \frac{p}{q} = \frac{sq - pt}{tq}$$
 *This contradicts the fact that $b$ is irrational. Hence $a+b$ is irrational.*
 :::
 :::
+:::
+
+### 7. Counterexamples（反例） {#counterexample}
+
+$3$ つ目は、向きが逆です。**「正しくない」ことを示すには、合わない例を $1$ つ挙げれば済みます。**
+
+**$n^{2} + 41n + 41$ の形の数が、すべて素数かどうか**を調べます。
+
+いくつか計算してみます。
+
+: $n^{2} + 41n + 41$ の値 {#tbl-aahl115-primes}
+
+| $n$ | $0$ | $1$ | $2$ | $3$ | $4$ |
+|---|---|---|---|---|---|
+| 値 | $41$ | $83$ | $127$ | $173$ | $221$ |
+| 素数か | ○ | ○ | ○ | ○ | ×（$13 \times 17$） |
+
+**$n = 4$ で崩れました。** $221$ は $13 \times 17$ なので、素数ではありません。**これで「すべてが素数」は正しくないと示せました。**
+
+::: {.callout-important}
+## 例を挙げるだけでは、点になりません
+**反例を挙げるだけでは足りません。なぜそれが反例になるのか**を説明する必要があります。
+
+**$n = 4$ と書くだけでは足りません。** 次の $3$ つを書いてください。
+
+- その $n$ を**代入した値**（ここでは $221$）
+- その値が**条件を満たさない理由**（$221 = 13 \times 17$ なので素数ではない）
+- だから**命題は正しくない**、という $1$ 文
+:::
+
+**反例は、小さい値から探してください。** $n = 0, 1, 2, \ldots$ と順に入れるのがふつうで、$x$ が実数なら $0$、$1$、$-1$、$\dfrac{1}{2}$ の $4$ つをまず試します。**分数と負の数で崩れる命題が多い**からです。
+
+**反例が $1$ つ見つかれば終わりです。見つからなくても、正しい証明にはなりません。**
+
+**逆向きには使えません。** $n = 0$ から $n = 3$ まで素数だったからといって、**すべてが素数だとは言えません。** いま見たとおりです。
 
 ::: {#exm-aahl115-prime}
 [Let $f(n) = n^{2}+n+1$.]{.q-en}
@@ -527,7 +463,8 @@ $f(n) = n^{2}+n+1$ とします。
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 順に代入します。
 
@@ -548,7 +485,11 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Take $n = 4$. Then $f(4) = 4^{2}+4+1 = 21$, and $21 = 3 \times 7$, so $21$ has a factor other than $1$ and itself and is therefore not prime. Since $4 \in \mathbb{Z}^{+}$ and $f(4)$ is not prime, the statement "$f(n)$ is prime for all $n \in \mathbb{Z}^{+}$" is false.*
+*Take $n = 4$.*
+
+*Then $f(4) = 4^{2}+4+1 = 21$, and $21 = 3 \times 7$, so $21$ has a factor other than $1$ and itself and is therefore not prime.*
+
+*Since $4 \in \mathbb{Z}^{+}$ and $f(4)$ is not prime, the statement "$f(n)$ is prime for all $n \in \mathbb{Z}^{+}$" is false.*
 :::
 
 （$n = 4$ をとる。$f(4) = 21 = 3 \times 7$ なので素数ではない。$4$ は正の整数なので、命題は正しくない、という意味です。）
@@ -566,6 +507,67 @@ $$
 
 **(b)** *Take $n = 4$. Then $f(4) = 21 = 3 \times 7$, which is not prime. Hence the statement is not true.*
 :::
+:::
+:::
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+#### なぜ、$2$ つ示すだけで「すべての $n$」が言えるのか {#why-induction}
+
+@fig-aahl115-idea-a のはしごは、たとえ話です。**なぜ本当に言えるのか**を、背理法で見ます。
+
+base case と inductive step の $2$ つが示せたのに、**成り立たない $n$ がある**と仮定します。そのような $n$ を集めた集合を $S$ とします。
+
+$S$ は正の整数の集合で、空ではないと仮定したので、**その中にいちばん小さいものがあります。** それを $n_{0}$ とします。
+
+- $n_{0} = 1$ ではありません。base case で $n = 1$ は成り立つと示したからです。
+- ですから $n_{0} \geq 2$ で、$n_{0} - 1$ も正の整数です。
+- $n_{0}$ は $S$ の最小なので、$n_{0}-1$ は $S$ に入っていません。つまり **$n = n_{0}-1$ では成り立ちます。**
+- ところが inductive step から、$n_{0}-1$ で成り立てば $n_{0}$ でも成り立ちます。
+
+**$n_{0}$ は $S$ に入っているのに、成り立つことになりました。** 矛盾です。ですから $S$ は空で、すべての正の整数で成り立ちます。
+
+**「正の整数の空でない集合には、最小のものがある」**ところを使いました。実数ではこれが言えません（$0 < x < 1$ の実数に最小はありません）。**帰納法が整数の話である理由が、ここにあります。**
+
+#### Euclid の証明：素数は無限にある {#why-euclid}
+
+背理法の使い方が、よく分かる例です。
+
+**素数が有限個しかないと仮定します。** それを $p_{1}, p_{2}, \ldots, p_{r}$ と、すべて書き並べます。ここで
+
+$$
+N = p_{1}p_{2}\cdots p_{r} + 1
+$$
+
+という数をつくります。$N$ は $2$ より大きい整数です。
+
+$N$ をどの $p_{i}$ で割っても、**$1$ 余ります。** 積の部分は $p_{i}$ で割り切れるのに、$+1$ が残るからです。
+
+ところが、$2$ 以上のどの整数も、素数の積に分けられます。$N$ を割り切る素数が $1$ つはあるはずですが、**それは $p_{1}, \ldots, p_{r}$ のどれでもありません。**
+
+**「すべての素数を書き並べた」という仮定に反します。** ですから、素数は無限にあります。
+
+#### $n = 1$ 以外から始めることもあります {#why-start}
+
+命題によっては、小さい $n$ で成り立たないことがあります。たとえば $n! > 2^{n}$ は $n = 1, 2, 3$ では成り立たず、**$n = 4$ から成り立ちます**（[演習 5](#exercises)）。
+
+このときは、**base case を $n = 4$ にします。** 結論の $1$ 文も *for all $n \geq 4$* に変えます。はしごの $1$ 段目が $4$ 段目に移るだけで、考え方は同じです。
+
+**問題文が *for $n \geq 4$* と書いていたら、base case は $n = 4$ です。** $n = 1$ で始めると、そこで止まります。
+
+#### 証明と反例の、向きのちがい {#why-asymmetry}
+
+「すべての $n$ で成り立つ」という命題について、$2$ つの向きは**つり合っていません。**
+
+- **正しいと示す**には、すべての $n$ を扱う必要があります。例をいくつ挙げても足りません。
+- **正しくないと示す**には、合わない $n$ が $1$ つあれば済みます。
+
+@tbl-aahl115-primes は、$n = 0$ から $3$ まで素数でした。**$4$ つ合っていても、何も証明できていません。** 一方、$n = 4$ の $1$ つだけで、命題は崩れました。
+
+**この非対称が、反例という道具がある理由です。**
 :::
 
 ## Common errors
@@ -607,18 +609,12 @@ $P(k+1)$ が出たところで止めると、**「すべての $n$ で成り立�
 
 ::: {.callout-warning}
 ## 反例を挙げるだけで終える
-`It is not sufficient to state the counterexample alone.` とシラバスに書かれています（[第 7 節](#counterexample)）。
+反例を挙げるだけでは足りません。**なぜそれが反例になるのか**も書きます（[第 7 節](#counterexample)）。
 
 代入した**値**と、それが条件を満たさない**理由**と、だから命題は正しくないという**$1$ 文**の $3$ つを書いてください。
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが $3$ つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -770,7 +766,7 @@ $$3^{2(k+1)}-1 = 3^{2k+2}-1 = 9 \times 3^{2k} - 1 = 9(8m+1) - 1 = 72m + 8 = 8(9m
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-**指数が $2n$ になっているところが、この問題の山です。** $n$ を $k+1$ にすると指数は $2k+2$ で、$3^{2k+2} = 3^{2} \times 3^{2k} = 9 \times 3^{2k}$ です。
+**指数が $2n$ になっているところが、この問題のポイントです。** $n$ を $k+1$ にすると指数は $2k+2$ で、$3^{2k+2} = 3^{2} \times 3^{2k} = 9 \times 3^{2k}$ です。
 
 **$3 \times 3^{2k}$ ではありません。** 指数が $2$ ずつ増えるので、かける数は $9$ です。
 
@@ -814,7 +810,7 @@ $$(k+1) \times 2^{k} > 2 \times 2^{k} = 2^{k+1}$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-**base case が $n = 1$ ではありません**（[Why it works](#why-start)）。問題文が `for all integers $n \geq 4$` なので、$n = 4$ から始めます。
+**base case が $n = 1$ ではありません**（[Why it works](#why-start)）。問題文が *for all integers $n \geq 4$* なので、$n = 4$ から始めます。
 
 不等式の帰納法では、**仮定を使って $1$ 回大きくし、そのあともう $1$ 回大きくする**のがふつうの形です。ここでは $(k+1) > 2$ を使いました。
 
@@ -852,7 +848,7 @@ $$4s^{2} = 2q^{2}, \qquad \text{so} \qquad q^{2} = 2s^{2}$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-**「これ以上約分できない分数」と置くところが要です。** そう置いたのに $2$ で約分できてしまう、という矛盾に持ち込みます。
+**「これ以上約分できない分数」と置くところがポイントです。** そう置いたのに $2$ で約分できてしまう、という矛盾に持ち込みます。
 
 **「$p^{2}$ が偶数なら $p$ も偶数」は、書いてください。** ここを飛ばすと、証明の穴になります。奇数を $2$ 乗すると奇数になる、という $1$ 行で済みます。
 
@@ -918,18 +914,24 @@ $$4s^{2} = 2q^{2}, \qquad \text{so} \qquad q^{2} = 2s^{2}$$
 ::: {.callout-tip collapse="true"}
 ## 解説
 
-**$0$ と $1$ のあいだの数を試すのが、こつです**（[第 7 節](#counterexample)）。$2$ 乗すると小さくなる範囲だからです。
+**$0$ と $1$ のあいだの数を試すのが、コツです**（[第 7 節](#counterexample)）。$2$ 乗すると小さくなる範囲だからです。
 
 **検算。** $\left(\dfrac{1}{2}\right)^{2} = \dfrac{1}{4}$ ✓ $\dfrac{1}{4} < \dfrac{1}{2}$ ✓
 
 **検算（別の反例で）。** $x = 1$ では $x^{2} = 1$ で、$1 > 1$ は成り立ちません ✓ **等号のときも反例です。** $x = 0$ も同じです。
 
-**理由を書かないと、点になりません。** シラバスの `Students must explain why their example is a counterexample.` が、ここに効きます。
+**理由を書かないと、点になりません。** なぜ反例になるのかを説明することが求められます。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The statement claims that $x^{2} > x$ holds for every real number $x$. Take $x = \dfrac{1}{2}$, which is a real number. Then $x^{2} = \dfrac{1}{4}$, and $\dfrac{1}{4} < \dfrac{1}{2}$, so for this value $x^{2} > x$ is false. A single real value for which the inequality fails is enough to show that the statement does not hold for all real $x$, so the statement is not always true.*
+*The statement claims that $x^{2} > x$ holds for every real number $x$.*
+
+*Take $x = \dfrac{1}{2}$, which is a real number.*
+
+*Then $x^{2} = \dfrac{1}{4}$, and $\dfrac{1}{4} < \dfrac{1}{2}$, so for this value $x^{2} > x$ is false.*
+
+*A single real value for which the inequality fails is enough to show that the statement does not hold for all real $x$, so the statement is not always true.*
 :::
 :::
 
@@ -969,7 +971,13 @@ $x = 1$ から順に試すと早いです。$x = 1$ なら $y^{2} = 9$ で $y = 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The statement claims that the equation $x^{2}+y^{2} = 10$ has no solution with $x$ and $y$ both positive integers. Take $x = 1$ and $y = 3$. Both are positive integers, and $1^{2}+3^{2} = 1+9 = 10$, so this pair does satisfy the equation. Exhibiting one positive integer solution is enough to show that the claim "there are no positive integer solutions" is false, so the statement is not true.*
+*The statement claims that the equation $x^{2}+y^{2} = 10$ has no solution with $x$ and $y$ both positive integers.*
+
+*Take $x = 1$ and $y = 3$.*
+
+*Both are positive integers, and $1^{2}+3^{2} = 1+9 = 10$, so this pair does satisfy the equation.*
+
+*Exhibiting one positive integer solution is enough to show that the claim "there are no positive integer solutions" is false, so the statement is not true.*
 :::
 :::
 
@@ -1023,7 +1031,15 @@ $x = 1$ から順に試すと早いです。$x = 1$ なら $y^{2} = 9$ で $y = 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The student has verified only the inductive step: the algebra showing that the statement for $n = k$ implies the statement for $n = k+1$ is correct. However, no base case has been established, and a proof by induction needs both parts. Here the base case in fact fails: when $n = 1$ the left-hand side is $1$ but the right-hand side is $\dfrac{1^{2}+1+2}{2} = 2$. So there is no value from which the chain of implications can start, and the argument proves nothing. The statement itself is false for every $n \in \mathbb{Z}^{+}$, because the correct sum is $\dfrac{n(n+1)}{2}$, which is exactly $1$ less than $\dfrac{n^{2}+n+2}{2}$.*
+*The student has verified only the inductive step: the algebra showing that the statement for $n = k$ implies the statement for $n = k+1$ is correct.*
+
+*However, no base case has been established, and a proof by induction needs both parts.*
+
+*Here the base case in fact fails: when $n = 1$ the left-hand side is $1$ but the right-hand side is $\dfrac{1^{2}+1+2}{2} = 2$.*
+
+*So there is no value from which the chain of implications can start, and the argument proves nothing.*
+
+*The statement itself is false for every $n \in \mathbb{Z}^{+}$, because the correct sum is $\dfrac{n(n+1)}{2}$, which is exactly $1$ less than $\dfrac{n^{2}+n+2}{2}$.*
 :::
 :::
 

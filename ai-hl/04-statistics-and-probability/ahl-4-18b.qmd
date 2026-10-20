@@ -15,48 +15,13 @@ sidebar: ai-hl
 - 与えられた **sample variance** を、電卓に入れられる形に直せる。
 :::
 
-::: {.callout-note}
-## AHL 4.18 の $2$ ページめです
-| ページ | 中身 |
-|---|---|
-| [AHL 4.18a](ahl-4-18a.qmd) | critical value と critical region の考え方 |
-| **AHL 4.18b**（このページ） | **分布ごとの検定** |
-| [AHL 4.18c](ahl-4-18c.qmd) | Type I error と Type II error |
-
-: AHL 4.18 の $3$ ページ {#tbl-ahl418b-map}
-
-[AHL 4.18a](ahl-4-18a.qmd) は「判定のしかた」でした。このページは「**どの検定を選ぶか**」と「**電卓でどう動かすか**」です。
-:::
-
-::: {.callout-note}
-## [SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) の $5$ ステップは、そのまま使います
-[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd#hypotheses) で $\chi^2$ 検定と $t$ 検定（$2$ 標本）を見ました。**手順はまったく同じ**です。
-
-1. $H_0$ と $H_1$ を書く
-2. 片側か両側かを決める
-3. 検定の名前を書く
-4. $p$-value を出す
-5. **文脈のことばで結論を書く**
-
-このページで増えるのは、**$3$ 番目の選択肢**だけです。
-:::
-
-::: {.callout-important}
-## Formula booklet に 4.18 の欄はありません
-AI HL の公式集は **4.17 の次が 4.19** です。このページの検定統計量の式（$z$、$t$）も**載っていません。**
-
-ただし、**AI では検定統計量を手で計算する必要はほとんどありません。** 電卓が $p$-value まで出してくれます。
-
-**手で作るのは binomial と Poisson の $2$ つだけ**です（[第5節](#binom)・[第6節](#pois)）。この $2$ つは電卓に検定コマンドがありません。
-:::
-
 ## The idea
 
-### 1. まず、どの検定かを決めます {#which}
+### 1. Choosing the test（検定の選び方） {#which}
 
-**この項目でいちばん失点するのは、計算ではなく選択です。** 検定を選び違えると、そのあとが全部合っていても点になりません。
+AHL 4.18 の $2$ ページめです。[AHL 4.18a](ahl-4-18a.qmd) は判定のしかたでした。このページは「**どの検定を選ぶか**」と「**電卓でどう動かすか**」です（Type I error と Type II error は [AHL 4.18c](ahl-4-18c.qmd)）。[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd#hypotheses) の $5$ つの手順（$H_0$ と $H_1$ → 片側か両側か → 検定の名前 → $p$-value → 文脈に沿って結論）は、そのまま使います。増えるのは、$3$ 番目の検定の選択肢だけです。
 
-![Choosing the test](img/ahl-4-18b-choose.svg){#fig-ahl418b-choose width=100%}
+![検定の選び方です。](img/ahl-4-18b-choose.svg){#fig-ahl418b-choose width=100%}
 
 @fig-ahl418b-choose の分かれ道は、**$H_0$ が何について言っているか**です。
 
@@ -70,31 +35,15 @@ AI HL の公式集は **4.17 の次が 4.19** です。このページの検定�
 
 : 検定の選び分け {#tbl-ahl418b-which}
 
-::: {.callout-tip}
-## 見分けるコツは「問題文に $\sigma$ があるか」です
-**母集団が正規分布だと確かめたうえで**、$\sigma$ が**問題文に数値で書いてあれば** `z Test`、**書いていなければ** `t Test` です。
+母平均の検定（第2節・第3節）では、$2$ 段階で見分けます。
 
-「母集団の standard deviation は $8$ g である」と書いてあれば $\sigma$ 既知。データだけが与えられていて、そこから散らばりを計算するなら $\sigma$ 未知です。
+**まず、母集団が normal distribution（正規分布）にしたがうと問題文に書いてあることを確かめます。** `The mass is normally distributed with ...` のような $1$ 文です。**そのうえで、$\sigma$ が数値で書いてあれば `z Test`、書いていなければ `t Test`** です。**標本の大きさでは決めません**（[第3節](#t-test)）。
 
-**$\sigma$ と $s$ は別のもの**です（[AHL 4.14](ahl-4-14.qmd#s2)）。$s$ は標本から計算した推定値なので、$\sigma$ が「与えられた」ことにはなりません。
-:::
+$s$ や `sample standard deviation` が与えられても、$\sigma$ が「与えられた」ことにはなりません（[AHL 4.14](ahl-4-14.qmd#s2)）。また、母集団が正規分布と書かれていない場面は、[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) の $\chi^2$ 検定や、[第5節](#binom)・[第6節](#pois)の binomial・Poisson の出番です。
 
-::: {.callout-important}
-## 第2節と第3節は、「母集団が正規分布」が前提です
-シラバスの言い方は `Test for population mean for normal distribution` です。**normal distribution** という語が入っています。
+### 2. Test with known $\sigma$（$\sigma$ が分かっているときの `z Test`） {#z-test}
 
-**問題文に、母集団が正規分布にしたがうと書いてあることを、まず確かめてください。** `The mass is normally distributed with ...` のような $1$ 文です。
-
-その前提を確かめたうえで、**$\sigma$ が既知なら $z$、未知なら $t$** を選びます。**標本の大きさでは決めません**（[第3節](#t-test)）。
-
-母集団が正規分布と書かれていない場面は、[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) の $\chi^2$ 検定や、[第5節](#binom)・[第6節](#pois)の binomial・Poisson の出番です。
-:::
-
-### 2. $\sigma$ が分かっているとき：`z Test` {#z-test}
-
-シラバスの言い方です。
-
-> Test for population mean for normal distribution. **Use of the normal distribution when $\sigma$ is known** and the $t$-distribution when $\sigma$ is unknown, regardless of sample size.
+正規母集団の母平均を検定するとき、$\sigma$ が分かっていれば normal distribution を使います。
 
 $\bar{X}$ の分布は、平均が $\mu$、standard deviation が $\dfrac{\sigma}{\sqrt{n}}$ の正規分布です（[AHL 4.15](ahl-4-15.qmd#idea)）。$\sigma$ が分かっているなら、この分布が**そのまま使えます。**
 
@@ -104,347 +53,12 @@ $$
 z = \frac{\bar{x} - \mu_0}{\dfrac{\sigma}{\sqrt{n}}}
 $$ {#eq-ahl418b-z}
 
-です。公式集には載っていません。**覚える必要があります。**
+です。公式集には載っていません（公式集に 4.18 の欄はありません）。**覚える必要があります。**
 
 ::: {.callout-note appearance="simple"}
 とはいえ、**答案で $z$ を計算する必要はふつうありません。** `z Test` に $\mu_0$、$\sigma$、$\bar{x}$、$n$ を入れれば、$z$ も $p$-value も出ます（[GDC 第1節](#gdc-z)）。
 
-@eq-ahl418b-z が要るのは、[AHL 4.18a](ahl-4-18a.qmd#xbar) で critical region を $\bar{x}$ のことばに直すときです。
-:::
-
-### 3. $\sigma$ が分からないとき：`t Test` {#t-test}
-
-$\sigma$ が分からなければ、標本から推定した $s$ で代用します。すると、使う分布が正規分布から **$t$ 分布**に変わります（[AHL 4.16](ahl-4-16.qmd#t-dist)）。
-
-$$
-t = \frac{\bar{x} - \mu_0}{\dfrac{s}{\sqrt{n}}}, \qquad \text{自由度} \ \nu = n - 1
-$$ {#eq-ahl418b-t}
-
-この式も公式集には載っていません。**覚える必要があります。** 自由度が $n - 1$ になる理由は [AHL 4.16](ahl-4-16.qmd#df) にあります。
-
-::: {.callout-important}
-## `regardless of sample size` が、この項目の要です
-シラバスは、はっきりこう書いています。
-
-> ... and the $t$-distribution when $\sigma$ is unknown, **regardless of sample size**.
-
-**標本がどれだけ大きくても、$\sigma$ が分からなければ $t$ です。**
-
-日本の教科書や一般の統計の本には「$n > 30$ なら正規分布で近似してよい」と書いてあることがあります。**この科目では、その規則を使いません。**
-
-判断の基準は**$n$ ではなく $\sigma$** です。
-:::
-
-::: {.callout-warning}
-## 「sample variance」を、そのまま電卓に入れないでください
-問題文が生のデータではなく、**$\bar{x}$・標本の大きさ・分散**だけを与えてくることがあります。このとき、与えられた分散が**どちらの分散か**を読み分ける必要があります。
-
-| 問題文の言い方 | 記号 | 電卓に入れられるか |
-|---|---|---|
-| `the sample variance is 14.7` | $s_n^2$ | **そのままでは入れられません** |
-| `the unbiased estimate of the population variance is 15.75` | $s_{n-1}^2$ | そのまま使えます |
-
-: どちらの分散か {#tbl-ahl418b-which-var}
-
-`t Test` の `sx` に入れるのは **$s_{n-1}$** のほうです（[AHL 4.14](ahl-4-14.qmd#s2)）。変換は
-
-$$
-s_{n-1}^2 = \frac{n}{n-1} \times s_n^2
-$$ {#eq-ahl418b-unbiased}
-
-です。$n = 15$ で $s_n^2 = 14.7$ なら
-
-$$
-s_{n-1}^2 = \frac{15}{14} \times 14.7 = 15.75, \qquad s_{n-1} = \sqrt{15.75} = 3.97
-$$
-
-**この $3.97$ を `sx` に入れます。** $\sqrt{14.7} = 3.83$ を入れると、$t$ も $p$-value もずれます。
-
-この式は公式集には載っていません。**覚える必要があります。**
-:::
-
-### 4. matched pairs は、差をとって $1$ 標本にします {#paired}
-
-シラバスの言い方です。
-
-> **The case of matched pairs is to be treated as an example of a single sample technique.**
-
-**matched pairs**（対応のあるデータ）は、同じ人・同じ物について**$2$ 回測ったデータ**です。
-
-- 同じ生徒の、講習の前と後の点数
-- 同じ患者の、投薬の前と後の血圧
-- 同じ畑の、$2$ 種類の肥料での収穫量
-
-::: {.callout-important}
-## $2$ 標本の $t$ 検定を使ってはいけません
-[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) で扱った $2$ 標本の $t$ 検定（`2-Sample t Test`）は、**別々の $2$ グループ**を比べるものです。
-
-matched pairs は同じ人の $2$ 回なので、**$2$ つの数がペアになっています。** ペアを崩して $2$ グループとして扱うと、その情報が失われます。
-
-**やることは $1$ つ。差をとります。**
-
-$$
-d = (\text{後}) - (\text{前})
-$$
-
-そして、この $d$ を**$1$ 本のデータ列**として `t Test` にかけます。$H_0$ は「差の平均は $0$」です。
-
-$$
-H_0: \mu_d = 0
-$$
-:::
-
-::: {.callout-tip}
-## 正規分布と仮定するのは、$2$ つの母集団ではなく**差**です
-$1$ 標本の $t$ 検定を使うので、**$d$ が正規分布にしたがう**ことを仮定します。
-
-**もとの $2$ つの母集団が正規分布かどうかは、問われません。** 前と後で大きく散らばっていても、**差が正規分布に近ければ**この検定は使えます。
-
-答案で仮定を書くときは *the differences are normally distributed* です。*the populations are normally distributed* ではありません。
-:::
-
-::: {.callout-tip}
-## 差の向きは、自分で決めて、書いておきます
-$(\text{後}) - (\text{前})$ でも $(\text{前}) - (\text{後})$ でも構いません。**ただし $H_1$ の向きが逆になります。**
-
-「講習で点数が上がったか」を調べるなら
-
-| 差の取り方 | $H_1$ |
-|---|---|
-| $d = (\text{後}) - (\text{前})$ | $\mu_d > 0$ |
-| $d = (\text{前}) - (\text{後})$ | $\mu_d < 0$ |
-
-: 差の向きと $H_1$ {#tbl-ahl418b-direction}
-
-**答案の最初に「$d =$ 後 $-$ 前 とする」と書いてください。** これがないと、採点者は $H_1$ の向きが合っているか判断できません。
-:::
-
-::: {.callout-warning}
-## 「$2$ 組の数が同じだけある」＝ matched pairs ではありません
-$2$ 組のデータの個数が同じでも、**ペアになっていなければ** matched pairs ではありません。
-
-| 場面 | ペアか |
-|---|---|
-| 同じ $8$ 人の、講習の前と後 | **matched pairs** |
-| $8$ 人の男子と $8$ 人の女子 | **違う**（$2$ 標本） |
-| 同じ $10$ 枚の畑の、肥料 A と 肥料 B | **matched pairs** |
-| $10$ 本の A 社の電池と $10$ 本の B 社の電池 | **違う**（$2$ 標本） |
-
-: ペアかどうかの見分け {#tbl-ahl418b-ispaired}
-
-**見分け方は $1$ つ。「$1$ 行目どうしを結びつける理由があるか」**です。
-
-同じ人・同じ物なら結びつきます。ただ人数が同じだけなら、$1$ 行目どうしに何の関係もありません。**数が同じというだけで、ペアだと決めないでください。**
-:::
-
-::: {.callout-note appearance="simple"}
-$2$ 標本の $t$ 検定（`2-Sample t Test`）は [SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd#gdc-ttest) で扱っています。$\sigma_1$ と $\sigma_2$ の**両方が与えられている**ときは、その正規分布版の `2-Sample z Test` を使います。**選び方の考え方は $1$ 標本のときと同じ**で、$\sigma$ が与えられているかどうかで決まります。
-:::
-
-### 5. 割合の検定は、binomial で {#binom}
-
-シラバスの言い方です。
-
-> **Test for proportion using binomial distribution.**
-
-**proportion**（割合）が $p_0$ から変わったか、を調べます。$n$ 回のうち何回起きたかを数えるので、$H_0$ のもとで
-
-$$
-X \sim B(n,\ p_0)
-$$
-
-です（[SL 4.8](../../ai-sl/04-statistics-and-probability/sl-4-8.qmd#notation)）。
-
-::: {.callout-important}
-## 電卓に、この検定はありません
-`menu → Statistics → Stat Tests` を開いても、**binomial 検定はありません**（[AHL 4.18a](ahl-4-18a.qmd#gdc-discrete)）。
-
-$p$-value を**自分で作ります。**
-
-$$
-H_1: p > p_0 \ \text{なら} \quad p\text{-value} = P(X \geq x_{\text{obs}})
-$$ {#eq-ahl418b-binom-p}
-
-$$
-H_1: p < p_0 \ \text{なら} \quad p\text{-value} = P(X \leq x_{\text{obs}})
-$$
-
-**$x_{\text{obs}}$ を含めます。** これが最大の落とし穴です（[第7節](#include)）。
-:::
-
-::: {.callout-warning}
-## `1-Prop z Test` は、別のものです
-`Stat Tests` の $5$ 番に `1-Prop z Test` があります。名前が近いので選びたくなりますが、**これは正規分布で近似する検定**です。
-
-シラバスが求めているのは `Test for proportion using binomial distribution` です。**近似ではなく、binomial そのもの**を使ってください。
-
-$n$ が小さいと、$2$ つの答えははっきり違います。
-:::
-
-::: {.callout-warning}
-## binomial の検定は、片側だけです
-> **Poisson and binomial tests will be one-tailed only.**
-
-$H_1$ に $\neq$ が出ることはありません。**$>$ か $<$ のどちらかです。**
-:::
-
-### 6. Poisson の平均の検定 {#pois}
-
-シラバスの言い方です。
-
-> **Test for population mean using Poisson distribution.**
-
-「一定の区間に起きる回数の平均が $m_0$ から変わったか」を調べます。$H_0$ のもとで
-
-$$
-X \sim \mathrm{Po}(m_0)
-$$
-
-です（[AHL 4.17](ahl-4-17.qmd#notation)）。やり方は binomial とまったく同じです。
-
-$$
-H_1: m > m_0 \ \text{なら} \quad p\text{-value} = P(X \geq x_{\text{obs}})
-$$ {#eq-ahl418b-pois-p}
-
-::: {.callout-warning}
-## 区間が変わったら、$m_0$ も変えます
-[AHL 4.17](ahl-4-17.qmd#scaling) と同じです。「$1$ 時間に $2.5$ 件」で $4$ 時間ぶんを調べるなら、$H_0$ のもとでの平均は
-
-$$
-m_0 = 2.5 \times 4 = 10
-$$
-
-です。**$2.5$ のまま計算すると、答えが桁ごと違います。**
-:::
-
-### 7. $x_{\text{obs}}$ を含めるかどうか {#include}
-
-**離散分布の $p$-value で、いちばん間違えるところです。**
-
-$p$-value は「**$H_0$ が正しいとして、観測した値と同じかそれ以上に極端な値が出る確率**」です。
-
-**「観測した値と同じ」を含みます。**
-
-| $H_1$ | 正しい $p$-value | よくある誤り |
-|---|---|---|
-| $p > p_0$（上側） | $P(X \geq x_{\text{obs}})$ | $P(X > x_{\text{obs}})$ |
-| $p < p_0$（下側） | $P(X \leq x_{\text{obs}})$ | $P(X < x_{\text{obs}})$ |
-
-: $x_{\text{obs}}$ を含める {#tbl-ahl418b-include}
-
-::: {.callout-warning}
-## $1$ つずれると、答えが半分以下になります
-@exm-ahl418b-binom で、$x_{\text{obs}} = 10$ のときの正しい $p$-value は $0.0480$ です。
-
-$P(X > 10) = P(X \geq 11) = 0.0171$ としてしまうと、**$0.36$ 倍**になります。
-
-$0.0480$ と $0.0171$ では、$2\%$ の検定で結論が分かれます。$0.0480$ では棄却できず、$0.0171$ では棄却してしまいます。
-:::
-
-### 8. $\rho = 0$ の検定 {#rho}
-
-シラバスの言い方です。
-
-> Use of technology to test the hypothesis that the **population product moment correlation coefficient ($\rho$) is $0$** for bivariate normal distributions.
-
-[SL 4.4](../../ai-sl/04-statistics-and-probability/sl-4-4.qmd) で、標本から $r$ を計算しました。ここで問うのは、**母集団の相関係数 $\rho$（ロー）が $0$ かどうか**です。$\rho$ は **population product moment correlation coefficient**（母積率相関係数）といいます。
-
-$$
-H_0: \rho = 0
-$$
-
-$H_1$ は、問題文の聞き方で決まります。
-
-| 問題文 | $H_1$ | 側 |
-|---|---|---|
-| `whether there is a linear correlation` | $\rho \neq 0$ | 両側 |
-| `whether there is a positive linear correlation` | $\rho > 0$ | 片側 |
-| `whether there is a negative linear correlation` | $\rho < 0$ | 片側 |
-
-: $\rho$ の検定の $H_1$ {#tbl-ahl418b-rho-h1}
-
-**`positive` や `negative` という語があったら片側**です。電卓の `Alternate Hyp` も、それに合わせてください。
-
-::: {.callout-tip}
-## $r$ と $\rho$ は別のものです
-| 記号 | 読み | 何のもの |
-|---|---|---|
-| $r$ | アール | **標本**の相関係数。データから計算する |
-| $\rho$ | ロー | **母集団**の相関係数。知ることはできない |
-
-: $r$ と $\rho$ {#tbl-ahl418b-r-rho}
-
-$r$ が $0$ でなくても、$\rho$ が $0$ である可能性はあります。**たまたま偏ったデータを引いただけかもしれない**からです。それを確かめるのが、この検定です。
-:::
-
-電卓には `Linear Reg t Test` があります。データを $2$ 列に入れて実行するだけです（[GDC 第4節](#gdc-rho)）。
-
-::: {.callout-note appearance="simple"}
-シラバスに `In examinations the data will be given` とあります。**データは必ず問題文に出ます。** 自分で集める必要はありません。
-:::
-
-::: {.callout-tip}
-## $r$ の critical value を与えられることがあります
-$p$-value で判定するかわりに、**$r$ そのものを critical value と比べる**形式もあります。
-
-> *The critical value for $r$ at the $5\%$ level with $n = 10$ is $0.632$.*
-
-**比べ方は、$H_1$ の向きで変わります。**
-
-| $H_1$ | 比べ方 |
-|---|---|
-| $\rho \neq 0$（両側） | $\lvert r \rvert$ を、正の critical value と比べる |
-| $\rho > 0$（片側・上側） | $r$ が、正の上側 critical value を**超える**か |
-| $\rho < 0$（片側・下側） | $r$ が、負の下側 critical value を**下回る**か |
-
-: $H_1$ と critical value の比べ方 {#tbl-ahl418b-rcrit}
-
-**絶対値を使うのは、両側のときだけ**です。片側で $\lvert r \rvert$ を使うと、**向きが逆のデータでも棄却してしまいます。** たとえば $H_1: \rho > 0$ なのに $r = -0.9$ だったら、$\lvert r \rvert$ は大きくても**棄却してはいけません。**
-
-**その critical value は、必ず問題文に書いてあります。** 自分で求める必要はありません（表も公式集もありません）。**$H_1$ の向きと合っているかを、必ず確かめてください。**
-
-@exm-ahl418b-rho は**両側**なので、$\lvert r \rvert$ で比べます。$\lvert 0.864 \rvert > 0.632$ なので棄却——$p$-value で出した結論と一致します。
-:::
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-### なぜ binomial と Poisson だけ、手で作るのか {#why}
-
-`z Test` も `t Test` も、電卓が $p$-value を出してくれます。なぜ binomial と Poisson だけ違うのでしょうか。
-
-**$p$-value の定義に戻ると、理由が見えます。**
-
-$p$-value は「$H_0$ が正しいとして、観測値と同じかそれ以上に極端な値が出る確率」です。
-
-- **連続な分布**（normal、$t$）… 「それ以上に極端」は**面積**です。面積を出すには積分が要るので、電卓の出番になります。
-- **離散な分布**（binomial、Poisson）… 「それ以上に極端」は、**確率を足すだけ**です。
-
-$$
-P(X \geq 10) = P(X = 10) + P(X = 11) + \cdots + P(X = 20)
-$$
-
-そして、この足し算をやってくれるコマンドは**すでにあります。** `Binomial Cdf` と `Poisson Cdf` です。
-
-**専用の検定コマンドが要らない**、というのが本当のところです。`Cdf` に範囲を入れれば、それがそのまま $p$-value です。
-
-### なぜ $x_{\text{obs}}$ を含めるのか {#why-include}
-
-$p$-value の定義に「観測値と**同じか**それ以上に極端」とあります。**「同じ」が入っています。**
-
-観測した $x_{\text{obs}}$ そのものも、「これくらい極端なことが起きる確率」の一部です。
-
-連続な分布では $P(X = a) = 0$ なので、含めても含めなくても同じでした。**離散では $P(X = a) \neq 0$ なので、はっきり差が出ます。**
-
-@exm-ahl418b-binom では $P(X = 10) = 0.0308$ です。含めるか含めないかで、これだけ変わります。
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
+@eq-ahl418b-z が要るのは、[AHL 4.18a](ahl-4-18a.qmd#xbar) で critical region を $\bar{x}$ の値で表し直すときです。
 :::
 
 ::: {#exm-ahl418b-z}
@@ -463,7 +77,8 @@ $p$-value の定義に「観測値と**同じか**それ以上に極端」とあ
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **まず検定を選びます。** 母平均についてで、**$\sigma = 0.4$ が問題文にあります。** ですから `z Test` です（@tbl-ahl418b-which）。
 
@@ -473,9 +88,11 @@ $$
 H_0: \mu = 25, \qquad H_1: \mu \neq 25
 $$
 
+$\bar{x}$ と $n$ が数値で与えられているので、`Stats` モードで入れます（[GDC 第1節](#gdc-z)）。
+
 ```
-z Test:   μ₀: 25    σ: 0.4    x̄: 25.15    n: 40
-          Alternate Hyp: μ ≠ μ₀
+z Test → Stats:   μ₀: 25    σ: 0.4    x̄: 25.15    n: 40
+                  Alternate Hyp: μ ≠ μ₀
 ```
 
 | 表示 | 値 |
@@ -494,7 +111,9 @@ $0.0177 < 0.05$ なので $H_0$ を棄却します。
 
 *$H_0: \mu = 25$, $H_1: \mu \neq 25$ (two-tailed).*
 
-*$p = 0.0177 < 0.05$, so reject $H_0$ at the $5\%$ significance level. There is sufficient evidence that the mean length of the rods has changed from $25$ cm.*
+*$p = 0.0177 < 0.05$, so reject $H_0$ at the $5\%$ significance level.*
+
+*There is sufficient evidence that the mean length of the rods has changed from $25$ cm.*
 :::
 
 （$\sigma$ が分かっているので $z$ 検定を使う。$p = 0.0177 < 0.05$ なので $5\%$ 水準で $H_0$ を棄却する。棒の平均の長さが $25$ cm から変わったという十分な証拠がある、という意味です。）
@@ -521,6 +140,54 @@ $$
 *$0.0177 < 0.05$, so reject $H_0$ at the $5\%$ level. There is evidence that the mean length has changed from $25$ cm.*
 :::
 :::
+:::
+
+### 3. Test with unknown $\sigma$（$\sigma$ が分からないときの `t Test`） {#t-test}
+
+$\sigma$ が分からなければ、標本から推定した $s$ で代用します。すると、使う分布が正規分布から **$t$ 分布**に変わります（[AHL 4.16](ahl-4-16.qmd#t-dist)）。
+
+$$
+t = \frac{\bar{x} - \mu_0}{\dfrac{s}{\sqrt{n}}}, \qquad \text{自由度} \ \nu = n - 1
+$$ {#eq-ahl418b-t}
+
+この式も公式集には載っていません。**覚える必要があります。** **degrees of freedom**（自由度）が $n - 1$ になる理由は [AHL 4.16](ahl-4-16.qmd#df) にあります。
+
+::: {.callout-important}
+## 標本の大きさに関係なく、$\sigma$ が分からなければ $t$ です
+**標本がどれだけ大きくても、$\sigma$ が分からなければ $t$ です。**
+
+日本の教科書や一般の統計の本には「$n > 30$ なら正規分布で近似してよい」と書いてあることがあります。**この科目では、その規則を使いません。**
+
+判断の基準は**$n$ ではなく $\sigma$** です。
+:::
+
+::: {.callout-warning}
+## 「sample variance」を、そのまま電卓に入れないでください
+問題文が生のデータではなく、**$\bar{x}$・標本の大きさ・variance（分散）**だけを与えてくることがあります。このとき、与えられた分散が**どちらの分散か**を読み分ける必要があります。
+
+| 問題文の言い方 | 記号 | 電卓に入れられるか |
+|---|---|---|
+| `the sample variance is 14.7` | $s_n^2$ | **そのままでは入れられません** |
+| `the unbiased estimate of the population variance is 15.75` | $s_{n-1}^2$ | そのまま使えます |
+
+: どちらの分散か {#tbl-ahl418b-which-var}
+
+`t Test` の `sx` に入れるのは **$s_{n-1}$** のほうです（[AHL 4.14](ahl-4-14.qmd#s2)）。変換は
+
+$$
+s_{n-1}^2 = \frac{n}{n-1} \times s_n^2
+$$ {#eq-ahl418b-unbiased}
+
+です。$n = 15$ で $s_n^2 = 14.7$ なら
+
+$$
+s_{n-1}^2 = \frac{15}{14} \times 14.7 = 15.75, \qquad s_{n-1} = \sqrt{15.75} = 3.97
+$$
+
+**この $3.97$ を `sx` に入れます。** $\sqrt{14.7} = 3.83$ を入れると、$t$ も $p$-value もずれます。
+
+この式は公式集には載っていません。**覚える必要があります。**
+:::
 
 ::: {#exm-ahl418b-t}
 [A coach claims that his athletes have a mean reaction time of $0.25$ seconds. A researcher tests $8$ of the athletes and records the following reaction times, in seconds.]{.q-en}
@@ -542,7 +209,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **まず検定を選びます。** 母平均についてですが、**$\sigma$ が問題文にありません。** データだけが与えられています。ですから `t Test` です。
 
@@ -572,7 +240,9 @@ $0.00786 < 0.05$ なので $H_0$ を棄却します。
 
 *$H_0: \mu = 0.25$, $H_1: \mu > 0.25$ (one-tailed).*
 
-*$p = 0.00786 < 0.05$, so reject $H_0$ at the $5\%$ significance level. There is sufficient evidence that the mean reaction time is greater than $0.25$ seconds, so the coach's claim is not supported.*
+*$p = 0.00786 < 0.05$, so reject $H_0$ at the $5\%$ significance level.*
+
+*There is sufficient evidence that the mean reaction time is greater than $0.25$ seconds, so the coach's claim is not supported.*
 :::
 
 （$\sigma$ が分からないので $t$ 検定を使う。$p = 0.00786 < 0.05$ なので $5\%$ 水準で $H_0$ を棄却する。平均の反応時間が $0.25$ 秒より大きいという十分な証拠があるので、コーチの主張は支持されない、という意味です。）
@@ -597,6 +267,43 @@ $$
 *$0.00786 < 0.05$, so reject $H_0$ at the $5\%$ level. There is evidence that the mean reaction time is greater than $0.25$ seconds.*
 :::
 :::
+:::
+
+### 4. Matched pairs（対応のあるデータ） {#paired}
+
+**matched pairs**（対応のあるデータ）は、同じ人・同じ物について**$2$ 回測ったデータ**です。差をとって、$1$ 標本の検定として扱います。
+
+- 同じ生徒の、講習の前と後の点数
+- 同じ患者の、投薬の前と後の血圧
+- 同じ畑の、$2$ 種類の肥料での収穫量
+
+**やることは $1$ つ。差をとります。**
+
+$$
+d = (\text{後}) - (\text{前})
+$$
+
+この $d$ を**$1$ 本のデータ列**として `t Test` にかけます。$H_0$ は「差の平均は $0$」です。
+
+$$
+H_0: \mu_d = 0
+$$
+
+**差の向きは自分で決めて、答案の最初に「$d =$ 後 $-$ 前 とする」と書いてください。** $(\text{前}) - (\text{後})$ でも構いませんが、$H_1$ の向きが逆になります。「講習で点数が上がったか」なら、$d = (\text{後}) - (\text{前})$ で $\mu_d > 0$、$d = (\text{前}) - (\text{後})$ なら $\mu_d < 0$ です。向きを書いておかないと、採点者は $H_1$ が合っているか判断できません。
+
+**正規分布を仮定するのは、$2$ つの母集団ではなく差のほうです。** $1$ 標本の $t$ 検定を使うので、$d$ が正規分布にしたがうことを仮定します。**もとの $2$ つの母集団が正規分布かどうかは、問われません。** 答案では *the differences are normally distributed* と書きます。*the populations are normally distributed* ではありません。
+
+::: {.callout-warning}
+## 個数が同じだけでは、matched pairs になりません
+**見分け方は $1$ つ。「$1$ 行目どうしを結びつける理由があるか」**です。同じ人・同じ物なら結びつきますが、人数が同じだけなら、$1$ 行目どうしに何の関係もありません。
+
+- 同じ $8$ 人の、講習の前と後 … **matched pairs**
+- $8$ 人の男子と $8$ 人の女子 … **違う**（$2$ 標本）
+- 同じ $10$ 枚の畑の、肥料 A と肥料 B … **matched pairs**
+- $10$ 本の A 社の電池と $10$ 本の B 社の電池 … **違う**（$2$ 標本）
+:::
+
+$2$ 標本の $t$ 検定（`2-Sample t Test`、[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd#gdc-ttest)）は、**別々の $2$ グループ**を比べるものです。matched pairs でこれを使うと、ペアの情報が失われます。$\sigma_1$ と $\sigma_2$ の**両方が与えられている**ときは、その正規分布版の `2-Sample z Test` を使います。
 
 ::: {#exm-ahl418b-paired}
 [Eight students take a memory test before and after a training course. Their scores are shown below.]{.q-en}
@@ -621,7 +328,8 @@ $8$ 人の生徒が、訓練コースの前と後に記憶力テストを受け�
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **同じ生徒を $2$ 回測っています。matched pairs です**（[第4節](#paired)）。差をとります。
 
@@ -655,11 +363,17 @@ $0.998 > 0.05$ なので、$H_0$ を棄却できません。
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Let $d = (\text{after}) - (\text{before})$. This is a matched-pairs situation, so the differences are treated as a single sample and a $t$-test is used.*
+*Let $d = (\text{after}) - (\text{before})$.*
+
+*This is a matched-pairs situation, so the differences are treated as a single sample and a $t$-test is used.*
 
 *$H_0: \mu_d = 0$, $H_1: \mu_d > 0$ (one-tailed).*
 
-*$p = 0.998 > 0.05$, so we do not reject $H_0$ at the $5\%$ significance level. There is no evidence that the course improves memory scores. In fact every difference is negative, so the scores went down.*
+*$p = 0.998 > 0.05$, so we do not reject $H_0$ at the $5\%$ significance level.*
+
+*There is no evidence that the course improves memory scores.*
+
+*In fact every difference is negative, so the scores went down.*
 :::
 
 （$d$ を「後 $-$ 前」とする。これは matched pairs の場面なので、差を $1$ 標本として扱い $t$ 検定を使う。$p = 0.998 > 0.05$ なので $5\%$ 水準で $H_0$ を棄却しない。コースが記憶力の得点を上げるという証拠はない。実際、差はすべて負で、得点は下がっている、という意味です。）
@@ -684,6 +398,83 @@ t = -4.31, \qquad p = 0.998
 $$
 *$0.998 > 0.05$, so do not reject $H_0$ at the $5\%$ level. There is no evidence that the course improves memory scores; all eight differences are negative, so the scores fell.*
 :::
+:::
+:::
+
+### 5. Test for a proportion（二項分布による割合の検定） {#binom}
+
+**proportion**（割合）が $p_0$ から変わったか、を調べます。$n$ 回のうち何回起きたかを数えるので、$H_0$ のもとで
+
+$$
+X \sim B(n,\ p_0)
+$$
+
+です（[SL 4.8](../../ai-sl/04-statistics-and-probability/sl-4-8.qmd#notation)）。
+
+**電卓に、この検定はありません。** `menu → Statistics → Stat Tests` を開いても binomial 検定はないので（[AHL 4.18a](ahl-4-18a.qmd#gdc-discrete)）、$p$-value を**自分で作ります。**
+
+$$
+H_1: p > p_0 \ \text{なら} \quad p\text{-value} = P(X \geq x_{\text{obs}})
+$$ {#eq-ahl418b-binom-p}
+
+$$
+H_1: p < p_0 \ \text{なら} \quad p\text{-value} = P(X \leq x_{\text{obs}})
+$$
+
+**$x_{\text{obs}}$ を含めます。** これが最大の落とし穴です（[第7節](#include)）。また、binomial と Poisson の検定は、片側検定だけが出ます。$H_1$ に $\neq$ が出ることはなく、**$>$ か $<$ のどちらか**です。
+
+::: {.callout-warning}
+## `1-Prop z Test` は、別のものです
+`Stat Tests` の $5$ 番にある `1-Prop z Test` は、**正規分布で近似する検定**です。名前は近いですが、ここでは**近似ではなく、binomial そのもの**を使ってください。$n$ が小さいと、$2$ つの答えははっきり違います。
+:::
+
+### 6. Test for a Poisson mean（ポアソン分布の平均の検定） {#pois}
+
+「一定の区間に起きる回数の平均が $m_0$ から変わったか」を調べます。$H_0$ のもとで
+
+$$
+X \sim \mathrm{Po}(m_0)
+$$
+
+です（[AHL 4.17](ahl-4-17.qmd#notation)）。やり方は binomial とまったく同じです。
+
+$$
+H_1: m > m_0 \ \text{なら} \quad p\text{-value} = P(X \geq x_{\text{obs}})
+$$ {#eq-ahl418b-pois-p}
+
+::: {.callout-warning}
+## 区間が変わったら、$m_0$ も変えます
+[AHL 4.17](ahl-4-17.qmd#scaling) と同じです。「$1$ 時間に $2.5$ 件」で $4$ 時間ぶんを調べるなら、$H_0$ のもとでの平均は
+
+$$
+m_0 = 2.5 \times 4 = 10
+$$
+
+です。**$2.5$ のまま計算すると、答えが桁ごと違います。**
+:::
+
+### 7. Including $x_{\text{obs}}$（$x_{\text{obs}}$ を含めるかどうか） {#include}
+
+binomial と Poisson の $p$-value では、観測した値 $x_{\text{obs}}$ そのものを含めて確率を足します。**離散分布の $p$-value で、いちばん間違えるところです。**
+
+$p$-value は「**$H_0$ が正しいとして、観測した値と同じかそれ以上に極端な値が出る確率**」です。
+
+**「観測した値と同じ」を含みます。**
+
+| $H_1$ | 正しい $p$-value | よくある誤り |
+|---|---|---|
+| $p > p_0$（上側） | $P(X \geq x_{\text{obs}})$ | $P(X > x_{\text{obs}})$ |
+| $p < p_0$（下側） | $P(X \leq x_{\text{obs}})$ | $P(X < x_{\text{obs}})$ |
+
+: $x_{\text{obs}}$ を含める {#tbl-ahl418b-include}
+
+::: {.callout-warning}
+## $1$ つずれると、答えが半分以下になります
+@exm-ahl418b-binom で、$x_{\text{obs}} = 10$ のときの正しい $p$-value は $0.0480$ です。
+
+$P(X > 10) = P(X \geq 11) = 0.0171$ としてしまうと、**$0.36$ 倍**になります。
+
+$0.0480$ と $0.0171$ では、$2\%$ の検定で結論が分かれます。$0.0480$ では棄却できず、$0.0171$ では棄却してしまいます。
 :::
 
 ::: {#exm-ahl418b-binom}
@@ -710,7 +501,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 割合についてで、「もっと高い」なので上側です。
 
@@ -734,7 +526,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*$p = 0.0480 < 0.05$, so reject $H_0$ at the $5\%$ significance level. There is sufficient evidence that the proportion of households owning a dog in this neighbourhood is greater than $0.3$.*
+*$p = 0.0480 < 0.05$, so reject $H_0$ at the $5\%$ significance level.*
+
+*There is sufficient evidence that the proportion of households owning a dog in this neighbourhood is greater than $0.3$.*
 :::
 
 （$p = 0.0480 < 0.05$ なので $5\%$ 水準で $H_0$ を棄却する。この地区で犬を飼っている世帯の割合が $0.3$ より大きいという十分な証拠がある、という意味です。）
@@ -770,6 +564,7 @@ $$
 **(c)** *$0.0480 < 0.05$, so reject $H_0$ at the $5\%$ level. There is evidence that the proportion of dog-owning households in this neighbourhood is greater than $0.3$.*
 :::
 :::
+:::
 
 ::: {#exm-ahl418b-pois}
 [A helpline receives calls at a mean rate of $8$ per week, following a Poisson distribution. After the helpline is advertised on local radio, $15$ calls are received in the following week.]{.q-en}
@@ -787,7 +582,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 Poisson の平均についてで、「増えた」なので上側です。**区間は $1$ 週間のままなので、$m_0$ は $8$ のまま**です。
 
@@ -814,7 +610,9 @@ $0.0173 < 0.05$ なので $H_0$ を棄却します。
 
 *$H_0: m = 8$, $H_1: m > 8$ (one-tailed).*
 
-*$p\text{-value} = P(X \geq 15) = 0.0173 < 0.05$, so reject $H_0$ at the $5\%$ significance level. There is sufficient evidence that the mean rate of calls has increased.*
+*$p\text{-value} = P(X \geq 15) = 0.0173 < 0.05$, so reject $H_0$ at the $5\%$ significance level.*
+
+*There is sufficient evidence that the mean rate of calls has increased.*
 :::
 
 （$H_0$ のもとで $X$ を $1$ 週間の電話の件数として $X \sim \mathrm{Po}(8)$ とする。$p$-value $= P(X \geq 15) = 0.0173 < 0.05$ なので $5\%$ 水準で $H_0$ を棄却する。電話の平均の割合が増えたという十分な証拠がある、という意味です。）
@@ -840,6 +638,56 @@ $$
 *$0.0173 < 0.05$, so reject $H_0$ at the $5\%$ level. There is evidence that the mean rate of calls has increased.*
 :::
 :::
+:::
+
+### 8. Test for $\rho = 0$（母相関係数が $0$ かどうかの検定） {#rho}
+
+**bivariate normal distribution**（二変量正規分布）にしたがう $2$ つの変数について、母相関係数が $0$ かどうかを電卓で検定します。
+
+[SL 4.4](../../ai-sl/04-statistics-and-probability/sl-4-4.qmd) で、標本から $r$ を計算しました。ここで問うのは、**母集団の相関係数 $\rho$（ロー）が $0$ かどうか**です。$\rho$ は **population product moment correlation coefficient**（母積率相関係数）といいます。
+
+$$
+H_0: \rho = 0
+$$
+
+$H_1$ は、問題文の聞き方で決まります。
+
+| 問題文 | $H_1$ | 側 |
+|---|---|---|
+| `whether there is a linear correlation` | $\rho \neq 0$ | 両側 |
+| `whether there is a positive linear correlation` | $\rho > 0$ | 片側 |
+| `whether there is a negative linear correlation` | $\rho < 0$ | 片側 |
+
+: $\rho$ の検定の $H_1$ {#tbl-ahl418b-rho-h1}
+
+**`positive` や `negative` という語があったら片側**です。電卓の `Alternate Hyp` も、それに合わせてください。
+
+$r$（アール）は**標本**の相関係数でデータから計算する値、$\rho$（ロー）は**母集団**の相関係数で、知ることはできません。$r$ が $0$ でなくても $\rho$ が $0$ である可能性はあります。**たまたま偏ったデータを引いただけかもしれない**からです。それを確かめるのが、この検定です。
+
+電卓には `Linear Reg t Test` があります。データを $2$ 列に入れて実行するだけです（[GDC 第4節](#gdc-rho)）。試験では、**データは必ず問題文に出ます。**
+
+::: {.callout-tip}
+## $r$ の critical value を与えられることがあります
+$p$-value で判定するかわりに、**$r$ そのものを critical value と比べる**形式もあります。
+
+> *The critical value for $r$ at the $5\%$ level with $n = 10$ is $0.632$.*
+
+**比べ方は、$H_1$ の向きで変わります。**
+
+| $H_1$ | 比べ方 |
+|---|---|
+| $\rho \neq 0$（両側） | $\lvert r \rvert$ を、正の critical value と比べる |
+| $\rho > 0$（片側・上側） | $r$ が、正の上側 critical value を**超える**か |
+| $\rho < 0$（片側・下側） | $r$ が、負の下側 critical value を**下回る**か |
+
+: $H_1$ と critical value の比べ方 {#tbl-ahl418b-rcrit}
+
+**絶対値を使うのは、両側のときだけ**です。片側で $\lvert r \rvert$ を使うと、**向きが逆のデータでも棄却してしまいます。** たとえば $H_1: \rho > 0$ なのに $r = -0.9$ だったら、$\lvert r \rvert$ は大きくても**棄却してはいけません。**
+
+**その critical value は、必ず問題文に書いてあります。** 自分で求める必要はありません（表も公式集もありません）。**$H_1$ の向きと合っているかを、必ず確かめてください。**
+
+@exm-ahl418b-rho は**両側**なので、$\lvert r \rvert$ で比べます。$\lvert 0.864 \rvert > 0.632$ なので棄却——$p$-value で出した結論と一致します。
+:::
 
 ::: {#exm-ahl418b-rho}
 [A gardener records the mass of fertiliser used, $x$ grams, and the height of the plant after four weeks, $y$ cm, for ten plants.]{.q-en}
@@ -863,7 +711,8 @@ $x$ と $y$ は **bivariate normal distribution**（二変量正規分布）に�
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **母相関係数についての検定**です。「相関があるかどうか」で向きの指定がないので**両側**です。
 
@@ -889,7 +738,9 @@ $0.00128 < 0.01$ なので $H_0$ を棄却します。
 
 *$H_0: \rho = 0$, $H_1: \rho \neq 0$ (two-tailed).*
 
-*$r = 0.864$, $p = 0.00128 < 0.01$, so reject $H_0$ at the $1\%$ significance level. There is sufficient evidence of a linear correlation between the mass of fertiliser used and the height of the plant.*
+*$r = 0.864$, $p = 0.00128 < 0.01$, so reject $H_0$ at the $1\%$ significance level.*
+
+*There is sufficient evidence of a linear correlation between the mass of fertiliser used and the height of the plant.*
 :::
 
 （$p = 0.00128 < 0.01$ なので $1\%$ 水準で $H_0$ を棄却する。使った肥料の重さと植物の高さのあいだに線形の相関があるという十分な証拠がある、という意味です。）
@@ -915,6 +766,42 @@ $$
 *$0.00128 < 0.01$, so reject $H_0$ at the $1\%$ level. There is evidence of a linear correlation between the mass of fertiliser and the height of the plant.*
 :::
 :::
+:::
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+#### なぜ binomial と Poisson だけ、手で作るのか {#why}
+
+`z Test` も `t Test` も、電卓が $p$-value を出してくれます。なぜ binomial と Poisson だけ違うのでしょうか。
+
+**$p$-value の定義に戻ると、理由が見えます。**
+
+$p$-value は「$H_0$ が正しいとして、観測値と同じかそれ以上に極端な値が出る確率」です。
+
+- **連続な分布**（normal、$t$）… 「それ以上に極端」は**面積**です。面積を出すには積分が要るので、電卓の出番になります。
+- **離散な分布**（binomial、Poisson）… 「それ以上に極端」は、**確率を足すだけ**です。
+
+$$
+P(X \geq 10) = P(X = 10) + P(X = 11) + \cdots + P(X = 20)
+$$
+
+そして、この足し算をやってくれるコマンドは**すでにあります。** `Binomial Cdf` と `Poisson Cdf` です。
+
+**専用の検定コマンドが要らない**、というのが本当のところです。`Cdf` に範囲を入れれば、それがそのまま $p$-value です。
+
+#### なぜ $x_{\text{obs}}$ を含めるのか {#why-include}
+
+$p$-value の定義に「観測値と**同じか**それ以上に極端」とあります。**「同じ」が入っています。**
+
+観測した $x_{\text{obs}}$ そのものも、「これくらい極端なことが起きる確率」の一部です。
+
+連続な分布では $P(X = a) = 0$ なので、含めても含めなくても同じでした。**離散では $P(X = a) \neq 0$ なので、はっきり差が出ます。**
+
+@exm-ahl418b-binom では $P(X = 10) = 0.0308$ です。含めるか含めないかで、これだけ変わります。
+:::
 
 ## Common errors
 
@@ -927,7 +814,7 @@ $$
 
 ::: {.callout-warning}
 ## $n$ が大きいから正規分布、としてしまう
-シラバスは `regardless of sample size` と書いています（[第3節](#t-test)）。判断は **$\sigma$ で**します。
+標本の大きさには関係ありません（[第3節](#t-test)）。判断は **$\sigma$ で**します。
 :::
 
 ::: {.callout-warning}
@@ -947,7 +834,7 @@ $$
 
 ::: {.callout-warning}
 ## matched pairs に `2-Sample t Test` を使う
-差をとって**$1$ 標本**にします（[第4節](#paired)）。シラバスが `an example of a single sample technique` と書いています。
+差をとって**$1$ 標本**にします（[第4節](#paired)）。matched pairs は $1$ 標本の検定として扱います。
 :::
 
 ::: {.callout-warning}
@@ -957,7 +844,7 @@ $d =$ 後 $-$ 前 なのか、前 $-$ 後 なのかで、$H_1$ の向きが逆�
 
 ::: {.callout-warning}
 ## 割合の検定に `1-Prop z Test` を使う
-シラバスは `using binomial distribution` と指定しています。**近似ではありません**（[第5節](#binom)）。
+割合の検定は binomial distribution そのものを使います。**近似ではありません**（[第5節](#binom)）。
 :::
 
 ::: {.callout-warning}
@@ -989,9 +876,7 @@ $p$-value が $2$ 倍または半分になります。**`z Test` と `t Test` �
 
 ::: {.callout-warning}
 ## binomial・Poisson で両側検定をしようとする
-> Poisson and binomial tests will be **one-tailed only**.
-
-シラバスが外しています（[第5節](#binom)）。
+binomial と Poisson の検定は、**片側だけ**です（[第5節](#binom)）。
 :::
 
 ::: {.callout-warning}
@@ -1015,7 +900,7 @@ menu → Statistics → Stat Tests
 **binomial と Poisson の検定は、ここにはありません**（[第5節](#binom)）。次の節を見てください。
 :::
 
-### binomial と Poisson は `Distributions` から {#gdc-discrete}
+### Binomial and Poisson tests（`Distributions` から使う） {#gdc-discrete}
 
 ```
 menu → Statistics → Distributions → Binomial Cdf
@@ -1090,7 +975,7 @@ Lists & Spreadsheet ページで、列 A のいちばん上のグレーの行に
 名前を付けないと `a[]` のままですが、それでも動きます。
 :::
 
-### matched pairs のとき {#gdc-paired}
+### Matched pairs（対応のあるデータのとき） {#gdc-paired}
 
 **電卓に `Paired t Test` はありません。** 差の列を自分で作ります。
 
@@ -1123,20 +1008,14 @@ menu → Statistics → Stat Tests → Linear Reg t Test
 
 ::: {.callout-tip}
 ## `a` と `b` は回帰直線です
-`Linear Reg t Test` は、検定と同時に回帰直線 $y = a + bx$ も出します。
+`Linear Reg t Test` は、検定と同時に **regression line**（回帰直線） $y = a + bx$ も出します。
 
-**IB の記法とは、$a$ と $b$ が逆**です。IB では $y = ax + b$ と書くので、**電卓の `b` が IB の $a$（傾き）、電卓の `a` が IB の $b$（切片）**にあたります。
+**IB の記法とは、$a$ と $b$ が逆**です。IB では $y = ax + b$ と書くので、**電卓の `b` が IB の $a$（gradient（傾き））、電卓の `a` が IB の $b$（intercept（切片））**にあたります。
 
 この項目では回帰直線は聞かれないことが多いのですが、$1$ つの問題で両方問われることがあります。**そのときだけ注意してください。**
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -1239,8 +1118,8 @@ $$
 $\sigma = 15$ が与えられているので `z Test` です。
 
 ```
-z Test:   μ₀: 180   σ: 15   x̄: 184.2   n: 50
-          Alternate Hyp: μ > μ₀
+z Test → Stats:   μ₀: 180   σ: 15   x̄: 184.2   n: 50
+                  Alternate Hyp: μ > μ₀
 ```
 
 $$
@@ -1561,7 +1440,9 @@ $p$-value が「偶然でこれくらいになる確率」を教えてくれま�
 **(a)**
 
 ::: {.model-answer}
-*The $p$-value is the probability of a result at least as extreme as the one observed, and this includes the observed value itself. She has used $P(X > 12)$, which excludes $X = 12$, so she should have used $P(X \geq 12)$.*
+*The $p$-value is the probability of a result at least as extreme as the one observed, and this includes the observed value itself.*
+
+*She has used $P(X > 12)$, which excludes $X = 12$, so she should have used $P(X \geq 12)$.*
 :::
 
 （$p$-value は、観測した結果と同じかそれ以上に極端な結果が出る確率であり、これには観測値そのものが含まれる。彼女は $X = 12$ を除く $P(X > 12)$ を使っているので、$P(X \geq 12)$ を使うべきだった、という意味です。）
@@ -1639,7 +1520,8 @@ $$
 m = 2.5 \times 4 = 10
 $$
 
-**(b)**
+**(b)** $H_0$ のもとで $X \sim \mathrm{Po}(10)$ です。上側なので $P(X \geq 18)$——**$18$ を含めます**（[第7節](#include)）。
+
 ```
 Poisson Cdf:   λ: 10   Lower Bound: 18   Upper Bound: 100
 ```
@@ -1687,10 +1569,12 @@ $P(X \geq 18)$ を $\mathrm{Po}(2.5)$ で計算すると $2.15 \times 10^{-10}$ 
 **(a)**
 
 ::: {.model-answer}
-*The syllabus states that the $t$-distribution is used when $\sigma$ is unknown, regardless of sample size. The choice of test depends on whether $\sigma$ is known, not on how large the sample is, so the size of $60$ is not a reason to use a $z$-test.*
+*The $t$-distribution is used when $\sigma$ is unknown, regardless of sample size.*
+
+*The choice of test depends on whether $\sigma$ is known, not on how large the sample is, so the size of $60$ is not a reason to use a $z$-test.*
 :::
 
-（シラバスは、$\sigma$ が分からないときは標本の大きさに関係なく $t$ 分布を使うと述べている。検定の選択は $\sigma$ が分かっているかどうかで決まり、標本がどれだけ大きいかでは決まらないので、$60$ という大きさは $z$ 検定を使う理由にならない、という意味です。）
+（$\sigma$ が分からないときは、標本の大きさに関係なく $t$ 分布を使う。検定の選択は $\sigma$ が分かっているかどうかで決まり、標本がどれだけ大きいかでは決まらないので、$60$ という大きさは $z$ 検定を使う理由にならない、という意味です。）
 
 **(b)**
 
@@ -1705,9 +1589,9 @@ $P(X \geq 18)$ を $\mathrm{Po}(2.5)$ で計算すると $2.15 \times 10^{-10}$ 
 ## 解説
 **この生徒の言っていることは、一般の統計では間違いではありません。** $n$ が大きいと $t$ 分布は正規分布にとても近づくので、実務では正規分布で近似することがあります。
 
-**しかし、この科目のシラバスは `regardless of sample size` と書いています**（[第3節](#t-test)）。試験では、この規則で採点されます。
+**しかし、この科目では、$\sigma$ が分からなければ標本の大きさに関係なく $t$ を使うと決まっています**（[第3節](#t-test)）。試験では、この規則で採点されます。
 
-**「一般には正しいが、この科目では使わない」**——そういう規則がいくつかあります。[AHL 4.16](ahl-4-16.qmd#which) の信頼区間でも、まったく同じ規則が使われています。
+**「一般には正しいが、この科目では使わない」**——そういう規則がいくつかあります。[AHL 4.16](ahl-4-16.qmd#which) の **confidence interval**（信頼区間）でも、まったく同じ規則が使われています。
 
 **判断の基準は $\sigma$ だけ**、と覚えてください。$n$ は関係ありません。
 :::

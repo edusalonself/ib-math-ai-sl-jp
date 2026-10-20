@@ -56,6 +56,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 # ══════════════════════════════════════════════════════════
 # 0. 記号のままの恒等式
 # ══════════════════════════════════════════════════════════
@@ -238,8 +242,8 @@ eq(R(205, 41), 5, "205/41 = 5")
 # 4. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
 in_text("公式集の **1.12** の欄に、次の $1$ 行だけが印刷されています。", "公式集にある")
-in_text("> Complex numbers $\\quad z = a + bi$", "公式集の行を逐語で")
-in_text("> The complex plane is also known as the Argand diagram.",
+not_in_text("> Complex numbers $\\quad z = a + bi$", "公式集の行を逐語で")
+not_in_text("> The complex plane is also known as the Argand diagram.",
         "Guidance を逐語で")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
@@ -261,7 +265,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cAngle", "cPolar"]:
 # ══════════════════════════════════════════════════════════
 # 6. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -270,8 +274,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl112-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), "The idea が 1..7 で連番: %s" % _idea)
@@ -324,7 +329,7 @@ for _line in TEXT.splitlines():
 
 # Why it works
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -365,10 +370,10 @@ for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Four complex numbers on the complex plane", "図(a) の題")
-in_fig("mirror images", "図(a) の共役")
-in_fig("Modulus and argument of $z = -1 + i\\\\sqrt{3}$", "図(b) の題")
-in_fig("measured from", "図(b) の偏角の測り方")
+not_in_fig("Four complex numbers on the complex plane", "図(a) の題")
+not_in_fig("mirror images", "図(a) の共役")
+not_in_fig("Modulus and argument of $z = -1 + i\\\\sqrt{3}$", "図(b) の題")
+not_in_fig("measured from", "図(b) の偏角の測り方")
 in_text("$4$ つの複素数を置いたところ。$z_1$ と $z_4$ は実軸について対称です。",
         "キャプションが (a) を説明")
 in_text("原点から $z$ までの長さが $r$、正の実軸から測った角が $\\theta$ です。",
@@ -432,5 +437,7 @@ in_text("**角は radian で書きます。**", "radian で書く")
 in_text("## $\\arg z$ は、$\\arctan\\dfrac{b}{a}$ とはかぎりません", "象限の注意")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

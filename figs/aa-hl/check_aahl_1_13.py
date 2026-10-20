@@ -56,6 +56,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 def cart(r, t):
     return sp.simplify(sp.expand(r * (sp.cos(t) + I * sp.sin(t))))
 
@@ -227,10 +231,10 @@ eq(sp.simplify(R(10, 2) * (1 + I) ** 2), 10 * I, "演習10 検算：a+bi で 10i
 # ══════════════════════════════════════════════════════════
 in_text("公式集の **1.13** の欄に、$3$ つの形が $1$ 行に並べて印刷されています。",
         "公式集にある")
-in_text("> Modulus-argument (polar) and exponential (Euler) form", "見出しを逐語で")
-in_text("> $z = r(\\cos\\theta + i\\sin\\theta) = re^{i\\theta}"
+not_in_text("> Modulus-argument (polar) and exponential (Euler) form", "見出しを逐語で")
+not_in_text("> $z = r(\\cos\\theta + i\\sin\\theta) = re^{i\\theta}"
         " = r\\,\\mathrm{cis}\\,\\theta$", "公式集の式を逐語で")
-in_text("> The ability to convert between Cartesian, modulus-argument (polar)"
+not_in_text("> The ability to convert between Cartesian, modulus-argument (polar)"
         " and Euler form is expected.", "Guidance を逐語で")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 # cis は 1 度だけ紹介する（_AA-HL-PLAN.md 決まったこと 2）
@@ -258,7 +262,7 @@ in_text("**Paper 1 では使えません。**", "Paper 1 では手で解くと�
 for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB"]:
     not_in_text(_m, "他機種: " + _m)
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -267,8 +271,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl113-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -317,7 +322,7 @@ for _line in TEXT.splitlines():
             chk("|" not in _cell or "\\lvert" in _cell or "\\rvert" in _cell,
                 "表のセルの中の裸の | :: " + _line[:60])
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -331,9 +336,10 @@ for _hh in re.findall(r"^### \d+\. (.+?) \{#", TEXT, re.M):
     _en = _hh[:_hh.rindex("（")]
     chk(not re.search(r"[ぁ-んァ-ヶ一-龥]", _en),
         "見出しの英語の側に日本語がある: " + _hh)
-in_text("### 1. Modulus–argument form（極形式） {#polar}", "見出し 1")
+in_text("### 1. Modulus-argument (polar) form（極形式） {#polar}", "見出し 1")
+in_text("公式集では **modulus-argument (polar) form** と書いています", "公式集の呼び方を最初に紹介")
 in_text("### 2. Euler form（Euler 形） {#euler}", "見出し 2")
-in_text("### 3. Converting between the forms（形のあいだを行き来する） {#convert}", "見出し 3")
+in_text("### 3. Converting between the forms（形を変形する） {#convert}", "見出し 3")
 in_text("### 4. Multiplication: multiply the moduli, add the "
         "arguments（掛け算：長さはかけ算、角は足し算） {#product}", "見出し 4")
 in_text("### 5. Division: divide the moduli, subtract the "
@@ -354,10 +360,10 @@ for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Multiplying: the arguments add, the moduli multiply", "図(a) の題")
+not_in_fig("Multiplying: the arguments add, the moduli multiply", "図(a) の題")
 in_fig("modulus $r_1r_2$", "図(a) の長さ")
-in_fig("Adding follows the parallelogram rule", "図(b) の題")
-in_fig("the real parts add and", "図(b) の要点")
+not_in_fig("Adding follows the parallelogram rule", "図(b) の題")
+not_in_fig("the real parts add and", "図(b) の要点")
 in_text("$2$ つを掛けると、長さはかけ算、角は足し算になります。", "キャプション (a)")
 in_text("$2$ つの矢印を $2$ 辺とする平行四辺形の対角線が、和になります。", "キャプション (b)")
 chk("A = np.array([3.0, 2.0])" in FIG and "B = np.array([1.0, 4.0])" in FIG,
@@ -408,5 +414,46 @@ in_text("**なぜ $e$ が出てくるのか**", "Euler 形の理由は Why it wo
 in_text("**それは AHL 5.19 で扱います。**", "級数は 5.19 へ送る")
 
 print()
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-13 の手直し
+# ══════════════════════════════════════════════════════════
+not_in_text("覚える必要はありません。覚えるのは、**どの形が、"
+            "どの計算に向いているか**", "その 1 文は削除した")
+not_in_text("シラバスは、この変形をはっきり求めています。", "シラバスを指すだけの前置き・崩れた引用は置かない")
+not_in_text("この行き来をはっきり", "「行き来」は使わない")
+in_text(": $3$ つの形の変形 {#tbl-aahl113-convert}", "表 1 の題")
+in_text("| Cartesian form → polar form・Euler form |", "表 1 の行 1")
+in_text("| polar form・Euler form → Cartesian form |", "表 1 の行 2")
+in_text("| polar form ⇄ Euler form |", "表 1 の行 3")
+in_text("Euler form の利点は、ここに出ます。", "値打ち → 利点")
+# 指数の分数表示
+in_text("$z_{1} = 2e^{i\\frac{\\pi}{3}}$、$z_{2} = 3e^{i\\frac{\\pi}{6}}$ なら", "z1・z2 の指数")
+in_text("z_{1}z_{2} = 6\\,e^{i\\left(\\frac{\\pi}{3} + \\frac{\\pi}{6}\\right)}", "積の指数")
+in_text("\\frac{2}{3}e^{i\\left(\\frac{\\pi}{3} - \\frac{\\pi}{6}\\right)}", "商の指数")
+not_in_text("6\\,e^{i(\\pi/3 + \\pi/6)}", "§4 の斜線の分数は直した")
+not_in_text("\\frac{2}{3}e^{i(\\pi/3 - \\pi/6)}", "§5 も同じ")
+# 偏角の範囲
+in_text("偏角を $-\\pi < \\arg z \\leq \\pi$ の範囲で表すなら、"
+        "$2\\pi$ を引いて $-\\dfrac{\\pi}{2}$ にします。",
+        "偏角の範囲の言いかえ")
+not_in_text("主値で答えるなら", "「主値で答えるなら」は消した")
+# 共役
+in_text("**Cartesian form のように conjugate（共役）を掛ける必要がありません**", "共役の文")
+# 回転の図
+in_text("(img/aahl-1-13-idea-c.svg){#fig-aahl113-idea-c", "図 (c) の埋め込み")
+in_text("**確かに $90^{\\circ}$ 回っています**（@fig-aahl113-idea-c）。",
+        "図 (c) への参照")
+chk(os.path.exists(os.path.join(os.path.dirname(QMD), "img",
+                                "aahl-1-13-idea-c.svg")), "図 (c) がある")
+not_in_fig("Multiplying by $i$ is a quarter turn", "図 (c) の題")
+# i をかけると (3,2) が (-2,3) に移ること
+chk(sp.expand(sp.I * (3 + 2 * sp.I)) == -2 + 3 * sp.I, "i(3+2i) = -2+3i")
+chk(sp.Abs(3 + 2 * sp.I) == sp.Abs(-2 + 3 * sp.I), "長さは変わらない")
+chk(abs(float(sp.arg(-2 + 3 * sp.I) - sp.arg(3 + 2 * sp.I) - sp.pi / 2))
+    < 1e-12, "偏角は π/2 だけ増える")
+
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

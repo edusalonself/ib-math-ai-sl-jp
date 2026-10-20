@@ -39,8 +39,6 @@ PI = np.pi
 # (a) 単位円
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(4.8, 4.4))
-ax1.set_title("$\\theta$ and $\\pi-\\theta$: same height, opposite across",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 _c = np.linspace(0.0, 2.0 * PI, 400)
 ax1.plot(np.cos(_c), np.sin(_c), color=GREY, linewidth=1.1)
 TH = np.radians(55.0)
@@ -61,8 +59,6 @@ ax1.text(Q[0] - 0.06, Q[1] + 0.10, "$(-\\cos\\theta,\\ \\sin\\theta)$",
          ha="right", fontsize=9, color=WARM)
 ax1.text(0.30, 0.13, "$\\theta$", fontsize=10, color=ACCENT)
 ax1.text(-0.42, 0.13, "$\\pi-\\theta$", fontsize=10, color=WARM)
-ax1.text(0.0, -1.32, "the $y$-values agree, the $x$-values are negatives",
-         ha="center", fontsize=9, color=GREY)
 ax1.set_xlim(-1.45, 1.45)
 ax1.set_ylim(-1.45, 1.45)
 ax1.set_aspect("equal")

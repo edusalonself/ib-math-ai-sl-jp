@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "03-geometry")
 QMD = os.path.join(BASE, "aasl-3-7b.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_3_7b.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 FIGSTR = "\n".join(t for t in re.findall(r'r?"((?:[^"\\]|\\.)*)"', _NODOC)
@@ -49,6 +68,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 def amp(a):
     return abs(a)
@@ -246,7 +268,7 @@ not_in_text("solve(", "CAS 前提の solve( は書いていない")
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -257,9 +279,8 @@ chk(len(re.findall(r"^::: \{#exm-aasl37b-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 chk(TEXT.count("::: {.callout-warning}") == 7, "Common errors 6 + 本文の注意 1 で 7")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -335,9 +356,9 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("A stretch in each direction", "図(a) の題")
+not_in_fig("A stretch in each direction", "図(a) の題")
 chk("factor of $3$" not in FIG, "図に倍率は書かない")
-in_fig("Where $a$, $b$, $c$ and $d$ show up", "図(b) の題")
+not_in_fig("Where $a$, $b$, $c$ and $d$ show up", "図(b) の題")
 in_fig("one period $= \\\\frac{2\\\\pi}{|b|}$", "図(b) の period")
 in_fig("midline $y = d$", "図(b) の midline")
 in_fig("shift by $c$", "図(b) の平行移動")
@@ -346,11 +367,16 @@ in_fig("shift by $c$", "図(b) の平行移動")
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-7b.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-3-7a.qmd") < DRAFT.index("aasl-3-7b.qmd"), "並びが 3.7a → 3.7b")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+DRAFT = None
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/03-geometry/aasl-3-7b.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-3-7a.qmd") < DRAFT.index("aasl-3-7b.qmd"), "並びが 3.7a → 3.7b")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("（注）_quarto.yml がないので、登録のチェックは飛ばした")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-7b.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -394,7 +420,9 @@ eq(R(360, 2), 180, "度でも b で割る")
 # --- 例題2 の答えを本文から落とした --------------------------------------
 not_in_body("**縦に $3$ 倍**", "縦の倍率は本文から落とした")
 not_in_body("stretch factor", "stretch factor は使わない")
-in_text("$2$ つのちがいの読み取りは、例題 2 でやります。", "例題 2 に送る")
+in_text("$2$ つのちがいの読み取りは、このあとの[例題 1](#exm-aasl37b-stretch)でやります。", "例題 1（新しい番号）に送る")
+chk(TEXT.index("{#stretch-b}") < TEXT.index("::: {#exm-aasl37b-stretch}") < TEXT.index("{#shift-c}"),
+    "伸縮の例題は第 3 節の後ろ")
 chk(TEXT.count("stretch factor") == 0, "stretch factor は使わない")
 chk(TEXT.count("scale factor") >= 3, f"scale factor を使う: {TEXT.count('scale factor')}")
 in_text("- $y$ 方向に **scale factor $3$** の拡大（$a = 3$）", "例題2(a) の 1 つ目")
@@ -588,7 +616,7 @@ in_text('- **amplitude**（振幅）$= |a|$、**period**（周期）$= \\dfrac{2
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -598,10 +626,10 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 2. $a$：amplitude（縦の伸縮） {#stretch-a}', "見出しの英語: 2. $a$：amplitude（縦の伸縮）")
-in_text('### 3. $b$：period（横の伸縮） {#stretch-b}', "見出しの英語: 3. $b$：period（横の伸縮）")
-in_text('### 4. $c$：horizontal translation（横の平行移動） {#shift-c}', "見出しの英語: 4. $c$：horizontal translat")
-in_text('### 5. $d$：the principal axis（中心線） {#shift-d}', "見出しの英語: 5. $d$：the principal axis（")
+in_text('### 2. Vertical stretch（縦の伸縮：$a$ と振幅） {#stretch-a}', "見出しの英語: 2. Vertical stretch（縦の伸縮：$a$ と")
+in_text('### 3. Horizontal stretch（横の伸縮：$b$ と周期） {#stretch-b}', "見出しの英語: 3. Horizontal stretch（横の伸縮：$b$")
+in_text('### 4. Horizontal translation（横の平行移動：$c$） {#shift-c}', "見出しの英語: 4. Horizontal translation（横の平行")
+in_text('### 5. Vertical translation and the principal axis（縦の平行移動：$d$ と中心線） {#shift-d}', "見出しの英語: 5. Vertical translation and th")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
@@ -618,7 +646,7 @@ in_text('d = \\frac{\\text{最大値} + \\text{最小値}}{2}', "その内容は
 # 2026-09-22：題名の言いかえ、図 (a) の文を外す、図 (c) を足す
 # ══════════════════════════════════════════════════════════
 in_text("（三角関数のグラフの変換と、実生活への応用）", "題名は「実生活への応用」")
-in_text("### 7. 実生活への応用 {#models}", "第 7 節の見出し")
+in_text("### 7. Real-life models（実生活への応用） {#models}", "第 7 節の見出し")
 not_in_text("（三角関数のグラフの変換と、実際の場面）", "題名は言いかえた")
 not_in_text("### 7. 実際の場面", "第 7 節の見出しも言いかえた")
 not_in_text("**実際の場面**の式を読み取れる", "冒頭の箇条書きも言いかえた")
@@ -631,7 +659,7 @@ chk(os.path.exists(SVG_C), "図 (c) がある")
 chk(not os.path.exists(SVG_C[:-4] + ".png"), "図 (c) の PNG は消してある")
 in_text("](img/aasl-3-7b-idea-c.svg){#fig-aasl37b-idea-c", "本文が図 (c) を貼っている")
 in_text("@fig-aasl37b-idea-c が、そのグラフです。", "図 (c) を参照している")
-in_fig(r"$h = 4\sin\left(\frac{\pi}{6}(t-3)\right) + 6$", "図 (c) の題")
+not_in_fig(r"$h = 4\sin\left(\frac{\pi}{6}(t-3)\right) + 6$", "図 (c) の題")
 in_fig("$12$ h", "図 (c) の period")
 in_fig("$h = 6$", "図 (c) の midline")
 in_fig("$t$ (h)", "図 (c) の横軸")
@@ -689,7 +717,7 @@ in_text("読み取った $4$ つを、グラフで確かめます。@fig-aasl37b
         "図 (d) を参照している")
 chk(TEXT.index("**別々に読むだけです。**")
     < TEXT.index("](img/aasl-3-7b-idea-d.svg)"), "図 (d) はその段落のあと")
-in_fig(r"$y = 3\sin\left(2x - \frac{\pi}{2}\right) + 4$", "図 (d) の題")
+not_in_fig(r"$y = 3\sin\left(2x - \frac{\pi}{2}\right) + 4$", "図 (d) の題")
 in_fig("period $= \\\\pi$", "図 (d) の period")
 in_fig("midline $y = 4$", "図 (d) の midline")
 in_fig("maximum $7$", "図 (d) の最大")
@@ -707,6 +735,18 @@ eq(2 * PI / 2, PI, "period = 2π/|b| = π")
 in_fig("ax4.plot([-0.35, 2 * np.pi], [4, 4]", "midline は 2π までで止める")
 chk("ax4.axhline" not in FIG, "図 (d) に axhline は使わない")
 in_fig('ax4.text(np.pi / 2 + 0.16, 5.3, "$3$"', "3 のラベルは矢印の右")
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

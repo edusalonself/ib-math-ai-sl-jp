@@ -55,6 +55,10 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている（消したはず）: " + msg + " :: " + sub[:70])
+
 # ══════════════════════════════════════════════════════════
 # 0. 定理そのもの
 # ══════════════════════════════════════════════════════════
@@ -277,12 +281,18 @@ in_text("> Binomial theorem $n \\in \\mathbb{N}$", "二項定理の見出しを�
 in_text("> $(a+b)^{n} = a^{n} + {}^{n}\\mathrm{C}_{1} a^{n-1}b + \\ldots +"
         " {}^{n}\\mathrm{C}_{r} a^{n-r}b^{r} + \\ldots + b^{n}$",
         "二項定理を逐語で")
-in_text("> $^{n}C_r$ should be found using **both** the formula and technology.",
-        "両方で求められる（Guidance）")
-in_text("> Example: Find $r$ when $^{6}C_r = 20$, using a table of values"
-        " generated with technology.", "表を作る例（Guidance）")
-in_text("`Counting principles may be used in the development of the theorem`",
-        "数え上げの Guidance")
+not_in_text("should be found using **both** the formula and technology",
+            "シラバス（Guidance）の引用は本文から外した")
+in_text("**式で出せることも、電卓で出せることも、どちらも求められています。**",
+        "両方で求められることは日本語で書いてある")
+not_in_text("> Example: Find $r$ when $^{6}C_r = 20$",
+            "シラバスの例の引用は本文から外した")
+in_text("「$^{6}\\mathrm{C}_{r} = 20$ となる $r$ を求めなさい」のような問題が解けます。",
+        "表を作る例は日本語で書いてある")
+not_in_text("`Counting principles may be used in the development of the theorem`",
+            "シラバス（Guidance）の引用は本文から外した")
+in_text("**二項定理は、このように「選び方を数える」ことで説明できます。**",
+        "数え上げで説明できることは日本語で書いてある")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
 # ══════════════════════════════════════════════════════════
@@ -300,7 +310,7 @@ in_text("**Paper 1 では使えません。**", "Paper 1 では手で解くと�
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -310,9 +320,16 @@ chk(len(re.findall(r"^::: \{#exm-aasl19-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 chk("## 解答例（答案用紙にはこう書く）" not in TEXT, "解答例の見出しをそろえた")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -364,9 +381,9 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Pascal's triangle", "図(a) の題")
+not_in_fig("Pascal's triangle", "図(a) の題は外した（キャプションが言う）")
 in_fig("$3 + 3 = 6$", "図(a) の例")
-in_fig("Reading a term of $(a+b)^{4}$", "図(b) の題")
+not_in_fig("Reading a term of", "図(b) の題は外した")
 in_fig("index of $a$", "図(b) のラベル")
 in_fig("index of $b$", "図(b) のラベル")
 # 図の値が本文と合っているか
@@ -383,11 +400,15 @@ for leak in ["10", "15", "20", "28", "280", "24", "54", "108", "35"]:
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-9.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-1-8.qmd") < DRAFT.index("aasl-1-9.qmd"), "並びが 1.8 → 1.9")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/01-number-and-algebra/aasl-1-9.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-1-8.qmd") < DRAFT.index("aasl-1-9.qmd"), "並びが 1.8 → 1.9")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-9.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -540,7 +561,7 @@ chk(TEXT.count("::: {.callout-warning}") >= 6, "Common errors が 6 つ以上")
 # ══════════════════════════════════════════════════════════
 # C12  「単項式」の言い方と、符号の場合分け
 # ══════════════════════════════════════════════════════════
-in_text("### 6. $a$ や $b$ に係数や符号が付いているとき {#substitution}",
+in_text('### 6. Coefficients and signs in the brackets（$a$ や $b$ に係数や符号が付いているとき） {#substitution}',
         "C12 第6節の見出し")
 not_in_text("$a$ や $b$ が単項式でないとき", "C12 旧見出しが消えている")
 in_text("$2x$ も $-3$ も、項が $1$ つだけの式（**monomial**、単項式）です。",
@@ -564,7 +585,7 @@ chk(_c12s == [1, -1, 1, -1, 1], "C12 符号が逆なら 1 つおきに変わる"
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -573,26 +594,27 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 
 # 節の見出しには、なるべく英語を添える（_方針変更-2026-09-15.md 第 17 節）
 in_text("### 2. Pascal's triangle（パスカルの三角形） {#pascal}", "見出しの英語 1")
-in_text('### 3. $^{n}\\mathrm{C}_{r}$（binomial coefficient）の式 {#ncr}', "見出しの英語 2")
-in_text('### 4. binomial theorem（二項定理） {#theorem}', "見出しの英語 3")
-in_text('### 5. 特定の項だけを取り出す（the term in $x^{k}$） {#one-term}', "見出しの英語 4")
+in_text('### 3. The formula for $^{n}\\mathrm{C}_{r}$（二項係数の式） {#ncr}', "見出しの英語 2")
+in_text('### 4. Binomial theorem（二項定理） {#theorem}', "見出しの英語 3")
+in_text('### 5. The term in $x^{k}$（特定の項だけを取り出す） {#one-term}', "見出しの英語 4")
 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
 in_text("### 2. Pascal's triangle（パスカルの三角形） {#pascal}", "見出しの英語: 2. Pascal's triangle（パスカルの")
-in_text('### 3. $^{n}\\mathrm{C}_{r}$（binomial coefficient）の式 {#ncr}', "見出しの英語: 3. $^{n}\mathrm{C}_{r}$（bi")
-in_text('### 4. binomial theorem（二項定理） {#theorem}', "見出しの英語: 4. binomial theorem（二項定理）")
-in_text('### 5. 特定の項だけを取り出す（the term in $x^{k}$） {#one-term}', "見出しの英語: 5. 特定の項だけを取り出す（the term in")
-in_text('### 7. 係数を簡単に求める方法（table of values） {#tabulate}', "見出しの英語: 7. 係数を簡単に求める方法（table of va")
+in_text('### 3. The formula for $^{n}\\mathrm{C}_{r}$（二項係数の式） {#ncr}', "見出しの英語: 3. $^{n}\mathrm{C}_{r}$（bi")
+in_text('### 4. Binomial theorem（二項定理） {#theorem}', "見出しの英語: 4. binomial theorem（二項定理）")
+in_text('### 5. The term in $x^{k}$（特定の項だけを取り出す） {#one-term}', "見出しの英語: 5. 特定の項だけを取り出す（the term in")
+in_text('### 7. Table of values（値を並べた表で $r$ を探す） {#tabulate}', "見出しの英語: 7. 係数を簡単に求める方法（table of va")
 
 # 2026-09-17：係数と Pascal's triangle のつながりを、はっきり書く
-in_text("**この係数が従うのが、Pascal's triangle（パスカルの三角形）です。**",
+in_text("この係数が従うのが、**Pascal's triangle**（パスカルの三角形）です。",
         "係数は Pascal's triangle に従う")
 in_text("三角形を $n$ 行目まで書けば、展開に使う係数は、その行をそのまま読むだけで",
         "行を読むだけで係数が出る")
-in_text("| $n$ | 係数（coefficients） |", "表 1 の見出しに英語")
-in_text("### 7. 係数を簡単に求める方法（table of values） {#tabulate}", "§7 の見出し")
+in_text("| $n$ | 係数 |", "表 1 の見出し（用語の英語は本文で先に出す）")
+in_text("**coefficient**（係数）", "coefficient は English（日本語）で出す")
+in_text('### 7. Table of values（値を並べた表で $r$ を探す） {#tabulate}', "§7 の見出し")
 not_in_text("### 7. 値を並べて解く", "古い見出しは残っていない")
 # n = 5 の行と、その展開
 in_text("1 \\quad 5 \\quad 10 \\quad 10 \\quad 5 \\quad 1", "n=5 の行")
@@ -634,16 +656,16 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 # ══════════════════════════════════════════════════════════
 # 2026-10-01 の手直し
 # ══════════════════════════════════════════════════════════
-in_text("### 1. expansion of a binomial（二項展開） {#idea}", "第 1 節の見出し")
+in_text('### 1. Binomial expansion（二項展開） {#idea}', "第 1 節の見出し")
 not_in_text("### 1. 展開すると、何が起きるか", "前の見出しは消した")
-in_text("**$^{n}\mathrm{C}_{r}$ は、$n$ 個のものから $r$ 個を選ぶ"
-        "combination（組み合わせ）の数です。**", "組み合わせの数だと先に書く")
-in_text("展開の係数は、まさにこの数になります", "係数とのつながり")
+in_text("$^{n}\mathrm{C}_{r}$ は、$n$ 個のものから $r$ 個を選ぶ"
+        " **combination**（組み合わせ）の数です。", "組み合わせの数だと先に書く")
+in_text("展開の係数は、まさにこの数になるので", "係数とのつながり")
 not_in_text("三角形を書かずに、係数を直接出す式があります。", "前の書き出しは消した")
 in_text("**$\\binom{n}{r}$ と書くこともあります。**", "かっこの書き方")
 in_text("$^{n}\mathrm{C}_{r} = \\binom{n}{r}$ です。", "2 つは同じもの")
 in_text("**公式集と電卓は $^{n}\mathrm{C}_{r}$ のほうです。**", "公式集の書き方")
-chk(TEXT.index("combination（組み合わせ）の数です。**")
+chk(TEXT.index("**combination**（組み合わせ）の数です。")
     < TEXT.index("{#eq-aasl19-ncr}"), "説明は式より前")
 chk(TEXT.index("{#eq-aasl19-ncr}")
     < TEXT.index("**$\\binom{n}{r}$ と書くこともあります。**"),

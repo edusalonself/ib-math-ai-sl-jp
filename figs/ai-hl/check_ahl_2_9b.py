@@ -58,7 +58,7 @@ d2 = sp.simplify(sp.diff(f, x, 2))
 chk(sp.solve(sp.Eq(d2, 0), x) == [sp.log(C) / k], "f'' = 0 は x0 だけ（いちばん急）")
 chk(float(sp.log(sp.Rational(1, 2)) / sp.Rational(1, 2)) < 0,
     "C < 1 なら lnC/k は負（S の曲がり角が x<0）")
-in_text("S の曲がり角が $x > 0$ に来るのは **$C > 1$**", "レビュー10")
+in_text("変曲点が $x > 0$ に来るのは $\\ln C > 0$、つまり **$C > 1$**（はじめの値が $\\dfrac{L}{2}$ より小さい）ときだけです。", "レビュー10")
 # 2026-09: 第4節を短くし、C < 1 の場合は Why it works（折りたたみ）へ移した
 in_text("**いちばん急な時刻 $\\dfrac{\\ln C}{k}$ が正になるのは $C > 1$ のときです**", "レビュー10")
 in_text("$L > 0$、$C > 0$、$k > 0$ なので（公式集の条件です）", "レビュー18")
@@ -186,7 +186,7 @@ not_in_text("f1(x)=piecewise(1+x,0≤x<2,x^2/4+x,x≥2)", "レビュー1: 通ら
 in_text("**$f(3)$ の値を決めるのは下の式です。**", "レビュー13")
 not_in_text("**$f(3)$ で上の式を使わないでください。**", "レビュー13")
 # ★ レビュー19: §6 に式を先に出す
-chk(TEXT.index("20 + 3(x-5), & x > 5") < TEXT.index("C(3) = 20 \\quad"),
+chk(TEXT.index("20 + 3(x-5), & x > 5") < TEXT.index("C(3) = 20"),
     "レビュー19: 式が C(3) の前にある")
 # ★ レビュー20: window
 in_text("**既定の window のままだと $f1$ も $f2$ も画面の外**", "レビュー20")
@@ -197,19 +197,27 @@ not_in_text("ここを取りちがえるのが、この項目でいちばん多�
 # ══════════════════════════════════════════════════════════
 # 4. シラバス・公式集
 # ══════════════════════════════════════════════════════════
-in_text("## 公式集の AHL 2.9 の欄\n**$1$ 行あります。** logistic function です。")
-in_text("piecewise model のほうは、公式集にありません。")
-in_text("**式は配られるので、覚える必要はありません。**")
-in_text("Logistic models: $f(x) = \\dfrac{L}{1+Ce^{-kx}}$; $L$, $C$, $k > 0$")
-in_text("> Piecewise models.")
-in_text("Guidance 欄で、logistic に付いているのは $2$ つです。")
-in_text("piecewise に付いているのは $3$ つです。")
-in_text("The formal definition of continuity is not required.")
-in_text("このほかに、項目全体にかかる `Link to: modelling skills (SL2.6)` があります",
-        "レビュー12b")
+# 2026-10: 公式集のボックスとシラバスの引用は外し、本文で直接言う
+not_in_text("## 公式集の AHL 2.9 の欄", "公式集のボックスは外した")
+in_text("この式は、条件 $L,\\ C,\\ k > 0$ も含めて公式集の **AHL 2.9** の欄にあるので、覚える必要はありません。",
+        "logistic の式は公式集にある（第 1 節）")
+in_text("piecewise model の式は公式集にありませんが、問題文で式が与えられるので、覚える必要はありません。",
+        "piecewise は公式集にない（第 6 節）")
+in_text("{#eq-ahl29b-logistic}", "logistic の式は本文に番号つきで")
+chk(TEXT.index("{#eq-ahl29b-logistic}") < TEXT.index("### 2. "), "logistic の式は第 1 節")
+for _q in ("Logistic models: $f(x) = \\dfrac{L}{1+Ce^{-kx}}$; $L$, $C$, $k > 0$",
+           "> Piecewise models.", "Guidance 欄で、logistic に付いているのは $2$ つです。",
+           "piecewise に付いているのは $3$ つです。",
+           "The formal definition of continuity is not required.",
+           "`Link to: modelling skills (SL2.6)`"):
+    not_in_text(_q, "シラバスの引用は本文から外した")
+chk(re.findall(r"^> (?!\[)", TEXT, re.M) == [], "シラバスの引用（> ...）は残っていない")
+in_text("## 厳密な定義は要りません", "continuity の厳密な定義は要らない（日本語で）")
 in_text("**この項目（AHL 2.9）では、解くことも覚えることも求められません。**",
         "レビュー12a")
-in_text("C = \\dfrac{L}{P_0}-1", "Enrichment の C")
+# 2026-10: Enrichment 欄の式の引用は外した。C の求め方は第 3 節の @eq-ahl29b-C
+not_in_text("C = \\dfrac{L}{P_0}-1", "Enrichment の引用は外した")
+in_text("C = \\frac{L}{f(0)} - 1\n$$ {#eq-ahl29b-C}", "C ははじめの値から決まる")
 
 # ══════════════════════════════════════════════════════════
 # 5. 構造
@@ -217,17 +225,29 @@ in_text("C = \\dfrac{L}{P_0}-1", "Enrichment の C")
 heads = re.findall(r"(?m)^## (.+)$", TEXT)
 # 2026-09: Why it works は内容を減らし、折りたたんでページ末尾へ移した
 need = ["What you should be able to do", "The idea",
-        "Worked examples", "Common errors",
+        "Common errors",
         "Using your GDC (TI-Nspire CX II)", "Exercises"]
 for hh in need:
     chk(hh in heads, "見出しがない: " + hh)
-chk([hh for hh in heads if hh in need] == need, "見出しの順序")
+chk([hh for hh in heads if hh in need] == need, "見出しの順序（Worked examples は 2026-10 に削除）")
+# 2026-10 新レイアウト：例題は The idea の各節の後ろ（The idea の次の ## は Common errors）
+not_in_text("## Worked examples", "Worked examples の節は消した")
+_iw = TEXT.index("\n## Common errors")
+chk(all(TEXT.index("## The idea") < m.start() < _iw
+        for m in re.finditer(r"::: \{#exm-", TEXT)), "例題はすべて The idea の中")
+_exm_want = [("exm-ahl29b-read", "C"), ("exm-ahl29b-fit", "k"),
+             ("exm-ahl29b-phone", "continuity"), ("exm-ahl29b-continuity", "continuity")]
+chk(re.findall(r"::: \{#(exm-[a-z0-9-]+)\}", TEXT) == [e for e, _ in _exm_want], "例題の並び")
+for _e, _s in _exm_want:
+    _hs = re.findall(r"^### \d+\. .*?\{#([A-Za-z0-9-]+)\}$",
+                     TEXT[:TEXT.index("::: {#" + _e + "}")], re.M)
+    chk(_hs[-1:] == [_s], "%s は %s の節の中: %s" % (_e, _s, _hs[-1:]))
 chk("Why it works" in heads, "見出しがない: Why it works")
 chk(heads.index("Why it works") > heads.index("Exercises"),
     "Why it works は Exercises より後ろ")
 chk(TEXT.count('## Why it works\n\n::: {.callout-note collapse="true"') == 1,
     "Why it works は折りたたんである")
-chk(len(re.findall(r"(?m)^---$", TEXT)) == 6, "--- は 6 個")
+chk(len(re.findall(r"(?m)^---$", TEXT)) == 2, "--- は 6 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳は 14 個")
 chk(TEXT.count("::: {.ex-sep}") == 9, ".ex-sep は 9 個")
 chk(len(re.findall(r"::: \{#exm-ahl29b-[\w-]+\}", TEXT)) == 4, "worked example は 4 個")
@@ -250,10 +270,10 @@ for term in ["**logistic model**（ロジスティックモデル）",
              "smooth（なめらか）"]:
     in_text(term, "英語→日本語の順")
 # 2026-09: 2 枚の 2 面図を 4 枚に分け、説明のすぐ近くへ移動
-in_text("![Reading a logistic model](img/ahl-2-9b-logistic.svg)")
-in_text("![A ceiling, or no ceiling](img/ahl-2-9b-vs-exp.svg)")
-in_text("![A piecewise model in context](img/ahl-2-9b-tariff.svg)")
-in_text("![Choosing $a$ so the graph joins up](img/ahl-2-9b-continuity.svg)")
+in_text("![ロジスティックモデルの読み方です。](img/ahl-2-9b-logistic.svg)")
+in_text("![上限があるか、ないかの違いです。](img/ahl-2-9b-vs-exp.svg)")
+in_text("![場面に当てはめた区分的なモデルです。](img/ahl-2-9b-tariff.svg)")
+in_text("![グラフがつながるように $a$ を選びます。](img/ahl-2-9b-continuity.svg)")
 not_in_text("ahl-2-9b-piecewise.svg")
 for svg in ["ahl-2-9b-logistic.svg", "ahl-2-9b-vs-exp.svg",
             "ahl-2-9b-tariff.svg", "ahl-2-9b-continuity.svg"]:

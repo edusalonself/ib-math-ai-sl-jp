@@ -51,18 +51,14 @@ def strips(ax, f, a, b, n, color=ACC, alpha=0.20, lw=1.6):
 HUMP = lambda t: 6 - 0.4 * (t - 3) ** 2
 
 # ══════════════ 1. 台形でうめる ══════════════
-fig, ax = plt.subplots(figsize=(7.2, 4.6))
-axes(ax, (-0.8, 7.0), (-1.1, 8.3), 1, 2)
+fig, ax = plt.subplots(figsize=(7.2, 4.0))
+axes(ax, (-0.8, 7.0), (-1.1, 7.0), 1, 2)
 xs = np.linspace(-0.4, 6.6, 400)
 ax.plot(xs, HUMP(xs), color=LINE, lw=2.8, zorder=6)
 strips(ax, HUMP, 0, 6, 4)
 for t in np.linspace(0, 6, 5):
     ax.plot([t, t], [0, HUMP(t)], color=ACC, lw=1.6, zorder=4)
 
-ax.text(3.0, 7.6, "the tops of the trapezia are STRAIGHT,\n"
-                  "so they miss a little of the curve",
-        fontsize=11.5, ha="center", va="center", color=GOLD, zorder=10,
-        bbox=BOX)
 ax.text(3.0, 2.2, "$4$ trapezia", fontsize=14, ha="center", va="center",
         color=INK, zorder=10, bbox=BOX)
 ax.text(6.7, 4.6, "$y=f(x)$", color=LINE, fontsize=12.5, ha="right",
@@ -73,8 +69,8 @@ plt.close(fig)
 
 
 # ══════════════ 2. 端は1回、中は2回 ══════════════
-fig, ax = plt.subplots(figsize=(7.6, 4.8))
-axes(ax, (-0.8, 7.0), (-2.4, 8.6), 1, 2)
+fig, ax = plt.subplots(figsize=(7.6, 4.4))
+axes(ax, (-0.8, 7.0), (-1.4, 8.0), 1, 2)
 xs = np.linspace(-0.4, 6.6, 400)
 ax.plot(xs, HUMP(xs), color=LINE, lw=2.4, zorder=6)
 pts = np.linspace(0, 6, 5)
@@ -94,8 +90,6 @@ ax.annotate("", xy=(1.5, 1.0), xytext=(0.0, 1.0),
                             mutation_scale=11))
 ax.text(0.75, 1.0, "$h$", fontsize=13, ha="center", va="center", color=INK,
         zorder=10, bbox=BOX)
-ax.text(3.0, -1.75, "the two ENDS count once;  every MIDDLE counts twice",
-        fontsize=12.5, ha="center", va="center", color=GOLD)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-8-count.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -112,8 +106,6 @@ ax.plot(xs, g(xs), color=LINE, lw=2.8, zorder=6)
 strips(ax, g, 0.5, 3.5, 2, color=GREEN, alpha=0.22)
 ax.text(2.0, 2.4, "trapezia lie\nBELOW", fontsize=12, ha="center",
         va="center", color=GREEN, zorder=10, bbox=BOX)
-ax.set_title("the curve bends like a hill  →  UNDER-estimate",
-             fontsize=12, color=GREEN, pad=8)
 
 ax = axs[1]
 axes(ax, (-0.5, 4.5), (-1.2, 8.4), 1, 2)
@@ -123,8 +115,6 @@ ax.plot(xs, u(xs), color=LINE, lw=2.8, zorder=6)
 strips(ax, u, 0.5, 3.5, 2, color=ACC, alpha=0.22)
 ax.text(1.55, 5.0, "trapezia lie\nABOVE", fontsize=12, ha="center",
         va="center", color=ACC, zorder=10, bbox=BOX)
-ax.set_title("the curve bends like a valley  →  OVER-estimate",
-             fontsize=12, color=ACC, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-8-over-under.svg"), bbox_inches="tight")
@@ -132,8 +122,8 @@ plt.close(fig)
 
 
 # ══════════════ 4. 関数がないとき（川・湖） ══════════════
-fig, ax = plt.subplots(figsize=(8.0, 4.4))
-blank(ax, (-4.0, 34.0), (-8.0, 9.6))
+fig, ax = plt.subplots(figsize=(7.4, 4.0))
+blank(ax, (-1.5, 31.5), (-8.0, 8.0))
 
 xd = np.array([0, 5, 10, 15, 20, 25, 30], float)
 wd = np.array([0, 6, 9, 11, 10, 7, 0], float)
@@ -155,10 +145,6 @@ for xv, wv in zip(xd, wd):
 ax.plot([0, 30], [-5.7, -5.7], color=GREY, lw=1.4, zorder=5)
 ax.text(15, -7.6, "distance along the lake (m)", fontsize=11.5, ha="center",
         va="center", color=GREY)
-ax.text(-3.6, 8.6, "widths measured every $5$ m — there is NO formula here",
-        fontsize=12.5, ha="left", va="center", color=GOLD)
-ax.text(33.6, 6.4, "the trapezoidal rule\nstill works", fontsize=11.5,
-        ha="right", va="center", color=INK, zorder=10, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-8-lake.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -168,7 +154,7 @@ plt.close(fig)
 fig, axs = plt.subplots(1, 2, figsize=(10.2, 4.2), sharey=True)
 sq = lambda t: t ** 2
 for ax, n, T in zip(axs, (4, 8), (22, 21.5)):
-    axes(ax, (-0.6, 4.6), (-2.6, 18.5), 1, 4,
+    axes(ax, (-0.6, 4.6), (-1.0, 18.5), 1, 4,
          ylab="$y$" if n == 4 else "")
     xs = np.linspace(-0.3, 4.3, 300)
     strips(ax, sq, 0, 4, n, color=ACC, alpha=0.18, lw=1.2)
@@ -177,9 +163,6 @@ for ax, n, T in zip(axs, (4, 8), (22, 21.5)):
                  pad=8)
     ax.text(0.25, 15.6, "exact area $=21.3$", fontsize=11.5, ha="left",
             va="center", color=GREEN, zorder=10, bbox=BOX)
-    ax.text(2.0, -1.9, "more strips  →  smaller gaps" if n == 8 else
-            "the gaps are the error", fontsize=11.5, ha="center",
-            va="center", color=GOLD)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-8-n.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -237,8 +220,6 @@ def _w1(ax):
     ax.annotate("", xy=(1.0, -1.3), xytext=(0.0, -1.3),
                 arrowprops=dict(arrowstyle="<|-|>", color=INK, lw=1.2))
     ax.annotate("$h$", (0.5, -2.0), color=INK, fontsize=11, ha="center")
-    ax.set_title("$n = 4$ trapezia between $x = 0$ and $x = 4$",
-                 fontsize=11.5, pad=8)
 
 
 we_fig("sl-5-8-we1.svg", _w1, (5.8, 4.0))
@@ -257,8 +238,6 @@ def _w3(ax):
     ax.annotate("", xy=(2.0, -1.8), xytext=(1.0, -1.8),
                 arrowprops=dict(arrowstyle="<|-|>", color=INK, lw=1.2))
     ax.annotate("$h$", (1.5, -2.7), color=INK, fontsize=11, ha="center")
-    ax.set_title("$n = 4$ trapezia between $x = 1$ and $x = 5$",
-                 fontsize=11.5, pad=8)
 
 
 we_fig("sl-5-8-we3.svg", _w3, (5.8, 4.0))
@@ -283,8 +262,6 @@ def _w4(ax):
     ax.annotate("$h = 2$", (1.0, -4.0), color=INK, fontsize=11, ha="center")
     ax.annotate("speed  (m s$^{-1}$)", (-0.9, 24.6), color=INK, fontsize=10,
                 ha="left", va="center")
-    ax.set_title("Only the recorded points are known — no formula",
-                 fontsize=11.5, pad=8)
 
 
 we_fig("sl-5-8-we4.svg", _w4, (6.2, 4.0))

@@ -40,8 +40,6 @@ fig2, ax2 = plt.subplots(figsize=(5.4, 4.6))
 # ══════════════════════════════════════════════════════════
 # (a) さいころ 2 個の標本空間
 # ══════════════════════════════════════════════════════════
-ax1.set_title("The sample space as a table", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-1.1, 6.4)
 ax1.set_ylim(-0.35, 7.3)
 ax1.set_aspect("equal")
@@ -67,8 +65,6 @@ ax1.text(-0.95, 3.0, "first die", fontsize=9.5, color=ACCENT, rotation=90,
 # ══════════════════════════════════════════════════════════
 # (b) 相対度数の落ち着き方
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Relative frequency as trials are added", fontsize=11,
-              color=INK, loc="left", pad=10)
 
 P = 0.4
 N = 400
@@ -94,9 +90,6 @@ for _sp in ("left", "bottom"):
     ax2.spines[_sp].set_color(GREY)
 ax2.tick_params(length=0, colors=GREY)
 
-ax2.annotate("", xy=(40, 0.93), xytext=(2, 0.93),
-             arrowprops=dict(arrowstyle="<->", color=GREY, linewidth=1.0))
-ax2.text(46, 0.90, "wide swings at the start", fontsize=9, color=GREY)
 ax2.annotate("", xy=(N - 2, 0.79), xytext=(N - 120, 0.79),
              arrowprops=dict(arrowstyle="<->", color=GREY, linewidth=1.0))
 ax2.text(N - 128, 0.76, "narrow later", fontsize=9, color=GREY, ha="right")

@@ -109,11 +109,6 @@ eigline(ax, V1, ACC, "$\\lambda_1 = 5$\n$\\mathbf{p}_1 = \\binom{1}{1}$",
 eigline(ax, V2, GREEN, "$\\lambda_2 = 1$\n$\\mathbf{p}_2 = \\binom{1}{-1}$",
         outward=True, labxy=(2.75, -3.35))
 ax.plot([0], [0], "o", color=INK, ms=9, zorder=9)
-ax.set_title("along an eigenvector the path is a\nSTRAIGHT line through the origin",
-             fontsize=12.5, color=INK, pad=10)
-fig.text(0.5, -0.03,
-         "Both $\\lambda > 0$, so both arrows point AWAY from the origin.",
-         fontsize=11, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-5-17a-eigen.svg")
 
@@ -130,8 +125,7 @@ for p in [(0.60, -0.50), (0.50, -0.60), (-0.60, 0.50), (-0.50, 0.60),
           (0.55, 0.05), (-0.55, -0.05)]:
     traj(ax, M_OUT, p, col=LINE, lw=2.0, tmax=3.0, both=False)
 ax.plot([0], [0], "o", color=INK, ms=9, zorder=9)
-ax.set_title("(a)  $\\lambda = 5,\\ 1$  (both POSITIVE)\nall paths move AWAY from the origin",
-             fontsize=12.5, color=LINE, pad=10)
+ax.set_title("(a)  $\\lambda = 5,\\ 1$", fontsize=12.5, color=LINE, pad=8)
 
 # (b) 両方負
 ax = axs[1]
@@ -142,15 +136,8 @@ for p in [(3.7, 1.0), (-3.7, -1.0), (1.0, 3.7), (-1.0, -3.7),
           (3.6, -2.2), (-3.6, 2.2)]:
     traj(ax, M_IN, p, col=LINE, lw=2.0, tmax=5.0, both=False)
 ax.plot([0], [0], "o", color=INK, ms=9, zorder=9)
-ax.set_title("(b)  $\\lambda = -1,\\ -5$  (both NEGATIVE)\nall paths move TOWARDS the origin",
-             fontsize=12.5, color=LINE, pad=10)
-
-fig.text(0.5, -0.07,
-         "The two eigenvector directions are the SKELETON of the picture.\n"
-         "A positive $\\lambda$ pushes outwards along its own direction,\n"
-         "a negative $\\lambda$ pulls inwards along its own direction.",
-         fontsize=12.5, ha="center", va="top", color=INK,
-         linespacing=1.5)
+ax.set_title("(b)  $\\lambda = -1,\\ -5$", fontsize=12.5, color=LINE,
+             pad=8)
 fig.tight_layout()
 save(fig, "ahl-5-17a-nodes.svg")
 
@@ -166,9 +153,6 @@ for p in [(1.4, -1.15), (-1.4, 1.15), (1.15, -1.4), (-1.15, 1.4),
           (2.6, -3.4), (-2.6, 3.4)]:
     traj(ax, M_SAD, p, col=LINE, lw=2.0, tmax=3.2, both=False)
 ax.plot([0], [0], "o", color=INK, ms=9, zorder=9)
-ax.set_title("$\\lambda = 3,\\ -1$  (OPPOSITE signs)\nthe origin is a SADDLE POINT",
-             fontsize=12.5, color=GOLD, pad=10)
-
 fig.tight_layout()
 save(fig, "ahl-5-17a-saddle.svg")
 
@@ -188,9 +172,6 @@ for p, c in (((0.60, -0.50), LINE), ((0.50, -0.60), GOLD),
              ((-0.60, 0.50), LINE), ((-0.50, 0.60), GOLD)):
     traj(ax, M_OUT, p, col=c, lw=2.2, tmax=3.0, both=False)
 ax.plot([0], [0], "o", color=INK, ms=8, zorder=9)
-ax.set_title("paths set off near the $\\lambda = 1$ direction,\nthen BEND towards the $\\lambda = 5$ direction",
-             fontsize=12.5, color=ACC, pad=10)
-
 ax = axs[1]
 frame(ax)
 eigline(ax, V1, ACC, "$\\lambda = 3$", outward=True, lw=2.2,
@@ -201,23 +182,11 @@ eigline(ax, V2, GREEN, "$\\lambda = -1$", outward=False, lw=2.2,
 #    色と説明が入れかわらないよう、対応をここで固定する。
 traj(ax, M_SAD, (1.4, -1.15), col=LINE, lw=2.4, tmax=3.2, both=False)
 traj(ax, M_SAD, (-1.4, 1.15), col=GOLD, lw=2.4, tmax=3.2, both=False)
-ax.text(-3.85, 3.8, "start just ABOVE the $\\lambda = -1$ line\n"
-                    "$\\rightarrow$ leaves TOP RIGHT",
-        fontsize=10.5, color=LINE, bbox=BOX, zorder=9, va="top", ha="left")
-ax.text(-3.85, -2.3, "start just BELOW it\n$\\rightarrow$ leaves BOTTOM LEFT",
-        fontsize=10.5, color=GOLD, bbox=BOX, zorder=9, va="top", ha="left")
+ax.text(1.6, -0.95, "above", fontsize=10.5, color=LINE, bbox=BOX, zorder=9,
+        va="center", ha="left")
+ax.text(-1.6, 0.95, "below", fontsize=10.5, color=GOLD, bbox=BOX, zorder=9,
+        va="center", ha="right")
 ax.plot([0], [0], "o", color=INK, ms=8, zorder=9)
-ax.set_title("at a saddle, which SIDE you start on\ndecides where you end up",
-             fontsize=12.5, color=GOLD, pad=10)
-
-fig.text(0.5, -0.13,
-         "The term with the biggest $\\lambda$ grows fastest, so it takes over\n"
-         "whenever its coefficient is not zero: the further out you go,\n"
-         "the closer the path gets to that direction.\n"
-         "At a saddle, the $\\lambda < 0$ line is the dividing line — paths that\n"
-         "are not on it eventually leave along the $\\lambda > 0$ line.",
-         fontsize=12.5, ha="center", va="top", color=INK,
-         linespacing=1.5)
 fig.tight_layout()
 save(fig, "ahl-5-17a-longrun.svg")
 

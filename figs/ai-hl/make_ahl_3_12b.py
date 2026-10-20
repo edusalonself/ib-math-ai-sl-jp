@@ -63,19 +63,16 @@ for T, col in [(0, LINE), (1, LINE), (1.5, ACC), (2, LINE), (3, LINE)]:
     vx, vy = 7.0, 6 - 4 * T
     ax.plot([px], [py], "o", color=INK, ms=6, zorder=8)
     arrow(ax, (px, py), (px + K * vx, py + K * vy), color=col, lw=2.4)
-ax.text(10.5, 5.3, "$t = 1.5$: the arrow is horizontal\n"
-                   "(the highest point, and the least speed)",
-        fontsize=11, color=ACC, ha="center", va="bottom")
+ax.text(10.5, 5.3, "$t = 1.5$", fontsize=11, color=ACC, ha="center",
+        va="bottom")
 ax.text(11.5, -3.4, "$\\mathbf{v} = \\binom{7}{6-4t}$,   "
-                    "$\\mathbf{r} = \\binom{7t}{6t-2t^2}$\n"
-                    "the across-part never changes; the up-part does",
+                    "$\\mathbf{r} = \\binom{7t}{6t-2t^2}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 for T in (0, 3):
     ax.text(7 * T, 6 * T - 2 * T ** 2 - 0.6, "$t=%d$" % T, fontsize=10,
             color=INK, ha="center", va="top")
-blank(ax, (-2.0, 26.0), (-6.0, 9.0), step=2)
-ax.set_title("(a)  the velocity arrow changes along the path",
-             fontsize=12.5, color=INK, pad=6)
+blank(ax, (-2.0, 26.0), (-5.0, 8.0), step=2)
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) 速さのグラフ
 ax = axs[1]
@@ -91,8 +88,7 @@ ax.text(0.15, 10.2, "$|\\mathbf{v}| = \\sqrt{7^2+(6-4t)^2}$",
 plain(ax, (0, 3), (0, 11), xstep=0.5, ystep=2)
 ax.set_xlabel("$t$ (s)", fontsize=11.5, color=INK)
 ax.set_ylabel("speed (m s$^{-1}$)", fontsize=11.5, color=INK)
-ax.set_title("(b)  the speed is never $0$ here\n"
-             "least value $7$, at $t = 1.5$", fontsize=12.5, color=INK, pad=6)
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=2.4)
 save(fig, "ahl-3-12b-idea.svg")
@@ -107,16 +103,15 @@ ax.plot([30.0], [20.0], "o", color=ACC, ms=10, zorder=8)
 ax.plot([30.0, 30.0], [0, 20.0], color=ACC, lw=1.4, ls=":", zorder=4)
 ax.plot([0, 60.0], [0, 0], color=GREY, lw=1.2, zorder=3)
 ax.plot([0, 60.0], [0, 0], "o", color=INK, ms=6, zorder=8)
-ax.text(30.0, 21.0, "highest point: $v_y = 0$ here", fontsize=11, color=ACC,
+ax.text(30.0, 21.0, "$v_y = 0$", fontsize=11, color=ACC,
         ha="center", va="bottom")
 ax.text(0, -1.8, "$t=0$", fontsize=10, color=INK, ha="center", va="top")
 ax.text(60.0, -1.8, "back to $y=0$", fontsize=10, color=INK, ha="center",
         va="top")
-ax.text(30.0, -8.5, "$\\mathbf{v} = \\binom{15}{20-10t}$:  "
-                    "$\\mathbf{a} = \\binom{0}{-10}$ is constant",
+ax.text(30.0, -8.5, "$\\mathbf{v} = \\binom{15}{20-10t}$,   "
+                    "$\\mathbf{a} = \\binom{0}{-10}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 blank(ax, (-6.0, 68.0), (-13.0, 30.0), step=5)
-ax.set_title("projectile motion", fontsize=12.5, color=INK, pad=6)
 fig.tight_layout()
 save(fig, "ahl-3-12b-projectile.svg")
 
@@ -142,14 +137,12 @@ ax.plot([0, 5 * np.cos(np.pi / 4)], [0, 5 * np.sin(np.pi / 4)], color=GREEN,
         lw=1.6, ls=":", zorder=3)
 ax.text(1.0, 2.5, "$|\\mathbf{r}| = 5$", fontsize=12,
         color=GREEN, ha="right", va="center")
-ax.text(-4.4, 3.6, "$\\mathbf{v}$ is a tangent", fontsize=11, color=ACC,
-        ha="center", va="center")
-ax.text(1.5, -8.6, "$\\mathbf{r} = \\binom{5\\cos 2t}{5\\sin 2t}$:  "
-                   "$|\\mathbf{v}| = 10$ is constant,\n"
-                   "but $\\mathbf{v}$ keeps turning",
+ax.text(-3.4, 5.0, "tangent", fontsize=11, color=ACC,
+        ha="right", va="center")
+ax.text(1.5, -6.7, "$\\mathbf{r} = \\binom{5\\cos 2t}{5\\sin 2t}$,   "
+                   "$|\\mathbf{v}| = 10$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-blank(ax, (-8.0, 11.5), (-10.5, 10.5), step=2)
-ax.set_title("circular motion", fontsize=12.5, color=INK, pad=6)
+blank(ax, (-8.0, 11.5), (-8.0, 8.5), step=2)
 fig.tight_layout()
 save(fig, "ahl-3-12b-circular.svg")
 
@@ -164,7 +157,7 @@ ax.plot([2], [0], "o", color=LINE, ms=9, zorder=8)
 ax.plot([7], [0], "o", color=GREEN, ms=9, zorder=8)
 ax.annotate("", xy=(7, 1.4), xytext=(2, 1.4),
             arrowprops=dict(arrowstyle="-|>", color=GOLD, lw=2.2))
-ax.text(4.5, 2.0, "shift of $5$ seconds", fontsize=12, color=GOLD,
+ax.text(4.5, 2.0, "$5$ s", fontsize=12, color=GOLD,
         ha="center", va="bottom", bbox=BOX, zorder=9)
 ax.text(0.25, 5.4, "$P$: $v_y = 4-2t$", fontsize=12, color=LINE, ha="left",
         va="center")
@@ -175,9 +168,6 @@ ax.text(7, -1.0, "$t=7$", fontsize=10.5, color=GREEN, ha="center", va="top")
 plain(ax, (0, 9), (-6, 8), xstep=1, ystep=2)
 ax.set_xlabel("$t$ (s)", fontsize=11.5, color=INK)
 ax.set_ylabel("$v_y$ (m s$^{-1}$)", fontsize=11.5, color=INK)
-ax.set_title("$f(t-5)$: the same graph, slid $5$ to the right\n"
-             "$Q$ does at $t = 7$ what $P$ did at $t = 2$",
-             fontsize=12.5, color=INK, pad=8)
 
 fig.tight_layout()
 save(fig, "ahl-3-12b-shift.svg")

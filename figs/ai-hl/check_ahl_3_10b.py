@@ -254,26 +254,32 @@ chk(float(D(sp.atan(sp.Rational(-5, 2) / 6))) < 0,
 # ══════════════════════════════════════════════════════════
 # 6. シラバス・公式集
 # ══════════════════════════════════════════════════════════
-in_text("> Position vectors $\\overrightarrow{\\text{OA}} = \\boldsymbol{a}$.",
-        "Content の逐語引用 1")
-in_text("> Rescaling and normalizing vectors.", "Content の逐語引用 2")
-in_text("$\\dfrac{\\boldsymbol{v}}{\\lvert \\boldsymbol{v} \\rvert}$, the unit normal vector.",
-        "Guidance の逐語引用")
-in_text("Find the velocity of a particle with speed $7\\,\\text{ms}^{-1}$ in the "
-        "direction $3\\boldsymbol{i} + 4\\boldsymbol{j}$.", "Example の逐語引用")
-in_text("> The resultant as the sum of two or more vectors.", "resultant の Guidance")
-in_text("**$1$ 行だけです。**", "公式集 AHL 3.10 は 1 行")
-in_text("**単位ベクトルの式 $\\dfrac{\\mathbf{v}}{\\lvert \\mathbf{v} \\rvert} は、公式集にありません。**"
-        .replace(" は、", "$ は、"), "v/|v| は公式集にないと書いている")
-in_text("**@eq-ahl310b-mag は試験中に見られます。暗記は問われません。**",
-        "公式集にあるものを暗記させていない")
-# normal の説明が、意図ではなく対象を述べている
-in_text("**ここに書かれている式 $\\dfrac{\\mathbf{v}}{\\lvert \\mathbf{v} \\rvert}$ は、"
-        "長さを $1$ にそろえた（normalize した）ベクトル**です。**垂直**という意味ではありません。",
-        "normal の説明")
+# 2026-10: シラバスの引用（Content・Guidance・Example）と公式集のボックスは外し、
+#           内容を本文に日本語で直接書いた
+for _q in ("> Position vectors $\\overrightarrow{\\text{OA}} = \\boldsymbol{a}$.",
+           "> Rescaling and normalizing vectors.",
+           "$\\dfrac{\\boldsymbol{v}}{\\lvert \\boldsymbol{v} \\rvert}$, the unit normal vector.",
+           "> The resultant as the sum of two or more vectors.",
+           "**$1$ 行だけです。**"):
+    not_in_text(_q, "シラバス・公式集の引用は本文から外した")
+chk(re.findall(r"^> (?!\[)", TEXT, re.M) == [], "シラバスの引用（> ...）は残っていない")
+in_text("### 2. Position vectors（位置ベクトル） {#position}", "位置ベクトルの節")
+in_text("### 8. Rescaling vectors（長さの付け替え） {#rescale}", "rescale の節")
+in_text("「速さ $7\\,\\text{ms}^{-1}$ で、$3\\mathbf{i}+4\\mathbf{j}$ の向きに進む粒子の速度を求めなさい」"
+        "という問題を考えます。", "シラバスの Example は日本語の問題文で")
+in_text("[AHL 3.10a 第5節](ahl-3-10a.qmd#add) で、**resultant**（合成ベクトル）は**全部足したもの**だと書きました。",
+        "resultant は足したもの")
+in_text("@eq-ahl310b-unit は公式集にないので、自分で覚えておく必要があります。",
+        "v/|v| は公式集にないと書いている")
+in_text("公式集の **AHL 3.10** の欄にあるので、試験中に見られます。",
+        "公式集にあるものは試験中に見られる")
+# normal の説明：unit normal vector（面に垂直）と、ここの v/|v|（v と同じ向き）を区別する
+in_text("**unit normal vector**（単位法線ベクトル）は、面に**垂直**な単位ベクトルです。"
+        "ここで作る $\\dfrac{\\mathbf{v}}{\\lvert \\mathbf{v} \\rvert}$ は $\\mathbf{v}$ と**同じ向き**なので、"
+        "混同しないでください。", "normal の説明")
 not_in_text("ここでの `normal` は、**normalize（長さを $1$ にそろえる）した**という意味です。",
             "IB の意図を断定した古い書き方")
-in_text("$\\mathbf{v}$ に垂直ではありません", "垂直ではないと明記")
+in_text("は $\\mathbf{v}$ と**同じ向き**なので", "垂直ではない（同じ向き）と明記")
 
 # ══════════════════════════════════════════════════════════
 # 7. GDC（TI-Nspire CX II、非 CAS）
@@ -322,14 +328,14 @@ chk(floor > leg_x and floor > leg_y,
 space = a_ * ex + b_ * ey + np.array([0.0, c_])
 tilt = np.degrees(np.arctan2(abs(space[0]), abs(space[1])))
 chk(tilt > 15, f"図1(b) の立体対角線が、高さの辺と見分けられる ({tilt:.1f}°)")
-chk("the middle square root is never worked out" in FIG,
-    "図1(b) の見出しが「途中の √ は出さない」")
+chk("the middle square root is never worked out" not in FIG,
+    "図1(b) の見出し文を図から外した（本文が「途中の √ は出さない」と言う）")
 in_text("**途中の $\\sqrt{13}$ は、計算しません。**", "本文も同じことを言っている")
 eq(sp.sqrt(2**2 + 3**2), sp.sqrt(13), "途中の値は √13")
 # 図 3(b): 3i+4j がずらして描かれ、隠れていない
 chk("OFFB" in FIG and "arrow(ax, tuple(OFFB), tuple(W + OFFB)" in FIG,
     "図3(b) の 3i+4j はずらして描いている")
-chk("(length $5$, not $7$)" in FIG, "図3(b) のラベルが長さ 5 を言っている")
+chk("(length $5$, not $7$)" not in FIG, "図3(b) の説明ラベルを図から外した（本文が長さ 5 を言う）")
 not_in_text("(direction only)", "図の古いラベル")
 chk("(direction only)" not in FIG, "図の古いラベルが残っていない")
 # 図 2: 座標と本文が一致
@@ -349,7 +355,10 @@ not_in_text("**方位（bearing）**", "日本語が先の古い書き方")
 in_text("（**normalize**、正規化）", "normalize の初出に訳語")
 in_text("（**rescale**、長さの付け替え）", "rescale の初出に訳語")
 not_in_text("**たしかめ方は、長さを出し直すことです。**", "検算のラベルでない古い言い方")
-chk("**確かめ" not in TEXT and "確かめます。" not in TEXT,
+# 2026-10: GDC の節の書き出し（「角度設定を確かめます。」「次の方法で確かめます。」）は
+#           ラベルではないので除き、The idea・例題・演習では「確かめます。」を使わない
+_noGDC = TEXT.split("## Using your GDC")[0] + TEXT.split("\n## Exercises")[1]
+chk("**確かめ" not in TEXT and "確かめます。" not in _noGDC,
     "検算のラベルに「確かめ」を使っていない")
 for w in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん", "当たり前", "そのとおり"]:
     chk(w not in TEXT, "禁止語を使っていない: " + w)
@@ -357,7 +366,7 @@ for w in ["誰でもできる", "簡単です", "当然", "明らか", "もち�
 # ══════════════════════════════════════════════════════════
 # 10. 体裁の不変量
 # ══════════════════════════════════════════════════════════
-chk(len(re.findall(r"(?m)^---\s*$", TEXT)) == 6, "--- は front matter 2 + 例題 4")
+chk(len(re.findall(r"(?m)^---\s*$", TEXT)) == 2, "--- は front matter 2 + 例題 4")
 chk(TEXT.count('<details class="jp-trans"') == 14, "日本語訳の折りたたみが 14")
 chk(TEXT.count(".ex-sep") == 9, "演習の区切りが 9")
 chk(TEXT.count("model-answer") == 6, "model-answer が 6")
@@ -373,9 +382,21 @@ heads = [h for h in re.findall(r"(?m)^## (.*)", TEXT)
                   "Worked examples", "Common errors",
                   "Using your GDC (TI-Nspire CX II)", "Exercises")]
 chk(heads == ["What you should be able to do", "The idea",
-              "Worked examples", "Common errors",
+              "Common errors",
               "Using your GDC (TI-Nspire CX II)", "Exercises"],
-    "見出しの順序（Why it works は 2026-09 に削除）")
+    "見出しの順序（Why it works は 2026-09、Worked examples は 2026-10 に削除）")
+# 2026-10 新レイアウト：例題は The idea の各節の後ろ
+not_in_text("## Worked examples", "Worked examples の節は消した")
+_iw = TEXT.index("\n## Common errors")
+chk(all(TEXT.index("## The idea") < m.start() < _iw
+        for m in re.finditer(r"::: \{#exm-", TEXT)), "例題はすべて The idea の中")
+_exm_want = [("exm-ahl310b-mag", "magnitude"), ("exm-ahl310b-ab", "distance"),
+             ("exm-ahl310b-unit", "direction"), ("exm-ahl310b-boat", "resultant")]
+chk(re.findall(r"::: \{#(exm-[a-z0-9-]+)\}", TEXT) == [e for e, _ in _exm_want], "例題の並び")
+for _e, _s in _exm_want:
+    _hs = re.findall(r"^### \d+\. .*?\{#([A-Za-z0-9-]+)\}$",
+                     TEXT[:TEXT.index("::: {#" + _e + "}")], re.M)
+    chk(_hs[-1:] == [_s], "%s は %s の節の中: %s" % (_e, _s, _hs[-1:]))
 chk(TEXT.count("**検算") >= 12, "検算が 12 か所以上: %d" % TEXT.count("**検算"))
 for m in re.finditer(r"`[^`\n]*`", TEXT):
     chk("$" not in m.group(0), "コードスパンの中の数式 :: " + m.group(0)[:60])
@@ -416,15 +437,18 @@ for link in re.findall(r"\]\((ahl-3-[0-9a-z]+)\.qmd#([a-z0-9-]+)\)", TEXT):
 #    登録先は _quarto-draft.yml ではなく _quarto.yml です。
 #    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
 #    「index の一覧にある」「残りの N 項目」は、もう検査しません。
-PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"),
-           encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-10b.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
-chk(PUB.index("ahl-3-10a.qmd") < PUB.index("ahl-3-10b.qmd")
-    < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.10a → 3.10b → 3.14")
-DRAFT = open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
-             encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-10b.qmd" not in DRAFT,
-    "下書き用の _quarto-draft.yml には残っていない")
+# _quarto.yml / _quarto-draft.yml が無い作業用コピーでは、登録の検査は飛ばす
+_PUBF = os.path.join(HERE, "..", "..", "_quarto.yml")
+if os.path.exists(_PUBF):
+    PUB = open(_PUBF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-10b.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
+    chk(PUB.index("ahl-3-10a.qmd") < PUB.index("ahl-3-10b.qmd")
+        < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.10a → 3.10b → 3.14")
+_DRF = os.path.join(HERE, "..", "..", "_quarto-draft.yml")
+if os.path.exists(_DRF):
+    DRAFT = open(_DRF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-10b.qmd" not in DRAFT,
+        "下書き用の _quarto-draft.yml には残っていない")
 
 GLO = open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
            encoding="utf-8").read()

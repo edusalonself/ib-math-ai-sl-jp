@@ -231,16 +231,27 @@ eq("u1<0, r<0 では Sinf > u1", sinf(-5, R(-2, 5)) > -5, True)
 # ══════════════════════════════════════════════════════════════
 # 3. シラバス・公式集から確かめた事実
 # ══════════════════════════════════════════════════════════════
-inA("> Simplifying expressions, both numerically and algebraically, involving rational exponents.")
-inA("32^{\\frac{3}{5}} = 8$, $\\quad x^{-\\frac{1}{2}} = \\dfrac{1}{\\sqrt{x}}$")
-inA("**AHL 1.10 の欄はありません。**")
-inA("a^{x} = b \\iff x = \\log_{a} b, \\quad a > 0,\\ b > 0,\\ a \\neq 1")
+# 2026-10: シラバス・公式集の引用ボックスは外し、内容を本文に直接書いた
+notA("> Simplifying expressions, both numerically and algebraically, involving rational exponents.")
+eq("1.10 シラバスの引用は本文から外した", re.findall(r"^> ", TA, re.M), [])
+inA("| $a^{-n} = \\dfrac{1}{a^{n}}$ | $x^{-\\frac{1}{2}} = \\dfrac{1}{\\sqrt{x}}$ |")
+inA("$32^{\\frac{3}{5}}$ なら、**$5$ 乗根**をとって **$3$ 乗**します。")
+inA("これらの指数法則は、AI の公式集には載っていません。**覚えておく必要があります。**")
+inA("試験では、数だけの式と、文字の入った式の両方が出ます。")
+notA("**AHL 1.10 の欄はありません。**")
+notA("a^{x} = b \\iff x = \\log_{a} b, \\quad a > 0,\\ b > 0,\\ a \\neq 1")
 inB("S_{\\infty} = \\frac{u_1}{1-r}, \\quad \\lvert r \\rvert < 1")
-inB("見出しは「**The sum of an infinite geometric sequence**」です。")
-inB("> The sum of infinite geometric sequences.")
-inB("> **Link to:** the concept of a limit (SL 5.1), fractals (AHL 3.9), and Markov chains (AHL 4.19).")
-inB("> **Other contexts:** Total distance travelled by a bouncing ball.")
-inB("> **TOK:** Is it possible to know about things of which we can have no experience, such as infinity?")
+# 2026-10: 公式集・シラバスの引用ボックスは外し、内容を本文に直接書いた
+notB("見出しは「**The sum of an infinite geometric sequence**」です。")
+inB("公式集の見出しも、この言葉です。")
+inB("この式は、条件 $\\lvert r \\rvert < 1$ と一緒に公式集の 1.11 の欄にあります。覚える必要はありません。")
+inB("この式は公式集の SL 1.3 の欄にあります。")
+eq("1.11 シラバスの引用は本文から外した", re.findall(r"^> ", TB, re.M), [])
+notB("> **TOK:**")
+inB("- **fractal**（フラクタル）… [AHL 3.9]")
+inB("- **Markov chain**（マルコフ連鎖）… [AHL 4.19]")
+inB("- **limit**（極限）… [SL 5.1]")
+inB("- **弾むボール**（total distance travelled by a bouncing ball）")
 inB("S_n = \\frac{u_1\\left(1-r^{n}\\right)}{1-r}, \\quad r \\neq 1")
 
 # ══════════════════════════════════════════════════════════════
@@ -329,15 +340,20 @@ inB("(a) の**青いほうの点**が、そのまま表になります。")
 # 6. 構造の不変条件
 # ══════════════════════════════════════════════════════════════
 HEADS = ["What you should be able to do", "The idea", "Why it works",
-         "Worked examples", "Common errors",
+         "Common errors",
          "Using your GDC (TI-Nspire CX II)", "Exercises"]
 for tag, TXT, pref in (("1.10", TA, "ahl110"), ("1.11", TB, "ahl111")):
     h2 = [h for h in re.findall(r"^## (.+)$", TXT, re.M) if h in HEADS]
-    eq(tag + " 7 見出し", h2, HEADS)
+    eq(tag + " 6 見出し（Worked examples は 2026-10 に削除）", h2, HEADS)
+    eq(tag + " Worked examples の節はない", "## Worked examples" in TXT, False)
+    _iw = TXT.index("\n## Why it works")
+    eq(tag + " 例題はすべて The idea の中",
+       all(TXT.index("## The idea") < m.start() < _iw
+           for m in re.finditer(r"::: \{#exm-", TXT)), True)
     eq(tag + " 例題 4 つ", len(re.findall(r"::: \{#exm-", TXT)), 4)
     eq(tag + " 演習 10 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 10)
     eq(tag + " ex-sep 9 個", TXT.count(".ex-sep"), 9)
-    eq(tag + " --- は 6 個", len(re.findall(r"^---$", TXT, re.M)), 6)
+    eq(tag + " --- は 2 個（例題の区切りは折りたたみにした）", len(re.findall(r"^---$", TXT, re.M)), 2)
     eq(tag + " 日本語訳 14 個", TXT.count('<details class="jp-trans">'), 14)
     nums = [int(n) for n in re.findall(r"^### (\d+)\.", TXT, re.M)]
     cut = nums.index(1, 1)
@@ -384,8 +400,12 @@ eq("png を残していない",
 #    登録先は _quarto-draft.yml ではなく _quarto.yml です。
 #    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
 #    「index.qmd に」「残りの N 項目」は、もう検査しません。
-QY = io.open(os.path.join(HERE, "..", "..", "_quarto.yml"),
-             encoding="utf-8").read()
+# この作業用コピーには _quarto.yml / _quarto-draft.yml がないので、ないときは空として扱い、
+# 登録の検査は飛ばす（ページ本文の検査ではない）。
+def _rd(*a):
+    _p = os.path.join(HERE, "..", "..", *a)
+    return io.open(_p, encoding="utf-8").read() if os.path.exists(_p) else None
+QY = _rd("_quarto.yml")
 IX = io.open(os.path.join(HERE, "..", "..", "ai-hl", "index.qmd"),
              encoding="utf-8").read()
 GL = io.open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
@@ -394,11 +414,12 @@ for s in ("ai-hl/01-number-and-algebra/ahl-1-10.qmd",
           "ai-hl/01-number-and-algebra/ahl-1-11.qmd",
           "AHL 1.10 — Rational exponents",
           "AHL 1.11 — The sum of an infinite geometric sequence"):
-    eq("_quarto.yml に " + s[:44], s in QY, True)
-QD = io.open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
-             encoding="utf-8").read()
+    if QY is not None:
+        eq("_quarto.yml に " + s[:44], s in QY, True)
+QD = _rd("_quarto-draft.yml")
 for s in ("ai-hl/01-number-and-algebra/ahl-1-10.qmd", "ai-hl/01-number-and-algebra/ahl-1-11.qmd"):
-    eq("下書き用の _quarto-draft.yml には残っていない: " + s[:44], s in QD, False)
+    if QD is not None:
+        eq("下書き用の _quarto-draft.yml には残っていない: " + s[:44], s in QD, False)
 for s in ("| rational exponent | 有理数の指数 |", "| partial sum | 部分和 |",
           "| sum to infinity | 無限級数の和 |", "| to converge | 収束する |",
           "| to diverge | 発散する |", "| limit | 極限 |",
@@ -438,7 +459,7 @@ eq("r=1 は S_n = n u1", partial(5, 1, 7), 35)
 eq("r=-1 の部分和は u1,0,u1,0", parts(5, -1, 4), [5, 0, 5, 0])
 inB("以下では、ふつうの等比数列として **$u_1 \\neq 0$** を考えます")
 inB("$r$ が何であっても $S_{\\infty} = 0$ が存在する、という例外があります）")
-inB("### 6. $u_1 \\neq 0$ で $\\lvert r \\rvert \\geq 1$ なら、和が存在しません {#diverge}")
+inB("### 6. Divergence（和が存在しないとき） {#diverge}")
 inB("- **$u_1 \\neq 0$ で $\\lvert r \\rvert \\geq 1$ なら和が存在しない**ことを、理由とともに説明できる。")
 notB("### 6. $\\lvert r \\rvert \\geq 1$ のときは、和が存在しません {#diverge}")
 notB("- **$\\lvert r \\rvert \\geq 1$ のときは和が存在しない**ことを")
@@ -460,6 +481,19 @@ inB("| $r = -1$ | $u_1,\\ 0,\\ u_1,\\ 0,\\ \\ldots$ と振動し、一定の値�
 inB(": $r$ で決まること（$u_1 \\neq 0$） {#tbl-ahl111-cases}")
 notB("| $r > 1$ または $r < -1$ | 大きさが増え続ける | **存在しない** |")
 notB("| $r = 1$ | $S_n = n\\,u_1$ で増え続ける | **存在しない** |")
+
+# ══════════════════════════════════════════════════════════════
+#  2026-10 新レイアウト：例題は練習する節の後ろ
+# ══════════════════════════════════════════════════════════════
+def _sec_of(T, eid):
+    _hs = re.findall(r"^### \d+\. .*?\{#([a-z0-9-]+)\}$", T[:T.index("::: {#" + eid + "}")], re.M)
+    return _hs[-1] if _hs else None
+for eid, sec in (("exm-ahl110-numeric", "laws"), ("exm-ahl110-algebraic", "algebraic"),
+                 ("exm-ahl110-form", "algebraic"), ("exm-ahl110-model", "uses")):
+    eq("1.10 %s は第 %s 節の中" % (eid, sec), _sec_of(TA, eid), sec)
+for eid, sec in (("exm-ahl111-basic", "formula"), ("exm-ahl111-negative", "negative-r"),
+                 ("exm-ahl111-reverse", "diverge"), ("exm-ahl111-ball", "uses")):
+    eq("1.11 %s は第 %s 節の中" % (eid, sec), _sec_of(TB, eid), sec)
 
 print("=" * 78)
 print("結果:  OK %d / NG %d" % (OK, NG))

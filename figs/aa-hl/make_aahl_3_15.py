@@ -45,26 +45,16 @@ def seg(ax, p, q, col, lw=2.0, ls="-", z=2):
 # (a) 4 つの場合
 # ══════════════════════════════════════════════════════════
 fig1, axs = plt.subplots(2, 2, figsize=(6.4, 4.4))
-fig1.suptitle("Two lines in three dimensions: four possibilities",
-              fontsize=11, color=INK, x=0.02, ha="left", y=0.99)
 
 # 左上: coincident
 ax = axs[0][0]
 seg(ax, (0.1, 0.9), (3.9, 2.6), ACCENT, lw=4.5)
 seg(ax, (0.4, 1.03), (3.6, 2.47), WARM, lw=2.0, ls=(0, (4, 3)), z=3)
-ax.set_title("coincident: the same line twice", fontsize=9.5, color=INK,
-             loc="left", pad=4)
-ax.text(0.1, 0.25, "directions parallel, and every point is shared",
-        fontsize=8.2, color=GREY)
 
 # 右上: parallel (distinct)
 ax = axs[0][1]
 seg(ax, (0.1, 0.7), (3.9, 2.4), ACCENT)
 seg(ax, (0.1, 1.5), (3.9, 3.2), WARM)
-ax.set_title("parallel, but not the same line", fontsize=9.5, color=INK,
-             loc="left", pad=4)
-ax.text(0.1, 0.25, "directions parallel, no point is shared",
-        fontsize=8.2, color=GREY)
 
 # 左下: intersecting
 ax = axs[1][0]
@@ -76,10 +66,6 @@ ax.annotate("one shared point", xy=(P[0], P[1]), xytext=(1.00, 0.72),
             fontsize=8.2, color=INK,
             arrowprops=dict(arrowstyle="-", color=GREY, linewidth=0.9,
                             shrinkA=3, shrinkB=5))
-ax.set_title("intersecting: they meet once", fontsize=9.5, color=INK,
-             loc="left", pad=4)
-ax.text(0.1, 0.25, "directions not parallel, the equations have a solution",
-        fontsize=7.6, color=GREY)
 
 # 右下: skew
 ax = axs[1][1]
@@ -88,10 +74,6 @@ seg(ax, (0.3, 3.1), (1.55, 2.25), WARM)
 seg(ax, (2.45, 1.64), (3.7, 0.8), WARM)
 ax.text(1.20, 2.74, "passes behind", fontsize=8.2, color=WARM,
         bbox=dict(facecolor="white", edgecolor="none", pad=1.0))
-ax.set_title("skew: they never meet", fontsize=9.5, color=INK,
-             loc="left", pad=4)
-ax.text(0.1, 0.25, "directions not parallel, the equations have no solution",
-        fontsize=7.6, color=GREY)
 
 for _row in axs:
     for _ax in _row:
@@ -103,8 +85,6 @@ for _row in axs:
 # (b) 判定の手順
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(6.2, 3.8))
-ax2.set_title("How to tell the four cases apart", fontsize=10.5, color=INK,
-              loc="left", pad=10)
 
 
 def box(x, y, w, h, text, col, fs=9):
@@ -142,9 +122,6 @@ link((2.7, 3.0), (2.85, 1.9), "no", dx=0.32, dy=0.0)
 link((7.3, 3.0), (7.05, 1.9), "third one\nholds too", dx=-1.00, dy=-0.18)
 link((8.9, 3.0), (9.05, 1.9), "it fails", dx=0.58, dy=0.0)
 
-ax2.text(0.0, 0.1, "the two parameters need different letters:"
-         " $\\lambda$ for one line, $\\mu$ for the other",
-         fontsize=8.8, color=GREY)
 ax2.set_xlim(-0.3, 10.2)
 ax2.set_ylim(-0.2, 6.2)
 ax2.axis("off")

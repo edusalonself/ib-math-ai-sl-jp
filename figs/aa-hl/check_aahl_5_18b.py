@@ -48,6 +48,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 
 _x = sp.Symbol("x", positive=True)
 _y = sp.Function("y")
@@ -184,22 +188,22 @@ chk(2 != 4, "演習10 標準形の P は 2")
 # ══════════════════════════════════════════════════════════
 # 3. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Homogeneous differential equation $\\dfrac{\\mathrm{d}y}"
+not_in_text("> Homogeneous differential equation $\\dfrac{\\mathrm{d}y}"
         "{\\mathrm{d}x} = f\\!\\left(\\dfrac{y}{x}\\right)$ using the"
         " substitution $y = vx$.", "同次形を逐語で")
-in_text("> Solution of $y' + P(x)y = Q(x)$, using the integrating factor.",
+not_in_text("> Solution of $y' + P(x)y = Q(x)$, using the integrating factor.",
         "積分因子を逐語で")
 in_text("公式集の **5.18** の欄", "公式集の場所")
-in_text("> Integrating factor for $y'+P(x)y = Q(x)$",
+not_in_text("> Integrating factor for $y'+P(x)y = Q(x)$",
         "公式集の見出しを逐語で")
 
 # ══════════════════════════════════════════════════════════
 # 4. 図と、答えの漏れ
 # ══════════════════════════════════════════════════════════
-in_fig("which method for a first order equation?", "図(a) の題")
-in_fig("check them in this order", "図(a) の注")
-in_fig("solutions of a linear equation", "図(b) の題")
-in_fig("the term with $C$ dies away", "図(b) の注")
+not_in_fig("which method for a first order equation?", "図(a) の題")
+not_in_fig("check them in this order", "図(a) の注")
+not_in_fig("solutions of a linear equation", "図(b) の題")
+not_in_fig("the term with $C$ dies away", "図(b) の注")
 in_text("$3$ つの形を、この順に確かめます。", "キャプション (a)")
 in_text("がちがっても、同じ曲線に近づきます。", "キャプション (b)")
 _BODY = TEXT[:TEXT.index("## Exercises")]
@@ -221,7 +225,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -230,11 +234,12 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl518b-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
-chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
-    "The idea が 1..7 で連番")
+chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 6)),
+    "The idea が 1..5 で連番")
 chk(TEXT.count("**検算") >= 12, "検算が十分ある: %d" % TEXT.count("**検算"))
 not_in_text("**確かめ", "検算は「検算」で統一")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -274,7 +279,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -334,5 +339,7 @@ in_text("## まず、この形に直します", "係数を 1 に")
 in_text("**上から順に試す**のが確実です。", "順に試す")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

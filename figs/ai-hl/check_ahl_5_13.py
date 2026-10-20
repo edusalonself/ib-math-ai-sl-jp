@@ -206,8 +206,12 @@ in_text("\\text{total distance} = 9 + 4 = 13 \\ \\text{m}")
 # ══════════════════════════════════════════════════════════════
 # 6. シラバス・公式集から確かめた事実
 # ══════════════════════════════════════════════════════════════
-in_text("> **Speed is the magnitude of velocity.**")
-in_text("> Use of $\\dot{x} = \\dfrac{dx}{dt}$ and $\\ddot{x} = \\dfrac{d^{2}x}{dt^{2}}$.")
+not_in_text("> **Speed is the magnitude of velocity.**")  # シラバスの引用は本文から外した
+not_in_text("> Use of $\\dot{x}")                       # シラバスの引用は本文から外した
+in_text("**speed は、velocity の大きさ（向きを除いたもの）です。**")
+in_text("**speed**（速さ）は、**velocity**（速度）の大きさです。")
+in_text("\\dot{x} = \\frac{dx}{dt}, \\qquad \\ddot{x} = \\frac{d^{2}x}{dt^{2}}")
+in_text("**問題文がドットで書いてきたら読めるようにしておいてください。**")
 # 冒頭の 3 つの囲みは削除し、要点だけ第1節に折り込んだ
 not_in_text("## 公式集の 5.13 の欄")
 in_text("a = \\frac{dv}{dt} = \\frac{d^{2}s}{dt^{2}} = v\\frac{dv}{ds}")
@@ -254,17 +258,23 @@ eq("exercise-block は 1 つ", TXT.count("::: {.exercise-block}"), 1)
 eq("例題は 4 つ", TXT.count("::: {#exm-ahl513-"), 4)
 eq("日本語訳の折りたたみ", TXT.count('<details class="jp-trans">'), 14)
 
-i_we = TXT.index("## Worked examples")
+not_in_text("## Worked examples")
+i_idea = TXT.index("## The idea")
+i_why = TXT.index("## Why it works")
 i_ce = TXT.index("## Common errors")
-we = TXT[i_we:i_ce]
-eq("例題の日本語訳の下に区切り線がある",
-   we.count("</details>\n\n---\n\n"), we.count("</details>"))
+_exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(i_idea < p < i_why for p in _exm), True)
+eq("例題の数は変わらない（4）", len(_exm), 4)
+we = TXT[i_idea:i_why]   # 例題は The idea の中にある
+eq("例題の日本語訳の下に、解説と解答例の折りたたみがある",
+   we.count('</details>\n\n::: {.callout-tip collapse="true"}\n## 解説と解答例'), we.count("::: {#exm-"))
 eq("演習には区切り線を入れない", TXT[i_ce:].count("\n---\n"), 0)
 
 chapters = [l[3:] for i, l in enumerate(L)
             if l.startswith("## ") and not (i and L[i - 1].lstrip().startswith(":::"))]
 eq("章見出しは _TEMPLATE の順どおり", chapters == [
-    "The idea", "Why it works", "Worked examples", "Common errors",
+    "The idea", "Why it works", "Common errors",
     "Using your GDC (TI-Nspire CX II)", "Exercises"], True)
 in_text("::: {.callout-note}\n## What you should be able to do")
 
@@ -277,8 +287,8 @@ for w in ("誰でもできる", "簡単です", "当然", "明らか", "もち�
 
 eq("検算が書かれている", TXT.count("**検算。**") >= 6, True)
 eq("model-answer がある", TXT.count("::: {.model-answer}") >= 5, True)
-in_text("![How the three graphs of one motion fit together](img/ahl-5-13-links.svg)")
-in_text("![Displacement and total distance are the same picture with and without the modulus](img/ahl-5-13-area.svg)")
+in_text("![$1$ つの運動を表す $3$ つのグラフのつながりです。](img/ahl-5-13-links.svg)")
+in_text("![変位と道のりは、絶対値があるかないかだけの違いです。](img/ahl-5-13-area.svg)")
 
 
 
@@ -305,7 +315,7 @@ eq("差は min の 2 倍（P=8/3, N=4/3）",
 in_text("AI HL は**$3$ つの paper すべてで電卓が使えます。**")
 not_in_text("AI HL は**両方の paper で電卓が使えます。**")
 # radian の理由と往復
-in_text("三角関数の中身に $^{\circ}$ が付いていないときは、その数は **radian**（弧度。角を度ではなく実数で測る測り方）です")
+in_text("三角関数の中身に $^{\\circ}$ が付いていないときは、その数は **radian**（弧度。角を度ではなく実数で測る測り方）です")
 not_in_text("kinematics の $t$ は**時間**なので、三角関数の中身は radian です")
 in_text("doc → Settings → Document Settings → Angle: Radian")
 in_text("**この項目が終わったら Degree に戻してください。**")
@@ -313,7 +323,7 @@ in_text("**この項目が終わったら Degree に戻してください。**")
 not_in_text("シラバスは、この項目を「物理の運動学と同じ内容」と位置づけています")
 in_text("**新しい微分の公式も、新しい積分の公式も出てきません。**")
 # 公式集の行の呼び方
-in_text("公式集の $1$ 行目にある、$3$ 番目の書き方です（@eq-ahl513-chain）")
+in_text("公式集の 5.13 の欄の $1$ 行目にある、$3$ 番目の書き方です（@eq-ahl513-chain）")
 in_text("公式集の $3$ 行目です（@eq-ahl513-disp）")
 not_in_text("公式集の $3$ つ目の形です")
 # 覚える式が 1 つある、という予告
@@ -359,7 +369,7 @@ in_text("| $v = 0$ | **一瞬静止する**（**instantaneously at rest**）。�
 in_text("| $a = 0$ | **velocity（速度）が極大・極小になる候補。** 前後で $a$ の符号が変わるかを確かめる | $t = 2$ |")
 not_in_text("| $v = 0$ | **一瞬止まる。** 向きが変わる瞬間 | $t = 1$、$t = 3$ |")
 not_in_text("| $a = 0$ | 速度が**増えるか減るかの境目** | $t = 2$ |")
-in_text("です。$a = 0$ を解くと、**velocity（速度）が極大・極小になる候補**が得られます。")
+in_text("です。$a = 0$ を解くと、**velocity（速度）が local maximum（極大）・極小になる候補**が得られます。")
 not_in_text("です。$a = 0$ を解くと、**いちばん速い（または遅い）瞬間**が出てきます。別のものです。")
 in_text("1. **$a = 0$ になる時刻**（velocity が極大・極小になる候補）")
 not_in_text("1. **$a = 0$ になる時刻**（$v$ が折り返すところ）")

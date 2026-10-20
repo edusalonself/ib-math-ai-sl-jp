@@ -57,7 +57,8 @@ X = np.array([1, 2, 3, 4, 5], float)
 Y = np.array([4, 4, 8, 9, 10], float)
 M = 2 * X + 1
 
-fig, axs = plt.subplots(1, 2, figsize=(12.4, 4.4))
+fig, axs = plt.subplots(1, 2, figsize=(11.0, 4.4),
+                        gridspec_kw={"width_ratios": [1.35, 1.0]})
 
 ax = axs[0]
 gx = np.linspace(0.6, 5.4, 100)
@@ -78,19 +79,14 @@ tidy(ax)
 
 ax = axs[1]
 ax.set_xlim(0, 10)
-ax.set_ylim(0, 10)
+ax.set_ylim(1.5, 9.5)
 ax.axis("off")
-ax.text(5.0, 8.7, "square each residual, then add", fontsize=12.5,
-        ha="center", color=INK)
 ax.text(5.0, 6.9, "$SS_{\\mathrm{res}} = \\sum (y - \\hat{y})^{2}$",
         fontsize=15, ha="center", color=ACC)
 ax.text(5.0, 4.9, "$= 1^{2} + (-1)^{2} + 1^{2} + 0^{2} + (-1)^{2}$",
         fontsize=13, ha="center", color=INK)
 ax.text(5.0, 3.3, "$= 4$", fontsize=16, ha="center", color=GREEN,
         weight="bold")
-ax.text(5.0, 1.4, "squaring removes the signs, so the pluses\n"
-                  "and minuses cannot cancel out",
-        fontsize=11.5, ha="center", va="center", color=GREY)
 fig.tight_layout()
 save(fig, "ahl-4-13-residuals.svg")
 
@@ -125,8 +121,7 @@ ax.set_title("$SS_{\\mathrm{res}} = \\sum (y - \\hat{y})^{2} = 4$",
              fontsize=12.5, color=ACC, pad=8)
 tidy(ax)
 fig.text(0.5, -0.02, "$R^{2} = 1 - \\dfrac{SS_{\\mathrm{res}}}"
-                     "{SS_{\\mathrm{tot}}} = 1 - \\dfrac{4}{32} = 0.875$"
-                     "     — the model accounts for $87.5\\%$ of the spread",
+                     "{SS_{\\mathrm{tot}}} = 1 - \\dfrac{4}{32} = 0.875$",
          fontsize=13, ha="center", color=GREEN)
 fig.tight_layout()
 save(fig, "ahl-4-13-r2.svg")
@@ -157,8 +152,6 @@ ax.set_ylim(-11000, 27000)
 ax.set_xlabel("$t$ (years)")
 ax.set_ylabel("value ($)")
 ax.legend(fontsize=10.5, loc="lower left", frameon=False)
-ax.set_title("the straight line gives a negative value",
-             fontsize=12.5, color=ACC, pad=8)
 tidy(ax)
 
 ax = axs[1]
@@ -176,8 +169,6 @@ ax.set_xlim(0, 10)
 ax.set_ylim(-11000, 27000)
 ax.set_xlabel("$t$ (years)")
 ax.legend(fontsize=10.5, loc="lower left", frameon=False)
-ax.set_title("the HIGHER $R^{2}$ is the worse model here",
-             fontsize=12.5, color=ACC, pad=8)
 tidy(ax)
 fig.tight_layout()
 save(fig, "ahl-4-13-compare.svg")

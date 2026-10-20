@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "03-geometry")
 QMD = os.path.join(BASE, "aasl-3-7a.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_3_7a.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 FIGSTR = "\n".join(t for t in re.findall(r'r?"((?:[^"\\]|\\.)*)"', _NODOC)
@@ -48,6 +67,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 def zeros_in(f, lo, hi):
     """f(x) = 0 の解を [lo, hi] で数える（π の整数倍・半整数倍だけ調べる）。"""
@@ -239,7 +261,7 @@ not_in_text("solve(", "CAS 前提の solve( は書いていない")
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -250,9 +272,8 @@ chk(len(re.findall(r"^::: \{#exm-aasl37a-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 chk(TEXT.count("::: {.callout-warning}") == 7, "Common errors 6 + 本文の注意 1 で 7")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
@@ -324,20 +345,25 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("$y = \\\\sin x$ and $y = \\\\cos x$", "図(a) の題")
-in_fig("$y = \\\\tan x$", "図(b) の題")
-in_fig("repeats every $\\\\pi$", "図(b) の周期")
+not_in_fig("$y = \\\\sin x$ and $y = \\\\cos x$", "図(a) の題")
+not_in_fig("$y = \\\\tan x$", "図(b) の題")
+not_in_fig("repeats every $\\\\pi$", "図(b) の周期")
 in_fig("asymptote", "図(b) の漸近線")
 
 # ══════════════════════════════════════════════════════════
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-7a.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-3-6.qmd") < DRAFT.index("aasl-3-7a.qmd"), "並びが 3.6 → 3.7a")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+DRAFT = None
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/03-geometry/aasl-3-7a.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-3-6.qmd") < DRAFT.index("aasl-3-7a.qmd"), "並びが 3.6 → 3.7a")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("（注）_quarto.yml がないので、登録のチェックは飛ばした")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-7a.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -524,7 +550,7 @@ for _r in _rows:
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -534,8 +560,8 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 4. amplitude と period {#amplitude}', "見出しの英語: 4. amplitude と period")
-in_text('### 6. domain and range（定義域と値域） {#range}', "見出しの英語: 6. domain and range（定義域と値域")
+in_text('### 4. Amplitude and period（振幅と周期） {#amplitude}', "見出しの英語: 4. Amplitude and period（振幅と周期）")
+in_text('### 6. Domain and range（定義域と値域） {#range}', "見出しの英語: 6. Domain and range（定義域と値域）")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
@@ -564,7 +590,7 @@ not_in_text("tbl-aasl37a-cos", "cos の 5 点の表は無い")
 not_in_text("[第 6 節](#sketch)", "第 6 節への案内も無い")
 _idea7 = [int(m) for m in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea7 == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea7}")
-in_text("### 6. domain and range（定義域と値域） {#range}", "第 7 節 → 第 6 節")
+in_text("### 6. Domain and range（定義域と値域） {#range}", "第 7 節 → 第 6 節")
 # period の意味を、式でも確かめる
 _x7 = sp.Symbol("x7", real=True)
 eq(sp.sin(_x7 + 2 * PI), sp.sin(_x7), "sin の period は 2π")
@@ -608,6 +634,18 @@ in_text("- **$\\tan x = 0$ になるのは $\\sin x = 0$ のとき**で、"
 chk(sp.tan(0) == 0 and sp.tan(PI) == 0 and sp.tan(2 * PI) == 0,
     "tan は 0、π、2π で 0")
 chk(sp.sin(0) == 0 and sp.sin(PI) == 0, "そこでは sin も 0")
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

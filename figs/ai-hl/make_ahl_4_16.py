@@ -43,25 +43,19 @@ lo = xb - t * sd / math.sqrt(N)
 hi = xb + t * sd / math.sqrt(N)
 hit = (lo <= MU) & (MU <= hi)
 
-fig, ax = plt.subplots(figsize=(9.0, 6.4))
+fig, ax = plt.subplots(figsize=(8.0, 6.0))
 for i in range(K):
     c = LINE if hit[i] else ACC
     ax.plot([lo[i], hi[i]], [i, i], color=c, lw=1.5,
             solid_capstyle="butt", zorder=3)
     ax.plot([xb[i]], [i], "o", ms=2.6, color=c, zorder=4)
 ax.axvline(MU, color=GOLD, lw=2.2, zorder=5)
-ax.text(MU + 0.35, K + 1.5, "the true mean  $\\mu = 50$", fontsize=11.5,
+ax.text(MU + 0.35, K + 1.5, "true mean  $\\mu = 50$", fontsize=11.5,
         ha="left", va="center", color=GOLD)
 miss = int((~hit).sum())
 ax.set_xlim(41, 59)
-ax.set_ylim(-5.5, K + 4)
+ax.set_ylim(-2, K + 4)
 ax.set_xlabel("value")
-ax.set_title("$100$ samples, $100$ different $95\\%$ intervals",
-             fontsize=13, color=INK, pad=12)
-ax.text(41.4, -3.6,
-        "%d of the %d intervals contain $\\mu$   ·   %d miss (red)"
-        % (K - miss, K, miss),
-        fontsize=11.5, ha="left", va="center", color=INK)
 tidy(ax)
 fig.tight_layout()
 save(fig, "ahl-4-16-meaning.svg")
@@ -75,7 +69,7 @@ def ci(xbar, s, n, conf, known):
     return xbar - q * se, xbar + q * se
 
 
-fig, axs = plt.subplots(1, 3, figsize=(13.6, 3.9), sharex=True)
+fig, axs = plt.subplots(1, 3, figsize=(13.0, 2.9), sharex=True)
 
 # (a) 信頼水準
 ax = axs[0]
@@ -89,8 +83,6 @@ for i, (c, lab, col) in enumerate(rows):
     ax.text(63.2, y, lab, fontsize=12, ha="right", va="center", color=col)
     ax.text(73.6, y, "width $%.2f$" % (b - a), fontsize=10.5, ha="left",
             va="center", color=col)
-ax.set_title("higher confidence  $\\rightarrow$  wider",
-             fontsize=12, color=INK, pad=10)
 
 # (b) 標本の大きさ
 ax = axs[1]
@@ -104,8 +96,6 @@ for i, (n, col) in enumerate(rows):
             color=col)
     ax.text(73.6, y, "width $%.2f$" % (b - a), fontsize=10.5, ha="left",
             va="center", color=col)
-ax.set_title("larger sample  $\\rightarrow$  narrower",
-             fontsize=12, color=INK, pad=10)
 
 # (c) ばらつき
 ax = axs[2]
@@ -119,12 +109,10 @@ for i, (s, col) in enumerate(rows):
             color=col)
     ax.text(73.6, y, "width $%.2f$" % (b - a), fontsize=10.5, ha="left",
             va="center", color=col)
-ax.set_title("more spread in the data  $\\rightarrow$  wider",
-             fontsize=12, color=INK, pad=10)
 
 for ax in axs:
     ax.axvline(68.4, color=GOLD, lw=1.6, ls="--", zorder=1)
-    ax.set_xlim(62.0, 79.0)
+    ax.set_xlim(62.0, 77.5)
     ax.set_ylim(-0.8, 2.8)
     tidy(ax)
     ax.set_xticks([64, 68, 72])
@@ -133,17 +121,13 @@ save(fig, "ahl-4-16-width.svg")
 
 
 # ══════════════ 3. 2 つの区間が重なるとき ══════════════
-fig, axs = plt.subplots(1, 2, figsize=(12.0, 3.6), sharex=True)
+fig, axs = plt.subplots(1, 2, figsize=(11.0, 2.9), sharex=True)
 
 CASES = [
-    ("the intervals overlap", [(51.2, 55.8, "brand A", LINE),
-                               (54.1, 58.9, "brand B", GREEN)],
-     "these intervals are not enough to claim\none mean is larger", ACC),
-    ("the intervals do not overlap", [(51.0, 54.0, "brand A", LINE),
-                                      (56.0, 59.0, "brand B", GREEN)],
-     "every value for A is below every value for B", GREEN),
+    [(51.2, 55.8, "brand A", LINE), (54.1, 58.9, "brand B", GREEN)],
+    [(51.0, 54.0, "brand A", LINE), (56.0, 59.0, "brand B", GREEN)],
 ]
-for ax, (title, bars, note, ncol) in zip(axs, CASES):
+for ax, bars in zip(axs, CASES):
     for i, (a, b, lab, col) in enumerate(bars):
         y = 1 - i
         ax.plot([a, b], [y, y], color=col, lw=9, solid_capstyle="butt",
@@ -159,11 +143,8 @@ for ax, (title, bars, note, ncol) in zip(axs, CASES):
         ax.text((ov_lo + ov_hi) / 2, -0.62,
                 "overlap $(%.1f,\\ %.1f)$" % (ov_lo, ov_hi), fontsize=10.5,
                 ha="center", va="center", color=ACC)
-    ax.set_title(title, fontsize=12.5, color=INK, pad=10)
-    ax.text(54.8, -1.12, note, fontsize=11.5, ha="center", va="center",
-            color=ncol)
     ax.set_xlim(48.5, 61.0)
-    ax.set_ylim(-1.5, 1.75)
+    ax.set_ylim(-0.85, 1.75)
     tidy(ax)
 fig.tight_layout()
 save(fig, "ahl-4-16-overlap.svg")

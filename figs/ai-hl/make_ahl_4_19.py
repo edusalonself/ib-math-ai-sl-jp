@@ -64,8 +64,8 @@ PA, PB = (0.6, 1.6), (3.6, 1.6)
 T2 = [["$0.8$", "$0.3$"], ["$0.2$", "$0.7$"]]
 
 # ══════════════ 1. transition diagram ══════════════
-fig, ax = plt.subplots(figsize=(7.2, 4.0))
-board(ax, (-0.7, 4.9), (-0.9, 3.3))
+fig, ax = plt.subplots(figsize=(5.2, 1.9))
+board(ax, (-0.7, 4.9), (0.75, 2.45))
 arc_edge(ax, PA, PB, rad=0.28)
 arc_edge(ax, PB, PA, rad=0.28)
 plabel(ax, PA, PB, "$0.2$", rad=0.28)
@@ -74,13 +74,12 @@ selfloop(ax, PA, "$0.8$", angle=180)
 selfloop(ax, PB, "$0.7$", angle=0)
 node(ax, PA, "A")
 node(ax, PB, "B")
-note(ax, 2.1, -0.55, "the four numbers are probabilities", GREY, 11)
 fig.tight_layout()
 save(fig, "ahl-4-19-diagram.svg")
 
 # ══════════════ 2. diagram → transition matrix ══════════════
-fig, axs = plt.subplots(1, 2, figsize=(10.6, 4.2))
-board(axs[0], (-0.7, 4.9), (-0.6, 3.3))
+fig, axs = plt.subplots(1, 2, figsize=(9.6, 2.8), gridspec_kw=dict(width_ratios=[5.6, 3.4]))
+board(axs[0], (-0.7, 4.9), (0.75, 2.6))
 arc_edge(axs[0], PA, PB, rad=0.28)
 arc_edge(axs[0], PB, PA, rad=0.28)
 plabel(axs[0], PA, PB, "$0.2$", rad=0.28)
@@ -91,11 +90,9 @@ node(axs[0], PA, "A")
 node(axs[0], PB, "B")
 axs[0].set_title("transition diagram", fontsize=12.5, color=LINE, pad=6)
 
-board(axs[1], (0, 5.2), (0, 4.2))
+board(axs[1], (0.6, 4.0), (1.1, 3.3))
 labelled_matrix(axs[1], 2.5, 2.0, T2, ["from A", "from B"], ["to A", "to B"])
 axs[1].set_title("transition matrix $T$", fontsize=12.5, color=ACC, pad=6)
-axs[1].text(2.5, 0.55, "each column adds up to $1$", fontsize=11.5,
-            ha="center", va="center", color=GOLD)
 fig.tight_layout()
 save(fig, "ahl-4-19-matrix.svg")
 
@@ -125,7 +122,7 @@ fig, ax = plt.subplots(figsize=(7.6, 4.4))
 ns = np.arange(0, 13)
 for start, col, lab in (([1.0, 0.0], ACC, "starting at $A$"),
                         ([0.0, 1.0], GREEN, "starting at $B$"),
-                        ([0.5, 0.5], LINE, "starting half and half")):
+                        ([0.5, 0.5], LINE, "half and half")):
     v = np.array(start)
     ys = []
     for _ in ns:
@@ -133,7 +130,7 @@ for start, col, lab in (([1.0, 0.0], ACC, "starting at $A$"),
         v = Tm @ v
     ax.plot(ns, ys, "o-", color=col, lw=2.0, ms=4.5, label=lab, zorder=5)
 ax.axhline(0.6, color=GOLD, lw=1.8, ls=(0, (5, 4)), zorder=3)
-ax.text(0.15, 0.645, "the steady state $0.6$", fontsize=11.5, color=GOLD,
+ax.text(0.15, 0.645, "steady state $0.6$", fontsize=11.5, color=GOLD,
         ha="left", va="center")
 ax.set_xlim(-0.4, 13.4)
 ax.set_ylim(-0.03, 1.05)
@@ -145,28 +142,23 @@ for s in ("top", "right"):
     ax.spines[s].set_visible(False)
 ax.spines["left"].set_color(GREY)
 ax.spines["bottom"].set_color(GREY)
-ax.legend(frameon=False, fontsize=10.5, loc="center right")
+ax.legend(frameon=False, fontsize=10.5, loc="upper right")
 fig.tight_layout()
 save(fig, "ahl-4-19-converge.svg")
 
 # ══════════════ 5. steady state：2 つの出し方 ══════════════
-fig, axs = plt.subplots(1, 2, figsize=(10.6, 3.4))
+fig, axs = plt.subplots(1, 2, figsize=(5.8, 1.1))
 for ax in axs:
-    board(ax, (0, 5.2), (0, 3.2))
+    board(ax, (0.6, 4.6), (1.2, 2.9))
     ax.set_aspect("auto")
 axs[0].text(2.6, 2.55, "keep multiplying", fontsize=12.5, ha="center",
             color=ACC)
-axs[0].text(2.6, 1.55, r"$s_1,\ s_2,\ s_3,\ \ldots$" "\n"
-                       r"until the numbers stop changing",
+axs[0].text(2.6, 1.55, r"$s_1,\ s_2,\ s_3,\ \ldots$",
             fontsize=12, ha="center", va="center", color=INK)
-axs[0].text(2.6, 0.45, "quick on the GDC, but only approximate",
-            fontsize=10.5, ha="center", color=GREY)
 axs[1].text(2.6, 2.55, "solve the equations", fontsize=12.5, ha="center",
             color=GREEN)
-axs[1].text(2.6, 1.55, r"$Ts = s$   together with   $a + b = 1$",
+axs[1].text(2.6, 1.55, r"$Ts = s$,   $a + b = 1$",
             fontsize=12, ha="center", va="center", color=INK)
-axs[1].text(2.6, 0.45, "slower, but gives the exact answer",
-            fontsize=10.5, ha="center", color=GREY)
 fig.tight_layout()
 save(fig, "ahl-4-19-steady.svg")
 

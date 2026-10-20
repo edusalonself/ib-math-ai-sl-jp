@@ -61,7 +61,6 @@ ax.text(2.05, 4.35, "right $2$, up $1$", fontsize=11.5, color=ACC,
         ha="center", va="bottom", bbox=BOX, zorder=8)
 frame(ax, (-2.6, 6.6), (-0.7, 5.6))
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("translation  $\\binom{2}{1}$", fontsize=12, color=INK, pad=9)
 fig.tight_layout()
 save(fig, "ahl-2-8-translation.svg")
 
@@ -76,7 +75,6 @@ ax.text(-4.7, 3.9, "in the $y$ axis", fontsize=11, color=GREEN, ha="left",
         va="top", bbox=BOX, zorder=8)
 frame(ax, (-5.0, 5.0), (-4.4, 4.5))
 ax.legend(fontsize=10.5, frameon=False, loc="lower right")
-ax.set_title("reflections", fontsize=12, color=INK, pad=9)
 fig.tight_layout()
 save(fig, "ahl-2-8-reflection.svg")
 
@@ -90,12 +88,10 @@ ax.text(1.25, 4.5, "$\\times 2$", fontsize=12.5, color=ACC, ha="left",
         va="center")
 ax.plot(XS[(XS > -2.4) & (XS < 6.4)], np.zeros_like(XS[(XS > -2.4) & (XS < 6.4)]),
         color=GOLD, lw=3.0, zorder=5)
-ax.text(4.6, -0.55, "the $x$ axis does not move", fontsize=10.5, color=GOLD,
+ax.text(4.6, -0.55, "invariant", fontsize=10.5, color=GOLD,
         ha="right", va="top")
 frame(ax, (-2.6, 6.6), (-1.4, 7.0))
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("vertical stretch, scale factor $2$", fontsize=12,
-             color=INK, pad=9)
 fig.tight_layout()
 save(fig, "ahl-2-8-vstretch.svg")
 
@@ -107,15 +103,13 @@ ax.add_patch(FancyArrowPatch((1.0, 3.15), (0.5, 3.15), arrowstyle="-|>",
                              mutation_scale=15, color=ACC, lw=2.0, zorder=6))
 ax.text(1.15, 3.55, "$x$ halved", fontsize=11.5, color=ACC, ha="left",
         va="bottom", bbox=BOX, zorder=8)
-ax.text(2.9, 2.35, "$y = f(2x)$ is a stretch\nof scale factor $\\frac{1}{2}$,\nnot $2$",
+ax.text(2.9, 2.35, "scale factor $\\frac{1}{2}$",
         fontsize=11, color=ACC, ha="left", va="top", bbox=BOX, zorder=8)
 ax.plot([0, 0], [-0.35, 4.3], color=GOLD, lw=2.4, zorder=5)
-ax.text(-3.3, -0.5, "the $y$ axis does not move", fontsize=10.5, color=GOLD,
+ax.text(0.15, -0.5, "invariant", fontsize=10.5, color=GOLD,
         ha="left", va="center")
 frame(ax, (-3.5, 6.8), (-1.0, 4.7))
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("horizontal stretch, scale factor $\\frac{1}{2}$",
-             fontsize=12, color=INK, pad=9)
 fig.tight_layout()
 save(fig, "ahl-2-8-hstretch.svg")
 
@@ -136,14 +130,10 @@ for _x in (0.0, 1.5):
                 arrowprops=dict(arrowstyle="<->", color=INK, lw=1.6))
     ax.text(_x + 0.16, (_lo + _hi) / 2, "$4$", fontsize=11.5, color=INK,
             ha="left", va="center", bbox=BOX, zorder=8)
-ax.text(2.4, 0.4, "vertical gap $= 4$ at every $x$",
-        fontsize=10.5, color=INK, ha="right", va="bottom", bbox=BOX, zorder=8)
 ax.set_xlim(-2.5, 2.5)
 ax.set_ylim(-1.2, 16.5)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=9.8, frameon=False, loc="upper center")
-ax.set_title("the same two transformations, two orders",
-             fontsize=12, color=INK, pad=9)
 tidy(ax)
 fig.tight_layout()
 save(fig, "ahl-2-8-order.svg")
@@ -167,7 +157,6 @@ ax.set_xticklabels(["$0$", "$\\frac{\\pi}{2}$", "$\\pi$",
                     "$\\frac{3\\pi}{2}$", "$2\\pi$"])
 ax.set_xlabel("$x$")
 ax.legend(fontsize=10.5, frameon=False, loc="upper right")
-ax.set_title("two stretches at once", fontsize=12, color=INK, pad=9)
 tidy(ax)
 
 fig.tight_layout()

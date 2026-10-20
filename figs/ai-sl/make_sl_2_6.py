@@ -23,13 +23,13 @@ BOX = dict(facecolor="white", edgecolor="none", pad=1.6, alpha=0.82)
 
 
 # ================= 1. the modelling cycle =================
-fig, ax = plt.subplots(figsize=(8.6, 5.4))
+fig, ax = plt.subplots(figsize=(7.2, 4.6))
 
 CARDS = [
-    (0.50, 0.86, "1.  Pose a real-world problem", GREY),
-    (0.84, 0.52, "2.  Develop and fit\nthe model", LINE),
-    (0.50, 0.16, "3.  Test and reflect\nupon the model", ACC),
-    (0.16, 0.52, "4.  Use the model", GREEN),
+    (0.50, 0.86, "1.  Pose problem", GREY),
+    (0.84, 0.52, "2.  Develop & fit", LINE),
+    (0.50, 0.16, "3.  Test & reflect", ACC),
+    (0.16, 0.52, "4.  Use model", GREEN),
 ]
 W, H = 0.30, 0.16
 for (cx, cy, text, col) in CARDS:
@@ -61,7 +61,7 @@ arc((0.205, 0.625), (0.335, 0.805), -0.30)   # 4 → 1
 arc((0.560, 0.250), (0.680, 0.470), -0.45, color=ACC, ls="--", lw=1.5)
 # ラベルは【線の上に乗せない】。輪の内側の、何もない場所に置く。
 LBL = dict(facecolor="white", edgecolor="none", pad=2.2, alpha=1.0)
-ax.annotate("reject:\ngo back and change it", (0.545, 0.415), fontsize=9.5,
+ax.annotate("reject", (0.545, 0.415), fontsize=9.5,
             color=ACC, ha="right", va="center", zorder=8, bbox=LBL)
 
 ax.annotate("accept", (0.330, 0.300), fontsize=9.5, color=GREEN,
@@ -69,10 +69,9 @@ ax.annotate("accept", (0.330, 0.300), fontsize=9.5, color=GREEN,
 ax.annotate("extend the problem", (0.325, 0.715), fontsize=9.5, color=GREY,
             ha="left", va="center", zorder=8, bbox=LBL)
 
-ax.set_xlim(0, 1.02)
+ax.set_xlim(-0.01, 1.02)
 ax.set_ylim(0.02, 1.0)
 ax.axis("off")
-ax.set_title("The modelling process", fontsize=13, pad=6)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-2-6-cycle.svg"), format="svg", bbox_inches="tight")
 plt.close(fig)
@@ -81,7 +80,7 @@ plt.close(fig)
 DX = np.array([1, 2, 3, 4, 5, 6])
 DY = np.array([6.0, 8.6, 10.0, 9.7, 7.6, 4.0])
 
-fig, axes = plt.subplots(1, 2, figsize=(11.0, 4.4))
+fig, axes = plt.subplots(1, 2, figsize=(11.0, 4.0))
 
 # bad: linear
 ax = axes[0]
@@ -89,9 +88,7 @@ ax.scatter(DX, DY, s=60, color=INK, zorder=6)
 xs = np.linspace(0.4, 6.6, 200)
 m, cc = np.polyfit(DX, DY, 1)
 ax.plot(xs, m * xs + cc, color=ACC, linewidth=2.4, zorder=5)
-ax.annotate("a linear model\ndoes not follow the shape", (3.5, 12.4),
-            color=ACC, fontsize=11, ha="center", zorder=8)
-ax.set_xlim(0, 7); ax.set_ylim(0, 14.6)
+ax.set_xlim(0, 7); ax.set_ylim(0, 12.6)
 ax.set_xticks([1, 2, 3, 4, 5, 6]); ax.set_yticks([4, 8, 12])
 ax.grid(True, color=GRID, linewidth=0.8); ax.set_axisbelow(True)
 for sp in ("top", "right"):
@@ -103,9 +100,7 @@ ax = axes[1]
 ax.scatter(DX, DY, s=60, color=INK, zorder=6)
 q = np.polyfit(DX, DY, 2)
 ax.plot(xs, np.polyval(q, xs), color=GREEN, linewidth=2.4, zorder=5)
-ax.annotate("a quadratic model rises\nthen falls, like the data", (3.5, 12.4),
-            color=GREEN, fontsize=11, ha="center", zorder=8)
-ax.set_xlim(0, 7); ax.set_ylim(0, 14.6)
+ax.set_xlim(0, 7); ax.set_ylim(0, 12.6)
 ax.set_xticks([1, 2, 3, 4, 5, 6]); ax.set_yticks([4, 8, 12])
 ax.grid(True, color=GRID, linewidth=0.8); ax.set_axisbelow(True)
 for sp in ("top", "right"):
@@ -128,15 +123,15 @@ xin = np.linspace(2, 10, 100)
 ax.plot(xin, h(xin), color=LINE, linewidth=2.8, zorder=5)
 ax.scatter(ts, h(ts), s=62, color=INK, zorder=7)
 
-ax.annotate("the data covers\nonly this range", (6, 300), fontsize=10.5,
+ax.annotate("data range", (6, 300), fontsize=10.5,
             color=LINE, ha="center", zorder=8)
-ax.annotate("interpolation\n(inside the data)", (6, 200), fontsize=10.5,
+ax.annotate("interpolation", (6, 200), fontsize=10.5,
             color=LINE, ha="center", zorder=8)
-ax.annotate("extrapolation\n(outside the data)", (27, 130), fontsize=10.5,
+ax.annotate("extrapolation", (27, 130), fontsize=10.5,
             color=ACC, ha="center", zorder=8)
 
 ax.scatter([40], [h(40)], s=70, color=ACC, zorder=7)
-ax.annotate("the model says 316 cm\nat age 40", xy=(40, h(40)), xytext=(30, 355),
+ax.annotate("$h(40) = 316$", xy=(40, h(40)), xytext=(30, 365),
             fontsize=10.5, color=ACC, ha="center", zorder=8,
             arrowprops=dict(arrowstyle="->", color=ACC, linewidth=1.4))
 
@@ -147,7 +142,7 @@ ax.set_ylabel("height $h$ (cm)")
 ax.grid(True, color=GRID, linewidth=0.8); ax.set_axisbelow(True)
 for sp in ("top", "right"):
     ax.spines[sp].set_visible(False)
-ax.set_title("The danger of extrapolation:  $h(t) = 6t + 76$", fontsize=12.5,
+ax.set_title("$h(t) = 6t + 76$", fontsize=12.5,
              pad=10)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-2-6-extrapolation.svg"), format="svg",
@@ -183,7 +178,6 @@ ax.annotate("radius $20$ m", (-10, 23.4), fontsize=10, color=GREEN,
 
 ax.set_xlim(-27, 27); ax.set_ylim(-3, 50)
 ax.set_aspect("equal"); ax.axis("off")
-ax.set_title("the Ferris wheel", fontsize=12.5, pad=8)
 
 # --- 右：高さと時間のグラフ ---
 ax = axes[1]
@@ -202,7 +196,7 @@ for (tv, hv, lab) in [(0, 2, "$(0,\\ 2)$"), (20, 12, "$(20,\\ 12)$"),
 ax.annotate("", xy=(120, 47), xytext=(0, 47),
             arrowprops=dict(arrowstyle="<->", color=GREY, lw=1.4,
                             mutation_scale=11), zorder=6)
-ax.annotate("one turn:  period $= 120$ s", (60, 48.4), fontsize=10.5,
+ax.annotate("period $= 120$ s", (60, 48.4), fontsize=10.5,
             color=GREY, ha="center", va="bottom", zorder=8)
 
 ax.set_xlim(-8, 248); ax.set_ylim(-2, 54)

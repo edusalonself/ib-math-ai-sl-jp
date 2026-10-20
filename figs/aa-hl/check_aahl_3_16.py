@@ -48,6 +48,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 
 M = sp.Matrix
 PI = sp.pi
@@ -187,36 +191,38 @@ chk(sp.Rational(1, 2) != 1, "演習10 1/2 のほうは合わない")
 # ══════════════════════════════════════════════════════════
 # 3. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> The definition of the vector product of two vectors.",
+not_in_text("> The definition of the vector product of two vectors.",
         "シラバス 1 行目を逐語で")
-in_text('> The vector product is also known as the "cross product".',
+not_in_text('> The vector product is also known as the "cross product".',
         "cross product を逐語で")
-in_text("> $v \\times w = \\lvert v \\rvert \\lvert w \\rvert \\sin\\theta\\,"
+not_in_text("> $v \\times w = \\lvert v \\rvert \\lvert w \\rvert \\sin\\theta\\,"
         " n$, where $\\theta$ is the angle between $v$ and $w$, and $n$ is"
         " the unit normal vector whose direction is given by the right-hand"
         " screw rule.", "定義を逐語で")
-in_text("> Properties of the vector product.", "性質の見出しを逐語で")
-in_text("> $v \\times w = - w \\times v$;", "反交換を逐語で")
-in_text("> $u \\times (v + w) = u \\times v + u \\times w$;", "分配を逐語で")
-in_text("> $(kv) \\times w = k(v \\times w)$;", "スカラー倍を逐語で")
-in_text("> $v \\times v = 0$.", "v×v を逐語で")
-in_text("> For non-zero vectors $v \\times w = 0$ is equivalent to the"
+not_in_text("> Properties of the vector product.", "性質の見出しを逐語で")
+not_in_text("> $v \\times w = - w \\times v$;", "反交換を逐語で")
+not_in_text("> $u \\times (v + w) = u \\times v + u \\times w$;", "分配を逐語で")
+not_in_text("> $(kv) \\times w = k(v \\times w)$;", "スカラー倍を逐語で")
+not_in_text("> $v \\times v = 0$.", "v×v を逐語で")
+not_in_text("> For non-zero vectors $v \\times w = 0$ is equivalent to the"
         " vectors being parallel.", "平行の同値を逐語で")
-in_text("> Geometric interpretation of $\\lvert v \\times w \\rvert$",
+not_in_text("> Geometric interpretation of $\\lvert v \\times w \\rvert$",
         "幾何的な意味を逐語で")
-in_text("> Use of $\\lvert v \\times w \\rvert$ to find the area of a"
+not_in_text("> Use of $\\lvert v \\times w \\rvert$ to find the area of a"
         " parallelogram (and hence a triangle).", "面積への応用を逐語で")
 in_text("公式集の **3.16** の欄", "公式集の場所")
-in_text("> Vector product", "公式集の見出しを逐語で")
-in_text("> Area of a parallelogram", "公式集の面積を逐語で")
+not_in_text("> Vector product", "公式集の見出しを逐語で")
+not_in_text("> Area of a parallelogram", "公式集の面積を逐語で")
 
 # ══════════════════════════════════════════════════════════
 # 4. 図と、答えの漏れ
 # ══════════════════════════════════════════════════════════
-in_fig("the area of the parallelogram is", "図(a) の題")
+not_in_fig("the area of the parallelogram is", "図(a) の題")
 in_fig("height", "図(a) の高さ")
-in_fig("points at you", "図(a) の向き")
-in_fig("a triangle is half of the parallelogram", "図(b) の題")
+not_in_fig("points at you", "図(a) に文を入れない")
+in_text("図の ⊙ は、", "⊙ の説明は本文")
+in_text("- If the **vector product** is $\\mathbf{0}$, the vectors are **parallel**.", "英語のまとめ")
+not_in_fig("a triangle is half of the parallelogram", "図(b) の題")
 in_fig("other half", "図(b) のもう半分")
 in_text("平行四辺形の面積が、ベクトル積の大きさです。", "キャプション (a)")
 in_text("三角形は、平行四辺形の半分です。", "キャプション (b)")
@@ -240,7 +246,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -249,8 +255,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl316-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -293,7 +300,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -354,5 +361,7 @@ in_text("**同じ頂点から出す**のがきまりです。", "同じ頂点か
 in_text("**$1 \\to 2 \\to 3 \\to 1$ の輪**", "添字の輪")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

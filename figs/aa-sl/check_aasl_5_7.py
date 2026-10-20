@@ -43,10 +43,32 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図1 に見つからない: %s :: %s" % (msg, sub[:60]))
 
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
+
 def in_fig2(sub, msg=""):
     chk(sub in FIG2, "図2 に見つからない: %s :: %s" % (msg, sub[:60]))
 
-BODY = TEXT.split("## Worked examples")[0]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
@@ -72,7 +94,7 @@ in_text("# SL 5.7 — The second derivative（第 2 次導関数） {#sec-aasl-5
         "見出し")
 
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
@@ -90,7 +112,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + Paper）")
 chk(TEXT.count("{.callout-important}") == 0,
     "callout-important 0（SL 5.7 は公式集にない）")
@@ -116,7 +138,7 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-5-7-idea-a.svg){#fig-aasl57-idea-a width=100%}", "図1 の埋め込み (a)")
+in_text("(img/aasl-5-7-idea-a.svg){#fig-aasl57-idea-a width=80%}", "図1 の埋め込み (a)")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img",
                                     "aasl-5-7-idea.svg")),
     "分割前の SVG は消してある")
@@ -157,7 +179,7 @@ for _a in ("aasl-5-2.qmd#sign", "aasl-5-3.qmd#power", "aasl-5-3.qmd#sum",
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('"The same $x$ on all three graphs"', "図1 (a) の題")
+not_in_fig('"The same $x$ on all three graphs"', "図1 (a) の題は外した")
 in_fig("F = X ** 3 - 3 * X ** 2", "図1 の関数")
 in_fig2("X ** 3 / 3 - X", "図2 の関数（C）")
 in_fig2("X ** 2 - 1", "図2 の関数（A）")
@@ -498,7 +520,7 @@ _figcol("tbl-aasl57-what", "@fig-aasl57-idea-a")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -508,16 +530,16 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 5. concavity（$f$ のグラフでの見え方） {#shape}',
+in_text('### 5. Concavity（$f$ のグラフでの見え方） {#shape}',
         "見出しの英語: 5. concavity（$f$ のグラフでの見え方）")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：見出しの英語／図 (b) を削除／第 6 節を短く／第 7 節を削除
 # ══════════════════════════════════════════════════════════
-in_text("### 1. second derivative（もう $1$ 回微分する） {#again}",
+in_text("### 1. Second derivative（もう $1$ 回微分する） {#again}",
         "第 1 節の見出し")
 not_in_text("### 1. もう $1$ 回微分する", "前の見出しは消した")
-in_text("### 5. concavity（$f$ のグラフでの見え方） {#shape}", "第 5 節の見出し")
+in_text("### 5. Concavity（$f$ のグラフでの見え方） {#shape}", "第 5 節の見出し")
 
 # --- 図 (b) は消した（同じ内容が表 3 にある）------------------------------
 for _s in ("aasl-5-7-idea-b", "fig-aasl57-idea-b"):
@@ -540,7 +562,7 @@ for _s in ("**急なところの読み方が使えるのは、", "**同じ表が
            "「$x$ 軸と出会う」の $2$ 通りのちがいは"):
     not_in_text(_s, "第 6 節から消した: " + _s[:24])
 in_text("**$x$ をそろえて縦に並べると、対応が見えます**", "第 6 節の 1 文は残す")
-in_text("(img/aasl-5-7-idea-a.svg){#fig-aasl57-idea-a width=100%}",
+in_text("(img/aasl-5-7-idea-a.svg){#fig-aasl57-idea-a width=80%}",
         "3 つのグラフの図は残す")
 
 # --- 第 7 節は消した -----------------------------------------------------
@@ -552,7 +574,7 @@ not_in_text("**$f''(a) = 0$ からわかるのは、$f'$ のグラフが $x = a$
 in_text("$f''(a) = 0$ からは、$f'$ のグラフがそこで水平だということしか"
         "わかりません（[第 4 節](#sign)）。", "Common errors は第 4 節を指す")
 # Paper の callout は第 6 節の終わりに
-_i6 = TEXT.index("### 6. $3$ つのグラフを見分ける {#identify}")
+_i6 = TEXT.index("### 6. Identifying the three graphs（$3$ つのグラフを見分ける） {#identify}")
 _iw = TEXT.index(chr(10) + "## Why it works")
 _s6 = TEXT[_i6:_iw]
 chk("## この項目は Paper 1 に出ます" in _s6, "Paper 1 の callout は第 6 節に")
@@ -570,6 +592,16 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

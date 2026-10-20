@@ -43,7 +43,7 @@ def tidy(ax):
 
 
 # ══════════════ 1. 片側・両側の critical region ══════════════
-fig, axs = plt.subplots(1, 3, figsize=(13.2, 3.9))
+fig, axs = plt.subplots(1, 3, figsize=(12.6, 3.5))
 xs = np.linspace(-3.6, 3.6, 800)
 ys = phi(xs)
 
@@ -71,12 +71,6 @@ for ax, (title, regions, marks, col) in zip(axs, panels):
     ax.set_xlabel("$z$", labelpad=16)
     tidy(ax)
 
-fig.text(0.5, -0.07,
-         "the shaded part is the CRITICAL REGION: its area is the "
-         "significance level.   A two-tailed test splits the same $5\\%$ "
-         "into two, so each side gets $2.5\\%$ and the value moves out to "
-         "$1.96$.",
-         fontsize=11.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-4-18a-tails.svg")
 
@@ -84,7 +78,7 @@ save(fig, "ahl-4-18a-tails.svg")
 # ══════════════ 2. z のことばから x-bar のことばへ ══════════════
 MU, SE = 500.0, 1.6
 CRIT = MU - Z05 * SE
-fig, axs = plt.subplots(1, 2, figsize=(12.6, 3.9))
+fig, axs = plt.subplots(1, 2, figsize=(11.6, 3.6))
 
 # left: z scale
 ax = axs[0]
@@ -94,8 +88,12 @@ ax.fill_between(xs[m], ys[m], color=LINE, alpha=0.55, zorder=3)
 ax.axvline(-Z05, color=LINE, lw=1.6, ls="--", zorder=5)
 ax.text(-Z05, -0.033, "$-1.645$", ha="center", va="top", fontsize=11,
         color=LINE)
-ax.set_title("in $z$:   reject when $z < -1.645$", fontsize=12.5, color=LINE,
-             pad=10)
+ax.text(-2.45, 0.245, "left area $= 5\\%$", ha="center", fontsize=10.5,
+        color=LINE)
+ax.annotate("", xy=(-2.25, 0.035), xytext=(-2.45, 0.225),
+            arrowprops=dict(arrowstyle="->", color=LINE, lw=1.0,
+                            shrinkA=1, shrinkB=1))
+ax.set_title("$z < -1.645$", fontsize=12.5, color=LINE, pad=10)
 ax.set_xlim(-3.6, 3.6)
 ax.set_ylim(0, 0.47)
 ax.set_xticks([])
@@ -110,13 +108,19 @@ ax.plot(xb, yb, color=INK, lw=2.0, zorder=4)
 m = xb <= CRIT
 ax.fill_between(xb[m], yb[m], color=LINE, alpha=0.55, zorder=3)
 ax.axvline(CRIT, color=LINE, lw=1.6, ls="--", zorder=5)
-ax.text(CRIT, -max(yb) * 0.075, "$497.37\\ldots$", ha="center", va="top",
+ax.text(CRIT, -max(yb) * 0.075, "$497.368$", ha="center", va="top",
         fontsize=11, color=LINE)
+ax.text(MU - 2.45 * SE, max(yb) * 0.615, "left area $= 5\\%$",
+        ha="center", fontsize=10.5, color=LINE)
+ax.annotate("", xy=(MU - 2.25 * SE, max(yb) * 0.088),
+            xytext=(MU - 2.45 * SE, max(yb) * 0.565),
+            arrowprops=dict(arrowstyle="->", color=LINE, lw=1.0,
+                            shrinkA=1, shrinkB=1))
 ax.axvline(MU, color=GOLD, lw=1.6, zorder=5)
 ax.text(MU + 0.18, max(yb) * 0.55, "$\\mu_0 = 500$", ha="left", va="center",
         fontsize=10.5, color=GOLD, bbox=BOX, zorder=6)
-ax.set_title("in $\\bar{x}$:   reject when $\\bar{x} < 497.37\\ldots$",
-             fontsize=12.5, color=LINE, pad=10)
+ax.set_title("$\\bar{x} < 497.368$", fontsize=12.5, color=LINE,
+             pad=10)
 ax.set_xlim(MU - 3.6 * SE, MU + 3.6 * SE)
 ax.set_ylim(0, max(yb) * 1.18)
 ax.set_xticks([495, CRIT, 500, 503, 505])
@@ -124,15 +128,6 @@ ax.set_xticklabels(["$495$", "", "$500$", "$503$", "$505$"])
 ax.set_xlabel("sample mean $\\bar{x}$  (g)", labelpad=16)
 tidy(ax)
 
-fig.text(0.5, -0.07,
-         "$\\sigma = 8$, $n = 25$, so the standard error is "
-         "$8 \\div \\sqrt{25} = 1.6$, and "
-         "$500 - 1.645 \\times 1.6 = 497.368\\ldots$   "
-         "The SAME picture, measured in grams instead of in $z$.   "
-         "The shaded area is EXACTLY $5\\%$, because the boundary is the "
-         "unrounded value.   Write $\\bar{x} < 497.4$ (1 d.p.) as the answer, "
-         "but keep $497.368\\ldots$ for calculations.",
-         fontsize=11.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-4-18a-xbar.svg")
 
@@ -144,15 +139,14 @@ ps = [binom(int(k), N, P) for k in ks]
 tail14 = sum(ps[14:])
 tail15 = sum(ps[15:])
 
-fig, axs = plt.subplots(2, 1, figsize=(9.6, 6.6), sharex=True)
+fig, axs = plt.subplots(2, 1, figsize=(6.4, 4.8), sharex=True)
 
 for ax, (kmin, tot, ok) in zip(
         axs, ((14, tail14, False), (15, tail15, True))):
     cols = [ACC if k >= kmin else GREY for k in ks]
     ax.bar(ks, ps, width=0.72, color=cols, alpha=0.9, zorder=3)
     ax.axvline(kmin - 0.5, color=INK, lw=1.6, ls="--", zorder=5)
-    verdict = ("$\\leq 0.05$ — this region is allowed" if ok
-               else "$> 0.05$ — TOO BIG, not allowed")
+    verdict = "$\\leq 0.05$" if ok else "$> 0.05$"
     ax.set_title("$X \\geq %d$:   $P = %.4f$   %s" % (kmin, tot, verdict),
                  fontsize=12.5, color=(GREEN if ok else ACC), pad=8)
     ax.set_ylim(0, max(ps) * 1.20)
@@ -160,16 +154,11 @@ for ax, (kmin, tot, ok) in zip(
     ax.set_axisbelow(True)
     tidy(ax)
 
-axs[1].set_xlim(-0.8, 25.8)
-axs[1].set_xticks(range(0, 26, 5))
+axs[1].set_xlim(-0.8, 21.8)
+axs[1].set_xticks(range(0, 21, 5))
 axs[1].set_xlabel("number of successes $x$   ($X \\sim B(25,\\ 0.4)$ "
                   "under $H_0$)")
 
-fig.text(0.5, -0.04,
-         "The bars are whole numbers, so no region has area exactly $0.05$.  "
-         "Take the BIGGEST region whose probability is still at most $0.05$: "
-         "here that is $X \\geq 15$.",
-         fontsize=11.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-4-18a-discrete.svg")
 

@@ -34,7 +34,7 @@ WARM = "#b45309"
 FILL = "#dbe8f5"
 
 
-fig, ax = plt.subplots(figsize=(7.2, 5.2))
+fig, ax = plt.subplots(figsize=(6.4, 4.6))
 
 XS = np.array([1, 2, 3, 4, 5, 6], dtype=float)
 YS = np.array([3, 5, 4, 7, 8, 9], dtype=float)
@@ -59,8 +59,6 @@ for _s in ("top", "right"):
     ax.spines[_s].set_visible(False)
 ax.set_xlabel("$x$", fontsize=12, color=INK)
 ax.set_ylabel("$y$", fontsize=12, color=INK, rotation=0, labelpad=12)
-ax.set_title("a line of best fit drawn by eye through the mean point",
-             fontsize=10, color=INK, loc="left", pad=10)
 
 fig.tight_layout()
 path = os.path.join(OUT, "aasl-4-4-ex1.svg")

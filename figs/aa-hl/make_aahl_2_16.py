@@ -3,10 +3,10 @@
     python3 figs/aa-hl/make_aahl_2_16.py            … SVG だけ
     FIG_PNG=1 python3 figs/aa-hl/make_aahl_2_16.py  … 目視用の PNG も
 
-出力: aa-hl/02-functions/img/aahl-2-16-idea-a.svg
+出力: aa-hl/02-functions/img/aahl-2-16-abs.svg / -fabs.svg / -sq.svg
       aa-hl/02-functions/img/aahl-2-16-idea-b.svg
 
-(a) 4 枚並べ：y = f(x) / |f(x)| / f(|x|) / [f(x)]^2。
+(a) |f(x)|、f(|x|)、[f(x)]^2 を 1 枚ずつ（もとの f を点線で重ねる）。各節に 1 枚ずつ置く。
 (b) y = f(x) と y = 1/f(x)：0 が漸近線に、±1 が交点になる。
 
 matplotlib の mathtext には次の制限があります（tools/README.md）。
@@ -46,37 +46,39 @@ def frame(ax):
 
 
 # ══════════════════════════════════════════════════════════
-# (a) 4 つの変換
+# (a) 3 つの変換を、1 枚ずつ（もとの f は点線で重ねる）
 # ══════════════════════════════════════════════════════════
-fig1, axes1 = plt.subplots(1, 4, figsize=(6.6, 2.2))
-_t = np.linspace(-4.2, 4.2, 500)
-
-
 def base(t):
     return t * t - 2.0 * t - 3.0
 
 
-PANELS = [
-    ("$y=f(x)$", base(_t), ACCENT),
-    ("$y=|f(x)|$", np.abs(base(_t)), WARM),
-    ("$y=f(|x|)$", base(np.abs(_t)), WARM),
-    ("$y=[f(x)]^{2}$", base(_t) ** 2 / 4.0, WARM),
-]
-for _ax, (_lab, _yv, _col) in zip(axes1, PANELS):
-    _ax.plot(_t, _yv, color=_col, linewidth=1.6)
-    _ax.set_title(_lab, fontsize=9.5, color=_col, pad=6)
-    _ax.set_xlim(-4.4, 4.4)
-    _ax.set_ylim(-5.6, 9.0)
-    frame(_ax)
-fig1.suptitle("One curve, four transformations (the last one is scaled to fit)",
-              fontsize=10.5, color=INK, x=0.02, ha="left", y=1.06)
+def one_panel(title, lab, t, yv, ylim):
+    fig, ax = plt.subplots(figsize=(4.4, 3.2))
+    ax.plot(t, base(t), color=ACCENT, linewidth=1.2, linestyle=(0, (4, 3)))
+    ax.plot(t, yv, color=WARM, linewidth=1.9)
+    ax.set_xlim(t[0] - 0.2, t[-1] + 0.2)
+    ax.set_ylim(*ylim)
+    frame(ax)
+    ax.text(0.98, 0.97, lab, transform=ax.transAxes, ha="right", va="top",
+            fontsize=9.5, color=WARM)
+    ax.text(0.98, 0.87, "dashed: $y=f(x)$", transform=ax.transAxes,
+            ha="right", va="top", fontsize=9, color=ACCENT)
+    return fig
+
+
+_t = np.linspace(-4.2, 4.2, 600)
+fig_abs = one_panel("The part below the axis is reflected upwards",
+                    "$y=|f(x)|$", _t, np.abs(base(_t)), (-5.6, 9.0))
+fig_fabs = one_panel("The right half is copied to the left",
+                     "$y=f(|x|)$", _t, base(np.abs(_t)), (-5.6, 9.0))
+_s = np.linspace(-1.7, 3.7, 600)
+fig_sq = one_panel("Squaring: never negative, smooth at the zeros",
+                   "$y=[f(x)]^{2}$", _s, base(_s) ** 2, (-5.6, 22.0))
 
 # ══════════════════════════════════════════════════════════
 # (b) 逆数のグラフ
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(5.8, 4.0))
-ax2.set_title("Where $f$ is zero, $1/f$ has an asymptote; where $f$ is $1$ or $-1$,"
-              " they meet", fontsize=9.8, color=INK, loc="left", pad=10)
 _u = np.linspace(-1.4, 5.4, 500)
 ax2.plot(_u, _u - 2.0, color=ACCENT, linewidth=1.8)
 for _lo, _hi in ((-1.4, 1.98), (2.02, 5.4)):
@@ -92,18 +94,16 @@ ax2.text(5.2, 3.0, "$y=f(x)$", ha="right", va="center", fontsize=9.5,
          color=ACCENT)
 ax2.text(4.9, 1.35, "$y=1/f(x)$", ha="right", va="center", fontsize=9.5,
          color=WARM)
-ax2.text(-1.3, -3.1, "they cross where the height is $1$ or $-1$",
-         ha="left", va="center", fontsize=9, color=GREY,
-         bbox=dict(facecolor="white", edgecolor="none", pad=1.5))
 ax2.set_xlim(-1.6, 5.6)
 ax2.set_ylim(-3.6, 3.6)
 frame(ax2)
 
-for _fig, _name in ((fig1, "a"), (fig2, "b")):
+for _fig, _name in ((fig_abs, "abs"), (fig_fabs, "fabs"), (fig_sq, "sq"),
+                     (fig2, "idea-b")):
     _fig.tight_layout()
-    _fig.savefig(os.path.join(OUT, "aahl-2-16-idea-%s.svg" % _name),
+    _fig.savefig(os.path.join(OUT, "aahl-2-16-%s.svg" % _name),
                  format="svg", bbox_inches="tight")
     if os.environ.get("FIG_PNG"):
-        _fig.savefig(os.path.join(OUT, "aahl-2-16-idea-%s.png" % _name),
+        _fig.savefig(os.path.join(OUT, "aahl-2-16-%s.png" % _name),
                      format="png", dpi=150, bbox_inches="tight")
 print("wrote", OUT)

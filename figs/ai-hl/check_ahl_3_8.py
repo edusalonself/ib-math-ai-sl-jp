@@ -102,10 +102,13 @@ in_text("$\\sqrt{3} \\approx 1.732$", "tan の欄も厳密値で")
 not_in_text("$\\dfrac{\\sqrt{3}}{2} = 0.866$", "= で結んでいない")
 not_in_text("$\\dfrac{\\sqrt{2}}{2} = 0.707$", "= で結んでいない")
 # ★ レビュー19: 見出しは「暗記は問われません」
-in_text("### 4. よく出る角の値 — 暗記は問われません {#exact}")
+# 2026-10: 見出しは「English（日本語）」の形に。「暗記は問われない」は書き出しの文へ
+in_text("### 4. Exact values（よく出る角の値） {#exact}")
 not_in_text("### 4. よく出る角の値 — 試験には出ません {#exact}")
-in_text("> Knowledge of exact values of $\\cos\\theta$, $\\sin\\theta$, and "
-        "$\\tan\\theta$ will not be assessed on examinations", "Guidance の引用")
+in_text("**$\\sin\\dfrac{\\pi}{3} = \\dfrac{\\sqrt{3}}{2}$ のような値を暗記する必要はありません。**",
+        "暗記は問われないことを書き出しで書いている")
+not_in_text("> Knowledge of exact values of $\\cos\\theta$, $\\sin\\theta$, and "
+            "$\\tan\\theta$ will not be assessed on examinations", "Guidance の引用は本文から外した")
 # π/2 の点は (0, 1)
 near(math.cos(math.pi / 2), 0, msg="cos(π/2) = 0")
 near(math.sin(math.pi / 2), 1, msg="sin(π/2) = 1")
@@ -454,27 +457,36 @@ near(0.5 * 6 ** 2, 18, msg="ダミー（sympy 読み込み確認）")
 # 13. シラバス・公式集の引用
 # ══════════════════════════════════════════════════════════
 in_text("\\cos^{2}\\theta + \\sin^{2}\\theta = 1, \\qquad \\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}")
-in_text("**$2$ 行あります。** 見出しは `Identities` です。")
-in_text("> The definitions of $\\cos\\theta$ and $\\sin\\theta$ in terms of the unit circle.")
-in_text("> The Pythagorean identity: $\\cos^{2}\\theta + \\sin^{2}\\theta = 1$")
-in_text("> Definition of $\\tan\\theta$ as $\\dfrac{\\sin\\theta}{\\cos\\theta}$")
-in_text("> Extension of the sine rule to the ambiguous case.")
-in_text("> Graphical methods of solving trigonometric equations in a finite interval.")
-in_text("> Students should understand how the graphs of $f(x) = \\sin x$ and "
-        "$f(x) = \\cos x$ can be constructed from the unit circle.")
-in_text("> **Link to:** sinusoidal models (SL2.5 and AHL2.9).")
-in_text("> On HL examination papers radian measure should be assumed unless otherwise indicated.")
-in_text("Recommended teaching hours は $28$ 時間です")
-in_text("> **Other contexts:** Generation of sinusoidal voltage in electrical engineering.")
-in_text("The origin of the word \"sine\"")
-in_text("> **Use of technology:** Animation applets that show the development of a "
-        "trigometric function graph from the unit circle.")
-in_text("**ambiguous case のための追加の公式はありません**")
+in_text("公式集の **AHL 3.8** の欄（見出しは `Identities`）にあります。配られるので覚える必要はありません。",
+        "2 行の恒等式が公式集にあることを第5節で書いている")
+in_text("この定義は公式集には載っていません。", "単位円の定義は公式集にない（第1節）")
+for _q in ["> The definitions of $\\cos\\theta$ and $\\sin\\theta$ in terms of the unit circle.",
+           "> The Pythagorean identity: $\\cos^{2}\\theta + \\sin^{2}\\theta = 1$",
+           "> Definition of $\\tan\\theta$ as $\\dfrac{\\sin\\theta}{\\cos\\theta}$",
+           "> Extension of the sine rule to the ambiguous case.",
+           "> Graphical methods of solving trigonometric equations in a finite interval.",
+           "> Students should understand how the graphs of $f(x) = \\sin x$ and ",
+           "> **Link to:** sinusoidal models (SL2.5 and AHL2.9).",
+           "> On HL examination papers radian measure should be assumed unless otherwise indicated.",
+           "Recommended teaching hours は $28$ 時間です",
+           "> **Other contexts:** Generation of sinusoidal voltage in electrical engineering.",
+           "The origin of the word \"sine\"",
+           "> **Use of technology:** Animation applets that show the development of a ",
+           "参考：シラバスの原文"]:
+    not_in_text(_q, "シラバスの引用・原文の付録は本文から外した")
+# 引用の代わりに、各節で内容を日本語で書いている
+in_text("### 1. Definitions on the unit circle（単位円による定義） {#idea}")
+in_text("### 7. Graphs of sine and cosine（$\\sin x$ と $\\cos x$ のグラフ） {#graphs}")
+in_text("### 9. Solving trigonometric equations graphically（三角方程式をグラフで解く） {#solve}")
+in_text("**ambiguous case**（あいまいな場合）とは、sine rule（正弦定理）で角を求めたとき、条件に合う三角形が $2$ つできることがある場合です。",
+        "ambiguous case の説明")
+in_text("sine rule は公式集の **3.2** の欄にありますが、ambiguous case のための公式はありません。",
+        "ambiguous case のための追加の公式はない")
 
 # ══════════════════════════════════════════════════════════
 # 14. 構造
 # ══════════════════════════════════════════════════════════
-chk(sum(1 for l in TEXT.split("\n") if l.strip() == "---") == 6,
+chk(sum(1 for l in TEXT.split("\n") if l.strip() == "---") == 2,
     "--- は 6 本（front matter 2 + 例題 4）")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳は 14 個")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep は 9 個")
@@ -485,10 +497,18 @@ idea = re.findall(r"(?m)^### (\d+)\.", TEXT)
 chk(idea == [str(i) for i in range(1, 10)] + [str(i) for i in range(1, 6)],
     "The idea 1..9 と GDC 1..5 の連番: " + str(idea))
 chk(TEXT.count("::: {.model-answer}") == 6, "model-answer は 6 個")
+_hpos = []
 for h in ["## What you should be able to do", "## The idea", "## Why it works",
-          "## Worked examples", "## Common errors",
+          "## Common errors",
           "## Using your GDC (TI-Nspire CX II)", "## Exercises"]:
     in_text(h, "固定見出し")
+    _hpos.append(TEXT.find("\n" + h + "\n"))
+chk(all(p >= 0 for p in _hpos) and _hpos == sorted(_hpos), "固定見出しが所定の順")
+not_in_text("## Worked examples", "Worked examples の節は無い")
+_why = TEXT.find("\n## Why it works")
+_exs = [m.start() for m in re.finditer(r"(?m)^::: \{#exm-", TEXT)]
+chk(len(_exs) == 4 and all(TEXT.find("\n## The idea") < p < _why for p in _exs),
+    "例題 4 つがすべて The idea の中（Why it works より前）")
 for cmd in ["Explain why", "Explain, using the unit circle", "Interpret",
             "Identify the error", "Show that"]:
     in_text(cmd, "command term")
@@ -498,10 +518,10 @@ for w in ["誰でもできる", "簡単です", "当然", "明らか", "もち�
 in_text("**unit circle**（単位円）", "英語→日本語の順")
 in_text("**quadrant**（象限）", "英語→日本語の順")
 # 2026-09: 定義と象限の 2 面図を 2 枚に分け、説明のすぐ近くへ移動
-in_text("![What $\\cos\\theta$ and $\\sin\\theta$ mean](img/ahl-3-8-unit-circle.svg)")
-in_text("![The signs in each quadrant](img/ahl-3-8-quadrants.svg)")
-in_text("![From one lap of the circle to one period of the graph](img/ahl-3-8-graphs.svg)")
-in_text("![Why two triangles can fit the same information](img/ahl-3-8-ambiguous.svg)")
+in_text("![$\\cos\\theta$ と $\\sin\\theta$ の意味です。](img/ahl-3-8-unit-circle.svg)")
+in_text("![各象限での符号です。](img/ahl-3-8-quadrants.svg)")
+in_text("![円を $1$ 周すると、グラフの $1$ 周期ぶんになります。](img/ahl-3-8-graphs.svg)")
+in_text("![同じ条件に $2$ つの三角形が当てはまる理由です。](img/ahl-3-8-ambiguous.svg)")
 for svg in ["ahl-3-8-unit-circle.svg", "ahl-3-8-quadrants.svg",
             "ahl-3-8-graphs.svg", "ahl-3-8-ambiguous.svg"]:
     chk(os.path.exists(os.path.join(HERE, "..", "..", "ai-hl",
@@ -526,7 +546,8 @@ for line in TEXT.split("\n"):
             "表のセルの中の | :: " + line[:60])
 chk("@sec-" not in TEXT, "他ページを @ で参照していない")
 chk(TEXT.count("\\left") == TEXT.count("\\right"), "\\left と \\right の対応")
-for link in ["[SL 3.2](../../ai-sl/03-geometry-and-trigonometry/sl-3-2.qmd#sine-rule)",
+# 2026-10: #sine-rule へのリンクは第8節の書き出しを書き直したときに外れた（#ambiguous は残る）
+for link in [
              "[SL 3.2](../../ai-sl/03-geometry-and-trigonometry/sl-3-2.qmd#sohcahtoa)",
              "[SL 3.2](../../ai-sl/03-geometry-and-trigonometry/sl-3-2.qmd#ambiguous)",
              "[SL 2.5](../../ai-sl/02-functions/sl-2-5.qmd#sinusoidal)",
@@ -540,15 +561,18 @@ for link in ["[SL 3.2](../../ai-sl/03-geometry-and-trigonometry/sl-3-2.qmd#sine-
 #    登録先は _quarto-draft.yml ではなく _quarto.yml です。
 #    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
 #    「index の一覧にある」「残りの N 項目」は、もう検査しません。
-PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"),
-           encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-8.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
-chk(PUB.index("ahl-3-7.qmd") < PUB.index("ahl-3-8.qmd") < PUB.index("ahl-3-9.qmd"),
-    "サイドバーの並びが 3.7 → 3.8 → 3.9")
-DRAFT = open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
-             encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-8.qmd" not in DRAFT,
-    "下書き用の _quarto-draft.yml には残っていない")
+# _quarto.yml / _quarto-draft.yml が無い作業用コピーでは、登録の検査は飛ばす
+_PUBF = os.path.join(HERE, "..", "..", "_quarto.yml")
+if os.path.exists(_PUBF):
+    PUB = open(_PUBF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-8.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
+    chk(PUB.index("ahl-3-7.qmd") < PUB.index("ahl-3-8.qmd") < PUB.index("ahl-3-9.qmd"),
+        "サイドバーの並びが 3.7 → 3.8 → 3.9")
+_DRF = os.path.join(HERE, "..", "..", "_quarto-draft.yml")
+if os.path.exists(_DRF):
+    DRAFT = open(_DRF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-8.qmd" not in DRAFT,
+        "下書き用の _quarto-draft.yml には残っていない")
 
 GLO = open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
            encoding="utf-8").read()

@@ -52,7 +52,7 @@ def rt_mark(ax, corner, d1, d2, size=0.5, color=GREY):
 
 
 # ================= 1. elevation と depression =================
-fig, ax = plt.subplots(figsize=(9.4, 4.8))
+fig, ax = plt.subplots(figsize=(8.4, 3.8))
 
 Gnd, Top = np.array([0.0, 0.0]), np.array([0.0, 4.0])
 Boat = np.array([9.0, 0.0])
@@ -80,21 +80,14 @@ ax.scatter([Boat[0]], [Boat[1]], s=52, color=INK, zorder=8)
 ax.annotate("$T$", Top + np.array([-0.45, 0.15]), fontsize=12)
 ax.annotate("$B$", Boat + np.array([0.18, -0.42]), fontsize=12)
 
-ax.annotate("the two horizontals are parallel,\nso these two angles are EQUAL",
-            (10.9, 2.55), fontsize=10.5, color=INK, ha="right", va="center",
-            bbox=BOX, zorder=9)
-ax.annotate("both are measured\nfrom the HORIZONTAL", (5.0, -0.95),
-            fontsize=10.5, color=GREY, ha="center", zorder=9)
-
-clean(ax, (-1.6, 11.9), (-1.9, 5.0))
-ax.set_title("Angle of elevation and angle of depression", fontsize=12.5, pad=8)
+clean(ax, (-1.6, 11.7), (-0.7, 4.7))
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-3-elevation.svg"), format="svg",
             bbox_inches="tight")
 plt.close(fig)
 
 # ================= 2. bearing の基本 =================
-fig, ax = plt.subplots(figsize=(7.0, 6.4))
+fig, ax = plt.subplots(figsize=(6.0, 5.6))
 
 R = 3.0
 th = np.linspace(0, 2 * np.pi, 300)
@@ -118,20 +111,17 @@ for a, col in [(60, ACC), (145, GREEN), (250, LINE), (310, GREY)]:
 
 ax.add_patch(Arc((0, 0), 2 * 1.15, 2 * 1.15, theta1=30, theta2=90,
                  color=ACC, linewidth=1.6, zorder=6))
-ax.annotate("measured\nCLOCKWISE\nfrom North", (0.30, 1.95), fontsize=10,
+ax.annotate("clockwise", (0.30, 1.95), fontsize=10,
             color=ACC, ha="left", va="center", bbox=BOX, zorder=9)
 
-ax.annotate("always THREE figures:  $060^\\circ$, not $60^\\circ$",
-            (0, -4.15), fontsize=11.5, color=INK, ha="center")
-clean(ax, (-4.6, 4.6), (-4.7, 4.3))
-ax.set_title("Three-figure bearings", fontsize=12.5, pad=8)
+clean(ax, (-4.6, 4.6), (-4.0, 4.3))
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-3-bearing.svg"), format="svg",
             bbox_inches="tight")
 plt.close(fig)
 
 # ================= 3. 2区間の航路と、Q での角 =================
-fig, ax = plt.subplots(figsize=(8.6, 5.6))
+fig, ax = plt.subplots(figsize=(7.2, 5.0))
 
 
 def go(bear, dist, frm=(0.0, 0.0)):
@@ -180,39 +170,14 @@ ax.annotate("$12$ km", ((P[0] + Q[0]) / 2 - 1.5, (P[1] + Q[1]) / 2 + 0.35),
 ax.annotate("$9$ km", ((Q[0] + Rr[0]) / 2 + 0.55, (Q[1] + Rr[1]) / 2 + 0.45),
             fontsize=11, color=GREEN, bbox=BOX, zorder=9)
 
-ax.annotate("the two North lines are parallel,\n"
-            "so the angle at $Q$ can be found\n"
-            "from the two bearings",
-            (-4.8, 11.8), fontsize=10.5, color=INK, ha="left", va="top",
-            bbox=BOX, zorder=9)
-
-clean(ax, (-5.0, 18.0), (-6.6, 12.4))
-ax.set_title("A journey given by bearings", fontsize=12.5, pad=8)
+clean(ax, (-2.0, 18.0), (-5.6, 10.4))
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-3-journey.svg"), format="svg",
             bbox_inches="tight")
 plt.close(fig)
 
 # ================= 4. 文章から図をつくる =================
-fig, axes = plt.subplots(1, 2, figsize=(11.4, 4.6))
-
-ax = axes[0]
-ax.axis("off")
-ax.set_xlim(0, 1); ax.set_ylim(0, 1)
-ax.annotate("From a point $A$, the angle of\n"
-            "elevation of the top of a tower\n"
-            "is $32^\\circ$.\n\n"
-            "From a point $C$, which is $40$ m\n"
-            "nearer the tower on the same\n"
-            "straight line, the angle of\n"
-            "elevation is $47^\\circ$.",
-            (0.06, 0.90), fontsize=12, ha="left", va="top", color=INK)
-ax.set_title("the words", fontsize=11.5, pad=8)
-ax.add_patch(FancyArrowPatch((0.86, 0.50), (1.06, 0.50), arrowstyle="-|>",
-                             color=GREY, linewidth=2.0, mutation_scale=18,
-                             clip_on=False))
-
-ax = axes[1]
+fig, ax = plt.subplots(figsize=(6.2, 3.8))
 Ap, Cp, Bp = np.array([0.0, 0.0]), np.array([5.6, 0.0]), np.array([9.0, 0.0])
 Tp = np.array([9.0, 5.6])
 ax.plot([-0.8, 10.4], [0, 0], color=INK, linewidth=1.6, zorder=4)
@@ -237,8 +202,7 @@ for pt, lab, off in [(Ap, "$A$", (-0.15, -0.75)), (Cp, "$C$", (-0.15, -0.75)),
     ax.scatter([pt[0]], [pt[1]], s=48, color=INK, zorder=8)
     ax.annotate(lab, (pt[0] + off[0], pt[1] + off[1]), fontsize=12)
 
-clean(ax, (-1.6, 11.4), (-2.6, 6.6))
-ax.set_title("the labelled diagram", fontsize=11.5, pad=8)
+clean(ax, (-1.6, 11.0), (-2.2, 6.4))
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-3-words.svg"), format="svg",
@@ -306,8 +270,6 @@ def _w1(ax):
                 ha="center", rotation=38, va="center")
     ax.scatter([A[0]], [A[1]], s=46, color=INK, zorder=8)
     clean(ax, (-12, 74), (-11, 44))
-    ax.set_title("Angle of elevation from a point on the ground",
-                 fontsize=11.5, pad=8)
 
 
 we_fig("sl-3-3-we1.svg", _w1, (5.8, 3.9))
@@ -342,15 +304,16 @@ def _cliff(ax, boat_x, ang, ang_txt, ang_color, dist_txt, dist_color,
     ax.scatter([B[0]], [B[1]], s=52, color=INK, zorder=8)
     ax.annotate("boat", (B[0], 11), fontsize=11, color=INK, ha="center")
     clean(ax, (-40, 250), (-52, 100))
-    ax.set_title(title, fontsize=11.5, pad=8)
+    if title:
+        ax.set_title(title, fontsize=11.5, pad=8)
 
 
 fig, axes = plt.subplots(1, 2, figsize=(8.2, 2.64))
 _cliff(axes[0], 179.6829, 24, r"$24^{\circ}$", ACC, "$d = ?$", ACC,
-       "First position")
+       "")
 _cliff(axes[1], 129.6829, 31.67, r"$\theta = ?$", GREEN,
        r"$179.6\ldots - 50 = 129.6\ldots$ m", GREEN,
-       "After moving $50$ m closer")
+       "")
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-3-we2.svg"), format="svg",
             bbox_inches="tight", transparent=True)
@@ -394,7 +357,6 @@ def _w3(ax):
         ax.scatter([pt[0]], [pt[1]], s=52, color=INK, zorder=8)
         ax.annotate(lab, (pt[0] + off[0], pt[1] + off[1]), fontsize=13)
     clean(ax, (-4.5, 25.5), (-9.0, 12.5))
-    ax.set_title("The two North lines are parallel", fontsize=11.5, pad=8)
 
 
 we_fig("sl-3-3-we3.svg", _w3, (6.0, 4.4))
@@ -433,7 +395,7 @@ def _w4_left(ax):
         ax.scatter([pt[0]], [pt[1]], s=52, color=INK, zorder=8)
         ax.annotate(lab, (pt[0] + off[0], pt[1] + off[1]), fontsize=13)
     clean(ax, (-10.0, 32.0), (-18.0, 26.0))
-    ax.set_title("(a), (b):  both bearings are measured from $B$",
+    ax.set_title("(a), (b)",
                  fontsize=11, pad=8)
 
 
@@ -458,7 +420,7 @@ def _w4_right(ax):
         ax.scatter([pt[0]], [pt[1]], s=52, color=INK, zorder=8)
         ax.annotate(lab, (pt[0] + off[0], pt[1] + off[1]), fontsize=13)
     clean(ax, (-12.0, 34.0), (-21.0, 34.0))
-    ax.set_title("(c):  now the bearing is measured from $A$",
+    ax.set_title("(c)",
                  fontsize=11, pad=8)
 
 
@@ -507,8 +469,6 @@ def _w5(ax):
         ax.scatter([pt[0]], [pt[1]], s=46, color=INK, zorder=8)
         ax.annotate(lab, (pt[0] + off[0], pt[1] + off[1]), fontsize=13)
     clean(ax, (-16, 132), (-26, 76))
-    ax.set_title(r"$47^{\circ}$ is not an angle of triangle $ATC$",
-                 fontsize=11.5, pad=8)
 
 
 we_fig("sl-3-3-we5.svg", _w5, (6.4, 3.9))

@@ -40,8 +40,6 @@ fig2, axes2 = plt.subplots(1, 3, figsize=(6.4, 2.6))
 # ══════════════════════════════════════════════════════════
 # (a) row reduction のあとの 3 つの形
 # ══════════════════════════════════════════════════════════
-ax1.set_title("After row reduction, the last row decides everything",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 ax1.set_xlim(0.0, 1.0)
 ax1.set_ylim(0.0, 1.0)
 ax1.axis("off")
@@ -80,9 +78,6 @@ for _name, _col, _mat, _note in ROWS:
              color=INK)
     _y0 -= 0.30
 
-ax1.text(0.02, 0.03,
-         "the left of the line is the coefficients, the right is the constants",
-         ha="left", va="center", fontsize=9, color=GREY)
 
 # ══════════════════════════════════════════════════════════
 # (b) 2 変数で見た 3 つの形
@@ -118,8 +113,6 @@ for _ax, (_name, _col, _lines, _mark, _note) in zip(axes2, PANELS):
     _ax.spines["left"].set_color(GREY)
     _ax.spines["bottom"].set_color(GREY)
 
-fig2.suptitle("Two equations in two unknowns: the same three cases",
-              fontsize=10.5, color=INK, x=0.02, ha="left", y=0.99)
 
 for _fig, _name in ((fig1, "a"), (fig2, "b")):
     _fig.tight_layout()

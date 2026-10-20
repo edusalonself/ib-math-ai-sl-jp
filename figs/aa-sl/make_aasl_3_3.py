@@ -36,16 +36,14 @@ GREY = "#6b7280"
 WARM = "#b45309"
 GREEN = "#15803d"
 
-fig1, ax1 = plt.subplots(figsize=(5.3, 4.8))
+fig1, ax1 = plt.subplots(figsize=(5.3, 3.4))
 fig2, ax2 = plt.subplots(figsize=(5.3, 4.8))
-fig3, ax3 = plt.subplots(figsize=(6.4, 4.0))
+fig3, ax3 = plt.subplots(figsize=(5.6, 3.5))
 # ══════════════════════════════════════════════════════════
 # (a) 仰角と俯角
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Elevation and depression", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-0.9, 9.4)
-ax1.set_ylim(-1.05, 5.4)
+ax1.set_ylim(-0.35, 4.3)
 ax1.axis("off")
 
 P = (0.6, 0.0)      # 下の観測者
@@ -75,16 +73,14 @@ ax1.text(T[0] - 2.15, T[1] - 0.62, "$\\theta$", fontsize=12, color=WARM)
 ax1.plot([P[0]], [P[1]], marker="o", markersize=5.5, color=INK, zorder=3)
 ax1.plot([T[0]], [T[1]], marker="o", markersize=5.5, color=INK, zorder=3)
 
-ax1.text(0.10, 4.55, "angle of depression, measured", fontsize=10, color=WARM)
-ax1.text(0.10, 4.10, "down from the horizontal", fontsize=10, color=WARM)
-ax1.text(3.05, 1.15, "angle of elevation", fontsize=10, color=GREEN)
+ax1.text(3.20, 3.85, "angle of depression", fontsize=10, color=WARM)
+ax1.text(3.00, 0.35, "angle of elevation", fontsize=10, color=GREEN)
 
 # ══════════════════════════════════════════════════════════
 # (b) 方位角
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Bearings", fontsize=11, color=INK, loc="left", pad=10)
-ax2.set_xlim(-4.4, 4.4)
-ax2.set_ylim(-3.15, 3.55)
+ax2.set_xlim(-2.3, 4.2)
+ax2.set_ylim(-1.75, 3.45)
 ax2.set_aspect("equal")
 ax2.axis("off")
 
@@ -122,10 +118,8 @@ ax2.text(Q[0] + 0.30, Q[1] - 1.05, "$\\theta + 180°$", fontsize=10.5,
 # ══════════════════════════════════════════════════════════
 # (c) 塔を 2 か所から見上げる（共通の辺は h）
 # ══════════════════════════════════════════════════════════
-ax3.set_title("Two triangles, one shared side", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax3.set_xlim(-1.0, 9.8)
-ax3.set_ylim(-1.35, 5.9)
+ax3.set_ylim(-1.35, 5.2)
 ax3.set_aspect("equal")
 ax3.axis("off")
 

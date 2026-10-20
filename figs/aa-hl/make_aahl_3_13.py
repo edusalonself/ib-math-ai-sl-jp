@@ -5,9 +5,11 @@
 
 出力: aa-hl/03-geometry-and-trigonometry/img/aahl-3-13-idea-a.svg
       aa-hl/03-geometry-and-trigonometry/img/aahl-3-13-idea-b.svg
+      aa-hl/03-geometry-and-trigonometry/img/aahl-3-13-idea-c.svg
 
 (a) 2 つのベクトルのなす角と、片方をもう片方に落とした影。
 (b) なす角と内積の符号：鋭角なら正、直角なら 0、鈍角なら負。
+(c) 三角形 ABC の角 BAC は、A から出る AB と AC のなす角。
 
 matplotlib の mathtext には次の制限があります（tools/README.md）。
   * \\begin{pmatrix} は読めない → 使わない
@@ -47,8 +49,6 @@ def arrow(ax, p, q, col, lw=1.8, ls="-"):
 # (a) なす角と影
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(5.4, 3.8))
-ax1.set_title("The angle between two vectors, and the shadow of one on the other",
-              fontsize=10, color=INK, loc="left", pad=10)
 v = np.array([4.0, 0.0])
 w = np.array([2.2, 2.4])
 arrow(ax1, O, v, ACCENT)
@@ -93,10 +93,34 @@ for _ax, (_deg, _lab, _col) in zip(axes2, PANELS):
     _ax.set_ylim(-0.6, 2.6)
     _ax.set_aspect("equal")
     _ax.axis("off")
-fig2.suptitle("The sign of the scalar product tells you the kind of angle",
-              fontsize=10.5, color=INK, x=0.02, ha="left", y=1.04)
 
-for _fig, _name in ((fig1, "a"), (fig2, "b")):
+# ══════════════════════════════════════════════════════════
+# (c) 三角形 ABC の角 BAC：A から出る 2 本のベクトル
+# ══════════════════════════════════════════════════════════
+fig3, ax3 = plt.subplots(figsize=(3.6, 2.6))
+PA = np.array([0.0, 0.0])
+PB = np.array([3.2, 0.3])
+PC = np.array([1.2, 2.0])
+ax3.plot([PB[0], PC[0]], [PB[1], PC[1]], color=GREY, linewidth=1.0,
+         linestyle=(0, (3, 3)))
+arrow(ax3, PA, PB, ACCENT)
+arrow(ax3, PA, PC, WARM)
+_t0 = np.degrees(np.arctan2(PB[1], PB[0]))
+_t1 = np.degrees(np.arctan2(PC[1], PC[0]))
+ax3.add_patch(Arc(PA, 0.9, 0.9, theta1=_t0, theta2=_t1, color=INK,
+                  linewidth=1.0))
+ax3.text(0.62, 0.42, "$\\theta$", fontsize=11, color=INK)
+for _p, _lab, _dx, _dy in ((PA, "$A$", -0.28, -0.12), (PB, "$B$", 0.08, -0.05),
+                           (PC, "$C$", -0.05, 0.10)):
+    ax3.text(_p[0] + _dx, _p[1] + _dy, _lab, fontsize=11, color=INK)
+ax3.text(1.75, -0.12, "$\\overrightarrow{AB}$", fontsize=10.5, color=ACCENT)
+ax3.text(0.25, 1.15, "$\\overrightarrow{AC}$", fontsize=10.5, color=WARM)
+ax3.set_xlim(-0.4, 3.6)
+ax3.set_ylim(-0.4, 2.4)
+ax3.set_aspect("equal")
+ax3.axis("off")
+
+for _fig, _name in ((fig1, "a"), (fig2, "b"), (fig3, "c")):
     _fig.tight_layout()
     _fig.savefig(os.path.join(OUT, "aahl-3-13-idea-%s.svg" % _name),
                  format="svg", bbox_inches="tight")

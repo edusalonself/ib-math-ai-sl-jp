@@ -68,8 +68,6 @@ ax1.text(0.15, 0.52, "$OP = 1$", ha="right", fontsize=9.5,
          color=ACCENT)
 ax1.text(0.44, 0.96, "the height of $P$ is $\\sin(A+B)$",
          fontsize=9, color=GREY)
-ax1.text(-0.02, -0.14, "it splits into two pieces, one from each triangle",
-         fontsize=9, color=GREY)
 ax1.set_xlim(-0.14, 1.24)
 ax1.set_ylim(-0.24, 1.08)
 ax1.set_aspect("equal")
@@ -81,8 +79,6 @@ ax1.axis("off")
 # (b) 加法定理 → 2 倍角
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(6.2, 3.2))
-ax2.set_title("Put $B = A$ and the double angle identities drop out",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 ax2.set_xlim(0.0, 1.0)
 ax2.set_ylim(0.0, 1.0)
 ax2.axis("off")
@@ -107,8 +103,6 @@ for _y, _left, _right, _col in ROWS:
              color=_col)
 ax2.text(0.55, 0.95, "$B = A$", ha="center", va="center", fontsize=9,
          color=INK)
-ax2.text(0.01, 0.02, "the booklet prints the left column; the right one you derive",
-         ha="left", va="center", fontsize=9, color=GREY)
 
 for _fig, _name in ((fig1, "a"), (fig2, "b")):
     _fig.tight_layout()

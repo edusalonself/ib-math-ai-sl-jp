@@ -48,6 +48,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 
 _x = sp.Symbol("x")
 _a = sp.Symbol("a", positive=True)
@@ -166,28 +170,28 @@ chk(sp.simplify(2 * _x / (1 + _x ** 2) - 1 / (1 + _x ** 2)) != 0,
 # ══════════════════════════════════════════════════════════
 # 3. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Derivatives of tanx, secx, cosecx, cotx, ax, loga x, arcsinx,"
+not_in_text("> Derivatives of tanx, secx, cosecx, cotx, ax, loga x, arcsinx,"
         " arccosx, arctanx.", "シラバスの導関数を逐語で")
-in_text("> Indefinite integrals of the derivatives of any of the above"
+not_in_text("> Indefinite integrals of the derivatives of any of the above"
         " functions.", "不定積分を逐語で")
-in_text("> Indefinite integral interpreted as a family of curves.",
+not_in_text("> Indefinite integral interpreted as a family of curves.",
         "曲線の族を逐語で")
-in_text("> The composites of any of these with a linear function.",
+not_in_text("> The composites of any of these with a linear function.",
         "1 次式との合成を逐語で")
-in_text("> Use of partial fractions to rearrange the integrand.",
+not_in_text("> Use of partial fractions to rearrange the integrand.",
         "部分分数を逐語で")
-in_text("> Link to: partial fractions (AHL1.11)", "1.11 への Link を逐語で")
+not_in_text("> Link to: partial fractions (AHL1.11)", "1.11 への Link を逐語で")
 in_text("公式集の **5.15** の欄", "公式集の場所")
-in_text("> Standard derivatives", "公式集の見出しを逐語で")
-in_text("> Standard integrals", "公式集の不定積分の見出しを逐語で")
+not_in_text("> Standard derivatives", "公式集の見出しを逐語で")
+not_in_text("> Standard integrals", "公式集の不定積分の見出しを逐語で")
 
 # ══════════════════════════════════════════════════════════
 # 4. 図と、答えの漏れ
 # ══════════════════════════════════════════════════════════
-in_fig(", and the triangle", "図(a) の題")
-in_fig("1-x^{2}}$, and", "図(a) の注")
-in_fig("an indefinite integral is a family of curves", "図(b) の題")
-in_fig("at the same $x$ the curves are parallel", "図(b) の注")
+not_in_fig(", and the triangle", "図(a) の題")
+not_in_fig("1-x^{2}}$, and", "図(a) の注")
+not_in_fig("an indefinite integral is a family of curves", "図(b) の題")
+not_in_fig("at the same $x$ the curves are parallel", "図(b) の注")
 in_text("三角形から $\\cos y$ が読めます。", "キャプション (a)")
 in_text("がちがうだけで、傾きは同じです。", "キャプション (b)")
 _BODY = TEXT[:TEXT.index("## Exercises")]
@@ -209,7 +213,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -218,8 +222,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl515-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -262,7 +267,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -322,5 +327,7 @@ in_text("## $+C$ を書かない", "+C を忘れない")
 in_text("**判別式を見る**と早いです。", "判別式で分ける")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

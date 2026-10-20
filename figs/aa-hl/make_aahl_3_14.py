@@ -47,9 +47,6 @@ def arrow(ax, p, q, col, lw=1.8, ls="-"):
 # (a) r = a + λb
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(5.8, 4.0))
-ax1.set_title("$\\mathbf{r} = \\mathbf{a}+\\lambda\\mathbf{b}$: start at"
-              " $\\mathbf{a}$, then slide along $\\mathbf{b}$",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 A = np.array([1.2, 2.6])
 B = np.array([1.6, -0.7])
 _t = np.linspace(-0.9, 2.5, 50)
@@ -68,8 +65,6 @@ ax1.plot([0.0], [0.0], "o", color=INK, markersize=4.5)
 ax1.text(-0.30, -0.10, "$O$", fontsize=10.5, color=INK)
 ax1.text(0.40, 1.35, "$\\mathbf{a}$", fontsize=11, color=ACCENT)
 ax1.text(1.95, 2.30, "$\\mathbf{b}$", fontsize=11, color=WARM)
-ax1.text(-0.55, -1.05, "any point of the line is reached by one value of"
-         " $\\lambda$", fontsize=9, color=GREY)
 ax1.set_xlim(-0.8, 5.2)
 ax1.set_ylim(-1.35, 3.6)
 ax1.set_aspect("equal")
@@ -79,8 +74,6 @@ ax1.axis("off")
 # (b) 2 直線のなす角
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(5.6, 3.4))
-ax2.set_title("The angle between two lines is the angle between their"
-              " directions", fontsize=10, color=INK, loc="left", pad=10)
 P = np.array([2.2, 1.0])
 d1 = np.array([1.5, 0.45])
 d2 = np.array([0.7, 1.45])
@@ -99,9 +92,6 @@ ax2.text(P[0] + 1.6, P[1] + 0.05, "$\\mathbf{b}_{1}$", fontsize=10.5,
          color=ACCENT)
 ax2.text(P[0] + 0.40, P[1] + 1.50, "$\\mathbf{b}_{2}$", fontsize=10.5,
          color=WARM)
-ax2.text(-0.1, -1.35, "take the acute angle: replace $\\theta$ by"
-         " $\\pi-\\theta$ if it comes out obtuse", fontsize=9, color=GREY,
-         bbox=dict(facecolor="white", edgecolor="none", pad=1.5))
 ax2.set_xlim(-0.3, 5.2)
 ax2.set_ylim(-1.7, 3.4)
 ax2.set_aspect("equal")

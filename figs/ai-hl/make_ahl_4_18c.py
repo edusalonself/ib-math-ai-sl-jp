@@ -59,14 +59,14 @@ ax.plot(xs, y1, color=INK, lw=2.2, ls="--", zorder=5)
 ax.axvline(CRIT, color=GOLD, lw=2.2, zorder=6)
 
 top = max(y0.max(), y1.max())
-ax.text(MU0, top * 1.06, "if $H_0$ is TRUE\n$\\bar{X} \\sim N(100,\\ 3^2)$",
+ax.text(MU0, top * 1.06, "$H_0$ true\n$\\bar{X} \\sim N(100,\\ 3^2)$",
         ha="center", va="bottom", fontsize=11, color=INK)
 ax.text(MU1 + 3.4, top * 1.06,
-        "if the TRUE mean is $106$\n$\\bar{X} \\sim N(106,\\ 3^2)$",
+        "true mean $106$\n$\\bar{X} \\sim N(106,\\ 3^2)$",
         ha="center", va="bottom", fontsize=11, color=INK)
 ax.text(CRIT, -top * 0.115, "$104.9$", ha="center", va="top", fontsize=11.5,
         color=GOLD)
-ax.text(CRIT, top * 1.30, "critical value", ha="center", va="bottom",
+ax.text(CRIT + 0.3, top * 1.30, "critical value", ha="left", va="bottom",
         fontsize=11, color=GOLD)
 
 ax.annotate("$\\alpha = P(\\text{Type I}) = 0.05$",
@@ -86,18 +86,12 @@ ax.set_xlabel("sample mean $\\bar{x}$", labelpad=18)
 ax.set_xticks([94, 100, 106, 112, 118])
 tidy(ax)
 
-fig.text(0.5, -0.06,
-         "$\\alpha$ is measured under the SOLID curve ($H_0$ true).   "
-         "$\\beta$ is measured under the DASHED curve (the true mean is "
-         "$106$).   They live on DIFFERENT distributions, "
-         "which is why $\\beta \\neq 1 - \\alpha$.",
-         fontsize=11.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-4-18c-two-errors.svg")
 
 
 # ══════════════ 2. α を小さくすると β は大きくなる ══════════════
-fig, axs = plt.subplots(3, 1, figsize=(8.4, 8.6), sharex=True)
+fig, axs = plt.subplots(3, 1, figsize=(6.6, 6.6), sharex=True)
 xs = np.linspace(88, 120, 1200)
 y0 = phi(xs, MU0, SE)
 y1 = phi(xs, MU1, SE)
@@ -117,7 +111,7 @@ for ax, (lab, z, a) in zip(
     ax.axvline(c, color=GOLD, lw=2.0, zorder=6)
     ax.set_title("significance level %s:   critical value $= %.1f$,   "
                  "$\\alpha = %.2f$,   $\\beta = %.3f$" % (lab, c, a, beta),
-                 fontsize=12.0, color=INK, pad=8)
+                 fontsize=11.0, color=INK, pad=8)
     ax.set_xlim(88, 120)
     ax.set_ylim(0, top * 1.14)
     tidy(ax)
@@ -125,11 +119,6 @@ for ax, (lab, z, a) in zip(
 axs[2].set_xlabel("sample mean $\\bar{x}$")
 axs[2].set_xticks([94, 100, 106, 112, 118])
 
-fig.text(0.5, -0.035,
-         "As $\\alpha$ goes DOWN, the boundary moves RIGHT — "
-         "and $\\beta$ goes UP.   You cannot make both small at once "
-         "with the same sample size.",
-         fontsize=11.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-4-18c-tradeoff.svg")
 
@@ -139,26 +128,35 @@ N = 20
 ks = np.arange(0, 21)
 K = 15  # critical region X >= 15
 
-fig, axs = plt.subplots(2, 1, figsize=(8.8, 6.4), sharex=True)
+fig, axs = plt.subplots(2, 1, figsize=(6.8, 5.0), sharex=True)
 
 for ax, (p, is_h0) in zip(axs, ((0.5, True), (0.8, False))):
     ps = [binom(int(k), N, p) for k in ks]
     if is_h0:
         cols = [ACC if k >= K else GREY for k in ks]
         tot = sum(ps[K:])
-        title = ("if $H_0$ is TRUE:   $X \\sim B(20,\\ 0.5)$      "
+        title = ("$H_0$ true:   $X \\sim B(20,\\ 0.5)$      "
                  "$\\alpha = P(X \\geq 15) = %.4f$" % tot)
         col = ACC
     else:
         cols = [LINE if k < K else GREY for k in ks]
         tot = sum(ps[:K])
-        title = ("if the TRUE $p$ is $0.8$:   $X \\sim B(20,\\ 0.8)$      "
+        title = ("true $p = 0.8$:   $X \\sim B(20,\\ 0.8)$      "
                  "$\\beta = P(X \\leq 14) = %.4f$" % tot)
         col = LINE
     ax.bar(ks, ps, width=0.72, color=cols, alpha=0.9, zorder=3)
     ax.axvline(K - 0.5, color=GOLD, lw=2.0, ls="--", zorder=6)
-    ax.set_title(title, fontsize=11.8, color=col, pad=8)
-    ax.set_ylim(0, max(ps) * 1.18)
+    ax.set_title(title, fontsize=11.0, color=col, pad=8)
+    ax.set_ylim(0, max(ps) * 1.30)
+    # 着色した範囲に、どちらの誤りかを直接書く
+    if is_h0:
+        ax.annotate("Type I\n$X \\geq 15$", xy=(16.2, max(ps) * 0.10),
+                    xytext=(17.6, max(ps) * 0.72), ha="center", fontsize=10.5,
+                    color=ACC,
+                    arrowprops=dict(arrowstyle="->", color=ACC, lw=1.2))
+    else:
+        ax.text(10.5, max(ps) * 0.72, "Type II\n$X \\leq 14$", ha="center",
+                fontsize=10.5, color=LINE)
     ax.grid(True, axis="y", color=GRID, lw=0.8)
     ax.set_axisbelow(True)
     tidy(ax)
@@ -167,11 +165,6 @@ axs[1].set_xlim(-0.8, 20.8)
 axs[1].set_xticks(range(0, 21, 5))
 axs[1].set_xlabel("number of successes $x$")
 
-fig.text(0.5, -0.04,
-         "SAME critical region $X \\geq 15$, TWO different distributions.  "
-         "$\\alpha$ is the shaded part of the top picture; "
-         "$\\beta$ is the shaded part of the bottom one.",
-         fontsize=11.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-4-18c-discrete.svg")
 

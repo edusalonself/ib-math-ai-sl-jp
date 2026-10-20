@@ -53,6 +53,10 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている（消したはず）: " + msg + " :: " + sub[:70])
+
 def FV(pv, r, k, n):
     """公式集の式から。r はパーセントの数字。"""
     return _S(pv) * (1 + sp.Rational(r, 100 * k)) ** (k * n)
@@ -284,17 +288,21 @@ chk(FV(5000, 20, 1, 2) < FV(5000, 20, 2, 2) < 2 * 5000,
 # 7. 公式集とシラバス
 # ══════════════════════════════════════════════════════════
 in_text("公式集の **1.4** の欄に `Compound interest` として印刷", "公式集にある")
-in_text("where $FV$ is the future value, $PV$ is the present value, $n$ is the"
-        " number of years, $k$ is the number of compounding periods per year,"
-        " $r\\%$ is the nominal annual rate of interest", "記号の説明を逐語で")
+not_in_text("where $FV$ is the future value, $PV$ is the present value",
+            "公式集の英文の引用は外した（記号の表と同じ内容）")
+in_text("| $FV$ | future value | $n$ 年後の額 |", "記号の意味は表にある")
+in_text("| $r$ | nominal annual rate of interest |", "r の意味も表にある")
 in_text("**depreciation の式は、公式集にありません。**", "載っていないものを明記")
 not_in_text("> In examinations, questions that ask students to derive "
             "the formula will not be set.",
             "導出の tip といっしょに消した（2026-10-01）")
-in_text("> Calculate the real value of an investment with an interest rate and"
-        " an inflation rate.", "real value の Guidance")
-in_text("`Compound interest can be calculated yearly, half-yearly, quarterly"
-        " or monthly.`", "k の Guidance")
+not_in_text("> Calculate the real value of an investment",
+            "シラバス（Guidance）の引用は本文から外した")
+in_text("これが **real value**（実質価値）です。", "real value は日本語で直接説明")
+not_in_text("Compound interest can be calculated yearly",
+            "シラバス（Guidance）の引用は本文から外した")
+in_text("この回数を **compounding periods per year**（$1$ 年に利息が付く回数）と言い、$k$ で表します。",
+        "k の内容は日本語で直接説明")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 in_text("## この式は公式集にありません", "割り戻しの式は載っていないと明記")
 in_text("## 割り戻しの指数は $kn$ ではなく $n$", "指数の注意")
@@ -302,7 +310,7 @@ in_text("**年 $1$ 回の複利で、利率とインフレ率が同じなら、�
         "real value は条件つきで述べる")
 in_text("**growth factor**（増加倍率）", "growth factor の訳は「増加倍率」")
 not_in_text("（成長率・増加倍率）", "「成長率」と併記しない")
-in_text("**growth rate（増加率）とは別のもの**です。", "rate と factor を分ける")
+in_text("**growth rate**（増加率）**とは別のもの**です。", "rate と factor を分ける")
 in_text("| 数列 | arithmetic（等差数列） | geometric（等比数列） |", "表に訳を添えた")
 in_text("$5760$ の $2\\%$ にも届きません", "2% ほど → 2% にも届かない")
 # 英語の言い回し
@@ -312,8 +320,8 @@ chk(TEXT.count("Find the number of years it takes for") == 3,
     "「何年かかるか」は 3 か所")
 chk(TEXT.count("nominal annual interest rate") >= 3,
     "nominal annual interest rate が 3 か所以上")
-in_text("$r\\%$ is the nominal annual rate of interest",
-        "公式集の逐語引用はそのまま")
+not_in_text("$r\\%$ is the nominal annual rate of interest",
+            "公式集の英文の引用は外した")
 
 # ══════════════════════════════════════════════════════════
 # 8. GDC
@@ -332,7 +340,7 @@ chk("## Using your GDC" not in TEXT, "独立した GDC の節は置いていな�
 # ══════════════════════════════════════════════════════════
 # 9. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -340,9 +348,16 @@ chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
 chk(TEXT.count("{.model-answer}") == 5, "model-answer が 5")
 chk(len(re.findall(r"^::: \{#exm-aasl14-", TEXT, re.M)) == 4, "例題が 4")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(m) for m in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -394,9 +409,10 @@ for bad in ["pmatrix", "\\lvert", "\\rvert"]:
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
 in_fig("simple interest", "図(a) の凡例")
 in_fig("compound interest", "図(a) の凡例 2")
-in_fig("smaller rate, more times", "図(b) の要点")
-in_fig("same after 1 year ($k=1$)", "図(a) に k=1 の断り")
-in_fig("nominal $12", "図(b) は名目 12%")
+not_in_fig("smaller rate, more times", "図(b) の説明の文は外した（本文が言う）")
+not_in_fig("same after 1 year", "図(a) の説明の文は外した（k=1 の断りは本文が言う）")
+not_in_fig("nominal $12", "図(b) の見出しは外した")
+in_text("図は名目年利 $12\\%$ の場合", "名目 12% は本文で言う")
 for _fx in ["1.12", "1.06", "1.03"]:
     in_fig(_fx, "図(b) の 1 期あたりの倍率 " + _fx)
 eq(1 + sp.Rational(12, 100 * 1), sp.Rational("1.12"), "k=1 で 1.12 倍")
@@ -414,11 +430,15 @@ for leak in ["2916", "7200", "2928.2", "3375", "4096", "1324", "5192",
 # 11. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-4.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-1-3.qmd") < DRAFT.index("aasl-1-4.qmd"), "並びが 1.3 → 1.4")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/01-number-and-algebra/aasl-1-4.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-1-3.qmd") < DRAFT.index("aasl-1-4.qmd"), "並びが 1.3 → 1.4")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-4.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -441,7 +461,7 @@ not_in_text("点を落とします", "採点の断定を弱めた")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -456,11 +476,11 @@ chk(TEXT.index("$n$ 年後の額 $FV$ を求める公式は")
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. 利息が、利息を生む（compound interest） {#idea}', "見出しの英語: 1. 利息が、利息を生む（compound inte")
-in_text('### 3. $k$：compounding periods per year（$1$ 年に何回つくか） {#k}', "見出しの英語: 3. $k$：compounding periods")
-in_text('### 4. simple interest（単利）とのちがい {#simple-vs-compound}', "見出しの英語: 4. simple interest（単利）とのちが")
-in_text('### 5. depreciation：価値が減る {#depreciation}', "見出しの英語: 5. depreciation：価値が減る")
-in_text('### 6. inflation と real value {#real}', "見出しの英語: 6. inflation と real value")
+in_text('### 1. Compound interest（利息が、利息を生む） {#idea}', "見出しの英語: 1. 利息が、利息を生む（compound inte")
+in_text('### 3. Compounding periods per year（$1$ 年に利息が付く回数） {#k}', "見出しの英語: 3. $k$：compounding periods")
+in_text('### 4. Simple and compound interest（単利と複利のちがい） {#simple-vs-compound}', "見出しの英語: 4. simple interest（単利）とのちが")
+in_text('### 5. Depreciation（価値が減る場合） {#depreciation}', "見出しの英語: 5. depreciation：価値が減る")
+in_text('### 6. Inflation and real value（インフレと実質価値） {#real}', "見出しの英語: 6. inflation と real value")
 
 
 

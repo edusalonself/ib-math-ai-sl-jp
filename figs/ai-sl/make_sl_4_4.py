@@ -55,12 +55,12 @@ fig, ax = plt.subplots(figsize=(6.8, 4.4))
 
 # データの外側（外挿の領域）
 ax.axvspan(8, 15, color="#f4f6f8", zorder=0)
-ax.annotate("beyond the data\n(extrapolation)", (11.5, 12), color=MUTE,
+ax.annotate("extrapolation", (11.5, 12), color=MUTE,
             ha="center", va="bottom", fontsize=9.5)
 
 # 100点の上限
 ax.axhline(100, color=ACC, linewidth=1.1, linestyle=":", zorder=1)
-ax.annotate("maximum possible score = 100", (0.3, 101.5), color=ACC,
+ax.annotate("maximum = 100", (0.3, 101.5), color=ACC,
             ha="left", va="bottom", fontsize=9.5)
 
 # 回帰直線：データの範囲は実線、その外は破線
@@ -101,7 +101,7 @@ CY = [12, 18, 24, 48, 48, 24, 18, 12]
 fig, ax = plt.subplots(figsize=(5.2, 3.4))
 ax.plot(CX, CY, "o", color=DOT, markersize=8,
         markeredgecolor="white", markeredgewidth=0.9)
-ax.set_title(r"$r = 0.00$,  but $x$ and $y$ are clearly related",
+ax.set_title(r"$r = 0.00$",
              fontsize=10.5, pad=8, color=ACC)
 ax.set_xlabel("$x$")
 ax.set_ylabel("$y$")

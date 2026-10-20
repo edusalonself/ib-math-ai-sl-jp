@@ -37,8 +37,6 @@ WARM = "#b45309"
 # (a) 同じ平均、ちがうちらばり
 # ══════════════════════════════════════════════════════════
 fig1, axs = plt.subplots(1, 2, figsize=(6.6, 2.8), sharey=True)
-fig1.suptitle("same mean, different spread", fontsize=11, color=INK,
-              x=0.01, ha="left", y=1.03)
 
 XS = [1, 2, 3, 4, 5]
 TIGHT = [0.05, 0.20, 0.50, 0.20, 0.05]
@@ -58,22 +56,18 @@ for _ax, _ps, _title, _col in ((axs[0], TIGHT, "small variance", ACCENT),
     _ax.tick_params(labelsize=9, colors=GREY)
 
 axs[0].set_ylabel("$P(X = x)$", fontsize=10, color=INK)
-fig1.text(0.01, -0.06, "the mean alone does not say how far the values"
-          " usually sit from it", fontsize=9, color=GREY)
 
 # ══════════════════════════════════════════════════════════
 # (b) aX + b
 # ══════════════════════════════════════════════════════════
 fig2, axs2 = plt.subplots(3, 1, figsize=(6.2, 4.0), sharex=True)
-fig2.suptitle("$aX + b$: adding $b$ slides, multiplying by $a$ stretches",
-              fontsize=10.5, color=INK, x=0.01, ha="left", y=1.02)
 
 PS = [0.2, 0.5, 0.3]
 ROWS = ((axs2[0], [1, 2, 3], ACCENT, "$X$", "gaps of $1$"),
         (axs2[1], [5, 6, 7], GREY, "$X + b$  (here $b = 4$)",
-         "same gaps: the spread has not changed"),
+         "gaps of $1$"),
         (axs2[2], [6, 8, 10], WARM, "$aX + b$  (here $a = 2$)",
-         "gaps of $2$: the spread is $a$ times wider"))
+         "gaps of $2$"))
 
 for _ax, _xs, _col, _lab, _note in ROWS:
     _ax.bar(_xs, PS, width=0.32, color=_col, alpha=0.88, zorder=2)
@@ -88,8 +82,6 @@ for _ax, _xs, _col, _lab, _note in ROWS:
 axs2[2].set_xticks([1, 2, 3, 5, 6, 7, 8, 10])
 axs2[2].set_xlabel("value", fontsize=10, color=INK)
 axs2[1].set_ylabel("probability", fontsize=9.5, color=INK)
-fig2.text(0.01, -0.03, "so the variance is multiplied by $a^{2}$ and is not"
-          " changed by $b$", fontsize=9, color=GREY)
 
 for _fig, _name in ((fig1, "a"), (fig2, "b")):
     _fig.tight_layout()

@@ -45,15 +45,13 @@ def pdf(z):
 
 
 fig1, ax1 = plt.subplots(figsize=(5.7, 4.8))
-fig2, ax2 = plt.subplots(figsize=(5.7, 4.8))
+fig2, ax2 = plt.subplots(figsize=(5.7, 4.1))
 Z = np.linspace(-3.9, 3.9, 800)
 Y = pdf(Z)
 
 # ══════════════════════════════════════════════════════════
 # (a) 曲線と 68 / 95 / 99.7
 # ══════════════════════════════════════════════════════════
-ax1.set_title("The normal curve and the $68$–$95$–$99.7$ guide",
-              fontsize=11, color=INK, loc="left", pad=12)
 ax1.plot(Z, Y, color=ACCENT, linewidth=1.6)
 ax1.fill_between(Z, 0, Y, where=(Z >= -1) & (Z <= 1), color=FILL)
 ax1.set_xlim(-4.2, 4.2)
@@ -81,13 +79,11 @@ ax1.text(0, 0.491, "about $95\\%$", fontsize=9.5, color=WARM, ha="center")
 # ══════════════════════════════════════════════════════════
 # (b) 面積から値へ、値から面積へ
 # ══════════════════════════════════════════════════════════
-ax2.set_title("A probability is an area; the inverse goes the other way",
-              fontsize=11, color=INK, loc="left", pad=12)
 ax2.plot(Z, Y, color=ACCENT, linewidth=1.6)
 K = 0.8416212335729144       # z with area 0.8 to the left
 ax2.fill_between(Z, 0, Y, where=(Z <= K), color=SHADE)
 ax2.set_xlim(-4.2, 4.2)
-ax2.set_ylim(-0.13, 0.52)
+ax2.set_ylim(-0.13, 0.43)
 ax2.axis("off")
 
 ax2.plot([-4.0, 4.0], [0, 0], color=GREY, linewidth=1.0)

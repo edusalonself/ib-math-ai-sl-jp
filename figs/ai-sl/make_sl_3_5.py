@@ -76,9 +76,6 @@ pt(ax, B, "$B$", 0.26, 0.06)
 pt(ax, M, "$M$  (midpoint)", 0.30, -0.34, color=GOLD, va="top")
 ax.text(2.35, 7.6, "perpendicular\nbisector of $AB$", color=ACC, fontsize=11,
         ha="center", va="center", zorder=9, bbox=BOX)
-ax.text(4.2, 0.55, "every point on this line is the same\n"
-                   "distance from $A$ as it is from $B$",
-        color=GREEN, fontsize=11, ha="center", va="center", zorder=9, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-5-idea.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -159,9 +156,6 @@ ax.text(2.25, -1.5, "rise $-3$", color=GREEN, ha="left", va="center",
 ax.text(-1.2, 2.85, r"$m_{\perp}=-\dfrac{3}{2}$", color=ACC, ha="left",
         va="center", fontsize=14, zorder=9, bbox=BOX)
 
-fig.suptitle("turn the step through $90^{\\circ}$:  run and rise swap over, "
-             "and one of them changes sign",
-             y=1.02, fontsize=11.5, color=INK)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-5-gradient.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -183,8 +177,6 @@ pt(ax, Q, "$B(2,-3)$", 0.26, -0.30, va="top")
 pt(ax, Mv, "$(2,2)$", -0.30, 0.28, color=ACC, ha="right")
 ax.text(5.6, 4.6, "$y=2$", color=ACC, ha="center", va="center",
         fontsize=14, zorder=9, bbox=BOX)
-ax.set_title("$AB$ is vertical  $\\Rightarrow$  the bisector is horizontal",
-             fontsize=11, color=INK, pad=8)
 
 # --- (b) 横の線分 → 縦の垂直二等分線
 ax = axes[1]
@@ -199,8 +191,6 @@ pt(ax, S, "$D(6,1)$", 0.26, 0.24)
 pt(ax, Mh, "$(1,1)$", 0.30, -0.34, color=ACC, va="top")
 ax.text(4.4, 5.4, "$x=1$", color=ACC, ha="center", va="center",
         fontsize=14, zorder=9, bbox=BOX)
-ax.set_title("$CD$ is horizontal  $\\Rightarrow$  the bisector is vertical",
-             fontsize=11, color=INK, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-5-special.svg"), bbox_inches="tight")

@@ -8,66 +8,20 @@ sidebar: ai-hl
 ## What you should be able to do
 - **critical value**（臨界値）と **critical region**（棄却域）が何かを言える。
 - **$p$-value での判定**と **critical region での判定**が、**同じ判定**だと説明できる。
-- 正規分布の critical value（$1.645$、$1.96$、$2.326$、$2.576$）を使い分けられる。
-- $z$ のことばで書かれた critical region を、**$\bar{x}$ のことば**に直せる。
+- **normal distribution**（正規分布）の critical value（$1.645$、$1.96$、$2.326$、$2.576$）を使い分けられる。
+- $z$ の値で表された critical region を、**$\bar{x}$ の値**で表し直せる。
 - **binomial と Poisson** で、critical region を自分で作れる。
 - **答案に書く丸めた値**と、**計算に使う丸める前の値**を使い分けられる。
 - 離散分布では **significance level ちょうどにはできない**理由を説明できる。
 :::
 
-::: {.callout-note}
-## AHL 4.18 は $3$ ページに分かれています
-シラバスの AHL 4.18 は、この科目でいちばん中身の多い項目です。この本では $3$ つに分けています。
-
-| ページ | 中身 |
-|---|---|
-| **AHL 4.18a**（このページ） | critical value と critical region の**考え方** |
-| [AHL 4.18b](ahl-4-18b.qmd) | 分布ごとの検定（normal・$t$・binomial・Poisson・$\rho$） |
-| [AHL 4.18c](ahl-4-18c.qmd) | Type I error と Type II error |
-
-: AHL 4.18 の $3$ ページ {#tbl-ahl418a-map}
-
-**このページは、$3$ つのうちの土台**です。ここで作る critical region の**確率**が、そのまま AHL 4.18c の Type I error の確率になります。
-:::
-
-::: {.callout-note}
-## [SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) の続きです
-[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) で、**hypothesis test**（仮説検定）の $5$ つのステップを見ました。$H_0$ と $H_1$ を書き、significance level を決め、$p$-value を電卓から読み、比べて結論を書く——という流れです。
-
-**このページで足すのは、判定のしかたをもう $1$ つ覚えることだけ**です。
-
-$p$-value と比べるかわりに、**「この値より外なら reject」という範囲**をあらかじめ決めておきます。その範囲が critical region です。
-
-$5$ つのステップは、そのままです。変わるのは $4$ 番目だけです。
-:::
-
-::: {.callout-important}
-## Formula booklet に 4.18 の欄はありません
-AI HL の公式集は、**4.17 の次が 4.19** です。**4.18 の欄はありません。**
-
-ですから、次の $4$ つの critical value と、[第5節](#xbar)の $\bar{x}_{\text{crit}}$ の式は、**覚える必要があります。**
-
-$$
-1.645, \qquad 1.96, \qquad 2.326, \qquad 2.576
-$$
-
-（[第4節](#normal-cv)で、どれをいつ使うかを整理します。電卓でも出せますが、試験中に電卓を開くより、覚えているほうが速くて安全です。）
-:::
-
-::: {.callout-warning}
-## シラバスが「やらなくてよい」と書いている部分があります
-> Students will **not be expected to calculate critical regions for $t$-tests**.
-
-**$t$ 検定の critical region は、求めなくてよい**ということです（[第7節](#not-t)）。
-
-> For discrete random variables, hypothesis tests and **critical regions will only be required for one-tailed tests**.
-
-**binomial と Poisson では、片側検定の critical region だけ**です（[第6節](#discrete)）。両側は出ません。
-:::
-
 ## The idea
 
-### 1. 「どこから先なら reject するか」を、先に決めておきます {#idea}
+### 1. Critical value and critical region（臨界値と棄却域） {#idea}
+
+**hypothesis test**（仮説検定）で、$p$-value を使うかわりに「この値より外なら reject する」という範囲を先に決めておく方法を学びます。[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd) の $5$ つのステップはそのままで、変わるのは判定の $4$ 番目だけです。
+
+AHL 4.18 は $3$ ページに分かれていて、このページはその土台です。分布ごとの検定は [AHL 4.18b](ahl-4-18b.qmd)、Type I error と Type II error は [AHL 4.18c](ahl-4-18c.qmd) で扱います。
 
 [SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd#p-value) では、こう進めました。
 
@@ -92,7 +46,7 @@ $$
 **critical region を先に決めるのも、同じ理由**です。データを見てから基準を動かせないようにしています。
 :::
 
-### 2. $p$-value での判定と、まったく同じ判定になります {#two-ways}
+### 2. Same decision as the $p$-value（$p$ 値による判定と同じ判定） {#two-ways}
 
 **$2$ つの道具は、どちらか一方を選ぶものではありません。同じことを、別の言い方でやっています。**
 
@@ -113,7 +67,7 @@ $$
 **両側の検定**では、$p$-value は片方の裾の面積の $2$ 倍、$\alpha$ も $2$ つの裾に半分ずつ分けたものなので、比べている形は同じです。
 
 ::: {.callout-note appearance="simple"}
-[第8節](#why)で、この一致を数値で確かめます。
+[Why it works](#why)で、この一致を数値で確かめます。
 :::
 
 ::: {.callout-tip}
@@ -122,14 +76,14 @@ $$
 
 指定がなければ、どちらでも構いません。**そのときは、どちらを使ったのかが分かるように書いてください。**
 
-そして、**時間があればもう一方でも確かめられます。** $2$ つは必ず同じ結論になるので（[第8節](#why)）、食い違ったらどこかで計算を間違えています。
+そして、**時間があればもう一方でも確かめられます。** $2$ つは必ず同じ結論になるので（[Why it works](#why)）、食い違ったらどこかで計算を間違えています。
 :::
 
-### 3. 片側か両側かで、境目の位置が変わります {#tails}
+### 3. One-tailed and two-tailed tests（片側検定と両側検定） {#tails}
 
 **significance level $\alpha$ は、critical region の面積です。** この面積をどこに置くかが、片側と両側の違いです。
 
-![One-tailed and two-tailed critical regions](img/ahl-4-18a-tails.svg){#fig-ahl418a-tails width=100%}
+![片側検定と両側検定の critical region です。](img/ahl-4-18a-tails.svg){#fig-ahl418a-tails width=100%}
 
 @fig-ahl418a-tails を見てください。どの $3$ つも、**塗った部分の面積は合わせて $0.05$** です。
 
@@ -149,77 +103,102 @@ $H_1$ を読み違えて片側の $1.645$ を使うと、**本当は reject で�
 **$H_1$ に $\neq$ があるかどうかを、必ず先に見てください。**
 :::
 
-### 4. 正規分布の critical value は、$4$ つ覚えます {#normal-cv}
+### 4. Critical values for the normal distribution（正規分布の臨界値） {#normal-cv}
 
-$\sigma$ が分かっている場合、判定に使う分布は標準正規分布です。よく出るのは、この $4$ つです。
+$\sigma$ が分かっている場合、判定に使う分布は標準正規分布です。critical value は、**片方の裾の面積**で決まります。
 
-| significance level | one-tailed（片側） | two-tailed（両側） |
-|---|---|---|
-| $10\%$ | $1.282$ | $1.645$ |
-| $5\%$ | $\mathbf{1.645}$ | $\mathbf{1.96}$ |
-| $1\%$ | $\mathbf{2.326}$ | $\mathbf{2.576}$ |
+- 片側 $5\%$ … $1.645$
+- 両側 $5\%$ … $1.96$（左右に $2.5\%$ ずつ）
+- 片側 $1\%$ … $2.326$
+- 両側 $1\%$ … $2.576$（左右に $0.5\%$ ずつ）
 
-: 正規分布の critical value {#tbl-ahl418a-cv}
+**覚えていなくても、[GDC 第1節](#gdc-inv) の `Inverse Normal` で出せます。** ただし $1.645$ と $1.96$ はよく出るので、覚えておくと速くて安全です。
 
-::: {.callout-tip}
-## 表の見方に、$1$ つ仕掛けがあります
-**両側 $10\%$ の $1.645$ と、片側 $5\%$ の $1.645$ が同じ数**になっています。
+**符号は、$H_1$ の向きで決めます。** 上側（$\mu > \mu_0$）なら $z > 1.645$、下側（$\mu < \mu_0$）なら $z < -1.645$ です。両側（$\mu \neq \mu_0$）は $z < -1.96$ **または** $z > 1.96$ の $2$ つの範囲で、$1$ つにまとめて書けません。
 
-偶然ではありません。両側 $10\%$ は片方の裾が $5\%$、片側 $5\%$ も裾が $5\%$——**同じ面積を切っている**からです。
+### 5. Critical region for $\bar{x}$（$\bar{x}$ で表した棄却域） {#xbar}
 
-覚えるべきは「片側か両側か」ではなく、**「片方の裾の面積はいくつか」**です。
+ここまで、棄却域を $z$ の値で表してきました。試験では「critical region を $\bar{x}$ で答えなさい」と聞かれることがあります。@exm-ahl418a-normal なら、**$25$ 袋の平均が何グラムより小さければ $H_0$ を棄却するのか**、その境目をグラムで求める、ということです。
 
-表の $1.282$（片側 $10\%$）は、$10\%$ 水準がめったに出ないので、覚えなくて構いません。必要になったら [GDC 第1節](#gdc-inv) で `Area: 0.9` から出せます。
-:::
+#### まず、やってみます {#walk}
 
-::: {.callout-warning}
-## 符号は、$H_1$ の向きで決めます
-表の数はすべて正の数です。**下側の検定では、マイナスを付けます。**
+@exm-ahl418a-normal の設定で書きかえます。$\mu_0 = 500$、$\sigma = 8$、$n = 25$、有意水準 $5\%$、$H_1$: $\mu < 500$ の下側検定です。
 
-| $H_1$ | critical region（$5\%$） |
-|---|---|
-| $\mu > \mu_0$ | $z > 1.645$ |
-| $\mu < \mu_0$ | $z < -1.645$ |
-| $\mu \neq \mu_0$ | $z < -1.96$ **または** $z > 1.96$ |
-
-: $H_1$ と critical region {#tbl-ahl418a-signs}
-
-両側のときは、**「または」でつないだ $2$ つの範囲**になります。$1$ つにまとめて書けません。
-:::
-
-### 5. $z$ のことばを、$\bar{x}$ のことばに直します {#xbar}
-
-試験では「critical region を $\bar{x}$ で答えなさい」と聞かれることがあります。問題文の単位（グラム、秒、円）で答える形です。
-
-**$\bar{x}$ の分布は、平均が $\mu_0$、standard deviation が $\dfrac{\sigma}{\sqrt{n}}$ の正規分布**です（[AHL 4.15](ahl-4-15.qmd#idea)）。この $\dfrac{\sigma}{\sqrt{n}}$ を **standard error**（標準誤差）といいます（[AHL 4.16](ahl-4-16.qmd#form)）。
-
-ですから、境目はこうなります。
+**手順1。$\dfrac{\sigma}{\sqrt{n}}$ を計算します**（この値を **standard error**（標準誤差）といいます）。
 
 $$
-\bar{x}_{\text{crit}} = \mu_0 \pm z_{\text{crit}} \times \frac{\sigma}{\sqrt{n}}
+\frac{\sigma}{\sqrt{n}} = \frac{8}{\sqrt{25}} = \frac{8}{5} = 1.6
+$$
+
+**手順2。$z$ で表した棄却域を、$\bar{x}$ で書きかえます。** 下側 $5\%$ の棄却域は $z < -1.645$ でした（[第4節](#normal-cv)）。$z$ は $\dfrac{\bar{x} - \mu_0}{\sigma / \sqrt{n}}$ なので（[AHL 4.18b](ahl-4-18b.qmd#z-test)）、これを入れて $\bar{x}$ について解きます。
+
+$$
+\begin{aligned}
+z &< -1.645 \\[2pt]
+\frac{\bar{x} - 500}{1.6} &< -1.645 \\[2pt]
+\bar{x} - 500 &< -1.645 \times 1.6 = -2.632 \\[2pt]
+\bar{x} &< 500 - 2.632 = 497.368
+\end{aligned}
+$$
+
+これで求まりました。**$z$ で表した条件を、平均の重さで表し直しただけ**です。新しい検定をしたわけではありません。
+
+$1$ つ注意です。ここで使った $-1.645$ は、$-1.6448536\ldots$ を丸めた値です。ですから境目も厳密には $497.3682\ldots$ で、このページで $497.368\ldots$ と書いているのは、**この丸める前の境目**のことです。小数第1位まで（$497.4$）で答えるなら、どちらで計算しても同じです。
+
+ここからは、この計算で使った $3$ つのことを順に説明します。
+
+#### なぜ $\dfrac{\sigma}{\sqrt{n}}$ なのか — standard error（標準誤差） {#se}
+
+$\sigma$ と $\dfrac{\sigma}{\sqrt{n}}$ は、どちらも「ばらつき」ですが、**ばらついているものが違います。**
+
+- 袋 $1$ つ $1$ つの重さがばらつきます。それを表すのが **population standard deviation**（母標準偏差）$\sigma$ です。@exm-ahl418a-normal では $\sigma = 8$ g です。
+- 次に、$25$ 袋ずつ選んで平均を求めます。**選ぶ $25$ 袋が変われば、平均も変わります。** つまり $\bar{x}$ も、ばらつく値です。
+- この**標本平均のばらつき**を表す標準偏差が standard error です。独立に $n$ 個選んだときは $\dfrac{\sigma}{\sqrt{n}}$ になります（[AHL 4.15](ahl-4-15.qmd#xbar)、[AHL 4.16](ahl-4-16.qmd#form)）。
+
+ですから、**袋 $1$ 個の重さの標準偏差は $8$ g ですが、$25$ 個の平均の標準誤差は $1.6$ g。** 平均を取ると、ばらつきは $5$ 分の $1$ になります。
+
+「誤差」という名前ですが、**計算ミスという意味ではありません。** また、手元の $\bar{x}$ が $\mu$ から実際にどれだけずれているか、という値でもありません。**標本を取り直したときに、$\bar{x}$ がどれくらい動くか**を表す値です。
+
+#### なぜ中心が $500$ なのか — $H_0$ を正しいと仮定しています {#xbar-dist}
+
+$\bar{X}$ の分布は、平均が $\mu_0$、standard deviation が standard error の正規分布です。
+
+$$
+\bar{X} \sim N\!\left(\mu_0,\ \frac{\sigma^{2}}{n}\right)
+$$
+
+中心が $\mu_0$ になるのは、**$H_0$ が正しいと仮定したとき**です。本当の $\mu$ が別の値なら、分布の中心もそこへ動きます（[AHL 4.18c](ahl-4-18c.qmd#normal)）。棄却域は「$H_0$ が正しいとしたら、めったに起きない範囲」なので、この仮定の上で作ります。
+
+正規分布として扱える条件も、ひとこと。**母集団が正規分布なら、$\bar{X}$ は正確に正規分布**です。母集団が正規分布とは限らないときは、$n$ が大きければ **central limit theorem**（中心極限定理）によって、**近似的に**正規分布として扱います（[AHL 4.15](ahl-4-15.qmd#when)）。
+
+#### 使った式は、標準化の式の変形です {#from-z}
+
+手順2でやったことを、文字のままやると次のようになります。$z = \dfrac{\bar{x} - \mu_0}{\sigma / \sqrt{n}}$ の両辺に $\dfrac{\sigma}{\sqrt{n}}$ をかけて、$\mu_0$ を移すと
+
+$$
+\bar{x}_{\text{crit}} = \mu_0 + z_{\text{crit}} \times \frac{\sigma}{\sqrt{n}}
 $$ {#eq-ahl418a-xbar}
 
-この式は公式集には載っていません。**覚える必要があります。**
+です。**この形を覚える必要はありません。標準化の式を変形すると求められます。**
 
-![The same critical region, in $z$ and in $\bar{x}$](img/ahl-4-18a-xbar.svg){#fig-ahl418a-xbar width=100%}
+$z_{\text{crit}}$ には、**符号を付けたまま**の critical value を入れます。下側の検定（$H_1$: $\mu < \mu_0$）なら、入れるのは**負の値**です。有意水準 $5\%$ なら $z_{\text{crit}} = -1.645$ になります。
 
-@fig-ahl418a-xbar の左右は、**まったく同じ絵**です。目盛りが $z$ かグラムか、という違いしかありません。
+上側の検定なら、$z_{\text{crit}}$ に正の値を入れ、境目は平均より上に $1$ つできます。両側の検定なら、正と負の両方を入れて、境目を $2$ つ作ります（[第4節](#normal-cv)）。
 
-[]{#rounding}
+#### $2$ つの図は、同じ条件を表しています {#two-scales}
 
-::: {.callout-important}
-## 丸めた値は「表示用」、判定には丸める前の値を使います
-critical value は、たいてい割り切れません。@exm-ahl418a-normal の正確な値は
+![同じ critical region を、$z$ の目盛りと $\bar{x}$ の目盛りで表したものです。](img/ahl-4-18a-xbar.svg){#fig-ahl418a-xbar width=100%}
 
-$$
-500 - 1.645 \times 1.6 = 497.368\ldots
-$$
+左の図は $z < -1.645$、右の図は $\bar{x} < 497.368$ を塗ったものです。**横軸の目盛りは違いますが（$z$ か、グラム）、表している棄却の条件は同じです。** どちらも、**左側の面積が $5\%$** になっています。
 
-です。**critical region を決めているのは、この値**です。
+#### 答案では、丸める前の値で判定し、指定の精度で書きます {#rounding}
 
-問題文が「小数第1位まで」「有効数字3桁で」と指定していたら、**ふつうに四捨五入して答えます。** ここでは $497.4$ です。特別な丸め方はありません。
+**途中の計算と判定には、丸める前の値を使います。答案には、問題文が指定した精度で書きます。** @exm-ahl418a-normal なら、判定は $497.368\ldots$ で行い、答案には $497.4$（小数第1位）と書きます。丸め方は**ふつうに四捨五入**で、特別な決まりはありません。
 
-**丸めた値は、答案に書くためのもの**です。次の $2$ つでは、**丸める前の値**を使ってください。
+::: {.callout-note collapse="true"}
+## 詳しく知りたい人へ（丸め・不等号・Type I error）
+
+**（1）どの場面で、どちらの値を使うのか**
 
 | 場面 | 使う値 |
 |---|---|
@@ -230,11 +209,10 @@ $$
 : 表示用の値と、計算用の値 {#tbl-ahl418a-rounding}
 
 電卓に保存しておけば、打ち直さずに使えます（[GDC 第2節](#gdc-xbar)）。
-:::
 
-::: {.callout-tip}
-## 連続分布では、$>$ と $\geq$ の違いは効きません
-正規分布では、**$1$ 点ちょうどの確率は $0$** です。
+**（2）連続分布では、$<$ と $\leq$ の違いは効きません**
+
+正規分布では、$1$ 点ちょうどの確率が $0$ です。
 
 $$
 P(\bar{X} = 497.368\ldots) = 0
@@ -243,9 +221,9 @@ $$
 ですから $\bar{x} < c$ と $\bar{x} \leq c$ は**同じ確率**で、どちらで書いても構いません。
 
 **離散分布は違います。** $P(X = 15)$ は $0$ ではないので、境目の整数を含めるかどうかで確率が変わります（[第6節](#discrete)）。**そこだけは、$\geq$ と $>$ を厳密に区別してください。**
-:::
 
-::: {.callout-note appearance="simple"}
+**（3）Type I error の確率が、ちょうど $\alpha$ になる理由**
+
 critical region を**丸める前の値**で決めているので、正規分布では
 
 $$
@@ -256,121 +234,6 @@ $$
 
 答案に書いた**丸めた値**を確率計算に入れ直すと、$\alpha$ からわずかにずれます。それは「その丸め値が間違い」という意味ではなく、**「精密な計算には丸める前の値を使う」**という意味です。
 :::
-
-::: {.callout-tip}
-## 符号は「$\pm$」ではなく、向きで選びます
-@eq-ahl418a-xbar の $\pm$ は、**両方使うという意味ではありません。**
-
-- 上側の検定（$H_1$: $\mu > \mu_0$）… $+$ だけ
-- 下側の検定（$H_1$: $\mu < \mu_0$）… $-$ だけ
-- 両側の検定（$H_1$: $\mu \neq \mu_0$）… $+$ と $-$ の**両方**
-
-**$H_1$ を見て、いくつ必要かを決めてください。**
-:::
-
-### 6. binomial と Poisson では、ちょうど $\alpha$ にできません {#discrete}
-
-**ここが、この項目でいちばん間違えやすいところです。**
-
-正規分布は連続なので、面積をちょうど $0.05$ に切れます。**binomial と Poisson は、値が整数しかありません。**
-
-$X \sim B(25,\ 0.4)$ を例にとると、$14$ と $15$ のあいだに $X$ が取れる値はありません。ですから、境目を少しずつ動かして確率を $0.05$ に合わせる、ということができません。
-
-![Why a discrete critical region cannot have area exactly $\alpha$](img/ahl-4-18a-discrete.svg){#fig-ahl418a-discrete width=52%}
-
-@fig-ahl418a-discrete が、その様子です。$X \geq 14$ は確率 $0.0778$ で $5\%$ を超えてしまい、$X \geq 15$ は $0.0344$ で $5\%$ に届きません。**ちょうど $0.05$ になる境目は、ありません。**
-
-**では、どちらを選ぶか。** シラバスが決めています。
-
-> The critical region will **maximize the probability of a Type I error while keeping it less than the stated significance level**.
-
-日本語にすると、こうです（シラバスの `less than` は、実際の採点では「$\alpha$ を**超えない**」＝ $\leq \alpha$ の意味で使われます）。
-
-::: {.callout-important}
-## 離散分布の critical region の決め方
-**確率が $\alpha$ を超えない範囲で、いちばん大きい region を選びます。**
-
-$5\%$ の検定で、上側なら
-
-$$
-P(X \geq k) \leq 0.05 \ \text{となる} \ \textbf{最小の} \ k
-$$ {#eq-ahl418a-discrete}
-
-を探します。**$k$ が小さいほど region は大きい**ので、「$\alpha$ 以下でいちばん大きい」は「条件を満たす最小の $k$」と同じことです。
-
-下側なら $P(X \leq k) \leq \alpha$ となる**最大の** $k$ です。
-:::
-
-::: {.callout-warning}
-## $\alpha$ を超えたら、その region は使えません
-@fig-ahl418a-discrete の $X \geq 14$ は $0.0778$ で、$0.05$ を**超えています。** これを選ぶと、$H_0$ が正しいのに reject してしまう確率が $5\%$ を超えます。**約束を破ったことになるので、使えません。**
-
-「$0.0778$ のほうが $0.05$ に近いから」という理由で選ばないでください。**近さではなく、超えないかどうか**です。
-:::
-
-::: {.callout-warning}
-## 逆に、小さすぎる region も選びません
-$X \geq 16$ の確率は $0.0132$ で、$0.05$ を超えていません。しかしこれは**必要以上に小さい** region です。
-
-小さくすると、$H_0$ が間違っているときに気づきにくくなります（[AHL 4.18c](ahl-4-18c.qmd) の Type II error です）。
-
-シラバスの `maximize` は、そのためのことばです。**超えない中で、いちばん大きく**取ります。
-:::
-
-### 7. $t$ 検定では、critical region を求めなくてよい {#not-t}
-
-$t$ 分布の critical value は、自由度によって変わります。$n = 10$ と $n = 30$ では違う数になり、$4$ つ覚えて済むという話になりません。
-
-**$\sigma$ が分からない場合（$t$ を使う場合）は、$p$-value で判定してください**（[AHL 4.18b](ahl-4-18b.qmd)）。
-
-| 場面 | critical region | 判定 |
-|---|---|---|
-| $\sigma$ 既知（normal） | **求める** | どちらでもよい |
-| $\sigma$ 未知（$t$） | **求めない** | $p$-value で |
-| binomial・Poisson | **求める**（片側のみ） | どちらでもよい |
-
-: critical region を求めるのはどこか {#tbl-ahl418a-where}
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-### 8. $2$ つの判定が一致する理由 {#why}
-
-[第2節](#two-ways)で「$p$-value での判定と critical region での判定は同じ結論になる」と書きました。数値で確かめます。
-
-@exm-ahl418a-normal の設定を使います。$\mu_0 = 500$、$\sigma = 8$、$n = 25$、$H_1$: $\mu < 500$、$5\%$。critical value は $497.368\ldots$（答案には $497.4$）でした。**ここでは丸める前の値で比べます。**
-
-| 観測値 $\bar{x}$ | critical region の中か | $p$-value | $p < 0.05$ か |
-|---|---|---|---|
-| $496.5$ | **中**（$496.5 < 497.368$） | $0.0144$ | **はい** |
-| $497.5$ | 外（$497.5 > 497.368$） | $0.0591$ | いいえ |
-
-: $2$ つの判定は一致する {#tbl-ahl418a-agree}
-
-**$2$ 行とも、左右の答えが一致しています。**
-
-なぜそうなるか。片側の検定で考えます。$p$-value は「観測値より外の面積」、critical region の面積は $\alpha$ です。
-
-**観測値が critical region の中にある**ということは、観測値が境目より外にあるということです。すると「観測値より外の面積」は「境目より外の面積」より**小さく**なります。つまり $p < \alpha$ です。
-
-両側でも、$2$ 倍どうしを比べるので同じことになります。
-
-逆も同じです。**$2$ つは、同じ大小関係を、面積で見るか位置で見るかの違いで表しているだけ**です。
-
-### 9. では、なぜ $2$ つとも学ぶのか {#why-both}
-
-**問われ方が違うから**です。
-
-- `Find the critical region` … 範囲そのものを聞かれています。$p$-value では答えられません。
-- `Find the p-value` … 確率を聞かれています。範囲では答えられません。
-- `Test at the 5% level` … どちらでも構いません。
-
-そして [AHL 4.18c](ahl-4-18c.qmd) の Type I / Type II error は、**critical region がないと計算できません。** critical region は、そのための道具でもあります。
-:::
-
-## Worked examples
 
 ::: {#exm-ahl418a-normal}
 [A machine fills bags of flour. The mass of a bag is normally distributed with standard deviation $\sigma = 8$ grams. The machine is set to a mean of $500$ grams.]{.q-en}
@@ -400,7 +263,8 @@ $t$ 分布の critical value は、自由度によって変わります。$n = 1
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 「少なく詰めている」を疑っているので、$H_1$ は**下側**です。$H_0$ はいつも「変わっていない」ほうです（[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd#hypotheses)）。
 
@@ -414,7 +278,7 @@ $$
 \frac{\sigma}{\sqrt{n}} = \frac{8}{\sqrt{25}} = \frac{8}{5} = 1.6
 $$
 
-片側 $5\%$ なので $z_{\text{crit}} = 1.645$。$H_1$ が下側なので、**マイナス**を使います（@eq-ahl418a-xbar）。
+片側 $5\%$ の critical value は $1.645$ です。$H_1$ が下側なので、$z_{\text{crit}} = -1.645$ を入れます（@eq-ahl418a-xbar）。
 
 $$
 \bar{x}_{\text{crit}} = 500 - 1.645 \times 1.6 = 497.368\ldots
@@ -431,10 +295,12 @@ critical region は $\bar{x} < 497.4$ です。
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The sample mean $496.5$ g lies in the critical region $\bar{x} < 497.4$ g, so we reject $H_0$ at the $5\%$ significance level. There is sufficient evidence to suggest that the machine is underfilling the bags.*
+*The sample mean $496.5$ g lies in the critical region $\bar{x} < 497.4$ g, so we reject $H_0$ at the $5\%$ significance level.*
+
+*There is sufficient evidence to suggest that the machine is underfilling the bags.*
 :::
 
-（標本平均 $496.5$ g は critical region $\bar{x} < 497.4$ g の中にあるので $5\%$ 水準で $H_0$ を棄却する、機械が少なく詰めていることを示す十分な証拠がある、という意味です。）
+（**sample**（標本）平均 $496.5$ g は critical region $\bar{x} < 497.4$ g の中にあるので $5\%$ 水準で $H_0$ を棄却する、機械が少なく詰めていることを示す十分な証拠がある、という意味です。）
 
 ::: {.callout-warning}
 ## $H_1$ を `accept` とは書きません
@@ -460,6 +326,7 @@ $$
 *Critical region: $\bar{x} < 497.4$ g.*
 
 **(c)** *$496.5 < 497.4$, so the sample mean is in the critical region. Reject $H_0$ at the $5\%$ level: there is evidence that the machine is underfilling.*
+:::
 :::
 :::
 
@@ -491,7 +358,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 「変わったかどうか」なので、**どちらの向きも指定していません。両側**です。
 
@@ -524,7 +392,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The sample mean $20.55$ ml lies in the critical region $\bar{x} > 20.5$ ml, so we reject $H_0$ at the $5\%$ significance level. There is sufficient evidence that the mean contents differ from the $20$ ml stated on the label, so the label should be questioned.*
+*The sample mean $20.55$ ml lies in the critical region $\bar{x} > 20.5$ ml, so we reject $H_0$ at the $5\%$ significance level.*
+
+*There is sufficient evidence that the mean contents differ from the $20$ ml stated on the label, so the label should be questioned.*
 :::
 
 （標本平均 $20.55$ ml は critical region $\bar{x} > 20.5$ ml の中にあるので $5\%$ 水準で $H_0$ を棄却する、平均がラベルの $20$ ml と異なるという十分な証拠があるのでラベルは疑うべきだ、という意味です。）
@@ -557,6 +427,35 @@ $$
 **(c)** *$20.55 > 20.5$, so the sample mean is in the critical region. Reject $H_0$ at the $5\%$ level: there is evidence that the mean differs from $20$ ml, so the label should be questioned.*
 :::
 :::
+:::
+
+### 6. Discrete distributions（二項分布とポアソン分布の棄却域） {#discrete}
+
+binomial と Poisson でも critical region を作れますが、確率をちょうど $\alpha$ にはできません。**ここが、この項目でいちばん間違えやすいところです。** なお、binomial と Poisson で critical region を求めるのは**片側検定だけ**です。両側は出ません。
+
+正規分布は連続なので、面積をちょうど $0.05$ に切れます。**binomial と Poisson は、値が整数しかありません。**
+
+$X \sim B(25,\ 0.4)$ を例にとると、$14$ と $15$ のあいだに $X$ が取れる値はありません。ですから、境目を少しずつ動かして確率を $0.05$ に合わせる、ということができません。
+
+![離散分布の critical region が、ちょうど $\alpha$ にならない理由です。](img/ahl-4-18a-discrete.svg){#fig-ahl418a-discrete width=90%}
+
+@fig-ahl418a-discrete が、その様子です。$X \geq 14$ は確率 $0.0778$ で $5\%$ を超えてしまい、$X \geq 15$ は $0.0344$ で $5\%$ に届きません。**ちょうど $0.05$ になる境目は、ありません。**
+
+**では、どちらを選ぶか。この例では $X \geq 15$ です。** $0.05$ を**超えない**ほうを選びます。
+
+決まりはこうです。**確率が $\alpha$ を超えない範囲で、いちばん大きい region を選びます。**（ここでの確率は、$H_0$ が正しいのに reject してしまう Type I error の確率です。）$5\%$ の上側検定なら
+
+$$
+P(X \geq k) \leq 0.05 \ \text{となる} \ \textbf{最小の} \ k
+$$ {#eq-ahl418a-discrete}
+
+を探します。**$k$ が小さいほど region は大きい**ので、「$\alpha$ 以下でいちばん大きい」は「条件を満たす最小の $k$」と同じことです。下側なら $P(X \leq k) \leq \alpha$ となる**最大の** $k$ です。
+
+::: {.callout-warning}
+## 超えてもいけないし、小さすぎてもいけません
+- $X \geq 14$（$0.0778$）… $0.05$ を**超える**ので使えません。「$0.05$ に近いから」では選びません。**近さではなく、超えないかどうか**です。
+- $X \geq 16$（$0.0132$）… 超えてはいませんが、**必要以上に小さい** region です。小さくすると、$H_0$ が間違っているときに気づきにくくなります（[AHL 4.18c](ahl-4-18c.qmd) の Type II error です）。
+:::
 
 ::: {#exm-ahl418a-binom}
 [In the past, $40\%$ of customers at a café have chosen the vegetarian option. The owner introduces a new vegetarian dish and believes that the proportion has increased.]{.q-en}
@@ -586,7 +485,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 「増えた」を疑っているので上側です。
 
@@ -648,6 +548,7 @@ P(X \geq 15) = 0.0344
 $$
 :::
 :::
+:::
 
 ::: {#exm-ahl418a-pois}
 [A shop receives complaints at a mean rate of $6$ per week, following a Poisson distribution. After a change of supplier, the manager wishes to test whether the rate of complaints has increased.]{.q-en}
@@ -677,7 +578,8 @@ $X$ を $1$ 週間の苦情の件数として、有意水準 $5\%$ で検定し�
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** $H_0$: $m = 6$、$H_1$: $m > 6$ です。$H_0$ のもとで $X \sim \mathrm{Po}(6)$（[AHL 4.17](ahl-4-17.qmd#notation)）。
 
@@ -697,7 +599,9 @@ critical region は $X \geq 11$ です。
 ::: {.model-answer}
 **試験ではこう書く**
 
-*$9$ is not in the critical region $X \geq 11$, so we do not reject $H_0$ at the $5\%$ significance level. There is insufficient evidence to suggest that the rate of complaints has increased.*
+*$9$ is not in the critical region $X \geq 11$, so we do not reject $H_0$ at the $5\%$ significance level.*
+
+*There is insufficient evidence to suggest that the rate of complaints has increased.*
 :::
 
 （$9$ は critical region $X \geq 11$ に入っていないので $5\%$ 水準で $H_0$ を棄却しない、苦情の割合が増えたと言うだけの証拠はない、という意味です。）
@@ -707,10 +611,12 @@ critical region は $X \geq 11$ です。
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The critical region must be as large as possible while its probability stays at or below the significance level. Since $P(X \geq 11) = 0.0426$ is still less than $0.05$, the region $X \geq 11$ is larger than $X \geq 12$ and is still allowed, so $X \geq 12$ is not used.*
+*The critical region must be as large as possible while its probability stays at or below the significance level.*
+
+*Since $P(X \geq 11) = 0.0426$ is still less than $0.05$, the region $X \geq 11$ is larger than $X \geq 12$ and is still allowed, so $X \geq 12$ is not used.*
 :::
 
-（critical region は、その確率が有意水準以下にとどまる範囲で、できるだけ大きく取らなければならない。$P(X \geq 11) = 0.0426$ はまだ $0.05$ より小さく、$X \geq 11$ のほうが $X \geq 12$ より大きくてなお許されるので、$X \geq 12$ は使わない、という意味です。）
+（critical region は、その確率が **significance level**（有意水準）以下にとどまる範囲で、できるだけ大きく取らなければならない。$P(X \geq 11) = 0.0426$ はまだ $0.05$ より小さく、$X \geq 11$ のほうが $X \geq 12$ より大きくてなお許されるので、$X \geq 12$ は使わない、という意味です。）
 
 ::: {.callout-warning}
 ## `do not reject` であって、`accept` ではありません
@@ -736,6 +642,58 @@ $$
 
 **(c)** *$P(X \geq 11) = 0.0426 < 0.05$, so $X \geq 11$ is allowed and is a larger region than $X \geq 12$. The critical region must be the largest region whose probability does not exceed the significance level.*
 :::
+:::
+:::
+
+### 7. No critical regions for $t$-tests（$t$ 検定では棄却域を求めない） {#not-t}
+
+$t$ 検定では、critical region を求めなくてよいことになっています。$t$ 分布の critical value は **degrees of freedom**（自由度）によって変わり、$n = 10$ と $n = 30$ では別の数になるからです。**$\sigma$ が分からない場合（$t$ を使う場合）は、$p$-value で判定してください**（[AHL 4.18b](ahl-4-18b.qmd)）。
+
+| 場面 | critical region | 判定 |
+|---|---|---|
+| $\sigma$ 既知（normal） | **求める** | どちらでもよい |
+| $\sigma$ 未知（$t$） | **求めない** | $p$-value で |
+| binomial・Poisson | **求める**（片側のみ） | どちらでもよい |
+
+: critical region を求めるのはどこか {#tbl-ahl418a-where}
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+#### $2$ つの判定が一致する理由 {#why}
+
+[第2節](#two-ways)で「$p$-value での判定と critical region での判定は同じ結論になる」と書きました。数値で確かめます。
+
+@exm-ahl418a-normal の設定を使います。$\mu_0 = 500$、$\sigma = 8$、$n = 25$、$H_1$: $\mu < 500$、$5\%$。critical value は $497.368\ldots$（答案には $497.4$）でした。**ここでは丸める前の値で比べます。**
+
+| 観測値 $\bar{x}$ | critical region の中か | $p$-value | $p < 0.05$ か |
+|---|---|---|---|
+| $496.5$ | **中**（$496.5 < 497.368$） | $0.0144$ | **はい** |
+| $497.5$ | 外（$497.5 > 497.368$） | $0.0591$ | いいえ |
+
+: $2$ つの判定は一致する {#tbl-ahl418a-agree}
+
+**$2$ 行とも、左右の答えが一致しています。**
+
+なぜそうなるか。片側の検定で考えます。$p$-value は「観測値より外の面積」、critical region の面積は $\alpha$ です。
+
+**観測値が critical region の中にある**ということは、観測値が境目より外にあるということです。すると「観測値より外の面積」は「境目より外の面積」より**小さく**なります。つまり $p < \alpha$ です。
+
+両側でも、$2$ 倍どうしを比べるので同じことになります。
+
+逆も同じです。**$2$ つは、同じ大小関係を、面積で見るか位置で見るかの違いで表しているだけ**です。
+
+#### では、なぜ $2$ つとも学ぶのか {#why-both}
+
+**問われ方が違うから**です。
+
+- `Find the critical region` … 範囲そのものを聞かれています。$p$-value では答えられません。
+- `Find the p-value` … 確率を聞かれています。範囲では答えられません。
+- `Test at the 5% level` … どちらでも構いません。
+
+そして [AHL 4.18c](ahl-4-18c.qmd) の Type I / Type II error は、**critical region がないと計算できません。** critical region は、そのための道具でもあります。
 :::
 
 ## Common errors
@@ -776,7 +734,7 @@ critical region を書くときも、**$\geq$ か $>$ か**をはっきりさせ
 
 ::: {.callout-warning}
 ## $t$ 検定で critical value を探そうとする
-シラバスが外しています（[第7節](#not-t)）。$\sigma$ が分からないときは、**$p$-value で判定**してください。
+$t$ 検定の critical region は求めなくてよいことになっています（[第7節](#not-t)）。$\sigma$ が分からないときは、**$p$-value で判定**してください。
 :::
 
 ::: {.callout-warning}
@@ -806,7 +764,7 @@ $\bar{x} < 19.5$ **または** $\bar{x} > 20.5$ です（[第4節](#normal-cv)�
 
 ## Using your GDC (TI-Nspire CX II)
 
-### 1. 正規分布の critical value を出す {#gdc-inv}
+### 1. Critical values from Inverse Normal（正規分布の臨界値を出す） {#gdc-inv}
 
 $4$ つの数（$1.645$、$1.96$、$2.326$、$2.576$）は覚えておくのが速いのですが、電卓でも出せます。
 
@@ -838,7 +796,7 @@ menu → Statistics → Distributions → Inverse Normal
 **両側は $\alpha$ を $2$ で割ってから**考えてください。
 :::
 
-### 2. $\bar{x}$ の critical value を、直接出す {#gdc-xbar}
+### 2. Critical value for $\bar{x}$（$\bar{x}$ の臨界値を直接出す） {#gdc-xbar}
 
 `μ` と `σ` に $0$ と $1$ ではなく、**$\mu_0$ と standard error** を入れると、$\bar{x}$ の境目がそのまま出ます。
 
@@ -854,7 +812,7 @@ $$
 
 $z$ を経由しなくても出せます。**ただし、答案には @eq-ahl418a-xbar の $1$ 行を書いてください。** 電卓から読んだ数だけでは、過程に点が付きません。
 
-### 3. binomial・Poisson の critical region を探す {#gdc-discrete}
+### 3. Discrete critical regions（二項分布・ポアソン分布の棄却域を探す） {#gdc-discrete}
 
 **`Binomial Cdf` と `Poisson Cdf` を、$k$ を変えながら何回か使います。**
 
@@ -905,16 +863,10 @@ menu → Statistics → Stat Tests
 
 この $2$ つだけは、`Binomial Cdf` / `Poisson Cdf` で**自分で確率を作ります。**
 
-なお `1-Prop z Test` は名前が近いので選びたくなりますが、**これは正規分布で近似する検定**です。シラバスが求めているのは `Test for proportion using binomial distribution` なので、**別のものです**（[AHL 4.18b](ahl-4-18b.qmd)）。
+なお `1-Prop z Test` は名前が近いので選びたくなりますが、**これは正規分布で近似する検定**です。このページで使うのは binomial distribution そのものを使う検定なので、**別のものです**（[AHL 4.18b](ahl-4-18b.qmd)）。
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -1024,7 +976,7 @@ $$
 
 **(b)** $254$ は $253.289\ldots$ より大きいので、critical region の中です。境目から離れているので、丸めた $253.3$ と比べても同じ結論になります。
 
-$p$-value で確かめても、同じ結論になります。$P(\bar{X} > 254) = 0.0228 < 0.05$ です（[第8節](#why)）。
+$p$-value で確かめても、同じ結論になります。$P(\bar{X} > 254) = 0.0228 < 0.05$ です（[Why it works](#why)）。
 
 **結論は、必ず文脈のことばに戻してください。** 「$H_0$ を棄却する」で止めないでください。
 :::
@@ -1354,7 +1306,9 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*$X$ can only take whole-number values, so the probability of the critical region changes in jumps as the boundary moves from one integer to the next. There is no integer boundary that gives an area of exactly $0.05$, so the region is chosen to be the largest one whose probability does not exceed $0.05$.*
+*$X$ can only take whole-number values, so the probability of the critical region changes in jumps as the boundary moves from one integer to the next.*
+
+*There is no integer boundary that gives an area of exactly $0.05$, so the region is chosen to be the largest one whose probability does not exceed $0.05$.*
 :::
 
 （$X$ は整数の値しか取れないので、境目が $1$ つの整数から次へ動くと critical region の確率は飛び飛びに変わる。ちょうど $0.05$ の面積を与える整数の境目は無いので、確率が $0.05$ を超えない範囲でいちばん大きい region を選ぶ、という意味です。）
@@ -1419,7 +1373,11 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*The probability $0.0201$ does not exceed $0.05$, so this region is allowed, but it is not the region that should be used. $P(X \geq 11) = 0.0426$ is also at most $0.05$, and $X \geq 11$ is a larger region. The critical region should be the largest region whose probability does not exceed the significance level, so the correct critical region is $X \geq 11$.*
+*The probability $0.0201$ does not exceed $0.05$, so this region is allowed, but it is not the region that should be used.*
+
+*$P(X \geq 11) = 0.0426$ is also at most $0.05$, and $X \geq 11$ is a larger region.*
+
+*The critical region should be the largest region whose probability does not exceed the significance level, so the correct critical region is $X \geq 11$.*
 :::
 
 （確率 $0.0201$ は $0.05$ を超えていないのでこの region は許されるが、使うべき region ではない。$P(X \geq 11) = 0.0426$ も $0.05$ 以下であり、$X \geq 11$ のほうが大きい region である。critical region は確率が有意水準を超えない範囲でいちばん大きいものにすべきなので、正しい critical region は $X \geq 11$ である、という意味です。）
@@ -1435,7 +1393,7 @@ $$
 
 **(b)** 「間違っている」と切り捨てないでください。**$0.05$ を超えていないので、約束は守れています。**
 
-問題は、**必要以上に小さいこと**です。シラバスの `maximize` に反しています（[第6節](#discrete)）。
+問題は、**必要以上に小さいこと**です。「超えない中でいちばん大きく取る」という決まりに反しています（[第6節](#discrete)）。
 
 答案には、**$X \geq 11$ でも $0.05$ を超えないことを、数値で示してください。** それが「もっと大きい region が取れる」という主張の根拠になります。
 
@@ -1475,31 +1433,39 @@ $$
 **(a)**
 
 ::: {.model-answer}
-*Yes. Since $\sigma$ is known, the test uses the normal distribution, and the critical values $1.645$, $1.96$, $2.326$ and $2.576$ apply.*
+*Yes.*
+
+*Since $\sigma$ is known, the test uses the normal distribution, and the critical values $1.645$, $1.96$, $2.326$ and $2.576$ apply.*
 :::
 
 **(b)**
 
 ::: {.model-answer}
-*No. Since $\sigma$ is unknown, the test uses the $t$-distribution, and the syllabus states that students will not be expected to calculate critical regions for $t$-tests. The conclusion should be reached using the $p$-value instead.*
+*No.*
+
+*Since $\sigma$ is unknown, the test uses the $t$-distribution, and critical regions are not calculated for $t$-tests.*
+
+*The conclusion should be reached using the $p$-value instead.*
 :::
 
 **(c)**
 
 ::: {.model-answer}
-*No. For discrete random variables the syllabus requires critical regions only for one-tailed tests, so a two-tailed critical region for a Poisson mean would not be asked for.*
+*No.*
+
+*For discrete random variables the syllabus requires critical regions only for one-tailed tests, so a two-tailed critical region for a Poisson mean would not be asked for.*
 :::
 :::
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-**この問題は計算がありません。** シラバスの範囲そのものを聞いています。試験で直接こう問われることは多くありませんが、**「この場面で何をすべきか」を取り違えると、大問がまるごと崩れます。**
+**この問題は計算がありません。** どの場面で何を使うかを聞いています。試験で直接こう問われることは多くありませんが、**「この場面で何をすべきか」を取り違えると、大問がまるごと崩れます。**
 
 **(a)** $\sigma$ 既知 → normal → critical value は $4$ つの数のどれか（[第4節](#normal-cv)）。
 
 **(b)** $\sigma$ 未知 → $t$ → critical region は求めない（[第7節](#not-t)）。
 
-**$n$ が大きくても $t$ です。** シラバスは `regardless of sample size` と書いています（[AHL 4.16](ahl-4-16.qmd#which)）。「$n$ が $30$ を超えたら normal」という規則は、**この科目では使いません。**
+**$n$ が大きくても $t$ です。** $\sigma$ が分からなければ、標本の大きさに関係なく $t$ を使います（[AHL 4.16](ahl-4-16.qmd#which)）。「$n$ が $30$ を超えたら normal」という規則は、**この科目では使いません。**
 
 **(c)** 離散分布では**片側だけ**です（[第6節](#discrete)）。
 

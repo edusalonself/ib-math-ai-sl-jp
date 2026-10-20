@@ -206,8 +206,11 @@ in_text("分散を入れると $0.440$")
 # 5. 改稿でそろえた表現（あとで戻っていないか）
 # ══════════════════════════════════════════════════════════════
 # 5-1 導入
-in_text("平均と分散だけでは、確率は一意に決まりません")
-in_text("確率を計算するには、normal など、**分布の種類も分かっている**必要があります")
+in_text("では、独立な確率変数を足すと、平均も分散も足し算できることを学びました")
+in_text("ただし、平均と分散だけでは、**分布の形は分かりません。**")
+in_text("**normal distribution**（正規分布）にしたがう確率変数の和や差について、"
+        "**確率を求める方法**を学びます")
+not_in_text("平均と分散だけでは、確率は一意に決まりません")
 not_in_text("しかし、平均と分散だけでは確率は出せません")
 not_in_text("**分布の形が分からない**からです")
 not_in_text("AHL 4.14 で足りなかった「形」が、ここで手に入ります")
@@ -215,7 +218,8 @@ not_in_text("AHL 4.14 で足りなかった「形」が、ここで手に入り�
 gdc = TXT.index("## Using your GDC")
 eq("公式集の注意は GDC の直前にある", TXT.index("AI HL の公式集は **4.14 の次が 4.17**") > gdc, True)
 eq("z 値の注意は GDC の直前にある",
-   TXT.index("standardized normal variable $z$") > gdc, True)
+   TXT.index("$z = \\dfrac{x-\\mu}{\\sigma}$ に直す必要はありません") > gdc, True)
+not_in_text("standardized normal variable $z$")  # シラバスの英文引用は外した
 
 # 5-2 linear combination を先に定義してから一般式
 i_def = TXT.index("linear combination**（一次結合）といいます")
@@ -235,7 +239,7 @@ for need in ("X_i \\sim N(\\mu_i,\\ \\sigma_i^{2})",
 in_text("**平均では係数をそのまま使いますが、分散では係数を $2$ 乗します。**")
 
 # 5-4 標準偏差：原則が先、3 段階、N の第2引数は分散
-i_rule = TXT.index("standard deviation（標準偏差）を直接足すのではなく、まず variance（分散）を足します")
+i_rule = TXT.index("**standard deviation**（標準偏差）**を直接足すのではなく、まず分散を足します。**")
 eq("原則が数値の前にある", i_rule < TXT.index("\\text{Var}(M + S) = 8^{2} + 6^{2} = 100"), True)
 # 直角三角形の比喩と、その図は取り除いた
 not_in_text("直角三角形")
@@ -243,7 +247,7 @@ not_in_text("{#pythagoras}")
 not_in_text("{#eq-ahl415-sd}")
 not_in_text("$8 + 6 = 14$ ではありません {#pythagoras}")
 not_in_text("(#pythagoras)")
-in_text("![Adding two independent normals gives another normal](img/ahl-4-15-sum.svg)")
+in_text("![独立な $2$ つの正規分布を足すと、また正規分布になります。](img/ahl-4-15-sum.svg)")
 in_text("@fig-ahl415-sum のとおり、$M$ と $S$ を足して出てくるのも normal distribution です。")
 in_text("\\text{Var}(M + S) = 8^{2} + 6^{2} = 100")
 in_text("\\sigma_{M+S} = \\sqrt{100} = 10")
@@ -294,17 +298,17 @@ eq("CLT の順序 導入→測定値と平均→図→定理→n が大きいと
    i_clt < i_one < i_fig < i_state < i_bigger < i_notdata < i_n30, True)
 # 節の順序：5 → 6 CLT → 7 平均と合計 → 8 exactly / approximately
 eq("CLT は「平均で解いても合計で解いても同じ」より前",
-   i_clt < TXT.index("### 7. 平均で解いても、合計で解いても同じです {#total}"), True)
+   i_clt < TXT.index("### 7. Sample mean and sample total（平均で解くか、合計で解くか） {#total}"), True)
 eq("exactly / approximately は最後",
-   TXT.index("### 7. 平均で解いても、合計で解いても同じです {#total}")
-   < TXT.index("### 8. exactly normal と approximately normal {#when}"), True)
+   TXT.index("### 7. Sample mean and sample total（平均で解くか、合計で解くか） {#total}")
+   < TXT.index("### 8. Exactly normal and approximately normal（正確に正規分布か、近似的に正規分布か） {#when}"), True)
 in_text("同じ population から独立に取り出した標本の sample mean $\\bar{X}$ は、sample size $n$ が"
         "十分に大きいとき、もとの population が normal でなくても、"
         "**approximately normal distribution**（近似的な正規分布）にしたがいます。")
 
 # 5-11 n > 30 を絶対視しない
 in_text("**ただし、これは数学的な境界ではありません。**")
-in_text("分布の偏りが強い場合や外れ値が多い場合は、より大きな $n$ が必要になることがあります")
+in_text("分布の偏りが強い場合や **outlier**（外れ値）が多い場合は、より大きな $n$ が必要になることがあります")
 not_in_text("$n > 30$ のときは、もとの分布が normal でなくても、$\\bar{X}$ を normal として扱ってよい")
 not_in_text("ただし試験では、**$n > 30$ なら十分**と決められています。")
 not_in_text("この課程では答えを出せません")
@@ -493,7 +497,7 @@ L2 = TXT.split("\n")
 chapters = [l[3:] for i, l in enumerate(L2)
             if l.startswith("## ")
             and not (i and L2[i - 1].lstrip().startswith(":::"))]
-want = ["The idea", "Why it works", "Worked examples",
+want = ["The idea", "Why it works",
         "Common errors", "Using your GDC (TI-Nspire CX II)", "Exercises"]
 eq("章見出しは _TEMPLATE の順どおり", chapters, want)
 in_text("::: {.callout-note}\n## What you should be able to do")
@@ -516,55 +520,51 @@ in_text("「上から $5\\%$ に入る境目」を求めています")
 # 8. 説明を足した箇所（あとで抜け落ちていないか）
 # ══════════════════════════════════════════════════════════════
 in_text("## 独立な normal random variables の linear combination も normal distribution にしたがう")
-in_text("ここで $Y$ は、$X_1,\\ \\ldots,\\ X_n$ にそれぞれ定数 $a_1,\\ \\ldots,\\ a_n$ を"
-        "かけて足し合わせて作った、**新しい確率変数**です。")
-in_text("この $Y$ も normal distribution にしたがい、")
+in_text("定数 $a_1,\\ \\ldots,\\ a_n$ をかけて足し合わせて作った**新しい確率変数**")
+in_text("も normal distribution にしたがい、")
 
 # 第2節：語の対応と N(430, 10^2)
-in_text("$2$ つの値の合計を表す**新しい確率変数** $M + S$ を考えます")
-for s in ("**平均（expected value）**は、係数がどちらも $1$ なので足すだけです。",
-          "次に、**分散（variance）**を求めます。$M$ と $S$ は独立なので、それぞれの分散を足します。",
-          "**標準偏差（standard deviation）**は、分散の正の平方根です。",
-          "したがって、$M + S$ がしたがう**分布（distribution）**は"):
+in_text("主菜の質量 $M \\sim N(250,\\ 8^{2})$ と副菜の質量 $S \\sim N(180,\\ 6^{2})$ が"
+        "独立なとき、合計 $M + S$ の分布を求めてみます")
+# 2026-10: 用語は「**English**（日本語）」の順で初出に 1 回だけ。2 回目以降は日本語だけ
+for s in ("平均は、そのまま足します。",
+          "独立なので、分散も足します。**標準偏差ではありません。**",
+          "標準偏差は、分散の正の平方根です。"):
     in_text(s)
-in_text("M + S \\sim N(430,\\ 10^{2})")
-in_text("$10^{2} = 100$ なので $N(430,\\ 100)$ と書いても同じ分布です")
-in_text("ここで、$E$ は平均、$\\text{Var}$ は分散、$\\sigma$ は標準偏差を表します。")
-in_text("**このページで新しく学ぶのは、それらをつなぐ部分**")
+in_text("$N(430,\\ 100)$ の $100$ は分散で、標準偏差の $10$ を書くのではありません。")
+not_in_text("M + S \\sim N(430,\\ 10^{2})")
 
 # 第4節：D が新しい確率変数
-in_text("**差を表す新しい確率変数**です")
-in_text("$D$ は「$1$ 回目の測定値と $2$ 回目の測定値の差」を表します")
-in_text("**したがって、差の平均は引き算ですが、差の分散は足し算です。**")
+in_text("差を表す新しい確率変数 $D = X - Y$ は、$Y$ の係数を $-1$ とする一次結合")
+in_text("**差でも、分散は足し算です。**")
+# 短い数値例（例題・演習とは別の数で）
+in_text("たとえば $X \\sim N(20,\\ 3^{2})$ と $Y \\sim N(16,\\ 4^{2})$ が独立なら、"
+        "$E(D) = 20 - 16 = 4$、$\\text{Var}(D) = 9 + 16 = 25$ で、$D \\sim N(4,\\ 25)$ です。")
+eq("第4節の数値例 E(D)", 20 - 16, 4)
+eq("第4節の数値例 Var(D)", 3 ** 2 + 4 ** 2, 25)
 
 # A > B の書きかえ
-in_text("**$A$ のほうが大きい**という出来事と、**$D$ が正である**という出来事は、まったく同じものです")
-in_text("$A$ と $B$ が独立な normal random variables なら、[第1節](#lincomb)より "
-        "$D = A - B$ も normal distribution にしたがいます")
-in_text("1. $D$ の平均を求める … $E(D) = E(A) - E(B)$")
-in_text("2. $D$ の分散と標準偏差を求める")
-in_text("3. `normCdf` で $P(D > 0)$ を求める")
-in_text("「$A - B$ は $0$ より大きいか」という $1$ つの normal distribution の問題に変える")
+in_text("**$A$ のほうが大きい**ことと、**$D$ が正である**ことは、同じ出来事です")
+in_text("$A$ と $B$ が独立な normal なら、$D$ も normal です（[第1節](#lincomb)）")
+in_text("$D$ についての $1$ つの normal distribution の問題に変える")
 
 # 第5節：random variable と observed value
 in_text("$\\bar{X}$ は「エックス・バー」と読みます")
-in_text("$n$ 回目の抽出で得られる値を表す **random variables**（確率変数）です")
-in_text("選ぶ前は値が決まっていないので、$X_1$ は $1$ つの数値ではなく random variable であり")
+in_text("$1$ 回目、$2$ 回目、……で得られる値を表す確率変数を "
+        "$X_1,\\ X_2,\\ \\ldots,\\ X_n$ とすると")
 in_text("**observed value**（観測値）")
-in_text("population が normal distribution $N(\\mu,\\ \\sigma^{2})$ にしたがうなら、"
-        "各 $X_i$ も同じ分布にしたがいます。")
+in_text("**population**（母集団）が $N(\\mu,\\ \\sigma^{2})$ のとき、そこから独立に $n$ 個を取り出します")
 in_text("X_i \\sim N(\\mu,\\ \\sigma^{2})")
-in_text("この $n$ 個の値の平均を表す新しい確率変数が、sample mean $\\bar{X}$ です。")
+in_text("この $n$ 個の平均を表す新しい確率変数が、sample mean $\\bar{X}$ です。")
 in_text("\\bar{X} = \\frac{X_1 + \\cdots + X_n}{n} = \\frac{1}{n}X_1 + \\cdots + \\frac{1}{n}X_n")
 in_text("E(\\bar{X}) &= \\frac{1}{n}\\mu + \\cdots + \\frac{1}{n}\\mu \\\\\n"
         "&= n\\left(\\frac{1}{n}\\right)\\mu \\\\\n&= \\mu")
 in_text("\\text{Var}(\\bar{X}) &= \\left(\\frac{1}{n}\\right)^{2}\\text{Var}(X_1) + \\cdots + "
         "\\left(\\frac{1}{n}\\right)^{2}\\text{Var}(X_n)")
-in_text("&= \\left(\\frac{1}{n}\\right)^{2}\\sigma^{2} + \\cdots + \\left(\\frac{1}{n}\\right)^{2}\\sigma^{2}")
-in_text("**ここで大事なのは、分散では係数 $\\dfrac{1}{n}$ を $2$ 乗することです。**")
+in_text("分散では、係数 $\\dfrac{1}{n}$ を $2$ 乗します。")
 in_text("\\boxed{\\ \\text{Var}(\\bar{X}) = \\frac{\\sigma^{2}}{n}\\ }")
 in_text("\\boxed{\\ \\bar{X} \\sim N\\!\\left(\\mu,\\ \\frac{\\sigma^{2}}{n}\\right)\\ }")
-in_text("$n$ が大きいほど standard error は小さくなり、$\\bar{X}$ は population mean $\\mu$ の"
+in_text("$n$ が大きいほど standard error は小さくなり、$\\bar{X}$ は $\\mu$ の"
         "近くに集まりやすくなります。")
 eq("Var(Xbar) の値（n=9, sigma=12）", 12 ** 2 / 9, 16.0)
 eq("sd(Xbar) の値（n=9, sigma=12）", 12 / 3, 4.0)
@@ -575,16 +575,15 @@ eq("sd(Xbar) の値（n=9, sigma=12）", 12 / 3, 4.0)
 # ══════════════════════════════════════════════════════════════
 # 9. 節の入れかえ（5 → 6 CLT → 7 平均と合計 → 8 exactly/approximately）
 # ══════════════════════════════════════════════════════════════
-in_text(r"**これは、$\bar{X}$ の分布の「広がり」についての性質です。**")
-in_text(r"一方、次に学ぶ **central limit theorem**（中心極限定理）は、$n$ が大きくなると "
-        r"$\bar{X}$ の分布の「**形**」が normal distribution に近づくことを説明します。")
+in_text(r"CLT が足してくれるのは、**形が normal に近い**という一点だけです。")
+not_in_text(r"**これは、$\bar{X}$ の分布の「広がり」についての性質です。**")
 
 # 第6節 CLT
 in_text(r"### 6. Central limit theorem（中心極限定理） {#clt}")
 in_text(r"たとえば待ち時間の分布は、短い値が多く、右側に長く伸びた形になることがあります")
 in_text(r"では、もとの分布が normal でない場合、sample mean $\bar{X}$ はどのような分布になるのでしょうか。")
 in_text(r"\boxed{\ \bar{X} \approx N\!\left(\mu,\ \frac{\sigma^{2}}{n}\right)\ }", 2)
-in_text(r"この $\dfrac{\sigma}{\sqrt{n}}$ が、[第5節](#xbar)で出てきた **standard error**（標準誤差）です。")
+in_text(r"標準偏差は $\dfrac{\sigma}{\sqrt{n}}$（standard error）で、[第5節](#xbar)とまったく同じです")
 in_text(r"#### $n$ が大きくなると、何が起こるのか {#bigger-n}")
 in_text(r"#### どのくらいの $n$ が必要ですか {#n30}")
 in_text(r"## 答案での書き方")
@@ -592,7 +591,7 @@ in_text(r"*Since $n = 40 > 30$, by the central limit theorem, $\bar{X}$ is appro
 in_text(r"もとの population が normal だと分かっている場合を除き、exactly normal とは言えません。")
 
 # 第7節 平均と合計
-in_text(r"### 7. 平均で解いても、合計で解いても同じです {#total}")
+in_text(r"### 7. Sample mean and sample total（平均で解くか、合計で解くか） {#total}")
 in_text(r"#### 方法1：平均で考える {#by-mean}")
 in_text(r"#### 方法2：合計で考える {#by-total}")
 in_text(r"#### なぜ $2$ つの確率は同じなのか {#same-event}")
@@ -602,20 +601,20 @@ in_text(r"\text{Var}(T) = 40 \times 2.5^{2} = 250")
 in_text(r"$T = 40\bar{X}$ なので、$\bar{X}$ が approximately normal なら $T$ も approximately normal です。")
 in_text(r"T \approx N(168,\ 250)")
 in_text(r"\boxed{\ P(\bar{X} > 4.5) = P(T > 180)\ }")
-in_text(r"平均と合計では数値の尺度が違いますが、表している出来事は同じです。")
+in_text(r"**問題が平均について聞いているなら平均を、合計について聞いているなら合計を使います。**")
 eq("E(T) の値", 40 * 4.2, 168.0)
 eq("Var(T) の値", 40 * 2.5 ** 2, 250.0)
 eq("Var(Xbar) の値（n=40）", 2.5 ** 2 / 40, 0.15625)
 eq("40 x 4.5 = 180", 40 * 4.5, 180.0)
 
 # 第8節 exactly / approximately
-in_text(r"### 8. exactly normal と approximately normal {#when}")
+in_text(r"### 8. Exactly normal and approximately normal（正確に正規分布か、近似的に正規分布か） {#when}")
 in_text(r"#### population が normal の場合 {#small-n}")
 in_text(r"#### population が normal とは限らない場合 {#approx-case}")
 in_text(r"#### 最後に確認 {#flow}")
-in_text(r"- population が normal なら、$\bar{X}$ は **exactly normal**")
-in_text(r"- population が normal とは限らなければ、十分に大きな $n$ に対して **approximately normal**")
-in_text(r"E(\bar{X}) = \mu, \qquad \text{Var}(\bar{X}) = \frac{\sigma^{2}}{n}")
+in_text(r"population が normal なら **exactly normal**、normal とは限らなければ、"
+        r"十分に大きな $n$ に対して **approximately normal** です。")
+in_text(r"$E(\bar{X}) = \mu$、$\text{Var}(\bar{X}) = \dfrac{\sigma^{2}}{n}$ で同じです")
 
 # 節番号の参照が入れかわっている
 in_text(r"使うのは **central limit theorem** です（[第6節](#clt)）。")
@@ -628,11 +627,15 @@ not_in_text(r"（[第7節](#n30)）")
 
 
 # 例題では、日本語訳の折りたたみの下に区切り線（---）を置く
-i_we = TXT.index("## Worked examples")
+# 2026-10: Worked examples の節は無くなり、例題は The idea の中へ移った
+not_in_text("## Worked examples")
+i_we = TXT.index("## The idea")
 i_ce = TXT.index("## Common errors")
-_we = TXT[i_we:i_ce]
-eq("例題の日本語訳の下に区切り線がある",
-   _we.count("</details>\n\n---\n\n"), _we.count("</details>"))
+_we = TXT[i_we:TXT.index("## Why it works")]
+eq("例題はすべて Why it works より前（The idea の中）",
+   _we.count("::: {#exm-"), TXT.count("::: {#exm-"))
+eq("例題の日本語訳の下に、解説と解答例の折りたたみがある",
+   _we.count('</details>\n\n::: {.callout-tip collapse="true"}\n## 解説と解答例'), _we.count("::: {#exm-"))
 eq("例題は 4 つ", _we.count("::: {#exm-"), 4)
 eq("演習には区切り線を入れない", TXT[i_ce:].count("\n---\n"), 0)
 
@@ -645,13 +648,13 @@ eq("code の中に 1E99 が残っていない",
                         or l.lstrip().startswith(r"$\texttt{normCdf}"))], [])
 eq("∞ を使った normCdf がある",
    TXT.count("normCdf(") + TXT.count(r"\texttt{normCdf}") >= 10, True)
-in_text("## $\infty$ の入れ方と、$1E99$ という書き方")
+in_text(r"## $\infty$ の入れ方と、$1E99$ という書き方")
 in_text("記号パレット")
 # 2026-09: 記号パレットは π キー（∞・°）／ctrl + = （≤ ≥）に訂正
 in_text("**`π` のキー**を押すと開く**記号パレット**")
 not_in_text("`ctrl` と `k` を押すとパレットが開く")
-in_text("| `Lower Bound` | 下の端。なければ $-\infty$ |")
-in_text("| `Upper Bound` | 上の端。なければ $\infty$ |")
+in_text(r"| `Lower Bound` | 下の端。なければ $-\infty$ |")
+in_text(r"| `Upper Bound` | 上の端。なければ $\infty$ |")
 
 
 print("=" * 78)

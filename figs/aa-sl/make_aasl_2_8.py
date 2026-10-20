@@ -39,8 +39,6 @@ fig2, ax2 = plt.subplots(figsize=(5.3, 4.8))
 # ══════════════════════════════════════════════════════════
 # (a) y = 1/x
 # ══════════════════════════════════════════════════════════
-ax1.set_title("The reciprocal function", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-4.2, 4.6)
 ax1.set_ylim(-4.2, 4.6)
 ax1.set_aspect("equal")
@@ -59,7 +57,7 @@ ax1.plot(-t, -1 / t, color=ACCENT, linewidth=2.3)
 
 d = np.linspace(-3.6, 3.6, 2)
 ax1.plot(d, d, color=GREEN, linewidth=1.2, linestyle=(0, (5, 4)))
-ax1.text(2.6, 3.2, "$y = x$", fontsize=10, color=GREEN)
+ax1.text(3.0, 2.6, "$y = x$", fontsize=10, color=GREEN)
 
 ax1.text(2.5, 1.05, "$y = \\dfrac{1}{x}$", fontsize=12, color=ACCENT)
 ax1.text(0.28, -2.7, "asymptote $x = 0$", fontsize=9.5, color=WARM)
@@ -68,8 +66,6 @@ ax1.text(-4.0, 0.3, "asymptote $y = 0$", fontsize=9.5, color=WARM)
 # ══════════════════════════════════════════════════════════
 # (b) y = (ax+b)/(cx+d)
 # ══════════════════════════════════════════════════════════
-ax2.set_title("A rational function", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax2.set_xlim(-3.4, 7.4)
 ax2.set_ylim(-4.4, 6.4)
 ax2.axis("off")
@@ -92,8 +88,9 @@ ax2.plot(u, HA + 3.5 / (u - VA), color=ACCENT, linewidth=2.3)
 v = np.linspace(-3.0, VA - 0.28, 300)
 ax2.plot(v, HA + 3.5 / (v - VA), color=ACCENT, linewidth=2.3)
 
-ax2.text(VA + 0.30, 5.6, "$x = -\\dfrac{d}{c}$", fontsize=11.5, color=WARM)
-ax2.text(5.0, HA + 0.35, "$y = \\dfrac{a}{c}$", fontsize=11.5, color=WARM)
+ax2.text(VA - 0.25, 5.6, "$x = -\\dfrac{d}{c}$", fontsize=11.5, color=WARM,
+         ha="right")
+ax2.text(-2.9, HA + 0.45, "$y = \\dfrac{a}{c}$", fontsize=11.5, color=WARM)
 
 for px, py in [(-1.5, HA + 3.5 / (-1.5 - VA)), (0, HA + 3.5 / (0 - VA))]:
     ax2.plot([px], [py], marker="o", markersize=5.5, color=INK, zorder=3)

@@ -35,12 +35,10 @@ WARM = "#b45309"
 GREEN = "#15803d"
 
 fig1, ax1 = plt.subplots(figsize=(5.3, 4.4))
-fig2, ax2 = plt.subplots(figsize=(5.3, 4.4))
+fig2, ax2 = plt.subplots(figsize=(5.3, 3.9))
 # ══════════════════════════════════════════════════════════
 # (a) sketch にラベルするもの
 # ══════════════════════════════════════════════════════════
-ax1.set_title("What a sketch must show", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-3.8, 4.6)
 ax1.set_ylim(-3.4, 4.6)
 ax1.axis("off")
@@ -81,18 +79,16 @@ ax1.annotate("minimum point", xy=(vx, (vx + 1.4) * (vx - 3.0) * 0.55),
 # ══════════════════════════════════════════════════════════
 # (b) 和のグラフ
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Adding two graphs", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax2.set_xlim(-0.6, 4.4)
-ax2.set_ylim(-0.9, 5.4)
+ax2.set_ylim(-0.9, 4.6)
 ax2.axis("off")
 
 ax2.annotate("", xy=(4.2, 0), xytext=(-0.4, 0),
              arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.1))
-ax2.annotate("", xy=(0, 5.2), xytext=(0, -0.7),
+ax2.annotate("", xy=(0, 4.4), xytext=(0, -0.7),
              arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.1))
 ax2.text(4.3, -0.32, "$x$", fontsize=11, color=GREY, ha="center")
-ax2.text(-0.28, 5.3, "$y$", fontsize=11, color=GREY, va="center")
+ax2.text(-0.28, 4.5, "$y$", fontsize=11, color=GREY, va="center")
 
 u = np.linspace(0.05, 3.9, 120)
 fv = 0.35 * u + 0.6
@@ -112,8 +108,6 @@ ax2.plot([p, p], [0, fp + gp], color=GREY, linewidth=1.0,
          linestyle=(0, (3, 3)))
 for hv, col in [(fp, ACCENT), (gp, GREEN), (fp + gp, WARM)]:
     ax2.plot([p], [hv], marker="o", markersize=5.5, color=col, zorder=3)
-ax2.text(p + 0.16, (fp + gp) / 2, "heights add", fontsize=10, color=INK,
-         ha="left", va="center")
 
 for _fig, _name in ((fig1, "aasl-2-3-idea-a.svg"), (fig2, "aasl-2-3-idea-b.svg")):
     _fig.tight_layout()

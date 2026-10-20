@@ -49,10 +49,6 @@ for ax, (m, col) in zip(axs, ((1.0, GREEN), (3.4, LINE), (10.2, ACC))):
     ax.set_title("$X \\sim \\mathrm{Po}(%g)$" % m, fontsize=12.5, color=col,
                  pad=10)
     tidy(ax)
-fig.text(0.5, -0.04,
-         "the mean is always $m$, and so is the variance:   "
-         "small $m$ gives a skewed shape, large $m$ looks almost normal",
-         fontsize=11.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-4-17-shapes.svg")
 
@@ -74,16 +70,12 @@ for ax, (hours, lab, col) in zip(
     ax.set_title("%s:   $m = %.4g \\times %.4g = %.4g$"
                  % (lab, RATE, hours, m), fontsize=11.5, color=col, pad=10)
     tidy(ax)
-fig.text(0.5, -0.05,
-         "$3.4$ emails per hour.   The RATE never changes — what changes is "
-         "the length of the interval, and $m$ changes with it.",
-         fontsize=11.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-4-17-scaling.svg")
 
 
 # ══════════════ 3. 3 つの分布の選び分け ══════════════
-fig, axs = plt.subplots(1, 3, figsize=(13.2, 4.1))
+fig, axs = plt.subplots(1, 3, figsize=(13.2, 3.6))
 
 # binomial B(20, 0.3)
 ax = axs[0]
@@ -91,11 +83,9 @@ ks = np.arange(0, 21)
 ps = [math.comb(20, int(k)) * 0.3 ** int(k) * 0.7 ** (20 - int(k)) for k in ks]
 ax.bar(ks, ps, width=0.72, color=GREEN, alpha=0.85, zorder=3)
 ax.set_xlim(-0.8, 20.8)
-ax.set_ylim(0, max(ps) * 1.42)
+ax.set_ylim(0, max(ps) * 1.26)
 ax.set_xlabel("$x$")
 ax.set_title("binomial   $B(20,\\ 0.3)$", fontsize=12.5, color=GREEN, pad=10)
-ax.text(10.0, max(ps) * 1.30, "$n$ trials, each a success or a failure",
-        fontsize=10.5, ha="center", color=INK)
 ax.text(10.0, max(ps) * 1.14, "mean $6$,  variance $4.2$",
         fontsize=10.5, ha="center", color=GREEN)
 tidy(ax)
@@ -105,11 +95,9 @@ ax = axs[1]
 ps = [pois(int(k), 6.0) for k in ks]
 ax.bar(ks, ps, width=0.72, color=LINE, alpha=0.85, zorder=3)
 ax.set_xlim(-0.8, 20.8)
-ax.set_ylim(0, max(ps) * 1.42)
+ax.set_ylim(0, max(ps) * 1.26)
 ax.set_xlabel("$x$")
 ax.set_title("Poisson   $\\mathrm{Po}(6)$", fontsize=12.5, color=LINE, pad=10)
-ax.text(10.0, max(ps) * 1.30, "counts in an interval, no upper limit",
-        fontsize=10.5, ha="center", color=INK)
 ax.text(10.0, max(ps) * 1.14, "mean $6$,  variance $6$",
         fontsize=10.5, ha="center", color=LINE)
 tidy(ax)
@@ -121,19 +109,11 @@ ys = np.exp(-0.5 * ((xs - 6) / 2.45) ** 2) / (2.45 * math.sqrt(2 * math.pi))
 ax.fill_between(xs, ys, color=ACC, alpha=0.30, zorder=2)
 ax.plot(xs, ys, color=ACC, lw=2.4, zorder=3)
 ax.set_xlim(-0.8, 20.8)
-ax.set_ylim(0, max(ys) * 1.42)
+ax.set_ylim(0, max(ys) * 1.26)
 ax.set_xlabel("$x$")
 ax.set_title("normal   $N(6,\\ 2.45^{2})$", fontsize=12.5, color=ACC, pad=10)
-ax.text(10.0, max(ys) * 1.30, "a measurement, not a count",
-        fontsize=10.5, ha="center", color=INK)
-ax.text(10.0, max(ys) * 1.14, "any value, not just whole numbers",
-        fontsize=10.5, ha="center", color=ACC)
 tidy(ax)
 
-fig.text(0.5, -0.03,
-         "the first two are counts (whole numbers); the third is continuous.  "
-         "Only Poisson has variance equal to the mean.",
-         fontsize=11.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-4-17-choosing.svg")
 

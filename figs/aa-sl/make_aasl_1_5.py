@@ -33,15 +33,13 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig1, ax1 = plt.subplots(figsize=(5.2, 4.3))
-fig2, ax2 = plt.subplots(figsize=(5.2, 4.3))
+fig1, ax1 = plt.subplots(figsize=(3.6, 4.0))
+fig2, ax2 = plt.subplots(figsize=(4.6, 3.4))
 # ══════════════════════════════════════════════════════════
 # (a) 2 の累乗のはしご
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Each step down divides by $2$",
-              fontsize=11, color=INK, loc="left", pad=10)
-ax1.set_xlim(0.0, 1.0)
-ax1.set_ylim(-0.6, 5.6)
+ax1.set_xlim(0.12, 0.95)
+ax1.set_ylim(-0.45, 5.45)
 ax1.axis("off")
 
 RUNGS = [(5, "$2^{3}$", "$8$"),
@@ -63,16 +61,11 @@ for y, _, _ in RUNGS[:-1]:
     ax1.text(0.82, y - 0.5, r"$\div 2$", ha="left", va="center",
              fontsize=9.5, color=GREY)
 
-ax1.plot([0.16, 0.16], [-0.35, 2.5], color=WARM, linewidth=1.6)
-ax1.text(0.12, 1.0, "forced,\nnot chosen", ha="right", va="center",
-         fontsize=9.5, color=WARM)
 
 # ══════════════════════════════════════════════════════════
 # (b) 1 つの事実を、2 通りに書く
 # ══════════════════════════════════════════════════════════
-ax2.set_title("One fact, written two ways",
-              fontsize=11, color=INK, loc="left", pad=10)
-ax2.set_xlim(0.0, 1.0)
+ax2.set_xlim(0.08, 0.92)
 ax2.set_ylim(0.18, 1.0)
 ax2.axis("off")
 

@@ -363,21 +363,35 @@ for lab, needle in [
     in_text(lab, needle)
 
 # ★ シラバスの引用
-in_text("sigma 既知は normal という引用",
-        "Use of the normal distribution when $\\sigma$ is known")
+# 2026-10: シラバスの英文引用は本文から外し、各節で日本語で直接書いた
+in_text("シラバスの引用は本文から外した（σ 既知は normal）",
+        "Use of the normal distribution when $\\sigma$ is known", want=False)
+in_text("σ 既知なら normal と日本語で書いている",
+        "正規母集団の母平均を検定するとき、$\\sigma$ が分かっていれば normal distribution を使います。")
 in_text("regardless of sample size の引用", "regardless of sample size")
-in_text("matched pairs の引用",
+in_text("シラバスの引用は本文から外した（matched pairs）",
         "The case of matched pairs is to be treated as an example of a "
-        "single sample technique")
-in_text("binomial で割合という引用",
-        "Test for proportion using binomial distribution")
-in_text("Poisson で平均という引用",
-        "Test for population mean using Poisson distribution")
-in_text("片側のみという引用",
-        "Poisson and binomial tests will be **one-tailed only**")
+        "single sample technique", want=False)
+in_text("matched pairs は 1 標本として扱うと日本語で書いている",
+        "差をとって、$1$ 標本の検定として扱います。")
+in_text("シラバスの引用は本文から外した（binomial で割合）",
+        "Test for proportion using binomial distribution", want=False)
+in_text("binomial で割合の節がある",
+        "### 5. Test for a proportion（二項分布による割合の検定） {#binom}")
+in_text("シラバスの引用は本文から外した（Poisson で平均）",
+        "Test for population mean using Poisson distribution", want=False)
+in_text("Poisson で平均の節がある",
+        "### 6. Test for a Poisson mean（ポアソン分布の平均の検定） {#pois}")
+in_text("シラバスの引用は本文から外した（片側のみ）",
+        "Poisson and binomial tests will be **one-tailed only**", want=False)
+in_text("binomial と Poisson は片側だけと日本語で書いている",
+        "binomial と Poisson の検定は、片側検定だけが出ます。")
 in_text("rho = 0 の引用",
         "population product moment correlation coefficient")
-in_text("データは与えられるという引用", "In examinations the data will be given")
+in_text("シラバスの引用は本文から外した（データは与えられる）",
+        "In examinations the data will be given", want=False)
+in_text("データは問題文に出ると日本語で書いている",
+        "試験では、**データは必ず問題文に出ます。**")
 # ★ GDC（ユーザーの実機画面で確認したもの）
 in_text("メニューは Statistics → Stat Tests", "menu → Statistics → Stat Tests")
 in_text("  Probability → が残っていない", "Probability → Distributions",
@@ -401,10 +415,35 @@ in_text("  |r| は両側限定と書いてある", "絶対値を使うのは、�
 in_text("  片側の比べ方の表がある", "{#tbl-ahl418b-rcrit}")
 in_text("  この例は両側だと書いてある", "@exm-ahl418b-rho は**両側**なので")
 # ★ 母平均の検定は「正規母集団」が前提
+# 2026-10: 第1節の BOX 2 つを本文にまとめた
 in_text("正規母集団が前提だと書いてある",
-        "第2節と第3節は、「母集団が正規分布」が前提です")
-in_text("  シラバスの normal distribution を引いている",
-        "`Test for population mean for normal distribution`")
+        "母平均の検定（第2節・第3節）では、$2$ 段階で見分けます。")
+in_text("  まず正規分布の記述を確かめると書いてある",
+        "**まず、母集団が normal distribution（正規分布）にしたがうと問題文に"
+        "書いてあることを確かめます。**")
+in_text("  そのうえで σ の有無で選ぶと書いてある",
+        "**そのうえで、$\\sigma$ が数値で書いてあれば `z Test`、"
+        "書いていなければ `t Test`** です。")
+in_text("  標本の大きさで決めないと書いてある", "**標本の大きさでは決めません**")
+in_text("  s は σ ではないと書いてある",
+        "$\\sigma$ が「与えられた」ことにはなりません")
+# 2026-10: 第4節は BOX を 1 つに減らし、本文へ移した
+_p4 = TXT[TXT.index("### 4. Matched pairs"):TXT.index("::: {#exm-ahl418b-paired}")]
+eq("第4節の callout は警告 1 つだけ",
+   (_p4.count("::: {.callout-important}"), _p4.count("::: {.callout-tip}"),
+    _p4.count("::: {.callout-warning}"), _p4.count("::: {.callout-note")), (0, 0, 1, 0))
+in_text("差の向きを答案に書くよう指示している",
+        "**差の向きは自分で決めて、答案の最初に「$d =$ 後 $-$ 前 とする」と書いてください。**")
+in_text("  向きで H1 が逆になると書いてある",
+        "$d = (\\text{後}) - (\\text{前})$ で $\\mu_d > 0$、"
+        "$d = (\\text{前}) - (\\text{後})$ なら $\\mu_d < 0$ です。")
+in_text("  差の向きの表は削除した", "{#tbl-ahl418b-direction}", want=False)
+in_text("  ペア判定の表は箇条書きにした", "{#tbl-ahl418b-ispaired}", want=False)
+in_text("ペアの見分け方が書いてある",
+        "「$1$ 行目どうしを結びつける理由があるか」")
+in_text("  シラバスの引用は本文から外した（normal distribution）",
+        "`Test for population mean for normal distribution`", want=False)
+in_text("  正規母集団の前提を第2節の書き出しで書いている", "正規母集団の母平均を検定するとき")
 in_text("  選び分け表に正規母集団と書いてある", "**正規母集団**の母平均")
 in_text("sample variance の変換式がある", "s_{n-1}^2 = \\frac{n}{n-1}")
 
@@ -420,6 +459,16 @@ _nb = [i + 1 for i, l in enumerate(_L)
        if _re.match(r"^:{3,} *\{", l) and i > 0
        and _L[i - 1].strip() != "" and not _L[i - 1].lstrip().startswith("#")]
 eq("開き fence の前に空行がある", _nb, [])
+
+# ── レイアウト（2026-10: Worked examples の節をなくし、例題は The idea の中へ） ──
+import re as _re2
+in_text("Worked examples の節は無い", "## Worked examples", want=False)
+_why2 = TXT.find("\n## Why it works")
+_idea2 = TXT.find("\n## The idea")
+_exs2 = [m.start() for m in _re2.finditer(r"(?m)^::: \{#exm-", TXT)]
+eq("例題の数は変わらない（6）", len(_exs2), 6)
+eq("例題はすべて The idea の中（Why it works より前）",
+   _idea2 >= 0 and _why2 >= 0 and all(_idea2 < q < _why2 for q in _exs2), True)
 
 print()
 print(f"══════════ OK {ok} / NG {ng} ══════════")

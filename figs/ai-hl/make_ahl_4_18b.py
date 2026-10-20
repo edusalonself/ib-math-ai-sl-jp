@@ -43,14 +43,13 @@ def arrow(ax, x1, y1, x2, y2, label=None, col=GREY, lx=None, ly=None,
                 bbox=dict(boxstyle="round,pad=0.16", fc="white", ec="none"))
 
 
-fig, ax = plt.subplots(figsize=(12.6, 9.0))
+fig, ax = plt.subplots(figsize=(12.6, 5.6))
 ax.set_xlim(-0.25, 13.5)
-ax.set_ylim(0, 10.4)
+ax.set_ylim(3.95, 10.25)
 ax.axis("off")
 
 # ── 出発点 ─────────────────────────────────────────────
-box(ax, 6.7, 9.75, 7.2, 0.74,
-    "What does $H_0$ say something about?", INK, fs=13.0, weight="bold")
+box(ax, 6.7, 9.75, 1.6, 0.74, "$H_0$", INK, fs=13.0, weight="bold")
 
 # ── 4 つの枝 ───────────────────────────────────────────
 Y1 = 8.15
@@ -63,7 +62,7 @@ for x, w, txt, col in BR:
     arrow(ax, 6.7, 9.38, x, Y1 + 0.40, col=col)
 
 # ── 平均の枝：σ で分かれる ─────────────────────────────
-box(ax, 2.10, 6.55, 3.6, 0.70, "Is $\\sigma$ GIVEN in the question?", LINE,
+box(ax, 2.10, 6.55, 3.6, 0.70, "$\\sigma$ given?", LINE,
     fs=11.0)
 arrow(ax, 2.10, Y1 - 0.40, 2.10, 6.94, col=LINE)
 
@@ -74,10 +73,6 @@ box(ax, 3.20, 4.75, 1.90, 1.25, "t Test\n($t$-distribution)", LINE, fs=11.5,
 arrow(ax, 1.70, 6.16, 1.00, 5.41, "yes", col=LINE, lx=0.82, ly=5.86)
 arrow(ax, 2.50, 6.16, 3.20, 5.41, "no", col=LINE, lx=3.32, ly=5.86)
 
-box(ax, 2.10, 2.85, 4.0, 0.92,
-    "$\\sigma$ unknown $\\Rightarrow$ always $t$,\n"
-    "REGARDLESS OF SAMPLE SIZE", GREY, fs=10.2, tcol=GREY)
-arrow(ax, 3.20, 4.10, 2.55, 3.34, col=GREY)
 
 # ── 割合・Poisson の枝 ─────────────────────────────────
 box(ax, 6.05, 5.20, 2.9, 1.45, "Binomial Cdf\nby hand\n(ONE-TAILED only)",
@@ -88,28 +83,12 @@ box(ax, 9.10, 5.20, 2.9, 1.45, "Poisson Cdf\nby hand\n(ONE-TAILED only)",
     GOLD, fs=11.5, weight="bold", tcol=GOLD)
 arrow(ax, 9.10, Y1 - 0.40, 9.10, 5.96, col=GOLD)
 
-box(ax, 7.55, 2.85, 5.6, 0.92,
-    "these two are NOT in the Stat Tests menu —\n"
-    "you build the $p$-value yourself", GREY, fs=10.2, tcol=GREY)
-arrow(ax, 6.05, 4.45, 6.60, 3.34, col=GREY)
-arrow(ax, 9.10, 4.45, 8.50, 3.34, col=GREY)
 
 # ── 相関の枝 ───────────────────────────────────────────
 box(ax, 12.00, 5.20, 2.5, 1.45, "Linear Reg\nt Test\n($H_0$: $\\rho = 0$)",
     ACC, fs=11.5, weight="bold", tcol=ACC)
 arrow(ax, 12.00, Y1 - 0.40, 12.00, 5.96, col=ACC)
 
-box(ax, 12.00, 2.85, 2.5, 0.92,
-    "the data will be\nGIVEN in the question", GREY, fs=10.2, tcol=GREY)
-arrow(ax, 12.00, 4.45, 12.00, 3.34, col=GREY)
-
-# ── paired の注（いちばん下） ──────────────────────────
-box(ax, 6.7, 0.95, 10.4, 0.92,
-    "PAIRED data (before and after, on the same subjects):  "
-    "take the DIFFERENCES first,\n"
-    "then treat them as ONE sample and use the t Test",
-    INK, fs=11.0)
-arrow(ax, 2.10, 2.36, 3.60, 1.45, col=GREY)
 
 fig.tight_layout()
 save(fig, "ahl-4-18b-choose.svg")

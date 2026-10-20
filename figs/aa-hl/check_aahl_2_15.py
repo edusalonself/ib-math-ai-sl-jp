@@ -51,6 +51,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 def solves(rel, want, msg):
     got = sp.solveset(rel, x, R)
     chk(got == want, "%s: %s のはずが %s" % (msg, want, got))
@@ -153,10 +157,11 @@ eq(sp.factor(x ** 3 - x), x * (x - 1) * (x + 1), "演習8 因数分解")
 solves(x ** 3 <= x, U(I(-oo, -1), I(0, 1)), "演習8")
 chk((x ** 3).subs(x, -2) == -8, "演習8 検算 x=-2")
 chk((x ** 3).subs(x, sp.Rational(1, 2)) == sp.Rational(1, 8), "演習8 検算 x=0.5")
-solves(1 / x > 2, I.open(0, sp.Rational(1, 2)), "演習9")
-chk((1 / x).subs(x, sp.Rational(1, 4)) == 4, "演習9 検算 x=1/4")
-chk((1 / x).subs(x, -1) == -1, "演習9 検算 x=-1 は入らない")
-chk(not ((1 / x).subs(x, -1) > 2), "演習9 x=-1 は満たさない")
+solves(x ** 2 < 2 * x, I.open(0, 2), "演習9")
+eq(sp.factor(x ** 2 - 2 * x), x * (x - 2), "演習9 因数分解")
+chk(not ((x ** 2).subs(x, -1) < (2 * x).subs(x, -1)), "演習9 x=-1 は満たさない")
+chk(not ((x ** 2).subs(x, 3) < (2 * x).subs(x, 3)), "演習9 x=3 は満たさない")
+chk((x ** 2).subs(x, 1) < (2 * x).subs(x, 1), "演習9 検算 x=1")
 solves(x ** 2 > 4, U(I.open(-oo, -2), I.open(2, oo)), "演習10")
 chk((x ** 2).subs(x, -3) == 9, "演習10 x=-3 は満たす")
 chk(not (sp.Integer(-3) > 2), "演習10 x=-3 は x>2 を満たさない")
@@ -165,9 +170,9 @@ eq(sp.factor(x ** 2 - 4), (x - 2) * (x + 2), "演習10 因数分解")
 # ══════════════════════════════════════════════════════════
 # 4. シラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Solutions of $g(x) \\geq f(x)$, both graphically and analytically.",
+not_in_text("> Solutions of $g(x) \\geq f(x)$, both graphically and analytically.",
         "シラバス本体を逐語で")
-in_text("> Graphical or algebraic methods for simple polynomials up to degree 3."
+not_in_text("> Graphical or algebraic methods for simple polynomials up to degree 3."
         " Use of technology for these and other functions.", "Guidance を逐語で")
 in_text("## 公式集には、この項目の欄がありません", "公式集にないことを書く")
 not_in_text("公式集の **2.15**", "ありもしない欄を書かない")
@@ -188,7 +193,7 @@ in_text("`menu` → `Analyze Graph` → `Intersection`", "TI-Nspire のメニュ
 for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -197,18 +202,19 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl215-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
-chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
-    "The idea が 1..7 で連番")
+chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 7)),
+    "The idea が 1..6 で連番")
 chk(TEXT.count("**検算") >= 12, "検算が十分ある: %d" % TEXT.count("**検算"))
 not_in_text("**確かめ", "検算は「検算」で統一")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
              "当たり前", "そのとおり"]:
     not_in_text(word, "禁止語")
 _ce = TEXT[TEXT.index("\n## Common errors"):TEXT.index("\n## Exercises")]
-chk(_ce.count("::: {.callout-warning}") == 6, "Common errors が 6 つ")
+chk(_ce.count("::: {.callout-warning}") == 5, "Common errors が 5 つ")
 _MASKED = TEXT.replace("\\$", "")
 for _blk in re.findall(r"\$\$(.*?)\$\$", _MASKED, re.S):
     chk("✓" not in _blk and "✗" not in _blk, "表示数式に ✓/✗: " + _blk[:40])
@@ -242,7 +248,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -265,8 +271,7 @@ in_text("### 4. Quadratic inequalities（$2$ 次の不等式） {#quadratic}", "
 in_text("### 5. Cubic inequalities and sign diagrams（$3$ "
         "次の不等式と符号の表） {#cubic}", "見出し 5")
 in_text("### 6. When there is a repeated root（重解があるとき） {#repeated}", "見出し 6")
-in_text("### 7. Inequalities with a fraction: do not multiply "
-        "through（分数を含むとき：両辺に掛けない） {#fractions}", "見出し 7")
+not_in_text("{#fractions}", "分数の不等式の節は置かない（範囲外）")
 
 # ══════════════════════════════════════════════════════════
 # 6. 図
@@ -280,9 +285,9 @@ for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("The answer is the stretch where one graph is above the other", "図(a) の題")
-in_fig("the ends of the shaded stretch are the crossing points", "図(a) の要点")
-in_fig("A sign diagram: multiply the signs down each column", "図(b) の題")
+not_in_fig("The answer is the stretch where one graph is above the other", "図(a) の題")
+not_in_fig("the ends of the shaded stretch are the crossing points", "図(a) の要点")
+not_in_fig("A sign diagram: multiply the signs down each column", "図(b) の題")
 in_fig("product", "図(b) の行")
 in_text("答えは、片方のグラフがもう片方より上にある区間です。", "キャプション (a)")
 in_text("因数ごとの符号を縦にかけると、積の符号が出ます。", "キャプション (b)")
@@ -326,12 +331,14 @@ chk(_pm is not None and int(_pm.group(1)) == len(_written), "PLAN の進捗")
 # 9. 見張り
 # ══════════════════════════════════════════════════════════
 in_text("## 両辺を $x$ で割ってはいけません", "x で割らない")
-in_text("**「またぐたびに符号が変わる」は、因数が $1$ 回のときの話です。**",
+in_text("同じ因数が $2$ 回現れると、**符号が変わりません**",
         "重解の見張り")
-in_text("**分母が $0$ になる $x$ は、答えに入れません。**", "分母の見張り")
+not_in_text("**分母が $0$ になる $x$ は、答えに入れません。**", "分数の不等式は範囲外")
 in_text("## 答えを点で書く", "範囲で書く")
 in_text("**手で解くのは $3$ 次まで**です。", "Guidance の範囲")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

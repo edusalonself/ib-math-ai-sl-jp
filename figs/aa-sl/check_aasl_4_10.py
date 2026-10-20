@@ -50,7 +50,26 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
 
-BODY = TEXT.split("## Worked examples")[0]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 
 def not_in_body(sub, msg=""):
@@ -89,7 +108,7 @@ in_text("# SL 4.10 — The regression line of $x$ on $y$"
         "（$x$ を $y$ で表す回帰直線） {#sec-aasl-4-10}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea", "## Why it works",
-           "## Worked examples", "## Common errors", "## Exercises"):
+           "## Common errors", "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "4.10 に GDC の節は置かない（4.4 を参照する）")
 
@@ -106,7 +125,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + Paper 2 の注 1）")
 chk(TEXT.count("{.callout-important}") == 0,
     "callout-important 0（4.10 は公式集に欄がない）")
@@ -132,8 +151,8 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-4-10-idea-a.svg){#fig-aasl410-idea-a width=100%}", "図 (a) の埋め込み")
-in_text("(img/aasl-4-10-idea-b.svg){#fig-aasl410-idea-b width=100%}", "図 (b) の埋め込み")
+in_text("(img/aasl-4-10-idea-a.svg){#fig-aasl410-idea-a width=80%}", "図 (a) の埋め込み")
+in_text("(img/aasl-4-10-idea-b.svg){#fig-aasl410-idea-b width=80%}", "図 (b) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-10-idea.svg")),
     "分割前の SVG は消してある")
 in_text("@fig-aasl410-idea-a", "図 (a) の参照")
@@ -532,7 +551,7 @@ chk('"dashed horizontal gaps' not in FIGCODE, "dashed の語は外した")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -551,8 +570,8 @@ for _sent in [
     'the $x$ on $y$ line make',
 ]:
     chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
-in_text('### 7. $2$ 本の直線の関係 {#compare}', "その内容は本文にある")
-in_text('### 2. どちらの直線を使うか {#which}', "その内容は本文にある")
+in_text('### 7. How the two lines are related（$2$ 本の直線の関係） {#compare}', "その内容は本文にある")
+in_text('### 2. Choosing the line（どちらの直線を使うか） {#which}', "その内容は本文にある")
 
 
 
@@ -563,6 +582,18 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

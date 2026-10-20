@@ -56,6 +56,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 def chain(n, r):
     """かけ算の鎖 n(n-1)...(n-r+1) / r!"""
     p = sp.Integer(1)
@@ -334,12 +338,12 @@ chk(abs(1) >= 1, "x = 1 は |x| < 1 を満たさない")
 # 8. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
 in_text("公式集の **1.10** の欄に、次の形で印刷されています。", "公式集にある")
-in_text("> Extension of binomial theorem, $n \\in \\mathbb{Q}$", "見出しを逐語で")
-in_text("> $(a+b)^{n} = a^{n}\\left(1 + n\\left(\\dfrac{b}{a}\\right)"
+not_in_text("> Extension of binomial theorem, $n \\in \\mathbb{Q}$", "見出しを逐語で")
+not_in_text("> $(a+b)^{n} = a^{n}\\left(1 + n\\left(\\dfrac{b}{a}\\right)"
         " + \\dfrac{n(n-1)}{2!}\\left(\\dfrac{b}{a}\\right)^{2} + \\ldots\\right)$",
         "公式集の式を逐語で")
-in_text("> Not required: Proof of binomial theorem.", "Not required を逐語で")
-in_text("> $(a + b)^{n} = \\left(a\\left(1 + \\dfrac{b}{a}\\right)\\right)^{n}"
+not_in_text("> Not required: Proof of binomial theorem.", "Not required を逐語で")
+not_in_text("> $(a + b)^{n} = \\left(a\\left(1 + \\dfrac{b}{a}\\right)\\right)^{n}"
         " = a^{n}\\left(1 + \\dfrac{b}{a}\\right)^{n}$, $n \\in \\mathbb{Q}$",
         "Guidance のくくり出しを逐語で")
 in_text("## 範囲は、公式集にありません", "範囲は公式集にないと書く")
@@ -362,7 +366,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "nDeriv", "taylor("]:
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -372,8 +376,9 @@ chk(len(re.findall(r"^::: \{#exm-aahl110b-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 chk("## 解答例（答案用紙にはこう書く）" not in TEXT, "解答例の見出しをそろえた")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), "The idea が 1..7 で連番: %s" % _idea)
@@ -427,7 +432,7 @@ for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
 # 11. Why it works は折りたたむ
 # ══════════════════════════════════════════════════════════
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -475,10 +480,10 @@ for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("The chain of factors", "図(a) の題")
-in_fig("a factor of $0$ arrives, so the expansion stops", "図(a) の要点")
-in_fig("no factor is ever $0$, so the expansion never stops", "図(a) の要点")
-in_fig("$(1+x)^{-1}$ and its partial sums", "図(b) の題")
+not_in_fig("The chain of factors", "図(a) の題")
+not_in_fig("a factor of $0$ arrives, so the expansion stops", "図(a) の要点")
+not_in_fig("no factor is ever $0$, so the expansion never stops", "図(a) の要点")
+not_in_fig("$(1+x)^{-1}$ and its partial sums", "図(b) の題")
 in_fig("$|x| < 1$", "図(b) の帯")
 in_text("上の鎖に $0$ が現れるかどうかで、展開が終わるかどうかが決まります。",
         "キャプションが (a) を説明")
@@ -543,7 +548,7 @@ in_text("**$\\lvert x \\rvert = 1$ は、$n$ によって変わります。** �
 not_in_text("$\\lvert x \\rvert \\geq 1$ では使えません", "旧：言い切り")
 in_text("**$n$ が分数や負の数なら、$n - r = 0$ になる $0$ 以上の整数 $r$ がありません。**",
         "終わらない理由")
-in_text("$n!$ が消えたことが要です。", "Why it works の要点")
+in_text("$n!$ が消えたことがポイントです。", "Why it works の要点")
 in_text("ただし**これは $n$ が負の整数のときの話**で、$n$ が分数のときは当てはまりません。",
         "符号が交互になる条件を限定")
 in_text("**負の符号があるから交互になる、とはかぎりません。**", "演習3 の注意")
@@ -552,5 +557,7 @@ in_text("**$2$ 乗のほうは、$-\\frac{1}{2}$ 乗の計算をまったく使�
 chk(TEXT.count("まったく使っていません") >= 3, "独立な道すじだと明示している")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

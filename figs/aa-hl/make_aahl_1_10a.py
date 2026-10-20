@@ -40,8 +40,6 @@ fig2, ax2 = plt.subplots(figsize=(6.2, 2.9))
 # ══════════════════════════════════════════════════════════
 # (a) かけ算の原理：4 x 3 の格子
 # ══════════════════════════════════════════════════════════
-ax1.set_title("One shirt and one pair of trousers", fontsize=11,
-              color=INK, loc="left", pad=10)
 ax1.set_xlim(-1.35, 3.35)
 ax1.set_ylim(-1.30, 4.15)
 ax1.axis("off")
@@ -68,14 +66,10 @@ for _j in range(N_TROUSER):
 
 ax1.text(1.0, -0.72, "$4 \\times 3 = 12$ outfits", ha="center",
          va="center", fontsize=12, color=INK)
-ax1.text(1.0, -1.18, "one dot for each outfit", ha="center",
-         va="center", fontsize=10, color=GREY)
 
 # ══════════════════════════════════════════════════════════
 # (b) 選んでから並べる
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Choosing 3 people out of 8, then putting them in order",
-              fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(0.0, 1.0)
 ax2.set_ylim(0.0, 1.0)
 ax2.axis("off")
@@ -99,8 +93,6 @@ for _k, _s in enumerate(ORDERS):
     _cx = 0.46 + 0.09 * _k
     ax2.text(_cx, 0.74, _s, ha="center", va="center", fontsize=11,
              color=WARM)
-ax2.text(0.70, 0.55, "the $3!$ orders of that one selection",
-         ha="center", va="center", fontsize=9.5, color=GREY)
 ax2.text(0.70, 0.26, "$^{8}\\mathrm{P}_{3} = 336$", ha="center",
          va="center", fontsize=12, color=WARM)
 ax2.text(0.70, 0.10, "arrangements", ha="center", va="center",

@@ -221,12 +221,13 @@ eq("f''>0 は minimum", classify(x ** 2, 0), "min")
 # 7. シラバス・公式集から確かめた事実
 # ══════════════════════════════════════════════════════════════
 # （「公式集に 5.10 の欄はありません」の囲みは削除しました）
-in_text("> Both forms of notation, $\\dfrac{d^{2}y}{dx^{2}}$ and $f''(x)$ "
-        "for the second derivative.")
-in_text('> Use of the terms "concave-up" for $f\'\'(x) > 0$, and "concave-down" '
-        'for $f\'\'(x) < 0$.')
-in_text("> Awareness that a point of inflexion is a point at which the "
-        "concavity changes and interpretation of this in context.")
+# シラバスの引用は本文から外し、日本語で直接書いた
+not_in_text("> Both forms of notation")          # シラバスの引用は本文から外した
+not_in_text("> Use of the terms \"concave-up\"")  # シラバスの引用は本文から外した
+not_in_text("> Awareness that a point of inflexion")  # シラバスの引用は本文から外した
+in_text("試験では、$f''(x)$ と $\\dfrac{d^{2}y}{dx^{2}}$ の両方の書き方が使われます。")
+in_text("$f''(x) > 0$ のところを **concave-up**（下に凸）、$f''(x) < 0$ のところを **concave-down**（上に凸）といいます。")
+in_text("試験で求められるのは、point of inflexion が「concavity が変わる点」だと知っていて、**文脈でその意味を説明できること**です。")
 # （kinematics とのつながりの節は AHL 5.13 に移したので削除しました）
 
 # ══════════════════════════════════════════════════════════════
@@ -274,14 +275,19 @@ top = [h for h in h2 if h in ("What you should be able to do", "The idea",
                               "Why it works", "Worked examples",
                               "Common errors",
                               "Using your GDC (TI-Nspire CX II)", "Exercises")]
-eq("テンプレートの 7 見出しが順に並ぶ", top,
+eq("テンプレートの 6 見出しが順に並ぶ（Worked examples は廃止）", top,
    ["What you should be able to do", "The idea", "Why it works",
-    "Worked examples", "Common errors",
+    "Common errors",
     "Using your GDC (TI-Nspire CX II)", "Exercises"])
-eq("例題は 4 つ", len(re.findall(r"::: \{#exm-", TXT)), 4)
+not_in_text("## Worked examples")
+_exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(TXT.index("## The idea") < p < TXT.index("## Why it works")
+       for p in _exm), True)
+eq("例題は 4 つ（数は変わらない）", len(_exm), 4)
 eq("演習は 10 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 10)
 eq("ex-sep は 9 個", TXT.count(".ex-sep"), 9)
-eq("例題の下の区切り線は 4 本（+ YAML の 1 本）", TXT.count("\n---\n"), 5)
+eq("区切り線は YAML の 1 本だけ", TXT.count("\n---\n"), 1)
 eq("model-answer は 7 つ", TXT.count("::: {.model-answer}"), 7)
 for w in ("誰でもできる", "簡単です", "当然", "明らか", "もちろん", "当たり前",
           "そのとおり", "ご指摘", "確かめ。"):

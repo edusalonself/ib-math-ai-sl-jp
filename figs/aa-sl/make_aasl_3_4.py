@@ -39,9 +39,8 @@ fig2, ax2 = plt.subplots(figsize=(5.3, 3.9))
 # ══════════════════════════════════════════════════════════
 # (a) ラジアンの定義
 # ══════════════════════════════════════════════════════════
-ax1.set_title("One radian", fontsize=11, color=INK, loc="left", pad=10)
 ax1.set_xlim(-1.25, 2.30)
-ax1.set_ylim(-1.30, 1.30)
+ax1.set_ylim(-1.08, 1.08)
 ax1.set_aspect("equal")
 ax1.axis("off")
 
@@ -69,10 +68,8 @@ ax1.text(1.02, 0.62, "arc of length $r$", fontsize=10, color=ACCENT)
 # ══════════════════════════════════════════════════════════
 # (b) 扇形と弓形
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Sector and segment", fontsize=11, color=INK, loc="left",
-              pad=10)
 ax2.set_xlim(-1.25, 2.65)
-ax2.set_ylim(-1.30, 1.35)
+ax2.set_ylim(-1.08, 1.12)
 ax2.set_aspect("equal")
 ax2.axis("off")
 

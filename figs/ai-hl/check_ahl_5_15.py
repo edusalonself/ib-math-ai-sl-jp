@@ -410,9 +410,7 @@ closes = len([l for l in L if re.match(r"^:{3,} *$", l)])
 eq("fence の開きと閉じの数が一致", opens, closes)
 
 # Worked examples の冒頭 callout が定型どおり
-in_text("Worked examples の定型 callout",
-        "問題文は英語です。意味が理解できなかったら、問題文の下の"
-        "「**日本語訳**」を開いてください。解説は日本語です。")
+not_in_text("例題の前の案内は置かない", "問題文は英語です。意味が")
 
 # 見出しの表記
 in_text("例題の解答例の見出し", "## 解答例（答案用紙にはこう書く）")
@@ -443,9 +441,12 @@ in_text("演習10 は column で答えている",
 # features 図に (a)-(d) のラベルが入っている
 MK = open(os.path.join(os.path.dirname(__file__), "make_ahl_5_15.py"),
           encoding="utf-8").read()
-for lab in ("(a)  slope depends on $x$ only", "(b)  slope depends on $y$ only",
-            "(c)  $\\\\dfrac{dP}{dt}", "(d)  $\\\\dfrac{dy}{dx} = y$"):
+for lab in ("(c)  $\\\\dfrac{dP}{dt}", "(d)  $\\\\dfrac{dy}{dx} = y$"):
     eq("features 図のパネル label %s" % lab[:3], lab in MK, True)
+for lab in ("(a)  slope depends on $x$ only", "(b)  slope depends on $y$ only"):
+    eq("features 図のパネル説明文は外した %s" % lab[:3], lab in MK, False)
+for lab in ('ax.set_title("(a)"', 'ax.set_title("(b)"'):
+    eq("features 図のパネル label %s" % lab[-4:-1], lab in MK, True)
 # 平衡解 P = 0, 50 が格子に乗っている
 eq("logistic の格子が P = 50 を含む",
    "PY = np.arange(0, 62.5, 5.0)" in MK, True)
@@ -464,10 +465,20 @@ in_text("ロジスティックの範囲外の断り",
 # 公式集の記述
 in_text("公式集に 5.15 の欄が無いこと", "**5.14 と 5.15 の欄はありません。**")
 
-# シラバスの文言
-in_text("シラバス Content", "Slope fields and their diagrams.")
-in_text("シラバス Guidance",
-        "Students will be required to use and interpret slope fields.")
+# シラバスの文言は引用せず、日本語で直接書いた
+not_in_text("シラバス Content の引用は本文から外した", "Slope fields and their diagrams.")
+not_in_text("シラバス Guidance の引用は本文から外した",
+            "Students will be required to use and interpret slope fields.")
+in_text("使うこと・読み取ることを日本語で書いている",
+        "この項目で求められるのは、slope field を**使うこと**（曲線をかき込むこと）と**読み取ること**の $2$ つで")
+
+# ★ レイアウト：Worked examples の節は無く、例題は The idea の中にある
+not_in_text("## Worked examples が無い", "## Worked examples")
+_exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(TXT.index("## The idea") < p < TXT.index("## Why it works")
+       for p in _exm), True)
+eq("例題の数は変わらない", len(_exm), 4)
 
 
 # ══════════════════════════════════════════════════════════
@@ -482,9 +493,7 @@ in_text("交差しない理由",
         "もし同じ点を $2$ 本の異なる解曲線が通ると、"
         "**その点を initial condition とする解が複数あることになります。**")
 in_text("模範解答（英語）",
-        "*For the differential equations considered here, an initial condition "
-        "determines a unique solution. Therefore, two distinct solution curves "
-        "cannot pass through the same point.*")
+        '*For the differential equations considered here, an initial condition determines a unique solution.*\n\n*Therefore, two distinct solution curves cannot pass through the same point.*')
 not_in_text("旧模範解答",
             "Two curves crossing at that point would need two different slopes, "
             "which is impossible.")
@@ -503,7 +512,7 @@ in_text("演習の模範解答も差し替え",
 _SRC = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                          "make_ahl_5_15.py"), encoding="utf-8").read()
 in_text_ok = "(one starting point gives only ONE solution)" in _SRC
-eq("図(d)の副題を一意性の言い方に直した", in_text_ok, True)
+eq("図(d)の副題（説明文）は図から外した", in_text_ok, False)
 eq("図(d)から「ONE slope at each point」を外した",
    "there is only ONE slope at each point" in _SRC, False)
 

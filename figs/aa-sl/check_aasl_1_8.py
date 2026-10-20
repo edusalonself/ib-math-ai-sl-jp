@@ -72,6 +72,10 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている（消したはず）: " + msg + " :: " + sub[:70])
+
 # ══════════════════════════════════════════════════════════
 # 0. 公式そのもの
 # ══════════════════════════════════════════════════════════
@@ -306,7 +310,7 @@ in_text("**これは確かめであって、答案ではありません。**", "
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -314,9 +318,16 @@ chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
 chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aasl18-", TEXT, re.M)) == 4, "例題が 4")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
@@ -368,9 +379,10 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("A square of area $1$", "図(a) の題")
-in_fig("The terms of $r^{\\\\,n}$", "図(b) の題")
-in_fig("dies away to $0$", "図(b) の |r|<1")
+not_in_fig("A square of area", "図(a) の題は外した（本文とキャプションが言う）")
+not_in_fig("The terms of", "図(b) の題は外した（縦軸のラベルにした）")
+in_fig("ax2.set_ylabel(\"$r^{\\\\,n}$\"", "図(b) の縦軸は r^n")
+not_in_fig("dies away", "図(b) の説明の文は外した（本文の表が言う）")
 in_fig("off the top", "図(b) の |r|>1")
 # 図の値が本文と合っているか
 _edges, _x = [0], R(0)
@@ -391,11 +403,15 @@ for leak in ["100", "= 27", "= 30", "20}{7", "5}{9", "2}{11", "= 32", "= 16"]:
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-8.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-1-7b.qmd") < DRAFT.index("aasl-1-8.qmd"), "並びが 1.7b → 1.8")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/01-number-and-algebra/aasl-1-8.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-1-7b.qmd") < DRAFT.index("aasl-1-8.qmd"), "並びが 1.7b → 1.8")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-8.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -563,7 +579,7 @@ _figcol("tbl-aasl18-diverge", "@fig-aasl18-idea-b")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -573,13 +589,13 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
 # ══════════════════════════════════════════════════════════
-in_text('無限等比級数の和 $S_{\\infty}$ を求める公式は、次のとおりです。', "公式の前置き 1")
+in_text('無限 **geometric series**（等比級数）の和 $S_{\\infty}$ を求める公式は、次のとおりです。', "公式の前置き 1")
 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 4. convergence and divergence（収束と発散） {#converge}', "見出しの英語: 4. convergence and diverge")
-in_text('### 6. recurring decimal（循環小数）を分数に直す {#recurring}', "見出しの英語: 6. recurring decimal（循環小数）")
+in_text('### 4. Convergence and divergence（収束と発散） {#converge}', "見出しの英語: 4. convergence and diverge")
+in_text('### 6. Recurring decimals as fractions（循環小数を分数に直す） {#recurring}', "見出しの英語: 6. recurring decimal（循環小数）")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：図 (a) から説明の文を外した（方針 第 21 節）
@@ -605,8 +621,8 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 # ══════════════════════════════════════════════════════════
 # 2026-10-01 の手直し
 # ══════════════════════════════════════════════════════════
-in_text("![A square of area $1$, filled by halving what is left]"
-        "(img/aasl-1-8-idea-a.svg){#fig-aasl18-idea-a width=100%}",
+in_text("![面積 $1$ の正方形を、残りの半分ずつで埋めていきます。]"
+        "(img/aasl-1-8-idea-a.svg){#fig-aasl18-idea-a width=55%}",
         "図 1 のキャプション")
 not_in_text("Each new piece is half of what is left", "前のキャプションは消した")
 in_text("**面積 $1$ の正方形を、毎回「残りの半分」で埋めていくのと同じです**",
@@ -630,9 +646,9 @@ chk(_from_fig == _areas, "区画の面積が 1/2, 1/4, 1/8, ...: %s" % _from_fig
 chk(sum(_from_fig) == 1 - sp.Rational(1, 2) ** 8, "8 区画の合計は 1 - 1/256")
 
 # 見出し
-in_text("### 2. sum to infinity（無限等比級数の和） {#formula}", "第 2 節の見出し")
+in_text('### 2. Sum to infinity（無限等比級数の和） {#formula}', "第 2 節の見出し")
 not_in_text("### 2. 公式 {#formula}", "前の見出しは消した")
-in_text("### 3. modulus（絶対値） {#modulus}", "第 3 節の見出し")
+in_text('### 3. Modulus（絶対値） {#modulus}', "第 3 節の見出し")
 not_in_text("### 3. $|r| < 1$ の読み方", "前の見出しは消した")
 
 # 第 6 節（逆向きに使う）は削除
@@ -640,7 +656,7 @@ not_in_text("#backwards", "逆向きの節は消した")
 not_in_text("### 6. 逆向きに使う", "その見出しも消した")
 not_in_text("**分母をはらってから動かす**のが、いちばん間違えにくい順です。",
             "その本文も消した")
-in_text("### 6. recurring decimal（循環小数）を分数に直す {#recurring}",
+in_text('### 6. Recurring decimals as fractions（循環小数を分数に直す） {#recurring}',
         "第 6 節は循環小数")
 chk(TEXT.count("[第 2 節](#formula)") >= 3,
     "逆向きの参照は第 2 節へ: %d 件" % TEXT.count("[第 2 節](#formula)"))

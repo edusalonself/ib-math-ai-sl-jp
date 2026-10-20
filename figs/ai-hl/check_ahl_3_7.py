@@ -275,18 +275,29 @@ chk(sp.solve(sp.Eq(R ** 2 * t / 2, sp.Symbol("A", positive=True)), t)[0]
 # 11. 公式集・シラバスの引用
 # ══════════════════════════════════════════════════════════
 in_text("l = r\\theta \\quad (\\text{arc length}), \\qquad A = \\frac{1}{2}r^{2}\\theta")
-in_text("> where $r$ is the radius, $\\theta$ is the angle measured in radians",
-        "断り書きは引用ブロックで")
-in_text("いっぽう、**度とラジアンの換算は印刷されていません。**")
-in_text("> The definition of a radian and conversion between degrees and radians.")
-in_text("> Using radians to calculate area of sector, length of arc.")
-in_text("> Radian measure may be expressed as exact multiples of $\\pi$, or decimals.")
-in_text("> **Link to:** trigonometric functions (AHL 2.9).")
-in_text("> On HL examination papers radian measure should be assumed unless otherwise indicated.")
-in_text("Recommended teaching hours は $28$ 時間です")
-in_text("> **Links to other subjects:** Diffraction patterns and circular motion (physics)")
-in_text("Seki Takakazu calculating $\\pi$ to ten decimal places")
-in_text("> **TOK:** Which is the better measure of an angle, degrees or radians?")
+not_in_text("> where $r$ is the radius", "断り書きは引用せず日本語で")
+in_text("「$\\theta$ はラジアンで測った角」という断り書き", "断り書きは日本語で")
+in_text("**この換算の式は公式集に載っていません。** この $1$ 行だけは、自分で覚えておきます。",
+        "換算が公式集にないこと（第3節）")
+in_text("この式と次の節の面積の式は、公式集の **AHL 3.7** の欄にあります（式は配られるので、覚える必要はありません）。",
+        "弧と扇形の式が公式集にあること（第5節）")
+for _q in ["> The definition of a radian and conversion between degrees and radians.",
+           "> Using radians to calculate area of sector, length of arc.",
+           "> Radian measure may be expressed as exact multiples of $\\pi$, or decimals.",
+           "> **Link to:** trigonometric functions (AHL 2.9).",
+           "> On HL examination papers radian measure should be assumed unless otherwise indicated.",
+           "Recommended teaching hours は $28$ 時間です",
+           "> **Links to other subjects:** Diffraction patterns and circular motion (physics)",
+           "Seki Takakazu calculating $\\pi$ to ten decimal places",
+           "> **TOK:** Which is the better measure of an angle, degrees or radians?",
+           "参考：シラバスの原文"]:
+    not_in_text(_q, "シラバスの引用・原文の付録は本文から外した")
+# 引用の代わりに日本語で書いてある
+in_text("ラジアンは、**$\\pi$ の倍数でも小数でも、どちらの形で書いても構いません。**",
+        "π の倍数でも小数でもよい")
+in_text("## HL の試験では、断りがなければラジアンです", "HL はラジアンが既定")
+in_text("[AHL 2.9a](../02-functions/ahl-2-9a.qmd#radian) でも同じ話をしています",
+        "三角関数（AHL 2.9）とのつながり")
 
 # ══════════════════════════════════════════════════════════
 # 12. GDC
@@ -310,7 +321,7 @@ chk("solve(" not in TEXT.replace("nSolve(", ""), "CAS 専用の solve( を使っ
 # ══════════════════════════════════════════════════════════
 # 13. 構造
 # ══════════════════════════════════════════════════════════
-chk(sum(1 for l in TEXT.split("\n") if l.strip() == "---") == 6,
+chk(sum(1 for l in TEXT.split("\n") if l.strip() == "---") == 2,
     "--- は 6 本（front matter 2 + 例題 4）")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳は 14 個")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep は 9 個")
@@ -322,10 +333,18 @@ idea = re.findall(r"(?m)^### (\d+)\.", TEXT)
 chk(idea == [str(i) for i in range(1, 8)] + [str(i) for i in range(1, 6)],
     "The idea 1..8 と GDC 1..5 の連番: " + str(idea))
 chk(TEXT.count("::: {.model-answer}") == 4, "model-answer は 4 個")
+_hpos = []
 for h in ["## What you should be able to do", "## The idea", "## Why it works",
-          "## Worked examples", "## Common errors",
+          "## Common errors",
           "## Using your GDC (TI-Nspire CX II)", "## Exercises"]:
     in_text(h, "固定見出し")
+    _hpos.append(TEXT.find("\n" + h + "\n"))
+chk(all(p >= 0 for p in _hpos) and _hpos == sorted(_hpos), "固定見出しが所定の順")
+not_in_text("## Worked examples", "Worked examples の節は無い")
+_why = TEXT.find("\n## Why it works")
+_exs = [m.start() for m in re.finditer(r"(?m)^::: \{#exm-", TEXT)]
+chk(len(_exs) == 4 and all(TEXT.find("\n## The idea") < p < _why for p in _exs),
+    "例題 4 つがすべて The idea の中（Why it works より前）")
 for cmd in ["Comment on this statement", "Explain why", "Interpret what happens",
             "Identify the error"]:
     in_text(cmd, "command term")
@@ -336,8 +355,8 @@ chk(TEXT.count("**検算。**") == 11, "検算。の個数: " + str(TEXT.count("
 for term in ["**radian**（ラジアン）", "扇形の**周**（perimeter）"]:
     pass
 in_text("**radian**（ラジアン）", "英語→日本語の順")
-in_text("![What a radian is, and why a full turn is $2\\pi$](img/ahl-3-7-radian.svg)")
-in_text("![The two formulas, and where they come from](img/ahl-3-7-sector.svg)")
+in_text("![ラジアンとは何か、そして $1$ 周が $2\\pi$ になる理由です。](img/ahl-3-7-radian.svg)")
+in_text("![$2$ つの公式と、その出どころです。](img/ahl-3-7-sector.svg)")
 for svg in ["ahl-3-7-radian.svg", "ahl-3-7-sector.svg"]:
     chk(os.path.exists(os.path.join(HERE, "..", "..", "ai-hl",
                                     "03-geometry-and-trigonometry", "img", svg)),
@@ -349,9 +368,14 @@ for anc in set(re.findall(r"\]\(#([a-z0-9-]+)\)", TEXT)):
 refs = set(re.findall(r"@((?:eq|fig|tbl|exm)-[a-z0-9-]+)", TEXT))
 for rf in refs:
     chk(rf in anchors, "crossref の先がない: @" + rf)
+# 2026-10: 公式集ボックスを消したとき、そこから参照されていた 2 つのラベルは
+#          本文の式に残した（ログ ahl-3-7.md）。参照が無くても害はないので除外する。
+_UNREF_OK = {"eq-ahl37-both", "eq-ahl37-convert"}
 for a in anchors:
-    if re.match(r"(eq|fig|tbl|exm)-", a):
+    if re.match(r"(eq|fig|tbl|exm)-", a) and a not in _UNREF_OK:
         chk(a in refs, "使われていない crossref アンカー: " + a)
+for a in _UNREF_OK:
+    chk(a in anchors, "ラベルは本文の式に残っている: " + a)
 for m in re.findall(r"`[^`\n]*`", TEXT):
     chk("$" not in m, "コードスパンに $ が入っている: " + m[:50])
 for line in TEXT.split("\n"):
@@ -369,15 +393,18 @@ in_text("[AHL 2.9a](../02-functions/ahl-2-9a.qmd#radian)")
 #    登録先は _quarto-draft.yml ではなく _quarto.yml です。
 #    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
 #    「index の一覧にある」「残りの N 項目」は、もう検査しません。
-PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"),
-           encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-7.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
-chk(PUB.index("ahl-3-7.qmd") < PUB.index("ahl-3-9.qmd"),
-    "サイドバーで 3.7 が 3.9 より先")
-DRAFT = open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
-             encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-7.qmd" not in DRAFT,
-    "下書き用の _quarto-draft.yml には残っていない")
+# _quarto.yml / _quarto-draft.yml が無い作業用コピーでは、登録の検査は飛ばす
+_PUBF = os.path.join(HERE, "..", "..", "_quarto.yml")
+if os.path.exists(_PUBF):
+    PUB = open(_PUBF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-7.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
+    chk(PUB.index("ahl-3-7.qmd") < PUB.index("ahl-3-9.qmd"),
+        "サイドバーで 3.7 が 3.9 より先")
+_DRF = os.path.join(HERE, "..", "..", "_quarto-draft.yml")
+if os.path.exists(_DRF):
+    DRAFT = open(_DRF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-7.qmd" not in DRAFT,
+        "下書き用の _quarto-draft.yml には残っていない")
 
 GLO = open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
            encoding="utf-8").read()

@@ -16,7 +16,7 @@ sidebar: ai-hl
 
 ## The idea
 
-### 1. 傾きが分かれば、少し先が予想できます {#idea}
+### 1. The idea of Euler's method（傾きを使って少し先を予想する） {#idea}
 
 [AHL 5.14](ahl-5-14.qmd) で**式で解き**、[AHL 5.15](ahl-5-15.qmd) で**絵で見ました。** このページは **$3$ つ目、数値で追う**方法です。
 
@@ -28,7 +28,7 @@ sidebar: ai-hl
 
 : 微分方程式の $3$ つの扱いかた {#tbl-ahl516a-three}
 
-シラバスも **`approximate`**（近似）と書いています。**ぴったりの答えは出ません。**
+この方法で出るのは **approximation**（近似値）です。**ぴったりの答えは出ません。**
 
 [AHL 5.15](ahl-5-15.qmd#idea) で見たように、微分方程式は**どの点でも傾きを教えてくれます。**
 
@@ -36,21 +36,21 @@ $$
 \frac{dy}{dx} = x + y
 $$
 
-点 $(0,\ 1)$ なら、傾きは $0 + 1 = 1$ です。
+点 $(0,\ 1)$ なら、**gradient**（傾き）は $0 + 1 = 1$ です。
 
 **では、そこから少しだけ進んだ先の $y$ は、いくつでしょうか。**
 
 正確には分かりません。しかし、**傾き $1$ でまっすぐ進んだ**とすれば、見当はつきます。$x$ が $0.3$ だけ増えれば、$y$ は $1 \times 0.3 = 0.3$ 増えて $1.3$ です。
 
-![One step, then another](img/ahl-5-16a-step.svg){#fig-ahl516a-step width=100%}
+![$1$ 歩進み、また $1$ 歩進みます。](img/ahl-5-16a-step.svg){#fig-ahl516a-step width=100%}
 
 @fig-ahl516a-step の (a) と (b) が、この $1$ 歩です。
 
 **そして、着いた先でもう一度、傾きを聞きます。** 新しい点 $(0.3,\ 1.3)$ での傾きは $0.3 + 1.3 = 1.6$ です。今度はその向きに進みます。
 
-**これをくり返すのが Euler's method です。** (c) のように、答えは**折れ線**になります。
+**これをくり返すのが Euler's method**（オイラー法）**です。** (c) のように、答えは**折れ線**になります。
 
-![The polygon cuts the corners](img/ahl-5-16a-gap.svg){#fig-ahl516a-gap width=65%}
+![折れ線は、曲線のカーブを近道します。](img/ahl-5-16a-gap.svg){#fig-ahl516a-gap width=90%}
 
 ::: {.callout-important}
 ## 折れ線なので、本当の曲線からはずれます
@@ -67,22 +67,22 @@ $$
 
 ::: {.callout-tip}
 ## [SL 5.4](../../ai-sl/05-calculus/sl-5-4.qmd) の tangent（接線）と同じことです
-ある点での接線は、**その点の近くで曲線とよく似ています。**
+ある点での **tangent**（接線）は、**その点の近くで曲線とよく似ています。**
 
 Euler's method は、その接線を**少しだけ**たどって、また新しい接線に乗りかえる、というくり返しです。
 
 **「少しだけ」が $h$ です。** $h$ が小さいほど、接線から離れる前に乗りかえられます。
 :::
 
-### 2. 公式の読み方 {#formula}
+### 2. Reading the formula（公式の読み方） {#formula}
 
-使う式は**公式集に載っています（5.16 の欄）。覚える必要はありません。**
+Euler's method で $1$ 歩ずつ進むための式です。公式集の **5.16** の欄にあるので、**覚える必要はありません。**
 
 $$
 y_{n+1} = y_n + h \times f(x_n,\ y_n), \qquad x_{n+1} = x_n + h
 $$ {#eq-ahl516a-euler}
 
-> where $h$ is a constant (step length)
+ここで $h$ は定数です。
 
 **記号が多く見えますが、言っていることは $1$ つです。**
 
@@ -104,7 +104,7 @@ $$
 
 ::: {.callout-warning}
 ## $f(x_n,\ y_n)$ は「新しい関数」ではありません
-$f(x,\ y)$ は、**微分方程式の右辺そのもの**です。
+$f(x,\ y)$ は、**differential equation（微分方程式）の右辺そのもの**です。
 
 $\dfrac{dy}{dx} = x + y$ なら $f(x,\ y) = x + y$、$\dfrac{dy}{dx} = 2 - y$ なら $f(x,\ y) = 2 - y$ です。
 
@@ -122,7 +122,7 @@ $$
 **右辺に $x$ が入っていない微分方程式**（たとえば $\dfrac{dy}{dx} = 2 - y$）なら $x$ を使わずに済みますが、$\dfrac{dy}{dx} = x + y$ のような式では、$x$ がずれると全部ずれます。
 :::
 
-### 3. 表にすると間違えません {#table}
+### 3. Using a table（表にして計算する） {#table}
 
 **手で歩くときは、必ず表を作ってください。** 頭の中でやると、どこかで $h$ を掛け忘れます。
 
@@ -152,206 +152,6 @@ $$
 **$h \times f$ の列は、答えではありません。** 途中の計算です。
 :::
 
-### 4. 刻み幅（step length）$h$ {#h}
-
-![Smaller steps, smaller error](img/ahl-5-16a-h.svg){#fig-ahl516a-h width=100%}
-
-@fig-ahl516a-h の $4$ 枚は、**同じ微分方程式を、$h$ だけ変えて**解いたものです。
-
-| $h$ | 歩数 number of steps（$x = 0.9$ まで） | $x = 0.9$ での誤差 |
-|---|---|---|
-| $0.45$ | $2$ | $0.714$ |
-| $0.3$ | $3$ | $0.525$ |
-| $0.15$ | $6$ | $0.293$ |
-| $0.075$ | $12$ | $0.156$ |
-
-: $h$ を半分にすると、誤差もおよそ半分 {#tbl-ahl516a-hs}
-
-**$h$ を小さくすると正確になりますが、歩数（number of steps）が増えます。** $h$ を半分にすれば、歩数は $2$ 倍です。
-
-$$
-(\text{歩数}) = \frac{(\text{進みたい幅})}{h}
-$$
-
-::: {.callout-important}
-## 歩数の数えかたを間違えないでください
-「$x = 0$ から $x = 0.3$ まで、$h = 0.1$ で」なら、**$3$ 歩**です。
-
-$$
-\frac{0.3 - 0}{0.1} = 3
-$$
-
-表の行は、$n = 0,\ 1,\ 2,\ 3$ の**$4$ 行**になります。**行の数と歩数は $1$ 違います。**
-
-$n = 3$ の行まで書いて、そこで止めてください。$4$ 歩目を進むと、$x = 0.4$ まで行ってしまいます。
-:::
-
-::: {.callout-tip}
-## $h$ は問題文で必ず指定されます
-自分で決めることはありません。*with step length $h = 0.2$* のように書かれています。
-
-**指定された $h$ を、そのまま使ってください。**
-:::
-
-### 5. 誤差の向きと大きさ {#error}
-
-![Which way, and by how much](img/ahl-5-16a-error.svg){#fig-ahl516a-error width=100%}
-
-**向きは、解曲線の曲がり方で決まります。**
-
-@fig-ahl516a-error の (a) と (b) を見くらべてください。
-
-| 解曲線の曲がり方 | 接線の位置 | Euler の答え |
-|---|---|---|
-| 上に曲がる（**concave-up**、下に凸） | 曲線の**下**を通る | **小さめ**に出る |
-| 下に曲がる（**concave-down**、上に凸） | 曲線の**上**を通る | **大きめ**に出る |
-
-: 誤差の向き {#tbl-ahl516a-direction}
-
-**大きさは $h$ で決まります。** @tbl-ahl516a-hs のとおり、$h$ に**ほぼ比例**します。
-
-::: {.callout-warning}
-## この向きの判定は、曲がり方が途中で変わらないときの話です
-解曲線が途中で concave-up から concave-down に変わると、**ずれの向きも変わることがあります。**
-
-AI HL で出るのはほとんどが**曲がり方の変わらない**場面ですが、*Explain why* と問われたら、**見ている区間で**の曲がり方を根拠にしてください。
-:::
-
-::: {.callout-tip}
-## 「concave-up かどうか」は、グラフか $2$ 階微分で見ます
-グラフが与えられていれば、見れば分かります。
-
-式で言うなら、**second derivative**（$2$ 階導関数）が正なら concave-up です。second derivative そのものは [AHL 5.10](ahl-5-10.qmd) で扱います。**concave-up / concave-down は、シラバスが名指ししている言葉です**（AHL 5.10 の Guidance 欄）。
-
-$$
-\frac{d^2y}{dx^2} > 0 \ \Longrightarrow \ \text{concave-up（下に凸）}
-$$
-
-$y = 2e^x - x - 1$ なら $\dfrac{d^2y}{dx^2} = 2e^x > 0$ で、**いつでも concave-up** です。だから @fig-ahl516a-error の (a) は、ずっと小さめに出ます。
-:::
-
-::: {.callout-important}
-## 答えを書くとき、「近似値」と分かるようにしてください
-Euler の答えは近似です。
-
-*Find an approximation for $y$ when $x = 0.3$* と問われたら、$y \approx 1.362$ のように **$\approx$** で書きます。
-
-*Comment on the accuracy of your answer* と問われたら、こう書きます。
-
-**書くことは $3$ つです。** ①近似であること、②どちら向きにずれるか（曲がり方を根拠に）、③どうすればよくなるか。
-
-次は、解曲線が **concave-up** の場合の書き方です。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*The value is only an approximation, because Euler's method replaces the curve by a chain of straight line segments. The exact solution curve bends upwards, so the tangent segments lie below it and the estimate is too small. Using a smaller step length $h$ would reduce the error.*
-:::
-
-（この値は近似にすぎない。Euler 法は曲線を直線のつながりで置きかえているからである。正確な解曲線は上に曲がっているので、接線は曲線の下を通り、推定値は小さすぎる。刻み幅 $h$ を小さくすれば誤差は減る、という意味です。）
-
-**concave-down のときは、②だけを入れかえます。** *bends downwards → tangent segments lie above it → the estimate is too large* です（@tbl-ahl516a-direction）。
-:::
-
-### 6. slope field の上を歩いています {#field}
-
-![Walking through a slope field](img/ahl-5-16a-field.svg){#fig-ahl516a-field width=100%}
-
-@fig-ahl516a-field は、[AHL 5.15](ahl-5-15.qmd) の slope field の上に、Euler の折れ線を重ねたものです。
-
-**やっていることは同じ**です。線分の向きに進む——それを絵でやるのが 5.15、数でやるのが 5.16 です。
-
-$h$ が大きいと、**途中で出会う線分を無視して**進んでしまいます。$h$ が小さければ、線分に沿ったまま進めます。
-
-::: {.callout-tip}
-## slope field が与えられたら、答えの見当がつきます
-表を作ったあとで、**その値が場の絵と合っているか**を見てください。
-
-たとえば場が右上がりばかりなのに $y$ が減っていたら、どこかで計算を間違えています。**$30$ 秒でできる検算です。**
-:::
-
-### 7. スプレッドシートと、試験での扱い {#tech}
-
-シラバスの Guidance が、はっきり書いています。
-
-> Spreadsheets should be used to find approximate solutions to differential equations.
->
-> In examinations, values will be generated using permissible technology.
-
-**歩数が多い問題は、手では解きません。** スプレッドシートか GDC を使います（[GDC 第1節](#gdc-sheet)）。
-
-::: {.callout-note appearance="simple"}
-それでも、このページでは**まず手で $2$〜$3$ 歩たどります。**
-
-式に何を入れているのかが分かっていないと、**電卓の出した数が正しいかどうか判断できない**からです。手で $3$ 歩できれば、$300$ 歩は電卓に任せられます。
-:::
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-### なぜ「傾き × 幅」を足してよいのか {#why}
-
-[SL 5.1](../../ai-sl/05-calculus/sl-5-1.qmd) で、導関数はこう定義されました。
-
-$$
-\frac{dy}{dx} = \lim_{h \to 0} \frac{y(x+h) - y(x)}{h}
-$$
-
-**$h$ が小さいときは、極限を取る前の式でも近い**はずです。
-
-$$
-\frac{dy}{dx} \approx \frac{y(x+h) - y(x)}{h}
-$$
-
-両辺に $h$ を掛けて、$y(x+h)$ について解きます。
-
-$$
-y(x+h) \approx y(x) + h \times \frac{dy}{dx}
-$$
-
-**右辺の $\dfrac{dy}{dx}$ を、微分方程式が教えてくれます。** それが $f(x,\ y)$ です。
-
-$$
-y(x+h) \approx y(x) + h \times f(x,\ y)
-$$
-
-これが @eq-ahl516a-euler そのものです。**公式は、導関数の定義を「途中で止めた」だけ**です。
-
-### なぜ誤差は $h$ に比例するのか {#why-error}
-
-**$1$ 歩あたりの誤差**は、$h^2$ に比例します。接線と曲線の離れ方が、$h$ の $2$ 乗で効いてくるからです（曲がり方が $\dfrac{d^2y}{dx^2}$ で決まるため）。
-
-いっぽう、決まった幅 $X$ を進むのに必要な**歩数**は $\dfrac{X}{h}$ です。
-
-$$
-(\text{全体の誤差}) \approx (\text{1 歩の誤差}) \times (\text{歩数}) \approx h^2 \times \frac{X}{h} = hX
-$$
-
-**$h$ の $1$ 乗が残ります。** だから $h$ を半分にすると、誤差もおよそ半分になります（@tbl-ahl516a-hs）。
-
-::: {.callout-note appearance="simple"}
-この計算は **AI HL では問われません。** 「$h$ を小さくすれば誤差が減る」と言えれば十分です。
-
-なぜ $2$ 乗が $1$ 乗になるのかが気になった人のために書いてあります。
-:::
-
-### 誤差は、たまってから減りません {#why-accumulate}
-
-$1$ 歩目でずれると、$2$ 歩目は**ずれた点から**始まります。そこで読む傾きも、本当の傾きではありません。
-
-つまり、**誤差は歩くほどたまります。** @fig-ahl516a-gap で、右へ行くほど差が開いているのは、そのためです。
-
-だから、**「$x = 5$ での値を $h = 1$ で」のような問題では、答えはかなり粗くなります。** 近似だと言い添えてください。
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-:::
-
 ::: {#exm-ahl516a-basic}
 [Consider the differential equation $\dfrac{dy}{dx} = x + y$ with $y = 1$ when $x = 0$.]{.q-en}
 
@@ -376,7 +176,8 @@ $1$ 歩目でずれると、$2$ 歩目は**ずれた点から**始まります�
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** $f(x,\ y) = x + y$ です。$x = 0$ から $x = 0.3$ まで、$h = 0.1$ なので **$3$ 歩**です（[第4節](#h)）。
 
@@ -472,6 +273,50 @@ $$
 $$
 :::
 :::
+:::
+
+### 4. Step length（刻み幅 $h$） {#h}
+
+**step length**（刻み幅）$h$ は、$1$ 歩で $x$ を進める幅です。$h$ の大きさで、答えの正確さが変わります。
+
+![刻み幅を小さくすると、誤差も小さくなります。](img/ahl-5-16a-h.svg){#fig-ahl516a-h width=100%}
+
+@fig-ahl516a-h の $4$ 枚は、**同じ微分方程式を、$h$ だけ変えて**解いたものです。灰色の曲線が正確な解です。
+
+| $h$ | 歩数（$x = 0.9$ まで） | $x = 0.9$ での誤差 |
+|---|---|---|
+| $0.45$ | $2$ | $0.714$ |
+| $0.3$ | $3$ | $0.525$ |
+| $0.15$ | $6$ | $0.293$ |
+| $0.075$ | $12$ | $0.156$ |
+
+: $h$ を半分にすると、誤差もおよそ半分 {#tbl-ahl516a-hs}
+
+**$h$ を小さくすると正確になりますが、**number of steps**（歩数）が増えます。** $h$ を半分にすれば、歩数は $2$ 倍です。
+
+$$
+(\text{歩数}) = \frac{(\text{進みたい幅})}{h}
+$$
+
+::: {.callout-important}
+## 歩数の数えかたを間違えないでください
+「$x = 0$ から $x = 0.3$ まで、$h = 0.1$ で」なら、**$3$ 歩**です。
+
+$$
+\frac{0.3 - 0}{0.1} = 3
+$$
+
+表の行は、$n = 0,\ 1,\ 2,\ 3$ の**$4$ 行**になります。**行の数と歩数は $1$ 違います。**
+
+$n = 3$ の行まで書いて、そこで止めてください。$4$ 歩目を進むと、$x = 0.4$ まで行ってしまいます。
+:::
+
+::: {.callout-tip}
+## $h$ は問題文で必ず指定されます
+自分で決めることはありません。*with step length $h = 0.2$* のように書かれています。
+
+**指定された $h$ を、そのまま使ってください。**
+:::
 
 ::: {#exm-ahl516a-smaller}
 [The same differential equation $\dfrac{dy}{dx} = x + y$ with $y(0) = 1$ is solved again, this time with $h = 0.05$.]{.q-en}
@@ -497,7 +342,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)**
 
@@ -524,7 +370,11 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Euler's method replaces the curve by straight segments, and each segment leaves the curve because the curve bends. A smaller step length means each straight segment is shorter, so it stays closer to the curve before a new slope is taken. The total error is therefore smaller.*
+*Euler's method replaces the curve by straight segments, and each segment leaves the curve because the curve bends.*
+
+*A smaller step length means each straight segment is shorter, so it stays closer to the curve before a new slope is taken.*
+
+*The total error is therefore smaller.*
 :::
 
 （Euler 法は曲線を直線の区間で置きかえており、曲線が曲がるために各区間は曲線から離れていく。刻み幅が小さいほど各区間は短くなり、次の傾きを取るまでに曲線から離れる量が少ない。したがって全体の誤差も小さくなる、という意味です。）
@@ -562,6 +412,73 @@ $$
 :::
 :::
 :::
+:::
+
+### 5. Direction and size of the error（誤差の向きと大きさ） {#error}
+
+Euler's method の答えは、正確な値から少しずれます。このずれ（**error**、誤差）が、どちら向きに、どれくらい出るかを考えます。
+
+![誤差がどちら向きに、どれくらい出るかです。](img/ahl-5-16a-error.svg){#fig-ahl516a-error width=100%}
+
+**向きは、解曲線の曲がり方で決まります。**
+
+@fig-ahl516a-error の (a) と (b) を見くらべてください。
+
+| 解曲線の曲がり方 | 接線の位置 | Euler の答え |
+|---|---|---|
+| 上に曲がる（**concave-up**、下に凸） | 曲線の**下**を通る | **小さめ**に出る |
+| 下に曲がる（**concave-down**、上に凸） | 曲線の**上**を通る | **大きめ**に出る |
+
+: 誤差の向き {#tbl-ahl516a-direction}
+
+**大きさは $h$ で決まります。** @tbl-ahl516a-hs のとおり、$h$ に**ほぼ比例**します。
+
+::: {.callout-warning}
+## この向きの判定は、曲がり方が途中で変わらないときの話です
+解曲線が途中で concave-up から concave-down に変わると、**ずれの向きも変わることがあります。**
+
+AI HL で出るのはほとんどが**曲がり方の変わらない**場面ですが、*Explain why* と問われたら、**見ている区間で**の曲がり方を根拠にしてください。
+:::
+
+::: {.callout-tip}
+## 「concave-up かどうか」は、グラフか $2$ 階微分で見ます
+グラフが与えられていれば、見れば分かります。
+
+式で言うなら、**second derivative**（$2$ 階導関数）が正なら concave-up です。second derivative そのものは [AHL 5.10](ahl-5-10.qmd) で扱います。**concave-up / concave-down という言葉は、そのまま覚えてください**（[AHL 5.10](ahl-5-10.qmd)）。
+
+$$
+\frac{d^2y}{dx^2} > 0 \ \Longrightarrow \ \text{concave-up（下に凸）}
+$$
+
+$y = 2e^x - x - 1$ なら $\dfrac{d^2y}{dx^2} = 2e^x > 0$ で、**いつでも concave-up** です。だから @fig-ahl516a-error の (a) は、ずっと小さめに出ます。
+:::
+
+::: {.callout-important}
+## 答えを書くとき、「近似値」と分かるようにしてください
+Euler の答えは近似です。
+
+*Find an approximation for $y$ when $x = 0.3$* と問われたら、$y \approx 1.362$ のように **$\approx$** で書きます。
+
+*Comment on the accuracy of your answer* と問われたら、こう書きます。
+
+**書くことは $3$ つです。** ①近似であること、②どちら向きにずれるか（曲がり方を根拠に）、③どうすればよくなるか。
+
+次は、解曲線が **concave-up** の場合の書き方です。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The value is only an approximation, because Euler's method replaces the curve by a chain of straight line segments.*
+
+*The exact solution curve bends upwards, so the tangent segments lie below it and the estimate is too small.*
+
+*Using a smaller step length $h$ would reduce the error.*
+:::
+
+（この値は近似にすぎない。Euler 法は曲線を直線のつながりで置きかえているからである。正確な解曲線は上に曲がっているので、接線は曲線の下を通り、推定値は小さすぎる。刻み幅 $h$ を小さくすれば誤差は減る、という意味です。）
+
+**concave-down のときは、②だけを入れかえます。** *bends downwards → tangent segments lie above it → the estimate is too large* です（@tbl-ahl516a-direction）。
+:::
 
 ::: {#exm-ahl516a-cooling}
 [A metal block cools in a room. Its temperature $\theta\ ^\circ$C after $t$ minutes satisfies]{.q-en}
@@ -585,7 +502,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** $f(t,\ \theta) = -0.1(\theta - 20)$ です。**右辺に $t$ が入っていません**が、やり方は同じです。
 
@@ -626,7 +544,11 @@ $3$ 分後、およそ $71.0\ ^\circ$C です。
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The estimate $71.0\ ^\circ$C is close to the exact value $71.9\ ^\circ$C, but it is too small by about $0.9\ ^\circ$C. The solution curve is concave-up, so the tangent segments lie below it. The step length $h = 1$ is quite large compared with the $3$ minutes being covered, so only three steps are taken; a smaller step length would give a closer estimate.*
+*The estimate $71.0\ ^\circ$C is close to the exact value $71.9\ ^\circ$C, but it is too small by about $0.9\ ^\circ$C.*
+
+*The solution curve is concave-up, so the tangent segments lie below it.*
+
+*The step length $h = 1$ is quite large compared with the $3$ minutes being covered, so only three steps are taken; a smaller step length would give a closer estimate.*
 :::
 
 （推定値 $71.0\ ^\circ$C は正確な値 $71.9\ ^\circ$C に近いが、およそ $0.9\ ^\circ$C 小さすぎる。解曲線は下に凸なので、接線は曲線の下を通る。刻み幅 $h = 1$ は、対象の $3$ 分に対して大きく、$3$ 歩しか進んでいない。刻み幅を小さくすれば、より近い推定値が得られる、という意味です。）
@@ -675,7 +597,12 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*The estimate $71.0\ ^\circ$C is about $0.9\ ^\circ$C below the exact value $71.9\ ^\circ$C. The solution curve is concave-up, so the tangent segments lie below it and Euler's method underestimates. A smaller step length would give a closer estimate.*
+*The estimate $71.0\ ^\circ$C is about $0.9\ ^\circ$C below the exact value $71.9\ ^\circ$C.*
+
+*The solution curve is concave-up, so the tangent segments lie below it and Euler's method underestimates.*
+
+*A smaller step length would give a closer estimate.*
+:::
 :::
 :::
 :::
@@ -700,7 +627,8 @@ $\dfrac{dy}{dx} = 2 - y$、$x = 0$ のとき $y = 0$、を考えます。
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** $x = 0$ から $x = 2$ まで、$h = 0.5$ なので **$4$ 歩**です。
 
@@ -725,7 +653,11 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Euler's method has overestimated. The solution curve is concave-down, that is it bends downwards, so each tangent segment lies above the curve. Every step therefore lands slightly too high, and the errors build up.*
+*Euler's method has overestimated.*
+
+*The solution curve is concave-down, that is it bends downwards, so each tangent segment lies above the curve.*
+
+*Every step therefore lands slightly too high, and the errors build up.*
 :::
 
 （Euler 法は大きく見積もっている。解曲線は上に凸、つまり下向きに曲がっているので、各接線の区間は曲線の上を通る。したがって毎回わずかに高い位置に着き、その誤差が積み重なる、という意味です。）
@@ -771,9 +703,101 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*Euler's method has overestimated, since $1.875 > 1.73$. The solution curve is concave-down, so each tangent segment lies above the curve and every step lands slightly too high.*
+*Euler's method has overestimated, since $1.875 > 1.73$.*
+
+*The solution curve is concave-down, so each tangent segment lies above the curve and every step lands slightly too high.*
 :::
 :::
+:::
+:::
+
+### 6. Euler's method and slope fields（方向場の上を歩く） {#field}
+
+Euler's method は、[AHL 5.15](ahl-5-15.qmd) の slope field（方向場）の線分に沿って進むことと同じです。
+
+![slope field の線分に沿って進みます。](img/ahl-5-16a-field.svg){#fig-ahl516a-field width=100%}
+
+@fig-ahl516a-field は、[AHL 5.15](ahl-5-15.qmd) の slope field の上に、Euler の折れ線を重ねたものです。
+
+**やっていることは同じ**です。線分の向きに進む——それを絵でやるのが 5.15、数でやるのが 5.16 です。
+
+$h$ が大きいと、**途中で出会う線分を無視して**進んでしまいます。$h$ が小さければ、線分に沿ったまま進めます。
+
+::: {.callout-tip}
+## slope field が与えられたら、答えの見当がつきます
+表を作ったあとで、**その値が場の絵と合っているか**を見てください。
+
+たとえば場が右上がりばかりなのに $y$ が減っていたら、どこかで計算を間違えています。**$30$ 秒でできる検算です。**
+:::
+
+### 7. Spreadsheets and technology（スプレッドシートと試験での扱い） {#tech}
+
+Euler's method の近似値は、ふつうはスプレッドシート（表計算）で求めます。**歩数が多い問題は、手では解きません。** スプレッドシートか GDC を使います（[GDC 第1節](#gdc-sheet)）。試験でも、たくさんの歩数の値は、試験で使ってよい電卓で出します。
+
+::: {.callout-note appearance="simple"}
+それでも、このページでは**まず手で $2$〜$3$ 歩たどります。**
+
+式に何を入れているのかが分かっていないと、**電卓の出した数が正しいかどうか判断できない**からです。手で $3$ 歩できれば、$300$ 歩は電卓に任せられます。
+:::
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+#### なぜ「傾き × 幅」を足してよいのか {#why}
+
+[SL 5.1](../../ai-sl/05-calculus/sl-5-1.qmd) で、導関数はこう定義されました。
+
+$$
+\frac{dy}{dx} = \lim_{h \to 0} \frac{y(x+h) - y(x)}{h}
+$$
+
+**$h$ が小さいときは、limit（極限）を取る前の式でも近い**はずです。
+
+$$
+\frac{dy}{dx} \approx \frac{y(x+h) - y(x)}{h}
+$$
+
+両辺に $h$ を掛けて、$y(x+h)$ について解きます。
+
+$$
+y(x+h) \approx y(x) + h \times \frac{dy}{dx}
+$$
+
+**右辺の $\dfrac{dy}{dx}$ を、微分方程式が教えてくれます。** それが $f(x,\ y)$ です。
+
+$$
+y(x+h) \approx y(x) + h \times f(x,\ y)
+$$
+
+これが @eq-ahl516a-euler そのものです。**公式は、導関数の定義を「途中で止めた」だけ**です。
+
+#### なぜ誤差は $h$ に比例するのか {#why-error}
+
+**$1$ 歩あたりの誤差**は、$h^2$ に比例します。接線と曲線の離れ方が、$h$ の $2$ 乗で効いてくるからです（曲がり方が $\dfrac{d^2y}{dx^2}$ で決まるため）。
+
+いっぽう、決まった幅 $X$ を進むのに必要な**歩数**は $\dfrac{X}{h}$ です。
+
+$$
+(\text{全体の誤差}) \approx (\text{1 歩の誤差}) \times (\text{歩数}) \approx h^2 \times \frac{X}{h} = hX
+$$
+
+**$h$ の $1$ 乗が残ります。** だから $h$ を半分にすると、誤差もおよそ半分になります（@tbl-ahl516a-hs）。
+
+::: {.callout-note appearance="simple"}
+この計算は **AI HL では問われません。** 「$h$ を小さくすれば誤差が減る」と言えれば十分です。
+
+なぜ $2$ 乗が $1$ 乗になるのかが気になった人のために書いてあります。
+:::
+
+#### 誤差は、たまってから減りません {#why-accumulate}
+
+$1$ 歩目でずれると、$2$ 歩目は**ずれた点から**始まります。そこで読む傾きも、本当の傾きではありません。
+
+つまり、**誤差は歩くほどたまります。** @fig-ahl516a-gap で、右へ行くほど差が開いているのは、そのためです。
+
+だから、**「$x = 5$ での値を $h = 1$ で」のような問題では、答えはかなり粗くなります。** 近似だと言い添えてください。
 :::
 
 ## Common errors
@@ -839,9 +863,9 @@ $3$ 歩でも、表を作ったほうが速くて確実です（[第3節](#table
 **Lists & Spreadsheet は使えます。** ですから、ここで説明する方法は**試験でもそのまま使えます。**
 :::
 
-### Lists & Spreadsheet で表を作る {#gdc-sheet}
+### Using Lists & Spreadsheet（Lists & Spreadsheet で表を作る） {#gdc-sheet}
 
-シラバスが *"Spreadsheets should be used"* と書いている方法です。
+Euler's method の表を、電卓の表計算（スプレッドシート）で作る方法です。
 
 ```
 ctrl + doc → Add Lists & Spreadsheet
@@ -892,7 +916,7 @@ Euler 法では、**$1$ つ上のセル**を指す必要があります。です
 **$h$ の値も、式の中に入っています。** $h$ を変えるときは、`A2` と `B2` の両方を直してください。
 :::
 
-### 計算画面で $1$ 歩ずつ進める {#gdc-home}
+### Stepping on the Calculator screen（計算画面で $1$ 歩ずつ進める） {#gdc-home}
 
 歩数が少ないときは、Calculator ページのほうが速いこともあります。
 
@@ -935,12 +959,6 @@ doc → Settings → Document Settings
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -1079,7 +1097,11 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*The step length $h = 0.25$ gives the better approximation. Its error is $0.736 - 0.633 = 0.103$, while the error for $h = 0.5$ is $0.736 - 0.5 = 0.236$. A smaller step length uses shorter straight segments, which stay closer to the curve.*
+*The step length $h = 0.25$ gives the better approximation.*
+
+*Its error is $0.736 - 0.633 = 0.103$, while the error for $h = 0.5$ is $0.736 - 0.5 = 0.236$.*
+
+*A smaller step length uses shorter straight segments, which stay closer to the curve.*
 :::
 :::
 
@@ -1211,7 +1233,9 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*The step length $h = 2$ years is large, so only three steps are taken over six years. Each step follows a straight line while the true solution curve bends, so the errors build up and the estimate may be some way from the exact value.*
+*The step length $h = 2$ years is large, so only three steps are taken over six years.*
+
+*Each step follows a straight line while the true solution curve bends, so the errors build up and the estimate may be some way from the exact value.*
 :::
 :::
 
@@ -1291,7 +1315,11 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*The solution curve rises steeply at first and then flattens out towards $y = 3$, so it is concave-down. Each tangent segment therefore lies above the curve, and every step lands slightly too high. The errors accumulate, so the final value $2.81$ is larger than the exact value $2.59$.*
+*The solution curve rises steeply at first and then flattens out towards $y = 3$, so it is concave-down.*
+
+*Each tangent segment therefore lies above the curve, and every step lands slightly too high.*
+
+*The errors accumulate, so the final value $2.81$ is larger than the exact value $2.59$.*
 :::
 :::
 
@@ -1339,9 +1367,13 @@ $$
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 ::: {.model-answer}
-*First, the student has not multiplied the slope by the step length. The formula is $y_1 = y_0 + h \times f(x_0,\ y_0)$, so the increase should be $0.1 \times 2 = 0.2$, not $2$.*
+*First, the student has not multiplied the slope by the step length.*
 
-*Second, the student has not updated $x$. The formula $x_1 = x_0 + h$ gives $x_1 = 0.1$, not $0$.*
+*The formula is $y_1 = y_0 + h \times f(x_0,\ y_0)$, so the increase should be $0.1 \times 2 = 0.2$, not $2$.*
+
+*Second, the student has not updated $x$.*
+
+*The formula $x_1 = x_0 + h$ gives $x_1 = 0.1$, not $0$.*
 :::
 
 $$
@@ -1397,13 +1429,17 @@ $1$ つ見つけて満足しないでください。**問題文が個数を言�
 **(a)**
 
 ::: {.model-answer}
-*The $h = 0.45$ path matches the segment only at the point where each step begins. As the step continues, the segments it passes become steeper, but the path keeps the old slope, so it falls below them.*
+*The $h = 0.45$ path matches the segment only at the point where each step begins.*
+
+*As the step continues, the segments it passes become steeper, but the path keeps the old slope, so it falls below them.*
 :::
 
 **(b)**
 
 ::: {.model-answer}
-*With $h = 0.15$ the path takes a new slope more often, so it has less distance in which to drift away from the segments before correcting itself. It therefore stays closer to the exact solution curve.*
+*With $h = 0.15$ the path takes a new slope more often, so it has less distance in which to drift away from the segments before correcting itself.*
+
+*It therefore stays closer to the exact solution curve.*
 :::
 :::
 
@@ -1455,7 +1491,9 @@ $1$ つ見つけて満足しないでください。**問題文が個数を言�
 **(a)**
 
 ::: {.model-answer}
-*Each time the step length is halved, the error is roughly halved as well. The error is approximately proportional to $h$.*
+*Each time the step length is halved, the error is roughly halved as well.*
+
+*The error is approximately proportional to $h$.*
 :::
 
 **(b)**
@@ -1466,7 +1504,9 @@ $$
 **(c)**
 
 ::: {.model-answer}
-*The proportionality is only an approximation. The size of each step's error depends on how sharply the curve bends, and the curvature is not the same at every point along the path, so the total error does not scale exactly.*
+*The proportionality is only an approximation.*
+
+*The size of each step's error depends on how sharply the curve bends, and the curvature is not the same at every point along the path, so the total error does not scale exactly.*
 :::
 :::
 
@@ -1526,7 +1566,9 @@ $t$ 分後の水そうの水位 $H$ cm が、上の式を満たします。$t = 
 **(a)**
 
 ::: {.model-answer}
-*The integral $\int \frac{1}{6 - 2\sqrt{H}}\, dH$ is not one of the standard integrals in the formula booklet, and it is not of the form $\int \frac{1}{u}\, du$ or $\int u^{n}\, du$. Evaluating it needs a substitution beyond the methods of AHL 5.14, so the equation cannot be solved by hand in this course.*
+*The integral $\int \frac{1}{6 - 2\sqrt{H}}\, dH$ is not one of the standard integrals in the formula booklet, and it is not of the form $\int \frac{1}{u}\, du$ or $\int u^{n}\, du$.*
+
+*Evaluating it needs a substitution beyond the methods of AHL 5.14, so the equation cannot be solved by hand in this course.*
 :::
 
 **(b)**
@@ -1552,7 +1594,9 @@ $$
 **(d)**
 
 ::: {.model-answer}
-*The estimate $6.36$ cm is below $9$ cm, and the slopes in the table are still positive and decreasing, so the level is still rising and slowing down. This is consistent with the level approaching $9$ cm but not yet having reached it.*
+*The estimate $6.36$ cm is below $9$ cm, and the slopes in the table are still positive and decreasing, so the level is still rising and slowing down.*
+
+*This is consistent with the level approaching $9$ cm but not yet having reached it.*
 :::
 :::
 
@@ -1564,7 +1608,7 @@ $$
 \int \frac{1}{6 - 2\sqrt{H}}\, dH = \int dt
 $$
 
-**できないのは、左辺の積分のほうです。** これは公式集の Standard integrals（AHL 5.11）のどれにも当てはまらず、$\dfrac{1}{u}$ や $u^n$ の形にもなっていません。置換積分が要りますが、そこは AI HL の範囲を超えます。
+**できないのは、左辺の積分のほうです。** これは公式集の Standard integrals（AHL 5.11）のどれにも当てはまらず、$\dfrac{1}{u}$ や $u^n$ の形にもなっていません。**integration by substitution**（置換積分）が要りますが、そこは AI HL の範囲を超えます。
 
 **この形は [AHL 5.14](ahl-5-14.qmd) でも「式を立てるところまで」とされていました。** 数値で解くのが、まさにこの項目で習うことです。
 

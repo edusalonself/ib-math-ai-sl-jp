@@ -10,32 +10,6 @@
 - 返済期間や利率を、Finance Solver で逆に求められる。
 :::
 
-::: {.callout-important}
-## Formula booklet には、何も載っていません
-SL 1.7 の欄は、**公式集にありません。** SL 1.2〜1.6 には式が印刷されていますが、1.7 は飛ばされています。
-
-理由はシラバスに書いてあります。
-
-> Knowledge of the annuity formula will enhance understanding but **will not be examined**.
-
-つまり **annuity の公式は試験に出ません。** 覚える必要もありません。
-
-そのかわり、シラバスの Content 欄はこうなっています。
-
-> Amortization and annuities **using technology**.
-
-**この項目は、電卓で解くことが前提です。** 公式を探すのではなく、Finance Solver の使い方を身につけてください。
-:::
-
-::: {.callout-warning}
-## 支払いは「期末」と決まっています
-シラバスに、はっきりこう書いてあります。
-
-> In examinations the payments will be made at the **end** of the period.
-
-ですから Finance Solver の `PmtAt` は、**いつも `END`** です。`BEGIN` にする問題は出ません。**触らないでください。**
-:::
-
 ## The idea
 
 ::: {.callout-tip}
@@ -53,7 +27,7 @@ menu → Finance → Finance Solver
 例題も、読みながら**実際に打ち込んでみてください。** 自分で数字を入れて答えが出た経験が1回あれば、試験でも手が動きます。
 :::
 
-### SL 1.4 と何が違うのか
+### 1. Regular payments（SL 1.4 との違い） {#vs-14}
 
 SL 1.4 では、最初に1回お金を預けて、あとは放っておきました。**途中でお金が動かない**ので、Finance Solver の `Pmt` はいつも $0$ でした。
 
@@ -74,7 +48,9 @@ SL 1.7 では、**毎回お金が動きます。**
 
 : SL 1.4 と SL 1.7 の違い {#tbl-14-vs-17}
 
-### amortization（ローンの返済）
+この項目は公式集に式がなく、**電卓（Finance Solver）で解くことが前提**です。annuity の公式は試験に出ないので、覚える必要はありません。
+
+### 2. Amortization（ローンの返済） {#amortization}
 
 **amortization**（アモチゼーション、元利均等返済）は、**借りたお金を毎回同じ額ずつ返して、最後にちょうど $0$ にする**返し方です。日本語では「元利均等返済」といいます。
 
@@ -82,45 +58,27 @@ $\$15\,000$ を借りて、毎月同じ額を5年間返す。5年後に借金が
 
 お金の流れは3つです。
 
-$$
-\underbrace{\text{借りる}}_{PV \ (+)}
-\quad \longrightarrow \quad
-\underbrace{\text{毎月返す}}_{Pmt \ (-)}
-\quad \longrightarrow \quad
-\underbrace{\text{完済}}_{FV = 0}
-$$
+**借りる**（$PV$ は $+$）→ **毎月返す**（$Pmt$ は $-$）→ **完済**（$FV = 0$）
 
 **借りたときはお金が入ってくる**ので $PV$ は正、**返すときは出ていく**ので $Pmt$ は負。最後は借金がなくなるので $FV = 0$ です。
 
-### annuity（年金）
+### 3. Annuities（年金） {#annuity}
 
 **annuity**（アニュイティ、年金）は、**毎回同じ額を払い込む、または受け取る**仕組みです。2つの向きがあります。
 
-**（1）積み立てる年金**
+**（1）savings annuity（積み立てる年金）**
 
 毎月お金を払い込んで、将来まとまった額を作ります。
 
-$$
-\underbrace{PV = 0}_{\text{最初は空}}
-\quad \longrightarrow \quad
-\underbrace{\text{毎月払い込む}}_{Pmt \ (-)}
-\quad \longrightarrow \quad
-\underbrace{\text{受け取る}}_{FV \ (+)}
-$$
+**最初は空**（$PV = 0$）→ **毎月払い込む**（$Pmt$ は $-$）→ **受け取る**（$FV$ は $+$）
 
-**（2）受け取る年金**
+**（2）payout annuity（受け取る年金）**
 
 最初にまとまった額を預けて、毎月受け取っていき、最後に使い切ります。
 
-$$
-\underbrace{\text{預ける}}_{PV \ (-)}
-\quad \longrightarrow \quad
-\underbrace{\text{毎月受け取る}}_{Pmt \ (+)}
-\quad \longrightarrow \quad
-\underbrace{\text{使い切る}}_{FV = 0}
-$$
+**預ける**（$PV$ は $-$）→ **毎月受け取る**（$Pmt$ は $+$）→ **使い切る**（$FV = 0$）
 
-### 符号を決める、たったひとつの考え方
+### 4. Signs of $PV$, $Pmt$ and $FV$（符号の決め方） {#signs}
 
 3つの場合を覚えようとしないでください。**覚えるのは1つだけ**です。
 
@@ -142,9 +100,9 @@ $PV$、$Pmt$、$FV$ の3つに、この規則を1つずつ当てはめるだけ�
 
 | | $PV$ | $Pmt$ | $FV$ |
 |---|---|---|---|
-| **ローンの返済**（amortization） | $+$（借りる） | $-$（返す） | $0$ |
-| **積み立てる年金** | $0$ | $-$（払い込む） | $+$（受け取る） |
-| **受け取る年金** | $-$（預ける） | $+$（受け取る） | $0$ |
+| **amortization**（ローンの返済） | $+$（借りる） | $-$（返す） | $0$ |
+| **savings annuity**（積み立てる年金） | $0$ | $-$（払い込む） | $+$（受け取る） |
+| **payout annuity**（受け取る年金） | $-$（預ける） | $+$（受け取る） | $0$ |
 
 : 3つの場合の符号 {#tbl-signs}
 
@@ -157,18 +115,18 @@ $PV$、$Pmt$、$FV$ の3つに、この規則を1つずつ当てはめるだけ�
 答案には、**絶対値（大きさ）を書きます。** 「毎月 $\$289.99$ 返す」であって、$-289.99$ とは書きません。
 :::
 
-### 総額と利息
+### 5. Total paid and total interest（総額と利息） {#totals}
 
-この例では、Finance Solver で `Pmt` を求めました。Finance Solver は `N`、`I(%)`、`PV`、`FV` など**どの欄でも求められます**（@tbl-fs-uses）。
+ローンや年金の問題では、毎回の額のほかに、**全部でいくら払ったか**と**利息がいくらか**もよく聞かれます。Finance Solver は `N`、`I(%)`、`PV`、`Pmt`、`FV` の**どの欄でも求められます**（@tbl-fs-uses）。
 
 ただし、**総返済額と支払った利息は、どの欄にもありません。** 画面には出てこないので、次の $2$ つは自分で計算します。
 
 $$
-\text{総返済額} = |Pmt| \times N
+\text{total paid（総返済額）} = |Pmt| \times N
 $$ {#eq-total-paid}
 
 $$
-\text{支払った利息} = \text{総返済額} - \text{借りた額}
+\text{total interest（支払った利息）} = \text{total paid} - \text{amount borrowed（借りた額）}
 $$ {#eq-total-interest}
 
 $\$15\,000$ を借りて総額 $\$17\,399.52$ 返したなら、差額の $\$2399.52$ が利息です。**「借りた額より多く返す」その差が利息**、というだけの話です。
@@ -176,53 +134,8 @@ $\$15\,000$ を借りて総額 $\$17\,399.52$ 返したなら、差額の $\$239
 積み立てる年金なら、向きが逆になります。
 
 $$
-\text{受け取った利息} = FV - |Pmt| \times N
+\text{interest earned（受け取った利息）} = FV - |Pmt| \times N
 $$
-
-## Why it works
-
-:::: {.callout-note collapse="true" appearance="simple"}
-## クリックすると開きます
-ここでは、**なぜ電卓が必要なのか**だけを見ます。annuity の公式はシラバスで試験に出ないと明記されているので、深入りしません。
-
-$\$15\,000$ を年利 $6\%$（monthly）で借りて、毎月 $\$289.99$ 返すとします。1か月あたりの利率は $\dfrac{6\%}{12} = 0.5\%$ です。
-
-**1回目の返済で何が起きるか**を追ってみましょう。
-
-| | 金額 |
-|---|---|
-| 1か月分の利息 | $15\,000 \times 0.005 = \$75.00$ |
-| 返した額 | $\$289.99$ |
-| **元本が減った分** | $289.99 - 75.00 = \$214.99$ |
-| 残高 | $15\,000 - 214.99 = \$14\,785.01$ |
-
-: 1回目の返済の中身 {#tbl-first-payment}
-
-**毎回の返済額は同じでも、中身は毎回違います。** 残高が減ると利息も減るので、元本に回る分がだんだん増えていきます。
-
-$$
-\text{2回目の利息} = 14\,785.01 \times 0.005 = \$73.93 \quad (\text{1回目より少ない})
-$$
-
-つまり、**残高が次の利息を決め、その利息が次の残高を決める**という繰り返しです。これを60回分たどらないと最終的な残高が分かりません。
-
-**手計算で60回たどるのは現実的ではありません。** だから電卓が要ります。シラバスが `using technology` と書いているのは、このためです。
-
-::: {.callout-note}
-## 「amortization（償却）」という言葉の意味
-借金が少しずつ削られて、最後に $0$ になることを **amortize**（償却する）といいます。
-
-@tbl-first-payment の「元本が減った分」が、まさに削られている部分です。**最初は利息の割合が大きく、終わりに近づくほど元本の割合が大きくなります。**
-
-ローンを組んだ最初の数年は、返しても返しても元本が減らない、と感じるのはこのためです。
-:::
-::::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-:::
 
 ::: {#exm-am-loan}
 [Aiko borrows $\$15\,000$ to buy a car. The loan is charged interest at a nominal annual rate of $6\%$, compounded monthly. She repays the loan in equal monthly instalments over 5 years.]{.q-en}
@@ -246,7 +159,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 ::: {.callout-important}
 ## 計算の前に：お金の流れを決める
@@ -313,6 +227,7 @@ $$289.992\ldots \times 60 = 17\,399.52\ldots \approx \$17\,399.52$$
 $$17\,399.52 - 15\,000 = \$2399.52$$
 :::
 :::
+:::
 
 ::: {#exm-am-savings}
 [Ben pays $\$200$ at the end of each month into a savings account. The account pays a nominal annual rate of $4.2\%$, compounded monthly. He does this for 15 years.]{.q-en}
@@ -336,7 +251,8 @@ $$17\,399.52 - 15\,000 = \$2399.52$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **これは「積み立てる年金」です。** 最初は空っぽなので $PV = 0$、毎月**払い込む**ので $Pmt$ は負、最後に**受け取る**ので $FV$ は正になります（@tbl-signs）。
 
@@ -389,6 +305,7 @@ $$200 \times 180 = \$36\,000$$
 $$50\,031.23 - 36\,000 = \$14\,031.23$$
 :::
 :::
+:::
 
 ::: {#exm-am-payout}
 [Chen has $\$250\,000$ in a retirement account when he retires. The account pays a nominal annual rate of $5\%$, compounded monthly. He plans to withdraw an equal amount at the end of each month for 20 years, after which the account will be empty.]{.q-en}
@@ -408,7 +325,8 @@ $$50\,031.23 - 36\,000 = \$14\,031.23$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **これは「受け取る年金」です。** 最初に**預ける**ので $PV$ は負、毎月**受け取る**ので $Pmt$ は正、最後に**使い切る**ので $FV = 0$（@tbl-signs）。
 
@@ -454,6 +372,7 @@ $$Pmt = 1649.89\ldots \approx \$1649.89$$
 $$1649.89\ldots \times 240 = 395\,973.44\ldots \approx \$395\,973.44$$
 :::
 :::
+:::
 
 ::: {#exm-am-balance}
 [Aiko's loan is described in @exm-am-loan. She borrowed $\$15\,000$ at a nominal annual rate of $6\%$, compounded monthly, repaying $\$289.99$ at the end of each month for 5 years.]{.q-en}
@@ -473,7 +392,8 @@ $$1649.89\ldots \times 240 = 395\,973.44\ldots \approx \$395\,973.44$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 考え方は1つだけです。**「3年で終わるローン」だと思って $FV$ を求めます。**
 
@@ -535,6 +455,7 @@ $$\text{principal repaid} = 15\,000 - 6543.05 = \$8456.95$$
 $$\text{interest} = 10\,439.71 - 8456.95 = \$1982.76$$
 :::
 :::
+:::
 
 ::: {#exm-am-creditcard}
 [Maya owes $\$4000$ on a credit card. The card charges interest at a nominal annual rate of $19.9\%$, compounded monthly. She pays $\$100$ at the end of each month.]{.q-en}
@@ -558,7 +479,8 @@ $$\text{interest} = 10\,439.71 - 8456.95 = \$1982.76$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 分からないのが $N$ なので、$N$ の欄で `enter` を押します。
 
@@ -589,7 +511,11 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Doubling the monthly payment from \$100 to \$200 reduces the time from 67 months to 25 months, which is much less than half. This is because a larger payment reduces the balance faster, so less interest is charged each month. Paying only \$100 means that most of the early payments go towards interest rather than towards reducing the debt.*
+*Doubling the monthly payment from \$100 to \$200 reduces the time from 67 months to 25 months, which is much less than half.*
+
+*This is because a larger payment reduces the balance faster, so less interest is charged each month.*
+
+*Paying only \$100 means that most of the early payments go towards interest rather than towards reducing the debt.*
 :::
 
 （毎月の支払いを $\$100$ から $\$200$ に倍にすると、期間は67か月から25か月に減ります。これは半分よりずっと短い期間です。支払いが多いほど残高が速く減り、毎月かかる利息も少なくなるからです。$\$100$ しか払わないと、最初のほうの支払いの大部分が、借金を減らすのではなく利息に消えてしまいます。）
@@ -604,9 +530,7 @@ $$
 
 **$\$100$ 払っても、借金が減るのは $\$33.67$ だけ**です。$3$ 分の $2$ が利息に消えています。
 
-シラバスの Aim 8 には、こう書かれています。
-
-> Ethical perceptions of borrowing and lending money; short-term loans at high interest rates, how can knowledge of mathematics result in individuals being exploited or protected from extortion?
+利息の高い短期の借金では、仕組みを知らないと、損な条件のまま払い続けることになりかねません。数学の知識があれば、そういう条件に気づけます。
 
 **数学を知っていると、自分を守れる。** この項目は、そういう項目です。
 :::
@@ -624,6 +548,46 @@ $$N = 24.50\ldots \quad \Rightarrow \quad \mathbf{25} \text{ months}$$
 **(c)** *Doubling the payment reduces the time from 67 months to 25 months, which is much less than half. A larger payment reduces the balance faster, so less interest is charged each month.*
 :::
 :::
+:::
+
+## Why it works
+
+:::: {.callout-note collapse="true" appearance="simple"}
+## クリックすると開きます
+ここでは、**なぜ電卓が必要なのか**だけを見ます。annuity の公式は試験には出ないので、深入りしません。
+
+$\$15\,000$ を年利 $6\%$（monthly）で借りて、毎月 $\$289.99$ 返すとします。1か月あたりの利率は $\dfrac{6\%}{12} = 0.5\%$ です。
+
+**1回目の返済で何が起きるか**を追ってみましょう。
+
+| | 金額 |
+|---|---|
+| 1か月分の利息 | $15\,000 \times 0.005 = \$75.00$ |
+| 返した額 | $\$289.99$ |
+| **元本が減った分** | $289.99 - 75.00 = \$214.99$ |
+| 残高 | $15\,000 - 214.99 = \$14\,785.01$ |
+
+: 1回目の返済の中身 {#tbl-first-payment}
+
+**毎回の返済額は同じでも、中身は毎回違います。** 残高が減ると利息も減るので、元本に回る分がだんだん増えていきます。
+
+$$
+\text{2回目の利息} = 14\,785.01 \times 0.005 = \$73.93 \quad (\text{1回目より少ない})
+$$
+
+つまり、**残高が次の利息を決め、その利息が次の残高を決める**という繰り返しです。これを60回分たどらないと最終的な残高が分かりません。
+
+**手計算で60回たどるのは現実的ではありません。** だから電卓が要ります。この項目を電卓で解くことになっているのは、このためです。
+
+::: {.callout-note}
+## 「amortization（償却）」という言葉の意味
+借金が少しずつ削られて、最後に $0$ になることを **amortize**（償却する）といいます。
+
+@tbl-first-payment の「元本が減った分」が、まさに削られている部分です。**最初は利息の割合が大きく、終わりに近づくほど元本の割合が大きくなります。**
+
+ローンを組んだ最初の数年は、返しても返しても元本が減らない、と感じるのはこのためです。
+:::
+::::
 
 ## Common errors
 
@@ -684,9 +648,9 @@ $\dfrac{250\,000}{240} = \$1041.67$ ではありません。正しくは $\$1649
 
 ## Using your GDC (TI-Nspire CX II)
 
-**この項目は、電卓なしでは解けません。** シラバスが `using technology` と指定しているので、遠慮なく使ってください。
+**この項目は、電卓なしでは解けません。** 試験でも電卓で解くことが前提なので、遠慮なく使ってください。
 
-### Finance Solver を開く {#finance}
+### Opening the Finance Solver（Finance Solver を開く） {#finance}
 
 Calculator ページで、
 
@@ -713,12 +677,12 @@ SL 1.4 と同じ画面です。違うのは、**`Pmt` の欄を実際に使う**
 
 ::: {.callout-tip}
 ## `PmtAt` は触らない
-シラバスに `In examinations the payments will be made at the end of the period` と明記されています。**`BEGIN` を使う問題は出ません。**
+試験では、支払いはいつも期末（`END`）です。**`BEGIN` を使う問題は出ません。**
 
 もし間違えて `BEGIN` にすると、答えが少しだけ違ってしまいます。**設定を確認する習慣**をつけてください。
 :::
 
-### 求めたい欄で `enter` を押す
+### Solving for any field（求めたい欄で `enter` を押す）
 
 Finance Solver の使い方は、いつも同じです。
 
@@ -730,15 +694,15 @@ $Pmt$ でも $N$ でも $I\%$ でも $FV$ でも、**同じやり方で求めら
 
 | 何を求めるか | 例 |
 |---|---|
-| 毎回の返済額 | @exm-am-loan |
-| 将来の価値 | @exm-am-savings |
-| 毎回の受取額 | @exm-am-payout |
-| 途中の残高 | @exm-am-balance |
-| かかる回数 | @exm-am-creditcard |
+| repayment（毎回の返済額） | @exm-am-loan |
+| future value（将来の価値） | @exm-am-savings |
+| withdrawal（毎回の受取額） | @exm-am-payout |
+| outstanding balance（途中の残高） | @exm-am-balance |
+| number of periods（かかる回数） | @exm-am-creditcard |
 
 : Finance Solver で求められるもの {#tbl-fs-uses}
 
-### 途中の残高を求める ── よく出ます
+### Outstanding balance（途中の残高を求める ── よく出ます）
 
 @exm-am-balance でやったやり方を、もう一度整理します。
 
@@ -759,7 +723,7 @@ $Pmt$ でも $N$ でも $I\%$ でも $FV$ でも、**同じやり方で求めら
 この本では Finance Solver に統一します。専用ツールを使いたい場合は、メニューから選ぶと入力欄に名前が出るので、それを見ながら埋めてください。
 :::
 
-### 総額と利息は、自分で計算する
+### Totals by hand（総額と利息は、自分で計算する）
 
 **Finance Solver は総額を出してくれません。** 出てきた $Pmt$ を使って、自分で掛け算します。
 
@@ -776,7 +740,7 @@ Finance Solver を閉じたあと、Calculator ページで `tvmPmt` などの�
 もっと簡単なのは、**Finance Solver の画面を開いたまま、答えをメモしておく**ことです。試験中はそのほうが速いです。
 :::
 
-### 答えが合っているかの検算
+### Checking your answer（答えが合っているかの検算）
 
 計算が終わったら、**大きさが妥当かどうかを1回だけ見てください。**
 
@@ -792,12 +756,6 @@ Finance Solver を閉じたあと、Calculator ページで `tvmPmt` などの�
 **どれかが逆になっていたら、符号を間違えています。** これで多くの失点を防げます。
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -827,7 +785,6 @@ $N = 12 \times 4 = 48$ です。$4$ ではありません。
 
 **検算。** $191.57 \times 48 = \$9195.36$ で、借りた $\$8000$ より多い。つじつまが合っています（@tbl-sanity）。
 :::
-
 
 ::: {.ex-sep}
 :::
@@ -870,7 +827,6 @@ $$23\,292.34 - 18\,000 = \$5292.34$$
 $FV$ が $\$18\,000$ より小さく出たら、$Pmt$ の符号が逆になっています。
 :::
 
-
 ::: {.ex-sep}
 :::
 
@@ -900,7 +856,6 @@ $\dfrac{180\,000}{180} = \$1000$ ですが、答えは $\$1376.99$。**残って
 
 $\$1000$ に近い値が出たら、$I\%$ を入れ忘れています。
 :::
-
 
 ::: {.ex-sep}
 :::
@@ -941,7 +896,6 @@ $$25\,879.21 - 22\,000 = \$3879.21$$
 **丸める前の $Pmt$ を使ってください。** $359.43 \times 72 = \$25\,878.96$ となり、正しい $\$25\,879.21$ と $25$ セントずれます。
 :::
 
-
 ::: {.ex-sep}
 :::
 
@@ -971,7 +925,6 @@ $FV$ は負で返ってきますが、答えは大きさで書きます。
 
 **検算。** 元の $\$22\,000$ より小さい $\$8151.22$。6年のうち4年が過ぎたので、$3$ 分の $1$ ちょっとが残っているのは自然です（@tbl-sanity）。
 :::
-
 
 ::: {.ex-sep}
 :::
@@ -1003,7 +956,6 @@ $59$ 回目の支払いは $\$10.53$ で済みますが、**回数としては $
 借金を返し終える問題では、**いつも切り上げ**です。「あと少しだから」で切り捨てると失点します。
 :::
 
-
 ::: {.ex-sep}
 :::
 
@@ -1033,7 +985,6 @@ $$I\% = 11.51\ldots \approx 11.5\%$$
 
 このように、**答えを見て「だいたいこのくらいのはず」と確かめられる**と、符号ミスに気づけます。
 :::
-
 
 ::: {.ex-sep}
 :::
@@ -1085,7 +1036,6 @@ $$\text{6 years: } 331.46\ldots \times 72 - 20\,000 = \$3864.96$$
 $608.44$ は $331.46$ の $2$ 倍より少し小さいことにも注目してください。期間が短いほうが、1回あたりの利息が少なくて済むからです。
 :::
 
-
 ::: {.ex-sep}
 :::
 
@@ -1127,7 +1077,6 @@ $$257.44\ldots \times 144 = 37\,072.04\ldots \approx \$37\,072.04$$
 
 $\dfrac{50\,000}{144} = \$347.22$ と比べると、**利息のおかげで毎月の負担が $\$90$ ほど軽くなっている**ことが分かります。
 :::
-
 
 ::: {.ex-sep}
 :::

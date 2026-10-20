@@ -17,7 +17,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "03-geometry")
 QMD = os.path.join(BASE, "aasl-3-8.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_3_8.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 FIGSTR = "\n".join(t for t in re.findall(r'r?"((?:[^"\\]|\\.)*)"', _NODOC)
@@ -52,6 +71,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 # ══════════════════════════════════════════════════════════
 # 0. 解を出す道具（solveset には頼らない）
@@ -366,10 +388,10 @@ chk("\\frac{1}{2}" not in BODY.split("### 5.")[0].split("### 2.")[-1]
 # ══════════════════════════════════════════════════════════
 chk(TEXT.count("callout-important") == 0, "3.8 に公式集の項目はない")
 _quotes = [l for l in TEXT.splitlines() if l.startswith("> ")]
-chk(len(_quotes) == 1, f"シラバスの引用は 1 行だけ: {_quotes}")
-chk(_quotes[0] == "> Not required: The general solution of trigonometric equations.",
-    "引用は Not required の行: " + _quotes[0])
-in_text("一般解の形は、SL では求められません。", "一般解は不要と書いてある")
+chk(len(_quotes) == 0, f"引用はない: {_quotes}")
+not_in_text("Not required: The general solution of trigonometric equations.",
+            "シラバスの引用は本文から外した")
+in_text("**general solution**（一般解）の形は、**SL では求められません。**", "一般解は不要と書いてある")
 not_in_text("+ 2n\\pi$ の形で答えます", "一般解を答えさせていない")
 
 # ══════════════════════════════════════════════════════════
@@ -401,12 +423,12 @@ in_text("**下限と上限を指定する**", "下限と上限")
 in_text("**TI-Nspire CX II に `solve(` はありません。**", "solve( はない")
 not_in_text("非 CAS")
 chk(TEXT.count("solve(") == 1, "solve( は「ない」と書く 1 か所だけ")
-in_text("**例題も演習も、すべて電卓なしで解けます。**", "電卓なしで解ける")
+not_in_text("**例題も演習も、すべて電卓なしで解けます。**", "例題の前の案内は置かない")
 
 # ══════════════════════════════════════════════════════════
 # 12. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -420,9 +442,8 @@ chk(len(re.findall(r"^::: \{#exm-aasl38-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 chk(TEXT.count("::: {.callout-warning}") == 8, "Common errors 6 + 本文の注意 2 で 8")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -489,18 +510,23 @@ chk(not os.path.exists(SVG_A[:-4] + ".png"), "図 (a) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Reading the number of solutions", "図(a) の題")
+not_in_fig("Reading the number of solutions", "図(a) の題")
 chk("to $2\\\\pi$\", fontsize=10, color=ACCENT)" not in FIG, "図は例題3(a) の区間ではない")
 chk("$y = k$" in FIG, "図の高さは k のまま")
 # ══════════════════════════════════════════════════════════
 # 14. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-8.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-3-7b.qmd") < DRAFT.index("aasl-3-8.qmd"), "並びが 3.7b → 3.8")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+DRAFT = None
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/03-geometry/aasl-3-8.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-3-7b.qmd") < DRAFT.index("aasl-3-8.qmd"), "並びが 3.7b → 3.8")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("（注）_quarto.yml がないので、登録のチェックは飛ばした")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-8.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -650,7 +676,7 @@ for _v in [2 * PI / 3, 4 * PI / 3]:
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -660,7 +686,7 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 5. $2$ 次式になるとき（quadratic in $\\sin x$ or $\\cos x$） {#quadratic}', "見出しの英語: 5. $2$ 次式になるとき（quadratic i")
+in_text('### 5. Quadratic equations in $\\sin x$ or $\\cos x$（$2$ 次式になるとき） {#quadratic}', "見出しの英語: 5. Quadratic equations in $\si")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
@@ -732,9 +758,9 @@ for _u in _U38:
 _i_sent = TEXT.index("**グラフでも数えられます。**")
 _i_img = TEXT.index("](img/aasl-3-8-idea-a.svg)")
 chk(_i_sent < _i_img, "図 2 は、その説明の下にある")
-chk(_i_img < TEXT.index("### 4. 中身が変わっているとき"), "図 2 は第 3 節の中")
+chk(_i_img < TEXT.index("### 4. Equations with a transformed angle"), "図 2 は第 3 節の中")
 
-in_text("角が $2x$ や $b(x-c)$ のときは、次の $3$ 手順で解きます。",
+in_text("角が $2x$ や $b(x-c)$ のときは、次の $3$ つの手順で解きます。",
         "第 4 節の書き出し")
 in_text("1. $u = 2x$ などと置き、**$x$ の区間を $u$ の区間に"
         "変換する**。", "手順 1")
@@ -774,7 +800,7 @@ chk("| trigonometric equation |" in _GLO38, "対訳表に trigonometric equation
 # 2026-09-29：第 2 節を書き直した
 #   α は「基本の解」ではなく reference angle（参照角）
 # ══════════════════════════════════════════════════════════
-in_text("### 2. trigonometric equation（三角方程式）の解き方 {#two}", "第 2 節の見出し")
+in_text("### 2. Solving the basic equations（基本の形の解き方） {#two}", "第 2 節の見出し")
 not_in_text("### 2. もう $1$ つの解", "前の見出しは消した")
 not_in_text("基本の解", "「基本の解」という言い方はページのどこにもない")
 
@@ -792,7 +818,7 @@ in_text("**$\\sin\\theta$ は、単位円上の点の $y$ 座標**です。"
 in_text("**$\\cos\\theta$ は、単位円上の点の $x$ 座標**です。"
         "$\\cos\\theta = k$ は、**縦線 $x = k$** と単位円の交点から"
         "読み取れます（@fig-aasl38-idea-d）。", "cos は x 座標")
-in_text("**$\\tan\\theta$ は、半径をのばした直線が、$(1, 0)$ での接線と交わる点の"
+in_text("**$\\tan\\theta$ は、半径をのばした直線が、$(1, 0)$ での tangent（接線）と交わる点の"
         "高さ**です。$\\tan x = k$ なら、接線の上の**高さ $k$ の点**と原点を結んで、"
         "その直線と円との交点を見ます（@fig-aasl38-idea-e）。", "tan は接線の高さ")
 
@@ -859,9 +885,9 @@ for _th38 in (4 * PI / 3, 7 * PI / 4):
     chk(-PI <= _th38 - 2 * PI <= PI, "引いたあとは −π..π の中")
 
 # --- 図 (c) は 3 枚 -------------------------------------------------------
-in_fig(r"$\sin\theta = k$", "図 (c) の 1 枚目の題")
-in_fig(r"$\cos\theta = k$", "図 (c) の 2 枚目の題")
-in_fig(r"$\tan\theta = k$", "図 (c) の 3 枚目の題")
+not_in_fig(r"$\sin\theta = k$", "図 (c) の 1 枚目の題")
+not_in_fig(r"$\cos\theta = k$", "図 (c) の 2 枚目の題")
+not_in_fig(r"$\tan\theta = k$", "図 (c) の 3 枚目の題")
 in_fig("tangent at $(1,0)$", "図 (c) の接線")
 in_fig(r"$(1,\,k)$", "図 (c) の (1, k)")
 in_fig(r"$2\pi-\alpha$", "図 (c) の 2π−α")
@@ -950,7 +976,7 @@ _p38 = [TEXT.index("$k$ は右辺の数です。"),
         TEXT.index("](img/aasl-3-8-idea-e.svg)"),
         TEXT.index("**$\\alpha$ そのものが解とはかぎりません。**"),
         TEXT.index("**区間が $-\\pi \\le \\theta \\le \\pi$ のときは、"),
-        TEXT.index("### 3. 区間の中をすべて拾う")]
+        TEXT.index("### 3. Finding all solutions in the interval")]
 chk(_p38 == sorted(_p38), f"第 2 節の順番: {_p38}")
 # 参照角の説明は、図より前にある
 chk(TEXT.index("reference angle（参照角）$\\alpha$") <
@@ -1046,8 +1072,20 @@ chk(len(sp.solveset(sp.sin(_x38e), _x38e,
 chk(len(sp.solveset(sp.cos(_x38e) - sp.sqrt(2) / 2, _x38e,
                     sp.Interval(0, 4 * sp.pi))) == 4,
     "0 ≤ x ≤ 4π で cos x = √2/2 の解は 4 つ")
-in_text("### 6. 倍角公式を使って因数分解する {#mixed}", "第 6 節の見出し")
+in_text("### 6. Using double angle identities（倍角公式を使って因数分解する） {#mixed}", "第 6 節の見出し")
 not_in_text("### 6. $\\sin$ と $\\cos$ が混ざるとき", "前の見出しは消した")
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

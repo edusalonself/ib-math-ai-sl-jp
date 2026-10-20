@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "02-functions")
 QMD = os.path.join(BASE, "aasl-2-9.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_2_9.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 # 色コード・ファイル名・キーワードはラベルではないので外す
@@ -51,6 +70,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 # ══════════════════════════════════════════════════════════
 # 0. 指数と対数の性質そのもの
@@ -190,7 +212,7 @@ not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシ
 # ══════════════════════════════════════════════════════════
 # 8. 説明のしかた（条件と断定）
 # ══════════════════════════════════════════════════════════
-in_text("**base（底）$a$ は正**とします。", "a > 0 の断り")
+in_text("**base**（底）**$a$ は正**とします。", "a > 0 の断り")
 in_text("**さらに、ここから先は $a \\neq 1$ とします。**", "a ≠ 1 を先に断る")
 in_text("## $\\log$ の中身が $0$ や負のときは、値がありません", "log の中身の注意")
 in_text("## $a^{x}$ は $0$ にも負にもなりません", "a^x > 0 の注意")
@@ -216,7 +238,7 @@ not_in_text("solve(", "CAS 前提の solve( は書いていない")
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -225,9 +247,8 @@ chk(TEXT.count("{.model-answer}") == 7, f"model-answer が 7: {TEXT.count('{.mod
 chk(len(re.findall(r"^::: \{#exm-aasl29-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -294,12 +315,12 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Exponential functions", "図(a) の題")
+not_in_fig("Exponential functions", "図(a) の題")
 in_fig("$y = 2^{x}$", "図(a) の y = 2^x")
 in_fig("$y = e^{x}$", "図(a) の y = e^x")
 in_fig("$y = \\\\left(\\\\frac{1}{2}\\\\right)^{x}$", "図(a) の減る例")
 in_fig("$(0,\\\\ 1)$", "図(a) の通る点")
-in_fig("Inverse of each other", "図(b) の題")
+not_in_fig("Inverse of each other", "図(b) の題")
 in_fig("$y = \\\\ln x$", "図(b) の対数")
 in_fig("$(1,\\\\ 0)$", "図(b) の通る点")
 in_fig("$y = x$", "図(b) の対称の線")
@@ -311,11 +332,16 @@ for leak in ["3^", "5^", "6^", "7^", "8^", "9^", "125", "= 4", "= 5", "= 7"]:
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-9.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-2-8.qmd") < DRAFT.index("aasl-2-9.qmd"), "並びが 2.8 → 2.9")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+DRAFT = None
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/02-functions/aasl-2-9.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-2-8.qmd") < DRAFT.index("aasl-2-9.qmd"), "並びが 2.8 → 2.9")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("（注）_quarto.yml がないので、登録のチェックは飛ばした")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-9.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -382,8 +408,8 @@ in_text("- $f(x) = e^{x}$ の $e$ が、$2.718\\ldots$ という無理数の定�
 
 # --- 真数・漸近線の英語 -------------------------------------------------
 in_text("真数（$\\log$ の中身）も正です。", "真数の言いかえ")
-in_text("**$y = 0$ が horizontal asymptote（水平漸近線）**です。", "水平漸近線の英語")
-in_text("**$x = 0$ が vertical asymptote（垂直漸近線）**です。", "垂直漸近線の英語")
+in_text("**$y = 0$ が horizontal asymptote**（水平漸近線）です。", "水平漸近線の英語")
+in_text("**$x = 0$ が vertical asymptote**（垂直漸近線）です。", "垂直漸近線の英語")
 
 # --- 電卓（キー名に頼らない）--------------------------------------------
 in_text("**自分の機械で一度たしかめておいてください。**", "キーの位置は機種による")
@@ -503,7 +529,7 @@ in_text('- **range**（値域）は $y > 0$。', "英語併記 2")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -517,16 +543,16 @@ in_text("$e$ は **Euler's number**（ネイピア数、自然対数の底）と
         "よばれる定数で、次の値をもちます。", "公式の前置き 1")
 not_in_text('$e$ は、次の値をもつ定数です。', "名前なしの言い方は消した")
 chk("| Euler's number |" in GLO, "対訳表に Euler's number がある")
-in_text('底が $a$ の対数関数は、次の形の関数です。', "公式の前置き 2")
+in_text('**logarithmic function**（対数関数）といいます。底が $a$ の対数関数は、次の形です。', "公式の前置き 2")
 in_text('底が $a$ の指数を、底 $e$ の指数に書きかえる式は、次のとおりです。', "公式の前置き 3")
 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. exponential function（指数関数）$f(x) = a^{x}$ {#exponential}', "見出しの英語: 1. exponential function（指数")
-in_text('### 2. $e$ と $f(x) = e^{x}$（the natural exponential function） {#natural}', "見出しの英語: 2. $e$ と $f(x) = e^{x}$（th")
-in_text('### 3. logarithmic function（対数関数）$f(x) = \\log_{a} x$ {#logarithm}', "見出しの英語: 3. logarithmic function（対数")
-in_text('### 4. 指数と対数は、互いに inverse functions（逆関数） {#inverse}', "見出しの英語: 4. 指数と対数は、互いに inverse func")
+in_text('### 1. Exponential functions（指数関数） {#exponential}', "見出しの英語: 1. Exponential functions")
+in_text('### 2. The natural exponential function（自然指数関数） {#natural}', "見出しの英語: 2. The natural exponential function")
+in_text('### 3. Logarithmic functions（対数関数） {#logarithm}', "見出しの英語: 3. Logarithmic functions")
+in_text('### 4. Exponentials and logarithms as inverses（互いに逆関数である指数と対数） {#inverse}', "見出しの英語: 4. Exponentials and logarithms as inverses")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
@@ -566,13 +592,25 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 # ══════════════════════════════════════════════════════════
 not_in_text("**答案では底を書いた方が安全**です。", "底の注意は削除した")
 in_text("$\log_{10} x$ は $\log x$ と書かれることもあります。", "残した言い方")
-in_text("1. **asymptote（漸近線）**（指数なら $y = 0$、対数なら $x = 0$）を"
+in_text("1. **asymptote**（漸近線）（指数なら $y = 0$、対数なら $x = 0$）を"
         "点線でかき、式を書く。", "sketch の 1")
-in_text("2. **intercept（軸との交点）**（指数なら $(0, 1)$、対数なら "
+in_text("2. **intercept**（軸との交点）（指数なら $(0, 1)$、対数なら "
         "$(1, 0)$）に点を打ち、座標を書く。", "sketch の 2")
-in_text("3. **increasing or decreasing（増えるか減るか）**が分かる形にかく。",
+in_text("3. **increasing or decreasing**（増えるか減るか）が分かる形にかく。",
         "sketch の 3")
 not_in_text("1. **漸近線**（指数なら", "前の書き方は消した")
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

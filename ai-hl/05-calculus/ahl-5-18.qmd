@@ -8,17 +8,17 @@ sidebar: ai-hl
 ## What you should be able to do
 - $\dfrac{d^{2}x}{dt^{2}} = f\!\left(x,\ \dfrac{dx}{dt},\ t\right)$ を、$y = \dfrac{dx}{dt}$ とおいて**連立1階**に書きかえられる。
 - 書きかえた系に **Euler 法**を使い、表を作って進められる（[AHL 5.16b](ahl-5-16b.qmd)）。
-- $\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ を**行列の形**に書き、eigenvalue（固有値）を求められる。
+- $\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ を**行列の形**に書き、**eigenvalue**（固有値）を求められる。
 - 異なる $2$ つの実数の固有値のとき、**厳密解**を書き、初期条件から定数を決められる（[AHL 5.17a](ahl-5-17a.qmd)）。
 - 固有値の型から、**振動するかどうか**と**おさまるかどうか**を言える。
-- phase portrait（相図）の縦軸が**速度**であることを説明できる。
+- **phase portrait**（相図）の縦軸が**速度**であることを説明できる。
 :::
 
 ## The idea
 
-### 1. 2階の式は、そのままでは進められません {#idea}
+### 1. Second order differential equations（2階の式は、そのままでは解き進められない） {#idea}
 
-これまでのページで扱ってきたのは、**1階**（**first order**）の微分方程式でした（[AHL 5.16b](ahl-5-16b.qmd) の Euler 法、[AHL 5.17a](ahl-5-17a.qmd) の厳密解と phase portrait）。$\dfrac{dx}{dt}$ までしか出てこない式のことです。このページで出てくるのは、$\dfrac{d^{2}x}{dt^{2}}$ が入った**2階**（**second order**）の式です。
+これまでのページで扱ってきたのは、**1階**（**first order**）の **differential equation**（微分方程式）でした（[AHL 5.16b](ahl-5-16b.qmd) の Euler 法、[AHL 5.17a](ahl-5-17a.qmd) の厳密解と相図）。$\dfrac{dx}{dt}$ までしか出てこない式のことです。このページで出てくるのは、$\dfrac{d^{2}x}{dt^{2}}$ が入った**2階**（**second order**）の式です。
 
 たとえば、ばねにつるしたおもりの動きは
 
@@ -50,7 +50,7 @@ $$
 
 そこで、**$\dfrac{dx}{dt}$ にも名前を付けて、いっしょに追いかけます。**
 
-### 2. $y = \dfrac{dx}{dt}$ とおくと、連立1階になります {#convert}
+### 2. Coupled first order equations（$y = \dfrac{dx}{dt}$ とおいて連立1階にする） {#convert}
 
 **$\dfrac{dx}{dt}$ を $y$ と呼ぶ**ことにします。
 
@@ -80,9 +80,7 @@ $$ {#eq-ahl518-convert}
 
 左の $f\!\left(x,\ \dfrac{dx}{dt},\ t\right)$ は、**$\dfrac{d^{2}x}{dt^{2}} = \ldots$ と直したときの右辺**という意味です。$x$ と $\dfrac{dx}{dt}$ と $t$ が入っていてよい、ということを表しているだけで、特別な関数ではありません。@eq-ahl518-spring なら $-2x - 3\dfrac{dx}{dt}$ がその中身です。
 
-**これで、$x$ と $y$ の連立1階になりました。** ここでの **$t$ は時刻**で、$x$（位置）も $y$（速度）も $t$ の関数です——[AHL 5.16b](ahl-5-16b.qmd) や [AHL 5.17a](ahl-5-17a.qmd) の連立系と、まったく同じ形です。ここから先は、その $2$ ページの内容です。シラバスも、この書きかえを名指ししています。
-
-> Write as coupled first order equations $\dfrac{dx}{dt} = y$ and $\dfrac{dy}{dt} = f(x,\ y,\ t)$.
+**これで、$x$ と $y$ の連立1階になりました。** ここでの **$t$ は時刻**で、$x$（位置）も $y$（速度）も $t$ の関数です——[AHL 5.16b](ahl-5-16b.qmd) や [AHL 5.17a](ahl-5-17a.qmd) の連立系と、まったく同じ形です。ここから先は、その $2$ ページの内容です。このような $2$ 本の式を **coupled first order equations**（連立1階微分方程式）といい、試験では `Write as coupled first order equations` の形でよく問われます。
 
 **新しい公式はありません。** 公式集に 5.18 の欄は無く、使うのは**5.16 の欄**（連立系の Euler 法）と**5.17 の欄**（連立系の厳密解）です。ただし、$\det(M - \lambda I) = 0$ は**公式集に載っていない**ので、覚えておいてください（[AHL 5.17b](ahl-5-17b.qmd)）。
 
@@ -115,12 +113,12 @@ $$
 
 ::: {.callout-warning}
 ## $y$ は、新しい未知の関数です
-$y$ は「もう $1$ つの量」ではなく、**$x$ の導関数に付けた名前**です。ですから $x$ と $y$ は独立ではありません。
+$y$ は「もう $1$ つの量」ではなく、$x$ の **derivative**（導関数）に付けた**名前**です。ですから $x$ と $y$ は独立ではありません。
 
 このことは、答えを見ると分かります。$x$ の式が出たら、$y$ はそれを微分したものになっているはずです。**そこが検算になります。**
 :::
 
-### 3. Euler 法は、5.16b のままです {#euler}
+### 3. Euler's method for the system（連立系でのオイラー法） {#euler}
 
 書きかえてしまえば、使う公式は [AHL 5.16b](ahl-5-16b.qmd#formula) の公式集の欄そのままです。
 
@@ -157,15 +155,125 @@ $$
 
 $t = 0.1$ のとき $x \approx 1$、$y \approx -0.2$ です。**位置はまだほとんど動いていませんが、速度は負になりました。** おもりが動きはじめたところです。
 
-![Euler's method and the exact solution for the same equation](img/ahl-5-18-euler.svg){#fig-ahl518-euler width=100%}
+![同じ方程式の、Euler 法の解と正確な解です。](img/ahl-5-18-euler.svg){#fig-ahl518-euler width=100%}
 
 @fig-ahl518-euler の左を見てください。**$h$ を小さくするほど、Euler 法の折れ線は本当の曲線に近づきます**（[AHL 5.16a](ahl-5-16a.qmd#h)）。右は、そのうち $h = 0.4$ の計算を $(x,\ y)$ 平面に描いたものです。
 
-### 4. $\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ を行列にする {#matrix}
+::: {#exm-ahl518-euler}
+[The displacement $x$ of a mass on a spring, at time $t$ seconds, satisfies]{.q-en}
 
-シラバスは、$2$ 階の式のうち**この形**を名指ししています。
+$$
+\frac{d^{2}x}{dt^{2}} + 3\frac{dx}{dt} + 2x = 0
+$$
 
-> Solutions of $\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ can also be investigated using the phase portrait method in AHL 5.17 above.
+[The mass is released from rest at $x = 1$, so that $x = 1$ and $\dfrac{dx}{dt} = 0$ when $t = 0$.]{.q-en}
+
+**(a)** [Write the equation as two coupled first order differential equations.]{.q-en}
+
+**(b)** [Use Euler's method with a step length of $h = 0.1$ to find approximations for $x$ and $\dfrac{dx}{dt}$ when $t = 0.2$.]{.q-en}
+
+**(c)** [Interpret your value of $\dfrac{dx}{dt}$ when $t = 0.2$ in the context of the motion.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ばねにつるしたおもりの、時刻 $t$ 秒における変位 $x$ は、上の式をみたします。
+
+`displacement` は「変位」、`released from rest` は「静止した状態から手をはなす」、`step length` は「刻み幅」という意味です。
+
+おもりは $x = 1$ の位置で静かにはなされます。つまり $t = 0$ のとき $x = 1$、$\dfrac{dx}{dt} = 0$ です。
+
+**(a)** この式を、$2$ 本の連立1階微分方程式として書きなさい。
+
+**(b)** 刻み幅 $h = 0.1$ の Euler 法を使って、$t = 0.2$ のときの $x$ と $\dfrac{dx}{dt}$ の近似値を求めなさい。
+
+**(c)** $t = 0.2$ のときの $\dfrac{dx}{dt}$ の値を、運動の文脈で解釈しなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** $y = \dfrac{dx}{dt}$ とおきます（[第2節](#convert)）。もとの式を $\dfrac{d^{2}x}{dt^{2}} = -2x - 3\dfrac{dx}{dt}$ と直し、$\dfrac{dx}{dt}$ を $y$ にします。
+
+$$
+\frac{dx}{dt} = y, \qquad \frac{dy}{dt} = -2x - 3y
+$$
+
+**(b)** $2$ 歩です。**まず表を作ります**（[AHL 5.16a](ahl-5-16a.qmd#table)）。$1$ 行ぶんを全部そろえてから、次の行へ進みます（[第3節](#euler)）。
+
+| $n$ | $t_n$ | $x_n$ | $y_n$ |
+|---|---|---|---|
+| $0$ | $0$ | $1$ | $0$ |
+| $1$ | $0.1$ | $1$ | $-0.2$ |
+| $2$ | $0.2$ | $0.98$ | $-0.34$ |
+
+: $h = 0.1$ の Euler 法 {#tbl-ahl518-table}
+
+計算は、こうです。
+
+**$n = 0$：** $t_0 = 0$、$x_0 = 1$、$y_0 = 0$
+
+$$
+x_1 = 1 + 0.1 \times 0 = 1
+$$
+
+$$
+y_1 = 0 + 0.1 \times (-2 \times 1 - 3 \times 0) = -0.2
+$$
+
+**$n = 1$：** $t_1 = 0.1$、$x_1 = 1$、$y_1 = -0.2$
+
+$$
+x_2 = 1 + 0.1 \times (-0.2) = 0.98
+$$
+
+$$
+y_2 = -0.2 + 0.1 \times (-2 \times 1 - 3 \times (-0.2)) = -0.2 + 0.1 \times (-1.4) = -0.34
+$$
+
+$t = 0.2$ のとき $x \approx 0.98$、$\dfrac{dx}{dt} \approx -0.34$ です。
+
+**検算。** $y_2$ の計算に使ったのは $x_1 = 1$ と $y_1 = -0.2$ で、$x_2 = 0.98$ ではありません ✓
+
+**(c)** $\dfrac{dx}{dt}$ は**速度**です（[第2節](#convert)）。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The value $\dfrac{dx}{dt} \approx -0.34$ is the velocity of the mass.*
+
+*It is negative, so at $t = 0.2$ the mass is moving back towards $x = 0$, and it is doing so at about $0.34$ units per second.*
+:::
+
+（$\dfrac{dx}{dt} \approx -0.34$ はおもりの速度である。負なので、$t = 0.2$ ではおもりは $x = 0$ のほうへ、毎秒 $0.34$ ほどの速さで戻っている、という意味です。）
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)**
+$$
+\frac{dx}{dt} = y, \qquad \frac{dy}{dt} = -2x - 3y
+$$
+
+**(b)**
+$$
+x_1 = 1, \qquad y_1 = -0.2
+$$
+$$
+x_2 = 0.98, \qquad y_2 = -0.34
+$$
+$$
+x \approx 0.98, \qquad \frac{dx}{dt} \approx -0.34 \quad (t = 0.2)
+$$
+
+**(c)** *$\dfrac{dx}{dt} \approx -0.34$ is the velocity. It is negative, so the mass is moving back towards $x = 0$ at $t = 0.2$.*
+:::
+:::
+:::
+
+### 4. Matrix form（$\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ を行列で書く） {#matrix}
+
+$a$、$b$ が定数の $\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ の形なら、Euler 法のほかに、[AHL 5.17a](ahl-5-17a.qmd) の固有値と相図の方法も使えます。
 
 書きかえると
 
@@ -212,7 +320,107 @@ $$
 $-2$ が $x$ の係数、$-3$ が $\dfrac{dx}{dt}$ の係数から来ています。**順番が入れかわる**ので、気をつけてください。
 :::
 
-### 5. 固有値が異なる $2$ つの実数なら、厳密解が書けます {#exact}
+::: {#exm-ahl518-general}
+[A driven system satisfies]{.q-en}
+
+$$
+\frac{d^{2}x}{dt^{2}} = \sin t - 0.5\frac{dx}{dt} - x
+$$
+
+[with $x = 0$ and $\dfrac{dx}{dt} = 1$ when $t = 0$.]{.q-en}
+
+**(a)** [Write the equation as two coupled first order differential equations.]{.q-en}
+
+**(b)** [Use Euler's method with $h = 0.1$ to find approximations for $x$ and $\dfrac{dx}{dt}$ when $t = 0.2$.]{.q-en}
+
+**(c)** [Explain why the eigenvalue method cannot be used for this equation.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある強制振動の系は、上の式をみたします。$t = 0$ のとき $x = 0$、$\dfrac{dx}{dt} = 1$ です。
+
+`driven system` は「外から力を加えられている系」という意味です。
+
+**(a)** この式を、$2$ 本の連立1階微分方程式として書きなさい。
+
+**(b)** $h = 0.1$ の Euler 法を使って、$t = 0.2$ のときの $x$ と $\dfrac{dx}{dt}$ の近似値を求めなさい。
+
+**(c)** この式に固有値の方法が使えない理由を説明しなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** $y = \dfrac{dx}{dt}$ とおくだけです。右辺の $t$ は、そのまま残します。
+
+$$
+\frac{dx}{dt} = y, \qquad \frac{dy}{dt} = \sin t - 0.5y - x
+$$
+
+**(b)** 右辺に $t$ があるので、**$t$ の値も使います**（[AHL 5.16b](ahl-5-16b.qmd#formula)）。
+
+**$n = 0$：** $t_0 = 0$、$x_0 = 0$、$y_0 = 1$
+
+$$
+x_1 = 0 + 0.1 \times 1 = 0.1
+$$
+
+$$
+y_1 = 1 + 0.1 \times (\sin 0 - 0.5 \times 1 - 0) = 1 + 0.1 \times (-0.5) = 0.95
+$$
+
+**$n = 1$：** $t_1 = 0.1$、$x_1 = 0.1$、$y_1 = 0.95$
+
+$$
+x_2 = 0.1 + 0.1 \times 0.95 = 0.195
+$$
+
+$$
+y_2 = 0.95 + 0.1 \times (\sin 0.1 - 0.5 \times 0.95 - 0.1) = 0.902
+$$
+
+$t = 0.2$ のとき $x \approx 0.195$、$\dfrac{dx}{dt} \approx 0.902$ です。
+
+**検算。** 電卓は **radian** にしておきます。$\sin 0.1 = 0.0998$ です。degree のままだと $0.00175$ になり、答えが変わります。
+
+**(c)** [第4節](#matrix)が使えるのは、右辺が $ax + by$ の形のとき、つまり **$x$ と $y$ の項だけ**でできているときです。定数項や $t$ の項があると、この形になりません（[AHL 5.17a](ahl-5-17a.qmd#idea)）。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The eigenvalue method applies to a system of the form $\dfrac{dx}{dt} = ax + by$, $\dfrac{dy}{dt} = cx + dy$, in which the right hand sides contain only $x$ and $y$.*
+
+*Here $\dfrac{dy}{dt}$ contains the term $\sin t$, which depends on $t$, so the system cannot be written as $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ and Euler's method must be used instead.*
+:::
+
+（固有値の方法は、右辺が $x$ と $y$ だけでできている系に使える。ここでは $\dfrac{dy}{dt}$ に $t$ による項 $\sin t$ があるので、$\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ の形に書けず、Euler 法を使うことになる、という意味です。）
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)**
+$$
+\frac{dx}{dt} = y, \qquad \frac{dy}{dt} = \sin t - 0.5y - x
+$$
+
+**(b)**
+$$
+x_1 = 0.1, \qquad y_1 = 0.95
+$$
+$$
+x_2 = 0.195, \qquad y_2 = 0.902
+$$
+$$
+x \approx 0.195, \qquad \frac{dx}{dt} \approx 0.902 \quad (t = 0.2)
+$$
+
+**(c)** *The right hand side contains $\sin t$, so the system is not of the form $\dfrac{dx}{dt} = ax + by$, $\dfrac{dy}{dt} = cx + dy$. It cannot be written as $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$, so eigenvalues cannot be used and Euler's method is needed.*
+:::
+:::
+:::
+
+### 5. Exact solutions（固有値が異なる $2$ つの実数のときの厳密解） {#exact}
 
 **この節ですること：行列にしたあとを、[AHL 5.17a](ahl-5-17a.qmd) の手順どおりに解きます。**
 
@@ -248,7 +456,7 @@ $$
 
 ::: {.callout-tip}
 ## eigenvector は、いつも $\binom{1}{\lambda}$ です
-$M = \begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}$ の固有値 $\lambda$ に対する eigenvector は
+$M = \begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}$ の固有値 $\lambda$ に対する **eigenvector**（固有ベクトル）は
 
 $$
 \mathbf{p} = \binom{1}{\lambda}
@@ -309,277 +517,11 @@ $$
 
 ::: {.callout-warning}
 ## この課程で厳密解を求めるのは、固有値が異なる $2$ つの実数のときだけです
-複素数の固有値でも、解の式そのものは存在します。ただし、**この課程では求められていません。** シラバスは、[AHL 5.17a](ahl-5-17a.qmd) でこう限定しています。
-
-> Calculation of exact solutions is only required for the case of **real distinct eigenvalues**.
+**complex number**（複素数）の固有値でも、解の式そのものは存在します。ただし、**この課程では求められていません。** 厳密解を求めるのは、固有値が異なる $2$ つの実数のときだけです（[AHL 5.17a](ahl-5-17a.qmd)）。
 
 固有値が**複素数**のときは、式を書くのではなく**絵で読みます**（[AHL 5.17b](ahl-5-17b.qmd)・[第6節](#damping)）。
 
-固有値が**重解**（$\lambda_1 = \lambda_2$）になる場合は、**この課程では出題されません。** シラバスの AHL 5.17 に、こう書かれているからです。
-
-> Systems will have **distinct, non-zero, eigenvalues**.
-:::
-
-### 6. 固有値の型で、動き方が決まります {#damping}
-
-$M$ の特性方程式は
-
-$$
-\det(M - \lambda I) = \lambda^{2} + a\lambda + b = 0
-$$ {#eq-ahl518-char}
-
-です。ですから、**$a$ と $b$ を見れば、動き方の見当がつきます。** 判別式を
-
-$$
-\Delta = a^{2} - 4b
-$$
-
-とおきます。解の公式から
-
-$$
-\lambda = \frac{-a \pm \sqrt{\Delta}}{2}
-$$ {#eq-ahl518-lambda}
-
-ですから、**$\Delta < 0$ のとき、$2$ つの固有値の実部はどちらも $-\dfrac{a}{2}$** です。
-
-![What the eigenvalues say about the motion](img/ahl-5-18-motion.svg){#fig-ahl518-motion width=100%}
-
-| $a$ と $b$ | 固有値 | 動き方 | 図 |
-|---|---|---|---|
-| $a > 0$、$b > 0$、$\Delta > 0$ | 異なる $2$ つの実数、**両方負** | **振動せずに** $0$ へ戻る | 左 |
-| $a > 0$、$b > 0$、$\Delta < 0$ | 複素数、**実部が負** | **振動しながら** $0$ へ戻る | 中（[AHL 5.17b](ahl-5-17b.qmd)） |
-| $a = 0$、$b > 0$ | **純虚数** | **振動が続く**（大きさが変わらない） | 右（[AHL 5.17b](ahl-5-17b.qmd)） |
-| $a < 0$、$b > 0$、$\Delta < 0$ | 複素数、**実部が正** | **振動しながら大きくなる** | [AHL 5.17b](ahl-5-17b.qmd) |
-| $b < 0$ | 異なる $2$ つの実数、**異符号** | ほとんどの出発点で**離れていく**（saddle point） | [AHL 5.17a](ahl-5-17a.qmd#saddle) |
-
-: 固有値と動き方 {#tbl-ahl518-cases}
-
-::: {.callout-note}
-## $a$ は「ブレーキ」の強さです
-ばねの問題なら、$a\dfrac{dx}{dt}$ の項は**速さに比例してじゃまをする力**（空気の抵抗のような、速さに比例する抵抗）を表しています。
-
-境目は $\Delta = a^{2} - 4b = 0$、つまり $a = 2\sqrt{b}$ です（$b > 0$ のとき）。
-
-- $a = 0$ … じゃまがないので、**いつまでも揺れ続けます**（@fig-ahl518-motion の右）
-- $0 < a < 2\sqrt{b}$（$\Delta < 0$）… **揺れながら、だんだんおさまります**（中）
-- $a > 2\sqrt{b}$（$\Delta > 0$）… **揺れる前におさまります**（左）
-
-**$2$ 階の式を、自分で立てる必要はありません**（$1$ 階の式をことばから立てる問題は [AHL 5.14](ahl-5-14.qmd) で出ます）。シラバスにこう書かれています。
-
-> Understanding the occurrence of simple second order differential equations in physical phenomena would aid understanding but **in examinations the equation will be given.**
-
-問われるのは、**与えられた式を書きかえて、解いて、動きを言葉で説明する**ところです。
-:::
-
-::: {.callout-warning}
-## `overdamped` のような英語は、この課程の用語ではありません
-物理では、上の表の $1$ 行目を `overdamped`、$2$ 行目を `underdamped` と呼びます。ただし、**AI HL のシラバスにはこれらの語はありません。**
-
-答案では、$\lambda$ の型と、**動きの言葉**で書いてください。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*The eigenvalues are real and both negative, so $x$ returns to $0$ without oscillating.*
-
-*The eigenvalues are complex with negative real part, so $x$ oscillates with decreasing amplitude and tends to $0$.*
-:::
-:::
-
-### 7. phase portrait の縦軸は「速度」です {#sketch}
-
-![The same three motions in the $(x, y)$ plane](img/ahl-5-18-phase.svg){#fig-ahl518-phase width=100%}
-
-@fig-ahl518-phase は、@fig-ahl518-motion と同じ $3$ つの動きを $(x,\ y)$ 平面に描いたものです。左が [AHL 5.17a](ahl-5-17a.qmd#sketch)、中と右が [AHL 5.17b](ahl-5-17b.qmd) と同じ絵ですが、**この項目では縦軸に意味があります。**
-
-- **横軸 $x$** … いまの位置
-- **縦軸 $y = \dfrac{dx}{dt}$** … いまの速度
-
-ですから、絵の読み方も具体的になります。
-
-| 絵の場所 | 意味 |
-|---|---|
-| $x$ 軸を横切る（$y = 0$） | **速度が $0$**。折り返す瞬間です |
-| $y$ 軸を横切る（$x = 0$） | **つりあいの位置**を通過する瞬間 |
-| 原点 | 動かずに止まっている状態 |
-| 原点に近づく | **おさまっていく** |
-
-: phase portrait の読み方 {#tbl-ahl518-read}
-
-**閉じた輪**（下の行）は、**同じ動きがくり返される**ことを表しています。開いて原点に巻きつく渦は、**くり返しながら小さくなっていく**ことを表しています。
-
-### 8. スプレッドシートで {#tech}
-
-シラバスの Use of technology に、こう書かれています。
-
-> Use of spreadsheets to generate values.
-
-列は $3$ つ（$t$、$x$、$y$）で足ります。$1$ 本目の式が $\dfrac{dx}{dt} = y$ なので、**$x$ の列は「$1$ つ上の $x$ に $h \times$（$1$ つ上の $y$）を足すだけ」**です。やり方は [GDC 第1節](#gdc-sheet)にあります。
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-### なぜ書きかえてよいのか {#why}
-
-$y = \dfrac{dx}{dt}$ とおいたとき、$2$ 本の式は**もとの式と同じことを言っています。**
-
-連立系の解 $(x,\ y)$ があったとします。$1$ 本目から $y = \dfrac{dx}{dt}$ なので、$2$ 本目の左辺 $\dfrac{dy}{dt}$ は $\dfrac{d^{2}x}{dt^{2}}$ です。ですから $2$ 本目は
-
-$$
-\frac{d^{2}x}{dt^{2}} = f\!\left(x,\ \frac{dx}{dt},\ t\right)
-$$
-
-と同じ式になります。**逆向きも同じです。** もとの式の解 $x$ に対して $y = \dfrac{dx}{dt}$ と決めれば、$2$ 本ともみたされます。
-
-**情報が増えても減ってもいません。** 名前を $1$ つ増やして、$2$ 階を $1$ 階に「ならした」だけです。
-
-### なぜ行列が $\begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}$ になるのか {#why-matrix}
-
-$\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ を $\dfrac{d^{2}x}{dt^{2}} = \ldots$ の形にすると
-
-$$
-\frac{d^{2}x}{dt^{2}} = -a\frac{dx}{dt} - bx
-$$
-
-です。$\dfrac{dx}{dt}$ を $y$ に書きかえて
-
-$$
-\frac{dy}{dt} = -bx - ay
-$$
-
-となります。**$x$ の係数が $-b$、$y$ の係数が $-a$。** これが行列の $2$ 行目です。$1$ 行目は $\dfrac{dx}{dt} = 0 \cdot x + 1 \cdot y$ なので $(0,\ 1)$ です。
-
-### 特性方程式が、もとの式とそっくりになります {#why-char}
-
-$M = \begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}$ について
-
-$$
-\det(M - \lambda I) = \begin{vmatrix} -\lambda & 1 \\ -b & -a-\lambda \end{vmatrix} = (-\lambda)(-a-\lambda) - (1)(-b) = \lambda^{2} + a\lambda + b
-$$
-
-です。もとの式で $\dfrac{d^{2}x}{dt^{2}} \to \lambda^{2}$、$\dfrac{dx}{dt} \to \lambda$、$x \to 1$ と置きかえたものと**同じ形**になっています。
-
-::: {.callout-warning}
-これは**検算に使ってください。** 答案には、まず $M$ を書きます。**$M$ を書かずに $\lambda^{2} + a\lambda + b = 0$ から始めると、どこから出したのかが読めません。**
-
-$M$ を書いたあとは、[AHL 5.17a](ahl-5-17a.qmd#general) のとおり、$\det(M - \lambda I) = 0$ か、$\lambda^{2} - (\text{対角の和})\lambda + \det M = 0$ のどちらで進めても構いません。ただし `Find the eigenvalues` と問われたときは、**$\det(M - \lambda I) = 0$ の行を残す**のが確実です。
-:::
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-:::
-
-::: {#exm-ahl518-euler}
-[The displacement $x$ of a mass on a spring, at time $t$ seconds, satisfies]{.q-en}
-
-$$
-\frac{d^{2}x}{dt^{2}} + 3\frac{dx}{dt} + 2x = 0
-$$
-
-[The mass is released from rest at $x = 1$, so that $x = 1$ and $\dfrac{dx}{dt} = 0$ when $t = 0$.]{.q-en}
-
-**(a)** [Write the equation as two coupled first order differential equations.]{.q-en}
-
-**(b)** [Use Euler's method with a step length of $h = 0.1$ to find approximations for $x$ and $\dfrac{dx}{dt}$ when $t = 0.2$.]{.q-en}
-
-**(c)** [Interpret your value of $\dfrac{dx}{dt}$ when $t = 0.2$ in the context of the motion.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-ばねにつるしたおもりの、時刻 $t$ 秒における変位 $x$ は、上の式をみたします。
-
-`displacement` は「変位」、`released from rest` は「静止した状態から手をはなす」、`step length` は「刻み幅」という意味です。
-
-おもりは $x = 1$ の位置で静かにはなされます。つまり $t = 0$ のとき $x = 1$、$\dfrac{dx}{dt} = 0$ です。
-
-**(a)** この式を、$2$ 本の連立1階微分方程式として書きなさい。
-
-**(b)** 刻み幅 $h = 0.1$ の Euler 法を使って、$t = 0.2$ のときの $x$ と $\dfrac{dx}{dt}$ の近似値を求めなさい。
-
-**(c)** $t = 0.2$ のときの $\dfrac{dx}{dt}$ の値を、運動の文脈で解釈しなさい。
-
-</details>
-
----
-
-**(a)** $y = \dfrac{dx}{dt}$ とおきます（[第2節](#convert)）。もとの式を $\dfrac{d^{2}x}{dt^{2}} = -2x - 3\dfrac{dx}{dt}$ と直し、$\dfrac{dx}{dt}$ を $y$ にします。
-
-$$
-\frac{dx}{dt} = y, \qquad \frac{dy}{dt} = -2x - 3y
-$$
-
-**(b)** $2$ 歩です。**まず表を作ります**（[AHL 5.16a](ahl-5-16a.qmd#table)）。$1$ 行ぶんを全部そろえてから、次の行へ進みます（[第3節](#euler)）。
-
-| $n$ | $t_n$ | $x_n$ | $y_n$ |
-|---|---|---|---|
-| $0$ | $0$ | $1$ | $0$ |
-| $1$ | $0.1$ | $1$ | $-0.2$ |
-| $2$ | $0.2$ | $0.98$ | $-0.34$ |
-
-: $h = 0.1$ の Euler 法 {#tbl-ahl518-table}
-
-計算は、こうです。
-
-**$n = 0$：** $t_0 = 0$、$x_0 = 1$、$y_0 = 0$
-
-$$
-x_1 = 1 + 0.1 \times 0 = 1
-$$
-
-$$
-y_1 = 0 + 0.1 \times (-2 \times 1 - 3 \times 0) = -0.2
-$$
-
-**$n = 1$：** $t_1 = 0.1$、$x_1 = 1$、$y_1 = -0.2$
-
-$$
-x_2 = 1 + 0.1 \times (-0.2) = 0.98
-$$
-
-$$
-y_2 = -0.2 + 0.1 \times (-2 \times 1 - 3 \times (-0.2)) = -0.2 + 0.1 \times (-1.4) = -0.34
-$$
-
-$t = 0.2$ のとき $x \approx 0.98$、$\dfrac{dx}{dt} \approx -0.34$ です。
-
-**検算。** $y_2$ の計算に使ったのは $x_1 = 1$ と $y_1 = -0.2$ で、$x_2 = 0.98$ ではありません ✓
-
-**(c)** $\dfrac{dx}{dt}$ は**速度**です（[第2節](#convert)）。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*The value $\dfrac{dx}{dt} \approx -0.34$ is the velocity of the mass. It is negative, so at $t = 0.2$ the mass is moving back towards $x = 0$, and it is doing so at about $0.34$ units per second.*
-:::
-
-（$\dfrac{dx}{dt} \approx -0.34$ はおもりの速度である。負なので、$t = 0.2$ ではおもりは $x = 0$ のほうへ、毎秒 $0.34$ ほどの速さで戻っている、という意味です。）
-
-::: {.callout-note}
-## 解答例（答案用紙にはこう書く）
-**(a)**
-$$
-\frac{dx}{dt} = y, \qquad \frac{dy}{dt} = -2x - 3y
-$$
-
-**(b)**
-$$
-x_1 = 1, \qquad y_1 = -0.2
-$$
-$$
-x_2 = 0.98, \qquad y_2 = -0.34
-$$
-$$
-x \approx 0.98, \qquad \frac{dx}{dt} \approx -0.34 \quad (t = 0.2)
-$$
-
-**(c)** *$\dfrac{dx}{dt} \approx -0.34$ is the velocity. It is negative, so the mass is moving back towards $x = 0$ at $t = 0.2$.*
-:::
+固有値が **repeated root**（重解）、つまり $\lambda_1 = \lambda_2$ になる場合は、**この課程では出題されません。** 固有値が $0$ になる場合も出題されません。試験に出る系の固有値は、いつも異なる $2$ つで、$0$ ではありません。
 :::
 
 ::: {#exm-ahl518-exact}
@@ -612,7 +554,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** [第4節](#matrix)のとおりです。$1$ 行目は $(0,\ 1)$、$2$ 行目は係数の符号を変えて並べます。
 
@@ -663,10 +606,16 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The exact value is $x = 0.967$, while Euler's method with $h = 0.1$ gives $x \approx 0.980$. The approximation is too large by about $0.013$, which is about $1.3\%$. Euler's method uses the gradient at the start of each step, so over a curve that is bending it drifts away from the exact solution. Using a smaller step length would reduce the error.*
+*The exact value is $x = 0.967$, while Euler's method with $h = 0.1$ gives $x \approx 0.980$.*
+
+*The approximation is too large by about $0.013$, which is about $1.3\%$.*
+
+*Euler's method uses the gradient at the start of each step, so over a curve that is bending it drifts away from the exact solution.*
+
+*Using a smaller step length would reduce the error.*
 :::
 
-（厳密な値は $0.967$ で、$h = 0.1$ の Euler 法は $0.980$ を返す。約 $0.013$、$1.3\%$ ほど大きい。Euler 法は各歩のはじめの傾きを使うので、曲がっている曲線ではずれていく。刻み幅を小さくすれば誤差は小さくなる、という意味です。）
+（厳密な値は $0.967$ で、$h = 0.1$ の Euler 法は $0.980$ を返す。約 $0.013$、$1.3\%$ ほど大きい。Euler 法は各歩のはじめの **gradient**（傾き）を使うので、曲がっている曲線ではずれていく。刻み幅を小さくすれば誤差は小さくなる、という意味です。）
 
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
@@ -690,6 +639,71 @@ x = 2e^{-t} - e^{-2t}
 $$
 
 **(c)** *The exact value is $x = 0.967$, so Euler's method overestimates by about $0.013$. Euler's method uses the gradient at the start of each step, so it drifts from a curve that is bending; a smaller $h$ would reduce the error.*
+:::
+:::
+:::
+
+### 6. Eigenvalues and the type of motion（固有値の型と動き方） {#damping}
+
+$M$ の特性方程式は
+
+$$
+\det(M - \lambda I) = \lambda^{2} + a\lambda + b = 0
+$$ {#eq-ahl518-char}
+
+です。ですから、**$a$ と $b$ を見れば、動き方の見当がつきます。** **discriminant**（判別式）を
+
+$$
+\Delta = a^{2} - 4b
+$$
+
+とおきます。解の公式から
+
+$$
+\lambda = \frac{-a \pm \sqrt{\Delta}}{2}
+$$ {#eq-ahl518-lambda}
+
+ですから、**$\Delta < 0$ のとき、$2$ つの固有値の **real part**（実部）はどちらも $-\dfrac{a}{2}$** です。
+
+![固有値から分かる、動き方です。](img/ahl-5-18-motion.svg){#fig-ahl518-motion width=100%}
+
+| $a$ と $b$ | 固有値 | 動き方 | 図 |
+|---|---|---|---|
+| $a > 0$、$b > 0$、$\Delta > 0$ | 異なる $2$ つの実数、**両方負** | **振動せずに** $0$ へ戻る | 左 |
+| $a > 0$、$b > 0$、$\Delta < 0$ | 複素数、**実部が負** | **振動しながら** $0$ へ戻る | 中（[AHL 5.17b](ahl-5-17b.qmd)） |
+| $a = 0$、$b > 0$ | **純虚数** | **振動が続く**（大きさが変わらない） | 右（[AHL 5.17b](ahl-5-17b.qmd)） |
+| $a < 0$、$b > 0$、$\Delta < 0$ | 複素数、**実部が正** | **振動しながら大きくなる** | [AHL 5.17b](ahl-5-17b.qmd) |
+| $b < 0$ | 異なる $2$ つの実数、**異符号** | ほとんどの出発点で**離れていく**（saddle point） | [AHL 5.17a](ahl-5-17a.qmd#saddle) |
+
+: 固有値と動き方 {#tbl-ahl518-cases}
+
+::: {.callout-note}
+## $a$ は「ブレーキ」の強さです
+ばねの問題なら、$a\dfrac{dx}{dt}$ の項は**速さに比例してじゃまをする力**（空気の抵抗のような、速さに比例する抵抗）を表しています。
+
+境目は $\Delta = a^{2} - 4b = 0$、つまり $a = 2\sqrt{b}$ です（$b > 0$ のとき）。
+
+- $a = 0$ … じゃまがないので、**いつまでも揺れ続けます**（@fig-ahl518-motion の右）
+- $0 < a < 2\sqrt{b}$（$\Delta < 0$）… **揺れながら、だんだんおさまります**（中）
+- $a > 2\sqrt{b}$（$\Delta > 0$）… **揺れる前におさまります**（左）
+
+**$2$ 階の式を、自分で立てる必要はありません**（$1$ 階の式をことばから立てる問題は [AHL 5.14](ahl-5-14.qmd) で出ます）。**試験では、$2$ 階の式は必ず与えられます。** ばねのような物理の場面でこの式が出てくることを知っておくと、理解の助けにはなります。
+
+問われるのは、**与えられた式を書きかえて、解いて、動きを言葉で説明する**ところです。
+:::
+
+::: {.callout-warning}
+## `overdamped` のような英語は、この課程の用語ではありません
+物理では、上の表の $1$ 行目を `overdamped`、$2$ 行目を `underdamped` と呼びます。ただし、**AI HL ではこれらの語を使いません。**
+
+答案では、$\lambda$ の型と、**動きの言葉**で書いてください。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The eigenvalues are real and both negative, so $x$ returns to $0$ without oscillating.*
+
+*The eigenvalues are complex with negative real part, so $x$ oscillates with decreasing amplitude and tends to $0$.*
 :::
 :::
 
@@ -721,7 +735,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)**
 
@@ -744,17 +759,25 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The eigenvalues are complex, so the motion oscillates. Their real part is $-1$, which is negative, so the size of each swing decreases and $x \to 0$ as $t$ increases. In the phase portrait the trajectory spirals inwards to the origin.*
+*The eigenvalues are complex, so the motion oscillates.*
+
+*Their real part is $-1$, which is negative, so the size of each swing decreases and $x \to 0$ as $t$ increases.*
+
+*In the phase portrait the trajectory spirals inwards to the origin.*
 :::
 
 （固有値が複素数なので振動する。実部が $-1$ で負なので、揺れの大きさは小さくなり、$t$ が増えると $x \to 0$ になる。相図では、軌道が原点へ渦を巻いて入る、という意味です。）
 
-**(c)** シラバスの限定を答えます。
+**(c)** 厳密解が必要なのは、固有値が異なる $2$ つの実数のときだけです（[第5節](#exact)）。それに当てはまるかを答えます。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*No. Exact solutions are only required when the eigenvalues are real and distinct. Here they are complex, so only a qualitative description of the motion is required.*
+*No.*
+
+*Exact solutions are only required when the eigenvalues are real and distinct.*
+
+*Here they are complex, so only a qualitative description of the motion is required.*
 :::
 
 （不要である。厳密解が求められるのは固有値が異なる $2$ つの実数のときだけで、ここでは複素数なので、運動の定性的な説明だけでよい、という意味です。）
@@ -774,100 +797,87 @@ $$
 **(c)** *No. Exact solutions are only required for real distinct eigenvalues, and here the eigenvalues are complex.*
 :::
 :::
-
-::: {#exm-ahl518-general}
-[A driven system satisfies]{.q-en}
-
-$$
-\frac{d^{2}x}{dt^{2}} = \sin t - 0.5\frac{dx}{dt} - x
-$$
-
-[with $x = 0$ and $\dfrac{dx}{dt} = 1$ when $t = 0$.]{.q-en}
-
-**(a)** [Write the equation as two coupled first order differential equations.]{.q-en}
-
-**(b)** [Use Euler's method with $h = 0.1$ to find approximations for $x$ and $\dfrac{dx}{dt}$ when $t = 0.2$.]{.q-en}
-
-**(c)** [Explain why the eigenvalue method cannot be used for this equation.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-ある強制振動の系は、上の式をみたします。$t = 0$ のとき $x = 0$、$\dfrac{dx}{dt} = 1$ です。
-
-`driven system` は「外から力を加えられている系」という意味です。
-
-**(a)** この式を、$2$ 本の連立1階微分方程式として書きなさい。
-
-**(b)** $h = 0.1$ の Euler 法を使って、$t = 0.2$ のときの $x$ と $\dfrac{dx}{dt}$ の近似値を求めなさい。
-
-**(c)** この式に固有値の方法が使えない理由を説明しなさい。
-
-</details>
-
----
-
-**(a)** $y = \dfrac{dx}{dt}$ とおくだけです。右辺の $t$ は、そのまま残します。
-
-$$
-\frac{dx}{dt} = y, \qquad \frac{dy}{dt} = \sin t - 0.5y - x
-$$
-
-**(b)** 右辺に $t$ があるので、**$t$ の値も使います**（[AHL 5.16b](ahl-5-16b.qmd#formula)）。
-
-**$n = 0$：** $t_0 = 0$、$x_0 = 0$、$y_0 = 1$
-
-$$
-x_1 = 0 + 0.1 \times 1 = 0.1
-$$
-
-$$
-y_1 = 1 + 0.1 \times (\sin 0 - 0.5 \times 1 - 0) = 1 + 0.1 \times (-0.5) = 0.95
-$$
-
-**$n = 1$：** $t_1 = 0.1$、$x_1 = 0.1$、$y_1 = 0.95$
-
-$$
-x_2 = 0.1 + 0.1 \times 0.95 = 0.195
-$$
-
-$$
-y_2 = 0.95 + 0.1 \times (\sin 0.1 - 0.5 \times 0.95 - 0.1) = 0.902
-$$
-
-$t = 0.2$ のとき $x \approx 0.195$、$\dfrac{dx}{dt} \approx 0.902$ です。
-
-**検算。** 電卓は **radian** にしておきます。$\sin 0.1 = 0.0998$ です。degree のままだと $0.00175$ になり、答えが変わります。
-
-**(c)** [第4節](#matrix)が使えるのは、右辺が $ax + by$ の形のとき、つまり **$x$ と $y$ の項だけ**でできているときです。定数項や $t$ の項があると、この形になりません（[AHL 5.17a](ahl-5-17a.qmd#idea)）。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*The eigenvalue method applies to a system of the form $\dfrac{dx}{dt} = ax + by$, $\dfrac{dy}{dt} = cx + dy$, in which the right hand sides contain only $x$ and $y$. Here $\dfrac{dy}{dt}$ contains the term $\sin t$, which depends on $t$, so the system cannot be written as $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ and Euler's method must be used instead.*
 :::
 
-（固有値の方法は、右辺が $x$ と $y$ だけでできている系に使える。ここでは $\dfrac{dy}{dt}$ に $t$ による項 $\sin t$ があるので、$\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$ の形に書けず、Euler 法を使うことになる、という意味です。）
+### 7. Phase portraits（相図の縦軸は速度） {#sketch}
 
-::: {.callout-note}
-## 解答例（答案用紙にはこう書く）
-**(a)**
+$2$ 階の式の **phase portrait**（相図）は、横軸が位置 $x$、縦軸が速度 $y$ です。
+
+![同じ $3$ つの動きを、$(x, y)$ 平面に描いたものです。](img/ahl-5-18-phase.svg){#fig-ahl518-phase width=100%}
+
+@fig-ahl518-phase は、@fig-ahl518-motion と同じ $3$ つの動きを $(x,\ y)$ 平面に描いたものです。左が [AHL 5.17a](ahl-5-17a.qmd#sketch)、中と右が [AHL 5.17b](ahl-5-17b.qmd) と同じ絵ですが、**この項目では縦軸に意味があります。**
+
+- **横軸 $x$** … いまの位置
+- **縦軸 $y = \dfrac{dx}{dt}$** … いまの速度
+
+ですから、絵の読み方も具体的になります。
+
+| 絵の場所 | 意味 |
+|---|---|
+| $x$ 軸を横切る（$y = 0$） | **速度が $0$**。折り返す瞬間です |
+| $y$ 軸を横切る（$x = 0$） | **つりあいの位置**を通過する瞬間 |
+| 原点 | 動かずに止まっている状態 |
+| 原点に近づく | **おさまっていく** |
+
+: phase portrait の読み方 {#tbl-ahl518-read}
+
+**閉じた輪**（下の行）は、**同じ動きがくり返される**ことを表しています。開いて原点に巻きつく渦は、**くり返しながら小さくなっていく**ことを表しています。
+
+### 8. Using a spreadsheet（スプレッドシートで値を出す） {#tech}
+
+Euler 法の値は、**spreadsheet**（スプレッドシート）で表にして出すこともできます。
+
+列は $3$ つ（$t$、$x$、$y$）で足ります。$1$ 本目の式が $\dfrac{dx}{dt} = y$ なので、**$x$ の列は「$1$ つ上の $x$ に $h \times$（$1$ つ上の $y$）を足すだけ」**です。やり方は [GDC の節](#gdc-sheet)にあります。
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+#### なぜ書きかえてよいのか {#why}
+
+$y = \dfrac{dx}{dt}$ とおいたとき、$2$ 本の式は**もとの式と同じことを言っています。**
+
+連立系の解 $(x,\ y)$ があったとします。$1$ 本目から $y = \dfrac{dx}{dt}$ なので、$2$ 本目の左辺 $\dfrac{dy}{dt}$ は $\dfrac{d^{2}x}{dt^{2}}$ です。ですから $2$ 本目は
+
 $$
-\frac{dx}{dt} = y, \qquad \frac{dy}{dt} = \sin t - 0.5y - x
+\frac{d^{2}x}{dt^{2}} = f\!\left(x,\ \frac{dx}{dt},\ t\right)
 $$
 
-**(b)**
+と同じ式になります。**逆向きも同じです。** もとの式の解 $x$ に対して $y = \dfrac{dx}{dt}$ と決めれば、$2$ 本ともみたされます。
+
+**情報が増えても減ってもいません。** 名前を $1$ つ増やして、$2$ 階を $1$ 階に「ならした」だけです。
+
+#### なぜ行列が $\begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}$ になるのか {#why-matrix}
+
+$\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ を $\dfrac{d^{2}x}{dt^{2}} = \ldots$ の形にすると
+
 $$
-x_1 = 0.1, \qquad y_1 = 0.95
-$$
-$$
-x_2 = 0.195, \qquad y_2 = 0.902
-$$
-$$
-x \approx 0.195, \qquad \frac{dx}{dt} \approx 0.902 \quad (t = 0.2)
+\frac{d^{2}x}{dt^{2}} = -a\frac{dx}{dt} - bx
 $$
 
-**(c)** *The right hand side contains $\sin t$, so the system is not of the form $\dfrac{dx}{dt} = ax + by$, $\dfrac{dy}{dt} = cx + dy$. It cannot be written as $\dfrac{d\mathbf{X}}{dt} = M\mathbf{X}$, so eigenvalues cannot be used and Euler's method is needed.*
+です。$\dfrac{dx}{dt}$ を $y$ に書きかえて
+
+$$
+\frac{dy}{dt} = -bx - ay
+$$
+
+となります。**$x$ の係数が $-b$、$y$ の係数が $-a$。** これが行列の $2$ 行目です。$1$ 行目は $\dfrac{dx}{dt} = 0 \cdot x + 1 \cdot y$ なので $(0,\ 1)$ です。
+
+#### 特性方程式が、もとの式とそっくりになります {#why-char}
+
+$M = \begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}$ について
+
+$$
+\det(M - \lambda I) = \begin{vmatrix} -\lambda & 1 \\ -b & -a-\lambda \end{vmatrix} = (-\lambda)(-a-\lambda) - (1)(-b) = \lambda^{2} + a\lambda + b
+$$
+
+です。もとの式で $\dfrac{d^{2}x}{dt^{2}} \to \lambda^{2}$、$\dfrac{dx}{dt} \to \lambda$、$x \to 1$ と置きかえたものと**同じ形**になっています。
+
+::: {.callout-warning}
+これは**検算に使ってください。** 答案には、まず $M$ を書きます。**$M$ を書かずに $\lambda^{2} + a\lambda + b = 0$ から始めると、どこから出したのかが読めません。**
+
+$M$ を書いたあとは、[AHL 5.17a](ahl-5-17a.qmd#general) のとおり、$\det(M - \lambda I) = 0$ か、$\lambda^{2} - (\text{対角の和})\lambda + \det M = 0$ のどちらで進めても構いません。ただし `Find the eigenvalues` と問われたときは、**$\det(M - \lambda I) = 0$ の行を残す**のが確実です。
 :::
 :::
 
@@ -922,7 +932,7 @@ $2$ 階の式なので、定数は $A$ と $B$ の $2$ つあります。決め�
 ## 複素固有値のときに、厳密解の式を書こうとする
 **誤り**：$\lambda = -1 \pm 2i$ から $x = Ae^{(-1+2i)t} + Be^{(-1-2i)t}$ と書く。
 
-この式そのものが誤りというわけではありませんが、**この課程では求められていません。** $A$ と $B$ が複素数になり、実数の $x$ に直す作業はシラバスの範囲外です。
+この式そのものが誤りというわけではありませんが、**この課程では求められていません。** $A$ と $B$ が複素数になり、実数の $x$ に直す作業はこの課程の範囲外です。
 
 **正しくは**：振動するか、おさまるかを**言葉で**述べます（[第6節](#damping)）。
 :::
@@ -952,7 +962,7 @@ $y$ は $\dfrac{dx}{dt}$ に付けた名前です。$x$ が出たら、$y$ は**
 Lists & Spreadsheet は Press-to-Test で止められていません（[AHL 5.16a](ahl-5-16a.qmd#gdc-sheet)）。**ここで説明する方法は、試験でもそのまま使えます。**
 :::
 
-### $3$ 列のスプレッドシートで進める {#gdc-sheet}
+### A three-column spreadsheet（$3$ 列のスプレッドシートで進める） {#gdc-sheet}
 
 ```
 ctrl + doc → Add Lists & Spreadsheet
@@ -999,7 +1009,7 @@ C2:  =c1+0.1*(sin(a1)-0.5*c1-b1)
 
 です。**角度の設定を radian にしておいてください。**
 
-### 固有値で場合分けを確かめる {#gdc-eig}
+### Checking the eigenvalues（固有値で場合分けを確かめる） {#gdc-eig}
 
 ```
 menu → Matrix & Vector → Advanced → Eigenvalues
@@ -1012,7 +1022,7 @@ $\begin{pmatrix} 0 & 1 \\ -b & -a \end{pmatrix}$ を入れます。実数が $2$
 `Find the eigenvalues` と問われたら、**$\det(M - \lambda I) = 0$ を書いて解く過程**が要ります。電卓は**検算**に使ってください（[AHL 5.17a](ahl-5-17a.qmd#gdc-eig)）。
 :::
 
-### 確かめ方 {#gdc-check}
+### Checking your answers（確かめ方） {#gdc-check}
 
 $3$ つあります。
 
@@ -1030,12 +1040,6 @@ $3$ つあります。
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -1307,7 +1311,9 @@ $x = Ae^{t} + Be^{-t}$ の形になり、$e^{t}$ の項が効いてきます。
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The eigenvalues $1$ and $-1$ have opposite signs, so the origin is a saddle point. The solution contains a term in $e^{t}$, which grows, so $|x|$ increases without limit as $t$ increases.*
+*The eigenvalues $1$ and $-1$ have opposite signs, so the origin is a saddle point.*
+
+*The solution contains a term in $e^{t}$, which grows, so $|x|$ increases without limit as $t$ increases.*
 :::
 
 **これは「おさまらない」場合です。** $b < 0$ だと、$x$ を引き戻す向きの力がありません。
@@ -1345,7 +1351,9 @@ $\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ の相図を、横軸 $x$、
 ::: {.model-answer}
 **試験ではこう書く**
 
-*At this point $\dfrac{dx}{dt} = 0$, so the object is momentarily at rest at $x = 0.4$. It is the turning point of the motion: the object stops there and then moves back the other way.*
+*At this point $\dfrac{dx}{dt} = 0$, so the object is momentarily at rest at $x = 0.4$.*
+
+*It is the turning point of the motion: the object stops there and then moves back the other way.*
 :::
 
 **「$x = 0$ を通る瞬間」ではありません。** それは縦軸を横切るときの話です。
@@ -1379,7 +1387,9 @@ $\dfrac{d^{2}x}{dt^{2}} + a\dfrac{dx}{dt} + bx = 0$ が表す運動を決める�
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Substituting $y = \dfrac{dx}{dt}$ gives a system in two unknown functions, so the general solution has two arbitrary constants and two conditions are needed. In context, the position alone does not determine the motion: the velocity at that instant is also needed.*
+*Substituting $y = \dfrac{dx}{dt}$ gives a system in two unknown functions, so the general solution has two arbitrary constants and two conditions are needed.*
+
+*In context, the position alone does not determine the motion: the velocity at that instant is also needed.*
 :::
 :::
 
@@ -1416,7 +1426,9 @@ $2$ 行目は $\dfrac{dy}{dt} = -12x - 7y$ です（[第4節](#matrix)）。
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The signs should be negative, because $\dfrac{d^{2}x}{dt^{2}} = -12x - 7\dfrac{dx}{dt}$, and the entries should be in the order $-12$ then $-7$, since the first column multiplies $x$ and the second multiplies $y$. The correct matrix is $M = \begin{pmatrix} 0 & 1 \\ -12 & -7 \end{pmatrix}$.*
+*The signs should be negative, because $\dfrac{d^{2}x}{dt^{2}} = -12x - 7\dfrac{dx}{dt}$, and the entries should be in the order $-12$ then $-7$, since the first column multiplies $x$ and the second multiplies $y$.*
+
+*The correct matrix is $M = \begin{pmatrix} 0 & 1 \\ -12 & -7 \end{pmatrix}$.*
 :::
 
 **検算。** $\det(M - \lambda I) = \lambda^{2} + 7\lambda + 12$ が、もとの式の係数とそろっていれば正しい行列です（[Why it works](#why-char)）。$\lambda = -3,\ -4$ です。

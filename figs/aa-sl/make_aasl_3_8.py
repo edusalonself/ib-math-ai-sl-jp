@@ -46,8 +46,6 @@ fig5, ax5 = plt.subplots(figsize=(6.2, 4.6))
 # ══════════════════════════════════════════════════════════
 # (a) 交点の数が解の数
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Reading the number of solutions", fontsize=11, color=INK,
-              loc="left", pad=10)
 x = np.linspace(0, 2 * np.pi, 700)
 K = 0.62
 ax1.plot(x, np.sin(x), color=ACCENT, linewidth=2.2)
@@ -66,7 +64,8 @@ ax1.set_yticklabels(["$-1$", "$0$", "$1$"], fontsize=9.5)
 for _sp in ("top", "right", "left", "bottom"):
     ax1.spines[_sp].set_visible(False)
 ax1.tick_params(length=0, colors=GREY)
-ax1.text(2 * np.pi + 0.05, K - 0.02, "$y = k$", fontsize=10.5, color=WARM)
+ax1.text(2 * np.pi + 0.2, K + 0.08, "$y = k$", fontsize=10.5, color=WARM,
+         ha="right")
 ax1.text(0.05, 1.62, "$y = \\sin x$", fontsize=10.5, color=ACCENT)
 
 
@@ -77,8 +76,7 @@ ax1.text(0.05, 1.62, "$y = \\sin x$", fontsize=10.5, color=ACCENT)
 _tc = np.linspace(0, 2 * np.pi, 400)
 
 
-def _circle(ax, title):
-    ax.set_title(title, fontsize=11, color=INK, loc="left", pad=10)
+def _circle(ax):
     ax.set_xlim(-1.65, 1.65)
     ax.set_ylim(-1.55, 1.55)
     ax.set_aspect("equal")
@@ -111,7 +109,7 @@ def _refarc(ax, a, r=0.30):
 _k = 0.62
 
 # 左：sin は y 座標
-_circle(ax3, r"$\sin\theta = k$")
+_circle(ax3)
 _al = np.arcsin(_k)
 ax3.plot([-1.45, 1.45], [_k, _k], color=WARM, linewidth=1.8)
 ax3.text(1.00, _k - 0.30, "$y = k$", fontsize=10.5, color=WARM)
@@ -122,7 +120,7 @@ _arm(ax3, np.pi - _al, ACCENT, r"$\pi-\alpha$", -0.70, 0.14)
 _refarc(ax3, _al)
 
 # 中：cos は x 座標
-_circle(ax4, r"$\cos\theta = k$")
+_circle(ax4)
 _be = np.arccos(_k)
 ax4.plot([_k, _k], [-1.40, 1.40], color=WARM, linewidth=1.8)
 ax4.text(_k + 0.10, 1.20, "$x = k$", fontsize=10.5, color=WARM)
@@ -133,7 +131,7 @@ _arm(ax4, -_be, ACCENT, r"$2\pi-\alpha$", 0.14, -0.26)
 _refarc(ax4, _be)
 
 # 右：tan は (1,0) での接線の高さ
-_circle(ax5, r"$\tan\theta = k$")
+_circle(ax5)
 ax5.set_xlim(-1.65, 2.65)
 _kt = 0.80
 _ga = np.arctan(_kt)

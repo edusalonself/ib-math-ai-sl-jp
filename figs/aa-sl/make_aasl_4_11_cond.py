@@ -36,15 +36,13 @@ GREY = "#6b7280"
 WARM = "#b45309"
 FILL = "#fdf0dc"
 
-fig1, ax1 = plt.subplots(figsize=(5.7, 2.7))
-fig3, ax3 = plt.subplots(figsize=(5.7, 3.6))
+fig1, ax1 = plt.subplots(figsize=(4.6, 2.5))
+fig3, ax3 = plt.subplots(figsize=(5.7, 3.3))
 # ══════════════════════════════════════════════════════════
 # (a) 二元表と、狭まった標本空間
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Knowing $B$ narrows the sample space to one row",
-              fontsize=11, color=INK, loc="left", pad=12)
-ax1.set_xlim(-0.35, 4.6)
-ax1.set_ylim(0.2, 3.1)
+ax1.set_xlim(-0.1, 4.3)
+ax1.set_ylim(0.45, 3.0)
 ax1.axis("off")
 
 COLS = ["", "$A$", "$A'$", "total"]
@@ -77,8 +75,6 @@ ax1.plot([CW * 3, CW * 3], [2.05 + CH / 2 + 0.10, 2.05 - 2 * CH - CH / 2],
 # ══════════════════════════════════════════════════════════
 # (c) かけ算の形：枝に沿ってかける
 # ══════════════════════════════════════════════════════════
-ax3.set_title("Multiplying along two branches", fontsize=11, color=INK,
-              loc="left", pad=12)
 ax3.set_xlim(-0.45, 6.2)
 ax3.set_ylim(-1.55, 1.75)
 ax3.axis("off")

@@ -66,8 +66,7 @@ ax.text(Q[0] + 0.18, (P[1] + Q[1]) / 2, "$3$ up", fontsize=12, color=ACC,
 ax.text(-2.3, 1.5, "$\\overrightarrow{AB} = \\binom{4}{3} = 4\\mathbf{i} + 3\\mathbf{j}$",
         fontsize=13, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 grid(ax, (-4.6, 3.6), (-2.6, 3.4))
-ax.set_title("(a)  the components are 'across' and 'up'", fontsize=12.5,
-             color=INK, pad=6)
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) 同じベクトルは、どこに置いても同じ
 ax = axs[1]
@@ -75,14 +74,8 @@ STARTS = [(-4.5, -2.0), (-1.5, 0.5), (0.5, -2.5), (-5.0, 1.5)]
 COLS = [LINE, GREEN, GOLD, ACC]
 for (sx, sy), c in zip(STARTS, COLS):
     arrow(ax, (sx, sy), (sx + 4, sy + 3), color=c, lw=2.6)
-ax.text(0.4, -3.85, "only the 'across' and 'up' matter,\n"
-                    "not where the arrow starts",
-        fontsize=11.5, color=GREY, ha="center", va="center", bbox=BOX,
-        zorder=9)
-grid(ax, (-5.8, 5.8), (-4.8, 4.8))
-ax.set_title("(b)  where you draw it does not matter\n"
-             "all four arrows are the SAME vector $\\binom{4}{3}$",
-             fontsize=12.5, color=INK, pad=6)
+grid(ax, (-5.8, 5.8), (-3.4, 4.8))
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=1.8)
 save(fig, "ahl-3-10a-components.svg")
@@ -105,12 +98,9 @@ ax.text(4.0, 2.4, "$\\mathbf{b}$", fontsize=14, color=GREEN, ha="left",
         va="center")
 ax.text(2.45, 2.75, "$\\mathbf{a}+\\mathbf{b}$", fontsize=14, color=ACC,
         ha="right", va="center", bbox=BOX, zorder=9)
-ax.text(2.0, -1.35, "nose to tail: $\\mathbf{a}$ then $\\mathbf{b}$\n"
-                    "$\\binom{3}{1} + \\binom{1}{3} = \\binom{4}{4}$",
+ax.text(2.0, -1.05, "$\\binom{3}{1} + \\binom{1}{3} = \\binom{4}{4}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-1.4, 5.4), (-2.6, 4.8))
-ax.set_title("adding: join them nose to tail", fontsize=12.5, color=INK,
-             pad=6)
+grid(ax, (-1.4, 5.4), (-1.8, 4.8))
 fig.tight_layout()
 save(fig, "ahl-3-10a-add.svg")
 
@@ -130,29 +120,19 @@ ax.text(3.15, 0.95, "$\\mathbf{a}-\\mathbf{b}$", fontsize=13, color=ACC,
         ha="left", va="top")
 ax.text(1.4, 3.5, "$\\mathbf{b}-\\mathbf{a}$", fontsize=13, color=GOLD,
         ha="left", va="bottom")
-ax.text(2.0, -1.35, "$\\mathbf{a}-\\mathbf{b}$ points FROM the tip of "
-                    "$\\mathbf{b}$\nTO the tip of $\\mathbf{a}$; "
-                    "$\\mathbf{b}-\\mathbf{a}$ is the other way\n"
-                    "(drawn slightly to the side, so both can be seen)",
-        fontsize=11.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-1.4, 5.4), (-2.6, 4.8))
-ax.set_title("subtracting: same length, opposite way round",
-             fontsize=12.5, color=INK, pad=6)
+grid(ax, (-1.4, 5.4), (-0.8, 4.8))
 fig.tight_layout()
 save(fig, "ahl-3-10a-sub.svg")
 
 
 # ══════════ fig 3: スカラー倍と平行 ══════════
-fig, ax = plt.subplots(figsize=(10.6, 4.6))
+fig, ax = plt.subplots(figsize=(7.4, 4.2))
 
 V = np.array([2.0, 1.0])
-ROWS = [(1.0, "$\\mathbf{a}$", LINE, 0.0, "the vector itself"),
-        (2.0, "$2\\mathbf{a}$", GREEN, -1.5,
-         "$k = 2$: same direction, twice as long"),
-        (0.5, "$0.5\\mathbf{a}$", GOLD, -3.0,
-         "$0 < k < 1$: same direction, shorter"),
-        (-1.5, "$-1.5\\mathbf{a}$", ACC, -4.5,
-         "$k < 0$: OPPOSITE direction")]
+ROWS = [(1.0, "$\\mathbf{a}$", LINE, 0.0, "$k = 1$"),
+        (2.0, "$2\\mathbf{a}$", GREEN, -1.5, "$k = 2$"),
+        (0.5, "$0.5\\mathbf{a}$", GOLD, -3.0, "$0 < k < 1$"),
+        (-1.5, "$-1.5\\mathbf{a}$", ACC, -4.5, "$k < 0$")]
 for k, lab, col, dy, note in ROWS:
     s0 = np.array([0.0, dy])
     arrow(ax, s0, s0 + k * V, color=col, lw=3.0)
@@ -161,18 +141,10 @@ for k, lab, col, dy, note in ROWS:
     ax.text(5.2, dy, note, fontsize=11.5, color=col, ha="left", va="center")
 
 ax.axvline(0, color=GREY, lw=1.0, ls=":", zorder=1)
-ax.text(2.0, 1.55, "every $k\\mathbf{a}$ is parallel to $\\mathbf{a}$   "
-                   "(for $\\mathbf{a} \\neq \\mathbf{0}$ and $k \\neq 0$)",
-        fontsize=12.5, color=INK, ha="center", va="center", bbox=BOX,
-        zorder=9)
-ax.text(0.15, -5.6, "all four start from the dotted line", fontsize=10.5,
-        color=GREY, ha="left", va="center")
-ax.set_xlim(-4.6, 13.2)
-ax.set_ylim(-6.2, 2.4)
+ax.set_xlim(-4.6, 7.4)
+ax.set_ylim(-6.2, 1.4)
 ax.set_aspect("equal")
 ax.axis("off")
-ax.set_title("Multiplying by a scalar: the direction is kept, or reversed",
-             fontsize=13, color=INK, pad=8)
 
 fig.tight_layout()
 save(fig, "ahl-3-10a-scalar.svg")

@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "02-functions")
 QMD = os.path.join(BASE, "aasl-2-3.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+
+def _strip_exm(s):
+    """例題ブロック（::: {#exm-...} から対応する ::: まで）を外す。"""
+    out, depth, skip = [], 0, False
+    for _l in s.split(chr(10)):
+        if not skip and _l.startswith("::: {#exm-"):
+            skip, depth = True, 0
+        if skip:
+            if re.match(r"^:{3,}\s*\{", _l):
+                depth += 1
+            elif re.match(r"^:{3,}\s*$", _l):
+                depth -= 1
+                if depth == 0:
+                    skip = False
+            continue
+        out.append(_l)
+    return chr(10).join(out)
+
+
+BODY = _strip_exm(TEXT[:TEXT.index("## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_2_3.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 # 色コード・ファイル名・キーワードはラベルではないので外す
@@ -56,6 +75,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 # ══════════════════════════════════════════════════════════
 # 0. The idea の数値
@@ -220,42 +242,42 @@ for _lk, _m in [("(3, 0)", "演習1"), ("(0, -6)", "演習1"),
 # ══════════════════════════════════════════════════════════
 not_in_text("## この項目には、公式集の欄がありません", "公式集の囲みは置かない")
 # 表 2 の「ラベルするもの」には英語も
-for _e in ["軸（axes）", "$x$ 切片・$y$ 切片（intercepts）",
-           "最大点・最小点（maximum and minimum points）", "漸近線（asymptote）",
-           "曲線そのもの（the curve）", "domain の端（endpoints of the domain）"]:
+for _e in ["axes（軸）", "intercepts（$x$ 切片・$y$ 切片）",
+           "maximum and minimum points（最大点・最小点）", "asymptote（漸近線）",
+           "the curve（曲線そのもの）", "endpoints of the domain（定義域の端）"]:
     in_text("| " + _e + " |", "表 2 の英語: " + _e)
-in_text('> Students should be aware of the difference between the command '
-        'terms "draw" and "sketch".', "Guidance を逐語で")
-in_text("> All axes and key features should be labelled.", "ラベルの指示を逐語で")
+not_in_text("> Students should be aware of the difference between the command",
+            "シラバス（Guidance）の引用は本文から外した")
+in_text("グラフをかく問題では、**draw**（正確にかく）と **sketch**（概形をかく）の $2$ つの指示が使われます。",
+        "draw と sketch のちがいは日本語で直接書いた")
+not_in_text("> All axes and key features should be labelled.", "シラバスの引用は本文から外した")
+in_text("関数のグラフでは、**軸と key features（重要な特徴）には必ずラベルをつける**ことになっています。",
+        "ラベルの指示は日本語で直接書いた")
 not_in_text("> Creating a sketch from information given or a context.",
             "Content 欄の引用は置かない")
 not_in_text("> Using technology to graph functions", "同上")
 not_in_text("> ... including transferring a graph from screen to paper.", "同上")
 in_text("文章で与えられた状況から、グラフを sketch する問題も出ます。",
         "文章で書く")
-in_text("### 5. 現実の状況からグラフを書く {#context}", "第 5 節の見出し")
-in_text("### 6. GDC から紙に写す {#screen}", "第 6 節の見出し")
+in_text('### 5. Graphs from a context（現実の場面からグラフをかく） {#context}', "第 5 節の見出し")
+in_text('### 6. From the GDC screen to paper（電卓の画面から紙に写す） {#screen}', "第 6 節の見出し")
 not_in_text("### 5. 場面からグラフをかく", "前の見出しは消した")
 not_in_text("### 6. 画面から紙へ写す", "同上")
 not_in_text("文章で与えられた場面", "「場面」→「状況」")
-in_text("Paper 2 では、電卓の画面のグラフを紙に写すことがあります。", "文章で書く")
+in_text("Paper 2 では、電卓の画面に出したグラフを、答案用紙に写すことがあります。", "文章で書く")
 in_text("関数どうしを足したり引いたりしたグラフも、この項目で扱います。", "文章で書く")
 # command term の定義（シラバスの Glossary から逐語）
-in_text("> **Draw**: Represent by means of a labelled, accurate diagram or "
-        "graph, using a pencil. A ruler (straight edge) should be used for "
-        "straight lines. Diagrams should be drawn to scale. Graphs should "
-        "have points correctly plotted (if appropriate) and joined in a "
-        "straight line or smooth curve.", "Draw の定義を逐語で")
-in_text("> **Sketch**: Represent by means of a diagram or graph (labelled as "
-        "appropriate). The sketch should give a general idea of the required "
-        "shape or relationship, and should include relevant features.",
-        "Sketch の定義を逐語で")
+not_in_text("> **Draw**: Represent by means of", "Glossary の英文の引用は本文から外した")
+not_in_text("> **Sketch**: Represent by means of", "同上")
+in_text("draw は、目盛りに合わせて点を正しくとり、定規やなめらかな曲線で結んだ正確な図です。",
+        "Draw の意味は日本語で直接書いた")
+in_text("sketch は、形と大事な特徴が伝わればよい図です。", "Sketch の意味は日本語で直接書いた")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
 # ══════════════════════════════════════════════════════════
 # 8. 説明のしかた
 # ══════════════════════════════════════════════════════════
-in_text("**この項目では、どちらでもラベルは要ります。**", "sketch でもラベルは要る")
+in_text("**ですから、draw でも sketch でもラベルは要ります。**", "sketch でもラベルは要る")
 in_text("**式が曲線を表しているときは、曲線で結ぶ。**", "なめらかに結ぶ")
 not_in_text("## 「一定の割合」なら、必ず直線です", "断定は外した")
 in_text("## 「毎分 $\\square$ ずつ」が**同じ量**なら、直線です", "言い方を正した")
@@ -282,7 +304,7 @@ in_text("**Paper 1 では使えません。**", "Paper 1 では手で解くと�
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -293,9 +315,16 @@ chk(TEXT.count("{.model-answer}") == 5, "model-answer が 5")
 chk(len(re.findall(r"^::: \{#exm-aasl23-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -358,13 +387,13 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("What a sketch must show", "図(a) の題")
+not_in_fig("What a sketch must show", "図(a) の題")
 in_fig("$x$-intercepts", "図(a) の x 切片")
 in_fig("$y$-intercept", "図(a) の y 切片")
 in_fig("minimum point", "図(a) の最小点")
-in_fig("Adding two graphs", "図(b) の題")
+not_in_fig("Adding two graphs", "図(b) の題")
 in_fig("$y = f(x) + g(x)$", "図(b) の和")
-in_fig("heights add", "図(b) の要点")
+not_in_fig("heights add", "図(b) の要点")
 # 図が使っている 3 つの高さは、実際に足し算になっている
 _fp, _gp = 0.35 * 1.6 + 0.6, 2.6 - 0.42 * 1.6
 chk(abs((_fp + _gp) - (_fp + _gp)) < 1e-12, "和の高さ")
@@ -379,11 +408,15 @@ for leak in ["= 7", "= 20", "500", "(3, 0)", "(2, 7)"]:
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-3.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-2-2.qmd") < DRAFT.index("aasl-2-3.qmd"), "並びが 2.2 → 2.3")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/02-functions/aasl-2-3.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-2-2.qmd") < DRAFT.index("aasl-2-3.qmd"), "並びが 2.2 → 2.3")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-3.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -449,12 +482,12 @@ in_text("（SL 2.8 で扱います）", "表でも同じ")
 in_text("[The table below is to be completed for $y = x^{2} - 2x$.]{.q-en}",
         "shows values をやめた")
 # 所見 20 — labelled as appropriate との関係
-in_text("Glossary の Sketch の定義は `labelled as appropriate` と書いていますが、",
-        "根拠のつながり")
+not_in_text("`labelled as appropriate`", "Glossary の英文の引用は外した")
+in_text("sketch は「形が伝わればよい」図ですが、関数のグラフでは、", "根拠のつながり")
 # 所見 21 — 用語の英日併記
 in_text("**domain**（定義域）の中で動かしたときにできる点", "domain の訳")
 in_text("**range**（値域）は $g(x)$ で書きます。", "range の訳")
-in_text("漸近線（asymptote）", "asymptote の英語")
+in_text("asymptote（漸近線）", "asymptote の英語")
 # 所見 22 — リンクのアンカー
 in_text("[SL 2.2 の第 6 節](aasl-2-2.qmd#model)", "アンカー付き")
 # 所見 23 — 縦軸の名前
@@ -507,7 +540,7 @@ in_text('- **draw**（正確にかく）と **sketch**（概形をかく）の�
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -517,8 +550,8 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 2. draw と sketch はちがいます {#draw-sketch}', "見出しの英語: 2. draw と sketch はちがいます")
-in_text('### 4. 表を作ってかく（table of values） {#table}', "見出しの英語: 4. 表を作ってかく（table of values")
+in_text('### 2. Draw and sketch（正確にかくか、概形をかくか） {#draw-sketch}', "見出しの英語: 2. draw と sketch はちがいます")
+in_text('### 4. Table of values（表を作ってかく） {#table}', "見出しの英語: 4. 表を作ってかく（table of values")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
@@ -528,7 +561,7 @@ for _sent in [
     'at each $x$, add the two $',
 ]:
     chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:26])
-in_text('> All axes and key features should be labelled.', "その内容は本文にある")
+in_text('**軸と key features（重要な特徴）には必ずラベルをつける**', "その内容は本文にある")
 in_text('グラフでは、**同じ $x$ のところで、$y$ の値を足す（引く）**ことになります', "その内容は本文にある")
 
 # ══════════════════════════════════════════════════════════

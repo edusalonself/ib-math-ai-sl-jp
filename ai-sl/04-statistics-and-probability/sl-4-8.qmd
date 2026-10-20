@@ -10,31 +10,6 @@
 - $E(X)$ が問題の中で**何を意味するか**を説明できる。
 :::
 
-::: {.callout-important}
-## Formula booklet に載っているもの
-SL 4.8 の欄には、次の3つが印刷されています。
-
-$$
-X \sim B(n, p)
-$$
-
-$$
-E(X) = np
-$$
-
-$$
-\text{Var}(X) = np(1-p)
-$$
-
-**この3つは配られるので、覚える必要はありません。**
-
-そして**ここが大事なところ**なのですが、**確率そのものを出す式は、公式集に載っていません。** シラバスにはこう書かれています。
-
-> In examinations, binomial probabilities should be found using **available technology**.
-
-つまり、**確率は電卓を使って出します。** 電卓の使い方をマスターしましょう。
-:::
-
 ## The idea
 
 ::: {.callout-tip}
@@ -50,13 +25,13 @@ menu → Statistics → Distributions
 ここに `Binomial Pdf` と `Binomial Cdf` があることを、いま確かめておいてください。
 :::
 
-### 1. binomial distribution が使える4つの条件 {#four-conditions}
+### 1. Conditions for a binomial model（二項分布が使える4つの条件） {#four-conditions}
 
 **binomial distribution**（二項分布）が扱うのは、次のような場面です。
 
 > **同じことを $n$ 回くり返して、うまくいった回数を数える。**
 
-ただし、**どんな場面でも使えるわけではありません。** シラバスにも *"Situations where the binomial distribution is an appropriate model"*（二項分布が適切なモデルとなる場面）と書かれています。**使ってよいかどうかの判断**が、この項目の半分です。
+ただし、**どんな場面でも使えるわけではありません。** 二項分布がその場面に合うモデルかどうか、**使ってよいかどうかの判断**が、この項目の半分です。
 
 次の**4つが全部そろったとき**だけ使えます。
 
@@ -82,7 +57,7 @@ menu → Statistics → Distributions
 **問題文の `with` と `without` は、必ず丸で囲んでください。** ここだけで、使える・使えないが決まります。
 :::
 
-### 2. $X \sim B(n, p)$ という書き方 {#notation}
+### 2. Notation $X \sim B(n, p)$（記号の書き方） {#notation}
 
 条件がそろったら、次のように書きます。**公式集にもこの形で載っています。**
 
@@ -111,9 +86,9 @@ $$
 
 **`Write down the distribution of X` と聞かれたら、この1行を書くだけ**で点になります。
 
-### 3. 電卓のコマンドは2つだけです {#two-commands}
+### 3. Binomial probabilities on the GDC（確率を出す電卓の2つのコマンド） {#two-commands}
 
-確率は電卓で出します。**使うのは2つだけ**です。
+二項分布の確率は、電卓で出します。確率そのものを出す式は公式集に載っていないので、**試験では必ず電卓を使います。** **使うのは2つだけ**です。
 
 | 求めたいもの | 使うコマンド |
 |---|---|
@@ -126,7 +101,77 @@ $$
 
 ちなみに、**Cdf** は **cumulative**（累積）からきています。SL 4.2 の cumulative frequency と同じ「積み上げていく」という意味です。
 
-### 4. 英語を $x$ の範囲に直します {#inequalities}
+::: {#exm-sl48-model}
+[A bag contains $20$ counters, of which $6$ are red. Five counters are taken from the bag **without replacement**. Let $X$ be the number of red counters taken.]{.q-en}
+
+**(a)** [Explain why $X$ cannot be modelled by a binomial distribution.]{.q-en}
+
+[The five counters are now taken **with replacement** instead.]{.q-en}
+
+**(b)** [Write down the distribution of $X$.]{.q-en}
+
+**(c)** [Find $P(X = 2)$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+袋に $20$ 個のカウンターが入っていて、そのうち $6$ 個が赤です。**戻さずに** $5$ 個取り出します。$X$ を取り出した赤の個数とします。
+
+**(a)** $X$ が二項分布ではモデル化できない理由を説明しなさい。
+
+いま、$5$ 個を**戻しながら**取り出すことにします。
+
+**(b)** $X$ の分布を書きなさい。
+
+**(c)** $P(X = 2)$ を求めなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** `Explain why` なので、**言葉で答える設問**です。計算はいりません。
+
+[条件3（$p$ が毎回同じ）](#four-conditions)が崩れています。**戻さないと、2回目の袋の中身が変わる**からです。
+
+$1$ 回目に赤を引く確率は $\dfrac{6}{20} = 0.3$ ですが、赤を引いたあとの $2$ 回目は $\dfrac{5}{19}$ になります。**毎回同じ $p$ ではありません。**
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*Because the counters are taken without replacement, the probability of taking a red counter changes at each draw.*
+
+*The trials are not independent and $p$ is not constant, so the binomial model does not apply.*
+:::
+
+（意味：戻さずに取り出すので、赤を引く確率が毎回変わってしまう。試行が独立でなく $p$ も一定でないので、二項分布は使えない。）
+
+**(b)** 戻すなら、袋の中身はいつも $20$ 個のまま、赤も $6$ 個のままです。**毎回 $p = \dfrac{6}{20} = 0.3$** になります。
+
+$$
+X \sim B(5,\ 0.3)
+$$
+
+**(c)** 「ちょうど $2$ 個」なので **binomPdf**。
+
+$\texttt{binomPdf}\left(5,\ 0.3,\ 2\right)$
+
+$$
+P(X = 2) = 0.309 \quad (3 \text{ s.f.})
+$$
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** *Because the counters are taken without replacement, the probability of taking a red counter changes at each draw, so $p$ is not constant. The binomial model does not apply.*
+
+**(b)** $X \sim B(5,\ 0.3)$
+
+**(c)** $P(X = 2) = 0.309$ (3 s.f.)
+:::
+:::
+:::
+
+### 4. Inequalities from words（英語の言い方を $x$ の範囲に直す） {#inequalities}
 
 **この項目で一番点を落とすのは、計算ではなくここです。** 英語を読み違えると、電卓に入れる数がずれます。
 
@@ -157,7 +202,7 @@ $X$ は回数なので**整数しかとりません**。だから $X < 5$ は $X
 
 $P(X \leq 3)$ と $P(X \geq 4)$ は、**足すと $1$** になります。**あいだに抜けている整数がない**からです。
 
-![Two ranges that add to 1](img/sl-4-8-ranges.svg){#fig-sl48-ranges width=100%}
+![足すと $1$ になる $2$ つの範囲](img/sl-4-8-ranges.svg){#fig-sl48-ranges width=100%}
 
 @fig-sl48-ranges は $X \sim B(20,\ 0.15)$ の様子です。オレンジの棒を全部足すと、左が $0.648$、右が $0.352$ で、**合わせて $1$** になります。
 
@@ -166,151 +211,6 @@ P(X \geq 4) = 1 - P(X \leq 3)
 $$ {#eq-sl48-complement}
 
 SL 4.5 の complementary events と同じ考え方です。TI-Nspire では binomCdf に上限 $n$ を入れれば直接出せるので、**この式を使わなくても解けます。** ただし「$P(X \geq 4)$ を $1 - P(X \leq 4)$ にしてしまう」間違いが多いので、**引くなら $3$ まで**だと覚えておいてください。
-
-### 5. $E(X) = np$ と $\text{Var}(X)$ {#mean-variance}
-
-期待値は、公式集の1行で出ます。
-
-$$
-E(X) = np
-$$ {#eq-sl48-mean}
-
-$20$ 回のうち $1$ 回あたり $0.15$ の確率で起きるなら、**$20 \times 0.15 = 3$ 回**。感覚どおりの答えになります。
-
-分散（**variance**）も公式集にあります。
-
-$$
-\text{Var}(X) = np(1-p)
-$$ {#eq-sl48-var}
-
-**標準偏差（standard deviation）が聞かれたら、$\text{Var}(X)$ の平方根**をとります。
-
-$$
-\sigma = \sqrt{np(1-p)}
-$$ {#eq-sl48-sd}
-
-::: {.callout-note}
-## $\sigma$ の式は公式集に**ありません**
-公式集にあるのは $\text{Var}(X) = np(1-p)$ までです。**「標準偏差は分散の平方根」**という関係（SL 4.3）は、自分で覚えておく必要があります。
-
-**まず $\text{Var}(X)$ を出して、それから平方根をとる**、という2段階でやれば確実です。
-:::
-
-#### $p$ が変わると形が変わります
-
-![The shape of $B(10, p)$ for three values of $p$](img/sl-4-8-shapes.svg){#fig-sl48-shapes width=100%}
-
-@fig-sl48-shapes は $n = 10$ のまま $p$ だけを変えたものです。赤い印が $E(X) = np$ の位置です。
-
-- $p$ が小さいと**左に寄り**ます（$p = 0.2$ なら $E(X) = 2$）
-- $p = 0.5$ のときだけ**左右対称**になります
-- $p$ が大きいと**右に寄り**ます（$p = 0.8$ なら $E(X) = 8$）
-
-**$E(X) = np$ は、山のだいたい真ん中**です。答えを出したあと、**$np$ とかけ離れていないか**を見れば、打ち間違いに気づけます。
-
-## Why it works
-
-:::: {.callout-note collapse="true" appearance="simple"}
-## クリックすると開きます
-ここでは、**なぜ $E(X) = np$ になるのか**だけを説明します。
-
-$1$ 回だけやる場合を考えます。うまくいけば $1$ 回、いかなければ $0$ 回と数えるので、SL 4.7 の $E(X)$ の式に入れると、
-
-$$
-E(X) = 1 \times p + 0 \times (1-p) = p
-$$
-
-**$1$ 回あたりの期待値は $p$** です。
-
-それを $n$ 回くり返すのですから、全部合わせると $p$ が $n$ 個ぶんで、
-
-$$
-E(X) = \underbrace{p + p + \cdots + p}_{n \text{ 個}} = np
-$$
-
-これが @eq-sl48-mean です。**SL 4.5 の「期待される回数 $= n \times P(A)$」と、まったく同じ式**でもあります。シラバスにも *"Link to: expected number of occurrences (SL4.5)"* と書かれています。
-
-::: {.callout-note}
-## 確率の式について（参考・覚えなくてよい）
-確率そのものは、次の式から出ています。
-
-$$
-P(X = x) = \binom{n}{x} p^{x} (1-p)^{\,n-x}
-$$
-
-**この式は AI SL の公式集に載っていませんし、試験で使う必要もありません。** シラバスが「電卓で求めること」と指定しているからです。
-
-意味だけ書いておくと、$p^{x}$ は「うまくいった $x$ 回ぶん」、$(1-p)^{\,n-x}$ は「いかなかった残りぶん」、$\binom{n}{x}$ は「どの回にうまくいくかの選び方の数」です。**電卓の binomPdf は、これを計算しています。**
-
-分散 $np(1-p)$ の証明も、シラバスに *"Not required: Formal proof of mean and variance"* と明記されています。**出ません。**
-:::
-::::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-:::
-
-::: {#exm-sl48-quiz}
-[A quiz has $12$ multiple-choice questions. Each question has $4$ options, exactly one of which is correct. A student guesses the answer to every question. Let $X$ be the number of questions the student answers correctly.]{.q-en}
-
-**(a)** [Write down the distribution of $X$.]{.q-en}
-
-**(b)** [Find $P(X = 3)$.]{.q-en}
-
-**(c)** [Find $E(X)$.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-$12$ 問の4択問題のテストがあります。各問題には $4$ つの選択肢があり、正解はちょうど $1$ つです。ある生徒が全問をあてずっぽうで答えます。$X$ をその生徒が正解した問題数とします。
-
-**(a)** $X$ の分布を書きなさい。
-
-**(b)** $P(X = 3)$ を求めなさい。
-
-**(c)** $E(X)$ を求めなさい。
-
-</details>
-
----
-
-**(a)** まず[4つの条件](#four-conditions)を確かめます。**問題数 $12$ は決まっている**、**各問は正解か不正解の2つだけ**、**あてずっぽうなので確率はどの問も $\dfrac{1}{4}$ で同じ**、**1問の結果が次の問に影響しない**。4つとも満たしています。
-
-$n = 12$、$p = \dfrac{1}{4} = 0.25$ なので、
-
-$$
-X \sim B(12,\ 0.25)
-$$
-
-**`Write down` なので、この1行で終わりです。** 計算はいりません。
-
-**(b)** 「ちょうど $3$ 問」なので **binomPdf** です（@tbl-sl48-commands）。
-
-$\texttt{binomPdf}\left(12,\ 0.25,\ 3\right)$
-
-$$
-P(X = 3) = 0.258 \quad (3 \text{ s.f.})
-$$
-
-**(c)** [公式集の $E(X) = np$](#mean-variance) です。
-
-$$
-E(X) = 12 \times 0.25 = 3
-$$
-
-**あてずっぽうで $12$ 問やると、平均 $3$ 問正解する**、という意味です。(b) で「ちょうど $3$ 問」を聞かれているのは、そこが山の真ん中だからです。
-
-::: {.callout-note}
-## 解答例（答案用紙にはこう書く）
-**(a)** $X \sim B(12,\ 0.25)$
-
-**(b)** $P(X = 3) = 0.258$ (3 s.f.)
-
-**(c)** $E(X) = np = 12 \times 0.25 = 3$
-:::
-:::
 
 ::: {#exm-sl48-defects}
 [A machine produces components. On average $8\%$ of the components are defective. A random sample of $20$ components is taken. Let $X$ be the number of defective components in the sample.]{.q-en}
@@ -336,7 +236,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 $8\%$ なので $p = 0.08$、$n = 20$ です。
 
@@ -387,6 +288,112 @@ $X \sim B(20,\ 0.08)$
 **(c)** $P(X \geq 3) = 0.212$ (3 s.f.)
 :::
 :::
+:::
+
+### 5. Mean and variance（期待値と分散） {#mean-variance}
+
+**expected value**（期待値）$E(X)$ は、「平均すると何回うまくいくか」を表す数です。二項分布では、次の1行で出ます。
+
+$$
+E(X) = np
+$$ {#eq-sl48-mean}
+
+$20$ 回のうち $1$ 回あたり $0.15$ の確率で起きるなら、**$20 \times 0.15 = 3$ 回**。感覚どおりの答えになります。
+
+**variance**（分散）も、次の式で出ます。
+
+$$
+\text{Var}(X) = np(1-p)
+$$ {#eq-sl48-var}
+
+$X \sim B(n, p)$ という書き方と、この $E(X)$・$\text{Var}(X)$ の $2$ つの式は、公式集の **SL 4.8** の欄にあります。配られるので、覚える必要はありません。
+
+**standard deviation**（標準偏差）が聞かれたら、**$\text{Var}(X)$ の平方根**をとります。
+
+$$
+\sigma = \sqrt{np(1-p)}
+$$ {#eq-sl48-sd}
+
+::: {.callout-note}
+## $\sigma$ の式は公式集に**ありません**
+公式集にあるのは $\text{Var}(X) = np(1-p)$ までです。**「標準偏差は分散の平方根」**という関係（SL 4.3）は、自分で覚えておく必要があります。
+
+**まず $\text{Var}(X)$ を出して、それから平方根をとる**、という2段階でやれば確実です。
+:::
+
+#### $p$ が変わると形が変わります
+
+![$3$ つの $p$ の値での $B(10, p)$ の形](img/sl-4-8-shapes.svg){#fig-sl48-shapes width=100%}
+
+@fig-sl48-shapes は $n = 10$ のまま $p$ だけを変えたものです。赤い印が $E(X) = np$ の位置です。
+
+- $p$ が小さいと**左に寄り**ます（$p = 0.2$ なら $E(X) = 2$）
+- $p = 0.5$ のときだけ**左右対称**になります
+- $p$ が大きいと**右に寄り**ます（$p = 0.8$ なら $E(X) = 8$）
+
+**$E(X) = np$ は、棒グラフのピーク（いちばん高いところ）のあたり**です。答えを出したあと、**$np$ とかけ離れていないか**を見れば、打ち間違いに気づけます。
+
+::: {#exm-sl48-quiz}
+[A quiz has $12$ multiple-choice questions. Each question has $4$ options, exactly one of which is correct. A student guesses the answer to every question. Let $X$ be the number of questions the student answers correctly.]{.q-en}
+
+**(a)** [Write down the distribution of $X$.]{.q-en}
+
+**(b)** [Find $P(X = 3)$.]{.q-en}
+
+**(c)** [Find $E(X)$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$12$ 問の4択問題のテストがあります。各問題には $4$ つの選択肢があり、正解はちょうど $1$ つです。ある生徒が全問をあてずっぽうで答えます。$X$ をその生徒が正解した問題数とします。
+
+**(a)** $X$ の分布を書きなさい。
+
+**(b)** $P(X = 3)$ を求めなさい。
+
+**(c)** $E(X)$ を求めなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** まず[4つの条件](#four-conditions)を確かめます。**問題数 $12$ は決まっている**、**各問は正解か不正解の2つだけ**、**あてずっぽうなので確率はどの問も $\dfrac{1}{4}$ で同じ**、**1問の結果が次の問に影響しない**。4つとも満たしています。
+
+$n = 12$、$p = \dfrac{1}{4} = 0.25$ なので、
+
+$$
+X \sim B(12,\ 0.25)
+$$
+
+**`Write down` なので、この1行で終わりです。** 計算はいりません。
+
+**(b)** 「ちょうど $3$ 問」なので **binomPdf** です（@tbl-sl48-commands）。
+
+$\texttt{binomPdf}\left(12,\ 0.25,\ 3\right)$
+
+$$
+P(X = 3) = 0.258 \quad (3 \text{ s.f.})
+$$
+
+**(c)** [公式集の $E(X) = np$](#mean-variance) です。
+
+$$
+E(X) = 12 \times 0.25 = 3
+$$
+
+**あてずっぽうで $12$ 問やると、平均 $3$ 問正解する**、という意味です。(b) で「ちょうど $3$ 問」を聞かれているのは、そこが分布のピーク（いちばん確率が高いところ）だからです。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** $X \sim B(12,\ 0.25)$
+
+**(b)** $P(X = 3) = 0.258$ (3 s.f.)
+
+**(c)** $E(X) = np = 12 \times 0.25 = 3$
+:::
+:::
+:::
 
 ::: {#exm-sl48-seeds}
 [A seed supplier states that $60\%$ of its seeds germinate. A gardener plants $50$ of these seeds. Let $X$ be the number of seeds that germinate.]{.q-en}
@@ -412,7 +419,8 @@ $X \sim B(20,\ 0.08)$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 $n = 50$、$p = 0.6$ です。
 
@@ -451,6 +459,7 @@ $X \sim B(50,\ 0.6)$
 **(c)** $\sigma = \sqrt{12} = 3.46$ (3 s.f.)
 :::
 :::
+:::
 
 ::: {#exm-sl48-throws}
 [A basketball player succeeds with $70\%$ of her free throws. She takes $15$ free throws. Let $X$ be the number of successful throws.]{.q-en}
@@ -476,7 +485,8 @@ $X \sim B(50,\ 0.6)$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 $$
 X \sim B(15,\ 0.7)
@@ -525,72 +535,45 @@ $X \sim B(15,\ 0.7)$
 *On average, the player scores $10.5$ out of $15$ free throws, in the long run.*
 :::
 :::
-
-::: {#exm-sl48-model}
-[A bag contains $20$ counters, of which $6$ are red. Five counters are taken from the bag **without replacement**. Let $X$ be the number of red counters taken.]{.q-en}
-
-**(a)** [Explain why $X$ cannot be modelled by a binomial distribution.]{.q-en}
-
-[The five counters are now taken **with replacement** instead.]{.q-en}
-
-**(b)** [Write down the distribution of $X$.]{.q-en}
-
-**(c)** [Find $P(X = 2)$.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-袋に $20$ 個のカウンターが入っていて、そのうち $6$ 個が赤です。**戻さずに** $5$ 個取り出します。$X$ を取り出した赤の個数とします。
-
-**(a)** $X$ が二項分布ではモデル化できない理由を説明しなさい。
-
-いま、$5$ 個を**戻しながら**取り出すことにします。
-
-**(b)** $X$ の分布を書きなさい。
-
-**(c)** $P(X = 2)$ を求めなさい。
-
-</details>
-
----
-
-**(a)** `Explain why` なので、**言葉で答える設問**です。計算はいりません。
-
-[条件3（$p$ が毎回同じ）](#four-conditions)が崩れています。**戻さないと、2回目の袋の中身が変わる**からです。
-
-$1$ 回目に赤を引く確率は $\dfrac{6}{20} = 0.3$ ですが、赤を引いたあとの $2$ 回目は $\dfrac{5}{19}$ になります。**毎回同じ $p$ ではありません。**
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*Because the counters are taken without replacement, the probability of taking a red counter changes at each draw. The trials are not independent and $p$ is not constant, so the binomial model does not apply.*
 :::
 
-（意味：戻さずに取り出すので、赤を引く確率が毎回変わってしまう。試行が独立でなく $p$ も一定でないので、二項分布は使えない。）
+## Why it works
 
-**(b)** 戻すなら、袋の中身はいつも $20$ 個のまま、赤も $6$ 個のままです。**毎回 $p = \dfrac{6}{20} = 0.3$** になります。
+:::: {.callout-note collapse="true" appearance="simple"}
+## クリックすると開きます
+ここでは、**なぜ $E(X) = np$ になるのか**だけを説明します。
 
-$$
-X \sim B(5,\ 0.3)
-$$
-
-**(c)** 「ちょうど $2$ 個」なので **binomPdf**。
-
-$\texttt{binomPdf}\left(5,\ 0.3,\ 2\right)$
+$1$ 回だけやる場合を考えます。うまくいけば $1$ 回、いかなければ $0$ 回と数えるので、SL 4.7 の $E(X)$ の式に入れると、
 
 $$
-P(X = 2) = 0.309 \quad (3 \text{ s.f.})
+E(X) = 1 \times p + 0 \times (1-p) = p
 $$
+
+**$1$ 回あたりの期待値は $p$** です。
+
+それを $n$ 回くり返すのですから、全部合わせると $p$ が $n$ 個ぶんで、
+
+$$
+E(X) = \underbrace{p + p + \cdots + p}_{n \text{ 個}} = np
+$$
+
+これが @eq-sl48-mean です。**SL 4.5 の「期待される回数 $= n \times P(A)$」と、まったく同じ式**でもあります。
 
 ::: {.callout-note}
-## 解答例（答案用紙にはこう書く）
-**(a)** *Because the counters are taken without replacement, the probability of taking a red counter changes at each draw, so $p$ is not constant. The binomial model does not apply.*
+## 確率の式について（参考・覚えなくてよい）
+確率そのものは、次の式から出ています。
 
-**(b)** $X \sim B(5,\ 0.3)$
+$$
+P(X = x) = \binom{n}{x} p^{x} (1-p)^{\,n-x}
+$$
 
-**(c)** $P(X = 2) = 0.309$ (3 s.f.)
+**この式は AI SL の公式集に載っていませんし、試験で使う必要もありません。** 試験では、確率は電卓で求めることになっているからです。
+
+意味だけ書いておくと、$p^{x}$ は「うまくいった $x$ 回ぶん」、$(1-p)^{\,n-x}$ は「いかなかった残りぶん」、$\binom{n}{x}$ は「どの回にうまくいくかの選び方の数」です。**電卓の binomPdf は、これを計算しています。**
+
+期待値 $np$ と分散 $np(1-p)$ の式をきちんと証明することは、**試験には出ません。**
 :::
-:::
+::::
 
 ## Common errors
 
@@ -660,9 +643,9 @@ $E(X) = 10.5$ は「**長い目で見た平均**」です。$15$ 本打って必
 
 ## Using your GDC (TI-Nspire CX II)
 
-シラバスは、確率を `technology` で求めるよう指定しています。**つまり GDC を使って求めます。****ここの操作を覚えれば、この項目の計算はすべて出せます。**
+二項分布の確率は、試験では GDC（電卓）で求めます。**ここの操作を覚えれば、この項目の計算はすべて出せます。**
 
-### 使うのはこの1か所だけです
+### The Distributions menu（使うのはこの1か所だけ）
 
 ```
 menu → Statistics → Distributions
@@ -677,7 +660,7 @@ menu → Statistics → Distributions
 
 : Distributions メニューの2つ {#tbl-sl48-gdc}
 
-### Binomial Pdf ── ちょうど $x$ 回
+### Binomial Pdf（ちょうど $x$ 回の確率）
 
 出てくる欄は3つです。
 
@@ -687,7 +670,7 @@ menu → Statistics → Distributions
 
 @exm-sl48-quiz なら $12$、$0.25$、$3$ と入れて、$0.258$ が出ます。
 
-### Binomial Cdf ── 範囲
+### Binomial Cdf（範囲の確率）
 
 出てくる欄は**4つ**です。**下2つを埋め忘れないでください。**
 
@@ -710,7 +693,7 @@ menu → Statistics → Distributions
 
 **「以上」なら Upper に $n$、「以下」なら Lower に $0$。** ここだけ覚えておけば迷いません。
 
-### 直接打ち込むこともできます
+### Typing the command（計算ページに直接打ち込む）
 
 計算ページで、次のように書いても同じ結果になります。
 
@@ -719,13 +702,13 @@ menu → Statistics → Distributions
 
 **メニューから選んだほうが、欄の名前が出るぶん安全**です。慣れるまではメニューを使ってください。
 
-### 出た答えを $np$ で見直す
+### Checking with $np$（出た答えを $np$ で見直す）
 
 答えが出たら、**$E(X) = np$ と見くらべてください**（@fig-sl48-shapes）。
 
 $n = 20$、$p = 0.08$ なら $np = 1.6$ です。**$1$ 個や $2$ 個あたりの確率が大きく、$10$ 個の確率はほぼ $0$** になるはずです。ここから大きく外れていたら、$n$ と $p$ を入れ違えているか、パーセントのまま入れています。
 
-### 表にして全部見る（余裕があれば）
+### A table of probabilities（表にして全部見る・余裕があれば）
 
 Lists & Spreadsheet で、$A$ 列に $0, 1, 2, \ldots, n$ を入れ、$B$ 列の見出しの下に
 
@@ -736,12 +719,6 @@ Lists & Spreadsheet で、$A$ 列に $0, 1, 2, \ldots, n$ を入れ、$B$ 列の
 と入れると、**すべての $x$ についての確率が一度に並びます。** @fig-sl48-shapes のような形が自分の電卓で見えるので、一度やっておくと分布のイメージがつかめます。
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -1005,7 +982,7 @@ $\texttt{binomCdf}\left(25,\ 0.6,\ 12,\ 18\right)$
 
 **(b)** $E(X) = 15$。
 
-$15$ は $12$ と $18$ のちょうど真ん中あたりです。**山の中心を含む広い範囲なので、確率が $0.849$ と大きくなる**のは自然です。答えが $0.1$ のような小さい値になったら、範囲を入れ間違えています。
+$15$ は $12$ と $18$ のちょうど真ん中あたりです。**分布のピークを含む広い範囲なので、確率が $0.849$ と大きくなる**のは自然です。答えが $0.1$ のような小さい値になったら、範囲を入れ間違えています。
 :::
 
 ::: {.ex-sep}
@@ -1039,7 +1016,7 @@ $15$ は $12$ と $18$ のちょうど真ん中あたりです。**山の中心�
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-**計算のない設問**ですが、シラバスに *"Situations where the binomial distribution is an appropriate model"* とある以上、**出うる形**です。
+**計算のない設問**ですが、二項分布が使える場面かどうかの判断はこの項目の中心なので、**試験にも出うる形**です。
 
 **(a)** [4つの条件](#four-conditions)のうち、**$p$ が一定** と **independent** の $2$ つを書けば十分です。
 
@@ -1084,7 +1061,7 @@ $X \sim B(200,\ 0.03)$
 ## 解説
 **(a)** `expected number` と書かれていますが、やることは $E(X) = np$ です。
 
-**SL 4.5 の「期待される回数 $= n \times P(A)$」とまったく同じ式**です。シラバスにも SL 4.5 へのリンクが書かれています。**別の公式ではありません。**
+**SL 4.5 の「期待される回数 $= n \times P(A)$」とまったく同じ式**です。**別の公式ではありません。**
 
 **(b)** `binomCdf(200, 0.03, 0, 5)`。$n$ が $200$ と大きくても、**電卓の入れ方は同じ**です。
 
@@ -1196,7 +1173,7 @@ $\texttt{binomCdf}\left(8,\ 0.45,\ 5,\ 8\right)$
 
 $3.6$ 世帯という世帯はありませんが、**丸めないでください**（SL 4.7）。「$8$ 世帯選ぶことを何度もくり返したときの平均」だからです。
 
-**(b) と (c) の見当。** $E(X) = 3.6$ なので、山の中心は $3$ と $4$ のあたりです。だから $P(X = 4)$ は大きめ、$P(X \geq 5)$ は半分より小さめになるはずで、$0.263$ と $0.260$ はどちらもつじつまが合っています。
+**(b) と (c) の見当。** $E(X) = 3.6$ なので、分布のピークは $3$ と $4$ のあたりです。だから $P(X = 4)$ は大きめ、$P(X \geq 5)$ は半分より小さめになるはずで、$0.263$ と $0.260$ はどちらもつじつまが合っています。
 :::
 
 :::

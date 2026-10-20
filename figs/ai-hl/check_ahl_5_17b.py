@@ -361,21 +361,21 @@ eq("fence の開閉が一致",
    len([l for l in L if re.match(r"^:{3,} *\{", l)]),
    len([l for l in L if re.match(r"^:{3,} *$", l)]))
 
-in_text("Worked examples の定型 callout",
-        "問題文は英語です。意味が理解できなかったら、問題文の下の"
-        "「**日本語訳**」を開いてください。解説は日本語です。")
+not_in_text("例題の前の案内は置かない", "問題文は英語です。意味が")
 in_text("例題の解答例の見出し", "## 解答例（答案用紙にはこう書く）")
 in_text("演習の解答例の見出し", "## 解答例（答案用紙に書くこと）")
 in_text("GDC の見出し", "## Using your GDC (TI-Nspire CX II)")
 in_text("厳密解は要らない旨", "**このページでは、厳密解を求めません。**")
 in_text("複素固有ベクトルは求めない",
-        "**複素数の固有ベクトルを求めることもありません。**")
+        "同じ理由で、複素数の **eigenvector**（固有ベクトル）も**求めません。**")
 in_text("qualitative analysis の語", "**qualitative analysis**（定性的な分析）")
 in_text("シラバス 5 つの場合", "the solutions form a circle or ellipse")
-in_text("シラバス key features",
-        "**equilibrium points**, **stable populations** and **saddle points**")
-in_text("node と centre はシラバス語でない旨",
-        "## `node` と `centre` は、シラバスには出てこない語です")
+not_in_text("シラバス key features の英文引用は本文から外した",
+            "**equilibrium points**, **stable populations** and **saddle points**")
+in_text("key features の 3 つを日本語で書いている",
+        "IB の問題で使われる呼び名は **saddle point**（鞍点）、**equilibrium point**（平衡点）、**stable population**（安定した個体数）の $3$ つです。")
+in_text("node と centre は IB の用語でない旨",
+        "## `node` と `centre` は、IB の用語ではありません")
 # レビュー修正の固定（回帰防止）
 in_text("char eq は公式集に無い", "この式は**公式集に載っていません**")
 in_text("固有値は det(M-λI)=0 から出す", "\\det(M - \\lambda I) = \\begin{vmatrix} -1 - \\lambda & -2 \\\\ 2 & -1 - \\lambda \\end{vmatrix}")
@@ -412,6 +412,14 @@ eq("対訳表の saddle 行",
    "固有ベクトルの向きによって、近づくものと離れるものがある |" in _GL, True)
 eq("対訳表から「近づいてから離れる」を外した",
    "**異符号**。近づいてから離れる" in _GL, False)
+
+# ★ レイアウト：Worked examples の節は無く、例題は The idea の中にある
+not_in_text("## Worked examples が無い", "## Worked examples")
+_exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(TXT.index("## The idea") < p < TXT.index("## Why it works")
+       for p in _exm), True)
+eq("例題の数は変わらない", len(_exm), 4)
 
 print()
 print("=" * 78)

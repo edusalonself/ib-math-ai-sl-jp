@@ -50,8 +50,29 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
 
-BODY = TEXT.split("## Worked examples")[0]
+
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 
 def not_in_body(sub, msg=""):
@@ -82,7 +103,7 @@ in_text("# SL 5.1 — Limits and the derivative（極限と導関数の考え方
         "{#sec-aasl-5-1}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
@@ -100,7 +121,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + Paper 1）")
 chk("## 電卓が使えるときは、こう確かめます" in TEXT,
     "電卓の話は、たたむ callout に分ける（Topic 5 の他ページと同じ形）")
@@ -130,8 +151,8 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-5-1-idea-a.svg){#fig-aasl51-idea-a width=100%}", "図 (a) の埋め込み")
-in_text("(img/aasl-5-1-idea-b.svg){#fig-aasl51-idea-b width=100%}", "図 (b) の埋め込み")
+in_text("(img/aasl-5-1-idea-a.svg){#fig-aasl51-idea-a width=85%}", "図 (a) の埋め込み")
+in_text("(img/aasl-5-1-idea-b.svg){#fig-aasl51-idea-b width=85%}", "図 (b) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-5-1-idea.svg")),
     "分割前の SVG は消してある")
 in_text("@fig-aasl51-idea-a", "図 (a) の参照")
@@ -146,8 +167,11 @@ for _w in ("得点になりません", "点になりません", "減点されま
 # 2. 引用と公式集
 # ══════════════════════════════════════════════════════════
 _quotes = re.findall(r"^> (.*)$", TEXT, re.M)
-chk(_quotes == ["Not required: Formal analytic methods of calculating limits."],
-    "シラバスの引用は Not required の 1 本だけ: %s" % _quotes)
+chk(_quotes == [], "シラバスの引用は本文から外した: %s" % _quotes)
+not_in_text("Not required: Formal analytic methods of calculating limits.",
+            "シラバスの引用は本文から外した")
+in_text("**式変形で極限を出す方法は、SL では求められていません。**",
+        "Not required の内容は日本語で書いてある")
 in_text("**@eq-aasl51-chord と @eq-aasl51-deriv は公式集にありません。**",
         "割線と導関数の式は公式集にない")
 not_in_text("公式集にあります", "5.1 に「公式集にあります」は置かない")
@@ -170,11 +194,11 @@ for _n in ("f'(x)", "\\dfrac{dy}{dx}", "\\dfrac{dV}{dr}", "\\dfrac{ds}{dt}"):
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('"A chord joins two points on the curve"', "図 (a) の題")
-in_fig('"A limit is where the outputs are heading"', "図 (b) の題")
+not_in_fig('"A chord joins two points on the curve"', "図 (a) に題は置かない")
+not_in_fig('"A limit is where the outputs are heading"', "図 (b) に題は置かない")
 in_fig('"$Q_1$"', "図 (c) の Q1")
 in_fig('"tangent at $P$"', "図 (c) の接線")
-in_fig('"the open circle says $f(a)$ itself need not exist"', "図 (b) の但し書き")
+not_in_fig('"the open circle says $f(a)$ itself need not exist"', "図 (b) の但し書きは本文へ")
 # 図に数値の答えを出していないこと
 _figmath = " ".join(re.findall(r"\$([^$]*)\$", FIGCODE))
 for _v in ("4", "2.001", "13", "-1", "0.25", "5", "6", "7"):
@@ -474,7 +498,7 @@ chk("$f(1.9) = \\dfrac{10}{19}$ です（[第 1 節](#average)）。" in TEXT,
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -485,10 +509,10 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. gradient of a chord（$2$ 点を結ぶ直線の傾き） {#average}', "見出しの英語: 1. gradient of a chord（$2$")
-in_text('### 2. limit（極限） {#limit}', "見出しの英語: 2. limit（極限）")
-in_text('### 4. from secant to tangent（割線から接線へ） {#tangent}', "見出しの英語: 4. from secant to tangent（")
-in_text('### 7. rate of change（変化率）としての読み方 {#rate}', "見出しの英語: 7. rate of change（変化率）としての")
+in_text('### 1. Gradient of a chord（$2$ 点を結ぶ直線の傾き） {#average}', "見出しの英語: 1. gradient of a chord（$2$")
+in_text('### 2. Limits（極限） {#limit}', "見出しの英語: 2. limit（極限）")
+in_text('### 4. From chord to tangent（割線から接線へ） {#tangent}', "見出しの英語: 4. from secant to tangent（")
+in_text('### 7. Rate of change（変化率としての読み方） {#rate}', "見出しの英語: 7. rate of change（変化率）としての")
 
 
 
@@ -534,7 +558,7 @@ chk(R(19, 10) < R(199, 100) < 2 < R(201, 100) < R(21, 10), "左は下から、�
 in_text("**表には $a$ そのものを入れません。**", "a は入れない（残す）")
 
 # --- 4) 第 4 節 ----------------------------------------------------------
-in_text("### 4. from secant to tangent（割線から接線へ） {#tangent}", "第 4 節の見出し")
+in_text("### 4. From chord to tangent（割線から接線へ） {#tangent}", "第 4 節の見出し")
 in_text("$$\nf'(x) = \\lim_{h \\to 0} \\frac{f(x + h) - f(x)}{h}\n$$ "
         "{#eq-aasl51-deriv}", "導関数の定義式")
 chk(TEXT.count("@eq-aasl51-deriv") >= 1, "導関数の式を参照している")
@@ -594,17 +618,17 @@ SVG_C51 = os.path.join(ROOT, "aa-sl", "05-calculus", "img",
                        "aasl-5-1-idea-c.svg")
 chk(os.path.exists(SVG_C51), "図 (c) がある")
 chk(not os.path.exists(SVG_C51[:-4] + ".png"), "図 (c) の PNG は消してある")
-in_text("(img/aasl-5-1-idea-c.svg){#fig-aasl51-idea-c width=100%}",
+in_text("(img/aasl-5-1-idea-c.svg){#fig-aasl51-idea-c width=85%}",
         "本文が図 (c) を貼っている")
 in_text("@fig-aasl51-idea-c", "図 (c) を参照している")
 # 図 (c) は第 4 節にある
 chk(TEXT.index("(img/aasl-5-1-idea-c.svg)")
-    > TEXT.index("### 4. from secant to tangent"), "図 (c) は第 4 節")
-chk(TEXT.index("(img/aasl-5-1-idea-c.svg)") < TEXT.index("### 5. 記号の書き方"),
+    > TEXT.index("### 4. From chord to tangent（割線から接線へ）"), "図 (c) は第 4 節")
+chk(TEXT.index("(img/aasl-5-1-idea-c.svg)") < TEXT.index("### 5. Notation（導関数の記号）"),
     "図 (c) は第 5 節より前")
 # 図 (a) は第 1 節にあり、接線も Q1〜Q3 も持っていない
 chk(TEXT.index("(img/aasl-5-1-idea-a.svg)")
-    < TEXT.index("### 2. limit（極限）"), "図 (a) は第 1 節")
+    < TEXT.index("### 2. Limits（極限）"), "図 (a) は第 1 節")
 _A51 = FIG.split("# (a) chord とは")[1].split("# (b) ")[0]
 for _bad in ("$Q_1$", "$Q_2$", "$Q_3$", "tangent at $P$",
              "as $Q$ slides towards $P$"):
@@ -656,6 +680,16 @@ _rows51 = [l for l in TEXT.split(chr(10))
            if l.startswith("| $f'(x)$ |") or l.startswith("| $y'$ |")
            or l.startswith("| $\\dfrac{dy}{dx}$ |")]
 chk(len(_rows51) == 3, "書き方の表は 3 行")
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

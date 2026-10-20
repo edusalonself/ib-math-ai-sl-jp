@@ -8,7 +8,7 @@ sidebar: aa-sl
 ## What you should be able to do
 - **Pascal's triangle**（パスカルの三角形）を作り、係数として使える。
 - $^{n}\mathrm{C}_{r} = \dfrac{n!}{r!(n-r)!}$ を、電卓なしで計算できる。
-- 公式集の二項定理を使って、$(a+b)^{n}$ を展開できる。
+- 公式集の **binomial theorem**（二項定理）を使って、$(a+b)^{n}$ を展開できる。
 - 展開せずに、**特定の項の係数だけ**を取り出せる。
 - $(2x-3)^{4}$ のように、$a$ や $b$ が**単項式でないとき**も扱える。
 - $^{6}\mathrm{C}_{r} = 20$ のような問題を、値を並べて解ける。
@@ -16,7 +16,7 @@ sidebar: aa-sl
 
 ## The idea
 
-### 1. expansion of a binomial（二項展開） {#idea}
+### 1. Binomial expansion（二項展開） {#idea}
 
 $(a+b)^{2}$ と $(a+b)^{3}$ を、手で展開してみます。
 
@@ -34,17 +34,19 @@ $$
 - $b$ の指数は $0$ から $n$ へ、$1$ ずつ**上がります。**
 - どの項でも、**$2$ つの指数の和は $n$** です。
 
-残るのは**係数（coefficient）**だけです。$n = 2$ で $1, 2, 1$、$n = 3$ で $1, 3, 3, 1$ でした。
+残るのは **coefficient**（係数）だけです。$n = 2$ で $1, 2, 1$、$n = 3$ で $1, 3, 3, 1$ でした。
 
-**この係数が従うのが、Pascal's triangle（パスカルの三角形）です。** 三角形を $n$ 行目まで書けば、展開に使う係数は、その行をそのまま読むだけで手に入ります（[第 2 節](#pascal)）。
+この係数が従うのが、**Pascal's triangle**（パスカルの三角形）です。 三角形を $n$ 行目まで書けば、展開に使う係数は、その行をそのまま読むだけで手に入ります（[第 2 節](#pascal)）。
 
 ### 2. Pascal's triangle（パスカルの三角形） {#pascal}
 
-![Each entry of Pascal's triangle, from the two above it](img/aasl-1-9-idea-a.svg){#fig-aasl19-idea-a width=100%}
+展開したときの係数を、三角形の形に並べて求める方法を見ます。図は、各数がすぐ上の $2$ つの数から作られるようすです。
+
+![パスカルの三角形の各数は、すぐ上の $2$ つの数から作られます。](img/aasl-1-9-idea-a.svg){#fig-aasl19-idea-a width=70%}
 
 係数だけを、$n$ の小さいほうから並べます（@fig-aasl19-idea-a）。
 
-| $n$ | 係数（coefficients） |
+| $n$ | 係数 |
 |:--|:--|
 | $0$ | $1$ |
 | $1$ | $1 \quad 1$ |
@@ -81,241 +83,6 @@ $n \leq 5$ くらいまでなら、三角形を書くほうが $^{n}\mathrm{C}_{
 **$n$ が大きいときや、$1$ つの項だけがほしいときは、$^{n}\mathrm{C}_{r}$ を使います**（[第 5 節](#one-term)）。
 :::
 
-### 3. $^{n}\mathrm{C}_{r}$（binomial coefficient）の式 {#ncr}
-
-**$^{n}\mathrm{C}_{r}$ は、$n$ 個のものから $r$ 個を選ぶcombination（組み合わせ）の数です。** 展開の係数は、まさにこの数になります（[Why it works](#why-it-works)）。ですから、三角形を書かずに、次の式で係数を直接出せます。
-
-$$
-^{n}\mathrm{C}_{r} = \frac{n!}{r!\,(n-r)!}
-$$ {#eq-aasl19-ncr}
-
-**$\binom{n}{r}$ と書くこともあります。** 読み方も意味も $^{n}\mathrm{C}_{r}$ と同じで、$^{n}\mathrm{C}_{r} = \binom{n}{r}$ です。問題文や教科書によって、どちらの書き方も出てきます。**公式集と電卓は $^{n}\mathrm{C}_{r}$ のほうです。**
-
-::: {.callout-important}
-## この式は公式集にあります
-公式集の **1.9** の欄に、二項定理といっしょに印刷されています。
-
-> $^{n}\mathrm{C}_{r} = \dfrac{n!}{r!(n-r)!}$
-
-シラバスの Guidance 欄には、こう書かれています。
-
-> $^{n}C_r$ should be found using **both** the formula and technology.
-
-**式で出せることも、電卓で出せることも、どちらも求められています。**
-:::
-
-$n!$（**factorial**、階乗）は、$1$ から $n$ までを掛けたものです。
-
-$$
-5! = 5 \times 4 \times 3 \times 2 \times 1 = 120, \qquad 0! = 1
-$$
-
-$^{5}\mathrm{C}_{2}$ を出してみます。
-
-$$
-^{5}\mathrm{C}_{2} = \frac{5!}{2!\,3!} = \frac{120}{2 \times 6} = \frac{120}{12} = 10
-$$
-
-::: {.callout-tip}
-## 約分してから計算する
-$\dfrac{5!}{2!\,3!}$ は、$120$ を出さなくても計算できます。$5! = 5 \times 4 \times 3!$ なので、$3!$ が消えます。
-
-$$
-\frac{5 \times 4 \times 3!}{2! \times 3!} = \frac{5 \times 4}{2} = 10
-$$
-
-**$n$ が大きいときは、この形でないと計算が急に重くなります。** $^{10}\mathrm{C}_{3}$ なら $\dfrac{10 \times 9 \times 8}{3 \times 2 \times 1} = 120$ です。**上は $r$ 個だけ、下は $r!$** と覚えてください。
-:::
-
-### 4. binomial theorem（二項定理） {#theorem}
-
-$(a+b)^{n}$ を展開すると、どの項も $a$ と $b$ のべき乗のかけ算になり、その前に付く数が $^{n}\mathrm{C}_{r}$ です。これを $1$ つの式にまとめたものが、次の定理です。
-
-![In every term, the two indices add up to $n$](img/aasl-1-9-idea-b.svg){#fig-aasl19-idea-b width=100%}
-
-$$
-(a+b)^{n} = a^{n} + {}^{n}\mathrm{C}_{1}\,a^{n-1}b + \cdots + {}^{n}\mathrm{C}_{r}\,a^{n-r}b^{r} + \cdots + b^{n}
-$$ {#eq-aasl19-binomial}
-
-::: {.callout-important}
-## この式も公式集にあります
-公式集の **1.9** の欄に、次の形で印刷されています（@fig-aasl19-idea-b）。
-
-> Binomial theorem $n \in \mathbb{N}$
->
-> $(a+b)^{n} = a^{n} + {}^{n}\mathrm{C}_{1} a^{n-1}b + \ldots + {}^{n}\mathrm{C}_{r} a^{n-r}b^{r} + \ldots + b^{n}$
-
-$n \in \mathbb{N}$ は、**$n$ が $0$ 以上の整数**という意味です。分数や負の数の $n$ は、SL では扱いません。
-
-**日本の学校では「自然数」に $0$ を含めないのがふつうですが、IB の $\mathbb{N}$ は $0$ を含みます。** 記号の約束が違うだけなので、IB の答案では IB の約束に合わせてください。
-:::
-
-公式集では、はじめと終わりの項が $a^{n}$、$b^{n}$ と、**係数を書かずに**印刷されています。これは
-
-$$
-^{n}\mathrm{C}_{0} = \frac{n!}{0!\,n!} = 1, \qquad {}^{n}\mathrm{C}_{n} = \frac{n!}{n!\,0!} = 1
-$$
-
-だからです（$0! = 1$ を使います）。**$^{n}\mathrm{C}_{0}\,a^{n}$ と書いても、同じことです。**
-
-[第 1 節](#idea) で見た $3$ つのことが、そのまま式になっています。
-
-| 場所 | 中身 |
-|:--|:--|
-| 係数 | $^{n}\mathrm{C}_{r}$ |
-| $a$ の指数 | $n - r$（下がる） |
-| $b$ の指数 | $r$（上がる） |
-| 指数の和 | $(n-r) + r = n$（いつも $n$） |
-
-: 一般項 $^{n}\mathrm{C}_{r}\,a^{n-r}b^{r}$ の読み方 {#tbl-aasl19-term}
-
-**$r$ は $0$ から始まります。** $r = 0$ の項が $a^{n}$、$r = n$ の項が $b^{n}$ です。
-
-### 5. 特定の項だけを取り出す（the term in $x^{k}$） {#one-term}
-
-$(x+1)^{20}$ の $x^{18}$ の係数を聞かれたとき、全部展開する必要はありません。**ほしい項だけを、@tbl-aasl19-term から作ります。**
-
-手順は $2$ 段階です。
-
-1. **$r$ を決める。** ほしい指数から、$n - r$ か $r$ のどちらかで方程式を立てます。
-2. **その項だけを計算する。**
-
-$(x+3)^{5}$ の $x^{2}$ の係数なら、$a = x$、$b = 3$、$n = 5$ です。$a$ の指数が $2$ なので、
-
-$$
-n - r = 2 \ \Rightarrow \ 5 - r = 2 \ \Rightarrow \ r = 3
-$$
-
-その項は
-
-$$
-^{5}\mathrm{C}_{3}\,x^{2}\,3^{3} = 10 \times 27 \times x^{2} = 270x^{2}
-$$
-
-**係数は $270$ です。**
-
-冒頭の $(x+1)^{20}$ も同じです。$20 - r = 18$ から $r = 2$ で、係数は
-
-$$
-^{20}\mathrm{C}_{2} = \frac{20 \times 19}{2 \times 1} = 190
-$$
-
-**$20$ 乗を展開する必要は、まったくありません。**
-
-::: {.callout-warning}
-## 「項」と「係数」を区別する
-`the term in` $x^{2}$ と聞かれたら $270x^{2}$、`the coefficient of` $x^{2}$ と聞かれたら $270$ です。
-
-**$x^{2}$ を付けるかどうか**が違います。問題文を読み直してください。
-:::
-
-### 6. $a$ や $b$ に係数や符号が付いているとき {#substitution}
-
-$(2x-3)^{4}$ のような形でも、やることは同じです。**$a = 2x$、$b = -3$ と見ます。**
-
-$2x$ も $-3$ も、項が $1$ つだけの式（**monomial**、単項式）です。$x$ や $3$ とちがうのは、**係数と符号が付いている**ことだけです。
-
-大事なのは、**かっこ**です。
-
-$$
-^{4}\mathrm{C}_{1}\,(2x)^{3}(-3)^{1} = 4 \times 8x^{3} \times (-3) = -96x^{3}
-$$
-
-$(2x)^{3} = 8x^{3}$ です。$2x^{3}$ ではありません（[SL 1.5 第 4 節](aasl-1-5.qmd#coefficients)）。
-
-::: {.callout-warning}
-## マイナスは $b$ に含めます
-$(2x-3)^{4}$ は $(2x + (-3))^{4}$ です。$b = -3$ として、**$b$ の累乗の中にマイナスを入れます。**
-
-$$
-(-3)^{1} = -3, \quad (-3)^{2} = 9, \quad (-3)^{3} = -27, \quad (-3)^{4} = 81
-$$
-
-**$a$ と $b$ の符号が逆のときは、符号が $1$ つおきに変わります。** $(2x-3)^{4}$ がその形です。
-
-**$a$ も $b$ も正なら、すべて $+$** になります。
-
-**$a$ も $b$ も負なら、共通の $-1$ をくくり出します。** $(-2x-3)^{4} = (2x+3)^{4}$ なので、すべて $+$。$(-2x-3)^{3} = -(2x+3)^{3}$ なので、すべて $-$ です。**$n$ が偶数か奇数かで決まります。**
-
-**まず $a$ と $b$ の符号を見てから、この見方を使ってください。**
-:::
-
-### 7. 係数を簡単に求める方法（table of values） {#tabulate}
-
-シラバスに、次の例が挙がっています。
-
-> Example: Find $r$ when $^{6}C_r = 20$, using a table of values generated with technology.
-
-やり方を、$n = 4$ で見ておきます。$^{4}\mathrm{C}_{r}$ を $r = 0$ から順に並べると、
-
-$$
-1, \quad 4, \quad 6, \quad 4, \quad 1
-$$
-
-@tbl-aasl19-pascal の $n = 4$ の行そのものです。たとえば $^{4}\mathrm{C}_{r} = 6$ になるのは $r = 2$ のときだけだと、**並びを見るだけで**分かります。
-
-**シラバスの例は $n = 6$ ですが、やることは同じです**（演習 $8$ で扱います）。
-
-**この並びは、左右対称です。** $^{4}\mathrm{C}_{1} = {}^{4}\mathrm{C}_{3} = 4$ です。一般に
-
-$$
-^{n}\mathrm{C}_{r} = {}^{n}\mathrm{C}_{n-r}
-$$ {#eq-aasl19-symmetry}
-
-ただし $n$ と $r$ は整数で、$0 \leq r \leq n$ のときの話です。
-
-**計算を半分に減らせます。** $^{9}\mathrm{C}_{7}$ を出すなら、$^{9}\mathrm{C}_{2}$ を出すほうが楽です。
-
-::: {.callout-tip collapse="true"}
-## Paper 2 では、電卓で表が作れます
-`menu → Probability → Combinations` を選ぶと、`nCr(` が出ます。$^{6}\mathrm{C}_{3}$ なら `nCr(6,3)` と入れます。
-
-表にするには、$r$ の列に $0, 1, 2, \ldots$ を入れ、隣の列で $^{6}\mathrm{C}_{r}$ を計算させます。**シラバスが言っている `a table of values` は、これです。**
-
-**Paper 1 では使えません。** ですから、このページの例題と演習は、すべて手で出せる大きさにしてあります。
-:::
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-**なぜ係数が $^{n}\mathrm{C}_{r}$ なのでしょうか。** 展開を、かっこの数え上げとして見ると分かります。
-
-$(a+b)^{3}$ は、かっこが $3$ つあります。
-
-$$
-(a+b)(a+b)(a+b)
-$$
-
-展開するとは、**それぞれのかっこから $a$ か $b$ のどちらかを選んで掛け、すべての選び方を足す**ことです。
-
-$ab^{2}$ という項ができるのは、**$3$ つのうち $2$ つのかっこから $b$ を選んだとき**です。その選び方は
-
-$$
-b\,b\,a, \qquad b\,a\,b, \qquad a\,b\,b
-$$
-
-の $3$ 通りあります。だから $ab^{2}$ の係数は $3$ です。
-
-一般に、**$n$ 個のかっこから $b$ を取る $r$ 個を選ぶ選び方の数**が、そのまま係数になります。それが $^{n}\mathrm{C}_{r}$ です。シラバスが `Counting principles may be used in the development of the theorem` と書いているのは、この見方のことです。
-
-**パスカルの三角形の作り方も、同じ見方で説明できます。** $n$ 個から $r$ 個を選ぶとき、**最後の $1$ 個を使うか使わないか**で分けます。
-
-- 使うなら、残り $n-1$ 個から $r-1$ 個を選ぶ。
-- 使わないなら、残り $n-1$ 個から $r$ 個を選ぶ。
-
-この $2$ つを足したものが $^{n}\mathrm{C}_{r}$ です。**「すぐ上の $2$ つを足す」は、これを言っています。**
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-
-**例題も演習も、すべて電卓なしで解けます。** Paper 1 のつもりで解いてください。
-:::
-
 ::: {#exm-aasl19-expand}
 [Expand $(x+2)^{4}$, giving your answer in ascending powers of $x$.]{.q-en}
 
@@ -326,7 +93,8 @@ $(x+2)^{4}$ を展開し、$x$ の次数の低いほうから順に書きなさ�
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 $n = 4$ の係数は $1, 4, 6, 4, 1$ です（@tbl-aasl19-pascal）。$a = x$、$b = 2$ です。
 
@@ -370,71 +138,161 @@ $$
 $$(x+2)^{4} = 16 + 32x + 24x^{2} + 8x^{3} + x^{4}$$
 :::
 :::
-
-::: {#exm-aasl19-ncr}
-**(a)** [Use the formula $^{n}\mathrm{C}_{r} = \dfrac{n!}{r!(n-r)!}$ to find the value of $^{7}\mathrm{C}_{3}$.]{.q-en}
-
-**(b)** [Find the value of $^{7}\mathrm{C}_{4}$.]{.q-en}
-
-**(c)** [Explain why $^{n}\mathrm{C}_{r} = {}^{n}\mathrm{C}_{n-r}$ for integers $n$ and $r$ with $0 \leq r \leq n$.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-**(a)** 公式 $^{n}\mathrm{C}_{r} = \dfrac{n!}{r!(n-r)!}$ を使って、$^{7}\mathrm{C}_{3}$ の値を求めなさい。
-
-**(b)** $^{7}\mathrm{C}_{4}$ の値を求めなさい。
-
-**(c)** $0 \leq r \leq n$ をみたす整数 $n$、$r$ について $^{n}\mathrm{C}_{r} = {}^{n}\mathrm{C}_{n-r}$ となる理由を説明しなさい。
-
-</details>
-
----
-
-**(a)** @eq-aasl19-ncr に $n = 7$、$r = 3$ を入れます。
-
-$$
-^{7}\mathrm{C}_{3} = \frac{7!}{3!\,4!} = \frac{7 \times 6 \times 5}{3 \times 2 \times 1} = \frac{210}{6} = 35
-$$
-
-$7! = 7 \times 6 \times 5 \times 4!$ なので、$4!$ が約分で消えます（[第 3 節](#ncr)）。
-
-**(b)** @eq-aasl19-symmetry を使えば、**計算せずに**出ます。$7 - 4 = 3$ なので、
-
-$$
-^{7}\mathrm{C}_{4} = {}^{7}\mathrm{C}_{3} = 35
-$$
-
-**(c)** `Explain why` なので、英語で理由を書きます。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*By the formula, $^{n}\mathrm{C}_{n-r} = \dfrac{n!}{(n-r)!\,\bigl(n-(n-r)\bigr)!} = \dfrac{n!}{(n-r)!\,r!}$, which is the same expression as $^{n}\mathrm{C}_{r} = \dfrac{n!}{r!\,(n-r)!}$, since $r!\,(n-r)! = (n-r)!\,r!$. There is also a counting reason: choosing which $r$ of the $n$ objects to take is the same as choosing which $n-r$ objects to leave, so the two counts must be equal.*
 :::
 
-（公式によれば $^{n}\mathrm{C}_{n-r} = \dfrac{n!}{(n-r)!\,r!}$ となり、$^{n}\mathrm{C}_{r}$ と同じ式である。掛ける順序を変えただけだからである。数え方でも説明できる。$n$ 個のうち取る $r$ 個を選ぶことと、残す $n-r$ 個を選ぶことは同じなので、通りの数は等しい、という意味です。）
+### 3. The formula for $^{n}\mathrm{C}_{r}$（二項係数の式） {#ncr}
 
-**検算（(a) について）。** @eq-aasl19-symmetry より $^{7}\mathrm{C}_{3} = {}^{7}\mathrm{C}_{4}$ なので、$r = 4$ のほうを公式で出してみます。
+$^{n}\mathrm{C}_{r}$ は、$n$ 個のものから $r$ 個を選ぶ **combination**（組み合わせ）の数です。 展開の係数は、まさにこの数になるので、**binomial coefficient**（二項係数）ともいいます（[Why it works](#why-it-works)）。ですから、三角形を書かずに、次の式で係数を直接出せます。
 
 $$
-^{7}\mathrm{C}_{4} = \frac{7!}{4!\,3!} = \frac{7 \times 6 \times 5 \times 4}{4 \times 3 \times 2 \times 1} = \frac{840}{24} = 35
-$$
+^{n}\mathrm{C}_{r} = \frac{n!}{r!\,(n-r)!}
+$$ {#eq-aasl19-ncr}
 
-割る数も掛ける数も **(a)** とは違いますが、同じ $35$ になりました ✓ **(a) の $\dfrac{210}{6}$ を計算し直したのではない**ところが大事です。
+**$\binom{n}{r}$ と書くこともあります。** 読み方も意味も $^{n}\mathrm{C}_{r}$ と同じで、$^{n}\mathrm{C}_{r} = \binom{n}{r}$ です。問題文や教科書によって、どちらの書き方も出てきます。**公式集と電卓は $^{n}\mathrm{C}_{r}$ のほうです。**
 
-**$7 \times 6 \times 5 = 210$ で止めていたら**、$3!$ で割り忘れています。$^{n}\mathrm{C}_{r}$ は「並べ方」ではなく「選び方」なので、**同じ組を数え直した分を $r!$ で割る**必要があります。
+::: {.callout-important}
+## この式は公式集にあります
+公式集の **1.9** の欄に、二項定理といっしょに印刷されています。
 
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-**(a)**
-$$^{7}\mathrm{C}_{3} = \frac{7!}{3!\,4!} = \frac{7 \times 6 \times 5}{3 \times 2 \times 1} = 35$$
+> $^{n}\mathrm{C}_{r} = \dfrac{n!}{r!(n-r)!}$
 
-**(b)**
-$$^{7}\mathrm{C}_{4} = {}^{7}\mathrm{C}_{3} = 35$$
-
-**(c)** *Replacing $r$ by $n-r$ in the formula gives $^{n}\mathrm{C}_{n-r} = \dfrac{n!}{(n-r)!\,\bigl(n-(n-r)\bigr)!} = \dfrac{n!}{(n-r)!\,r!} = {}^{n}\mathrm{C}_{r}$. Choosing which $r$ objects to take is the same as choosing which $n-r$ objects to leave.*
+**式で出せることも、電卓で出せることも、どちらも求められています。**
 :::
+
+$n!$ は **factorial**（階乗）といい、$1$ から $n$ までを掛けたものです。
+
+$$
+5! = 5 \times 4 \times 3 \times 2 \times 1 = 120, \qquad 0! = 1
+$$
+
+$^{5}\mathrm{C}_{2}$ を出してみます。
+
+$$
+^{5}\mathrm{C}_{2} = \frac{5!}{2!\,3!} = \frac{120}{2 \times 6} = \frac{120}{12} = 10
+$$
+
+::: {.callout-tip}
+## 約分してから計算する
+$\dfrac{5!}{2!\,3!}$ は、$120$ を出さなくても計算できます。$5! = 5 \times 4 \times 3!$ なので、$3!$ が消えます。
+
+$$
+\frac{5 \times 4 \times 3!}{2! \times 3!} = \frac{5 \times 4}{2} = 10
+$$
+
+**$n$ が大きいときは、この形でないと計算が急に重くなります。** $^{10}\mathrm{C}_{3}$ なら $\dfrac{10 \times 9 \times 8}{3 \times 2 \times 1} = 120$ です。**上は $r$ 個だけ、下は $r!$** と覚えてください。
+:::
+
+### 4. Binomial theorem（二項定理） {#theorem}
+
+$(a+b)^{n}$ を展開すると、どの項も $a$ と $b$ のべき乗のかけ算になり、その前に付く数が $^{n}\mathrm{C}_{r}$ です。これを $1$ つの式にまとめたものが、次の定理です。
+
+![どの項でも、$2$ つの指数を足すと $n$ になります。](img/aasl-1-9-idea-b.svg){#fig-aasl19-idea-b width=80%}
+
+$$
+(a+b)^{n} = a^{n} + {}^{n}\mathrm{C}_{1}\,a^{n-1}b + \cdots + {}^{n}\mathrm{C}_{r}\,a^{n-r}b^{r} + \cdots + b^{n}
+$$ {#eq-aasl19-binomial}
+
+::: {.callout-important}
+## この式も公式集にあります
+公式集の **1.9** の欄に、次の形で印刷されています（@fig-aasl19-idea-b）。
+
+> Binomial theorem $n \in \mathbb{N}$
+>
+> $(a+b)^{n} = a^{n} + {}^{n}\mathrm{C}_{1} a^{n-1}b + \ldots + {}^{n}\mathrm{C}_{r} a^{n-r}b^{r} + \ldots + b^{n}$
+
+$n \in \mathbb{N}$ は、**$n$ が $0$ 以上の整数**という意味です。分数や負の数の $n$ は、SL では扱いません。
+
+**日本の学校では「自然数」に $0$ を含めないのがふつうですが、IB の $\mathbb{N}$ は $0$ を含みます。** 記号の約束が違うだけなので、IB の答案では IB の約束に合わせてください。
+:::
+
+公式集では、はじめと終わりの項が $a^{n}$、$b^{n}$ と、**係数を書かずに**印刷されています。これは
+
+$$
+^{n}\mathrm{C}_{0} = \frac{n!}{0!\,n!} = 1, \qquad {}^{n}\mathrm{C}_{n} = \frac{n!}{n!\,0!} = 1
+$$
+
+だからです（$0! = 1$ を使います）。**$^{n}\mathrm{C}_{0}\,a^{n}$ と書いても、同じことです。**
+
+[第 1 節](#idea) で見た $3$ つのことが、そのまま式になっています。
+
+| 場所 | 中身 |
+|:--|:--|
+| 係数 | $^{n}\mathrm{C}_{r}$ |
+| $a$ の指数 | $n - r$（下がる） |
+| $b$ の指数 | $r$（上がる） |
+| 指数の和 | $(n-r) + r = n$（いつも $n$） |
+
+: 一般項 $^{n}\mathrm{C}_{r}\,a^{n-r}b^{r}$ の読み方 {#tbl-aasl19-term}
+
+**$r$ は $0$ から始まります。** $r = 0$ の項が $a^{n}$、$r = n$ の項が $b^{n}$ です。
+
+### 5. The term in $x^{k}$（特定の項だけを取り出す） {#one-term}
+
+$(x+1)^{20}$ の $x^{18}$ の係数を聞かれたとき、全部展開する必要はありません。**ほしい項だけを、@tbl-aasl19-term から作ります。**
+
+手順は $2$ 段階です。
+
+1. **$r$ を決める。** ほしい指数から、$n - r$ か $r$ のどちらかで方程式を立てます。
+2. **その項だけを計算する。**
+
+$(x+3)^{5}$ の $x^{2}$ の係数なら、$a = x$、$b = 3$、$n = 5$ です。$a$ の指数が $2$ なので、
+
+$$
+n - r = 2 \ \Rightarrow \ 5 - r = 2 \ \Rightarrow \ r = 3
+$$
+
+その項は
+
+$$
+^{5}\mathrm{C}_{3}\,x^{2}\,3^{3} = 10 \times 27 \times x^{2} = 270x^{2}
+$$
+
+**係数は $270$ です。**
+
+冒頭の $(x+1)^{20}$ も同じです。$20 - r = 18$ から $r = 2$ で、係数は
+
+$$
+^{20}\mathrm{C}_{2} = \frac{20 \times 19}{2 \times 1} = 190
+$$
+
+**$20$ 乗を展開する必要は、まったくありません。**
+
+::: {.callout-warning}
+## 「項」と「係数」を区別する
+`the term in` $x^{2}$ と聞かれたら $270x^{2}$、`the coefficient of` $x^{2}$ と聞かれたら $270$ です。
+
+**$x^{2}$ を付けるかどうか**が違います。問題文を読み直してください。
+:::
+
+### 6. Coefficients and signs in the brackets（$a$ や $b$ に係数や符号が付いているとき） {#substitution}
+
+$(2x-3)^{4}$ のような形でも、やることは同じです。**$a = 2x$、$b = -3$ と見ます。**
+
+$2x$ も $-3$ も、項が $1$ つだけの式（**monomial**、単項式）です。$x$ や $3$ とちがうのは、**係数と符号が付いている**ことだけです。
+
+大事なのは、**かっこ**です。
+
+$$
+^{4}\mathrm{C}_{1}\,(2x)^{3}(-3)^{1} = 4 \times 8x^{3} \times (-3) = -96x^{3}
+$$
+
+$(2x)^{3} = 8x^{3}$ です。$2x^{3}$ ではありません（[SL 1.5 第 4 節](aasl-1-5.qmd#coefficients)）。
+
+::: {.callout-warning}
+## マイナスは $b$ に含めます
+$(2x-3)^{4}$ は $(2x + (-3))^{4}$ です。$b = -3$ として、**$b$ の累乗の中にマイナスを入れます。**
+
+$$
+(-3)^{1} = -3, \quad (-3)^{2} = 9, \quad (-3)^{3} = -27, \quad (-3)^{4} = 81
+$$
+
+**$a$ と $b$ の符号が逆のときは、符号が $1$ つおきに変わります。** $(2x-3)^{4}$ がその形です。
+
+**$a$ も $b$ も正なら、すべて $+$** になります。
+
+**$a$ も $b$ も負なら、共通の $-1$ をくくり出します。** $(-2x-3)^{4} = (2x+3)^{4}$ なので、すべて $+$。$(-2x-3)^{3} = -(2x+3)^{3}$ なので、すべて $-$ です。**$n$ が偶数か奇数かで決まります。**
+
+**まず $a$ と $b$ の符号を見てから、この見方を使ってください。**
 :::
 
 ::: {#exm-aasl19-brackets}
@@ -447,7 +305,8 @@ $(2x-3)^{3}$ を展開しなさい。
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 $a = 2x$、$b = -3$、$n = 3$ です（[第 6 節](#substitution)）。係数は $1, 3, 3, 1$ です。
 
@@ -505,6 +364,7 @@ $$(2x-3)^{3} = (2x)^{3} + 3(2x)^{2}(-3) + 3(2x)(-3)^{2} + (-3)^{3}$$
 $$= 8x^{3} - 36x^{2} + 54x - 27$$
 :::
 :::
+:::
 
 ::: {#exm-aasl19-coefficient}
 **(a)** [Find the coefficient of $x^{3}$ in the expansion of $(x+3)^{6}$.]{.q-en}
@@ -524,7 +384,8 @@ $$= 8x^{3} - 36x^{2} + 54x - 27$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** $a = x$、$b = 3$、$n = 6$ です。$a$ の指数がほしい $3$ なので（[第 5 節](#one-term)）、
 
@@ -563,10 +424,16 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The term in $x^{2}$ comes from $r = 3$, so it contains the factor $(-1)^{3}$. Since $3$ is odd, $(-1)^{3} = -1$, while the other factors of the coefficient, $^{5}\mathrm{C}_{3} = 10$ and $2^{2} = 4$, are both positive. The coefficient is therefore $10 \times 4 \times (-1) = -40$, which is negative. In general the terms of $(2x-1)^{5}$ alternate in sign, and the ones with an odd value of $r$ are the negative ones.*
+*The term in $x^{2}$ comes from $r = 3$, so it contains the factor $(-1)^{3}$.*
+
+*Since $3$ is odd, $(-1)^{3} = -1$, while the other factors of the coefficient, $^{5}\mathrm{C}_{3} = 10$ and $2^{2} = 4$, are both positive.*
+
+*The coefficient is therefore $10 \times 4 \times (-1) = -40$, which is negative.*
+
+*In general the terms of $(2x-1)^{5}$ alternate in sign, and the ones with an odd value of $r$ are the negative ones.*
 :::
 
-（$x^2$ の項は $r = 3$ から出るので、因数 $(-1)^3$ を含む。$3$ は奇数なので $(-1)^3 = -1$ であり、ほかの因数 $^{5}\mathrm{C}_{3} = 10$ と $(2x)^2 = 4x^2$ はどちらも正である。したがって積は負になり、$-40x^2$ となる。一般に $(2x-1)^5$ の項は符号が交互で、$r$ が奇数のものが負になる、という意味です。）
+（$x^2$ の項は $r = 3$ から出るので、因数 $(-1)^3$ を含む。$3$ は奇数なので $(-1)^3 = -1$ であり、ほかの因数 $^{5}\mathrm{C}_{3} = 10$ と $2^{2} = 4$ はどちらも正である。したがって係数は $10 \times 4 \times (-1) = -40$ で、負になる。一般に $(2x-1)^5$ の項は符号が交互で、$r$ が奇数のものが負になる、という意味です。）
 
 **検算（(a) について）。** $^{6}\mathrm{C}_{3}$ を、パスカルの作り方でも出します。$^{5}\mathrm{C}_{2} = 10$ で（[第 3 節](#ncr)）、@eq-aasl19-symmetry より $^{5}\mathrm{C}_{3} = {}^{5}\mathrm{C}_{2} = 10$ なので、
 
@@ -586,7 +453,7 @@ $$
 
 **指数の和 $3 + 3 = 6$ は、検算にはなりません。** 一般項が $a^{n-r}b^{r}$ の形をしている以上、和はいつも $n$ になるからです。
 
-**決め手になるのは、どちらが $a$ の指数かの確認です。** **(a)** では $r = 3$ を $b$ の指数と取りちがえても、$a$ の指数も $3$ なので**たまたま同じ答え**になります。**(b)** ではそうなりません。$r = 3$ のとき $a$ の指数は $2$ です。**$2$ つが違う問題で確かめるのが要です。**
+**決め手になるのは、どちらが $a$ の指数かの確認です。** **(a)** では $r = 3$ を $b$ の指数と取りちがえても、$a$ の指数も $3$ なので**たまたま同じ答え**になります。**(b)** ではそうなりません。$r = 3$ のとき $a$ の指数は $2$ です。**$2$ つが違う問題で確かめるのがポイントです。**
 
 ::: {.callout-note}
 ## 解答例（答案用紙に書くこと）
@@ -601,6 +468,143 @@ $$^{5}\mathrm{C}_{3}\,(2x)^{2}(-1)^{3} = 10 \times 4x^{2} \times (-1) = -40x^{2}
 
 **(c)** *The term has the factor $(-1)^{3} = -1$, while $^{5}\mathrm{C}_{3} = 10$ and $2^{2} = 4$ are positive, so the coefficient is negative.*
 :::
+:::
+:::
+
+### 7. Table of values（値を並べた表で $r$ を探す） {#tabulate}
+
+$^{n}\mathrm{C}_{r}$ の値を $r = 0$ から順に並べた表（**table of values**）を使うと、「$^{6}\mathrm{C}_{r} = 20$ となる $r$ を求めなさい」のような問題が解けます。
+
+やり方を、$n = 4$ で見ておきます。$^{4}\mathrm{C}_{r}$ を $r = 0$ から順に並べると、
+
+$$
+1, \quad 4, \quad 6, \quad 4, \quad 1
+$$
+
+@tbl-aasl19-pascal の $n = 4$ の行そのものです。たとえば $^{4}\mathrm{C}_{r} = 6$ になるのは $r = 2$ のときだけだと、**並びを見るだけで**分かります。
+
+**$n = 6$ でも、やることは同じです**（演習 $8$ で扱います）。
+
+**この並びは、左右対称です。** $^{4}\mathrm{C}_{1} = {}^{4}\mathrm{C}_{3} = 4$ です。一般に
+
+$$
+^{n}\mathrm{C}_{r} = {}^{n}\mathrm{C}_{n-r}
+$$ {#eq-aasl19-symmetry}
+
+ただし $n$ と $r$ は整数で、$0 \leq r \leq n$ のときの話です。
+
+**計算を半分に減らせます。** $^{9}\mathrm{C}_{7}$ を出すなら、$^{9}\mathrm{C}_{2}$ を出すほうが楽です。
+
+::: {.callout-tip collapse="true"}
+## Paper 2 では、電卓で表が作れます
+`menu → Probability → Combinations` を選ぶと、`nCr(` が出ます。$^{6}\mathrm{C}_{3}$ なら `nCr(6,3)` と入れます。
+
+表にするには、$r$ の列に $0, 1, 2, \ldots$ を入れ、隣の列で $^{6}\mathrm{C}_{r}$ を計算させます。**問題文の `a table of values` は、この表のことです。**
+
+**Paper 1 では使えません。** ですから、このページの例題と演習は、すべて手で出せる大きさにしてあります。
+:::
+
+::: {#exm-aasl19-ncr}
+**(a)** [Use the formula $^{n}\mathrm{C}_{r} = \dfrac{n!}{r!(n-r)!}$ to find the value of $^{7}\mathrm{C}_{3}$.]{.q-en}
+
+**(b)** [Find the value of $^{7}\mathrm{C}_{4}$.]{.q-en}
+
+**(c)** [Explain why $^{n}\mathrm{C}_{r} = {}^{n}\mathrm{C}_{n-r}$ for integers $n$ and $r$ with $0 \leq r \leq n$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+**(a)** 公式 $^{n}\mathrm{C}_{r} = \dfrac{n!}{r!(n-r)!}$ を使って、$^{7}\mathrm{C}_{3}$ の値を求めなさい。
+
+**(b)** $^{7}\mathrm{C}_{4}$ の値を求めなさい。
+
+**(c)** $0 \leq r \leq n$ をみたす整数 $n$、$r$ について $^{n}\mathrm{C}_{r} = {}^{n}\mathrm{C}_{n-r}$ となる理由を説明しなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** @eq-aasl19-ncr に $n = 7$、$r = 3$ を入れます。
+
+$$
+^{7}\mathrm{C}_{3} = \frac{7!}{3!\,4!} = \frac{7 \times 6 \times 5}{3 \times 2 \times 1} = \frac{210}{6} = 35
+$$
+
+$7! = 7 \times 6 \times 5 \times 4!$ なので、$4!$ が約分で消えます（[第 3 節](#ncr)）。
+
+**(b)** @eq-aasl19-symmetry を使えば、**計算せずに**出ます。$7 - 4 = 3$ なので、
+
+$$
+^{7}\mathrm{C}_{4} = {}^{7}\mathrm{C}_{3} = 35
+$$
+
+**(c)** `Explain why` なので、英語で理由を書きます。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*By the formula, $^{n}\mathrm{C}_{n-r} = \dfrac{n!}{(n-r)!\,\bigl(n-(n-r)\bigr)!} = \dfrac{n!}{(n-r)!\,r!}$, which is the same expression as $^{n}\mathrm{C}_{r} = \dfrac{n!}{r!\,(n-r)!}$, since $r!\,(n-r)! = (n-r)!\,r!$.*
+
+*There is also a counting reason: choosing which $r$ of the $n$ objects to take is the same as choosing which $n-r$ objects to leave, so the two counts must be equal.*
+:::
+
+（公式によれば $^{n}\mathrm{C}_{n-r} = \dfrac{n!}{(n-r)!\,r!}$ となり、$^{n}\mathrm{C}_{r}$ と同じ式である。掛ける順序を変えただけだからである。数え方でも説明できる。$n$ 個のうち取る $r$ 個を選ぶことと、残す $n-r$ 個を選ぶことは同じなので、通りの数は等しい、という意味です。）
+
+**検算（(a) について）。** @eq-aasl19-symmetry より $^{7}\mathrm{C}_{3} = {}^{7}\mathrm{C}_{4}$ なので、$r = 4$ のほうを公式で出してみます。
+
+$$
+^{7}\mathrm{C}_{4} = \frac{7!}{4!\,3!} = \frac{7 \times 6 \times 5 \times 4}{4 \times 3 \times 2 \times 1} = \frac{840}{24} = 35
+$$
+
+割る数も掛ける数も **(a)** とは違いますが、同じ $35$ になりました ✓ **(a) の $\dfrac{210}{6}$ を計算し直したのではない**ところが大事です。
+
+**$7 \times 6 \times 5 = 210$ で止めていたら**、$3!$ で割り忘れています。$^{n}\mathrm{C}_{r}$ は「並べ方」ではなく「選び方」なので、**同じ組を数え直した分を $r!$ で割る**必要があります。
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$^{7}\mathrm{C}_{3} = \frac{7!}{3!\,4!} = \frac{7 \times 6 \times 5}{3 \times 2 \times 1} = 35$$
+
+**(b)**
+$$^{7}\mathrm{C}_{4} = {}^{7}\mathrm{C}_{3} = 35$$
+
+**(c)** *Replacing $r$ by $n-r$ in the formula gives $^{n}\mathrm{C}_{n-r} = \dfrac{n!}{(n-r)!\,\bigl(n-(n-r)\bigr)!} = \dfrac{n!}{(n-r)!\,r!} = {}^{n}\mathrm{C}_{r}$. Choosing which $r$ objects to take is the same as choosing which $n-r$ objects to leave.*
+:::
+:::
+:::
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+**なぜ係数が $^{n}\mathrm{C}_{r}$ なのでしょうか。** 展開を、かっこの数え上げとして見ると分かります。
+
+$(a+b)^{3}$ は、かっこが $3$ つあります。
+
+$$
+(a+b)(a+b)(a+b)
+$$
+
+展開するとは、**それぞれのかっこから $a$ か $b$ のどちらかを選んで掛け、すべての選び方を足す**ことです。
+
+$ab^{2}$ という項ができるのは、**$3$ つのうち $2$ つのかっこから $b$ を選んだとき**です。その選び方は
+
+$$
+b\,b\,a, \qquad b\,a\,b, \qquad a\,b\,b
+$$
+
+の $3$ 通りあります。だから $ab^{2}$ の係数は $3$ です。
+
+一般に、**$n$ 個のかっこから $b$ を取る $r$ 個を選ぶ選び方の数**が、そのまま係数になります。それが $^{n}\mathrm{C}_{r}$ です。**二項定理は、このように「選び方を数える」ことで説明できます。**
+
+**パスカルの三角形の作り方も、同じ見方で説明できます。** $n$ 個から $r$ 個を選ぶとき、**最後の $1$ 個を使うか使わないか**で分けます。
+
+- 使うなら、残り $n-1$ 個から $r-1$ 個を選ぶ。
+- 使わないなら、残り $n-1$ 個から $r$ 個を選ぶ。
+
+この $2$ つを足したものが $^{n}\mathrm{C}_{r}$ です。**「すぐ上の $2$ つを足す」は、これを言っています。**
 :::
 
 ## Common errors
@@ -656,12 +660,6 @@ $x^{k}$ の係数がほしいとき、$a = x$ なら $n - r = k$ です。$r = k
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが $3$ つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -1035,7 +1033,13 @@ $n = 3$ なら $1+3+3+1 = 8 = 2^{3}$ ✓ $n = 4$ なら $1+4+6+4+1 = 16 = 2^{4}$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The binomial theorem states that $(a+b)^{n} = {}^{n}\mathrm{C}_{0}a^{n} + {}^{n}\mathrm{C}_{1}a^{n-1}b + \cdots + {}^{n}\mathrm{C}_{n}b^{n}$, and the numbers in the row of Pascal's triangle are exactly the coefficients $^{n}\mathrm{C}_{0}, {}^{n}\mathrm{C}_{1}, \ldots, {}^{n}\mathrm{C}_{n}$. Substituting $a = 1$ and $b = 1$ makes every factor $a^{n-r}b^{r}$ equal to $1$, so the right-hand side becomes the sum of the row, while the left-hand side becomes $(1+1)^{n} = 2^{n}$. Hence the row sums to $2^{n}$. For example, the row for $n = 4$ is $1, 4, 6, 4, 1$, and $1+4+6+4+1 = 16 = 2^{4}$.*
+*The binomial theorem states that $(a+b)^{n} = {}^{n}\mathrm{C}_{0}a^{n} + {}^{n}\mathrm{C}_{1}a^{n-1}b + \cdots + {}^{n}\mathrm{C}_{n}b^{n}$, and the numbers in the row of Pascal's triangle are exactly the coefficients $^{n}\mathrm{C}_{0}, {}^{n}\mathrm{C}_{1}, \ldots, {}^{n}\mathrm{C}_{n}$.*
+
+*Substituting $a = 1$ and $b = 1$ makes every factor $a^{n-r}b^{r}$ equal to $1$, so the right-hand side becomes the sum of the row, while the left-hand side becomes $(1+1)^{n} = 2^{n}$.*
+
+*Hence the row sums to $2^{n}$.*
+
+*For example, the row for $n = 4$ is $1, 4, 6, 4, 1$, and $1+4+6+4+1 = 16 = 2^{4}$.*
 :::
 :::
 
@@ -1085,7 +1089,13 @@ $b = -3$ です（[第 6 節](#substitution)）。$(-3)^{1} = -3$、$(-3)^{2} = 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The student treated the second term as $b = 3$ rather than $b = -3$, so every term came out positive. With $b = -3$ the odd powers of $b$ are negative, so the signs alternate. The correct expansion is $(x-3)^{4} = x^{4} - 12x^{3} + 54x^{2} - 108x + 81$. Substituting $x = 1$ confirms this: the original expression gives $(-2)^{4} = 16$, the correct expansion gives $1 - 12 + 54 - 108 + 81 = 16$, and the student's answer gives $256$.*
+*The student treated the second term as $b = 3$ rather than $b = -3$, so every term came out positive.*
+
+*With $b = -3$ the odd powers of $b$ are negative, so the signs alternate.*
+
+*The correct expansion is $(x-3)^{4} = x^{4} - 12x^{3} + 54x^{2} - 108x + 81$.*
+
+*Substituting $x = 1$ confirms this: the original expression gives $(-2)^{4} = 16$, the correct expansion gives $1 - 12 + 54 - 108 + 81 = 16$, and the student's answer gives $256$.*
 :::
 :::
 

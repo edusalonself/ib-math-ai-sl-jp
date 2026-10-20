@@ -15,50 +15,13 @@ sidebar: ai-hl
 - $2$ つの町の人口移動などで、**長い目で見たときどうなるか**を説明できる。
 :::
 
-::: {.callout-important}
-## Formula booklet に載っています
-公式集の **AHL 1.15** の欄にあるのは、**次の $1$ つだけ**です。
-
-$$
-M^{n} = PD^{n}P^{-1}
-$$ {#eq-ahl115-power}
-
-> where $P$ is the matrix of eigenvectors and $D$ is the diagonal matrix of eigenvalues
-
-**そして、いちばん大事な式は載っていません。**
-
-::: {.callout-warning}
-## characteristic equation は、覚える必要があります
-$$
-\det(M - \lambda I) = 0
-$$ {#eq-ahl115-char}
-
-公式集のどこにも印刷されていません。**この項目で唯一、覚えなければならない式**です。
-:::
-:::
-
-::: {.callout-note}
-## 扱うのは $2 \times 2$ だけです
-シラバスがはっきり限定しています。
-
-> Students will only be expected to perform calculations by hand and with technology for **$2 \times 2$ matrices**.
-
-$3 \times 3$ の固有値を手で出す、ということはありません。
-
-また diagonalization（対角化）も、
-
-> restricted to the case where there are **distinct real eigenvalues**
-
-つまり **$\lambda$ が $2$ つとも実数で、しかも異なる**場合だけです。重解や複素数は出ません。
-:::
-
 ## The idea
 
-### 1. 向きが変わらないベクトルを探します {#idea}
+### 1. Eigenvectors and eigenvalues（向きが変わらないベクトル） {#idea}
 
 行列を掛けると、ふつうベクトルは**向きも長さも変わります。** ところが、**向きだけは変わらない**特別なベクトルがあります。
 
-![An eigenvector keeps its direction](img/ahl-1-15-idea.svg){#fig-ahl115-idea width=100%}
+![固有ベクトルは、行列を掛けても向きが変わりません。](img/ahl-1-15-idea.svg){#fig-ahl115-idea width=100%}
 
 @fig-ahl115-idea の左では、$M\mathbf{u}$ が点線からずれています。**向きが変わってしまった**わけです。
 
@@ -77,11 +40,11 @@ $\mathbf{v} = \mathbf{0}$ なら $M\mathbf{0} = \lambda\mathbf{0}$ はどんな 
 この条件が、次の [characteristic equation](#char) を生みます。
 :::
 
-### 2. characteristic equation {#char}
+### 2. The characteristic equation（固有方程式） {#char}
 
-$\lambda$ を先に見つけます。
+eigenvalue $\lambda$ は、**characteristic equation**（固有方程式）という式から求めます。$\mathbf{v}$ より先に、$\lambda$ を見つけます。
 
-![Where the characteristic equation comes from](img/ahl-1-15-char.svg){#fig-ahl115-char width=90%}
+![固有方程式がどこから出てくるかを示しています。](img/ahl-1-15-char.svg){#fig-ahl115-char width=100%}
 
 @eq-ahl115-def を移項すると $M\mathbf{v} - \lambda\mathbf{v} = \mathbf{0}$、つまり
 
@@ -89,9 +52,15 @@ $$
 (M - \lambda I)\mathbf{v} = \mathbf{0}
 $$
 
-もし $(M - \lambda I)$ に[逆行列があったら](ahl-1-14.qmd#inverse)、両辺に掛けて $\mathbf{v} = \mathbf{0}$ になってしまいます。それは[認めない](#nonzero)ので、**逆行列があってはいけません。**
+もし $(M - \lambda I)$ に[逆行列があったら](ahl-1-14.qmd#inverse)、両辺に掛けて $\mathbf{v} = \mathbf{0}$ になってしまいます。それは[認めない](#nonzero)ので、**inverse matrix（逆行列）があってはいけません。**
 
-[逆行列がないのは $\det = 0$ のとき](ahl-1-14.qmd#singular)ですから、@eq-ahl115-char が出ます。
+[逆行列がないのは $\det = 0$ のとき](ahl-1-14.qmd#singular)ですから、次の式が出ます。
+
+$$
+\det(M - \lambda I) = 0
+$$ {#eq-ahl115-char}
+
+これが characteristic equation です。公式集のどこにも載っていないので、**この項目で唯一、覚えなければならない式**です。
 
 #### 実際に展開すると {#expand}
 
@@ -127,7 +96,68 @@ $$
 $\lambda = 5$ または $\lambda = 2$ です。**展開せずに書ける**ようになると速いです。
 :::
 
-### 3. eigenvector の求め方 {#eigenvector}
+::: {#exm-ahl115-values}
+[Let $M = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}$.]{.q-en}
+
+**(a)** [Write down the characteristic equation of $M$.]{.q-en}
+
+**(b)** [Hence find the eigenvalues of $M$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+$M = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}$ とします。
+
+**(a)** $M$ の characteristic equation を書きなさい。
+
+**(b)** これを使って、$M$ の eigenvalue を求めなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** @eq-ahl115-char に入れます。$M - \lambda I$ は、**対角から $\lambda$ を引く**だけです。
+
+$$
+\det\begin{pmatrix} 4-\lambda & 1 \\ 2 & 3-\lambda \end{pmatrix} = 0
+$$
+
+$$
+(4-\lambda)(3-\lambda) - (1)(2) = 0
+$$
+
+$$
+12 - 7\lambda + \lambda^{2} - 2 = 0 \ \Rightarrow \ \lambda^{2} - 7\lambda + 10 = 0
+$$
+
+**(b)** 因数分解します。
+
+$$
+(\lambda - 5)(\lambda - 2) = 0 \ \Rightarrow \ \lambda = 5 \ \text{or} \ \lambda = 2
+$$
+
+::: {.callout-tip}
+## 検算は[対角の和と $\det$](#expand) で
+対角の和は $4 + 3 = 7$ ✓（$\lambda$ の係数）
+
+$\det M = 4(3) - 1(2) = 10$ ✓（定数項）
+
+**展開した式と一致しました。** 展開でミスをしていないか、これで確かめられます。
+:::
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** $\det(M - \lambda I) = 0$
+
+$(4-\lambda)(3-\lambda) - 2 = 0$,  so  $\lambda^{2} - 7\lambda + 10 = 0$
+
+**(b)** $(\lambda-5)(\lambda-2) = 0$,  so  $\lambda = 5$ or $\lambda = 2$
+:::
+:::
+:::
+
+### 3. Finding eigenvectors（固有ベクトルの求め方） {#eigenvector}
 
 $\lambda$ が出たら、@eq-ahl115-def にもどして $\mathbf{v}$ を探します。$\lambda = 5$ で試します。
 
@@ -181,180 +211,6 @@ $$
 \mathbf{v} = \begin{pmatrix} 1 \\ -2 \end{pmatrix}
 $$
 
-### 4. $P$ と $D$ を作ります {#pd}
-
-![Lining up P and D](img/ahl-1-15-pd.svg){#fig-ahl115-pd width=88%}
-
-- $P$ … eigenvector を**列**に並べる
-- $D$ … eigenvalue を**対角**に並べる
-
-$$
-P = \begin{pmatrix} 1 & 1 \\ 1 & -2 \end{pmatrix}, \qquad D = \begin{pmatrix} 5 & 0 \\ 0 & 2 \end{pmatrix}
-$$
-
-::: {.callout-warning}
-## 順番をそろえてください
-$P$ の**$1$ 列目**が $\lambda = 5$ の eigenvector なら、$D$ の**$1$ 番目**も $5$ です。
-
-片方だけ入れかえると、$PDP^{-1}$ はもう $M$ になりません。**書いたら $1$ 度、目で対応を確かめてください。**
-:::
-
-$$
-M = PDP^{-1}
-$$ {#eq-ahl115-diag}
-
-これが **diagonalization**（対角化）です。
-
-### 5. 累乗が、一気に計算できます {#power}
-
-@eq-ahl115-power が公式集の式です。
-
-![The four steps](img/ahl-1-15-steps.svg){#fig-ahl115-steps width=100%}
-
-$D$ は対角行列なので、累乗が**そのまま**です。
-
-$$
-D^{n} = \begin{pmatrix} 5^{n} & 0 \\ 0 & 2^{n} \end{pmatrix}
-$$
-
-::: {.callout-tip}
-## 対角行列の累乗は、対角の数を累乗するだけです
-$0$ が邪魔をしないので、$\begin{pmatrix} 5 & 0 \\ 0 & 2 \end{pmatrix}^{3} = \begin{pmatrix} 125 & 0 \\ 0 & 8 \end{pmatrix}$ になります。
-
-**$M$ を $3$ 回掛けるより、はるかに楽です。** $n = 20$ でも同じ手間で出せます。
-:::
-
-### 6. 長い目で見ると、どうなるか {#longrun}
-
-シラバスが挙げている使い道です。
-
-> Applications, for example **movement of population between two towns**, predator/prey models.
-
-![Two towns settle into a fixed ratio](img/ahl-1-15-towns.svg){#fig-ahl115-towns width=92%}
-
-@fig-ahl115-towns は、毎年 A 町の $20\%$ が B 町へ、B 町の $10\%$ が A 町へ移る場合です。
-
-$$
-T = \begin{pmatrix} 0.8 & 0.1 \\ 0.2 & 0.9 \end{pmatrix}
-$$
-
-固有値は $\lambda = 1$ と $\lambda = 0.7$ です。
-
-::: {.callout-important}
-## $\lambda = 1$ の eigenvector が、落ち着き先です
-$\lambda = 1$ は「**掛けても変わらない**」という意味です。そこに達したら、もう動きません。
-
-もう一方は $0.7$ で、$0.7^{n}$ は $n$ が大きくなると $0$ に近づきます。**その成分は消えていきます。**
-
-だから、どこから始めても $\lambda = 1$ の eigenvector の**比**に落ち着きます。ここでは $\begin{pmatrix} 1 \\ 2 \end{pmatrix}$、つまり $1 : 2$ です。
-:::
-
-::: {.callout-note appearance="simple"}
-このしくみは **AHL 4.19** の transition matrices（推移行列）と Markov chains、そして **AHL 5.17** の coupled differential equations につながります。シラバスにも `Link to:` として書かれています。
-:::
-
-## Why it works
-
-:::: {.callout-note collapse="true" appearance="simple"}
-## クリックすると開きます
-なぜ $M^{n} = PD^{n}P^{-1}$ になるのか。ここだけ説明します。
-
-@eq-ahl115-diag より $M = PDP^{-1}$ です。これを $2$ 乗してみます。
-
-$$
-M^{2} = (PDP^{-1})(PDP^{-1})
-$$
-
-[結合法則](ahl-1-14.qmd#noncommutative)が使えるので、真ん中に注目してください。
-
-$$
-M^{2} = PD\,(P^{-1}P)\,DP^{-1}
-$$
-
-$P^{-1}P = I$ ですから、**真ん中が消えます。**
-
-$$
-M^{2} = PD\,I\,DP^{-1} = PD^{2}P^{-1}
-$$
-
-$3$ 乗でも同じことが起こります。
-
-$$
-M^{3} = PD\,(P^{-1}P)\,D\,(P^{-1}P)\,DP^{-1} = PD^{3}P^{-1}
-$$
-
-**間にはさまった $P^{-1}P$ が、次々と消えていく。** これが $M^{n} = PD^{n}P^{-1}$ の中身です。
-
-::: {.callout-note appearance="simple"}
-$P$ と $P^{-1}$ は**両端に $1$ つずつ残るだけ**で、まん中には $D$ が $n$ 個並びます。だから[対角行列の累乗](#power)さえ計算できればよい、ということになります。
-:::
-::::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-:::
-
-::: {#exm-ahl115-values}
-[Let $M = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}$.]{.q-en}
-
-**(a)** [Write down the characteristic equation of $M$.]{.q-en}
-
-**(b)** [Hence find the eigenvalues of $M$.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-$M = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}$ とします。
-
-**(a)** $M$ の characteristic equation を書きなさい。
-
-**(b)** これを使って、$M$ の eigenvalue を求めなさい。
-
-</details>
-
----
-
-**(a)** @eq-ahl115-char に入れます。$M - \lambda I$ は、**対角から $\lambda$ を引く**だけです。
-
-$$
-\det\begin{pmatrix} 4-\lambda & 1 \\ 2 & 3-\lambda \end{pmatrix} = 0
-$$
-
-$$
-(4-\lambda)(3-\lambda) - (1)(2) = 0
-$$
-
-$$
-12 - 7\lambda + \lambda^{2} - 2 = 0 \ \Rightarrow \ \lambda^{2} - 7\lambda + 10 = 0
-$$
-
-**(b)** 因数分解します。
-
-$$
-(\lambda - 5)(\lambda - 2) = 0 \ \Rightarrow \ \lambda = 5 \ \text{or} \ \lambda = 2
-$$
-
-::: {.callout-tip}
-## 検算は[対角の和と $\det$](#expand) で
-対角の和は $4 + 3 = 7$ ✓（$\lambda$ の係数）
-
-$\det M = 4(3) - 1(2) = 10$ ✓（定数項）
-
-**展開した式と一致しました。** 展開でミスをしていないか、これで確かめられます。
-:::
-
-::: {.callout-note}
-## 解答例（答案用紙にはこう書く）
-**(a)** $\det(M - \lambda I) = 0$
-
-$(4-\lambda)(3-\lambda) - 2 = 0$,  so  $\lambda^{2} - 7\lambda + 10 = 0$
-
-**(b)** $(\lambda-5)(\lambda-2) = 0$,  so  $\lambda = 5$ or $\lambda = 2$
-:::
-:::
-
 ::: {#exm-ahl115-vectors}
 [For the matrix $M = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}$, the eigenvalues are $5$ and $2$. Find an eigenvector corresponding to each eigenvalue.]{.q-en}
 
@@ -365,7 +221,8 @@ $(4-\lambda)(3-\lambda) - 2 = 0$,  so  $\lambda^{2} - 7\lambda + 10 = 0$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **$\lambda = 5$ のとき。** 対角から $5$ を引きます。
 
@@ -409,6 +266,35 @@ $\lambda = 5$:  $(M - 5I)\mathbf{v} = \mathbf{0}$ gives $-x + y = 0$, so $\mathb
 $\lambda = 2$:  $(M - 2I)\mathbf{v} = \mathbf{0}$ gives $2x + y = 0$, so $\mathbf{v}_{2} = \begin{pmatrix} 1 \\ -2 \end{pmatrix}$
 :::
 :::
+:::
+
+### 4. Diagonalization（$P$ と $D$ を作る） {#pd}
+
+eigenvector と eigenvalue を並べて、$2$ つの行列 $P$ と $D$ を作ります。
+
+![$P$ と $D$ の並べ方です。](img/ahl-1-15-pd.svg){#fig-ahl115-pd width=85%}
+
+- $P$ … eigenvector を**列**に並べる
+- $D$ … eigenvalue を**対角**に並べる
+
+$$
+P = \begin{pmatrix} 1 & 1 \\ 1 & -2 \end{pmatrix}, \qquad D = \begin{pmatrix} 5 & 0 \\ 0 & 2 \end{pmatrix}
+$$
+
+::: {.callout-warning}
+## 順番をそろえてください
+$P$ の**$1$ 列目**が $\lambda = 5$ の eigenvector なら、$D$ の**$1$ 番目**も $5$ です。
+
+片方だけ入れかえると、$PDP^{-1}$ はもう $M$ になりません。**書いたら $1$ 度、目で対応を確かめてください。**
+:::
+
+$$
+M = PDP^{-1}
+$$ {#eq-ahl115-diag}
+
+これが **diagonalization**（対角化）です。
+
+試験で扱うのは $2 \times 2$ の行列だけです。対角化も、eigenvalue が**異なる $2$ つの実数**になる場合だけで、**repeated root**（重解）や複素数の eigenvalue は出ません。
 
 ::: {#exm-ahl115-pd}
 [The matrix $M = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}$ has eigenvalues $5$ and $2$, with eigenvectors $\begin{pmatrix} 1 \\ 1 \end{pmatrix}$ and $\begin{pmatrix} 1 \\ -2 \end{pmatrix}$.]{.q-en}
@@ -428,7 +314,8 @@ $\lambda = 2$:  $(M - 2I)\mathbf{v} = \mathbf{0}$ gives $2x + y = 0$, so $\mathb
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** eigenvector を**列に**、eigenvalue を**対角に**。[順番をそろえます](#pd)。
 
@@ -460,6 +347,32 @@ $$
 **(b)** $\det P = -3$;  $P^{-1} = \dfrac{1}{3}\begin{pmatrix} 2 & 1 \\ 1 & -1 \end{pmatrix}$
 :::
 :::
+:::
+
+### 5. Powers of a matrix（行列の累乗） {#power}
+
+$P$ と $D$ を使うと、$M$ の累乗が一気に計算できます。
+
+$$
+M^{n} = PD^{n}P^{-1}
+$$ {#eq-ahl115-power}
+
+この式は公式集の **AHL 1.15** の欄にあります。$P$ は eigenvector を並べた行列、$D$ は eigenvalue を並べた対角行列です。
+
+![$4$ つの手順です。](img/ahl-1-15-steps.svg){#fig-ahl115-steps width=100%}
+
+$D$ は対角行列なので、累乗が**そのまま**です。
+
+$$
+D^{n} = \begin{pmatrix} 5^{n} & 0 \\ 0 & 2^{n} \end{pmatrix}
+$$
+
+::: {.callout-tip}
+## 対角行列の累乗は、対角の数を累乗するだけです
+$0$ が邪魔をしないので、$\begin{pmatrix} 5 & 0 \\ 0 & 2 \end{pmatrix}^{3} = \begin{pmatrix} 125 & 0 \\ 0 & 8 \end{pmatrix}$ になります。
+
+**$M$ を $3$ 回掛けるより、はるかに楽です。** $n = 20$ でも同じ手間で出せます。
+:::
 
 ::: {#exm-ahl115-power}
 [Let $M = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix}$, with $P = \begin{pmatrix} 1 & 1 \\ 1 & -2 \end{pmatrix}$ and $D = \begin{pmatrix} 5 & 0 \\ 0 & 2 \end{pmatrix}$.]{.q-en}
@@ -475,7 +388,8 @@ $M^{n} = PD^{n}P^{-1}$ を使って $M^{3}$ を求めなさい。
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 まず $D^{3}$ です。[対角の数を $3$ 乗するだけ](#power)。
 
@@ -523,6 +437,34 @@ $D^{3} = \begin{pmatrix} 125 & 0 \\ 0 & 8 \end{pmatrix}$
 $M^{3} = PD^{3}P^{-1} = \begin{pmatrix} 125 & 8 \\ 125 & -16 \end{pmatrix}\cdot\dfrac{1}{3}\begin{pmatrix} 2 & 1 \\ 1 & -1 \end{pmatrix} = \begin{pmatrix} 86 & 39 \\ 78 & 47 \end{pmatrix}$
 :::
 :::
+:::
+
+### 6. Long-term behaviour（長い目で見たときのようす） {#longrun}
+
+eigenvalue と eigenvector を使うと、$2$ つの町の人口移動や、捕食者と獲物の数の変化などが、長い目で見てどうなるかが分かります。
+
+![$2$ つの町の人口が、一定の比に落ち着いていきます。](img/ahl-1-15-towns.svg){#fig-ahl115-towns width=100%}
+
+@fig-ahl115-towns は、毎年 A 町の $20\%$ が B 町へ、B 町の $10\%$ が A 町へ移る場合です。
+
+$$
+T = \begin{pmatrix} 0.8 & 0.1 \\ 0.2 & 0.9 \end{pmatrix}
+$$
+
+固有値は $\lambda = 1$ と $\lambda = 0.7$ です。
+
+::: {.callout-important}
+## $\lambda = 1$ の eigenvector が、落ち着き先です
+$\lambda = 1$ は「**掛けても変わらない**」という意味です。そこに達したら、もう動きません。
+
+もう一方は $0.7$ で、$0.7^{n}$ は $n$ が大きくなると $0$ に近づきます。**その成分は消えていきます。**
+
+だから、どこから始めても $\lambda = 1$ の eigenvector の**比**に落ち着きます。ここでは $\begin{pmatrix} 1 \\ 2 \end{pmatrix}$、つまり $1 : 2$ です。
+:::
+
+::: {.callout-note appearance="simple"}
+このしくみは **AHL 4.19** の transition matrices（推移行列）と Markov chains、そして **AHL 5.17** の coupled differential equations につながります。
+:::
 
 ::: {#exm-ahl115-towns}
 [Each year, $20\%$ of the people living in town A move to town B, and $10\%$ of the people living in town B move to town A. The total population of the two towns is $30\,000$ and stays the same.]{.q-en}
@@ -554,7 +496,8 @@ $M^{3} = PD^{3}P^{-1} = \begin{pmatrix} 125 & 8 \\ 125 & -16 \end{pmatrix}\cdot\
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** [行列とベクトルの掛け算](ahl-1-14.qmd#howto)です。
 
@@ -595,7 +538,11 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*In the long term town A has $10\,000$ people and town B has $20\,000$. The eigenvalue $\lambda = 1$ has eigenvector $\begin{pmatrix} 1 \\ 2 \end{pmatrix}$, so a population in the ratio $1 : 2$ does not change from year to year. The other eigenvalue is $0.7$, and $0.7^{n} \to 0$ as $n$ increases, so that part of the population distribution dies away.*
+*In the long term town A has $10\,000$ people and town B has $20\,000$.*
+
+*The eigenvalue $\lambda = 1$ has eigenvector $\begin{pmatrix} 1 \\ 2 \end{pmatrix}$, so a population in the ratio $1 : 2$ does not change from year to year.*
+
+*The other eigenvalue is $0.7$, and $0.7^{n} \to 0$ as $n$ increases, so that part of the population distribution dies away.*
 :::
 
 （意味：長い目で見ると A 町は $10\,000$ 人、B 町は $20\,000$ 人になる。$\lambda = 1$ の eigenvector が $\begin{pmatrix} 1 \\ 2 \end{pmatrix}$ なので、$1 : 2$ の人口配分は年が変わっても動かない。もう一方の eigenvalue は $0.7$ で、$n$ が大きくなると $0.7^{n}$ は $0$ に近づくため、その成分は消えていく。）
@@ -619,6 +566,44 @@ $1$ つ目だけだと「なぜそこに向かうのか」が説明できてい�
 **(d)** *Town A: $10\,000$; town B: $20\,000$. The eigenvector for $\lambda = 1$ is $\begin{pmatrix} 1 \\ 2 \end{pmatrix}$, so the ratio $1 : 2$ is unchanged each year, and since $0.7^{n} \to 0$ the other part dies away.*
 :::
 :::
+:::
+
+## Why it works
+
+:::: {.callout-note collapse="true" appearance="simple"}
+## クリックすると開きます
+なぜ $M^{n} = PD^{n}P^{-1}$ になるのか。ここだけ説明します。
+
+@eq-ahl115-diag より $M = PDP^{-1}$ です。これを $2$ 乗してみます。
+
+$$
+M^{2} = (PDP^{-1})(PDP^{-1})
+$$
+
+[結合法則](ahl-1-14.qmd#noncommutative)が使えるので、真ん中に注目してください。
+
+$$
+M^{2} = PD\,(P^{-1}P)\,DP^{-1}
+$$
+
+$P^{-1}P = I$ ですから、**真ん中が消えます。**
+
+$$
+M^{2} = PD\,I\,DP^{-1} = PD^{2}P^{-1}
+$$
+
+$3$ 乗でも同じことが起こります。
+
+$$
+M^{3} = PD\,(P^{-1}P)\,D\,(P^{-1}P)\,DP^{-1} = PD^{3}P^{-1}
+$$
+
+**間にはさまった $P^{-1}P$ が、次々と消えていく。** これが $M^{n} = PD^{n}P^{-1}$ の中身です。
+
+::: {.callout-note appearance="simple"}
+$P$ と $P^{-1}$ は**両端に $1$ つずつ残るだけ**で、まん中には $D$ が $n$ 個並びます。だから[対角行列の累乗](#power)さえ計算できればよい、ということになります。
+:::
+::::
 
 ## Common errors
 
@@ -711,7 +696,7 @@ $\begin{pmatrix} 1 \\ 2 \end{pmatrix}$ は**比**であって、人数ではあ�
 固有値・固有ベクトルは、電卓に専用のコマンドがあります。ただし**返ってくる形が答案用ではない**ので、そこだけ注意が要ります。
 :::
 
-### 1. 行列を入れて、名前を付ける {#gdc-enter}
+### 1. Entering and naming a matrix（行列を入れて名前を付ける） {#gdc-enter}
 
 [AHL 1.14](ahl-1-14.qmd#gdc-enter) と同じです。
 
@@ -721,7 +706,7 @@ menu → Matrix & Vector → Create → Matrix
 
 入れたら `ctrl + sto→` に続けて `m` などと打って保存します。
 
-### 2. eigenvalue {#gdc-eigval}
+### 2. Eigenvalues（固有値を出す） {#gdc-eigval}
 
 ```
 menu → Matrix & Vector → Advanced → Eigenvalues
@@ -736,7 +721,7 @@ $\{5, 2\}$ で返るとは限りません。**どちらがどちらか、自分�
 対角の和と一致するか（$5 + 2 = 7$）で検算できます。
 :::
 
-### 3. eigenvector {#gdc-eigvec}
+### 3. Eigenvectors（固有ベクトルを出す） {#gdc-eigvec}
 
 ```
 menu → Matrix & Vector → Advanced → Eigenvectors
@@ -772,7 +757,7 @@ $0.447$ と $-0.894$ は $1 : -2$ ですから、$\begin{pmatrix} 1 \\ -2 \end{p
 符号が両方とも逆（$-0.447$ と $0.894$）で返ることもありますが、それも正解です。$-1$ 倍しても eigenvector です。
 :::
 
-### 4. 手で出した答えを確かめる {#gdc-check}
+### 4. Checking answers（手で出した答えを確かめる） {#gdc-check}
 
 いちばん確実なのは、**定義そのもの**を打つことです。
 
@@ -796,12 +781,6 @@ $p \times d \times p^{-1}$
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -1111,7 +1090,7 @@ $M^{5} = \dfrac{1}{3}\begin{pmatrix} 6282 & 3093 \\ 6186 & 3189 \end{pmatrix} = 
 ## 解説
 $5^{5} = 3125$、$2^{5} = 32$。**ここは電卓を使ってかまいません。**
 
-$P^{-1} = \dfrac{1}{3}\begin{pmatrix} 2 & 1 \\ 1 & -1 \end{pmatrix}$ です（例題3と同じ）。
+$P^{-1} = \dfrac{1}{3}\begin{pmatrix} 2 & 1 \\ 1 & -1 \end{pmatrix}$ です（[例題 3](#exm-ahl115-pd) と同じ）。
 
 $\dfrac{1}{3}$ は**最後まで外に出したまま**にします。$6282 \div 3 = 2094$。
 

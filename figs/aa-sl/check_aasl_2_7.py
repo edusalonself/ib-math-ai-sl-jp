@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "02-functions")
 QMD = os.path.join(BASE, "aasl-2-7.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_2_7.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 # 色コード・ファイル名・キーワードはラベルではないので外す
@@ -59,6 +78,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 # ══════════════════════════════════════════════════════════
 # 0. The idea の例
@@ -236,10 +258,11 @@ in_text("公式集の **2.7** の欄に `Solutions of a quadratic equation` と�
         "欄の名前")
 in_text("> $ax^{2} + bx + c = 0 \\Rightarrow x = \\dfrac{-b \\pm \\sqrt{b^{2}-4ac}}{2a}$, "
         "$a \\neq 0$", "公式集を逐語で")
-in_text("> Solutions may be referred to as roots of equations or zeros of functions.",
-        "Guidance を逐語で")
-chk(TEXT.count("\n> ") == 3,
-    f"引用は 3 つ（公式集 2 つとシラバス 1 つ）: {TEXT.count(chr(10) + '> ')}")
+not_in_text("Solutions may be referred to as roots of equations or zeros of functions.",
+            "シラバスの引用は本文から外した")
+in_text("関数の値が $0$ になる $x$ は **zero**（零点）と言います。", "引用の中身は日本語で説明")
+chk(TEXT.count("\n> ") == 2,
+    f"引用は 2 つ（公式集 2 つ）: {TEXT.count(chr(10) + '> ')}")
 chk(TEXT.index("$$ {#eq-aasl27-formula}") < TEXT.index("## この式は公式集にあります"),
     "公式集の callout は式の直後")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
@@ -272,7 +295,7 @@ in_text("**Paper 1 では使えません。**", "Paper 1 では手で解くと�
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -281,9 +304,8 @@ chk(TEXT.count("{.model-answer}") == 5, "model-answer が 5")
 chk(len(re.findall(r"^::: \{#exm-aasl27-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 9)), f"The idea が 1..8 で連番: {_idea}")
@@ -347,13 +369,13 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Three routes to the solutions", "図(a) の題")
-in_fig("make one side $0$", "図(a) の出発点")
+not_in_fig("Three routes to the solutions", "図(a) の題")
+not_in_fig("make one side $0$", "図(a) の出発点")
 in_fig("factorising", "図(a) 因数分解")
 in_fig("completing\\nthe square", "図(a) 平方完成")
 in_fig("the quadratic\\nformula", "図(a) 解の公式")
 in_fig("the same solutions", "図(a) の結論")
-in_fig("Reading a quadratic inequality", "図(b) の題")
+not_in_fig("Reading a quadratic inequality", "図(b) の題")
 # 図に具体的な数値を書いていない
 chk(not re.search(r"\d\s*x", FIGSTR), "図に具体的な式を書いていない")
 for leak in ["= 3", "= 4", "-2", "\\sqrt{33}"]:
@@ -363,11 +385,16 @@ for leak in ["= 3", "= 4", "-2", "\\sqrt{33}"]:
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-7.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-2-6.qmd") < DRAFT.index("aasl-2-7.qmd"), "並びが 2.6 → 2.7a")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+DRAFT = None
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/02-functions/aasl-2-7.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-2-6.qmd") < DRAFT.index("aasl-2-7.qmd"), "並びが 2.6 → 2.7a")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("（注）_quarto.yml がないので、登録のチェックは飛ばした")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-7.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -393,8 +420,7 @@ eq(2 * _a3**2, (29 - 5 * sp.sqrt(33)) / 4, "2x^2 = (29-5√33)/4")
 eq(5 * _a3, (-25 + 5 * sp.sqrt(33)) / 4, "5x = (-25+5√33)/4")
 
 # --- 例題3 (d) の解答例を短くした ---------------------------------------
-in_text("so a formula that produces two solutions cannot apply. This is why "
-        "the formula booklet states the condition $a \\neq 0$.",
+in_text('This is why the formula booklet states the condition $a \\neq 0$.',
         "例題3(d) の解答例（短縮後）")
 not_in_text("A linear equation with $b \\neq 0$ has exactly one solution",
             "例題3(d) の長い一文は消した")
@@ -466,13 +492,14 @@ in_text("**ここに書いていない機種の可否は、推測しないでく
 # 英語の用語は、このページの初出で日本語を添える
 # （_方針変更-2026-09-15.md 第 10 節）
 # ══════════════════════════════════════════════════════════
-in_text('$x^{2}-9x+20 = 0$ の **roots**（解）は $4$ と $5$、$f(x) = x^{2}-9x+20$ の **zeros**（零点）も $4$ と $5$ です', "英語併記 1")
+in_text('方程式の答えは **solution**（解）とも **root**（解・根）とも言い、関数の値が $0$ になる $x$ は **zero**（零点）と言います。', "英語併記 1")
+in_text('$x^{2}-9x+20 = 0$ の roots は $4$ と $5$、$f(x) = x^{2}-9x+20$ の zeros も $4$ と $5$ です', "roots と zeros の例")
 
 # ══════════════════════════════════════════════════════════
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -482,18 +509,18 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
 # ══════════════════════════════════════════════════════════
-in_text('因数分解して解くときに使う性質は、次のとおりです。', "公式の前置き 1")
-in_text('$ax^{2}+bx+c = 0$ の解を、係数から直接出す公式は、次のとおりです。', "公式の前置き 2")
+in_text('左辺を **factorise**（因数分解）すると、$2$ 次方程式は $1$ 次方程式 $2$ つに分かれます。そのときに使う性質は、次のとおりです。', "公式の前置き 1")
+in_text('$ax^{2}+bx+c = 0$ の解を、係数 $a$、$b$、$c$ から直接出す公式を **quadratic formula**（解の公式）といいます。次の式です。', "公式の前置き 2")
 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 2. factorising（因数分解）で解く {#factor}', "見出しの英語: 2. factorising（因数分解）で解く")
-in_text('### 3. completing the square（平方完成）で解く {#complete}', "見出しの英語: 3. completing the square（平")
-in_text('### 1. solving a quadratic equation（$2$ 次方程式を解く） {#idea}',
-        "見出しの英語: 1. solving a quadratic equation")
+in_text('### 2. Solving by factorising（因数分解で解く） {#factor}', "見出しの英語: 2. Solving by factorising")
+in_text('### 3. Solving by completing the square（平方完成で解く） {#complete}', "見出しの英語: 3. Solving by completing the square")
+in_text('### 1. Solving a quadratic equation（$2$ 次方程式を解く） {#idea}',
+        "見出しの英語: 1. Solving a quadratic equation")
 not_in_text('### 1. 解く道すじは $3$ つ', "前の見出しは消した")
-in_text('### 4. the quadratic formula（解の公式）で解く {#formula}', "見出しの英語: 4. the quadratic formula（解")
+in_text('### 4. The quadratic formula（解の公式） {#formula}', "見出しの英語: 4. The quadratic formula")
 
 # ══════════════════════════════════════════════════════════
 # 10. 判別式（2.7b を結合した分）
@@ -502,8 +529,7 @@ a_, b_, c_, k_ = sp.symbols("a b c k")
 _disc = b_ ** 2 - 4 * a_ * c_
 chk(sp.simplify(_disc - (b_ ** 2 - 4 * a_ * c_)) == 0, "Δ = b^2 - 4ac")
 in_text("\\Delta = b^{2} - 4ac", "判別式の式")
-in_text("### 6. discriminant（判別式）$\\Delta$：解の個数と種類を決める "
-        "{#discriminant}",
+in_text("### 6. The discriminant（判別式） {#discriminant}",
         "§6 の見出し")
 in_text("> $\\Delta = b^{2} - 4ac$", "公式集の判別式を逐語で")
 
@@ -530,13 +556,13 @@ SVG_D = os.path.join(BASE, "img", "aasl-2-7-idea-d.svg")
 chk(os.path.exists(SVG_C) and os.path.exists(SVG_D), "図 (c)(d) がある")
 for _p in (SVG_C, SVG_D):
     chk(not os.path.exists(_p[:-4] + ".png"), "PNG は消してある: " + _p[-24:])
-in_fig("The sign of the discriminant", "図 (c) の題")
-in_fig("A line and a curve", "図 (d) の題")
+not_in_fig("The sign of the discriminant", "図 (c) の題")
+not_in_fig("A line and a curve", "図 (d) の題")
 chk(TEXT.count("@fig-aasl27-idea-c") >= 1, "図 (c) を参照している")
 chk(TEXT.count("@fig-aasl27-idea-d") >= 1, "図 (d) を参照している")
 
 # 直線と曲線（§8）→ 接するとき
-in_text("### 8. 直線と曲線が出会う条件 {#intersect}", "§8 の見出し")
+in_text("### 8. When a line meets a curve（直線と曲線が出会う条件） {#intersect}", "§8 の見出し")
 in_text("**`touch`（接する）という語が出てきたら、$\\Delta = 0$ です。**", "touch は Δ=0")
 _line = sp.Eq(x ** 2 + 3 * x + 4, 2 * x + k_)
 _q = sp.expand(x ** 2 + 3 * x + 4 - (2 * x + k_))
@@ -548,7 +574,7 @@ chk(sp.solveset(sp.Eq(4 * k_ - 15, 0), k_, REALS) == {R(15, 4)},
 # 落とした節（文字から値を求める）は、演習 8・9 の解説で扱う
 not_in_text("### 4. 文字を含む方程式で、条件から値を求める", "その節は置かない")
 in_text("**文字が入っていても、やることは同じです。**", "演習 8 で手順を説明")
-in_text("**演習 $8$ と同じ $5$ 手順です。**", "演習 9 で不等式の場合")
+in_text("**演習 $8$ と同じ $5$ つの手順です。**", "演習 9 で不等式の場合")
 in_text("**$a \\neq 0$ を確かめる。**", "5 手順に a≠0 が入っている")
 chk(sp.solveset(sp.Eq(k_ ** 2 - 100, 0), k_, REALS) == {-10, 10},
     "演習8 k = ±10")
@@ -636,6 +662,18 @@ for _yl in (-0.80, -1.55, -2.30):
 
 in_fig('ax4.text(-2.35, 6.45, "$y = f(x)$"', "y = f(x) のラベルも直線と離した")
 chk('ax4.text(1.5, 6.4' not in FIG, "前の位置は消した")
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

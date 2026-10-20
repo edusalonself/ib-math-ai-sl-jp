@@ -302,16 +302,25 @@ for lab, needle in [
         ("演習10 の年", "2033")]:
     in_text(lab, needle)
 
-# ★ シラバスの引用
-in_text("Content 1 行目の引用",
-        "Setting up a model/differential equation from a context")
-in_text("Content 2 行目の引用", "Solving by separation of variables")
-in_text("藻の例の引用",
-        "The growth of an algae $G$, at time $t$, is proportional to "
-        "$\\sqrt{G}$")
-in_text("指数モデルの例の引用",
-        "An exponential model as a solution of $\\dfrac{dy}{dx} = ky$")
-in_text("general solution の語の引用", '**"general solution"**')
+# ★ シラバスの引用は本文から外し、日本語で直接書いた
+in_text("Content 1 行目：シラバスの引用は本文から外した",
+        "Setting up a model/differential equation from a context", False)
+in_text("Content 2 行目：シラバスの引用は本文から外した",
+        "Solving by separation of variables", False)
+in_text("藻の例：シラバスの引用は本文から外した",
+        "The growth of an algae $G$, at time $t$, is proportional to", False)
+in_text("指数モデル：シラバスの引用は本文から外した",
+        "An exponential model as a solution of", False)
+in_text("場面から式を立てる節がある",
+        "### 2. Setting up a differential equation（ことばから式を立てる） {#setup}")
+in_text("変数分離の節がある",
+        "### 4. Separation of variables（変数分離） {#separate}")
+in_text("藻の例を日本語で書いている",
+        "「時刻 $t$ での藻の量 $G$ の増える速さが、$\\sqrt{G}$ に比例する」という場面は")
+in_text("指数モデルの節がある",
+        "### 6. Exponential models（$\\dfrac{dy}{dx} = ky$ の解は指数関数） {#exponential}")
+in_text("general solution の語（問題文の言い方）",
+        "問題文が `general solution` と言っているなら、**$C$（または $A$）は残したまま**が答えです。")
 # ★ 公式集に 5.14 が無いこと
 in_text("5.13 の次が 5.16 と書いてある", "**5.13 の次が 5.16**")
 in_text("覚える必要があると書いてある", "覚える必要があります")
@@ -366,12 +375,9 @@ in_text("演習4 の日本語訳にも A>0",
 in_text("旧・無条件の問題文", "**(b)** [Describe the behaviour of $y$ as $x$ increases "
         "when (i) $k > 0$ and (ii) $k < 0$.]{.q-en}", False)
 in_text("模範解答 (i) に Assuming A>0",
-        "*Assuming $A > 0$: when $k > 0$ the exponent $kx$ increases as $x$ "
-        "increases, so $y$ increases without limit. This is exponential growth.*")
+        '*Assuming $A > 0$: when $k > 0$ the exponent $kx$ increases as $x$ increases, so $y$ increases without limit.*\n\n*This is exponential growth.*')
 in_text("模範解答 (ii) に Assuming A>0",
-        "*Assuming $A > 0$: when $k < 0$ the exponent $kx$ decreases as $x$ "
-        "increases, so $y$ tends towards $0$ but never reaches it. "
-        "This is exponential decay.*")
+        '*Assuming $A > 0$: when $k < 0$ the exponent $kx$ decreases as $x$ increases, so $y$ tends towards $0$ but never reaches it.*\n\n*This is exponential decay.*')
 in_text("旧・模範解答 (i)", "*When $k > 0$ the exponent $kx$ increases as $x$ "
         "increases, so $y$ increases without limit.", False)
 in_text("解説で A の 3 通りを示す", "- $A = 0$ … $y = 0$ が恒等的に成り立ちます"
@@ -399,6 +405,15 @@ eq("A=0 なら恒等的に 0",
    {round(0.0 * _m.exp(0.5 * x), 12) for x in range(6)}, {0.0})
 eq("A<0, k<0 は下から 0 に近づく",
    -2.0 * _m.exp(-0.5 * 20) < 0 and abs(-2.0 * _m.exp(-0.5 * 20)) < 1e-4, True)
+
+# ★ レイアウト：Worked examples の節は無く、例題は The idea の中にある
+import re as _re
+in_text("## Worked examples が無い", "## Worked examples", False)
+_exm = [m.start() for m in _re.finditer(r"::: \{#exm-", TXT)]
+_idea, _why = TXT.index("## The idea"), TXT.index("## Why it works")
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(_idea < p < _why for p in _exm), True)
+eq("例題の数は変わらない", len(_exm), 4)
 
 print()
 print(f"══════════ OK {ok} / NG {ng} ══════════")

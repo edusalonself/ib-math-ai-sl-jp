@@ -36,12 +36,10 @@ WARM = "#b45309"
 FILL = "#e8f0f9"
 SHADE = "#fdf0dc"
 
-fig2, ax2 = plt.subplots(figsize=(5.7, 4.0))
+fig2, ax2 = plt.subplots(figsize=(4.6, 2.5))
 # ══════════════════════════════════════════════════════════
-ax2.set_title("In a table, independence means equal row proportions",
-              fontsize=11, color=INK, loc="left", pad=12)
-ax2.set_xlim(-0.4, 4.8)
-ax2.set_ylim(0.2, 3.1)
+ax2.set_xlim(-0.1, 4.3)
+ax2.set_ylim(0.45, 3.0)
 ax2.axis("off")
 
 COLS = ["", "$A$", "$A'$", "total"]

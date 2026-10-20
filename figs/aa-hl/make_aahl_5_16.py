@@ -40,8 +40,6 @@ SHADE2 = "#fbe3c4"
 # (a) 置換積分の手順
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(6.0, 3.2))
-ax1.set_title("integration by substitution, step by step", fontsize=10.5,
-              color=INK, loc="left", pad=10)
 
 
 def box(x, y, w, h, text, col, fs=9.2):
@@ -66,11 +64,6 @@ box(0.3, 0.0, 4.6, 0.8, "integrate, then put $x$ back", WARM)
 for _y0, _y1 in ((4.2, 3.6), (2.8, 2.2), (1.4, 0.8)):
     down(2.6, _y0, _y1)
 
-ax1.text(5.2, 3.05, "for a definite integral,", fontsize=9, color=GREY)
-ax1.text(5.2, 2.60, "change the limits instead", fontsize=9, color=GREY)
-ax1.text(5.2, 2.15, "of putting $x$ back", fontsize=9, color=GREY)
-ax1.text(0.0, -0.95, "nothing in $x$ may be left behind: $dx$ must go too",
-         fontsize=9, color=GREY)
 ax1.set_xlim(-0.2, 10.4)
 ax1.set_ylim(-1.4, 5.3)
 ax1.axis("off")
@@ -79,8 +72,6 @@ ax1.axis("off")
 # (b) 部分積分の面積図
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(5.0, 3.6))
-ax2.set_title("$uv$ splits into two pieces", fontsize=10.5, color=INK,
-              loc="left", pad=10)
 
 t = np.linspace(0, 1, 300)
 CX = 0.6 + 3.2 * t
@@ -96,8 +87,6 @@ ax2.text(2.55, 1.15, "$\\int v\\,du$", fontsize=11, color=INK)
 ax2.text(1.05, 2.60, "$\\int u\\,dv$", fontsize=11, color=INK)
 ax2.text(2.05, 0.18, "$u$", fontsize=11, color=GREY)
 ax2.text(0.22, 1.85, "$v$", fontsize=11, color=GREY)
-ax2.text(0.0, -0.75, "the whole rectangle is $uv$, so"
-         " $\\int u\\,dv = uv - \\int v\\,du$", fontsize=9.2, color=GREY)
 ax2.set_xlim(-0.2, 4.6)
 ax2.set_ylim(-1.2, 3.9)
 ax2.axis("off")

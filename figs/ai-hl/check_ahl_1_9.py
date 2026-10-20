@@ -233,7 +233,11 @@ _SVG = _io.open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
                               "..", "..", "ai-hl", "01-number-and-algebra",
                               "img", "ahl-1-9-three-laws.svg"),
                 encoding="utf-8").read()
-eq("図の条件に a ≠ 1 が入っている", ("≠" in _SVG) or ("2260" in _SVG), True)
+# SVG は文字をパスで書くので、グリフ名が環境で変わる。make スクリプトの文字列でも確かめる
+_MK19 = _io.open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                               "make_ahl_1_9.py"), encoding="utf-8").read()
+eq("図の条件に a ≠ 1 が入っている", ("≠" in _SVG) or ("2260" in _SVG)
+   or ("a \\\\neq 1" in _MK19), True)
 
 # a = 1 は本当に底になれない（1^x は 1 しか返さない）
 eq("1 は何乗しても 1", {1.0 ** k for k in range(-5, 6)}, {1.0})
@@ -259,6 +263,22 @@ eq("200 / 2 = 100 = 10^2", 200 // 2, 10 ** 2)
 eq("2^3 x 125 = 1000", 2 ** 3 * 125, 10 ** 3)
 # exact だが整数にならない例（log 12 は無理数）
 eq("log 12 は整数ではない", abs(math.log10(12) - round(math.log10(12))) > 0.05, True)
+
+# ══════════ 2026-10 新レイアウト：例題は The idea の各節の後ろ ══════════
+import re as _re
+hasnt("Worked examples の節は消した", "## Worked examples")
+_iw19 = _T.index("\n## Why it works")
+eq("例題はすべて The idea の中",
+   all(_T.index("## The idea") < m.start() < _iw19
+       for m in _re.finditer(r"::: \{#exm-", _T)), True)
+eq("例題 5 つ（数は変わらない）", len(_re.findall(r"::: \{#exm-", _T)), 5)
+def _sec19(eid):
+    _hs = _re.findall(r"^### \d+\. .*?\{#([a-z0-9-]+)\}$", _T[:_T.index("::: {#" + eid + "}")], _re.M)
+    return _hs[-1] if _hs else None
+for _e, _s in (("exm-ahl19-value", "three-laws"), ("exm-ahl19-single", "log-ln"),
+               ("exm-ahl19-exp", "solve"), ("exm-ahl19-decay", "solve"),
+               ("exm-ahl19-digits", "scale")):
+    eq("%s は %s の節の中" % (_e, _s), _sec19(_e), _s)
 
 print()
 print(f"══════════ OK {ok} / NG {ng} ══════════")

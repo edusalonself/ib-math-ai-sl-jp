@@ -14,6 +14,25 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "02-functions")
 QMD = os.path.join(BASE, "aasl-2-1.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
+
+def _strip_exm(s):
+    """例題ブロック（::: {#exm-...} から対応する ::: まで）を外す。"""
+    out, depth, skip = [], 0, False
+    for _l in s.split(chr(10)):
+        if not skip and _l.startswith("::: {#exm-"):
+            skip, depth = True, 0
+        if skip:
+            if re.match(r"^:{3,}\s*\{", _l):
+                depth += 1
+            elif re.match(r"^:{3,}\s*$", _l):
+                depth -= 1
+                if depth == 0:
+                    skip = False
+            continue
+        out.append(_l)
+    return chr(10).join(out)
+
+
 FIG = open(os.path.join(HERE, "make_aasl_2_1.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 # 色コード（"#1f2328" など）はラベルではないので外す
@@ -58,6 +77,10 @@ def not_in_text(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている（消したはず）: " + msg + " :: " + sub[:70])
 
 # ══════════════════════════════════════════════════════════
 # 0. 公式そのもの
@@ -131,7 +154,7 @@ eq(sp.solve(_L2.subs(x, 0), y)[0], 5, "例題2(c) y 切片 5")
 eq(-3 * (4 - 4) + 12 - 12, 0, "2y+2 = -3(x-4) の途中")
 eq(2 * (-1) + 2, 0, "点を入れると 2y+2 = 0")
 # 例題 2 は、本文（第 4・5 節）と同じ数値を使っていない
-_body = TEXT[:TEXT.index("## Worked examples")]
+_body = _strip_exm(TEXT[:TEXT.index("## Common errors")])
 chk("(4, -1)" not in _body and "(4,-1)" not in _body, "例題2 の点は本文に出てこない")
 chk("3x + 2y - 10" not in _body, "例題2 の答えは本文に出てこない")
 # 符号をまちがえた式は、点を通らない
@@ -256,14 +279,21 @@ in_text("公式集の **2.1** の欄に `Equations of a straight line` として
         "3 つの形も公式集にある")
 in_text("> $y = mx + c$ ; $ax + by + d = 0$ ; $y - y_{1} = m\\left(x - x_{1}\\right)$",
         "3 つの形を逐語で")
-in_text("> $y = mx + c$ (gradient-intercept form).", "Guidance の名前")
-in_text("> $ax + by + d = 0$ (general form).", "同上")
-in_text("> $y - y_1 = m(x - x_1)$ (point-gradient form).", "同上")
+not_in_text("> $y = mx + c$ (gradient-intercept form).", "シラバス（Guidance）の引用は本文から外した")
+not_in_text("> $ax + by + d = 0$ (general form).", "同上")
+not_in_text("> $y - y_1 = m(x - x_1)$ (point-gradient form).", "同上")
+in_text("| $y = mx + c$ | gradient-intercept form |", "3 つの形の名前は表にある")
+in_text("| $ax + by + d = 0$ | general form |", "同上")
+in_text("| $y - y_{1} = m(x-x_{1})$ | point-gradient form |", "同上")
 in_text("## この $2$ つは公式集にありません", "平行・垂直は載っていない")
-in_text("> Parallel lines $m_1 = m_2$.", "シラバスの Content を逐語で")
-in_text("> Perpendicular lines $m_1 \\times m_2 = -1$.", "同上")
-in_text("> Calculate gradients of inclines such as mountain roads, bridges, etc.",
-        "勾配の Guidance を逐語で")
+not_in_text("> Parallel lines $m_1 = m_2$.", "シラバスの引用は本文から外した")
+not_in_text("> Perpendicular lines $m_1 \\times m_2 = -1$.", "同上")
+in_text("\\text{parallel:} \\quad m_{1} = m_{2}", "平行の式は本文にある")
+in_text("\\text{perpendicular:} \\quad m_{1} \\times m_{2} = -1", "垂直の式は本文にある")
+not_in_text("> Calculate gradients of inclines such as mountain roads, bridges, etc.",
+            "シラバス（Guidance）の引用は本文から外した")
+in_text("傾きは、山道や橋のような **incline**（傾斜、坂）の急さを表すのにも使います。",
+        "勾配の内容は日本語で直接書いた")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
 # ══════════════════════════════════════════════════════════
@@ -281,7 +311,7 @@ in_text("**Paper 1 では使えません。**", "Paper 1 では手で解くと�
 # ══════════════════════════════════════════════════════════
 # 9. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -291,9 +321,16 @@ chk(len(re.findall(r"^::: \{#exm-aasl21-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 chk("## 解答例（答案用紙にはこう書く）" not in TEXT, "解答例の見出しをそろえた")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -351,10 +388,10 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Gradient $=$ rise $\\\\div$ run", "図(a) の題")
+not_in_fig("Gradient $=$ rise", "図(a) の題は外した（本文とキャプションが言う）")
 in_fig("run $= x_{2}-x_{1}$", "図(a) の run")
 in_fig("rise\\n$= y_{2}-y_{1}$", "図(a) の rise")
-in_fig("Parallel and perpendicular", "図(b) の題")
+not_in_fig("Parallel and perpendicular", "図(b) の題は外した（キャプションが言う）")
 # 青い 2 本には m_1・m_2、直交する線には -1/m_1 と書く
 in_fig("gradient $m_{1}$", "図(b) の m_1")
 in_fig("gradient $m_{2}$", "図(b) の m_2")
@@ -372,11 +409,15 @@ for leak in ["-2", "4x", "3x - 4y", "(4, 0)", "(0, -10)", "2x + y",
 # 11. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-1.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-1-9.qmd") < DRAFT.index("aasl-2-1.qmd"), "並びが 1.9 → 2.1")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/02-functions/aasl-2-1.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-1-9.qmd") < DRAFT.index("aasl-2-1.qmd"), "並びが 1.9 → 2.1")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-1.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -418,7 +459,7 @@ in_text("横だった辺が縦になり、縦だった辺が横になります�
 in_text("（$m < 0$ のときは「左へ $m$」が実際には右向きになりますが、座標の書き方は同じ $(-m, 1)$ です。）",
         "m < 0 の但し書き")
 # 所見 10 — 演習 6 の検算
-in_text("**自分で書いた $-\\dfrac{1}{3}$ ではなく、答えの式から傾きを取り直すのが要です。**",
+in_text("**自分で書いた $-\\dfrac{1}{3}$ ではなく、答えの式から傾きを取り直すのがポイントです。**",
         "循環的な検算を直した")
 eq(sp.solve(_e6, y)[0], -R(1, 3) * x + R(5, 3), "答えの式から取り直した傾き")
 # 所見 11 — 図を本文で受けている
@@ -479,7 +520,7 @@ chk("@fig-aasl21-idea-b |" not in TEXT, "図の列は残っていない")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -494,10 +535,10 @@ in_text('直線の式の書き方は、次の $3$ つです。', "公式の前�
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 2. gradient（傾き）を、$2$ 点から出す {#gradient}', "見出しの英語: 2. gradient（傾き）を、$2$ 点から出す")
-in_text('### 5. intercepts（切片） {#intercepts}', "見出しの英語: 5. intercepts（切片）")
-in_text('### 6. parallel and perpendicular（平行と垂直） {#parallel-perp}', "見出しの英語: 6. parallel and perpendicu")
-in_text('### 7. gradient（勾配）：傾きが表しているもの {#incline}', "見出しの英語: 7. gradient（勾配）：傾きが表しているもの")
+in_text('### 2. Gradient from two points（$2$ 点から傾きを出す） {#gradient}', "見出しの英語: 2. gradient（傾き）を、$2$ 点から出す")
+in_text('### 5. Intercepts（切片） {#intercepts}', "見出しの英語: 5. intercepts（切片）")
+in_text('### 6. Parallel and perpendicular lines（平行と垂直） {#parallel-perp}', "見出しの英語: 6. parallel and perpendicu")
+in_text('### 7. Gradient in context（傾きが表しているもの） {#incline}', "見出しの英語: 7. gradient（勾配）：傾きが表しているもの")
 
 # 2026-09-17：公式の前置きと、傾きの意味
 in_text("$2$ 直線の傾きを $m_{1}$、$m_{2}$ とすると、平行・垂直の条件は"

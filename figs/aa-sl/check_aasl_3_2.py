@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "03-geometry")
 QMD = os.path.join(BASE, "aasl-3-2.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_3_2.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 FIGSTR = "\n".join(t for t in re.findall(r'r?"((?:[^"\\]|\\.)*)"', _NODOC)
@@ -49,6 +68,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 def cos_rule(a, b, C):
     return a ** 2 + b ** 2 - 2 * a * b * sp.cos(D(C))
@@ -237,7 +259,7 @@ not_in_text("solve(", "CAS 前提の solve( は書いていない")
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -246,9 +268,8 @@ chk(TEXT.count("{.model-answer}") == 8, f"model-answer が 8: {TEXT.count('{.mod
 chk(len(re.findall(r"^::: \{#exm-aasl32-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -320,15 +341,15 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Naming sides and angles", "図(a) の題")
+not_in_fig("Naming sides and angles", "図(a) の題")
 chk("$a$ faces $A$" not in FIGSTR, "図(a) から「a faces A」を消した")
 chk("arrowstyle" not in FIGCODE.split("(b) どちらの定理か")[0],
     "図(a) の点線の矢印も消した")
-in_fig("Which rule?", "図(b) の題")
-in_fig("a side and the angle", "図(b) の正弦定理")
-in_fig("facing it: sine rule", "図(b) の正弦定理（続き）")
-in_fig("two sides and the", "図(b) の余弦定理")
-in_fig("angle between them:", "図(b) の余弦定理（続き）")
+not_in_fig("Which rule?", "図(b) の題")
+not_in_fig("a side and the angle", "図(b) の正弦定理")
+not_in_fig("facing it: sine rule", "図(b) の正弦定理（続き）")
+not_in_fig("two sides and the", "図(b) の余弦定理")
+not_in_fig("angle between them:", "図(b) の余弦定理（続き）")
 in_fig("cosine rule", "図(b) の余弦定理（名前）")
 chk(not re.search(r"\d", FIGSTR), "図のラベルに数字がない")
 
@@ -336,11 +357,16 @@ chk(not re.search(r"\d", FIGSTR), "図のラベルに数字がない")
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-2.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-3-1.qmd") < DRAFT.index("aasl-3-2.qmd"), "並びが 3.1 → 3.2")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+DRAFT = None
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/03-geometry/aasl-3-2.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-3-1.qmd") < DRAFT.index("aasl-3-2.qmd"), "並びが 3.1 → 3.2")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("（注）_quarto.yml がないので、登録のチェックは飛ばした")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-2.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -426,7 +452,8 @@ in_text("**この表は公式集にはありません。** Paper 1 は電卓な�
 # --- シラバスは「奨励」------------------------------------------------
 not_in_text("シラバスは、この項目について次のように述べています。",
             "その段落も消した")
-in_text("シラバスが、ラベルを付けた図をかくよう勧めています", "勧めています")
+not_in_text("シラバスが、ラベルを付けた図をかくよう勧めています", "シラバスの言い回しは外し、内容を直接書いた")
+in_text("辺と角に文字を付けた図を、先にかいてください（[第 3 節](#naming)）。", "図をかくことを直接すすめる")
 not_in_text("シラバスは、この項目について次のように求めています。", "「求めています」は消した")
 not_in_text("ラベルを付けた図をかくよう求めています", "「求めています」は消した")
 
@@ -475,7 +502,7 @@ chk(abs(float(sp.acos(sp.Rational(-1, 14))) - 1.6423) < 1e-3,
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -485,19 +512,19 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
 # ══════════════════════════════════════════════════════════
-in_text('辺と、その向かいの角の組を結びつける **sine rule（正弦定理）**の公式は、次のとおりです。', "公式の前置き 1")
-in_text('$2$ 辺とそのあいだの角から残りの辺を求める **cosine rule（余弦定理）**と、それを角について解いた形は、次のとおりです。', "公式の前置き 2")
+in_text('辺と、その向かいの角の組を結びつける **sine rule**（正弦定理）の公式は、次のとおりです。', "公式の前置き 1")
+in_text('$2$ 辺とそのあいだの角から残りの辺を求める **cosine rule**（余弦定理）と、それを角について解いた形は、次のとおりです。', "公式の前置き 2")
 in_text('$2$ 辺とそのあいだの角から、三角形の面積を求める公式は、次のとおりです。', "公式の前置き 3")
 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. sine, cosine and tangent ratios（直角三角形の三角比） {#ratios}',
+in_text('### 1. Right-angled triangle trigonometry（直角三角形の三角比） {#ratios}',
         "見出しの英語: 1. sine, cosine and tangent")
-in_text('### 2. inverse trigonometric ratios（角を求める） {#inverse}', "見出しの英語: 2. inverse trigonometric r")
-in_text('### 4. the sine rule（正弦定理） {#sine-rule}', "見出しの英語: 4. the sine rule（正弦定理）")
-in_text('### 5. the cosine rule（余弦定理） {#cosine-rule}', "見出しの英語: 5. the cosine rule（余弦定理）")
-in_text('### 7. area of a triangle（三角形の面積） {#area}', "見出しの英語: 7. area of a triangle（三角形の")
+in_text('### 2. Inverse trigonometric ratios（三角比から角を求める） {#inverse}', "見出しの英語: 2. Inverse trigonometric ratio")
+in_text('### 4. The sine rule（正弦定理） {#sine-rule}', "見出しの英語: 4. The sine rule（正弦定理）")
+in_text('### 5. The cosine rule（余弦定理） {#cosine-rule}', "見出しの英語: 5. The cosine rule（余弦定理）")
+in_text('### 7. Area of a triangle（三角形の面積） {#area}', "見出しの英語: 7. Area of a triangle（三角形の面積） ")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：第 1 節に hyp / opp / adj の図を足した
@@ -507,7 +534,7 @@ chk(os.path.exists(SVG_C), "図 (c) がある")
 chk(not os.path.exists(SVG_C[:-4] + ".png"), "図 (c) の PNG は消してある")
 in_text("](img/aasl-3-2-idea-c.svg){#fig-aasl32-idea-c", "本文が図 (c) を貼っている")
 in_text("@fig-aasl32-idea-c を見てください。", "図 (c) を参照している")
-in_fig("Naming the sides from $\\theta$", "図 (c) の題")
+not_in_fig("Naming the sides from $\\theta$", "図 (c) の題")
 for _w in ("hypotenuse", "opposite", "adjacent"):
     in_fig(_w, "図 (c) の " + _w)
 in_fig("$\\sin\\theta$ = opp / hyp", "図 (c) の sin")
@@ -518,9 +545,9 @@ in_text("**opposite と adjacent は、どの角から見るかで入れかわ�
 in_text("hypotenuse だけは、どちらの角から見ても同じ辺です。", "斜辺は変わらない")
 in_text("**この $3$ 辺の組み合わせが、$3$ つの比になります。**", "公式の前置き")
 # 図 (c) は第 1 節の中（第 2 節より前）
-chk(TEXT.index("### 1. sine, cosine and tangent ratios")
+chk(TEXT.index("### 1. Right-angled triangle trigonometry")
     < TEXT.index("](img/aasl-3-2-idea-c.svg)")
-    < TEXT.index("### 2. inverse trigonometric ratios"), "図 (c) は第 1 節の中")
+    < TEXT.index("### 2. Inverse trigonometric ratios"), "図 (c) は第 1 節の中")
 # SOH-CAH-TOA の中身
 _t = sp.Symbol("theta")
 chk(sp.simplify(sp.tan(_t) - sp.sin(_t) / sp.cos(_t)) == 0,
@@ -556,8 +583,8 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 # ══════════════════════════════════════════════════════════
 # 2026-10-01 の手直し
 # ══════════════════════════════════════════════════════════
-in_text("辺の長さから角を出すときは、**inverse trigonometric ratios"
-        "（逆の関数）**を使います", "逆の関数に英語を添えた")
+in_text("辺の長さから角を出すときは、**inverse trigonometric ratios**"
+        "（逆三角関数）を使います", "逆三角関数に英語を添えた")
 not_in_text("辺の長さから角を出すときは、**逆の関数**を使います",
             "前の言い方は消した")
 # シラバスの「図をかく」の段落は削除
@@ -568,6 +595,18 @@ not_in_text("つまり、**文章で与えられた問題は、まず図にす�
             "同上")
 not_in_text("**図があると、どの定理を使うかがその場で見えます。**", "同上")
 not_in_text("と、図をかくこと {#area}", "第 7 節の見出しからも外した")
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

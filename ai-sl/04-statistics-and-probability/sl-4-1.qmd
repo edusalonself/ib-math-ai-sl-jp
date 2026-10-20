@@ -11,46 +11,21 @@
 - 外れ値を**捨てるべきか残すべきか**を、問題の文脈から判断できる。
 :::
 
-::: {.callout-important}
-## Formula booklet に載っているもの
-**SL 4.1 の欄はありません。** 公式集の Topic 4 は **4.2 から始まります。**
-
-そこに、この項目で使う式が1つだけ載っています。
-
-$$
-\text{IQR} = Q_3 - Q_1
-$$
-
-**ただし、外れ値の $1.5 \times \text{IQR}$ という決まりは、公式集に載っていません。** シラバスの Guidance 欄にだけ書かれています。**ここは自分で覚えておく必要があります。**
-:::
-
-::: {.callout-warning}
-## Topic 4 に入る前に ── 大事な前提が1つあります
-シラバスの Topic 4 の冒頭に、次の一文があります。
-
-> At SL the data set will be considered to be the population unless otherwise stated.
-
-**SL では、問題に出てくるデータは「母集団そのもの」として扱います。** 「特に断りがなければ」という条件付きです。
-
-いまはピンとこなくて構いません。ただ、これが効いてくる場面が SL 4.3 で来ます。電卓が $\sigma_x$ と $s_x$ の**2種類の標準偏差**を出してくるとき、**どちらを答えに書くか**がこの一文で決まります。
-
-**この項目のうちに、この一文があることだけ覚えておいてください。**
-:::
-
 ## The idea
 
 [Topic 3](../03-geometry-and-trigonometry/sl-3-1.qmd) では、**距離・角度・位置**を使って現実の状況をモデル化しました。Topic 4 では、**集めた data から特徴や関係を読み取り、その結論がどこまで信頼できるか**を考えます。
 
 この項目には、**計算がほとんどありません。** そのかわり、**言葉で説明する設問**がたくさん出ます。AI SL で点差がつくところそのものです。
 
-中身は4つです。
+中身は $5$ つです。
 
 1. **population と sample** ── 誰を調べたいのか、実際に誰を調べたのか
 2. **discrete と continuous** ── データの種類
 3. **5つの sampling technique** ── 標本の取り方
-4. **bias と outlier** ── そのデータは信用できるか
+4. **bias** ── そのデータは信用できるか
+5. **outlier** ── 外れた値をどう扱うか
 
-### 1. population と sample {#population-sample}
+### 1. Population and sample（母集団と標本） {#population-sample}
 
 **population**（母集団）は、**本当に知りたい相手の全部**です。
 
@@ -64,6 +39,8 @@ $$
 | **sample** | 実際に調べた**一部** | ある学校の3年生 $40$ 人 |
 
 : population と sample {#tbl-sl41-pop-sample}
+
+SL では、特に断りがなければ、**問題に出てくるデータは population そのものとして扱います。** この約束は、SL 4.3 で電卓が出す $2$ 種類の **standard deviation**（標準偏差）$\sigma_x$ と $s_x$ の、どちらを答えに書くかを決めるときに使います。
 
 #### なぜ全部調べないのか
 
@@ -81,7 +58,7 @@ $$
 
 「適当に選んだ」という意味ではありません。**「選び方に人の都合が入っていない」**という意味です。ここを取り違えると、次の sampling technique の話が全部ずれます。
 
-### 2. discrete data と continuous data {#discrete-continuous}
+### 2. Discrete and continuous data（離散データと連続データ） {#discrete-continuous}
 
 **discrete data**（離散データ）は**数えるもの**、**continuous data**（連続データ）は**測るもの**です。
 
@@ -109,13 +86,57 @@ $$
 **試験でここが単独で問われることは多くありません。** 迷ったら「**数えているのか、測っているのか**」に戻ってください。
 :::
 
-### 3. 5つの sampling technique {#sampling-methods}
+::: {#exm-sl41-pop}
+[A researcher wants to find the average number of hours per week that students at a school of $1500$ students spend on homework. She asks $60$ students.]{.q-en}
 
-ここがこの項目の中心です。**シラバスに名前が5つ挙がっています。**
+**(a)** [State the population and the sample.]{.q-en}
 
-> Simple random, convenience, systematic, quota and stratified sampling methods.
+**(b)** [State whether the number of hours is discrete or continuous data.]{.q-en}
 
-**この5つだけです。** 他の方法は出ません。
+**(c)** [Give one reason why the researcher did not ask every student.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある研究者が、生徒数 $1500$ 人の学校で、生徒が1週間に宿題に使う平均時間を調べたいと考えています。彼女は $60$ 人に質問しました。
+
+**(a)** 母集団（population）と標本（sample）を答えなさい。
+
+**(b)** その時間数が discrete データか continuous データかを答えなさい。
+
+**(c)** 全員に質問しなかった理由を1つ挙げなさい。
+
+（`State` は「短く答える。理由は不要」、`Give one reason` は「理由を1つ書く」という指示です。）
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** **知りたい相手の全部**が population です（[population と sample](#population-sample)）。
+
+研究者が知りたいのは「この学校の生徒」の宿題時間なので、population は **$1500$ 人全員**です。実際に聞いたのは $60$ 人なので、そちらが sample です。
+
+**「$1500$」「$60$」と数字だけ書かないでください。** 何の $1500$ なのかを言葉で書きます。
+
+**(b)** 時間は**測るもの**です（[discrete と continuous](#discrete-continuous)）。$3$ 時間と $4$ 時間のあいだに $3.5$ 時間も $3.75$ 時間もあります。ですから **continuous** です。
+
+**(c)** 理由は1つで構いません。$1500$ 人に聞くのは時間がかかりすぎる、というのが一番素直です。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** *Population: all $1500$ students at the school. Sample: the $60$ students she asked.*
+
+**(b)** *Continuous.*
+
+**(c)** *Asking all $1500$ students would take too much time.*
+:::
+:::
+:::
+
+### 3. Sampling techniques（5 つの標本の取り方） {#sampling-methods}
+
+**sampling technique**（標本の取り方）は、母集団から標本を選ぶ方法です。ここがこの項目の中心です。出てくるのは次の **$5$ つだけ**で、他の方法は出ません。
 
 | English | 日本語 | どうやるか |
 |---|---|---|
@@ -197,176 +218,6 @@ $1200$ 人から $40$ 人なら $k = 30$ で、**$30$ 人ごとに1人**選び�
 
 **最初の1人は、$1$ から $30$ の中から無作為に決めます。** ここを $1$ 番から始めてしまうと無作為ではなくなります。
 
-### 4. bias（かたより）{#bias}
-
-**bias** は、**標本が母集団を正しく代表していない**ことです。
-
-日本語では「かたより」「偏り」と言います。**「間違い」ではありません。** 計算は正しくても、集め方のせいで結論がずれる、という話です。
-
-#### bias が起きる典型的な場面
-
-- **聞く相手がかたよっている** … 駅前で朝7時に聞けば、通勤する人ばかりになります
-- **答えてくれた人だけを数えている** … アンケートに答える人は、そもそも関心が高い人です
-- **質問の仕方が答えを誘導している**
-- **データが抜けている**（missing data）… 答えなかった人を無視すると、その人たちの意見が消えます
-- **記録の間違い**（errors in the recording of data）… 打ち間違い、単位の取り違え
-
-シラバスにも `Dealing with missing data, errors in the recording of data` と書かれています。**データが手に入った時点で「これは信用できるか」と考える**、というのがこの項目の狙いです。
-
-#### 答案での書き方
-
-`Explain why the sample may be biased` は、**理由を英語の文で書く**設問です。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*The sample is biased because only students at the library were asked, and students who study at the library are likely to study more than average. The sample does not represent all students in the school.*
-:::
-
-（図書館にいた生徒にしか聞いていないので、この標本にはかたよりがあります。図書館で勉強する生徒は平均より勉強時間が長いと考えられます。この標本は学校全体を代表していません。）
-
-**型は2文です。**
-
-1. **なぜかたよるのか**（who was left out / who was over-represented）
-2. **だからどうなるのか**（the sample does not represent …）
-
-**「ランダムじゃないから」だけでは点になりません。** 「誰が抜けているのか」を具体的に書いてください。
-
-### 5. outlier（外れ値）{#outliers}
-
-**quartile**（四分位数）の意味と求め方は、このあとの [SL 4.2](sl-4-2.qmd#cumfreq)・[SL 4.3](sl-4-3.qmd#dispersion) でくわしく学びます。このページでは、**GDC が出した $Q_1$、$Q_3$ をそのまま使い、外れ値の判定のしかたに集中します。**
-
-**outlier** は、**他の値から大きく離れた値**です。
-
-「大きく離れた」の意味を、シラバスがはっきり決めています。
-
-> Outlier is defined as a data item which is more than $1.5 \times$ interquartile range (IQR) from the nearest quartile.
-
-**近いほうの quartile から $1.5 \times \text{IQR}$ より遠い値**、ということです。式にすると次の2本になります。
-
-$$
-x < Q_1 - 1.5 \times \text{IQR} \qquad \text{または} \qquad x > Q_3 + 1.5 \times \text{IQR}
-$$ {#eq-sl41-outlier}
-
-この2つの境目を **fence**（さかい目）と呼ぶことがあります。
-
-::: {.callout-note}
-## $Q_1$、$Q_3$、$\text{IQR}$ がまだ分からない人へ
-$Q_1$（第1四分位数）、$Q_3$（第3四分位数）、$\text{IQR}$（四分位範囲）については、**このあとの [SL 4.2](sl-4-2.qmd#cumfreq) と [SL 4.3](sl-4-3.qmd#dispersion) を参考にしてください。**
-
-- **[SL 4.2](sl-4-2.qmd#cumfreq)** … 累積度数グラフから $Q_1$、$Q_3$ を読み取る方法と、箱ひげ図
-- **[SL 4.3](sl-4-3.qmd#dispersion)** … $\text{IQR}$ が散らばりの尺度として何を表しているか
-
-**いまの段階では、次の2つだけ分かっていれば足ります。**
-
-- $Q_1$ と $Q_3$ は、データを小さい順に並べて**4等分したときの境目**（電卓が出してくれます）
-- $\text{IQR} = Q_3 - Q_1$
-:::
-
-#### 手順は4つです
-
-1. $Q_1$ と $Q_3$ を出す（電卓の One-Variable Statistics）
-2. $\text{IQR} = Q_3 - Q_1$（公式集にあります）
-3. $1.5 \times \text{IQR}$ を計算する
-4. $Q_1$ から引いた値、$Q_3$ に足した値を出して、**その外側にあるデータを探す**
-
-::: {.callout-important}
-## 平均から測るのではありません
-$1.5 \times \text{IQR}$ を測る**起点は $Q_1$ と $Q_3$** です。**平均（mean）ではありません。**
-
-外れ値があると平均そのものが引っぱられてしまうので、起点には使えないのです。$Q_1$ と $Q_3$ は、外れ値があってもほとんど動きません。
-:::
-
-#### 外れ値は、捨てるとはかぎりません
-
-ここが、この項目で一番大事なところです。シラバスにこう書かれています。
-
-> Awareness that, in context, some outliers are a valid part of the sample but some outlying data items may be an error in the sample.
-
-**外れ値には2種類あります。**
-
-| | どういうものか | どうするか |
-|---|---|---|
-| **本物の値** | 珍しいけれど、実際にそうだった | **残す** |
-| **記録の間違い** | 打ち間違い、単位の取り違え | 直すか、**除く** |
-
-: 2種類の外れ値 {#tbl-sl41-outlier-kind}
-
-たとえばクラスの身長に $196$ cm が1つあったとします。**背の高い生徒が実際にいるなら、それは本物**です。捨ててはいけません。
-
-一方、$15$ cm があったら、**$150$ cm の打ち間違い**でしょう。人の身長が $15$ cm ということはありません。
-
-**どちらなのかは、計算では決まりません。** 問題の文脈から判断します。だから `Comment on` や `Explain` で聞かれます。
-
-## Why it works
-
-:::: {.callout-note collapse="true" appearance="simple"}
-## クリックすると開きます
-ここでは、**なぜ $1.5$ 倍なのか**だけを見ておきます。
-
-$\text{IQR}$ は、**まん中の $50\%$ がどれくらいの幅に収まっているか**を表しています。つまり「このデータのふつうのばらつき」の目安です。
-
-その**さらに $1.5$ 倍ぶん外側**まで出たら、さすがに珍しい ── というのが、この決まりの考え方です。
-
-$1.5$ という数字に深い理由はなく、**使いやすいように決められた約束**です。ただ、よくできた数字ではあります。もしデータが normal distribution（正規分布、SL 4.9）に近ければ、この決まりで外れ値になるのは**全体の約 $0.7\%$**、およそ $143$ 個に1個だけです。
-
-**「めったに出ないが、出たときは見に行く価値がある」**という、ちょうどよい厳しさになっています。
-
-なお、**この $0.7\%$ という数字を試験で使うことはありません。** $1.5$ 倍という決まりを正しく使えれば十分です。
-::::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-:::
-
-::: {#exm-sl41-pop}
-[A researcher wants to find the average number of hours per week that students at a school of $1500$ students spend on homework. She asks $60$ students.]{.q-en}
-
-**(a)** [State the population and the sample.]{.q-en}
-
-**(b)** [State whether the number of hours is discrete or continuous data.]{.q-en}
-
-**(c)** [Give one reason why the researcher did not ask every student.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-ある研究者が、生徒数 $1500$ 人の学校で、生徒が1週間に宿題に使う平均時間を調べたいと考えています。彼女は $60$ 人に質問しました。
-
-**(a)** 母集団（population）と標本（sample）を答えなさい。
-
-**(b)** その時間数が discrete データか continuous データかを答えなさい。
-
-**(c)** 全員に質問しなかった理由を1つ挙げなさい。
-
-（`State` は「短く答える。理由は不要」、`Give one reason` は「理由を1つ書く」という指示です。）
-
-</details>
-
----
-
-**(a)** **知りたい相手の全部**が population です（[population と sample](#population-sample)）。
-
-研究者が知りたいのは「この学校の生徒」の宿題時間なので、population は **$1500$ 人全員**です。実際に聞いたのは $60$ 人なので、そちらが sample です。
-
-**「$1500$」「$60$」と数字だけ書かないでください。** 何の $1500$ なのかを言葉で書きます。
-
-**(b)** 時間は**測るもの**です（[discrete と continuous](#discrete-continuous)）。$3$ 時間と $4$ 時間のあいだに $3.5$ 時間も $3.75$ 時間もあります。ですから **continuous** です。
-
-**(c)** 理由は1つで構いません。$1500$ 人に聞くのは時間がかかりすぎる、というのが一番素直です。
-
-::: {.callout-note}
-## 解答例（答案用紙にはこう書く）
-**(a)** *Population: all $1500$ students at the school. Sample: the $60$ students she asked.*
-
-**(b)** *Continuous.*
-
-**(c)** *Asking all $1500$ students would take too much time.*
-:::
-:::
-
 ::: {#exm-sl41-methods}
 [For each of the following, state the sampling method used.]{.q-en}
 
@@ -393,7 +244,8 @@ $1.5$ という数字に深い理由はなく、**使いやすいように決め
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 [5つの方法の表](#sampling-methods)と見くらべながら読んでください。
 
@@ -418,6 +270,7 @@ $1.5$ という数字に深い理由はなく、**使いやすいように決め
 **(c)** *Systematic sampling.*
 
 **(d)** *Quota sampling.*
+:::
 :::
 :::
 
@@ -451,7 +304,8 @@ $1.5$ という数字に深い理由はなく、**使いやすいように決め
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** stratified sampling は、**もとの割合をそのまま使います**（[計算のしかた](#stratified-calc)）。
 
@@ -491,6 +345,106 @@ Check: $20 + 24 + 16 = 60$ ✓
 **(b)** *A stratified sample includes students from each grade in the same proportion as the whole school, so every grade is represented fairly. A convenience sample would only include students who happened to be nearby, which may over-represent one grade.*
 :::
 :::
+:::
+
+### 4. Bias（かたより） {#bias}
+
+**bias** は、**標本が母集団を正しく代表していない**ことです。
+
+日本語では「かたより」「偏り」と言います。**「間違い」ではありません。** 計算は正しくても、集め方のせいで結論がずれる、という話です。
+
+#### bias が起きる典型的な場面
+
+- **聞く相手がかたよっている** … 駅前で朝7時に聞けば、通勤する人ばかりになります
+- **答えてくれた人だけを数えている** … アンケートに答える人は、そもそも関心が高い人です
+- **質問の仕方が答えを誘導している**
+- **missing data**（データが抜けている）… 答えなかった人を無視すると、その人たちの意見が消えます
+- **errors in the recording of data**（記録の間違い）… 打ち間違い、単位の取り違え
+
+抜けたデータや記録の間違いも、かたよりの原因になります。**データが手に入った時点で「これは信用できるか」と考える**ことが大切です。
+
+#### 答案での書き方
+
+`Explain why the sample may be biased` は、**理由を英語の文で書く**設問です。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The sample is biased because only students at the library were asked, and students who study at the library are likely to study more than average.*
+
+*The sample does not represent all students in the school.*
+:::
+
+（図書館にいた生徒にしか聞いていないので、この標本にはかたよりがあります。図書館で勉強する生徒は平均より勉強時間が長いと考えられます。この標本は学校全体を代表していません。）
+
+**型は2文です。**
+
+1. **なぜかたよるのか**（who was left out / who was over-represented）
+2. **だからどうなるのか**（the sample does not represent …）
+
+**「ランダムじゃないから」だけでは点になりません。** 「誰が抜けているのか」を具体的に書いてください。
+
+### 5. Outliers（外れ値） {#outliers}
+
+**outlier**（外れ値）は、**他の値から大きく離れた値**です。
+
+**quartile**（四分位数）の意味と求め方は、このあとの [SL 4.2](sl-4-2.qmd#cumfreq)・[SL 4.3](sl-4-3.qmd#dispersion) でくわしく学びます。このページでは、**GDC が出した $Q_1$、$Q_3$ をそのまま使い、外れ値の判定のしかたに集中します。**
+
+「大きく離れた」の意味は、はっきり決まっています。**近いほうの quartile から $1.5 \times \text{IQR}$ より遠い値**を外れ値とします。式にすると次の2本になります。
+
+$$
+x < Q_1 - 1.5 \times \text{IQR} \qquad \text{または} \qquad x > Q_3 + 1.5 \times \text{IQR}
+$$ {#eq-sl41-outlier}
+
+この2つの境目を **fence**（さかい目）と呼ぶことがあります。
+
+$\text{IQR} = Q_3 - Q_1$ は公式集の **SL 4.2** の欄にあります（SL 4.1 の欄はありません）。ですが、**この $1.5 \times \text{IQR}$ の決まりは公式集に載っていないので、覚えておく必要があります。**
+
+::: {.callout-note}
+## $Q_1$、$Q_3$、$\text{IQR}$ がまだ分からない人へ
+$Q_1$（第1四分位数）、$Q_3$（第3四分位数）、$\text{IQR}$（**interquartile range**（四分位範囲））については、**このあとの [SL 4.2](sl-4-2.qmd#cumfreq) と [SL 4.3](sl-4-3.qmd#dispersion) を参考にしてください。**
+
+- **[SL 4.2](sl-4-2.qmd#cumfreq)** … **cumulative frequency**（累積度数）グラフから $Q_1$、$Q_3$ を読み取る方法と、**box and whisker diagram**（箱ひげ図）
+- **[SL 4.3](sl-4-3.qmd#dispersion)** … $\text{IQR}$ が散らばりの尺度として何を表しているか
+
+**いまの段階では、次の2つだけ分かっていれば足ります。**
+
+- $Q_1$ と $Q_3$ は、データを小さい順に並べて**4等分したときの境目**（電卓が出してくれます）
+- $\text{IQR} = Q_3 - Q_1$
+:::
+
+#### 手順は4つです
+
+1. $Q_1$ と $Q_3$ を出す（電卓の One-Variable Statistics）
+2. $\text{IQR} = Q_3 - Q_1$（公式集にあります）
+3. $1.5 \times \text{IQR}$ を計算する
+4. $Q_1$ から引いた値、$Q_3$ に足した値を出して、**その外側にあるデータを探す**
+
+::: {.callout-important}
+## 平均から測るのではありません
+$1.5 \times \text{IQR}$ を測る**起点は $Q_1$ と $Q_3$** です。**平均（mean）ではありません。**
+
+外れ値があると平均そのものが引っぱられてしまうので、起点には使えないのです。$Q_1$ と $Q_3$ は、外れ値があってもほとんど動きません。
+:::
+
+#### 外れ値は、捨てるとはかぎりません
+
+ここが、この項目で一番大事なところです。
+
+**外れ値には2種類あります。**
+
+| | どういうものか | どうするか |
+|---|---|---|
+| **本物の値** | 珍しいけれど、実際にそうだった | **残す** |
+| **記録の間違い** | 打ち間違い、単位の取り違え | 直すか、**除く** |
+
+: 2種類の外れ値 {#tbl-sl41-outlier-kind}
+
+たとえばクラスの身長に $196$ cm が1つあったとします。**背の高い生徒が実際にいるなら、それは本物**です。捨ててはいけません。
+
+一方、$15$ cm があったら、**$150$ cm の打ち間違い**でしょう。人の身長が $15$ cm ということはありません。
+
+**どちらなのかは、計算では決まりません。** 問題の文脈から判断します。だから `Comment on` や `Explain` で聞かれます。
 
 ::: {#exm-sl41-outlier}
 [The waiting times, in minutes, of $11$ patients at a clinic are]{.q-en}
@@ -520,7 +474,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 電卓の One-Variable Statistics に入れると、$Q_1$ と $Q_3$ が出ます（[GDCの使い方](#onevar)）。**この $2$ つが、(b) で使う途中結果**です。
 
@@ -569,6 +524,7 @@ $$Q_1 - 15 = -8, \qquad Q_3 + 15 = 32$$
 *$45 > 32$, so $45$ is an outlier. No other value lies outside these limits.*
 :::
 :::
+:::
 
 ::: {#exm-sl41-judge}
 [A teacher records the heights, in cm, of the students in her class. Two of the recorded values, $15$ and $196$, are identified as outliers.]{.q-en}
@@ -586,7 +542,8 @@ $$Q_1 - 15 = -8, \qquad Q_3 + 15 = 32$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **計算する問題ではありません。** [外れ値には2種類ある](#outliers)という話が、そのまま問われています。
 
@@ -603,6 +560,24 @@ $$Q_1 - 15 = -8, \qquad Q_3 + 15 = 32$$
 *$196$ cm is unusually tall but it is a possible height, so it is likely to be a valid part of the sample. It should be kept.*
 :::
 :::
+:::
+
+## Why it works
+
+:::: {.callout-note collapse="true" appearance="simple"}
+## クリックすると開きます
+ここでは、**なぜ $1.5$ 倍なのか**だけを見ておきます。
+
+$\text{IQR}$ は、**まん中の $50\%$ がどれくらいの幅に収まっているか**を表しています。つまり「このデータのふつうのばらつき」の目安です。
+
+その**さらに $1.5$ 倍ぶん外側**まで出たら、さすがに珍しい ── というのが、この決まりの考え方です。
+
+$1.5$ という数字に深い理由はなく、**使いやすいように決められた約束**です。ただ、よくできた数字ではあります。もしデータが normal distribution（正規分布、SL 4.9）に近ければ、この決まりで外れ値になるのは**全体の約 $0.7\%$**、およそ $143$ 個に1個だけです。
+
+**「めったに出ないが、出たときは見に行く価値がある」**という、ちょうどよい厳しさになっています。
+
+なお、**この $0.7\%$ という数字を試験で使うことはありません。** $1.5$ 倍という決まりを正しく使えれば十分です。
+::::
 
 ## Common errors
 
@@ -660,7 +635,7 @@ $1.5 \times \text{IQR}$ で**必ず計算してください。**
 
 ## Using your GDC (TI-Nspire CX II)
 
-### データを入れる ── Lists & Spreadsheet {#onevar}
+### Entering data（データを入れる ── Lists & Spreadsheet） {#onevar}
 
 Topic 4 では、このページをずっと使います。**まず開き方を手に覚えさせてください。**
 
@@ -679,7 +654,7 @@ ctrl + doc → Add Lists & Spreadsheet
 **必ず一番上のグレーの行に名前を入れてから**、データを打ち込んでください。
 :::
 
-### $Q_1$ と $Q_3$ を出す ── One-Variable Statistics
+### One-variable statistics（$Q_1$ と $Q_3$ を出す） {#gdc-quartiles}
 
 ```
 menu → Statistics → Stat Calculations → One-Variable Statistics
@@ -703,10 +678,10 @@ menu → Statistics → Stat Calculations → One-Variable Statistics
 ## $\sigma_x$ と $s_x$ が並んで出てきます
 同じ画面に $\sigma_x$ と $s_x$ という**2つの標準偏差**が出ます。この項目では使いませんが、**SL 4.3 でどちらを書くかが問われます。**
 
-このページの冒頭に書いた `the data set will be considered to be the population` が、そこで効いてきます。**いまは「2つ出てくる」ことだけ見ておいてください。**
+[第1節](#population-sample)に書いた「SL ではデータを population として扱う」という約束が、そこで効いてきます。**いまは「2つ出てくる」ことだけ見ておいてください。**
 :::
 
-### 外れ値を目で確かめる ── 箱ひげ図
+### Box plots（外れ値を箱ひげ図で確かめる） {#gdc-boxplot}
 
 計算した結果が合っているかは、**箱ひげ図で見ると早い**です。
 
@@ -724,7 +699,7 @@ TI-Nspire は**外れ値を箱ひげから離れた点として表示します�
 
 **ただし答案には、計算のほうを書きます。** グラフは検算に使うものです。
 
-### 無作為に選ぶ ── `randInt`
+### Random numbers（`randInt` で無作為に選ぶ） {#gdc-randint}
 
 simple random sampling を実際にやってみることもできます。Calculator ページで、
 
@@ -742,12 +717,6 @@ $1$ から $600$ までの整数を $30$ 個返します。名簿に番号を振
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 

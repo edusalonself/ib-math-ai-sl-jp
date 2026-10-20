@@ -20,8 +20,8 @@ def save(fig, name):
 
 
 # ══════════════ 1. order（行×列）と element ══════════════
-fig, ax = plt.subplots(figsize=(7.6, 4.2))
-blank(ax, (-1.0, 9.2), (-1.9, 3.4))
+fig, ax = plt.subplots(figsize=(5.4, 3.5))
+blank(ax, (0.8, 7.0), (-1.1, 3.25))
 
 rows = [["1", "2", "3"], ["4", "5", "6"]]
 c, (x0, y0, w, h) = matrix(ax, 3.0, 1.0, rows, cw=0.86, ch=0.72, fs=15)
@@ -38,24 +38,22 @@ label(ax, c[(0, 1)][0], y0 + h + 0.40, "column 2", color=GREEN)
 
 # element
 ax.plot(*c[(1, 2)], "o", ms=22, mfc="none", mec=GOLD, mew=2.0, zorder=8)
-arrow(ax, (7.05, -0.80), (c[(1, 2)][0] + 0.06, c[(1, 2)][1] - 0.36),
+arrow(ax, (5.45, -0.60), (c[(1, 2)][0] + 0.06, c[(1, 2)][1] - 0.36),
       color=GOLD, rad=0.24)
-label(ax, 7.35, -0.95, "element in row 2, column 3", color=GOLD, ha="left")
+label(ax, 5.6, -0.72, "element", color=GOLD, ha="left")
 
-label(ax, 3.0, 2.85, "this matrix has order  $2 \\times 3$", fs=14)
-label(ax, 3.0, -1.55, "ORDER is always  rows $\\times$ columns  —  in that order",
-      color=GOLD, fs=12.5)
+label(ax, 3.0, 2.85, "order  $2 \\times 3$", fs=14)
 fig.tight_layout()
 save(fig, "ahl-1-14-order.svg")
 
 
 # ══════════════ 2. かけ算：内側がそろうこと ══════════════
-fig, axs = plt.subplots(2, 1, figsize=(8.0, 5.6),
-                        gridspec_kw={"height_ratios": [0.80, 1.30]})
+fig, axs = plt.subplots(2, 1, figsize=(7.4, 4.4),
+                        gridspec_kw={"height_ratios": [0.80, 0.80]})
 
 # --- 上：次数の合わせ方 ---
 ax = axs[0]
-blank(ax, (-0.4, 10.4), (-1.25, 2.30))
+blank(ax, (-0.4, 9.6), (-1.25, 2.30))
 ax.set_aspect("auto")
 for x, t in ((1.4, "$2 \\times 3$"), (4.2, "$3 \\times 2$")):
     ax.text(x, 0.9, t, fontsize=20, ha="center", va="center", color=INK)
@@ -66,14 +64,14 @@ ax.annotate("", xy=(3.55, 1.45), xytext=(2.15, 1.45),
             arrowprops=dict(arrowstyle="<|-|>", color=GREEN, lw=1.8,
                             connectionstyle="arc3,rad=-0.55",
                             mutation_scale=12))
-ax.text(2.85, 2.02, "these MUST be equal", fontsize=12.5, ha="center",
+ax.text(2.85, 2.12, "equal", fontsize=12.5, ha="center",
         va="center", color=GREEN)
 
 ax.annotate("", xy=(4.85, 0.15), xytext=(0.75, 0.15),
             arrowprops=dict(arrowstyle="<|-|>", color=ACC, lw=1.8,
                             connectionstyle="arc3,rad=0.30",
                             mutation_scale=12))
-ax.text(2.8, -0.85, "the OUTER two give the answer's order", fontsize=12.5,
+ax.text(2.8, -0.85, "answer's order", fontsize=12.5,
         ha="center", va="center", color=ACC)
 
 ax.text(6.15, 0.9, "$\\Rightarrow$", fontsize=18, ha="center", va="center",
@@ -83,7 +81,7 @@ ax.text(7.6, 0.9, "$2 \\times 2$", fontsize=20, ha="center", va="center",
 
 # --- 下：行×列 ---
 ax = axs[1]
-blank(ax, (-0.6, 11.0), (-0.75, 2.80))
+blank(ax, (-0.6, 10.0), (0.05, 1.95))
 
 A = [["1", "2"], ["3", "4"]]
 B = [["5", "6"], ["7", "8"]]
@@ -103,23 +101,19 @@ ax.plot([cB[(0, 0)][0], cB[(0, 0)][0]], [by0 - 0.10, by0 + bh + 0.10],
         color=GREEN, lw=2.4, alpha=0.30, zorder=3)
 ax.plot(*cC[(0, 0)], "o", ms=24, mfc="none", mec=GOLD, mew=1.8, zorder=8)
 
-ax.text(8.9, 1.55, "row 1 of the first", fontsize=12, ha="center",
+ax.text(8.6, 1.55, "row 1", fontsize=12, ha="center",
         va="center", color=ACC)
-ax.text(8.9, 1.10, "$\\times$  column 1 of the second", fontsize=12,
+ax.text(8.6, 1.10, "$\\times$  column 1", fontsize=12,
         ha="center", va="center", color=GREEN)
-ax.text(8.9, 0.55, "$1(5) + 2(7) = 19$", fontsize=13, ha="center",
-        va="center", color=GOLD)
-
-ax.text(5.2, 2.35, "go ACROSS the row, DOWN the column, "
-                   "multiply and add", fontsize=12.5, ha="center",
+ax.text(8.6, 0.55, "$1(5) + 2(7) = 19$", fontsize=13, ha="center",
         va="center", color=GOLD)
 fig.tight_layout()
 save(fig, "ahl-1-14-multiply.svg")
 
 
 # ══════════════ 3. AB と BA は違う ══════════════
-fig, ax = plt.subplots(figsize=(8.6, 3.5))
-blank(ax, (-0.6, 11.95), (-1.35, 2.55))
+fig, ax = plt.subplots(figsize=(8.6, 2.4))
+blank(ax, (-0.6, 11.95), (0.0, 2.45))
 
 A = [["1", "2"], ["3", "4"]]
 B = [["5", "6"], ["7", "8"]]
@@ -141,16 +135,13 @@ matrix(ax, 10.55, 0.9, [["23", "34"], ["31", "46"]], cw=0.78, ch=0.58, fs=13,
        color=GREEN, bracket=GREEN)
 ax.text(7.8, 2.05, "$BA$", fontsize=15, ha="center", va="center", color=INK)
 
-ax.text(5.6, -1.00, "with numbers  $3 \\times 5 = 5 \\times 3$,  "
-                    "but with matrices the ORDER matters",
-        fontsize=12.5, ha="center", va="center", color=GOLD)
 fig.tight_layout()
 save(fig, "ahl-1-14-noncomm.svg")
 
 
 # ══════════════ 4. 2×2 の逆行列の作り方 ══════════════
-fig, ax = plt.subplots(figsize=(8.4, 4.2))
-blank(ax, (-0.7, 9.9), (-2.35, 2.30))
+fig, ax = plt.subplots(figsize=(7.8, 3.3))
+blank(ax, (-0.1, 9.0), (-1.45, 2.30))
 
 # 左：もとの行列（a,d を赤、b,c を緑）
 matrix(ax, 1.0, 0.85, [["$a$", "$b$"], ["$c$", "$d$"]],
@@ -173,21 +164,18 @@ ax.text(4.35, 1.85, "$A^{-1}$", fontsize=15, ha="center", va="center",
         color=INK)
 
 # 説明は矢印を交差させず、下に2行だけ
-ax.text(2.65, -0.55, "$a$ and $d$  swap places", fontsize=12.5,
+ax.text(2.65, -0.55, "$a$, $d$: swap", fontsize=12.5,
         ha="center", va="center", color=ACC)
-ax.text(2.65, -1.10, "$b$ and $c$  change sign, stay put", fontsize=12.5,
+ax.text(2.65, -1.10, "$b$, $c$: change sign", fontsize=12.5,
         ha="center", va="center", color=GREEN)
 
-ax.text(4.6, -1.85, "if  $\\det A = 0$  there is NO inverse  "
-                    "(the matrix is SINGULAR)",
-        fontsize=12.5, ha="center", va="center", color=GOLD)
 fig.tight_layout()
 save(fig, "ahl-1-14-inverse.svg")
 
 
 # ══════════════ 5. Ax = b を解く ══════════════
-fig, ax = plt.subplots(figsize=(8.2, 4.5))
-blank(ax, (-0.6, 10.0), (-3.05, 3.35))
+fig, ax = plt.subplots(figsize=(6.4, 3.2))
+blank(ax, (-0.1, 7.9), (-1.15, 3.35))
 ax.set_aspect("auto")
 
 ax.text(0.2, 2.6, "$3x + y = 11$", fontsize=14, ha="left", va="center")
@@ -207,17 +195,12 @@ ax.text(6.9, 3.05, "$\\mathbf{b}$", fontsize=13, ha="center", color=GREEN)
 ax.text(4.7, 1.05, "$A\\mathbf{x} = \\mathbf{b}$", fontsize=18, ha="center",
         va="center", color=INK)
 arrow(ax, (4.7, 0.60), (4.7, -0.15), color=GOLD, lw=1.8)
-ax.text(5.05, 0.22, "multiply both sides by $A^{-1}$ ON THE LEFT",
+ax.text(5.05, 0.22, "$A^{-1}\\times$ (left)",
         fontsize=12, ha="left", va="center", color=GOLD)
 
 ax.text(4.7, -0.70, "$\\mathbf{x} = A^{-1}\\mathbf{b}$", fontsize=18,
         ha="center", va="center", color=ACC)
 
-ax.text(4.7, -1.85, "$A^{-1}$ must go on the LEFT of $\\mathbf{b}$  —  "
-                    "$\\mathbf{b}A^{-1}$ is not even defined",
-        fontsize=12.5, ha="center", va="center", color=GOLD)
-ax.text(4.7, -2.60, "this works only when $\\det A \\neq 0$",
-        fontsize=12, ha="center", va="center", color=GREY)
 fig.tight_layout()
 save(fig, "ahl-1-14-solve.svg")
 

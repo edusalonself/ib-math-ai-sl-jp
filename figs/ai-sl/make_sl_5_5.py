@@ -44,8 +44,8 @@ def curved(ax, p, q, rad=0.35, color=ACC, lw=2.0):
 
 
 # ══════════════ 1. 積分は微分の逆 ══════════════
-fig, ax = plt.subplots(figsize=(7.2, 3.5))
-blank(ax, ylim=(0.0, 1.0))
+fig, ax = plt.subplots(figsize=(7.2, 3.1))
+blank(ax, ylim=(0.12, 1.0))
 
 ax.text(0.22, 0.55, r"$x^{3}$", fontsize=32, ha="center", va="center")
 ax.text(0.78, 0.55, r"$3x^{2}$", fontsize=32, ha="center", va="center")
@@ -57,8 +57,6 @@ ax.text(0.50, 0.94, "differentiate  (SL 5.3)", color=ACC, fontsize=13,
 curved(ax, (0.70, 0.42), (0.30, 0.42), rad=-0.32, color=GREEN)
 ax.text(0.50, 0.20, "integrate  (SL 5.5)", color=GREEN, fontsize=13,
         ha="center", va="center", zorder=9, bbox=BOX)
-ax.text(0.50, 0.02, r"but $x^{3}+1$ and $x^{3}-5$ also differentiate to $3x^{2}$ ...",
-        color=GOLD, fontsize=11.5, ha="center", va="center", zorder=9)
 
 ax.set_xlim(0.06, 0.94)
 fig.tight_layout()
@@ -77,11 +75,11 @@ ax.annotate("", xy=(0.46, 0.62), xytext=(0.31, 0.62),
             arrowprops=dict(arrowstyle="-|>", color=INK, lw=2.2))
 
 curved(ax, (0.245, 0.78), (0.655, 0.83), rad=-0.36, color=ACC)
-ax.text(0.44, 0.965, "1.  add $1$ to the power:  $4+1=5$",
+ax.text(0.44, 0.965, "$4+1=5$",
         color=ACC, fontsize=12, ha="center", va="center", zorder=9, bbox=BOX)
 
 curved(ax, (0.245, 0.47), (0.660, 0.47), rad=0.26, color=GREEN)
-ax.text(0.45, 0.235, "2.  divide by the new power:  $\\div\\, 5$",
+ax.text(0.45, 0.30, "$\\div\\, 5$",
         color=GREEN, fontsize=12, ha="center", va="center", zorder=9, bbox=BOX)
 
 ax.text(0.5, 0.06, r"$\int ax^{n}\,dx = \frac{a\,x^{\,n+1}}{n+1}+C, \quad n \neq -1$",
@@ -92,7 +90,7 @@ plt.close(fig)
 
 
 # ══════════════ 3. +C と boundary condition ══════════════
-fig, axs = plt.subplots(1, 2, figsize=(9.8, 4.3))
+fig, axs = plt.subplots(1, 2, figsize=(9.4, 4.0))
 
 xs = np.linspace(-2.6, 2.6, 400)
 
@@ -106,12 +104,8 @@ for a in (1.4,):
                                        2 * a * (a + 0.55 - a) + a * a + c],
                 color=ACC, lw=2.0, zorder=6)
         ax.plot([a], [a * a + c], "o", color=INK, ms=4.5, zorder=8)
-ax.text(-2.75, 9.4, "all have the same gradient\nat every $x$",
-        color=ACC, fontsize=11.5, ha="left", va="center", zorder=10, bbox=BOX)
 ax.text(-2.75, -2.5, r"$y=x^{2}+C$", fontsize=14, ha="left", va="center",
         zorder=10, bbox=BOX)
-ax.set_title("without a condition: a whole family", fontsize=12, color=INK,
-             pad=8)
 
 ax = axs[1]
 axes(ax, (-2.9, 2.9), (-3.4, 10.4), 1, 2)
@@ -123,9 +117,6 @@ ax.text(1.85, 8.3, "$(2,\\,7)$", color=ACC, fontsize=12.5, ha="right",
         va="bottom", zorder=10, bbox=BOX)
 ax.text(-2.75, -2.5, r"$y=x^{2}+3$", color=LINE, fontsize=14, ha="left",
         va="center", zorder=10, bbox=BOX)
-ax.text(-2.75, 9.4, "one point picks out\none curve", color=ACC,
-        fontsize=11.5, ha="left", va="center", zorder=10, bbox=BOX)
-ax.set_title("with $y=7$ when $x=2$: just one", fontsize=12, color=INK, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-5-plusc.svg"), bbox_inches="tight")
@@ -159,8 +150,8 @@ plt.close(fig)
 
 
 # ══════════════ 5. 変化率のグラフの面積＝合計 ══════════════
-fig, ax = plt.subplots(figsize=(7.2, 4.6))
-axes(ax, (-1.2, 21.5), (-1.6, 14.5), 2, 2,
+fig, ax = plt.subplots(figsize=(7.2, 4.2))
+axes(ax, (-1.2, 21.5), (-1.6, 12.8), 2, 2,
      xlab="$t$ (minutes)", ylab="", ypad=6)
 ts = np.linspace(0, 20, 300)
 ax.plot(ts, 12 - 0.5 * ts, color=LINE, lw=2.8, zorder=6)
@@ -170,13 +161,11 @@ ax.fill_between(sh, 0, 12 - 0.5 * sh, color=GREEN, alpha=0.20, zorder=2)
 ax.plot([10, 10], [0, 7], color=GREEN, lw=1.8, zorder=5)
 ax.text(10, -0.7, "$t=10$", color=GREEN, fontsize=11.5, ha="center", va="top",
         zorder=10, bbox=BOX)
-ax.text(4.6, 4.4, "area $=$ total litres\nin the first $10$ minutes",
+ax.text(4.6, 4.4, "total litres",
         color=INK, fontsize=11.5, ha="center", va="center", zorder=10,
         bbox=BOX)
 ax.text(20.9, 10.4, "rate of flow\n(litres per minute)", color=LINE,
         fontsize=11.5, ha="right", va="center", zorder=10, bbox=BOX)
-ax.text(0.4, 13.4, "the graph shows a RATE; the area shows the TOTAL",
-        fontsize=12, ha="left", va="center", color=GOLD, zorder=10, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-5-rate.svg"), bbox_inches="tight")
 plt.close(fig)

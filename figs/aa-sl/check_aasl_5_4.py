@@ -47,7 +47,29 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
 
-BODY = TEXT.split("## Worked examples")[0]
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
+
+
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 
 def not_in_body(sub, msg=""):
@@ -76,7 +98,7 @@ chk(TEXT.startswith("---\nsidebar: aa-sl\n---\n"), "front matter")
 in_text("# SL 5.4 — Tangents and normals（接線と法線） {#sec-aasl-5-4}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
@@ -94,7 +116,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + Paper 1）")
 chk(TEXT.count("{.callout-important}") == 0,
     "callout-important 0（5.4 に Topic 5 の公式集の欄はない）")
@@ -120,7 +142,7 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-5-4-idea-a.svg){#fig-aasl54-idea-a width=100%}", "図 (a) の埋め込み")
+in_text("(img/aasl-5-4-idea-a.svg){#fig-aasl54-idea-a width=85%}", "図 (a) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-5-4-idea.svg")),
     "分割前の SVG は消してある")
 in_text("@fig-aasl54-idea-a", "図 (a) の参照")
@@ -154,7 +176,9 @@ for _w in ("maximum", "minimum", "極大", "極小", "変曲点", "optimi"):
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('"The tangent and the normal at $P$"', "図 (a) の題")
+not_in_fig('"The tangent and the normal at $P$"', "図 (a) の題は外した")
+not_in_fig("gradient of tangent", "図 (a) の説明文は外した")
+not_in_fig("gradient of normal", "図 (a) の説明文は外した")
 in_fig('"tangent"', "図 (a) の接線ラベル")
 in_fig('"normal"', "図 (a) の法線ラベル")
 # 図の接線と法線が本当に垂直か
@@ -398,7 +422,7 @@ chk("**かけ算の形にすると、点そのもの（$x = x_{1}$）もふく�
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -423,12 +447,12 @@ in_text('- 接線が水平なとき、法線が縦の直線 $x = a$ になるこ
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：節の見出しに英語を添える（方針 第 17 節）
 # ══════════════════════════════════════════════════════════
-for _h in ("### 1. gradient of the tangent（接線の傾き） {#gradient}",
-           "### 2. equation of the tangent（接線の方程式） {#tangent}",
-           "### 3. normal（法線）とは {#normalidea}",
-           "### 4. gradient of the normal（法線の傾き） {#normalgrad}",
-           "### 5. equation of the normal（法線の方程式） {#normaleq}",
-           "### 6. horizontal tangent（傾きが $0$ のとき） {#special}"):
+for _h in ("### 1. Gradient of the tangent（接線の傾き） {#gradient}",
+           "### 2. Equation of the tangent（接線の方程式） {#tangent}",
+           "### 3. The normal（法線とは） {#normalidea}",
+           "### 4. Gradient of the normal（法線の傾き） {#normalgrad}",
+           "### 5. Equation of the normal（法線の方程式） {#normaleq}",
+           "### 6. Horizontal tangent（傾きが $0$ のとき） {#special}"):
     in_text(_h, "見出しの英語: " + _h[4:])
 for _h in ("### 1. 接線の傾き", "### 2. 接線の方程式", "### 3. 法線とは",
            "### 4. 法線の傾き", "### 5. 法線の方程式", "### 6. 手順",
@@ -436,7 +460,8 @@ for _h in ("### 1. 接線の傾き", "### 2. 接線の方程式", "### 3. 法線
     not_in_text(_h, "前の見出しは消した: " + _h[4:])
 # どの見出しも 英語（日本語） の形（③ の 日本語（英語） は使っていない）
 for _n, _line in re.findall(r"^### (\d)\. (.*)$", TEXT, re.M):
-    chk(re.match(r"^[a-z]", _line), "見出し %s は英語で始まる: %s" % (_n, _line))
+    chk(re.match(r"^[A-Z][^（]*（[^（）]*）( \{#[a-z-]+\})?$", _line),
+        "見出し %s は「English（日本語）」の形（英語は大文字で始まる）: %s" % (_n, _line))
 
 
 
@@ -462,8 +487,8 @@ in_text("**$x_{1}$ と $y_{1}$ は点の座標、$m$ は傾きです。** 点は
 in_text("**答えは $y = \\ldots$ の形に整理します。** "
         "問題文が別の形を指定していれば、それに合わせます。",
         "第 2 節: 答えの形")
-_i2 = TEXT.index("### 2. equation of the tangent（接線の方程式） {#tangent}")
-_i3 = TEXT.index("### 3. normal（法線）とは {#normalidea}")
+_i2 = TEXT.index("### 2. Equation of the tangent（接線の方程式） {#tangent}")
+_i3 = TEXT.index("### 3. The normal（法線とは） {#normalidea}")
 _s2 = TEXT[_i2:_i3]
 for _s in ("入れるものは $3$ つです", "点は $f$ から", "答えは $y = \\ldots$ の形"):
     chk(_s in _s2, "第 2 節の中にある: " + _s)
@@ -474,7 +499,7 @@ not_in_text("#steps", "#steps のアンカーとリンクは消した")
 not_in_text("{#tbl-aasl54-steps}", "手順の表は消した")
 not_in_text("$3$ 歩で書けます", "3 歩の言い方は消した")
 not_in_text("### 7.", "節は 6 つ")
-in_text("### 6. horizontal tangent（傾きが $0$ のとき） {#special}",
+in_text("### 6. Horizontal tangent（傾きが $0$ のとき） {#special}",
         "傾きが 0 のときは第 6 節")
 chk(TEXT.count("[第 6 節](#special)") == 5, "第 6 節への参照 5 件")
 chk(TEXT.count("[第 2 節](#tangent)") >= 5, "第 2 節への参照 5 件以上")
@@ -497,6 +522,16 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

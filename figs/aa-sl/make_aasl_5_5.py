@@ -43,8 +43,6 @@ fig2, ax2 = plt.subplots(figsize=(5.8, 5.0))
 # ══════════════════════════════════════════════════════════
 # (a) 同じ導関数をもつ曲線は、縦にずれて何本もある
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Why the constant is needed", fontsize=11, color=INK,
-              loc="left", pad=12)
 
 T = np.linspace(-1.6, 1.6, 300)
 
@@ -54,7 +52,7 @@ def g(t):
 
 
 ax1.set_xlim(-2.15, 2.75)
-ax1.set_ylim(-4.05, 3.35)
+ax1.set_ylim(-3.30, 3.35)
 ax1.axis("off")
 ax1.plot([-2.0, 2.45], [0, 0], color=GREY, linewidth=1.0)
 ax1.plot([0, 0], [-3.15, 3.05], color=GREY, linewidth=1.0)
@@ -83,8 +81,6 @@ ax1.text(_xc + 0.12, g(1.6), "$+C$", fontsize=11, color=GREY, ha="left",
 # ══════════════════════════════════════════════════════════
 # (b) 面積と定積分
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Area under a curve that stays above the axis", fontsize=11,
-              color=INK, loc="left", pad=12)
 
 U = np.linspace(0.15, 4.6, 400)
 
@@ -95,7 +91,7 @@ def h(t):
 
 ax2.plot(U, h(U), color=ACCENT, linewidth=2.0)
 ax2.set_xlim(-0.55, 5.3)
-ax2.set_ylim(-1.05, 4.3)
+ax2.set_ylim(-0.60, 4.3)
 ax2.axis("off")
 ax2.plot([-0.35, 5.1], [0, 0], color=GREY, linewidth=1.0)
 ax2.plot([0, 0], [0, 4.0], color=GREY, linewidth=1.0)
@@ -115,8 +111,6 @@ ax2.text(4.75, h(4.55) + 0.15, "$y = f(x)$", fontsize=10.5, color=ACCENT,
          ha="right")
 ax2.text((AA + BB) / 2, 0.68, "area", fontsize=11, color=INK, ha="center")
 
-ax2.text(-0.35, -0.92, r"$A = \int_{a}^{b} y \, dx$   when $f(x) > 0$ "
-         "between $a$ and $b$", fontsize=11.5, color=ACCENT)
 
 for _fig, _name in ((fig1, "aasl-5-5-idea-a.svg"), (fig2, "aasl-5-5-idea-b.svg")):
     _fig.tight_layout()

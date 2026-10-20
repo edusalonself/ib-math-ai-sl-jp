@@ -48,6 +48,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 
 M = sp.Matrix
 PI = sp.pi
@@ -206,24 +210,24 @@ chk(list(M([0, 0, 0]) + 1 * M([1, 0, 0])) == [1, 0, 0], "演習10 交点は (1,0
 # ══════════════════════════════════════════════════════════
 # 3. シラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Coincident, parallel, intersecting and skew lines, distinguishing"
+not_in_text("> Coincident, parallel, intersecting and skew lines, distinguishing"
         " between these cases.", "シラバス 1 行目を逐語で")
-in_text("> Points of intersection.", "シラバス 2 行目を逐語で")
-in_text("> Skew lines are non-parallel lines that do not intersect in"
+not_in_text("> Points of intersection.", "シラバス 2 行目を逐語で")
+not_in_text("> Skew lines are non-parallel lines that do not intersect in"
         " three-dimensional space.", "ねじれの位置の定義を逐語で")
 
 # ══════════════════════════════════════════════════════════
 # 4. 図と、答えの漏れ
 # ══════════════════════════════════════════════════════════
-in_fig("Two lines in three dimensions: four possibilities", "図(a) の題")
-in_fig("coincident: the same line twice", "図(a) 一致")
-in_fig("parallel, but not the same line", "図(a) 平行")
-in_fig("intersecting: they meet once", "図(a) 交わる")
-in_fig("skew: they never meet", "図(a) ねじれ")
+not_in_fig("Two lines in three dimensions: four possibilities", "図(a) の題")
+not_in_fig("coincident: the same line twice", "図(a) 一致")
+not_in_fig("parallel, but not the same line", "図(a) 平行")
+not_in_fig("intersecting: they meet once", "図(a) 交わる")
+not_in_fig("skew: they never meet", "図(a) ねじれ")
 in_fig("passes behind", "図(a) 奥を通る")
-in_fig("How to tell the four cases apart", "図(b) の題")
+not_in_fig("How to tell the four cases apart", "図(b) の題")
 in_fig("are the directions parallel?", "図(b) 最初の問い")
-in_fig("the two parameters need different letters", "図(b) の注")
+not_in_fig("the two parameters need different letters", "図(b) の注")
 in_text("$2$ 直線の関係は $4$ 通りです。", "キャプション (a)")
 in_text("流れ図にすると、判定は $2$ 段階です。", "キャプション (b)")
 _BODY = TEXT[:TEXT.index("## Exercises")]
@@ -246,7 +250,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -255,8 +259,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl315-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -299,7 +304,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -360,5 +365,7 @@ in_text("**$3$ 本目を確かめて初めて**交わると言えます", "3 本
 in_text("**ねじれの位置は、$3$ 次元になって初めて現れる場合**です", "3 次元だけ")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

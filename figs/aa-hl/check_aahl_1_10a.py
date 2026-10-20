@@ -62,6 +62,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 # ══════════════════════════════════════════════════════════
 # 0. 公式そのもの（記号のまま）
 # ══════════════════════════════════════════════════════════
@@ -327,13 +331,13 @@ eq(R(1320, 220), 6, "ちょうど 3! 倍")
 # 8. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
 in_text("公式集の **1.10** の欄に、次の $2$ つが印刷されています。", "公式集にある")
-in_text("> Combinations $^{n}\\mathrm{C}_{r} = \\dfrac{n!}{r!(n-r)!}$",
+not_in_text("> Combinations $^{n}\\mathrm{C}_{r} = \\dfrac{n!}{r!(n-r)!}$",
         "Combinations を逐語で")
-in_text("> Permutations $^{n}\\mathrm{P}_{r} = \\dfrac{n!}{(n-r)!}$",
+not_in_text("> Permutations $^{n}\\mathrm{P}_{r} = \\dfrac{n!}{(n-r)!}$",
         "Permutations を逐語で")
 chk(TEXT.count("> Not required: Permutations where some objects are identical."
-               " Circular arrangements.") == 2,
-    "Not required を逐語で 2 か所（第 3 節と Common errors）")
+               " Circular arrangements.") == 0,
+    "シラバスの引用は置かない（本文で説明する）")
 in_text("公式集の **4.5** の欄に、次の形で印刷されています。", "P(A) の欄")
 in_text("P(A) = \\frac{n(A)}{n(U)}", "P(A) = n(A)/n(U)")
 in_text("**公式集には印刷されていません。**", "かけ算の原理と n! は公式集にない")
@@ -361,7 +365,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "8 nPr 3", "nDeriv"]:
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -371,8 +375,9 @@ chk(len(re.findall(r"^::: \{#exm-aahl110a-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 chk("## 解答例（答案用紙にはこう書く）" not in TEXT, "解答例の見出しをそろえた")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
@@ -424,7 +429,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 # 11. Why it works は折りたたむ（_方針変更-2026-09-15.md 第 15 節）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -474,10 +479,10 @@ for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("One shirt and one pair of trousers", "図(a) の題")
+not_in_fig("One shirt and one pair of trousers", "図(a) の題")
 in_fig("$4 \\\\times 3 = 12$ outfits", "図(a) の答え")
-in_fig("one dot for each outfit", "図(a) の読み方")
-in_fig("Choosing 3 people out of 8, then putting them in order", "図(b) の題")
+not_in_fig("one dot for each outfit", "図(a) の読み方")
+not_in_fig("Choosing 3 people out of 8, then putting them in order", "図(b) の題")
 in_fig("$^{8}\\\\mathrm{C}_{3} = 56$", "図(b) の選び方の数")
 in_fig("$^{8}\\\\mathrm{P}_{3} = 336$", "図(b) の並べ方の数")
 in_fig("$\\\\times\\\\ 3! = 6$", "図(b) の倍率")
@@ -554,7 +559,7 @@ in_text("**$^{n}\\mathrm{P}_{r}$ が $^{n}\\mathrm{C}_{r}$ より小さくなる
         "無条件の言い切りにしていない")
 not_in_text("$^{n}\\mathrm{P}_{r}$ のほうが、いつも大きい", "旧：言い切り")
 in_text("$r = 0$ と $r = 1$ では $r! = 1$ なので等しくなります。", "等号になる場合を書いた")
-in_text("**どの山も同じ大きさであることが、この議論の要です。**", "割り算が使える条件")
+in_text("**どの山も同じ大きさであることが、この議論のポイントです。**", "割り算が使える条件")
 in_text("**公式が合うためには $0! = 1$ 以外にない**", "0! = 1 の順序")
 in_text("**これは検算になりません。**", "効かない検算を、効かないと書く")
 chk(TEXT.count("検算になりません") + TEXT.count("検算にはなりません")
@@ -572,5 +577,7 @@ in_text("$^{4}\\mathrm{C}_{1} \\times {}^{8}\\mathrm{C}_{3} = 4 \\times 56 = 224
         "その誤答を数で示した")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

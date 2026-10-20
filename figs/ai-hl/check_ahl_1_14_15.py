@@ -30,7 +30,7 @@ eq("BA", B * A, M([[23, 34], [31, 46]]))
 A1 = M([[2, 0, -1], [3, 1, 4]]); B1 = M([[1, 5, 2], [0, -2, 3]])
 eq("E1 2A-B", 2 * A1 - B1, M([[3, -5, -4], [6, 4, 5]]))
 
-# --- 例題3: 売上 × 単価 ---
+# --- 例題2（exm-ahl114-shop。2026-10 の並べかえ前は例題3）: 売上 × 単価 ---
 S = M([[12, 8, 5], [10, 14, 6]]); P = M([[4], [7], [10]])
 eq("E3 revenue", S * P, M([[154], [198]]))
 
@@ -174,6 +174,45 @@ eq("Ex10 v(1)", T10 * M([[3], [2]]), M([[3], [2]]))
 eq("Ex10 long run",
    M([[40000 * sp.Rational(3, 5)], [40000 * sp.Rational(2, 5)]]),
    M([[24000], [16000]]))
+
+# ══════════ 2026-10 新レイアウト：例題は The idea の各節の後ろ ══════════
+import os, re
+print("══════════ ページの構成（2026-10） ══════════")
+_D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..",
+                  "ai-hl", "01-number-and-algebra")
+
+
+def _chk(name, cond):
+    global ok, ng
+    print(("  OK   " if cond else "  ★NG★ ") + name)
+    ok, ng = ok + bool(cond), ng + (not cond)
+
+
+for _pg, _want in (("ahl-1-14", [("exm-ahl114-basic", "multiply"),
+                                 ("exm-ahl114-shop", "multiply"),
+                                 ("exm-ahl114-multiply", "noncommutative"),
+                                 ("exm-ahl114-solve", "solve"),
+                                 ("exm-ahl114-code", "solve")]),
+                   ("ahl-1-15", [("exm-ahl115-values", "char"),
+                                 ("exm-ahl115-vectors", "eigenvector"),
+                                 ("exm-ahl115-pd", "pd"),
+                                 ("exm-ahl115-power", "power"),
+                                 ("exm-ahl115-towns", "longrun")])):
+    _T = open(os.path.join(_D, _pg + ".qmd"), encoding="utf-8").read()
+    _chk(_pg + " Worked examples の節はない", "## Worked examples" not in _T)
+    _ids = re.findall(r"::: \{#(exm-[a-z0-9-]+)\}", _T)
+    _chk(_pg + " 例題 5 つ（数は変わらない）", len(_ids) == 5)
+    _iw = _T.index("\n## Why it works")
+    _chk(_pg + " 例題はすべて The idea の中",
+         all(_T.index("## The idea") < m.start() < _iw
+             for m in re.finditer(r"::: \{#exm-", _T)))
+    _chk(_pg + " 例題の並び", _ids == [e for e, _ in _want])
+    for _e, _s in _want:
+        if _e not in _T:
+            continue
+        _hs = re.findall(r"^### \d+\. .*?\{#([a-z0-9-]+)\}$",
+                         _T[:_T.index("::: {#" + _e + "}")], re.M)
+        _chk("%s %s は %s の節の中" % (_pg, _e, _s), bool(_hs) and _hs[-1] == _s)
 
 print(f"\n合計  OK {ok}   NG {ng}")
 raise SystemExit(1 if ng else 0)

@@ -43,24 +43,17 @@ def bare(ax):
 
 
 # ---------- 0. いちばんシンプルな正規分布の曲線 ----------
-fig, ax = plt.subplots(figsize=(7.6, 3.9))
+fig, ax = plt.subplots(figsize=(6.8, 3.2))
 x = curve(ax)
 ax.fill_between(x, pdf(x), color="#eaf2fb", zorder=2)
 ax.axvline(0, color=ACC, linestyle="--", linewidth=1.4, zorder=6)
-ax.annotate("the peak is at the mean", xy=(0, pdf(0.0) * 1.015),
-            xytext=(1.55, pdf(0.0) * 1.20), ha="center", va="center",
-            color=ACC, fontsize=11.5, zorder=8,
-            arrowprops=dict(arrowstyle="->", color=ACC, linewidth=1.3),
-            bbox=dict(boxstyle="round,pad=0.16", fc="white", ec="none"))
-ax.annotate("the curve is symmetrical about $\\mu$", (0, pdf(0.0) * 0.42),
-            ha="center", va="center", color=INK, fontsize=11.5, zorder=8,
-            bbox=dict(boxstyle="round,pad=0.16", fc="white", ec="none"))
 ax.annotate("total area $= 1$", (0, pdf(0.0) * 0.14), ha="center", va="center",
             color="#1a5276", fontsize=12, zorder=8,
             bbox=dict(boxstyle="round,pad=0.16", fc="white", ec="none"))
 ax.set_xticks([0])
 ax.set_xticklabels([r"$\mu$"], fontsize=13)
 bare(ax)
+ax.set_ylim(0, pdf(0.0) * 1.06)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-4-9-curve.svg"), format="svg", bbox_inches="tight")
 plt.close(fig)

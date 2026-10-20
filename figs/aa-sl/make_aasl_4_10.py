@@ -42,13 +42,11 @@ MX, MY = XS.mean(), YS.mean()
 A = np.polyfit(XS, YS, 1)          # y on x
 B = np.polyfit(YS, XS, 1)          # x on y
 
-fig1, ax1 = plt.subplots(figsize=(5.6, 4.9))
-fig2, ax2 = plt.subplots(figsize=(5.6, 4.9))
+fig1, ax1 = plt.subplots(figsize=(5.6, 4.5))
+fig2, ax2 = plt.subplots(figsize=(5.6, 4.5))
 # ══════════════════════════════════════════════════════════
 # (a) 2 本の回帰直線
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Two different regression lines", fontsize=11, color=INK,
-              loc="left", pad=12)
 ax1.scatter(XS, YS, s=34, color=ACCENT, zorder=3)
 
 _gx = np.linspace(0.4, 8.6, 100)
@@ -83,8 +81,6 @@ ax1.legend(loc="upper left", fontsize=9.5, frameon=False)
 # ══════════════════════════════════════════════════════════
 # (b) 何を最小にしているか
 # ══════════════════════════════════════════════════════════
-ax2.set_title("The two lines minimise different gaps", fontsize=11,
-              color=INK, loc="left", pad=12)
 ax2.scatter(XS, YS, s=34, color=ACCENT, zorder=3)
 ax2.plot(_gx, A[0] * _gx + A[1], color=ACCENT, linewidth=1.4)
 ax2.plot(B[0] * _gy + B[1], _gy, color=WARM, linewidth=1.4,

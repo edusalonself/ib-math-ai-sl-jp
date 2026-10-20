@@ -38,8 +38,6 @@ WARM = "#b45309"
 # (a) 0 になる点の近くでは、接線とほぼ同じ
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(5.8, 3.4))
-ax1.set_title("near a common zero, each curve looks like its tangent",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 
 t = np.linspace(-1.35, 1.0, 500)
 F = 1.6 * t + 0.8 * t ** 2
@@ -55,10 +53,6 @@ ax1.plot([0], [0], "o", color=INK, markersize=5, zorder=5)
 ax1.text(0.06, -0.38, "$a$", fontsize=10.5, color=INK)
 ax1.text(1.06, 2.32, "$y = f(x)$", fontsize=10, color=ACCENT)
 ax1.text(1.06, 0.22, "$y = g(x)$", fontsize=10, color=WARM)
-ax1.text(-1.45, -2.05, "both are $0$ at $x = a$, so the quotient is"
-         " $\\frac{0}{0}$ there", fontsize=9, color=GREY)
-ax1.text(-1.45, -2.50, "but the ratio of the tangents is"
-         " $\\frac{f'(a)}{g'(a)}$", fontsize=9, color=GREY)
 ax1.set_xlim(-1.6, 2.4)
 ax1.set_ylim(-2.9, 2.6)
 ax1.plot([-1.45, 1.10], [0, 0], color=GREY, linewidth=0.8, zorder=0)
@@ -72,9 +66,6 @@ for _s in ("top", "right", "bottom", "left"):
 # (b) sin x / x
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(5.8, 3.0))
-ax2.set_title("$y = \\frac{\\sin x}{x}$ has a hole at $x = 0$, and the"
-              " values approach $1$", fontsize=10.2, color=INK, loc="left",
-              pad=10)
 
 u = np.linspace(-11, 11, 1400)
 u = u[np.abs(u) > 1e-6]

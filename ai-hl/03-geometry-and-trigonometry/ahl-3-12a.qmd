@@ -17,10 +17,22 @@ sidebar: ai-hl
 - $3$ 次元でも、**成分が $1$ つ増えるだけ**で同じ計算ができる。
 :::
 
+## The idea
 
+### 1. Position at time $t$（時刻 $t$ での位置） {#idea}
 
-::: {.callout-tip}
-## [AHL 3.11](ahl-3-11.qmd) との対応
+**constant velocity**（等速度）で動く物体の、時刻 $t$ での位置は
+
+$$
+\mathbf{r} = \mathbf{r}_0 + \mathbf{v}t
+$$ {#eq-ahl312a-r}
+
+- $\mathbf{r}$ … 時刻 $t$ での **position vector**（位置ベクトル）
+- $\mathbf{r}_0$ … **$t = 0$ のときの位置**
+- $\mathbf{v}$ … **velocity**（速度）。向きと大きさを持つ
+
+[AHL 3.11](ahl-3-11.qmd) の $\mathbf{r} = \mathbf{a} + \lambda\mathbf{b}$ で、**$\mathbf{a}$ を $\mathbf{r}_0$、$\lambda$ を $t$、$\mathbf{b}$ を $\mathbf{v}$ と書き直しただけ**です（@eq-ahl312a-correspond、@tbl-ahl312a-correspond）。
+
 $$
 \underbrace{\mathbf{r} = \mathbf{a} + \lambda\mathbf{b}}_{\text{AHL 3.11}} \qquad \longrightarrow \qquad \underbrace{\mathbf{r} = \mathbf{r}_0 + \mathbf{v}t}_{\text{AHL 3.12}}
 $$ {#eq-ahl312a-correspond}
@@ -33,26 +45,9 @@ $$ {#eq-ahl312a-correspond}
 
 : 記号の対応 {#tbl-ahl312a-correspond}
 
-**式の形は同じですが、意味が付いたぶん、変えられなくなったものがあります**（[第2節](#velocity)）。
-:::
+**式の形は同じですが、記号に意味が付いたぶん、自由に変えられなくなったものがあります**（[第2節](#velocity)）。
 
-## The idea
-
-### 1. $\mathbf{r} = \mathbf{r}_0 + \mathbf{v}t$ {#idea}
-
-**constant velocity**（等速度）で動く物体の、時刻 $t$ での位置は
-
-$$
-\mathbf{r} = \mathbf{r}_0 + \mathbf{v}t
-$$ {#eq-ahl312a-r}
-
-- $\mathbf{r}$ … 時刻 $t$ での**位置ベクトル**
-- $\mathbf{r}_0$ … **$t = 0$ のときの位置**
-- $\mathbf{v}$ … **velocity**（速度）。向きと大きさを持つ
-
-[AHL 3.11](ahl-3-11.qmd) の $\mathbf{r} = \mathbf{a} + \lambda\mathbf{b}$ で、**$\mathbf{a}$ を $\mathbf{r}_0$、$\lambda$ を $t$、$\mathbf{b}$ を $\mathbf{v}$ と書き直しただけ**です（@eq-ahl312a-correspond、@tbl-ahl312a-correspond）。
-
-![Constant velocity: one step of v per unit of time](img/ahl-3-12a-idea.svg){#fig-ahl312a-idea width=100%}
+![等速度の運動：単位時間ごとに $\mathbf{v}$ だけ進みます。](img/ahl-3-12a-idea.svg){#fig-ahl312a-idea width=100%}
 
 @fig-ahl312a-idea の (a) は $\mathbf{r} = \begin{pmatrix} 1 \\ 2 \end{pmatrix} + t\begin{pmatrix} 2 \\ 1 \end{pmatrix}$ です。$t = 0,\ 1,\ 2,\ 3,\ 4$ の位置に点を打ってあります。
 
@@ -67,7 +62,7 @@ $$ {#eq-ahl312a-r}
 **この $3$ つを書き出してから計算に入る**と、最後に単位や時刻でつまずきません。
 :::
 
-### 2. $\mathbf{v}$ の長さが speed です {#velocity}
+### 2. Velocity and speed（速度と速さ） {#velocity}
 
 **speed**（速さ）は、velocity の**大きさ**です（[AHL 3.10b 第4節](ahl-3-10b.qmd#distance)）。
 
@@ -81,7 +76,7 @@ $\mathbf{v} = \begin{pmatrix} 2 \\ 1 \end{pmatrix}$ なら $\lvert \mathbf{v} \r
 ## ここでは、$\mathbf{v}$ を勝手にスカラー倍できません
 [AHL 3.11 第3節](ahl-3-11.qmd#not-unique) では、direction vector を何倍しても**同じ直線**でした。
 
-**ここは違います。** @fig-ahl312a-idea の (b) を見てください。$\mathbf{v} = \begin{pmatrix} 2 \\ 1 \end{pmatrix}$ の $P$ と、$\mathbf{v} = \begin{pmatrix} 4 \\ 2 \end{pmatrix}$ の $Q$ は、**同じ道すじを通りますが、速さが $2$ 倍**です。
+**ここは違います。** @fig-ahl312a-idea の (b) を見てください。$\mathbf{v} = \begin{pmatrix} 2 \\ 1 \end{pmatrix}$ の $P$ と、$\mathbf{v} = \begin{pmatrix} 4 \\ 2 \end{pmatrix}$ の $Q$ は、**同じ道すじを通りますが、速さが $2$ 倍**です。(b) の点の横の数字は時刻 $t$ です。
 
 $t = 1$ のとき $P$ は $(3,\ 3)$、$Q$ は $(5,\ 4)$ で、**別の場所にいます。**
 
@@ -91,157 +86,6 @@ $t = 1$ のとき $P$ は $(3,\ 3)$、$Q$ は $(5,\ 4)$ で、**別の場所に�
 :::
 
 $t$ 秒間に進む**道のり**は $\lvert \mathbf{v} \rvert t$ です。**等速度なので、道のりと変位の大きさが一致します**（向きが変わらないからです）。
-
-### 3. 経路と位置は、別のものです {#path}
-
-- **path**（経路）… 物体が通る**線**。等速度なら**直線**です
-- **position**（位置）… **ある時刻での点** $1$ つ
-
-**経路は [AHL 3.11](ahl-3-11.qmd) の直線そのもの**です。ですから $2$ つの物体の**経路が交わる点**は、[AHL 3.11 第9節](ahl-3-11.qmd#intersect) のやり方で求まります。
-
-**ただし $t \geq 0$ なので、実際に通るのは半分（半直線）だけ**です。求めた $\lambda$、$\mu$ が**両方とも $0$ 以上**なら、その点は本当に $2$ 物体が通る点です。
-
-**$2$ 直線で別の文字を使うのは、[AHL 3.11 第9節](ahl-3-11.qmd#intersect) と同じ理由**です。しかもこのページでは、その $2$ つの値には**時刻**という意味があります。
-
-### 4. 「経路が交わる」と「衝突する」は、別のことです {#cross-vs-collide}
-
-**このページで、いちばん大事なところです。**
-
-![Crossing paths, and an actual collision](img/ahl-3-12a-cross.svg){#fig-ahl312a-cross width=100%}
-
-@fig-ahl312a-cross の (a) では、$A$ と $B$ の経路が $(3,\ 5)$ で交わっています。しかし
-
-- $A$ がそこにいるのは $t = 1$
-- $B$ がそこにいるのは $t = 5$
-
-**$4$ 秒ずれています。ぶつかりません。**
-
-(b) では、両方が $t = 1$ に $(3,\ 5)$ にいます。**これが collide**（衝突する）です。
-
-::: {.callout-important}
-## 交点を出しただけでは、答えになりません
-`Do the particles collide?` と聞かれたら、**時刻まで確かめてください。**
-
-- **経路が交わる** … 場所が同じ。$\lambda$ と $\mu$ は違ってよい
-- **衝突する** … **場所も時刻も同じ**。$\lambda = \mu$ でなければならない
-
-`Do the paths cross?` と `Do the particles collide?` は、**別の問い**です。
-:::
-
-### 5. relative position — $\overrightarrow{AB} = \mathbf{r}_B - \mathbf{r}_A$ {#relative}
-
-$$
-\overrightarrow{AB} = \mathbf{r}_B - \mathbf{r}_A
-$$ {#eq-ahl312a-ab}
-
-**「ゴールひくスタート」**でした（[AHL 3.10b 第3節](ahl-3-10b.qmd#ab)）。$A$ から見て $B$ がどこにいるか、を表します。
-
-両方が動いているので、$\overrightarrow{AB}$ は **$t$ の式**になります。
-
-$$
-\overrightarrow{AB} = (\mathbf{r}_{0B} - \mathbf{r}_{0A}) + t(\mathbf{v}_B - \mathbf{v}_A)
-$$ {#eq-ahl312a-abt}
-
-**これも「はじめの差」＋「$t$ ×（速度の差）」の形**です。$\mathbf{v}_B - \mathbf{v}_A$ を **relative velocity**（相対速度）といいます。
-
-### 6. 衝突の判定は $\overrightarrow{AB} = \mathbf{0}$ {#collide-test}
-
-$2$ つが同じ場所にいるということは、その差が $\mathbf{0}$ だということです。
-
-$$
-\text{衝突する} \quad \Longleftrightarrow \quad \overrightarrow{AB} = \mathbf{0} \ \text{となる} \ t \geq 0 \ \text{がある}
-$$ {#eq-ahl312a-collide}
-
-**成分ごとに $0$ とおいて、$t$ が全部そろうかを見ます。** [AHL 3.11 第6節](ahl-3-11.qmd#on-line) の「$1$ つの値が全成分で成り立つか」と、まったく同じ考え方です。**$t \geq 0$ でそろえば衝突**です（@exm-ahl312a-collide）。
-
-$\overrightarrow{AB} = \begin{pmatrix} 12-4t \\ -2-2t \end{pmatrix}$ なら
-
-- $1$ つ目 … $12-4t = 0$ から $t = 3$
-- $2$ つ目 … $-2-2t = 0$ から $t = -1$
-
-**そろいません。しかも $t = -1$ は範囲の外です。** ですから衝突しません（@exm-ahl312a-cross）。
-
-::: {.callout-warning}
-## いつも $0$ になる成分は、条件になりません
-$\overrightarrow{AB}$ のある成分が、$t$ によらず $0$ のことがあります。$2$ つの物体が、その向きにはずっと同じ位置にいる、ということです。
-
-**その成分は、はじめから満たされています。** 残りの成分だけで $t$ を決めます（演習 $8$）。
-
-逆に、**$t$ によらず $0$ でない**成分があれば、その時点で**衝突しません**（演習 $10$）。
-:::
-
-### 7. $2$ つの距離は $\lvert \overrightarrow{AB} \rvert$ です {#distance}
-
-時刻 $t$ での $2$ 物体の距離は
-
-$$
-d(t) = \lvert \overrightarrow{AB} \rvert = \sqrt{(\text{成分}_1)^2 + (\text{成分}_2)^2}
-$$ {#eq-ahl312a-d}
-
-**relative velocity（相対速度）$\mathbf{v}_B - \mathbf{v}_A$ が $\mathbf{0}$ でなければ**、@eq-ahl312a-d の中身は $t$ の $2$ 次式になります。**$\sqrt{\ }$ の中を先に整理してください。**
-
-**$\mathbf{v}_B = \mathbf{v}_A$ のときだけ別**で、そのときは $\overrightarrow{AB}$ が $t$ によらず一定になり、中身は定数です（演習 $6$）。
-
-### 8. 最接近する時刻と距離 {#closest}
-
-![Two ships, the gap between them, and the graph of that gap](img/ahl-3-12a-closest.svg){#fig-ahl312a-closest width=100%}
-
-@fig-ahl312a-closest の (a) は、$A$ が東へ $3$、$B$ が北へ $4$ で進む様子です。点線は、そのときどきの $A$ と $B$ を結ぶ線分で、その長さが $\lvert \overrightarrow{AB} \rvert$ です。
-
-**近づいてから、また離れます。** (b) はその距離 $d$ のグラフです。
-
-**$5$ つの手順があります。**
-
-**相対速度が $\mathbf{0}$ でないとき**の手順です。
-
-| ステップ | すること |
-|:--|:--|
-| $1$ | $\overrightarrow{AB}$ を $t$ の式で書く（@eq-ahl312a-abt） |
-| $2$ | $d^2$ を計算して、$t$ の $2$ 次式に整理する |
-| $3$ | **平方完成**する（または頂点の $t = -\dfrac{b}{2a}$ を使う） |
-| $4$ | その $t$ を $d$ に入れる。**$d^2$ ではなく $d$ を答える** |
-| $5$ | $t \geq 0$ になっているかを確かめる |
-
-: 最接近を出す $5$ つの手順 {#tbl-ahl312a-steps}
-
-@fig-ahl312a-closest の例では
-
-$$
-d^2 = 25t^2 - 150t + 625 = 25\left((t-3)^2 + 16\right)
-$$
-
-$$
-d = 5\sqrt{(t-3)^2+16}
-$$
-
-$(t-3)^2$ が $0$ 以上なので、**$t = 3$ のときが最小**で、そのとき $d = 5\sqrt{16} = 20$ です。
-
-::: {.callout-important}
-## $d^2$ が最小になる $t$ と、$d$ が最小になる $t$ は同じです
-$d \geq 0$ で、$\sqrt{\ }$ は増加する関数なので、**$d^2$ を小さくすれば $d$ も小さくなります。**
-
-ですから $\sqrt{\ }$ を付けたまま平方完成する必要はなく、**$d^2$ で計算して構いません。**
-
-**ただし、答えるのは $d$ です。** $d^2 = 400$ を答えにしないでください。$400$ km ではなく $20$ km です。
-:::
-
-### 9. $3$ 次元でも、成分が $1$ つ増えるだけです {#three-d}
-
-$$
-\mathbf{r} = \begin{pmatrix} 1 \\ 0 \\ -2 \end{pmatrix} + t\begin{pmatrix} 2 \\ -3 \\ 1 \end{pmatrix}
-$$
-
-衝突の判定も、$3$ 成分すべてで同じ $t$ が要る、というだけです（[第6節](#collide-test)、演習 $8$）。
-
-距離も $d = \sqrt{(\ )^2+(\ )^2+(\ )^2}$ になるだけで、**平方完成の手順は変わりません。**
-
-**図はかけなくなりますが、計算はできます**（[AHL 3.11 第7節](ahl-3-11.qmd#three-d)）。
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-:::
 
 ::: {#exm-ahl312a-position}
 [A particle starts at the point $(-3,\ 7)$ and moves with constant velocity $\begin{pmatrix} 4 \\ -2 \end{pmatrix}$ m s$^{-1}$. Time $t$ is measured in seconds from the start.]{.q-en}
@@ -269,7 +113,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** @eq-ahl312a-r にあてはめるだけです。
 
@@ -322,6 +167,87 @@ $$\lvert \mathbf{v} \rvert = \sqrt{4^2+(-2)^2} = 2\sqrt{5} \approx 4.47 \ \text{
 $$7-2t = 0 \ \Rightarrow \ t = 3.5 \ \text{s}$$
 :::
 :::
+:::
+
+### 3. Path and position（経路と位置） {#path}
+
+経路と位置は、別のものです。
+
+- **path**（経路）… 物体が通る**線**。等速度なら**直線**です
+- **position**（位置）… **ある時刻での点** $1$ つ
+
+**経路は [AHL 3.11](ahl-3-11.qmd) の直線そのもの**です。ですから $2$ つの物体の**経路が交わる点**は、[AHL 3.11 第9節](ahl-3-11.qmd#intersect) のやり方で求まります。
+
+**ただし $t \geq 0$ なので、実際に通るのは半分（半直線）だけ**です。求めた $\lambda$、$\mu$ が**両方とも $0$ 以上**なら、その点は本当に $2$ 物体が通る点です。
+
+**$2$ 直線で別の文字を使うのは、[AHL 3.11 第9節](ahl-3-11.qmd#intersect) と同じ理由**です。しかもこのページでは、その $2$ つの値には**時刻**という意味があります。
+
+### 4. Crossing paths and collisions（経路が交わることと衝突すること） {#cross-vs-collide}
+
+$2$ つの物体の経路が交わっても、$2$ つがぶつかるとはかぎりません。**このページで、いちばん大事なところです。**
+
+![経路が交わるだけの場合と、実際にぶつかる場合です。](img/ahl-3-12a-cross.svg){#fig-ahl312a-cross width=100%}
+
+@fig-ahl312a-cross の (a) では、$A$ と $B$ の経路が $(3,\ 5)$ で交わっています。しかし
+
+- $A$ がそこにいるのは $t = 1$
+- $B$ がそこにいるのは $t = 5$
+
+**$4$ 秒ずれています。ぶつかりません。**
+
+(b) では、両方が $t = 1$ に $(3,\ 5)$ にいます。**これが collide**（衝突する）です。
+
+::: {.callout-important}
+## 交点を出しただけでは、答えになりません
+`Do the particles collide?` と聞かれたら、**時刻まで確かめてください。**
+
+- **経路が交わる** … 場所が同じ。$\lambda$ と $\mu$ は違ってよい
+- **衝突する** … **場所も時刻も同じ**。$\lambda = \mu$ でなければならない
+
+`Do the paths cross?` と `Do the particles collide?` は、**別の問い**です。
+:::
+
+### 5. Relative position（相対位置） {#relative}
+
+**relative position**（相対位置）は、$A$ から見て $B$ がどこにいるかを表すベクトルです。
+
+$$
+\overrightarrow{AB} = \mathbf{r}_B - \mathbf{r}_A
+$$ {#eq-ahl312a-ab}
+
+**「ゴールひくスタート」**でした（[AHL 3.10b 第3節](ahl-3-10b.qmd#ab)）。$A$ から見て $B$ がどこにいるか、を表します。
+
+両方が動いているので、$\overrightarrow{AB}$ は **$t$ の式**になります。
+
+$$
+\overrightarrow{AB} = (\mathbf{r}_{0B} - \mathbf{r}_{0A}) + t(\mathbf{v}_B - \mathbf{v}_A)
+$$ {#eq-ahl312a-abt}
+
+**これも「はじめの差」＋「$t$ ×（速度の差）」の形**です。$\mathbf{v}_B - \mathbf{v}_A$ を **relative velocity**（相対速度）といいます。
+
+### 6. Testing for a collision（衝突の判定） {#collide-test}
+
+$2$ つが同じ場所にいるということは、その差が $\mathbf{0}$ だということです。
+
+**$2$ つが衝突するのは、$\overrightarrow{AB} = \mathbf{0}$ となる $t \geq 0$ があるときです。**
+
+**成分ごとに $0$ とおいて、$t$ が全部そろうかを見ます。** [AHL 3.11 第6節](ahl-3-11.qmd#on-line) の「$1$ つの値が全成分で成り立つか」と、まったく同じ考え方です。**$t \geq 0$ でそろえば衝突**です（@exm-ahl312a-collide）。
+
+$\overrightarrow{AB} = \begin{pmatrix} 12-4t \\ -2-2t \end{pmatrix}$ なら
+
+- $1$ つ目 … $12-4t = 0$ から $t = 3$
+- $2$ つ目 … $-2-2t = 0$ から $t = -1$
+
+**そろいません。しかも $t = -1$ は範囲の外です。** ですから衝突しません（@exm-ahl312a-cross）。
+
+::: {.callout-warning}
+## いつも $0$ になる成分は、条件になりません
+$\overrightarrow{AB}$ のある成分が、$t$ によらず $0$ のことがあります。$2$ つの物体が、その向きにはずっと同じ位置にいる、ということです。
+
+**その成分は、はじめから満たされています。** 残りの成分だけで $t$ を決めます（演習 $8$）。
+
+逆に、**$t$ によらず $0$ でない**成分があれば、その時点で**衝突しません**（演習 $10$）。
+:::
 
 ::: {#exm-ahl312a-cross}
 [Two particles $A$ and $B$ move with constant velocity. At time $t$ seconds their position vectors, in metres, are]{.q-en}
@@ -353,7 +279,8 @@ $2$ つの粒子 $A$、$B$ が一定の速度で動きます。時刻 $t$ 秒に
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 経路は直線なので、[AHL 3.11 第9節](ahl-3-11.qmd#intersect) のやり方です。**文字は $2$ 種類**にします。
 
@@ -382,7 +309,7 @@ $$
 
 **(c)** 時刻が違うので、**衝突しません**（[第4節](#cross-vs-collide)）。
 
-$\overrightarrow{AB}$ でも確かめられます（@eq-ahl312a-collide）。
+$\overrightarrow{AB}$ でも確かめられます（[第6節](#collide-test)）。
 
 $$
 \overrightarrow{AB} = \begin{pmatrix} 13-2t \\ t \end{pmatrix} - \begin{pmatrix} 1+2t \\ 2+3t \end{pmatrix} = \begin{pmatrix} 12-4t \\ -2-2t \end{pmatrix}
@@ -395,7 +322,11 @@ $12-4t = 0$ から $t = 3$、$-2-2t = 0$ から $t = -1$ です。**そろわな
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The paths crossing only says that the two straight lines share a point in space; it says nothing about when each particle is there. Here $A$ reaches $(3,\ 5)$ at $t = 1$ and $B$ reaches it at $t = 5$, so $B$ arrives four seconds after $A$ has already gone. A collision needs the same position at the same time, which is why the two parameters must be allowed to differ when finding the crossing point but must be equal for a collision.*
+*The paths crossing only says that the two straight lines share a point in space; it says nothing about when each particle is there.*
+
+*Here $A$ reaches $(3,\ 5)$ at $t = 1$ and $B$ reaches it at $t = 5$, so $B$ arrives four seconds after $A$ has already gone.*
+
+*A collision needs the same position at the same time, which is why the two parameters must be allowed to differ when finding the crossing point but must be equal for a collision.*
 :::
 
 （経路が交わるというのは、$2$ 本の直線が空間の中で $1$ 点を共有するというだけのことで、それぞれの粒子がいつそこにいるかについては何も言っていない。ここでは $A$ は $t = 1$ に $(3,\ 5)$ に着き、$B$ は $t = 5$ に着くので、$A$ が去ったあと $4$ 秒たってから $B$ が到着する。衝突には、同じ位置に同じ時刻でいることが必要である。だからこそ、交点を求めるときは $2$ つの parameter が違ってよく、衝突のときは等しくなければならない、という意味です。）
@@ -425,6 +356,7 @@ $$\overrightarrow{AB} = \begin{pmatrix} 12-4t \\ -2-2t \end{pmatrix}$$
 
 **(d)**
 *Crossing paths give the same position; a collision needs the same position at the same time. Here the arrival times are $t = 1$ and $t = 5$.*
+:::
 :::
 :::
 
@@ -458,7 +390,8 @@ $2$ つの粒子 $A$、$B$ の、時刻 $t$ 秒における位置ベクトルは
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** ゴールひくスタートです（@eq-ahl312a-ab）。
 
@@ -466,7 +399,7 @@ $$
 \overrightarrow{AB} = \begin{pmatrix} 5-2t \\ 4+t \end{pmatrix} - \begin{pmatrix} 1+2t \\ 2+3t \end{pmatrix} = \begin{pmatrix} 4-4t \\ 2-2t \end{pmatrix}
 $$
 
-**(b)** $\overrightarrow{AB} = \mathbf{0}$ となる $t$ を探します（@eq-ahl312a-collide）。
+**(b)** $\overrightarrow{AB} = \mathbf{0}$ となる $t$ を探します（[第6節](#collide-test)）。
 
 $$
 4-4t = 0 \quad \Longrightarrow \quad t = 1
@@ -489,7 +422,11 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*$\overrightarrow{AB}$ is the position of $B$ as seen from $A$ at time $t$: its components say how far $B$ is from $A$ in the $x$- and $y$-directions at that moment. At $t = 0$ it is $\begin{pmatrix} 4 \\ 2 \end{pmatrix}$, so $B$ starts $4$ m from $A$ in the $x$-direction and $2$ m in the $y$-direction. The vector shrinks steadily to $\mathbf{0}$ at $t = 1$, which is the moment the two particles are in the same place.*
+*$\overrightarrow{AB}$ is the position of $B$ as seen from $A$ at time $t$: its components say how far $B$ is from $A$ in the $x$- and $y$-directions at that moment.*
+
+*At $t = 0$ it is $\begin{pmatrix} 4 \\ 2 \end{pmatrix}$, so $B$ starts $4$ m from $A$ in the $x$-direction and $2$ m in the $y$-direction.*
+
+*The vector shrinks steadily to $\mathbf{0}$ at $t = 1$, which is the moment the two particles are in the same place.*
 :::
 
 （$\overrightarrow{AB}$ は、時刻 $t$ において $A$ から見た $B$ の位置である。その成分は、そのとき $B$ が $A$ から $x$ 方向にいくつ、$y$ 方向にいくつのところにいるかを表す。$t = 0$ では $\begin{pmatrix} 4 \\ 2 \end{pmatrix}$ なので、$B$ は $A$ から $x$ 方向に $4$ m、$y$ 方向に $2$ m のところから始まる。このベクトルはだんだん小さくなり、$t = 1$ で $\mathbf{0}$ になる。それが $2$ 粒子が同じ場所にいる瞬間である、という意味です。）
@@ -517,6 +454,64 @@ $$\mathbf{r}_A(1) = \begin{pmatrix} 3 \\ 5 \end{pmatrix} = \mathbf{r}_B(1)$$
 **(d)**
 *$\overrightarrow{AB}$ is the position of $B$ relative to $A$; it reaches $\mathbf{0}$ exactly when they meet.*
 :::
+:::
+:::
+
+### 7. Distance between two objects（$2$ つの物体の距離） {#distance}
+
+$2$ つの物体の距離は、相対位置の大きさ $\lvert \overrightarrow{AB} \rvert$ です。時刻 $t$ での距離を式で書くと
+
+$$
+d(t) = \lvert \overrightarrow{AB} \rvert = \sqrt{(\text{成分}_1)^2 + (\text{成分}_2)^2}
+$$ {#eq-ahl312a-d}
+
+**relative velocity（相対速度）$\mathbf{v}_B - \mathbf{v}_A$ が $\mathbf{0}$ でなければ**、@eq-ahl312a-d の中身は $t$ の $2$ 次式になります。**$\sqrt{\ }$ の中を先に整理してください。**
+
+**$\mathbf{v}_B = \mathbf{v}_A$ のときだけ別**で、そのときは $\overrightarrow{AB}$ が $t$ によらず一定になり、中身は定数です（演習 $6$）。
+
+### 8. Closest approach（最接近する時刻と距離） {#closest}
+
+$2$ つの物体の距離がいちばん小さくなる時刻と、そのときの距離を求めます。
+
+![$2$ 隻の船、そのあいだの距離、そしてその距離のグラフです。](img/ahl-3-12a-closest.svg){#fig-ahl312a-closest width=100%}
+
+@fig-ahl312a-closest の (a) は、$A$ が東へ $3$、$B$ が北へ $4$ で進む様子です。点線は、そのときどきの $A$ と $B$ を結ぶ線分で、その長さが $\lvert \overrightarrow{AB} \rvert$ です。
+
+**近づいてから、また離れます。** (b) はその距離 $d$ のグラフです。
+
+**$5$ つの手順があります。**
+
+**相対速度が $\mathbf{0}$ でないとき**の手順です。
+
+| ステップ | すること |
+|:--|:--|
+| $1$ | $\overrightarrow{AB}$ を $t$ の式で書く（@eq-ahl312a-abt） |
+| $2$ | $d^2$ を計算して、$t$ の $2$ 次式に整理する |
+| $3$ | **平方完成**する（または頂点の $t = -\dfrac{b}{2a}$ を使う） |
+| $4$ | その $t$ を $d$ に入れる。**$d^2$ ではなく $d$ を答える** |
+| $5$ | $t \geq 0$ になっているかを確かめる |
+
+: 最接近を出す $5$ つの手順 {#tbl-ahl312a-steps}
+
+@fig-ahl312a-closest の例では
+
+$$
+d^2 = 25t^2 - 150t + 625 = 25\left((t-3)^2 + 16\right)
+$$
+
+$$
+d = 5\sqrt{(t-3)^2+16}
+$$
+
+$(t-3)^2$ が $0$ 以上なので、**$t = 3$ のときが最小**で、そのとき $d = 5\sqrt{16} = 20$ です。
+
+::: {.callout-important}
+## $d^2$ が最小になる $t$ と、$d$ が最小になる $t$ は同じです
+$d \geq 0$ で、$\sqrt{\ }$ は増加する関数なので、**$d^2$ を小さくすれば $d$ も小さくなります。**
+
+ですから $\sqrt{\ }$ を付けたまま平方完成する必要はなく、**$d^2$ で計算して構いません。**
+
+**ただし、答えるのは $d$ です。** $d^2 = 400$ を答えにしないでください。$400$ km ではなく $20$ km です。
 :::
 
 ::: {#exm-ahl312a-closest}
@@ -549,7 +544,8 @@ $2$ 隻の船 $A$、$B$ が一定の速度で進みます。東と北を正の�
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** @eq-ahl312a-abt のとおりです。
 
@@ -588,7 +584,11 @@ $t = 3 \geq 0$ なので、意味のある答えです（@tbl-ahl312a-steps の�
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The ships start $25$ km apart and close on each other for three hours, after which they begin to separate again. The closest they ever come is $20$ km, three hours after the start. They never meet: the least distance is $20$ km, not $0$, so there is no risk of collision on these courses.*
+*The ships start $25$ km apart and close on each other for three hours, after which they begin to separate again.*
+
+*The closest they ever come is $20$ km, three hours after the start.*
+
+*They never meet: the least distance is $20$ km, not $0$, so there is no risk of collision on these courses.*
 :::
 
 （$2$ 隻は $25$ km 離れて出発し、$3$ 時間のあいだ近づき、そのあとはまた離れていく。もっとも近づくのは出発から $3$ 時間後で、そのときの距離は $20$ km である。$2$ 隻は出会わない。最小の距離が $0$ ではなく $20$ km なので、この進路では衝突の心配はない、という意味です。）
@@ -625,6 +625,21 @@ $$t = 3 \ \text{hours}, \qquad d = 5\sqrt{16} = 20 \ \text{km}$$
 *The ships are closest three hours after the start, and even then they are $20$ km apart, so they do not meet.*
 :::
 :::
+:::
+
+### 9. Motion in three dimensions（$3$ 次元の運動） {#three-d}
+
+$3$ 次元でも、式の形は同じで、成分が $1$ つ増えるだけです。
+
+$$
+\mathbf{r} = \begin{pmatrix} 1 \\ 0 \\ -2 \end{pmatrix} + t\begin{pmatrix} 2 \\ -3 \\ 1 \end{pmatrix}
+$$
+
+衝突の判定も、$3$ 成分すべてで同じ $t$ が要る、というだけです（[第6節](#collide-test)、演習 $8$）。
+
+距離も $d = \sqrt{(\ )^2+(\ )^2+(\ )^2}$ になるだけで、**平方完成の手順は変わりません。**
+
+**図はかけなくなりますが、計算はできます**（[AHL 3.11 第7節](ahl-3-11.qmd#three-d)）。
 
 ## Common errors
 
@@ -675,15 +690,17 @@ $\overrightarrow{AB} = \mathbf{0}$ を解いて $t = -1$ が出たら、それ�
 
 ## Using your GDC (TI-Nspire CX II)
 
-### 1. 位置は、代入で出せます {#gdc-position}
+### 1. Finding a position by substitution（代入で位置を求める） {#gdc-position}
 
-**Matrix** として入れて、そのまま計算します（[AHL 3.10a の GDC 第1節](ahl-3-10a.qmd#gdc-enter)）。
+ある時刻の位置は、$t$ に値を入れて計算すれば出ます。$\mathbf{r}_0$ と $\mathbf{v}$ を **Matrix** として入れて、そのまま計算します（[AHL 3.10a の GDC 第1節](ahl-3-10a.qmd#gdc-enter)）。
 
 $\begin{bmatrix} -3 \\ 7 \end{bmatrix}+5 \times \begin{bmatrix} 4 \\ -2 \end{bmatrix}$
 
 $\begin{pmatrix} 17 \\ -3 \end{pmatrix}$ が返ります（@exm-ahl312a-position）。
 
-### 2. 名前を付けておくと、$t$ を変えるのが楽です {#gdc-store}
+### 2. Storing vectors（ベクトルに名前を付けて保存する） {#gdc-store}
+
+ベクトルに名前を付けて保存しておくと、$t$ を変えて何度も計算するのが楽です。
 
 - $\begin{bmatrix} 1 \\ 2 \end{bmatrix}  \ \to \  ra$
 - $\begin{bmatrix} 2 \\ 3 \end{bmatrix}  \ \to \  va$
@@ -702,7 +719,7 @@ $\begin{pmatrix} 17 \\ -3 \end{pmatrix}$ が返ります（@exm-ahl312a-position
 
 **$1$ つの問題が終わったら、変数を消しておいてください**（`menu → Actions → Clear a-z`）。
 
-### 3. 交点は、連立方程式として {#gdc-linsolve}
+### 3. Solving for the crossing point（連立方程式で交点を求める） {#gdc-linsolve}
 
 `menu → Algebra` の中の **Solve System of Linear Equations** を使います（[AHL 3.11 の GDC 第3節](ahl-3-11.qmd#gdc-linsolve)）。
 
@@ -717,7 +734,7 @@ $\{1,\ 5\}$ が返ります。**この $2$ つが、それぞれの到着時刻*
 
 **値が違うことを、そのまま答えに使ってください。** 電卓は「衝突するか」までは教えてくれません。
 
-### 4. 距離のグラフで、最接近を見る {#gdc-graph}
+### 4. Graphing the distance（距離のグラフで最接近を見る） {#gdc-graph}
 
 `ctrl + doc` でページを足して Graphs を開き、$d$ を $x$ の関数として入れます。
 
@@ -736,7 +753,7 @@ $f1(x) = \sqrt{\left(25 - 3x\right)^{2} + \left(4x\right)^{2}}$
 `Show that` と指定されている問題では、**グラフだけでは点がもらえません。**
 :::
 
-### 5. 表で、近づき方を見る {#gdc-table}
+### 5. Using a table（表で近づき方を見る） {#gdc-table}
 
 グラフのページで `ctrl + T` を押すと、表が出ます。$x = 0,\ 1,\ 2,\ \ldots$ の $d$ が並ぶので、**どこで折り返すか**が見えます。
 
@@ -744,7 +761,7 @@ $f1(x) = \sqrt{\left(25 - 3x\right)^{2} + \left(4x\right)^{2}}$
 
 **表の刻みは、はじめ $1$ です**（変えられます）。頂点がちょうど整数でないときは、刻みを細かくするか、[GDC 第4節](#gdc-graph) の `Analyze Graph` を使ってください。
 
-### 6. 検算のしかた {#gdc-check}
+### 6. Checking your answers（検算のしかた） {#gdc-check}
 
 - **$t = 0$ を入れる。** 出発点が出るか見る（@exm-ahl312a-position）
 - **最接近の $t$ での位置を、直接出す。** そこから $\lvert \overrightarrow{AB} \rvert$ を計算して、答えと合うか見る（@exm-ahl312a-closest）
@@ -755,12 +772,6 @@ $f1(x) = \sqrt{\left(25 - 3x\right)^{2} + \left(4x\right)^{2}}$
 $2$ つ目がいちばん強い検算です。**$t$ を $2$ つ選んで両方で合わせる**と、平方完成で項を落とした誤りまで見つかります（@exm-ahl312a-closest）。
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが $3$ つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -888,7 +899,7 @@ $$\mathbf{r}_A(2) = \begin{pmatrix} 6 \\ 2 \end{pmatrix} = \mathbf{r}_B(2)$$
 
 $\overrightarrow{AB} = \mathbf{r}_B - \mathbf{r}_A$ です（@eq-ahl312a-ab）。$-6-4 = -10$、$4-(-1) = 5$ で、**符号を $2$ か所とも間違えない**でください。
 
-$2$ 成分とも $t = 2$ でそろい、$t \geq 0$ も満たします（@eq-ahl312a-collide）。
+$2$ 成分とも $t = 2$ でそろい、$t \geq 0$ も満たします（[第6節](#collide-test)）。
 
 **検算。** $t = 2$ を**両方の式**に入れます。$\begin{pmatrix} 0 \\ 4 \end{pmatrix}+2\begin{pmatrix} 3 \\ -1 \end{pmatrix} = \begin{pmatrix} 6 \\ 2 \end{pmatrix}$、$\begin{pmatrix} 10 \\ -6 \end{pmatrix}+2\begin{pmatrix} -2 \\ 4 \end{pmatrix} = \begin{pmatrix} 6 \\ 2 \end{pmatrix}$ ✓ **同じ点になりました。片方だけでは、衝突の確認になりません。**
 :::
@@ -949,7 +960,11 @@ $$\lambda = 3, \quad \mu = 2, \qquad \text{crossing point } (7,\ 7)$$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*No, the particles do not collide. The paths do share the point $(7,\ 7)$, but $A$ arrives there at $t = 3$ and $B$ at $t = 2$, so $B$ has already passed through a second before $A$ gets there. Equivalently, $\overrightarrow{AB} = \begin{pmatrix} 8-3t \\ t \end{pmatrix}$ is never the zero vector, since the second component is $0$ only at $t = 0$, where the first component is $8$.*
+*No, the particles do not collide.*
+
+*The paths do share the point $(7,\ 7)$, but $A$ arrives there at $t = 3$ and $B$ at $t = 2$, so $B$ has already passed through a second before $A$ gets there.*
+
+*Equivalently, $\overrightarrow{AB} = \begin{pmatrix} 8-3t \\ t \end{pmatrix}$ is never the zero vector, since the second component is $0$ only at $t = 0$, where the first component is $8$.*
 :::
 :::
 
@@ -1142,7 +1157,11 @@ $$\lvert \mathbf{v} \rvert = \sqrt{12^2+5^2} = 13 \ \text{km h}^{-1}$$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The speed $13\ \text{km h}^{-1}$ is how much sea the boat covers each hour, regardless of direction. Because the velocity is constant, the boat travels in a straight line, so after $2.5$ hours it has covered $2.5 \times 13 = 32.5$ km and is exactly $32.5$ km from the harbour. If the boat had changed course, the distance travelled would still be $32.5$ km but the distance from the harbour would be less.*
+*The speed $13\ \text{km h}^{-1}$ is how much sea the boat covers each hour, regardless of direction.*
+
+*Because the velocity is constant, the boat travels in a straight line, so after $2.5$ hours it has covered $2.5 \times 13 = 32.5$ km and is exactly $32.5$ km from the harbour.*
+
+*If the boat had changed course, the distance travelled would still be $32.5$ km but the distance from the harbour would be less.*
 :::
 :::
 
@@ -1192,32 +1211,16 @@ $2$ 粒子は**同じ $y$ 方向の速度 $3$** を持っているので、$y$ �
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The student's crossing point is right, but the conclusion is not. Two paths crossing means the two straight lines share a point; a collision needs both particles to be at that point at the same time. Here $A$ reaches $(4,\ 7)$ at $t = 2$ and $B$ reaches it at $t = 4$. More directly, $\overrightarrow{AB} = \mathbf{r}_B - \mathbf{r}_A = \begin{pmatrix} 6-2t \\ -6 \end{pmatrix}$, whose second component is $-6$ for every $t$, so $\overrightarrow{AB}$ can never be the zero vector. The particles therefore never collide; they stay $6$ apart in the $y$-direction because their $y$-velocities are equal.*
+*The student's crossing point is right, but the conclusion is not.*
+
+*Two paths crossing means the two straight lines share a point; a collision needs both particles to be at that point at the same time.*
+
+*Here $A$ reaches $(4,\ 7)$ at $t = 2$ and $B$ reaches it at $t = 4$.*
+
+*More directly, $\overrightarrow{AB} = \mathbf{r}_B - \mathbf{r}_A = \begin{pmatrix} 6-2t \\ -6 \end{pmatrix}$, whose second component is $-6$ for every $t$, so $\overrightarrow{AB}$ can never be the zero vector.*
+
+*The particles therefore never collide; they stay $6$ apart in the $y$-direction because their $y$-velocities are equal.*
 :::
 :::
 
 :::
-
-## 参考：シラバスの原文 {#syllabus}
-
-:::: {.callout-note collapse="true" appearance="simple"}
-## クリックすると開きます
-AHL 3.12 の Content 欄は $2$ 行あります。このページはそのうち $1$ 行目で、次の $2$ 文でできています。
-
-> Vector applications to kinematics.
-> Modelling linear motion with constant velocity in two and three dimensions.
-
-**$1$ 行目に対応する Guidance は、次の $3$ 行**です。
-
-> Finding positions, intersections, describing paths, finding times and distances when two objects are closest to each other.
-
-> $\boldsymbol{r} = \boldsymbol{r}_0 + \boldsymbol{v}t$.
-
-> Relative position of B from A is $\overrightarrow{\text{AB}}$.
-
-**Guidance の $1$ 行目に、$5$ つのことが並んでいます。** 位置を出す（[第1節](#idea)）、交点を出す（[第3節](#path)）、経路を述べる（[第3節](#path)）、$2$ 物体が最接近する**時刻**と**距離**を出す（[第8節](#closest)）。
-
-このページは、この $5$ つに**衝突の判定**（[第4節](#cross-vs-collide)〜[第6節](#collide-test)）を加えて扱います。
-
-$2$ 行目の Content「Motion with variable velocity in two dimensions」は、次のページ [AHL 3.12b](ahl-3-12b.qmd) です。
-::::

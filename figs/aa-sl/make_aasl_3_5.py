@@ -51,9 +51,8 @@ t = np.linspace(0, 2 * np.pi, 400)
 # ══════════════════════════════════════════════════════════
 # (a) 単位円の定義
 # ══════════════════════════════════════════════════════════
-ax1.set_title("The unit circle", fontsize=11, color=INK, loc="left", pad=10)
 ax1.set_xlim(-1.55, 1.95)
-ax1.set_ylim(-1.18, 1.75)
+ax1.set_ylim(-1.18, 1.62)
 ax1.set_aspect("equal")
 ax1.axis("off")
 
@@ -88,8 +87,6 @@ ax1.plot([1], [0], marker="o", markersize=4, color=GREY, zorder=3)
 # ══════════════════════════════════════════════════════════
 # (axes) 軸の上の 4 点
 # ══════════════════════════════════════════════════════════
-axX.set_title("The four points on the axes", fontsize=11, color=INK,
-              loc="left", pad=10)
 axX.set_xlim(-2.6, 2.6)
 axX.set_ylim(-1.85, 1.75)
 axX.set_aspect("equal")
@@ -118,10 +115,8 @@ axX.text(0.14, -1.20, "$\\cos\\frac{3\\pi}{2} = 0$"
 # ══════════════════════════════════════════════════════════
 # (b) 象限の符号と、折り返し
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Signs, and reflections", fontsize=11, color=INK, loc="left",
-              pad=10)
 ax2.set_xlim(-1.75, 1.75)
-ax2.set_ylim(-1.18, 1.75)
+ax2.set_ylim(-1.18, 1.55)
 ax2.set_aspect("equal")
 ax2.axis("off")
 
@@ -150,7 +145,6 @@ for _x, _y, _lab, _col, _ha in [
 # (c) 参照角
 # ══════════════════════════════════════════════════════════
 fig3, ax3 = plt.subplots(figsize=(5.6, 5.4))
-ax3.set_title("Reference angles", fontsize=11, color=INK, loc="left", pad=10)
 ax3.set_xlim(-1.75, 1.75)
 ax3.set_ylim(-1.62, 1.62)
 ax3.set_aspect("equal")
@@ -192,8 +186,6 @@ fig5, ax5 = plt.subplots(figsize=(5.3, 4.9))
 # ══════════════════════════════════════════════════════════
 # (a) 2 つの三角形
 # ══════════════════════════════════════════════════════════
-ax4.set_title("The two special triangles", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax4.set_xlim(-0.35, 5.6)
 ax4.set_ylim(-0.62, 1.85)
 ax4.set_aspect("equal")
@@ -229,8 +221,6 @@ ax4.text(bx + 0.09, 0.66, "$\\frac{\\pi}{3}$", fontsize=11, color=GREEN)
 # ══════════════════════════════════════════════════════════
 # (b) あいまいな場合
 # ══════════════════════════════════════════════════════════
-ax5.set_title("The ambiguous case", fontsize=11, color=INK, loc="left",
-              pad=10)
 ax5.set_xlim(-0.7, 7.6)
 ax5.set_ylim(-0.95, 4.75)
 ax5.set_aspect("equal")

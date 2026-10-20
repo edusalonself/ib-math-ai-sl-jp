@@ -41,7 +41,29 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
-BODY = TEXT.split("## Worked examples")[0]
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
+
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
@@ -61,7 +83,7 @@ in_text("# SL 5.3 — Differentiating $ax^{n}$（べき乗の微分） {#sec-aas
         "見出し")
 
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
@@ -79,7 +101,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + Paper 1）")
 chk(TEXT.count("{.callout-important}") == 1,
     "callout-important 1（公式集 5.3 の x^n）")
@@ -105,7 +127,7 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-5-3-idea-a.svg){#fig-aasl53-idea-a width=100%}", "図 (a) の埋め込み")
+in_text("(img/aasl-5-3-idea-a.svg){#fig-aasl53-idea-a width=95%}", "図 (a) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-5-3-idea.svg")),
     "分割前の SVG は消してある")
 in_text("@fig-aasl53-idea-a", "図 (a) の参照")
@@ -142,7 +164,7 @@ chk(os.path.exists(os.path.join(ROOT, "aa-sl", "01-number-and-algebra",
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('"Two things happen to the power"', "図 (a) の題")
+not_in_fig('"Two things happen to the power"', "図 (a) の題は外した")
 _figmath = " ".join(re.findall(r"\$([^$]*)\$", FIGCODE))
 for _v in ("12", "239", "4x - 5", "2x", "7x^{6}", "15"):
     chk(_v not in _figmath, "図の数式に答え %s は出さない" % _v)
@@ -355,7 +377,7 @@ chk("$ax = ax^{1}$ なので、導関数は $a$ です（[第 2 節](#constant)�
 chk("$kx$ の導関数は $k$ です（[第 2 節](#constant)）。" in TEXT,
     "演習9 のリンクは第2節")
 chk("**$3x$ の微分は $3$ です。**" in TEXT and
-    TEXT.index("**$3x$ の微分は $3$ です。**") < TEXT.index("### 3. 和と差"),
+    TEXT.index("**$3x$ の微分は $3$ です。**") < TEXT.index("### 3. Sums and differences（和と差）"),
     "3x の話は第2節にある")
 
 # --- m4: 指数の検算のつじつま ------------------------------------
@@ -400,7 +422,7 @@ chk("接線の傾きを見れば、求めた $f'(a)$ の見当が付きます。
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -421,17 +443,17 @@ for _sent in [
     chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
 in_text('- 定数倍 $ax^{n}$ を微分できる。', "その内容は本文にある")
 in_text('**なぜ、定数倍はそのまま残るのでしょうか。**', "その内容は本文にある")
-in_text('### 2. 定数倍 {#constant}', "その内容は本文にある")
+in_text('### 2. Constant multiples（定数倍） {#constant}', "その内容は本文にある")
 in_text('**項ごとに微分して、そのまま足し引きします。**', "その内容は本文にある")
 in_text('- 和と差の形を、項ごとに微分できる。', "その内容は本文にある")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：第 1 節の導入と、図 (a) のはみ出し
 # ══════════════════════════════════════════════════════════
-in_text("### 1. the power rule（べき乗の微分） {#power}", "第 1 節の見出し")
+in_text("### 1. The power rule（べき乗の微分） {#power}", "第 1 節の見出し")
 not_in_text("### 1. べき乗の微分", "前の見出しは消した")
 in_text("微分の出発点は、**$x$ のべき乗**（$x^{2}$、$x^{3}$、$x^{-1}$ など）です。"
-        "多項式も、$\\dfrac{1}{x^{2}}$ のような分数も、**$ax^{n}$ の形の和**に"
+        "**polynomial**（多項式）も、$\\dfrac{1}{x^{2}}$ のような分数も、**$ax^{n}$ の形の和**に"
         "直せば微分できます。そのための規則が **the power rule**（べき乗の微分）"
         "です。", "第 1 節の導入")
 in_text("**規則は $1$ つです。** $n$ が整数のとき", "式の前置き")
@@ -487,8 +509,8 @@ in_text("多項式は、$4x^{3}$ や $-5x^{2}$ のような **$ax^{n}$ の形の
 chk(TEXT.index("多項式は、$4x^{3}$ や")
     < TEXT.index("**項ごとに微分して、そのまま足し引きします。**"),
     "書き出しは「項ごとに」より前")
-chk(TEXT.index("### 3. 和と差 {#sum}") < TEXT.index("多項式は、$4x^{3}$ や")
-    < TEXT.index("### 4. 定数の微分"), "書き出しは第 3 節の中")
+chk(TEXT.index("### 3. Sums and differences（和と差） {#sum}") < TEXT.index("多項式は、$4x^{3}$ や")
+    < TEXT.index("### 4. Derivative of a constant（定数の微分）"), "書き出しは第 3 節の中")
 
 # --- 表 2：直した形を式で ------------------------------------------------
 in_text("| 式 | 直した形 |", "表 2 の見出し行")
@@ -515,7 +537,7 @@ not_in_text("導関数に値を入れる", "第 7 節の見出しは消した")
 not_in_text("$f'(3)$ は、$x = 3$ での接線の傾きです。",
             "5.1 と重なる文は消した（SL 5.1 第 6 節にある）")
 # Paper の callout は第 6 節の終わりに移した
-_i6 = TEXT.index("### 6. 直してから微分する {#rewrite}")
+_i6 = TEXT.index("### 6. Rewriting before differentiating（直してから微分する） {#rewrite}")
 _iw = TEXT.index(chr(10) + "## Why it works")
 _s6 = TEXT[_i6:_iw]
 chk("## この項目は Paper 1 に出ます" in _s6, "Paper 1 の callout は第 6 節に")
@@ -538,6 +560,16 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

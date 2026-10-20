@@ -53,6 +53,10 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている（消したはず）: " + msg + " :: " + sub[:70])
+
 # ══════════════════════════════════════════════════════════
 # 0. 指数法則そのもの（記号で）
 # ══════════════════════════════════════════════════════════
@@ -263,15 +267,18 @@ ne(sp.Rational(2) ** sp.Rational(5, 2), 8, "2^2.5 は 8 ではない")
 # ══════════════════════════════════════════════════════════
 in_text("公式集の **1.5** の欄に `Exponents and logarithms` として印刷",
         "公式集にある")
-in_text("> $a^{x} = b \\iff x = \\log_{a} b$, where $a > 0$, $b > 0$, $a \\neq 1$",
-        "公式集の条件を逐語で")
+not_in_text("> $a^{x} = b \\iff x = \\log_{a} b$, where",
+            "公式集の英文の引用は外した")
+in_text("**条件 $a > 0$、$b > 0$、$a \\neq 1$ も、いっしょに書かれています。**",
+        "公式集の条件は日本語で書いた")
 not_in_text("Awareness that $a^x = b$", "Guidance の引用は置かない")
 not_in_text("商の法則は、積の法則から出ます", "商の法則の導出は置かない")
 not_in_text("この項目であつかうのは**整数の指数**です", "整数の指数の但し書きは置かない")
 in_text("（整数の指数法則と、対数の導入）", "題名は「対数の導入」")
 not_in_text("対数のはじまり", "古い題名は残っていない")
-in_text("> Numerical evaluation of logarithms using technology.",
-        "電卓の Guidance")
+not_in_text("> Numerical evaluation of logarithms using technology.",
+            "シラバス（Guidance）の引用は本文から外した")
+in_text("## Paper 2 では、電卓で値を出せます", "電卓で対数を出す内容は残っている")
 in_text("## この $5$ つは、公式集にありません", "指数法則は載っていないと明記")
 in_text("**指数法則そのものは、どこにも載っていません。**", "同上（本文）")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
@@ -291,7 +298,7 @@ in_text("**Paper 1 では使えません。**", "Paper 1 では手で解くと�
 # ══════════════════════════════════════════════════════════
 # 9. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -299,9 +306,16 @@ chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
 chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aasl15-", TEXT, re.M)) == 4, "例題が 4")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(m) for m in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -351,9 +365,9 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Each step down divides by", "図(a) の題")
-in_fig("forced,\\nnot chosen", "図(a) の要点")
-in_fig("One fact, written two ways", "図(b) の題")
+not_in_fig("Each step down divides by", "図(a) の題は外した（本文が言う）")
+not_in_fig("not chosen", "図(a) の説明の文は外した（本文が言う）")
+not_in_fig("One fact, written two ways", "図(b) の題は外した（本文が言う）")
 for _lab in ["base", "exponent", "value"]:
     in_fig('"' + _lab + '"', "図(b) のラベル " + _lab)
 # 図の値が本文と合っているか
@@ -368,11 +382,15 @@ for leak in ["49", "36", "64", "125", "243", "625", "729", "0.0001",
 # 11. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-5.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-1-4.qmd") < DRAFT.index("aasl-1-5.qmd"), "並びが 1.4 → 1.5")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/01-number-and-algebra/aasl-1-5.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-1-4.qmd") < DRAFT.index("aasl-1-5.qmd"), "並びが 1.4 → 1.5")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-5.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -448,7 +466,7 @@ eq(1000 * 1000, 10 ** 6, "1000 × 1000 = 10^6")
 eq(10 ** 7, 10000000, "x=7 なら桁が 1 つ多い")
 # 演習 9 の検算が循環していた
 not_in_text("いくつかの底で確かめます。$2^{0} = 1$", "a^0 = 1 を使う検算は消した")
-in_text("**示したい $a^{0} = 1$ を仮定せずに出しているのが要です。**", "非循環の検算")
+in_text("**示したい $a^{0} = 1$ を仮定せずに出しているのがポイントです。**", "非循環の検算")
 eq(sp.Rational(8, 8), 1, "8/8 = 1")
 eq(sp.Rational(1000, 1000), 1, "1000/1000 = 1")
 # 追加した Common errors
@@ -461,7 +479,7 @@ chk(TEXT.count("::: {.callout-warning}") >= 9, "callout-warning が十分ある"
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -469,13 +487,13 @@ chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
 chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
 
 # 底（base）は、このページの初出で英語を併記（第 10 節）
-in_text('- 底（base）が $10$ の対数（$\\log$）と、底が $e$ の対数（$\\ln$）が読める。', "底の英語併記")
+in_text('- **base**（底）が $10$ の **logarithm**（対数）$\\log$ と、底が $e$ の対数 $\\ln$ が読める。', "底の英語併記")
 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 3. $a^{0} = 1$ と、負の指数（zero and negative exponents） {#zero-negative}', "見出しの英語: 3. $a^{0} = 1$ と、負の指数（zero")
-in_text('### 6. 底が $10$ と、底が $e$（common and natural logarithms） {#base-10-e}', "見出しの英語: 6. 底が $10$ と、底が $e$（common")
+in_text('### 3. Zero and negative exponents（$0$ と負の指数） {#zero-negative}', "見出しの英語: 3. $a^{0} = 1$ と、負の指数（zero")
+in_text('### 6. Common and natural logarithms（底が $10$ の対数と、底が $e$ の対数） {#base-10-e}', "見出しの英語: 6. 底が $10$ と、底が $e$（common")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義の文を図から本文へ（方針 第 21 節）
@@ -499,19 +517,19 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 # ══════════════════════════════════════════════════════════
 # 2026-10-01：第 1 節の見出し
 # ══════════════════════════════════════════════════════════
-in_text("### 1. exponent（指数） {#idea}", "第 1 節の見出し")
+in_text('### 1. Exponents（指数） {#idea}', "第 1 節の見出し")
 not_in_text("### 1. 指数は「何回掛けるか」", "前の見出しは消した")
 
-in_text("### 2. laws of exponents（指数法則） {#laws}", "第 2 節の見出し")
+in_text('### 2. Laws of exponents（指数法則） {#laws}', "第 2 節の見出し")
 not_in_text("### 2. 指数法則 {#laws}", "前の見出しは消した")
-in_text("### 5. logarithm（対数） {#log-def}", "第 5 節の見出し")
+in_text('### 5. Logarithms（対数） {#log-def}', "第 5 節の見出し")
 not_in_text("### 5. 対数は、指数を取り出す", "前の見出しは消した")
 
-in_text("### 4. coefficients and variables（係数と文字がまざったとき） "
+in_text("### 4. Coefficients and variables（係数と文字がまざった式） "
         "{#coefficients}", "第 4 節の見出し")
 not_in_text("### 4. 係数と文字がまざったとき {#coefficients}",
             "前の見出しは消した")
-in_text("### 7. logarithms by hand（手で出す対数） {#by-hand}", "第 7 節の見出し")
+in_text('### 7. Logarithms by hand（手で対数の値を出す） {#by-hand}', "第 7 節の見出し")
 not_in_text("### 7. 手で出す対数と、電卓", "前の見出しは消した")
 # The idea の見出しは、英語と日本語の両方を含む
 # （方針 §17：①英語（日本語）／②そのまま英語／③日本語（英語））

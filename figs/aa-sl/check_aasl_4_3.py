@@ -15,7 +15,25 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "04-statistics-and-probability")
 QMD = os.path.join(BASE, "aasl-4-3.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 # 2026-09-24：このページに図はありません（図 1・図 2 を削除）。
 # make_aasl_4_3.py も消したので、FIG / FIGSTR / FIGCODE はありません。
 
@@ -364,14 +382,16 @@ chk(TEXT.count("callout-important") == 1, "公式集の callout は 1 つ（平�
 in_text("公式集の **4.3** の欄にあります", "平均は公式集の 4.3")
 in_text("**$n$ が「度数の合計」であることが大事です。**", "n の意味")
 _quotes = [l for l in TEXT.splitlines() if l.startswith("> ")]
-chk(len(_quotes) == 1, f"シラバスの引用は 1 行: {_quotes}")
-chk(_quotes[0] == "> Students should use mid-interval values to estimate the mean "
-    "of grouped data.", "引用は階級値の指定")
+chk(len(_quotes) == 0, f"シラバスの引用は本文から外した: {_quotes}")
+not_in_text("Students should use mid-interval values to estimate the mean",
+            "シラバスの引用は本文から外した")
+in_text("mean を推定するときは、必ずこの値を使います。", "階級値を使うことは日本語で直接書いた")
 not_in_text("Calculation of standard deviation and variance of the sample using only",
             "Guidance は逐語で貼らない")
 not_in_text("Variance is the square of the standard deviation", "Guidance は貼らない")
 not_in_text("`using only technology`", "Guidance の逐語は貼らない")
-in_text("標準偏差と分散は電卓で求めるものと決めています", "technology の指定")
+in_text("標準偏差と分散は、電卓で求めるものです。", "technology の指定（直接の説明）")
+not_in_text("シラバスは", "シラバスを引いて説明する文は直した")
 
 # ══════════════════════════════════════════════════════════
 # 10. 説明のしかた
@@ -380,7 +400,7 @@ in_text("**理由をつけて選びます。**", "理由をつける")
 in_text("**答えるのは階級です。** 度数ではありません。", "modal class は階級")
 in_text("「$50 \\le v < 70$」のように階級を書きます", "階級で答える例")
 in_text("**階級の幅がすべて同じときだけ**使えます。", "幅が同じときだけ")
-in_text("**四分位数の求め方は、$1$ つではありません。**", "四分位数の方法")
+in_text("**quartile（四分位数）の求め方は、$1$ つではありません。**", "四分位数の方法")
 
 # ══════════════════════════════════════════════════════════
 # 11. GDC
@@ -416,7 +436,7 @@ for _h in _tip:
 # ══════════════════════════════════════════════════════════
 # 12. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -430,7 +450,7 @@ chk(len(re.findall(r"^::: \{#exm-aasl43-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 chk(TEXT.count("::: {.callout-warning}") == 8, "Common errors 6 + 本文 1 + GDC 1 で 8")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Using your GDC (TI-Nspire CX II)", "Exercises"]
 chk([h_ for h_ in _h2 if h_ in _want] == _want, "6 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
@@ -509,11 +529,15 @@ in_text("**かけると間隔も $\\lvert a \\rvert$ 倍になります。**",
 # 14. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/04-statistics-and-probability/aasl-4-3.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-4-2.qmd") < DRAFT.index("aasl-4-3.qmd"), "並びが 4.2 → 4.3")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/04-statistics-and-probability/aasl-4-3.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-4-2.qmd") < DRAFT.index("aasl-4-3.qmd"), "並びが 4.2 → 4.3")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(04-statistics-and-probability/aasl-4-3.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -553,8 +577,10 @@ not_in_body("$20 \\le t < 30$", "例題2(c) の答えは本文に出さない")
 eq(F(50 + 70, 2), 60, "50-70 の階級値は 60")
 eq(60 - 50, 10, "下端との差は 10")
 # 差しかえた階級が、例題・演習のどこにも出てこないこと
-chk(TEXT.count("50 \\le v < 70") >= 2 and "50 \\le v < 70" not in
-    TEXT[TEXT.index("## Worked examples"):], "50<=v<70 は本文だけに出る")
+_nonex43 = _strip_exm(TEXT[:TEXT.index("\n## Exercises")])
+chk(TEXT.count("50 \\le v < 70") >= 2
+    and _nonex43.count("50 \\le v < 70") == TEXT.count("50 \\le v < 70"),
+    "50<=v<70 は本文だけに出る（例題・演習には出ない）")
 
 # --- Why it works が σ を「ずれの平均」と書いていた ---------------------
 in_text("$\\sigma$ はずれの大きさから作られる数なので、どのずれも "
@@ -663,7 +689,7 @@ eq(sp.Rational("6.48") - sp.Rational("6.40"), sp.Rational("0.08"), "差は 0.08"
 chk(sp.Rational("6.48") > sp.Rational("6.40"), "sx > σx")
 
 # --- GDC の節 —— 確認していない操作と、逐語の引用 -------------------------
-in_text("標準偏差と分散は電卓で求めるものと決めています", "日本語で書く")
+in_text("標準偏差と分散は、電卓で求めるものです。", "日本語で書く")
 not_in_text("`using only technology`", "Guidance の逐語は貼らない")
 in_text("列の先頭にその列の名前（`mass` など）を付け", "列の名前")
 in_text("を選び、**データを入れた列を指定します**。", "列を指定する")
@@ -735,7 +761,7 @@ chk(_mean != sp.Rational(sum(_mid), 4), "E08 重みをつけると値が変わ�
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -746,20 +772,20 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. mean・median・mode の $3$ つ {#three}', "見出しの英語: 1. mean・median・mode の $3$ ")
-in_text('### 3. 度数分布表からの mean {#mean}', "見出しの英語: 3. 度数分布表からの mean")
-in_text('### 4. grouped frequency table（グループ化された表）と mid-interval value {#grouped}', "見出しの英語: 4. グループ化された表：mid-interval ")
-in_text('### 5. modal class と、四分位数の求め方 {#quartiles}', "見出しの英語: 5. modal class と、四分位数の求め方")
-in_text('### 6. standard deviation と variance {#sd}', "見出しの英語: 6. standard deviation と va")
-in_text('### 7. データ全体を動かすとどうなるか（effect of constant changes） {#changes}', "見出しの英語: 7. データ全体を動かすとどうなるか（effect ")
+in_text('### 1. Mean, median and mode（$3$ つの代表値） {#three}', "見出しの英語: 1. mean・median・mode の $3$ ")
+in_text('### 3. Mean from a frequency table（度数分布表から平均を出す） {#mean}', "見出しの英語: 3. 度数分布表からの mean")
+in_text('### 4. Grouped data and mid-interval values（階級に分けた表と階級値） {#grouped}', "見出しの英語: 4. グループ化された表：mid-interval ")
+in_text('### 5. Modal class and quartiles（最頻階級と四分位数） {#quartiles}', "見出しの英語: 5. modal class と、四分位数の求め方")
+in_text('### 6. Standard deviation and variance（標準偏差と分散） {#sd}', "見出しの英語: 6. standard deviation と va")
+in_text('### 7. Effect of constant changes（データ全体を動かしたとき） {#changes}', "見出しの英語: 7. データ全体を動かすとどうなるか（effect ")
 
 
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 4. grouped frequency table（グループ化された表）と mid-interval value {#grouped}', "その内容は本文にある")
-in_text('### 7. データ全体を動かすとどうなるか（effect of constant changes） {#changes}', "その内容は本文にある")
+in_text('### 4. Grouped data and mid-interval values（階級に分けた表と階級値） {#grouped}', "その内容は本文にある")
+in_text('### 7. Effect of constant changes（データ全体を動かしたとき） {#changes}', "その内容は本文にある")
 
 
 
@@ -782,7 +808,7 @@ in_text("$$\n\\bar{x} = \\frac{23}{20} = 1.15\n$$", "第 3 節の mean の式")
 in_text("**$fx$ の行を作ってから足します。**", "fx の行を作る")
 
 # --- 2) 第 4 節の、mid-interval value の例 -------------------------------
-in_text("階級にまとめられた表を **grouped frequency table** といいます。",
+in_text("階級にまとめられた表を **grouped frequency table**（グループ化された度数分布表）といいます。",
         "grouped frequency table の英語")
 in_text(": mid-interval value を使って mean を推定する {#tbl-aasl43-mid .tbl-narrow}",
         "第 4 節の表")
@@ -852,6 +878,16 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

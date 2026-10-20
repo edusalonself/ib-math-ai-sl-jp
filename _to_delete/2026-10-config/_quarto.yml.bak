@@ -1,0 +1,500 @@
+# ══════════════════════════════════════════════════════════
+#  日本語で読む IB数学 — サイト全体の設定
+#
+#  ★ 2026年8月、book から website に変えました。
+#     book はサイドバーを1本しか持てないため、AI SL・AI HL・
+#     AA SL・AA HL の4コースを並べられません。
+#     website なら、コースごとにサイドバーを分けられます。
+#
+#    quarto preview                   … 公開するものだけ
+#    quarto preview --profile draft   … 執筆中のコースも見える
+#
+#  ★ 公開はいつも手作業です。勝手に公開されることはありません。
+#     手順は PUBLISH.md を見てください。
+# ══════════════════════════════════════════════════════════
+
+project:
+  type: website
+  output-dir: _site
+
+  # ── 何をビルドするか ────────────────────────────────────
+  #  ここに書いたものだけが出力されます。書きかけのコースは
+  #  _quarto-draft.yml 側で足しているので、profile を付けずに
+  #  ビルドしても【HTML すら作られません】。
+  #  ★ サイドバーから消すだけでは、ファイルは公開されてしまいます。
+  #     消したいものは、必ずこのリストからも外してください。
+  # ────────────────────────────────────────────────────────
+  render:
+    - index.qmd
+    - glossary-ai.qmd
+    - ai-sl/index.qmd
+    - ai-sl/**/*.qmd
+    - "!ai-sl/appendix-gdc.qmd"   # 中身ができたら、この行を消す
+    - ai-hl/index.qmd
+    - ai-hl/**/*.qmd
+    - aa-sl/index.qmd
+    - aa-sl/**/*.qmd
+    - glossary-aa.qmd
+
+lang: ja
+
+website:
+  title: "日本語で読む IB数学"
+  # ★ 公開先の URL。sitemap.xml と検索エンジン向けの canonical に使われます。
+  #    独自ドメイン（math.selfsg.com）に切り替えたら、ここも書き換えること。
+  site-url: https://edusalonself.github.io/ib-math-ai-sl-jp/
+
+  # ── アクセス解析（Google アナリティクス GA4）─────────────
+  #  ★ gtag のタグを自分で貼る必要はありません。この tracking-id を
+  #     書いておけば、Quarto が全ページの <head> に入れてくれます。
+  #  ★ 測定 ID を変えるときは、ここ1か所だけ直せば済みます。
+  #  ・anonymize-ip は GA4 では既定で有効です（書いても害はありません）。
+  #  ・下書きプロファイル（_quarto-draft.yml）では空にしてあるので、
+  #    quarto preview --profile draft の localhost アクセスは
+  #    集計に入りません。
+  # ────────────────────────────────────────────────────────
+  google-analytics:
+    tracking-id: "G-LQBB7M9VZ0"
+    version: 4
+    anonymize-ip: true
+
+  # ── Cookie 同意バナー ───────────────────────────────────
+  #  implied … バナーは出るが、読者が操作しなくても計測は動く。
+  #            express にすると「同意する」を押すまで計測しない。
+  #  文言は lang: ja から自動で日本語になります。ただし既定の本文は
+  #  「ターゲット広告」に触れていて、このサイトの実態と合わないので、
+  #  cookie-text-ja.html で書きかえています（format の
+  #  include-after-body を見てください）。
+  # ────────────────────────────────────────────────────────
+  cookie-consent:
+    type: implied
+    style: simple
+    palette: light
+    prefs-text: "Cookie の設定"
+
+  search:
+    location: navbar
+    type: overlay
+  page-navigation: true
+
+  navbar:
+    left:
+      - text: "AI SL"
+        href: ai-sl/index.qmd
+      - text: "AI HL"
+        href: ai-hl/index.qmd
+      - text: "AA SL"
+        href: aa-sl/index.qmd
+      - text: "英日対訳表（AI）"
+        href: glossary-ai.qmd
+      - text: "英日対訳表（AA）"
+        href: glossary-aa.qmd
+    right:
+      - text: "学習サロン SELF"
+        href: https://www.selfsg.com/
+
+  # ── サイドバー ──────────────────────────────────────────
+  #  コースごとに1本。id を付けておくと、ページの front matter に
+  #    sidebar: ai-sl
+  #  と書いて明示的に指定することもできます。
+  # ────────────────────────────────────────────────────────
+  sidebar:
+    - id: ai-sl
+      title: "IB数学 AI SL"
+      style: docked
+      collapse-level: 1
+      contents:
+        - ai-sl/index.qmd
+
+        - section: "Topic 1 — Number and algebra"
+          contents:
+            - file: ai-sl/01-number-and-algebra/sl-1-1.qmd
+              text: "SL 1.1 — Numbers in standard form"
+            - file: ai-sl/01-number-and-algebra/sl-1-2.qmd
+              text: "SL 1.2 — Arithmetic sequences and series"
+            - file: ai-sl/01-number-and-algebra/sl-1-3.qmd
+              text: "SL 1.3 — Geometric sequences and series"
+            - file: ai-sl/01-number-and-algebra/sl-1-4.qmd
+              text: "SL 1.4 — Compound interest and depreciation"
+            - file: ai-sl/01-number-and-algebra/sl-1-5.qmd
+              text: "SL 1.5 — Exponents and logarithms"
+            - file: ai-sl/01-number-and-algebra/sl-1-6.qmd
+              text: "SL 1.6 — Approximation and percentage error"
+            - file: ai-sl/01-number-and-algebra/sl-1-7.qmd
+              text: "SL 1.7 — Amortization and annuities"
+            - file: ai-sl/01-number-and-algebra/sl-1-8.qmd
+              text: "SL 1.8 — Solving equations with technology"
+
+        - section: "Topic 2 — Functions"
+          contents:
+            - file: ai-sl/02-functions/sl-2-1.qmd
+              text: "SL 2.1 — Equations of a straight line"
+            - file: ai-sl/02-functions/sl-2-2.qmd
+              text: "SL 2.2 — Functions, domain, range and inverse functions"
+            - file: ai-sl/02-functions/sl-2-3.qmd
+              text: "SL 2.3 — Graphs of functions"
+            - file: ai-sl/02-functions/sl-2-4.qmd
+              text: "SL 2.4 — Key features of graphs"
+            - file: ai-sl/02-functions/sl-2-5.qmd
+              text: "SL 2.5 — Modelling with functions"
+            - file: ai-sl/02-functions/sl-2-6.qmd
+              text: "SL 2.6 — The modelling process"
+
+        - section: "Topic 3 — Geometry and trigonometry"
+          contents:
+            - file: ai-sl/03-geometry-and-trigonometry/sl-3-1.qmd
+              text: "SL 3.1 — Three-dimensional geometry"
+            - file: ai-sl/03-geometry-and-trigonometry/sl-3-2.qmd
+              text: "SL 3.2 — Trigonometric ratios, sine and cosine rules"
+            - file: ai-sl/03-geometry-and-trigonometry/sl-3-3.qmd
+              text: "SL 3.3 — Applications: bearings, elevation and depression"
+            - file: ai-sl/03-geometry-and-trigonometry/sl-3-4.qmd
+              text: "SL 3.4 — The circle: length of an arc, area of a sector"
+            - file: ai-sl/03-geometry-and-trigonometry/sl-3-5.qmd
+              text: "SL 3.5 — Equations of perpendicular bisectors"
+            - file: ai-sl/03-geometry-and-trigonometry/sl-3-6.qmd
+              text: "SL 3.6 — Voronoi diagrams"
+
+        - section: "Topic 4 — Statistics and probability"
+          contents:
+            - file: ai-sl/04-statistics-and-probability/sl-4-1.qmd
+              text: "SL 4.1 — Sampling, bias and outliers"
+            - file: ai-sl/04-statistics-and-probability/sl-4-2.qmd
+              text: "SL 4.2 — Presentation of data"
+            - file: ai-sl/04-statistics-and-probability/sl-4-3.qmd
+              text: "SL 4.3 — Measures of central tendency and dispersion"
+            - file: ai-sl/04-statistics-and-probability/sl-4-4.qmd
+              text: "SL 4.4 — Correlation and linear regression"
+            - file: ai-sl/04-statistics-and-probability/sl-4-5.qmd
+              text: "SL 4.5 — Introduction to probability"
+            - file: ai-sl/04-statistics-and-probability/sl-4-6.qmd
+              text: "SL 4.6 — Combined events and conditional probability"
+            - file: ai-sl/04-statistics-and-probability/sl-4-7.qmd
+              text: "SL 4.7 — Discrete random variables and expected value"
+            - file: ai-sl/04-statistics-and-probability/sl-4-8.qmd
+              text: "SL 4.8 — The binomial distribution"
+            - file: ai-sl/04-statistics-and-probability/sl-4-9.qmd
+              text: "SL 4.9 — The normal distribution"
+            - file: ai-sl/04-statistics-and-probability/sl-4-10.qmd
+              text: "SL 4.10 — Spearman's rank correlation coefficient"
+            - file: ai-sl/04-statistics-and-probability/sl-4-11.qmd
+              text: "SL 4.11 — Hypothesis testing: χ² and t-tests"
+
+        - section: "Topic 5 — Calculus"
+          contents:
+            - file: ai-sl/05-calculus/sl-5-1.qmd
+              text: "SL 5.1 — Introduction to limits and the derivative"
+            - file: ai-sl/05-calculus/sl-5-2.qmd
+              text: "SL 5.2 — Increasing and decreasing functions"
+            - file: ai-sl/05-calculus/sl-5-3.qmd
+              text: "SL 5.3 — Differentiation"
+            - file: ai-sl/05-calculus/sl-5-4.qmd
+              text: "SL 5.4 — Tangents and normals"
+            - file: ai-sl/05-calculus/sl-5-5.qmd
+              text: "SL 5.5 — Introduction to integration"
+            - file: ai-sl/05-calculus/sl-5-6.qmd
+              text: "SL 5.6 — Local maxima and minima"
+            - file: ai-sl/05-calculus/sl-5-7.qmd
+              text: "SL 5.7 — Optimisation"
+            - file: ai-sl/05-calculus/sl-5-8.qmd
+              text: "SL 5.8 — The trapezoidal rule"
+
+        - section: "付録"
+          contents:
+            - file: glossary-ai.qmd
+              text: "英日対訳表（AI）"
+            # - file: ai-sl/appendix-gdc.qmd
+            #   text: "試験でのGDC"        # 中身ができたら戻す
+
+    - id: ai-hl
+      title: "IB数学 AI HL"
+      style: docked
+      collapse-level: 1
+      contents:
+        - ai-hl/index.qmd
+
+        # 書き上がった項目から、ここに足していきます。
+        - section: "Topic 1 — Number and algebra"
+          contents:
+            - file: ai-hl/01-number-and-algebra/ahl-1-9.qmd
+              text: "AHL 1.9 — Laws of logarithms"
+            - file: ai-hl/01-number-and-algebra/ahl-1-10.qmd
+              text: "AHL 1.10 — Rational exponents"
+            - file: ai-hl/01-number-and-algebra/ahl-1-11.qmd
+              text: "AHL 1.11 — The sum of an infinite geometric sequence"
+            - file: ai-hl/01-number-and-algebra/ahl-1-12a.qmd
+              text: "AHL 1.12a — Complex numbers in Cartesian form"
+            - file: ai-hl/01-number-and-algebra/ahl-1-12b.qmd
+              text: "AHL 1.12b — The complex plane"
+            - file: ai-hl/01-number-and-algebra/ahl-1-13.qmd
+              text: "AHL 1.13 — Polar and exponential form"
+            - file: ai-hl/01-number-and-algebra/ahl-1-14.qmd
+              text: "AHL 1.14 — Matrices"
+            - file: ai-hl/01-number-and-algebra/ahl-1-15.qmd
+              text: "AHL 1.15 — Eigenvalues and eigenvectors"
+
+        - section: "Topic 2 — Functions"
+          contents:
+            - file: ai-hl/02-functions/ahl-2-7.qmd
+              text: "AHL 2.7 — Composite and inverse functions"
+            - file: ai-hl/02-functions/ahl-2-8.qmd
+              text: "AHL 2.8 — Transformations of graphs"
+            - file: ai-hl/02-functions/ahl-2-9a.qmd
+              text: "AHL 2.9a — Half-life, natural log and sinusoidal models"
+            - file: ai-hl/02-functions/ahl-2-9b.qmd
+              text: "AHL 2.9b — Logistic and piecewise models"
+            - file: ai-hl/02-functions/ahl-2-10.qmd
+              text: "AHL 2.10 — Log–log and semi-log scaling"
+
+        - section: "Topic 3 — Geometry and trigonometry"
+          contents:
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-7.qmd
+              text: "AHL 3.7 — Radian measure"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-8.qmd
+              text: "AHL 3.8 — The unit circle and identities"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-9.qmd
+              text: "AHL 3.9 — Geometric transformations in two dimensions"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-10a.qmd
+              text: "AHL 3.10a — Vectors: the basics"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-10b.qmd
+              text: "AHL 3.10b — Magnitude, position and unit vectors"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-11.qmd
+              text: "AHL 3.11 — Vector equation of a line"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-12a.qmd
+              text: "AHL 3.12a — Kinematics: constant velocity"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-12b.qmd
+              text: "AHL 3.12b — Kinematics: variable velocity"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-13a.qmd
+              text: "AHL 3.13a — The scalar product"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-13b.qmd
+              text: "AHL 3.13b — The vector product"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-14.qmd
+              text: "AHL 3.14 — Graph theory"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-15.qmd
+              text: "AHL 3.15 — Adjacency matrices"
+            - file: ai-hl/03-geometry-and-trigonometry/ahl-3-16.qmd
+              text: "AHL 3.16 — Tree and cycle algorithms"
+
+        - section: "Topic 4 — Statistics and probability"
+          contents:
+            - file: ai-hl/04-statistics-and-probability/ahl-4-12.qmd
+              text: "AHL 4.12 — Data collection and χ² categorisation"
+            - file: ai-hl/04-statistics-and-probability/ahl-4-13.qmd
+              text: "AHL 4.13 — Non-linear regression"
+            - file: ai-hl/04-statistics-and-probability/ahl-4-14.qmd
+              text: "AHL 4.14 — Linear transformation of a single random variable"
+            - file: ai-hl/04-statistics-and-probability/ahl-4-15.qmd
+              text: "AHL 4.15 — Linear combinations of normal variables"
+            - file: ai-hl/04-statistics-and-probability/ahl-4-16.qmd
+              text: "AHL 4.16 — Confidence intervals for the mean of a normal population"
+            - file: ai-hl/04-statistics-and-probability/ahl-4-17.qmd
+              text: "AHL 4.17 — The Poisson distribution"
+            - file: ai-hl/04-statistics-and-probability/ahl-4-18a.qmd
+              text: "AHL 4.18a — Critical values and critical regions"
+            - file: ai-hl/04-statistics-and-probability/ahl-4-18b.qmd
+              text: "AHL 4.18b — Tests for a mean, a proportion and ρ"
+            - file: ai-hl/04-statistics-and-probability/ahl-4-18c.qmd
+              text: "AHL 4.18c — Type I and Type II errors"
+            - file: ai-hl/04-statistics-and-probability/ahl-4-19.qmd
+              text: "AHL 4.19 — Transition matrices"
+
+        - section: "Topic 5 — Calculus"
+          contents:
+            - file: ai-hl/05-calculus/ahl-5-9a.qmd
+              text: "AHL 5.9a — Derivatives of the standard functions"
+            - file: ai-hl/05-calculus/ahl-5-9b.qmd
+              text: "AHL 5.9b — The chain, product and quotient rules, and related rates"
+            - file: ai-hl/05-calculus/ahl-5-10.qmd
+              text: "AHL 5.10 — The second derivative"
+            - file: ai-hl/05-calculus/ahl-5-11a.qmd
+              text: "AHL 5.11a — Standard integrals"
+            - file: ai-hl/05-calculus/ahl-5-11b.qmd
+              text: "AHL 5.11b — Integration by inspection and substitution"
+            - file: ai-hl/05-calculus/ahl-5-12a.qmd
+              text: "AHL 5.12a — Area enclosed by a curve and the axes"
+            - file: ai-hl/05-calculus/ahl-5-12b.qmd
+              text: "AHL 5.12b — Volumes of revolution"
+            - file: ai-hl/05-calculus/ahl-5-13.qmd
+              text: "AHL 5.13 — Kinematics"
+            - file: ai-hl/05-calculus/ahl-5-14.qmd
+              text: "AHL 5.14 — Setting up a differential equation"
+            - file: ai-hl/05-calculus/ahl-5-15.qmd
+              text: "AHL 5.15 — Slope fields"
+            - file: ai-hl/05-calculus/ahl-5-16a.qmd
+              text: "AHL 5.16a — Euler's method"
+            - file: ai-hl/05-calculus/ahl-5-16b.qmd
+              text: "AHL 5.16b — Euler's method for coupled systems"
+            - file: ai-hl/05-calculus/ahl-5-17a.qmd
+              text: "AHL 5.17a — Phase portraits: real eigenvalues"
+            - file: ai-hl/05-calculus/ahl-5-17b.qmd
+              text: "AHL 5.17b — Phase portraits: complex eigenvalues"
+            - file: ai-hl/05-calculus/ahl-5-18.qmd
+              text: "AHL 5.18 — Second order differential equations"
+
+        - section: "付録"
+          contents:
+            - file: ai-sl/index.qmd
+              text: "SL の39項目（AI SL）"
+            - file: glossary-ai.qmd
+              text: "英日対訳表（AI）"
+
+    - id: aa-sl
+      title: "IB数学 AA SL"
+      style: docked
+      collapse-level: 1
+      contents:
+        - aa-sl/index.qmd
+
+        # 書き上がった項目から、ここに足していきます。
+        - section: "Topic 1 — Number and algebra"
+          contents:
+            - file: aa-sl/01-number-and-algebra/aasl-1-1.qmd
+              text: "SL 1.1 — Numbers in standard form"
+            - file: aa-sl/01-number-and-algebra/aasl-1-2.qmd
+              text: "SL 1.2 — Arithmetic sequences and series"
+            - file: aa-sl/01-number-and-algebra/aasl-1-3.qmd
+              text: "SL 1.3 — Geometric sequences and series"
+            - file: aa-sl/01-number-and-algebra/aasl-1-4.qmd
+              text: "SL 1.4 — Financial applications of geometric sequences"
+            - file: aa-sl/01-number-and-algebra/aasl-1-5.qmd
+              text: "SL 1.5 — Laws of exponents and introduction to logarithms"
+            - file: aa-sl/01-number-and-algebra/aasl-1-6.qmd
+              text: "SL 1.6 — Simple deductive proof"
+            - file: aa-sl/01-number-and-algebra/aasl-1-7a.qmd
+              text: "SL 1.7a — Laws of exponents with rational exponents"
+            - file: aa-sl/01-number-and-algebra/aasl-1-7b.qmd
+              text: "SL 1.7b — Laws of logarithms and exponential equations"
+            - file: aa-sl/01-number-and-algebra/aasl-1-8.qmd
+              text: "SL 1.8 — The sum of an infinite geometric series"
+            - file: aa-sl/01-number-and-algebra/aasl-1-9.qmd
+              text: "SL 1.9 — The binomial theorem"
+
+        - section: "Topic 2 — Functions"
+          contents:
+            - file: aa-sl/02-functions/aasl-2-1.qmd
+              text: "SL 2.1 — Different forms of the equation of a straight line"
+            - file: aa-sl/02-functions/aasl-2-2.qmd
+              text: "SL 2.2 — Functions, domain, range and the inverse function"
+            - file: aa-sl/02-functions/aasl-2-3.qmd
+              text: "SL 2.3 — The graph of a function"
+            - file: aa-sl/02-functions/aasl-2-4.qmd
+              text: "SL 2.4 — Key features of graphs"
+            - file: aa-sl/02-functions/aasl-2-5.qmd
+              text: "SL 2.5 — Composite functions and the inverse function"
+            - file: aa-sl/02-functions/aasl-2-6.qmd
+              text: "SL 2.6 — The quadratic function and its three forms"
+            - file: aa-sl/02-functions/aasl-2-7.qmd
+              text: "SL 2.7 — Quadratic equations, inequalities and the discriminant"
+            - file: aa-sl/02-functions/aasl-2-8.qmd
+              text: "SL 2.8 — The reciprocal function and rational functions"
+            - file: aa-sl/02-functions/aasl-2-9.qmd
+              text: "SL 2.9 — Exponential and logarithmic functions"
+            - file: aa-sl/02-functions/aasl-2-10.qmd
+              text: "SL 2.10 — Solving equations, graphically and analytically"
+            - file: aa-sl/02-functions/aasl-2-11.qmd
+              text: "SL 2.11 — Transformations of graphs"
+
+        - section: "Topic 3 — Geometry and trigonometry"
+          contents:
+            - file: aa-sl/03-geometry/aasl-3-1.qmd
+              text: "SL 3.1 — Three-dimensional geometry"
+            - file: aa-sl/03-geometry/aasl-3-2.qmd
+              text: "SL 3.2 — Right-angled trigonometry and the sine and cosine rules"
+            - file: aa-sl/03-geometry/aasl-3-3.qmd
+              text: "SL 3.3 — Applications of trigonometry"
+            - file: aa-sl/03-geometry/aasl-3-4.qmd
+              text: "SL 3.4 — Radian measure, arc length and sector area"
+            - file: aa-sl/03-geometry/aasl-3-5.qmd
+              text: "SL 3.5 — The unit circle, exact values and the ambiguous case"
+            - file: aa-sl/03-geometry/aasl-3-6.qmd
+              text: "SL 3.6 — Trigonometric identities"
+            - file: aa-sl/03-geometry/aasl-3-7a.qmd
+              text: "SL 3.7a — The circular functions and their graphs"
+            - file: aa-sl/03-geometry/aasl-3-7b.qmd
+              text: "SL 3.7b — Transformations of trigonometric graphs and real-life models"
+            - file: aa-sl/03-geometry/aasl-3-8.qmd
+              text: "SL 3.8 — Solving trigonometric equations"
+
+        - section: "Topic 4 — Statistics and probability"
+          contents:
+            - file: aa-sl/04-statistics-and-probability/aasl-4-1.qmd
+              text: "SL 4.1 — Sampling, bias and outliers"
+            - file: aa-sl/04-statistics-and-probability/aasl-4-2.qmd
+              text: "SL 4.2 — Presentation of data"
+            - file: aa-sl/04-statistics-and-probability/aasl-4-3.qmd
+              text: "SL 4.3 — Measures of central tendency and dispersion"
+            - file: aa-sl/04-statistics-and-probability/aasl-4-4.qmd
+              text: "SL 4.4 — Correlation and linear regression"
+            - file: aa-sl/04-statistics-and-probability/aasl-4-5.qmd
+              text: "SL 4.5 — Introduction to probability"
+            - file: aa-sl/04-statistics-and-probability/aasl-4-6.qmd
+              text: "SL 4.6 — Combined events"
+            - file: aa-sl/04-statistics-and-probability/aasl-4-7.qmd
+              text: "SL 4.7 — Discrete random variables"
+            - file: aa-sl/04-statistics-and-probability/aasl-4-8.qmd
+              text: "SL 4.8 — The binomial distribution"
+            - file: aa-sl/04-statistics-and-probability/aasl-4-9.qmd
+              text: "SL 4.9 — The normal distribution"
+            - file: aa-sl/04-statistics-and-probability/aasl-4-10.qmd
+              text: "SL 4.10 — The regression line of x on y"
+            - file: aa-sl/04-statistics-and-probability/aasl-4-11.qmd
+              text: "SL 4.11 — Formal conditional probability"
+            - file: aa-sl/04-statistics-and-probability/aasl-4-12.qmd
+              text: "SL 4.12 — Standardization and unknown mu, sigma"
+
+        - section: "Topic 5 — Calculus"
+          contents:
+            - file: aa-sl/05-calculus/aasl-5-1.qmd
+              text: "SL 5.1 — Limits and the derivative"
+            - file: aa-sl/05-calculus/aasl-5-2.qmd
+              text: "SL 5.2 — Increasing and decreasing functions"
+            - file: aa-sl/05-calculus/aasl-5-3.qmd
+              text: "SL 5.3 — Differentiating a x^n"
+            - file: aa-sl/05-calculus/aasl-5-4.qmd
+              text: "SL 5.4 — Tangents and normals"
+            - file: aa-sl/05-calculus/aasl-5-5.qmd
+              text: "SL 5.5 — Introduction to integration"
+            - file: aa-sl/05-calculus/aasl-5-6.qmd
+              text: "SL 5.6 — Standard derivatives and the rules of differentiation"
+            - file: aa-sl/05-calculus/aasl-5-7.qmd
+              text: "SL 5.7 — The second derivative"
+            - file: aa-sl/05-calculus/aasl-5-8.qmd
+              text: "SL 5.8 — Maximum and minimum points, concavity and optimization"
+            - file: aa-sl/05-calculus/aasl-5-9.qmd
+              text: "SL 5.9 — Kinematics"
+            - file: aa-sl/05-calculus/aasl-5-10.qmd
+              text: "SL 5.10 — Standard integrals, reverse chain rule and substitution"
+            - file: aa-sl/05-calculus/aasl-5-11.qmd
+              text: "SL 5.11 — Definite integrals and areas"
+
+        - file: glossary-aa.qmd
+          text: "英日対訳表（AA）"
+
+  page-footer:
+    left: "© 2026 学習サロン SELF"
+    center:
+      - text: "学習サロン SELF"
+        href: https://www.selfsg.com/
+    right: "IB（国際バカロレア機構）とは関係のない独立した教材です"
+
+crossref:
+  # false にしておくこと。true だと「Example 17.1」のように
+  # ページの通し番号が頭に付き、シラバス番号と紛らわしくなる。
+  chapters: false
+  thm-title: 定理
+  def-title: 定義
+  exm-title: 例題
+  cor-title: 系
+
+format:
+  html:
+    theme: [cosmo, styles.scss]
+    toc: true
+    toc-title: このページの内容
+    toc-depth: 3
+    number-sections: false
+    html-math-method: mathjax
+    fig-align: center
+    link-external-newwindow: true
+    # Cookie 同意バナーの本文を、このサイトの実態に合わせて差しかえる
+    include-after-body: cookie-text-ja.html

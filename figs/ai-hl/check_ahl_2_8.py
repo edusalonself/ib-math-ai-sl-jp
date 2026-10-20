@@ -84,8 +84,8 @@ not_in_text("**$p$ を $1$ より小さくすると縮み、負にすると裏�
             "レビュー3: GDC 側の同じ主張")
 
 # ★ レビュー5: q の条件
-in_text("\\text{ 倍} \\qquad (q > 0)", "eq-ahl28-hstretch の条件")
-in_text("\\text{ 倍してから、右に } a \\qquad (q > 0)", "eq-ahl28-inside の条件")
+in_text("y = f(qx) \\qquad (q > 0)\n$$ {#eq-ahl28-hstretch}", "eq-ahl28-hstretch の条件")
+in_text("（$q > 0$）は、横に $\\dfrac{1}{q}$ 倍してから、右に $a$ 動かします。", "合成変換の読み方（本文）")
 in_text("$q < 0$ のときは、**scale factor $\\dfrac{1}{\\lvert q \\rvert}$ の horizontal stretch** に加えて")
 chk(sp.simplify(sp.Function("F")(-x) - sp.Function("F")(-1 * x)) == 0,
     "q=-1 は y 軸についての対称移動")
@@ -283,15 +283,23 @@ for cas in ["expand(", "factor(", "solve(", "csolve(", "Polar", "Define f"]:
 # 2026-09: 削除した節・欄の検査（in_text("Translations: $y = f(x)+b$; $y = f(x-a)…）
 # 2026-09: 削除した節・欄の検査（in_text("Reflections: in the $x$ axis $y = -f(x)…）
 # 2026-09: 削除した節・欄の検査（in_text("Vertical stretch with scale factor $p$:…）
-in_text("Horizontal stretch with scale factor $\\dfrac{1}{q}$: $y = f(qx)$")
+# 2026-10: シラバスの英文引用は外し、日本語で直接書いた
+not_in_text("Horizontal stretch with scale factor $\\dfrac{1}{q}$: $y = f(qx)$", "シラバスの引用は本文から外した")
+in_text("もとのグラフを**横に $\\dfrac{1}{q}$ 倍**したものです。scale factor は $q$ ではなく $\\dfrac{1}{q}$ です。",
+        "横の拡大の scale factor は 1/q（本文）")
 # 2026-09: 削除した節・欄の検査（in_text("$x$ and $y$ axes are invariant.")…）
-in_text("Students should be made aware of the significance of the order of transformations.")
-in_text("Translation by the vector $\\begin{pmatrix} 3 \\\\ -2 \\end{pmatrix}$")
+not_in_text("Students should be made aware of the significance of the order of transformations.",
+            "シラバスの引用は本文から外した")
+in_text("**変換の順序によって、結果が変わることがあります。**", "順序の注意は日本語で直接")
+not_in_text("Translation by the vector $\\begin{pmatrix} 3 \\\\ -2 \\end{pmatrix}$", "シラバスの引用は本文から外した")
+in_text("たとえば $\\begin{pmatrix} 3 \\\\ -2 \\end{pmatrix}$ は「**右に $3$、下に $2$**」で、式は $y = f(x-3)-2$ です。",
+        "ベクトル (3, -2) の平行移動は本文で")
+chk(re.findall(r"^> (?!\[)", TEXT, re.M) == [], "シラバスの引用（> ...）は残っていない")
 # 2026-09: 削除した節・欄の検査（chk(TEXT.count("> ") >= 15, "引用行が 15 行以上（Content…）
 # 2026-09: 削除した節・欄の検査（in_text("**Reflections の $2$ 式については、Guidance 欄に対…）
 not_in_text("**Reflections の行だけ、Guidance 欄が空です。** 迷いようがない、ということでしょう。",
             "レビュー7: 決めつけと §3 との矛盾")
-in_text("Guidance の `x and y axes are invariant.` は、$2$ つの stretch についての注意です")
+not_in_text("Guidance の `x and y axes are invariant.` は、$2$ つの stretch についての注意です")
 not_in_text("これが Guidance の `x and y axes are invariant.` の半分です",
             "レビュー11: シラバス文を勝手に半分に割っていた")
 not_in_text("ここを外さないことが、そのまま得点になります", "採点についての検証できない主張")
@@ -301,13 +309,29 @@ not_in_text("ここを外さないことが、そのまま得点になります"
 # ══════════════════════════════════════════════════════════
 heads = re.findall(r"(?m)^## (.+)$", TEXT)
 need = ["What you should be able to do", "The idea", "Why it works",
-        "Worked examples", "Common errors",
+        "Common errors",
         "Using your GDC (TI-Nspire CX II)", "Exercises"]
 for h in need:
     chk(h in heads, "見出しがない: " + h)
-chk([h for h in heads if h in need] == need, "7 つの見出しの順序")
+chk([h for h in heads if h in need] == need, "6 つの見出しの順序（Worked examples は 2026-10 に削除）")
+# 2026-10 新レイアウト：例題は The idea の各節の後ろ
+not_in_text("## Worked examples", "Worked examples の節は消した")
+_iw = TEXT.index("\n## Why it works")
+chk(all(TEXT.index("## The idea") < m.start() < _iw
+        for m in re.finditer(r"::: \{#exm-", TEXT)), "例題はすべて The idea の中")
+_exm_want = [
+        ("exm-ahl28-basic", "translation"),
+        ("exm-ahl28-reflect", "outside-inside"),
+        ("exm-ahl28-order", "composite"),
+        ("exm-ahl28-sine", "composite")]
+chk(re.findall(r"::: \{#(exm-[a-z0-9-]+)\}", TEXT) == [e for e, _ in _exm_want],
+    "例題の並び")
+for _e, _s in _exm_want:
+    _hs = re.findall(r"^### \d+\. .*?\{#([a-z0-9-]+)\}$",
+                     TEXT[:TEXT.index("::: {#" + _e + "}")], re.M)
+    chk(_hs[-1:] == [_s], "%s は %s の節の中: %s" % (_e, _s, _hs[-1:]))
 
-chk(len(re.findall(r"(?m)^---$", TEXT)) == 6, "--- は 6 個")
+chk(len(re.findall(r"(?m)^---$", TEXT)) == 2, "--- は 6 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳は 14 個")
 chk(TEXT.count("::: {.ex-sep}") == 9, ".ex-sep は 9 個")
 chk(len(re.findall(r"::: \{#exm-ahl28-[\w-]+\}", TEXT)) == 4, "worked example は 4 個")
@@ -347,8 +371,8 @@ for svg in ["ahl-2-8-translation.svg", "ahl-2-8-reflection.svg",
 for ref in ["@fig-ahl28-translation", "@fig-ahl28-reflection",
             "@fig-ahl28-vstretch", "@fig-ahl28-hstretch",
             "@fig-ahl28-order", "@fig-ahl28-sine", "@eq-ahl28-vtrans",
-            "@eq-ahl28-htrans", "@eq-ahl28-xreflect", "@eq-ahl28-yreflect",
-            "@eq-ahl28-vstretch", "@eq-ahl28-hstretch", "@eq-ahl28-inside",
+            "@eq-ahl28-htrans",
+            "@eq-ahl28-vstretch", "@eq-ahl28-hstretch",
 # 2026-09: 削除した節・欄の検査（"@tbl-ahl28-four", "@tbl-ahl28-matrix", "@exm-ah…）
             "@exm-ahl28-reflect", "@exm-ahl28-order", "@exm-ahl28-sine"]:
     in_text(ref, "交差参照")
@@ -379,8 +403,9 @@ for line in TEXT.split("\n"):
 # ══════════════════════════════════════════════════════════
 #  2026-08 の修正: 負の係数を scale factor と呼ばない
 # ══════════════════════════════════════════════════════════
-in_text("y = p\\,f(x) \\quad \\text{は、vertical stretch with scale factor } p "
-        "\\qquad (p > 0)")
+# 2026-10: 表示数式の中の日本語を本文に出した
+in_text("y = p\\,f(x) \\qquad (p > 0)\n$$ {#eq-ahl28-vstretch}")
+in_text("英語では *vertical stretch with scale factor $p$* と書きます。")
 not_in_text("y = p\\,f(x) \\quad \\text{は、縦に } p \\text{ 倍}")
 in_text("**scale factor は正の大きさとして書きます。**")
 in_text("**$p < 0$ のときは、$1$ つの変換ではありません。**")
@@ -396,7 +421,8 @@ in_text("| $y = p\\,f(x)$ | 外 | $y$ 座標 | $y$ 座標を $p$ 倍する。"
         "$p<0$ なら reflection も起こり、stretch の scale factor は $\\lvert p \\rvert$ | $x$ 軸の上 |")
 not_in_text("| $y = p\\,f(x)$ | 外 | $y$ 座標 | 縦に $p$ 倍 | $x$ 軸の上 |")
 # 2026-09: 削除した節・欄の検査（in_text("（$p>0$ なら vertical stretch, scale facto…）
-in_text("y = f(qx) \\quad \\text{は、横に } \\frac{1}{q} \\text{ 倍} \\qquad (q > 0)")
+not_in_text("y = f(qx) \\quad \\text{は、横に } \\frac{1}{q} \\text{ 倍}", "表示数式の中に日本語の文を入れない")
+not_in_text("\\text{は、", "表示数式の中に日本語の文を入れない")
 # シラバスの引用はそのまま（IB の原文）
 # 2026-09: 削除した節・欄の検査（in_text("> Vertical stretch with scale factor $p…）
 # y = -3 f(x) は「x 軸で折り返してから 3 倍」と同じ写像

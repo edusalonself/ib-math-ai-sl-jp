@@ -86,6 +86,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている（外したはず）: " + msg + " :: " + sub[:70])
+
+
 # ══════════════════════════════════════════════════════════
 # 0. 公式集の成分式そのもの
 # ══════════════════════════════════════════════════════════
@@ -401,8 +405,10 @@ not_in_text("| $0$ になるのは | **垂直**のとき | **平行**のとき |
             "無条件だった行（レビュー8）")
 not_in_text("| 大きさ | $\\lvert \\mathbf{v} \\rvert \\lvert \\mathbf{w} \\rvert"
             " \\cos\\theta$", "cosθ を「大きさ」と呼んでいた行（レビュー8）")
-in_text("### 3. $\\mathbf{v} \\times \\mathbf{w}$ は、$\\mathbf{0}$ でなければ両方に垂直です",
-        "見出しの条件（レビュー14）")
+in_text("### 3. Perpendicular to both vectors（$2$ つのベクトルに垂直な向き） {#perpendicular}",
+        "第3節の見出し")
+in_text("$\\mathbf{v} \\times \\mathbf{w}$ は、$\\mathbf{0}$ でなければ $\\mathbf{v}$ にも $\\mathbf{w}$ にも垂直です。",
+        "見出しにあった条件を本文の書き出しに書いている（レビュー14）")
 in_text("$\\mathbf{v}$ と $\\mathbf{w}$ が平行のとき、またはどちらかが $\\mathbf{0}$ のとき",
         "n が決まらない条件（レビュー12）")
 # sinθ >= 0 は 0..180 で正しい
@@ -412,23 +418,29 @@ chk(all(float(sp.sin(sp.rad(d))) >= -1e-12 for d in range(0, 181)),
 # ══════════════════════════════════════════════════════════
 # 6. 公式集とシラバスの引用
 # ══════════════════════════════════════════════════════════
-in_text("Definition and calculation of the vector product of two vectors.",
-        "Content の引用 1")
-in_text("Geometric interpretation of $\\lvert \\mathbf{v} \\times \\mathbf{w}"
-        " \\rvert$.", "Content の引用 2")
-in_text("Components of vectors.", "Content の引用 3")
-in_text("is the unit normal vector whose direction is given by the right-hand"
-        " screw rule.", "Guidance の引用 1")
-in_text("Use of $\\lvert \\mathbf{v} \\times \\mathbf{w} \\rvert$ to find the"
-        " area of a parallelogram (and hence a triangle).", "Guidance の引用 2")
-in_text("acting perpendicular to vector $\\mathbf{b}$, in the plane formed by"
-        " the two vectors", "Guidance の引用 3")
-in_text("**Not required:** generalized properties and proofs of scalar and"
-        " cross product.", "Not required の引用")
-in_text("公式集にありません", "|a×b|/|b| が公式集にないこと")
+not_in_text("Definition and calculation of the vector product of two vectors.",
+            "シラバスの引用は本文から外した")
+not_in_text("Geometric interpretation of $\\lvert \\mathbf{v} \\times \\mathbf{w}"
+            " \\rvert$.", "シラバスの引用は本文から外した")
+not_in_text("Components of vectors.", "シラバスの引用は本文から外した")
+not_in_text("is the unit normal vector whose direction is given by the right-hand"
+            " screw rule.", "Guidance の引用は本文から外した")
+not_in_text("Use of $\\lvert \\mathbf{v} \\times \\mathbf{w} \\rvert$ to find the"
+            " area of a parallelogram (and hence a triangle).", "Guidance の引用は本文から外した")
+not_in_text("acting perpendicular to vector $\\mathbf{b}$, in the plane formed by"
+            " the two vectors", "Guidance の引用は本文から外した")
+not_in_text("**Not required:** generalized properties and proofs of scalar and"
+            " cross product.", "Not required の引用は本文から外した")
+# 引用の代わりに日本語で直接書いてある
+in_text("どちらかを決めるのが **right-hand screw rule**（右ねじの規則）です。", "右ねじの規則の説明")
+in_text("この式は、公式集の **AHL 3.13** の欄の `Area of a parallelogram` の行にあります。",
+        "平行四辺形の面積が公式集にあること")
+in_text("**$\\mathbf{a}$ と $\\mathbf{b}$ が乗っている平面の中**での、$\\mathbf{b}$ に垂直な向き",
+        "垂直な成分が 2 ベクトルの平面の中だと書いている")
+in_text("この式は公式集にはありませんが、@eq-ahl313b-mag の両辺を $\\lvert \\mathbf{b} \\rvert$ で割れば $1$ 行で出せます。",
+        "|a×b|/|b| が公式集にないこと")
 in_text("覚える必要はありません", "公式集にあるものを暗記させていない")
-in_text("`(and hence a triangle)` はシラバスの Guidance にあります",
-        "三角形は Guidance だと書いている")
+in_text("三角形の面積も求められます", "三角形の面積にも触れている")
 chk(TEXT.count("ahl-3-13a.qmd") >= 8, "3.13a への後方リンクがある")
 # 3.13a の内容をこのページで重ねて説明していないか
 for banned in ["\\cos\\theta = \\frac{v_1w_1", "acute angle between two lines"]:
@@ -466,7 +478,7 @@ in_text("$70.5$ ではなく $1.23$ が返ります", "角度設定の注意（�
 # ══════════════════════════════════════════════════════════
 # 8. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6,
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2,
     "--- は 6 本（front matter 2 + 例題 4）")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
@@ -475,9 +487,14 @@ chk(TEXT.count("{.model-answer}") == 6, "model-answer が 6")
 chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
 chk(len(re.findall(r"^::: \{#exm-ahl313b-", TEXT, re.M)) == 4, "例題が 4")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Using your GDC (TI-Nspire CX II)", "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "6 つの見出しが所定の順")
+chk([h for h in _h2 if h in _want] == _want, "見出しが所定の順（Worked examples は無い）")
+chk("## Worked examples" not in TEXT, "## Worked examples の節は無い")
+_why = TEXT.index("\n## Why it works")
+_exs = [m.start() for m in re.finditer(r"(?m)^::: \{#exm-", TEXT)]
+chk(len(_exs) == 4 and all(TEXT.index("\n## The idea") < p < _why for p in _exs),
+    "例題 4 つがすべて The idea の中（Why it works より前）")
 _idea = [int(m) for m in re.findall(r"^### (\d+)\. .*\{#(?!gdc-)", TEXT, re.M)]
 chk(_idea == list(range(1, 10)), f"The idea が 1..9 で連番: {_idea}")
 _gdc = [int(m) for m in re.findall(r"^### (\d+)\. .*\{#gdc-", TEXT, re.M)]
@@ -530,7 +547,7 @@ in_fig("= |\\\\mathbf{v}\\\\times\\\\mathbf{w}| = 6", "図2 の面積 6")
 in_fig("\\\\frac{1}{2}|\\\\mathbf{v}\\\\times\\\\mathbf{w}|", "図2 の三角形")
 in_fig("$=|\\\\mathbf{w}|\\\\sin\\\\theta = 2$", "図2 の高さ 2")
 in_fig("base $=|\\\\mathbf{v}| = 3$", "図2 の底辺 3")
-in_fig("drawn shorter than its true length", "縮尺を断っている（レビュー11）")
+not_in_fig("drawn shorter than its true length", "図の中の文は外した（縮尺の断りは本文へ）")
 in_fig("the other\\nhalf", "図2(b) のラベル（レビュー10）")
 # 図 3 の数値（3.13a と同じ a, b）
 same(cross(vec(-1, 6, 0), vec(4, 3, 0)), vec(0, 0, -27), "図3 の a×b")
@@ -554,15 +571,18 @@ for leak in ["14.2", "5.87", "4.07", "63.6", "116", "9.5", "22", "$11",
 #    登録先は _quarto-draft.yml ではなく _quarto.yml です。
 #    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
 #    「index の一覧にある」「残りの N 項目」は、もう検査しません。
-PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"),
-           encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-13b.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
-chk(PUB.index("ahl-3-13a.qmd") < PUB.index("ahl-3-13b.qmd")
-    < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.13a → 3.13b → 3.14")
-DRAFT = open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
-             encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-13b.qmd" not in DRAFT,
-    "下書き用の _quarto-draft.yml には残っていない")
+# _quarto.yml / _quarto-draft.yml が無い作業用コピーでは、登録の検査は飛ばす
+_PUBF = os.path.join(HERE, "..", "..", "_quarto.yml")
+if os.path.exists(_PUBF):
+    PUB = open(_PUBF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-13b.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
+    chk(PUB.index("ahl-3-13a.qmd") < PUB.index("ahl-3-13b.qmd")
+        < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.13a → 3.13b → 3.14")
+_DRF = os.path.join(HERE, "..", "..", "_quarto-draft.yml")
+if os.path.exists(_DRF):
+    DRAFT = open(_DRF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-13b.qmd" not in DRAFT,
+        "下書き用の _quarto-draft.yml には残っていない")
 
 GLO = open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
            encoding="utf-8").read()

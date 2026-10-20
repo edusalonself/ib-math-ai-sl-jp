@@ -321,8 +321,8 @@ def in_text(name, needle, want=True):
 
 
 for lab, needle in [
-        ("例題1 alpha", "0.0207"), ("例題1 beta", "0.196"),
-        ("例題1 P(X>=14)", "0.0577"),
+        ("第1節 コインの alpha", "0.0207"), ("第1節 コインの beta", "0.196"),
+        ("第1節 P(X>=14)", "0.0577"),
         ("例題2 alpha", "0.0335"), ("例題2 beta", "0.762"),
         ("例題2 P(X>=6)", "0.0839"),
         ("例題3 crit", "104.9"), ("例題3 beta", "0.361"),
@@ -338,26 +338,33 @@ for lab, needle in [
         ("演習8 P(X>=12)", "0.0507"), ("演習8 alpha", "0.0216"),
         ("演習8 beta", "0.181"),
         ("演習10 crit", "24.2"), ("演習10 beta", "0.0877"),
-        ("power の値", "0.639"),
         ("Why it works の 0.905", "0.905"),
         ("Why it works の 0.0457", "0.0457"),
         ("GDC の誤りの値 0.472", "0.472"),
         ("演習3 の丸め誤差 0.345", "0.345")]:
     in_text(lab, needle)
 
-# ★ シラバスの引用
-in_text("適用範囲の引用",
+# ★ シラバスの引用は本文から外し、日本語で直接書いた
+in_text("適用範囲：シラバスの引用は本文から外した",
         "Applied to normal with known variance, Poisson and binomial "
-        "distributions")
-in_text("離散は片側のみの引用",
-        "critical regions will only be required for one-tailed tests")
+        "distributions", want=False)
+in_text("適用範囲を日本語で書いている",
+        "**分散が分かっている正規分布・二項分布・ポアソン分布**の $3$ つです")
+in_text("離散は片側のみ：シラバスの引用は本文から外した",
+        "critical regions will only be required for one-tailed tests",
+        want=False)
+in_text("離散は片側のみと日本語で書いている",
+        "二項分布とポアソン分布の検定は、片側検定だけが出ます")
 # ★ 教える上での要点
-in_text("beta != 1 - alpha を書いている", "$\\beta = 1 - \\alpha$ では、ありません")
+in_text("beta != 1 - alpha を書いている",
+        "### 3. $\\beta$ is not $1 - \\alpha$（$\\beta$ は $1 - \\alpha$ ではない） {#not-complement}")
 in_text("本当の値が要ると書いている", "具体的な値")
 in_text("離散では alpha ちょうどにならないと書いている",
         "$\\alpha$ ちょうどにはなりません")
 in_text("alpha を下げると beta が上がると書いている",
-        "$\\alpha$ を小さくすると、$\\beta$ は大きくなります")
+        "$\\alpha$ を小さくするには、境目を**外へ**動かします。すると赤い部分は小さくなりますが、**青い部分が大きくなります。**")
+in_text("  第7節の見出し",
+        "### 7. The trade-off between $\\alpha$ and $\\beta$（$\\alpha$ と $\\beta$ の関係） {#tradeoff}")
 in_text("標本を大きくすれば両方減ると書いている", "標本を大きくすること")
 # ★ GDC（ユーザーの実機画面で確認したもの）
 in_text("  Probability → Distributions が残っていない",
@@ -408,9 +415,9 @@ in_text("未丸めの境目を使うと書いてある", "丸める前の値を�
 # ★ 検定のあとに起こりえる誤り（参考資料で確認した出題型）
 in_text("検定後にどちらが起こりえたか、の節がある", "{#after}")
 in_text("  reject したら Type I と書いてある",
-        "$H_0$ を **reject した** | **Type I**")
+        "| $H_0$ を棄却した | **Type I** |")
 in_text("  reject しなかったら Type II と書いてある",
-        "$H_0$ を **reject しなかった** | **Type II**")
+        "| $H_0$ を棄却しなかった | **Type II** |")
 in_text("false positive / false negative がある", "false positive")
 in_text("  false negative もある", "false negative")
 in_text("演習4 に (d) がある", "which type of error could have occurred")
@@ -427,6 +434,54 @@ _nb = [i + 1 for i, l in enumerate(_L)
        and _L[i - 1].strip() != "" and not _L[i - 1].lstrip().startswith("#")]
 eq("開き fence の前に空行がある", _nb, [])
 
+
+# ★ 2026-10 の再構成（導入＝コインの例 → 2 つの確率 → 表 → beta != 1-alpha）
+_order = [TXT.index("### 1. Two kinds of error"),
+          TXT.index("### 2. The two probabilities"),
+          TXT.index("### 3. $\\beta$ is not"),
+          TXT.index("### 4. Normal distribution"),
+          TXT.index("### 5. Binomial and Poisson"),
+          TXT.index("### 6. Errors after a test"),
+          TXT.index("### 7. The trade-off")]
+eq("節の順序が新しい構成どおり", _order, sorted(_order))
+in_text("棄却域は変えず分布を変える、と書いてある",
+        "**棄却域は変えません。使う分布を変えます。**")
+in_text("  表が「使う分布」と「求める範囲」になっている",
+        "| 求める確率 | 使う分布 | 求める範囲 |")
+in_text("beta には具体的な母数の値が要ると書いてある",
+        "**Type II error の確率を数値で求めるには、対立仮説に対応する具体的な母数の値が必要です。**")
+in_text("alpha/beta は今回の結論が誤る確率ではない、と書いてある",
+        "**今回出した結論が間違っている確率ではありません。**")
+in_text("棄却しない＝正しいと証明した、ではないと書いてある",
+        "**「reject しない」は「$H_0$ が正しいと証明した」という意味ではありません**")
+in_text("標本を大きくする話が代表例として書いてある",
+        "**両方を小さくする代表的な方法は、標本を大きくすることです。**")
+in_text("正規分布では標本平均の分布を使うと書いてある",
+        "$1$ つの値ではなく**標本平均 $\\bar{X}$ の分布**を使います")
+# ★ 不正確な断言を置きかえた（戻っていないか）
+for _bad in ("見つからなければ、読み落としています",
+             "結論を出したあとに、$\\beta$ を計算させる問題は出ません",
+             "正しい判断だった可能性のほうが高いのがふつうです",
+             "$2$ つとも**前より**小さくできる方法が、$1$ つだけあります",
+             "**power を求める問題は出ません。**",
+             "問題文のどこかに必ず具体的な値があります"):
+    in_text("  不正確な断言が残っていない: " + _bad[:22], _bad, want=False)
+# ★ 裁判・false positive は折りたたみの中
+_det = TXT[TXT.index("## 詳しく知りたい人へ（別の呼び方と、裁判のたとえ）"):]
+_det = _det[:_det.index(":::")]
+for _need in ("false positive", "false negative", "冤罪"):
+    eq("折りたたみの中に %s がある" % _need, _need in _det, True)
+
+# ★ レイアウト：Worked examples の節は無く、例題は The idea の中にある
+in_text("## Worked examples が無い", "## Worked examples", want=False)
+_exm = [m.start() for m in _re.finditer(r"::: \{#exm-", TXT)]
+_idea, _why = TXT.index("## The idea"), TXT.index("## Why it works")
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(_idea < p < _why for p in _exm), True)
+# 2026-10: コイン（binomial）の例題は第1節の導入に移したので、例題は 2 つ
+eq("例題は normal と Poisson の 2 つ", len(_exm), 2)
+in_text("  コインの例が第1節にある", "コインが表に偏っているかを、$5\\%$ の有意水準で検定します。")
+in_text("  コインの棄却域が書いてある", "**棄却域は $X \\geq 15$**")
 
 print()
 print(f"══════════ OK {ok} / NG {ng} ══════════")

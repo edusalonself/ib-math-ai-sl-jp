@@ -48,7 +48,7 @@ ax.set_yticks([-1, 1, 2, 3])
 ax.set_xlabel("$x$", loc="right")
 ax.set_ylabel("$y$", loc="top", rotation=0)
 origin_axes(ax, (-0.9, 4.9), (-1.9, 4.2), grid=True)
-ax.set_title("Draw:  accurate, to scale, points plotted", fontsize=11.5, pad=10)
+ax.set_title("Draw", fontsize=12, pad=8)
 
 # 右：Sketch（形と特徴・ラベルあり・目盛りなし）
 ax = axes[1]
@@ -65,7 +65,7 @@ ax.set_yticks([])
 ax.set_xlabel("$x$", loc="right")
 ax.set_ylabel("$y$", loc="top", rotation=0)
 origin_axes(ax, (-0.9, 4.9), (-1.9, 4.2), grid=False)
-ax.set_title("Sketch:  shape and key features, labelled", fontsize=11.5, pad=10)
+ax.set_title("Sketch", fontsize=12, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-2-3-draw-sketch.svg"), format="svg",
@@ -88,11 +88,11 @@ for (x, y, lab, dx, dy) in marks:
                 ha="center" if dx == 0 else "left")
 
 ax.annotate("$y = f(x)$", (4.15, 3.1), fontsize=12, color=LINE)
-ax.annotate("label the axes", (5.25, -1.0), fontsize=10, color=GREEN,
+ax.annotate("axis labels", (5.25, -1.0), fontsize=10, color=GREEN,
             ha="right")
 ax.annotate("", xy=(5.1, -0.06), xytext=(4.75, -0.85),
             arrowprops=dict(arrowstyle="->", color=GREEN, linewidth=1.3))
-ax.annotate("give the domain used", (2.4, -1.75), fontsize=10, color=GREEN,
+ax.annotate("domain", (2.4, -1.75), fontsize=10, color=GREEN,
             ha="center")
 ax.plot([-0.5, 4.5], [-1.55, -1.55], color=GREEN, linewidth=2.0,
         solid_capstyle="butt", zorder=5)
@@ -104,7 +104,6 @@ ax.set_yticks([])
 ax.set_xlabel("$x$", loc="right")
 ax.set_ylabel("$y$", loc="top", rotation=0)
 origin_axes(ax, (-1.0, 5.3), (-2.1, 4.3), grid=False)
-ax.set_title("What to label on a sketch", fontsize=12.5, pad=10)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-2-3-labels.svg"), format="svg",
             bbox_inches="tight")
@@ -142,8 +141,6 @@ ax.set_yticks([2, 4, 6, 8])
 ax.set_xlabel("$x$", loc="right")
 ax.set_ylabel("$y$", loc="top", rotation=0)
 origin_axes(ax, (-1.9, 5.4), (-2.4, 9.6))
-ax.set_title("The sum of two functions is added vertically",
-             fontsize=12.5, pad=18)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-2-3-sum.svg"), format="svg", bbox_inches="tight")
 plt.close(fig)

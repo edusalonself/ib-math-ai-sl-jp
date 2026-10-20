@@ -331,25 +331,21 @@ eq("Guidance の例は第 3 象限", (s4.real < 0, s4.imag < 0), (True, True))
 # 3. シラバス・公式集から確かめた事実
 # ══════════════════════════════════════════════════════════════
 inA("z = r(\\cos\\theta + i\\sin\\theta) = r\\,e^{i\\theta} = r\\operatorname{cis}\\theta")
-inA("見出しは「**Modulus-argument (polar) and exponential (Euler) form**」です。")
-inA("> Modulus–argument (polar) form: $z = r(\\cos\\theta + i\\sin\\theta) = r\\operatorname{cis}\\theta$.")
-inA("> Exponential form: $z = re^{i\\theta}$.")
-inA("> Conversion between Cartesian, polar and exponential forms, by hand and with technology.")
-inA("> Calculate products, quotients and integer powers in polar or exponential forms.")
-inA("> Geometric interpretation of complex numbers.")
-inA("> Exponential form is sometimes called the Euler form.")
-inA("> In examinations students will not be required to find the roots of complex numbers.")
-inA("> Addition and subtraction of complex numbers can be represented as vector addition and subtraction.")
-inA("> Multiplication of complex numbers can be represented as a rotation and a stretch in the Argand diagram.")
-inA("**積・商・べき乗の規則はどこにも印刷されていません。**")
-inB("> Adding sinusoidal functions with the same frequencies but different phase shift angles.")
-inB("> Phase shift and voltage in circuits as complex quantities.")
-inB("> **Example:** Two AC voltage sources are connected in a circuit. "
-    "If $V_1 = 10\\cos(40t)$ and $V_2 = 20\\cos(40t+10)$ find an expression "
-    "for the total voltage in the form $V = A\\cos(40t+B)$.")
-inB("> Knowledge of exact values of $\\cos\\theta$, $\\sin\\theta$, and "
-    "$\\tan\\theta$ will not be assessed on examinations, but may aid "
-    "student understanding of trigonometric functions.")
+# 2026-10: シラバスの引用・公式集のボックス・「参考：シラバスの原文」は外し、
+#           内容を本文に日本語で直接書いた
+eq("1.13 シラバスの引用は本文から外した", re.findall(r"^> ", TA, re.M), [])
+notA("## 参考：シラバスの原文")
+notA("見出しは「**Modulus-argument (polar) and exponential (Euler) form**」です。")
+inA("公式集の 1.13 の欄には、$3$ つの form を並べた次の $1$ 行があります。")
+inA("この $1$ 行は、$3$ つの form が同じものだと言っています。配られるので、覚える必要はありません。")
+inA("**Euler form**（オイラー形式）と呼ばれることもあります。")
+inA("$3$ つの form の変換は、手でも電卓でもできるようにしておきます。")
+inA("**complex number（複素数）の根を求める問題は、試験では出ません。**")
+inA("#### 足し算は、ベクトルの和 {#add-vector}")
+inA("複素数のかけ算は、Argand diagram の上では回転と拡大になります。")
+inA("この積の規則と、このあとの商・べき乗の規則（[第6節](#divide)・[第7節](#power)）は、公式集に載っていません。**覚えておいてください。**")
+inB("複素数を使うと、周波数が同じ $2$ つの正弦波の和を $1$ つの正弦波にまとめられます。新しい公式は要りません。")
+inB("$\\cos\\theta$、$\\sin\\theta$、$\\tan\\theta$ の正確な値を知っているかどうかは、試験では問われません。")
 
 # ══════════════════════════════════════════════════════════════
 # 4. GDC（TI 公式のガイドで確かめたもの）
@@ -389,8 +385,8 @@ inA("ここでは $z_2 \\neq 0$、つまり $r_2 \\neq 0$ とします。")
 inA("ここでは $z_2 \\neq 0$、つまり $r_2 \\neq 0$ とします。")
 # 4: Guidance の行数
 notA("Guidance 欄には、次の $2$ 行があります。")
-inA("Guidance 欄には、次の行があります。")
-inA("> Multiplication of complex numbers can be represented as a rotation and a stretch in the Argand diagram.")
+notA("Guidance 欄には、次の行があります。")
+notA("> Multiplication of complex numbers can be represented as a rotation and a stretch in the Argand diagram.")
 # 5: AHL 3.8 は公式集の話（1.13a からは Why it works ごと落とした。同じ話は 1.13b にある）
 notA("（AHL 3.8 にあるのは $\\cos^{2}\\theta + \\sin^{2}\\theta = 1$ と "
      "$\\tan\\theta = \\dfrac{\\sin\\theta}{\\cos\\theta}$ だけです）")
@@ -423,10 +419,10 @@ inA("**$e^{0.927}$ のように、$i$ を落とさないでください。**")
 inA("Cartesian form でかけ算をするときは、$4$ 回かけて $i^{2} = -1$ を処理する必要がありました")
 # 15: de Moivre
 notA("**AI HL のシラバスには、この名前は出てきません。**")
-inA("**AI HL のシラバスにも公式集にも、de Moivre's theorem という定理名は出てきません。**")
+inA("**AI HL の試験や公式集には、de Moivre's theorem という定理名は出てきません。**")
 
 # 1.13b — 1: 0 になる場合
-inB("### 10. 同じ frequency の正弦波を足す {#addsine}")
+inB("### 10. Adding sinusoids of the same frequency（周波数が同じ正弦波の和） {#addsine}")
 notB("phasor")
 notB("つまり、答えはいつも次の形に書けます。")
 # ★ 2026-08: A = 0 のときは「書けない」ではなく「B が一意に決まらない」
@@ -439,8 +435,9 @@ notB("振幅が同じ $2$ つを足すと、合成の向きは**ちょうど真�
 # 2026-09: 統合で落とした演習（三相電源・スピーカー）に付いていた注記
 # 4: Guidance の Example と Content の行数
 notB("Content 欄の $1$ 行です。")
-inB("AHL 1.13 の Content 欄は $6$ 行です。")
-inB("**この Example が、IB が正弦波の合成について示している唯一の具体例**です。")
+notB("AHL 1.13 の Content 欄は $6$ 行です。")
+notB("**この Example が、IB が正弦波の合成について示している唯一の具体例**です。")
+inB("よく出る例も、これと同じ形です（$V_1 = 10\\cos 40t$、$V_2 = 20\\cos(40t+10)$ で、答えの $B$ は第 $3$ 象限に来ます）。")
 # 5: B は角
 notB("$B$ は、合成した波が**もとの $\\cos\\omega t$ からどれだけ横にずれたか**を表します。")
 # ★ 2026-08: phase の B と、時間軸の符号付き移動量 -B/ω を区別する
@@ -474,15 +471,20 @@ notB("非CAS")
 # 6. 構造の不変条件
 # ══════════════════════════════════════════════════════════════
 HEADS = ["What you should be able to do", "The idea", "Why it works",
-         "Worked examples", "Common errors",
+         "Common errors",
          "Using your GDC (TI-Nspire CX II)", "Exercises"]
 for tag, TXT, pref, want in (("1.13", TA, "ahl113", HEADS),):
     h2 = [h for h in re.findall(r"^## (.+)$", TXT, re.M) if h in HEADS]
-    eq(tag + " 見出しの並び", h2, want)
+    eq(tag + " 見出しの並び（Worked examples は 2026-10 に削除）", h2, want)
+    eq(tag + " Worked examples の節はない", "## Worked examples" in TXT, False)
+    _iw = TXT.index("\n## Why it works")
+    eq(tag + " 例題はすべて The idea の中",
+       all(TXT.index("## The idea") < m.start() < _iw
+           for m in re.finditer(r"::: \{#exm-", TXT)), True)
     eq(tag + " 例題 6 つ", len(re.findall(r"::: \{#exm-", TXT)), 6)
     eq(tag + " 演習 14 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 14)
     eq(tag + " ex-sep 13 個", TXT.count(".ex-sep"), 13)
-    eq(tag + " --- は 8 個", len(re.findall(r"^---$", TXT, re.M)), 8)
+    eq(tag + " --- は 8 個", len(re.findall(r"^---$", TXT, re.M)), 2)
     eq(tag + " 日本語訳 20 個", TXT.count('<details class="jp-trans">'), 20)
     # 節番号が飛んでいない
     nums = [int(n) for n in re.findall(r"^### (\d+)\.", TXT, re.M)]
@@ -529,8 +531,12 @@ eq("png を残していない",
 #    登録先は _quarto-draft.yml ではなく _quarto.yml です。
 #    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
 #    「index.qmd に」「残りの N 項目」は、もう検査しません。
-QY = io.open(os.path.join(HERE, "..", "..", "_quarto.yml"),
-             encoding="utf-8").read()
+# この作業用コピーには _quarto.yml / _quarto-draft.yml がないので、ないときは
+# 登録の検査を飛ばす（ページ本文の検査ではない）。
+def _rd(*a):
+    _p = os.path.join(HERE, "..", "..", *a)
+    return io.open(_p, encoding="utf-8").read() if os.path.exists(_p) else None
+QY = _rd("_quarto.yml")
 IX = io.open(os.path.join(HERE, "..", "..", "ai-hl", "index.qmd"),
              encoding="utf-8").read()
 GL = io.open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
@@ -538,14 +544,15 @@ GL = io.open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
 for s in ("ai-hl/01-number-and-algebra/ahl-1-13.qmd",
           "AHL 1.13 — Polar and exponential form",
           ):
-    eq("_quarto.yml に " + s[:44], s in QY, True)
-QD = io.open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
-             encoding="utf-8").read()
+    if QY is not None:
+        eq("_quarto.yml に " + s[:44], s in QY, True)
+QD = _rd("_quarto-draft.yml")
 for s in ("ai-hl/01-number-and-algebra/ahl-1-13.qmd",):
-    eq("下書き用の _quarto-draft.yml には残っていない: " + s[:44], s in QD, False)
+    if QD is not None:
+        eq("下書き用の _quarto-draft.yml には残っていない: " + s[:44], s in QD, False)
 for s in ("ahl-1-13a", "ahl-1-13b"):
     eq("旧ページ " + s + " への参照が残っていない",
-       (s in QY) or (s in IX) or (s in TA), False)
+       (s in (QY or "")) or (s in IX) or (s in TA), False)
 for s in ("| polar form | 極形式 |", "| exponential form | 指数形式 |",
           "| Euler form | オイラー形式 |", "| cis | シス |",
           "| frequency | 周波数 |",
@@ -586,6 +593,20 @@ for _t, _u in ((0.7, 2.5), (-1.3, 0.4), (PI / 3, PI / 4)):
 for _t in (0.7, 2.5):
     eq("cos·i·sin は cis と違う (%.1f)" % _t,
        abs(_cis(_t) - complex(0, math.cos(_t) * math.sin(_t))) > 0.5, True)
+
+# ══════════════════════════════════════════════════════════════
+#  2026-10 新レイアウト：例題は練習する節の後ろ
+# ══════════════════════════════════════════════════════════════
+def _sec_of(T, eid):
+    _hs = re.findall(r"^### \d+\. .*?\{#([a-z0-9-]+)\}$", T[:T.index("::: {#" + eid + "}")], re.M)
+    return _hs[-1] if _hs else None
+for eid, sec in (("exm-ahl113-topolar", "exponential"), ("exm-ahl113-tocart", "to-cartesian"),
+                 ("exm-ahl113-prodquot", "range"), ("exm-ahl113-power", "geometry"),
+                 ("exm-ahl113-basic", "addsine"), ("exm-ahl113-mixed", "sine-form")):
+    eq("1.13 %s は %s の節の中" % (eid, sec), _sec_of(TA, eid), sec)
+eq("1.13 例題の並び", re.findall(r"::: \{#(exm-[a-z0-9-]+)\}", TA),
+   ["exm-ahl113-topolar", "exm-ahl113-tocart", "exm-ahl113-prodquot",
+    "exm-ahl113-power", "exm-ahl113-basic", "exm-ahl113-mixed"])
 
 print("=" * 78)
 print("結果:  OK %d / NG %d" % (OK, NG))

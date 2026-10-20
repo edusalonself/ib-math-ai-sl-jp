@@ -71,8 +71,6 @@ for _ax, _y, _t, _c, _lim in zip(ax_a, CURVES, TITLES, COLS, YLIMS):
         _ax.axvline(_v, color=GREY, linewidth=0.7, linestyle=(0, (3, 3)),
                     alpha=0.75)
 
-ax_a[0].set_title("The same $x$ on all three graphs", fontsize=11,
-                  color=INK, loc="left", pad=26)
 
 AR = dict(arrowstyle="->", linewidth=1.0)
 ax_a[0].annotate("steepest downwards", xy=(1.0, -2.1), xytext=(-0.85, -3.9),

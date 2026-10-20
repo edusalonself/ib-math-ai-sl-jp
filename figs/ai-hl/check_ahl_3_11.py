@@ -277,16 +277,26 @@ in_text("**平行でもないのに交わらない**という、$3$ 次元だけ
 # ══════════════════════════════════════════════════════════
 # 6. シラバス・公式集
 # ══════════════════════════════════════════════════════════
-in_text("> $\\boldsymbol{r} = \\boldsymbol{a} + \\lambda\\boldsymbol{b}$, where "
-        "$\\boldsymbol{b}$ is a direction vector of the line.", "Content の逐語引用")
-in_text("> Convert to parametric form: $x = x_0 + \\lambda l$, $y = y_0 + \\lambda m$, "
-        "$z = z_0 + \\lambda n$.", "Guidance の逐語引用")
-in_text("**`a direction vector` の `a` に注目してください。**", "a と the の違い")
-in_text("**$2$ 行あります。どちらも与えられます。**", "公式集は 2 行")
-in_text("暗記は問われません", "暗記させていない")
+# 2026-10: シラバスの引用と公式集のボックスは外し、内容を本文に直接書いた
+not_in_text("> $\\boldsymbol{r} = \\boldsymbol{a} + \\lambda\\boldsymbol{b}$, where", "シラバスの引用は本文から外した")
+not_in_text("> Convert to parametric form:", "シラバスの引用は本文から外した")
+not_in_text("**`a direction vector` の `a` に注目してください。**", "シラバスの言い回しを使った説明は外した")
+chk(re.findall(r"^> (?!\[)", TEXT, re.M) == [], "シラバスの引用（> ...）は残っていない")
+# 方向ベクトルは 1 つに決まらない（a direction vector の a の内容）は第 3 節で
+in_text("### 3. Non-uniqueness of the equation（式の書き方は $1$ 通りではない） {#not-unique}",
+        "方向ベクトル・式は 1 通りではない")
+# 公式集の 2 行（ベクトル方程式と媒介変数表示）は、それぞれの節で
+in_text("この式は公式集の **AHL 3.11** の欄にあります。", "公式集：ベクトル方程式（第 1 節）")
+in_text("公式集の **AHL 3.11** の欄にも、ベクトル方程式と並んで次の形で載っています。",
+        "公式集：媒介変数表示（第 4 節）")
+for _l in ("{#eq-ahl311-vector}", "{#eq-ahl311-param}"):
+    in_text(_l, "公式集の式に番号: " + _l)
+chk("暗記" not in TEXT or "暗記は問われません" in TEXT, "暗記を求めていない")
 # 2026-09: 「交点は 3.12 の欄」callout は削除（交点はこのページで扱う）
 not_in_text("**AHL 3.12（運動）の欄**", "削除した 3.12 の欄の callout が残っていない")
-chk("Mathematics and the knower" in TEXT, "TOK の逐語引用")
+# 2026-10: 「参考：シラバスの原文」（TOK の引用を含む）は外した
+chk("Mathematics and the knower" not in TEXT, "TOK の引用は本文から外した")
+not_in_text("## 参考：シラバスの原文", "シラバスの原文の節は外した")
 
 # ══════════════════════════════════════════════════════════
 # 7. GDC（TI-Nspire CX II、非 CAS）
@@ -319,7 +329,8 @@ chk("PA = np.array([2.0, -1.0])" in FIG and "PB = np.array([6.0, 1.0])" in FIG,
     "図2 の 2 点が本文と同じ")
 chk("OFFP = np.array([8.0, 3.0])" in FIG, "図2(b) の D(8,3)")
 same(line((2, -1), (4, 2), sp.Rational(3, 2)), vec(8, 2), "D の x から出る λ は 1.5、y は 2")
-chk("$\\\\lambda = 1.5$ works for both" in FIG, "図2(b) のラベル")
+chk("$\\\\lambda = 1.5$ works for both" not in FIG, "図2(b) の説明文を図から外した（本文が説明）")
+chk("$(8,\\\\ 2)$,  $\\\\lambda = 1.5$" in FIG, "図2(b) のラベル")
 chk("L2a, L2b = np.array([2.0, -3.0]), np.array([1.0, 2.0])" in FIG,
     "図3(a) の L2 が本文と同じ")
 chk("X = np.array([4.0, 1.0])" in FIG, "図3(a) の交点")
@@ -329,7 +340,8 @@ chk("$\\\\lambda = 1$ on $L_1$" in FIG and "$\\\\mu = 2$ on $L_2$" in FIG,
 chk("np.array([-3.0, 1.0])" in FIG, "図3(b) の L3 は方向 (-3,1)")
 chk("np.array([-6.0, 2.0]), -0.7" not in FIG,
     "図3(b) が、例題3 の (-6,2) を使い回していない")
-chk("$(1,\\\\ -2)$ is on $L_3$" in FIG, "図3(b) が L3 上の点を名指ししている")
+chk("$(1,\\\\ -2)$ is on $L_3$" not in FIG, "図3(b) の説明文を図から外した")
+in_text("$L_3$ は $(1,\\ -2)$ を通り", "図3(b) の L3 上の点を本文が名指ししている")
 # L3 は L1 と平行で、(1,-2) は L1 上にない
 same(vec(-3, 1), -1 * vec(3, -1), "L3 の方向は L1 に平行")
 okL3, _ = on_line((1, 2), (3, -1), (1, -2))
@@ -338,7 +350,7 @@ chk(not okL3, "(1,-2) は L1 上にない")
 # ══════════════════════════════════════════════════════════
 # 9. 体裁の不変量
 # ══════════════════════════════════════════════════════════
-chk(len(re.findall(r"(?m)^---\s*$", TEXT)) == 6, "--- は front matter 2 + 例題 4")
+chk(len(re.findall(r"(?m)^---\s*$", TEXT)) == 2, "--- は front matter 2 + 例題 4")
 chk(TEXT.count('<details class="jp-trans"') == 14, "日本語訳の折りたたみが 14")
 chk(TEXT.count(".ex-sep") == 9, "演習の区切りが 9")
 chk(TEXT.count("model-answer") == 6, "model-answer が 6")
@@ -353,9 +365,21 @@ heads = [h for h in re.findall(r"(?m)^## (.*)", TEXT)
                   "Worked examples", "Common errors",
                   "Using your GDC (TI-Nspire CX II)", "Exercises")]
 chk(heads == ["What you should be able to do", "The idea", "Why it works",
-              "Worked examples", "Common errors",
+              "Common errors",
               "Using your GDC (TI-Nspire CX II)", "Exercises"],
-    "7 つの見出しの順序")
+    "6 つの見出しの順序（Worked examples は 2026-10 に削除）")
+# 2026-10 新レイアウト：例題は The idea の各節の後ろ
+not_in_text("## Worked examples", "Worked examples の節は消した")
+_iw = TEXT.index("\n## Why it works")
+chk(all(TEXT.index("## The idea") < m.start() < _iw
+        for m in re.finditer(r"::: \{#exm-", TEXT)), "例題はすべて The idea の中")
+_exm_want = [("exm-ahl311-write", "on-line"), ("exm-ahl311-point", "three-d"),
+             ("exm-ahl311-same", "parallel"), ("exm-ahl311-intersect", "intersect")]
+chk(re.findall(r"::: \{#(exm-[a-z0-9-]+)\}", TEXT) == [e for e, _ in _exm_want], "例題の並び")
+for _e, _s in _exm_want:
+    _hs = re.findall(r"^### \d+\. .*?\{#([A-Za-z0-9-]+)\}$",
+                     TEXT[:TEXT.index("::: {#" + _e + "}")], re.M)
+    chk(_hs[-1:] == [_s], "%s は %s の節の中: %s" % (_e, _s, _hs[-1:]))
 chk(TEXT.count("**検算") >= 12, "検算が 12 か所以上: %d" % TEXT.count("**検算"))
 chk("**確かめ" not in TEXT and "確かめます。" not in TEXT,
     "検算のラベルに「確かめ」を使っていない")
@@ -411,15 +435,18 @@ chk("ahl-3-10b.qmd#unit)" not in TEXT, "「速さ×向き」の参照は #direct
 #    登録先は _quarto-draft.yml ではなく _quarto.yml です。
 #    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
 #    「index の一覧にある」「残りの N 項目」は、もう検査しません。
-PUB = open(os.path.join(HERE, "..", "..", "_quarto.yml"),
-           encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-11.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
-chk(PUB.index("ahl-3-10b.qmd") < PUB.index("ahl-3-11.qmd")
-    < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.10b → 3.11 → 3.14")
-DRAFT = open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
-             encoding="utf-8").read()
-chk("ai-hl/03-geometry-and-trigonometry/ahl-3-11.qmd" not in DRAFT,
-    "下書き用の _quarto-draft.yml には残っていない")
+# _quarto.yml / _quarto-draft.yml が無い作業用コピーでは、登録の検査は飛ばす
+_PUBF = os.path.join(HERE, "..", "..", "_quarto.yml")
+if os.path.exists(_PUBF):
+    PUB = open(_PUBF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-11.qmd" in PUB, "_quarto.yml（公開用）に登録されている")
+    chk(PUB.index("ahl-3-10b.qmd") < PUB.index("ahl-3-11.qmd")
+        < PUB.index("ahl-3-14.qmd"), "サイドバーの並びが 3.10b → 3.11 → 3.14")
+_DRF = os.path.join(HERE, "..", "..", "_quarto-draft.yml")
+if os.path.exists(_DRF):
+    DRAFT = open(_DRF, encoding="utf-8").read()
+    chk("ai-hl/03-geometry-and-trigonometry/ahl-3-11.qmd" not in DRAFT,
+        "下書き用の _quarto-draft.yml には残っていない")
 
 GLO = open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
            encoding="utf-8").read()

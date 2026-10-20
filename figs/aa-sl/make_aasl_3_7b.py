@@ -39,14 +39,12 @@ WARM = "#b45309"
 GREEN = "#15803d"
 
 fig1, ax1 = plt.subplots(figsize=(5.4, 4.6))
-fig2, ax2 = plt.subplots(figsize=(5.4, 4.6))
+fig2, ax2 = plt.subplots(figsize=(5.4, 3.8))
 fig3, ax3 = plt.subplots(figsize=(6.4, 4.3))
 fig4, ax4 = plt.subplots(figsize=(6.2, 4.2))
 # ══════════════════════════════════════════════════════════
 # (a) 縦に伸ばし、横に縮める
 # ══════════════════════════════════════════════════════════
-ax1.set_title("A stretch in each direction", fontsize=11, color=INK,
-              loc="left", pad=10)
 x = np.linspace(0, 2 * np.pi, 600)
 ax1.plot(x, np.sin(x), color=GREY, linewidth=1.8, linestyle=(0, (6, 3)),
          label="$y = \\sin x$")
@@ -68,15 +66,13 @@ ax1.legend(loc="upper right", frameon=False, fontsize=10)
 # ══════════════════════════════════════════════════════════
 # (b) 4 つの数がどこに出るか
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Where $a$, $b$, $c$ and $d$ show up", fontsize=11, color=INK,
-              loc="left", pad=10)
 A, D, SH = 2.0, 3.0, 0.7
 xx = np.linspace(-0.6, 7.2, 700)
 yy = A * np.sin(xx - SH) + D
 ax2.plot(xx, yy, color=ACCENT, linewidth=2.2)
 ax2.axhline(D, color=GREEN, linewidth=1.2, linestyle=(0, (5, 4)))
 ax2.set_xlim(-0.9, 8.9)
-ax2.set_ylim(-0.4, 6.7)
+ax2.set_ylim(-0.05, 5.35)
 ax2.set_xticks([])
 ax2.set_yticks([])
 for _sp in ("top", "right", "left", "bottom"):
@@ -101,8 +97,6 @@ ax2.plot([SH], [D], marker="o", markersize=5.0, color=INK, zorder=3)
 # ══════════════════════════════════════════════════════════
 # (c) 数の入った例：潮の高さ
 # ══════════════════════════════════════════════════════════
-ax3.set_title(r"$h = 4\sin\left(\frac{\pi}{6}(t-3)\right) + 6$",
-              fontsize=12, color=INK, loc="left", pad=12)
 _t3 = np.linspace(0, 24, 600)
 _h3 = 4 * np.sin(np.pi / 6 * (_t3 - 3)) + 6
 ax3.plot(_t3, _h3, color=ACCENT, linewidth=2.4)
@@ -126,7 +120,7 @@ ax3.text(12, 1.0, "$(12,\\ 2)$", fontsize=10, color=WARM, ha="center")
 
 ax3.annotate("", xy=(3.0, 10), xytext=(3.0, 6),
              arrowprops=dict(arrowstyle="<->", color=WARM, linewidth=1.3))
-ax3.text(3.35, 7.8, "$4$", fontsize=11, color=WARM)
+ax3.text(2.25, 7.8, "$4$", fontsize=11, color=WARM)
 ax3.annotate("", xy=(18, 11.5), xytext=(6, 11.5),
              arrowprops=dict(arrowstyle="<->", color=INK, linewidth=1.3))
 ax3.text(12, 11.7, "$12$ h", fontsize=10.5, color=INK, ha="center")
@@ -138,8 +132,6 @@ ax3.text(-1.1, 11.9, "$h$ (m)", fontsize=10.5, color=GREY, va="top")
 # ══════════════════════════════════════════════════════════
 # (d) 第 6 節で読み取った例
 # ══════════════════════════════════════════════════════════
-ax4.set_title(r"$y = 3\sin\left(2x - \frac{\pi}{2}\right) + 4$",
-              fontsize=12, color=INK, loc="left", pad=12)
 _x4 = np.linspace(0, 2 * np.pi, 700)
 _y4 = 3 * np.sin(2 * _x4 - np.pi / 2) + 4
 ax4.plot(_x4, _y4, color=ACCENT, linewidth=2.4)

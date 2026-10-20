@@ -44,7 +44,28 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
-BODY = TEXT.split("## Worked examples")[0]
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
+
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
@@ -61,7 +82,7 @@ chk(TEXT.startswith("---\nsidebar: aa-sl\n---\n"), "front matter")
 in_text("# SL 4.8 — The binomial distribution（二項分布） {#sec-aasl-4-8}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea", "## Why it works",
-           "## Worked examples", "## Common errors",
+           "## Common errors",
            "## Using your GDC (TI-Nspire CX II)", "## Exercises"):
     in_text(_h, "節 " + _h)
 
@@ -84,7 +105,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + Paper 2 の注 1）")
 chk(TEXT.count("{.callout-important}") == 2,
     "callout-important 2（B(n,p) と、平均・分散）")
@@ -110,17 +131,18 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-4-8-idea-a.svg){#fig-aasl48-idea-a width=100%}", "図 (a) の埋め込み")
-in_text("(img/aasl-4-8-idea-b.svg){#fig-aasl48-idea-b width=100%}", "図 (b) の埋め込み")
+in_text("(img/aasl-4-8-idea-a.svg){#fig-aasl48-idea-a width=80%}", "図 (a) の埋め込み")
+in_text("(img/aasl-4-8-idea-b.svg){#fig-aasl48-idea-b width=80%}", "図 (b) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-8-idea.svg")),
     "分割前の SVG は消してある")
 in_text("@fig-aasl48-idea-a", "図 (a) の参照")
 in_text("@fig-aasl48-idea-b", "図 (b) の参照")
 
-# シラバスの引用は「Not required:」の 1 行だけ
+# シラバスの引用は本文から外した（Not required は日本語で直接書く）
 _quotes = re.findall(r"^> (.+)$", TEXT, re.M)
-chk(_quotes == ["Not required: Formal proof of mean and variance."],
-    "引用は Not required の 1 行だけ: %s" % _quotes)
+chk(_quotes == [], "シラバスの引用は本文から外した: %s" % _quotes)
+not_in_text("Not required: Formal proof of mean and variance.", "シラバスの引用は本文から外した")
+in_text("**この $2$ つの式の証明は求められません。**", "Not required の内容は日本語で直接書いた")
 for _w in ("そのとおり", "もちろん", "簡単です", "自明", "当たり前", "明らか"):
     not_in_text(_w, "禁止語 " + _w)
 for _w in ("得点になりません", "点になりません", "減点されます"):
@@ -140,7 +162,7 @@ in_text("公式集の **4.8** の欄に *Mean* と *Variance* として載って
         "公式集 4.8 平均と分散")
 in_text("**@eq-aasl48-pmf そのものは、公式集の 4.8 の欄にはありません。**",
         "確率の式は 4.8 にない")
-in_text("$\\binom{n}{r}$ は Topic 1 の **1.9**（binomial theorem）の欄にあります。",
+in_text("$\\binom{n}{r}$ は Topic 1 の **1.9** の欄（**binomial theorem**、二項定理）にあります。",
         "nCr は 1.9 の欄")
 in_text("この式は公式集にありませんが", "σ の式は公式集にない")
 in_text("{#tbl-aasl48-cond}", "4 条件の表")
@@ -508,8 +530,8 @@ in_text("**検算（(a) について、$4$ つ全部に触れたか）。**", "m
 in_text("**補足（袋の大きさ）。**", "m3 補足に格下げ")
 
 # --- m4 図 (b) のタイトル ----------------------------------------------
-in_fig("$X \\\\sim B(6,\\\\ 0.5)$: $P(X \\\\leq 2)$ adds the bars up ",
-       "m4 図 (b) のタイトル")
+not_in_fig("$X \\\\sim B(6,\\\\ 0.5)$: $P(X \\\\leq 2)$ adds the bars up ",
+           "m4 図 (b) に題は置かない")
 
 # --- m5 キャプション ---------------------------------------------------
 
@@ -586,7 +608,7 @@ chk(abs(20 * 0.15 * 0.85 - 2.55) < 1e-12, "E10 Var(X) = 2.55")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -596,9 +618,9 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 5. mean and variance（平均と分散） {#mean}', "見出しの英語: 5. mean and variance（平均と分散")
-in_text('### 1. ちょうど $x$ 回：`binomPdf` {#gdc-pdf}', "見出しの英語: 1. ちょうど $x$ 回：`binomPdf`")
-in_text('### 2. 範囲：`binomCdf` {#gdc-cdf}', "見出しの英語: 2. 範囲：`binomCdf`")
+in_text('### 5. Mean and variance（平均と分散） {#mean}', "見出しの英語: 5. mean and variance（平均と分散")
+in_text('### 1. Exactly $x$ successes（ちょうど $x$ 回：`binomPdf`） {#gdc-pdf}', "見出しの英語: 1. ちょうど $x$ 回：`binomPdf`")
+in_text('### 2. A range of values（範囲：`binomCdf`） {#gdc-cdf}', "見出しの英語: 2. 範囲：`binomCdf`")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
@@ -609,8 +631,8 @@ for _sent in [
     '\\"more than $2$\\" is the',
 ]:
     chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
-in_text('### 5. mean and variance（平均と分散） {#mean}', "その内容は本文にある")
-in_text('### 4. 「以下」「以上」の言いかえ {#range}', "その内容は本文にある")
+in_text('### 5. Mean and variance（平均と分散） {#mean}', "その内容は本文にある")
+in_text('### 4. Ranges of values（「以下」「以上」の言いかえ） {#range}', "その内容は本文にある")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：図 (a) から説明の文を外した（方針 第 21 節）
@@ -629,6 +651,16 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

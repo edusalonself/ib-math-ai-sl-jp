@@ -35,8 +35,8 @@ WARM = "#b45309"
 PALE = "#e8f0f8"
 PALEW = "#fbeee0"
 
-fig1, ax1 = plt.subplots(figsize=(9.2, 2.8))
-fig2, ax2 = plt.subplots(figsize=(9.2, 2.8))
+fig1, ax1 = plt.subplots(figsize=(6.6, 1.5))
+fig2, ax2 = plt.subplots(figsize=(6.6, 1.5))
 def box(ax, cx, cy, w, h, label, edge, face):
     ax.add_patch(FancyBboxPatch((cx - w / 2, cy - h / 2), w, h,
                                 boxstyle="round,pad=0.02,rounding_size=0.06",
@@ -56,10 +56,8 @@ def arrow(ax, x0, x1, y, label, colour=INK, dy=0.22):
 # ══════════════════════════════════════════════════════════
 # (a) 合成関数
 # ══════════════════════════════════════════════════════════
-ax1.set_title("$(f \\circ g)(x) = f(g(x))$: $g$ acts first",
-              fontsize=11.5, color=INK, loc="left", pad=8)
-ax1.set_xlim(0, 10)
-ax1.set_ylim(-0.2, 1.9)
+ax1.set_xlim(0.7, 9.7)
+ax1.set_ylim(0.25, 1.35)
 ax1.axis("off")
 
 box(ax1, 3.4, 0.8, 1.5, 0.9, "$g$", ACCENT, PALE)
@@ -71,10 +69,8 @@ arrow(ax1, 7.75, 9.5, 0.8, "$f(g(x))$")
 # ══════════════════════════════════════════════════════════
 # (b) 逆関数は、もとに戻す
 # ══════════════════════════════════════════════════════════
-ax2.set_title("$(f^{-1} \\circ f)(x) = x$: the inverse undoes $f$",
-              fontsize=11.5, color=INK, loc="left", pad=8)
-ax2.set_xlim(0, 10)
-ax2.set_ylim(-0.2, 1.9)
+ax2.set_xlim(0.7, 9.7)
+ax2.set_ylim(0.25, 1.35)
 ax2.axis("off")
 
 box(ax2, 3.4, 0.8, 1.5, 0.9, "$f$", WARM, PALEW)

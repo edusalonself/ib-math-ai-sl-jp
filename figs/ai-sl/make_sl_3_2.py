@@ -51,20 +51,20 @@ def angle_mark(ax, vertex, p1, p2, radius=0.55, color=ACC, lw=1.5):
 
 
 # ================= 1. どの道具を使うか =================
-fig, ax = plt.subplots(figsize=(9.6, 5.2))
+fig, ax = plt.subplots(figsize=(8.0, 4.4))
 
 CARDS = [
-    (0.50, 0.90, 0.46, 0.13, "Is there a right angle in the triangle?", INK),
-    (0.20, 0.66, 0.30, 0.11, "YES", GREEN),
-    (0.78, 0.66, 0.30, 0.11, "NO", LINE),
-    (0.20, 0.44, 0.34, 0.15,
-     "$\\sin$, $\\cos$, $\\tan$\n(SOH-CAH-TOA)\nand Pythagoras", GREEN),
-    (0.78, 0.44, 0.40, 0.15,
-     "Which three things do you know?", LINE),
-    (0.60, 0.15, 0.30, 0.15,
-     "a matching pair\n(a side and the angle\nopposite it)", ACC),
-    (0.94, 0.15, 0.30, 0.15,
-     "two sides and the\nangle between them,\nor all three sides", GREY),
+    (0.50, 0.90, 0.28, 0.13, "right angle?", INK),
+    (0.20, 0.66, 0.18, 0.11, "YES", GREEN),
+    (0.78, 0.66, 0.18, 0.11, "NO", LINE),
+    (0.20, 0.44, 0.26, 0.15,
+     "$\\sin$, $\\cos$, $\\tan$\nPythagoras", GREEN),
+    (0.78, 0.44, 0.28, 0.15,
+     "what is known?", LINE),
+    (0.60, 0.15, 0.24, 0.15,
+     "a pair\n($a$ and $A$)", ACC),
+    (0.94, 0.15, 0.24, 0.15,
+     "$a$, $b$, $C$\nor $a$, $b$, $c$", GREY),
 ]
 for (cx, cy, w, h, text, col) in CARDS:
     ax.add_patch(FancyBboxPatch((cx - w / 2, cy - h / 2), w, h,
@@ -87,17 +87,16 @@ arrow((0.78, 0.60), (0.78, 0.525), color=LINE)
 arrow((0.68, 0.365), (0.60, 0.235), color=ACC)
 arrow((0.88, 0.365), (0.94, 0.235), color=GREY)
 
-ax.annotate("use the\n**sine rule**".replace("**", ""), (0.60, 0.015),
+ax.annotate("sine rule", (0.60, 0.04),
             fontsize=11.5, color=ACC, ha="center", va="center",
             fontweight="bold", zorder=6)
-ax.annotate("use the\ncosine rule", (0.94, 0.015), fontsize=11.5, color=GREY,
+ax.annotate("cosine rule", (0.94, 0.04), fontsize=11.5, color=GREY,
             ha="center", va="center", fontweight="bold", zorder=6)
 
 ax.set_xlim(0.0, 1.14)
 ax.set_ylim(-0.06, 1.0)
 ax.set_aspect("auto")
 ax.axis("off")
-ax.set_title("Which tool do I use?", fontsize=13, pad=6)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-2-choose.svg"), format="svg",
             bbox_inches="tight")
@@ -120,13 +119,10 @@ ax.annotate("adjacent", (2.0, -0.36), fontsize=11, color=GREEN, ha="center")
 ax.annotate("opposite", (4.22, 1.5), fontsize=11, color=ACC, va="center")
 ax.annotate("hypotenuse", (1.7, 1.6), fontsize=11, color=LINE, rotation=36.87,
             ha="center", bbox=BOX, zorder=8)
-ax.annotate("looked at from $C$ instead,\nopposite and adjacent swap.\nthe hypotenuse never moves.",
-            (-0.9, 3.7), fontsize=9.5, color=GREY, ha="left", va="top", zorder=8)
 for pt, lab, dx, dy in [(Apt, "$A$", -0.32, -0.28), (Bpt, "$B$", 0.14, -0.34),
                         (Cpt, "$C$", 0.14, 0.10)]:
     ax.annotate(lab, (pt[0] + dx, pt[1] + dy), fontsize=12)
-clean(ax, (-1.0, 6.2), (-1.1, 4.3))
-ax.set_title(r"Naming the sides from the angle $\theta$", fontsize=12, pad=8)
+clean(ax, (-1.0, 6.2), (-1.1, 3.6))
 
 # --- 右：大文字と小文字の約束 ---
 ax = axes[1]
@@ -142,11 +138,7 @@ ax.annotate("$C$", (1.62, 2.42), fontsize=13, color=LINE)
 ax.annotate("$c$", (2.5, -0.42), fontsize=13, color=LINE, ha="center")
 ax.annotate("$a$", (3.55, 1.85), fontsize=13, color=ACC)
 ax.annotate("$b$", (0.55, 1.72), fontsize=13, color=GREEN)
-ax.annotate("side $a$ is opposite angle $A$", (2.5, 4.0), fontsize=11,
-            color=INK, ha="center")
-clean(ax, (-1.0, 6.2), (-1.1, 4.6))
-ax.set_title("Capital letter = angle,  small letter = the side opposite it",
-             fontsize=12, pad=8)
+clean(ax, (-1.0, 6.2), (-1.1, 3.6))
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-2-labelling.svg"), format="svg",
@@ -196,13 +188,13 @@ def draw_tri(ax, known_sides, known_angles, want, title, col):
 
 
 draw_tri(axes[0], ["a"], ["A", "B"], "b",
-         "Sine rule\n(a pair, and one more angle)", ACC)
+         "Sine rule", ACC)
 draw_tri(axes[1], ["a", "b"], ["A"], "B",
-         "Sine rule\n(a pair, and one more side)", ACC)
+         "Sine rule", ACC)
 draw_tri(axes[2], ["a", "b"], ["C"], "c",
-         "Cosine rule\n(two sides, angle between)", LINE)
+         "Cosine rule", LINE)
 draw_tri(axes[3], ["a", "b", "c"], [], "C",
-         "Cosine rule\n(all three sides)", LINE)
+         "Cosine rule", LINE)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-2-rules.svg"), format="svg",
@@ -225,9 +217,7 @@ ax.annotate("$b$", (2.6, -0.44), fontsize=13, color=LINE, ha="center")
 ax.annotate("$h = a\\sin C$", (2.02, 1.5), fontsize=12, color=ACC, ha="left")
 ax.annotate("area $= \\dfrac{1}{2}ab\\sin C$", (2.6, 3.6), fontsize=14,
             color=INK, ha="center")
-ax.annotate("$C$ must be the angle\nBETWEEN $a$ and $b$", (5.0, 2.0),
-            fontsize=10.5, color=GREEN, ha="center")
-clean(ax, (-1.0, 7.4), (-1.1, 4.4))
+clean(ax, (-0.6, 5.8), (-0.9, 4.2))
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-2-area.svg"), format="svg",
             bbox_inches="tight")
@@ -315,11 +305,7 @@ ang_label(ax, B, C, A, "$B$", color=GREEN, r=0.85)
 ang_label(ax, C, A, B, "$C$", color=LINE, r=0.85)
 vlabels(ax, [A, B, C], ["$A$", "$B$", "$C$"],
         [(-16, -12), (16, -12), (0, 16)])
-ax.annotate("same colour = a pair\n(an angle and the side opposite it)",
-            (3.5, -2.30), fontsize=10.5, ha="center", color=INK)
-clean(ax, (-1.9, 8.9), (-3.3, 6.4))
-ax.set_title("Capital = angle,  small = the side opposite it",
-             fontsize=12, pad=8)
+clean(ax, (-1.9, 8.9), (-1.5, 5.2))
 
 # --- 右：PQR で出されたら、自分で書き込む ---
 ax = axes[1]
@@ -329,11 +315,7 @@ vlabels(ax, [A, B, C], ["$P$", "$Q$", "$R$"],
 side_label(ax, B, C, "$p$", color=ACC, inside=A, off=0.10)
 side_label(ax, C, A, "$q$", color=GREEN, inside=B, off=0.10)
 side_label(ax, A, B, "$r$", color=LINE, inside=C, off=0.085)
-ax.annotate("the question gives you only $P$, $Q$, $R$ —\n"
-            "write $p$, $q$, $r$ on your own diagram first",
-            (3.5, -2.30), fontsize=10.5, ha="center", color=ACC)
-clean(ax, (-1.9, 8.9), (-3.3, 6.4))
-ax.set_title("Same rule with any letters", fontsize=12, pad=8)
+clean(ax, (-1.9, 8.9), (-1.5, 5.2))
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-2-notation.svg"), format="svg",
@@ -361,8 +343,6 @@ vlabels(ax, [A, B, C], ["$A$", "$B$", "$C$"],
 ax.annotate(r"$c^{2} = a^{2} + b^{2} - 2ab\cos C$", (4.1, -2.35), fontsize=13,
             ha="center", color=INK)
 clean(ax, (-2.2, 10.4), (-3.4, 9.0))
-ax.set_title("Two sides and the angle between them", fontsize=12, pad=8,
-             color=LINE)
 
 # --- 右：3辺 → 角 ---
 ax = axes[1]
@@ -376,13 +356,8 @@ vlabels(ax, [A, B, C], ["$A$", "$B$", "$C$"],
 ax.annotate(r"$\cos C = \dfrac{a^{2} + b^{2} - c^{2}}{2ab}$", (4.1, -2.45),
             fontsize=13, ha="center", color=INK)
 clean(ax, (-2.2, 10.4), (-3.4, 9.0))
-ax.set_title("All three sides", fontsize=12, pad=8, color=LINE)
 
-fig.text(0.5, 0.015,
-         "in both pictures  $C$  is between  $a$  and  $b$,  "
-         "and  $c$  is the side opposite  $C$",
-         ha="center", fontsize=11.5, color=ACC)
-fig.tight_layout(rect=(0, 0.045, 1, 1))
+fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-2-cosine.svg"), format="svg",
             bbox_inches="tight")
 plt.close(fig)
@@ -420,8 +395,6 @@ def _we1(ax):
                 va="center")
     ax.annotate("wall", (1.72, 4.25), color=GREY, fontsize=10.5, ha="left")
     clean(ax, (-1.1, 3.4), (-0.9, 4.9))
-    ax.set_title("The wall is vertical, so the right angle is at the foot "
-                 "of the wall", fontsize=10.5, pad=8)
 
 
 we_fig("sl-3-2-we1.svg", _we1, figsize=(5.6, 4.3))
@@ -470,7 +443,7 @@ we_fig("sl-3-2-we2.svg", _plain(
     [("$a = 8$ cm", ACC, 0.07), ("$b = ?$", LINE, 0.07), (None, INK, 0.10)],
     [(r"$42^{\circ}$", ACC, 1.5, 1.7), (r"$63^{\circ}$", LINE, 1.5, 1.7),
      (r"$C = ?$", GREEN, 1.4, 2.0)],
-    title="A pair:  $a$ with $42^{\\circ}$"), figsize=(5.6, 4.0))
+    ), figsize=(5.6, 4.0))
 
 # --- 例題3：B=105, b=14, c=9 → C ---
 we_fig("sl-3-2-we3.svg", _plain(
@@ -478,7 +451,7 @@ we_fig("sl-3-2-we3.svg", _plain(
     [(None, INK, 0.10), ("$b = 14$ cm", ACC, 0.07), ("$c = 9$ cm", LINE, 0.11)],
     [(None, INK, 1, 1), (r"$105^{\circ}$", ACC, 1.6, 1.35),
      (r"$C = ?$", LINE, 1.5, 2.15)],
-    title="A pair:  $b$ with $105^{\\circ}$"), figsize=(5.6, 4.2))
+    ), figsize=(5.6, 4.2))
 
 # --- 例題4：a=7, b=10, C=55 → c ---
 we_fig("sl-3-2-we4.svg", _plain(
@@ -487,7 +460,7 @@ we_fig("sl-3-2-we4.svg", _plain(
      ("$c = ?$", ACC, 0.11)],
     [(None, INK, 1, 1), (None, INK, 1, 1),
      (r"$55^{\circ}$", ACC, 1.4, 1.8)],
-    title="Two sides, and the angle between them"), figsize=(5.6, 4.0))
+    ), figsize=(5.6, 4.0))
 
 # --- 例題5：5, 7, 9 → 最大角 ---
 we_fig("sl-3-2-we5.svg", _plain(
@@ -496,7 +469,7 @@ we_fig("sl-3-2-we5.svg", _plain(
      ("$c = 9$ cm  (longest)", ACC, 0.11)],
     [(None, INK, 1, 1), (None, INK, 1, 1),
      (r"$C = ?$", ACC, 1.2, 1.75)],
-    title="The largest angle is opposite the longest side"),
+    ),
     figsize=(5.8, 3.8))
 
 # --- 例題6：土地 40, 55, 68 ---
@@ -507,6 +480,6 @@ we_fig("sl-3-2-we6.svg", _plain(
     [(None, INK, 1, 1), (None, INK, 1, 1),
      (r"$68^{\circ}$", ACC, 7.5, 1.8)],
     verts=("", "", ""),
-    title="Two sides, and the angle between them"), figsize=(5.6, 4.0))
+    ), figsize=(5.6, 4.0))
 
 print("wrote sl-3-2-notation.svg, sl-3-2-cosine.svg, sl-3-2-we1..we6.svg")

@@ -59,6 +59,10 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている（消したはず）: " + msg + " :: " + sub[:70])
+
 # ══════════════════════════════════════════════════════════
 # 0. 法則そのもの（記号で）
 # ══════════════════════════════════════════════════════════
@@ -265,13 +269,16 @@ in_text("## この $3$ つは公式集にあります", "対数法則は載っ�
 in_text("> $\\log_{a} xy = \\log_{a} x + \\log_{a} y$", "積の法則を逐語で")
 in_text("> $\\log_{a} \\dfrac{x}{y} = \\log_{a} x - \\log_{a} y$", "商の法則を逐語で")
 in_text("> $\\log_{a} x^{m} = m \\log_{a} x$", "累乗の法則を逐語で")
-in_text("> for $a$, $x$, $y > 0$", "条件を逐語で")
+not_in_text("> for $a$, $x$, $y > 0$", "英文の条件の引用は外した")
+in_text("使える範囲は、$a$、$x$、$y$ がどれも正（$a, x, y > 0$）のときです。", "条件は日本語の文で書いた")
 in_text("> $\\log_{a} x = \\dfrac{\\log_{b} x}{\\log_{b} a}$",
         "底の変換を逐語で（公式集）")
-in_text("> for $a$, $b$, $x > 0$", "条件はシラバスの Content 欄")
+not_in_text("> for $a$, $b$, $x > 0$", "英文の条件の引用は外した")
+in_text("条件は、$a$、$b$、$x$ がどれも正（$a, b, x > 0$）であることです。", "底の変換の条件は日本語の文で書いた")
 in_text("> $\\log_47 = \\dfrac{\\ln7}{\\ln4}$", "シラバスの例を逐語で")
+not_in_text(" where $a$, $x > 0$, $a \\neq 1$", "公式集の英語の where は外した")
 in_text("> $a^{x} = \\mathrm{e}^{x \\ln a}$ ; $\\log_{a} a^{x} = x = a^{\\log_{a} x}$"
-        " where $a$, $x > 0$, $a \\neq 1$", "指数・対数関数の欄を逐語で")
+        "（$a, x > 0$, $a \\neq 1$）", "指数・対数関数の欄（条件はかっこ書き）")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
 # ══════════════════════════════════════════════════════════
@@ -290,7 +297,7 @@ in_text("**Paper 1 では、$\\dfrac{\\ln 7}{\\ln 3}$ が答えです。**",
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 7, "--- は 7 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 15, "日本語訳が 15")
 chk(TEXT.count("</details>") == 15, "</details> も 15")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -298,9 +305,16 @@ chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
 chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aasl17b-", TEXT, re.M)) == 5, "例題が 5")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -349,9 +363,9 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Multiplying below, adding above (base $2$)", "図(a) の題")
+not_in_fig("Multiplying below, adding above", "図(a) の題は外した（本文が言う）")
 in_fig("values", "図(a) の下段ラベル")
-in_fig("Change of base: pick $b$ you can do by hand", "図(b) の題")
+not_in_fig("pick $b$ you can do by hand", "図(b) の題は外した（本文が言う）")
 in_fig("take $b = 5$", "図(b) の選び方")
 eq(lg(8, 2) + lg(4, 2), lg(32, 2), "図(a) の 3 + 2 = 5")
 eq(lg(125, 25), R(3, 2), "図(b) の 3/2")
@@ -364,12 +378,16 @@ for _lk in ["28", "45", "81", "30", "4096", "5}{3", "16"]:
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-7b.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-1-7a.qmd") < DRAFT.index("aasl-1-7b.qmd"),
-    "並びが 1.7a → 1.7b")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/01-number-and-algebra/aasl-1-7b.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-1-7a.qmd") < DRAFT.index("aasl-1-7b.qmd"),
+        "並びが 1.7a → 1.7b")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-7b.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -388,7 +406,7 @@ for t in ["| laws of logarithms |", "| change of base |",
 # 条件（a ≠ 1、b ≠ 1）
 in_text("これに加えて、**底は $a \\neq 1$** でなければなりません。", "対数法則に a ≠ 1")
 in_text("これに加えて、**$a \\neq 1$ と $b \\neq 1$** が要ります。", "底の変換に条件")
-in_text("条件は、シラバスの Content 欄のほうに書かれています。", "条件の出どころを正しく")
+not_in_text("条件は、シラバスの Content 欄のほうに書かれています。", "条件の出どころを正しく")
 chk(all(sp.Integer(1) ** _t == 1 for _t in [-3, 0, 2, 7]), "1 は何乗しても 1")
 # log(x+y) は「一般には」等しくない
 in_text("（正確には「一般には等しくない」です。", "特別な場合がある")
@@ -500,13 +518,13 @@ for _href in re.findall(r"\]\(([^)]+)\)", TEXT):
 in_text("方法点（M mark）を得るためにも、途中式を書いておくのが安全です。", "断定を弱めた")
 not_in_text("方法点（M mark）がもらえないことがあります", "古い言い方は残っていない")
 
-in_text("**Topic 2（Functions）** の指数関数で使います", "文章で書く")
+in_text("**Topic 2（Functions）** の **exponential function**（指数関数）で使います", "文章で書く")
 
 # ══════════════════════════════════════════════════════════
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -522,11 +540,11 @@ in_text('指数と対数が、たがいに打ち消し合うことを表す式�
 # ══════════════════════════════════════════════════════════
 # 2026-09-17 の手入れ
 # ══════════════════════════════════════════════════════════
-in_text("**これが対数法則（laws of logarithms）の正体**です。", "対数法則の併記")
-in_text("指数法則（laws of exponents）を別の言葉で言っただけです。", "指数法則の併記")
-in_text("### 3. change of base（底の変換） {#change-of-base}", "§3 の併記")
-in_text("### 6. 指数方程式（$1$）：底をそろえる（same base） {#same-base}", "§6 の併記")
-in_text("### 7. 指数方程式（$2$）：対数をとる（taking logarithms） {#take-logs}",
+in_text("これが **laws of logarithms**（対数法則）の正体です。", "対数法則の併記（English（日本語））")
+in_text("指数法則を別の言葉で言っただけです。", "指数法則の言いかえ")
+in_text('### 3. Change of base（底の変換） {#change-of-base}', "§3 の併記")
+in_text('### 6. Exponential equations with a common base（底をそろえて解く指数方程式） {#same-base}', "§6 の併記")
+in_text('### 7. Taking logarithms（両辺の対数をとって解く） {#take-logs}',
         "§7 の併記")
 in_text("新しい底の $b$ は、**こちらが選べます。**", "新しい底の b")
 in_text("**中身を素因数に分ける**のが、カギです。", "カギです")
@@ -552,15 +570,15 @@ in_text("**$(\\log_{2} x)^{2}$ と $\\log_{2} x^{2}$ は別ものです。**", "
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 3. change of base（底の変換） {#change-of-base}', "見出しの英語: 3. change of base（底の変換）")
-in_text('### 6. 指数方程式（$1$）：底をそろえる（same base） {#same-base}', "見出しの英語: 6. 指数方程式（$1$）：底をそろえる（same ")
-in_text('### 7. 指数方程式（$2$）：対数をとる（taking logarithms） {#take-logs}', "見出しの英語: 7. 指数方程式（$2$）：対数をとる（taking")
+in_text('### 3. Change of base（底の変換） {#change-of-base}', "見出しの英語: 3. change of base（底の変換）")
+in_text('### 6. Exponential equations with a common base（底をそろえて解く指数方程式） {#same-base}', "見出しの英語: 6. 指数方程式（$1$）：底をそろえる（same ")
+in_text('### 7. Taking logarithms（両辺の対数をとって解く） {#take-logs}', "見出しの英語: 7. 指数方程式（$2$）：対数をとる（taking")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：図 (a) から説明の文を外した（方針 第 21 節）
 # ══════════════════════════════════════════════════════════
 chk("a product becomes a sum" not in FIG, "図に説明の文を書いていない")
-chk("ax1.set_ylim(0.10, 1.0)" in FIG, "図 (a) の下の余白を詰めた")
+chk("ax1.set_ylim(0.10, 0.88)" in FIG, "図 (a) の上下の余白を詰めた")
 in_text("かけ算・わり算・累乗を、$\\log$ の足し算・引き算・かけ算に変える法則は、"
         "次の $3$ つです。", "積が和になるのは本文にある")
 

@@ -17,7 +17,7 @@ sidebar: aa-sl
 
 ## The idea
 
-### 1. 二項分布が使える $4$ つの条件 {#when}
+### 1. Conditions for a binomial distribution（二項分布が使える $4$ つの条件） {#when}
 
 **binomial distribution**（二項分布）は、**同じ試行を決まった回数くり返して、成功の回数を数える**ときの分布です。次の $4$ つがそろっている必要があります。
 
@@ -34,7 +34,7 @@ sidebar: aa-sl
 
 **「成功」は、うれしいこととはかぎりません。** 「不良品である」を成功と呼ぶこともあります。数えたいほうを成功にします。
 
-### 2. $X \sim B(n, p)$ という書き方 {#notation}
+### 2. Notation（$X \sim B(n, p)$ という書き方） {#notation}
 
 条件がそろったら、成功の回数 $X$ について
 
@@ -53,9 +53,9 @@ $X \sim B(n,\ p)$ は、公式集の **4.8** の欄に *Binomial distribution* �
 
 **$X$ のとりうる値は $0, 1, 2, \ldots, n$ です。** ぜんぶ失敗の $0$ から、ぜんぶ成功の $n$ までです。
 
-### 3. $P(X = x)$ の形 {#pmf}
+### 3. Binomial probabilities（$P(X = x)$ の式） {#pmf}
 
-$n$ 回のうち、ちょうど $x$ 回成功する確率は
+二項分布では、成功の回数ごとの確率を $1$ つの式で表せます。$n$ 回のうち、ちょうど $x$ 回成功する確率は
 
 $$
 P(X = x) = \binom{n}{x} p^{x} (1 - p)^{n - x}
@@ -70,18 +70,20 @@ $$ {#eq-aasl48-pmf}
 - $\binom{n}{x}$ … $n$ 回のうちどの回が成功かの**選び方の数**
 
 ::: {.callout-note appearance="simple"}
-**@eq-aasl48-pmf そのものは、公式集の 4.8 の欄にはありません。** $\binom{n}{r}$ は Topic 1 の **1.9**（binomial theorem）の欄にあります。
+**@eq-aasl48-pmf そのものは、公式集の 4.8 の欄にはありません。** $\binom{n}{r}$ は Topic 1 の **1.9** の欄（**binomial theorem**、二項定理）にあります。
 
 試験では確率を GDC で出すので、この式を使って手で計算する必要はありません。**式は、何が起きているかを理解するためのものです。**
 :::
 
 **$\binom{n}{x}$ を忘れると、答えが小さくなりすぎます。** $p^{x}(1-p)^{n-x}$ は「決まった順番で」起こる確率で、順番のちがいを数えていません。
 
-### 4. 「以下」「以上」の言いかえ {#range}
-
-![A binomial distribution with $p = \tfrac{1}{2}$](img/aasl-4-8-idea-b.svg){#fig-aasl48-idea-b width=100%}
+### 4. Ranges of values（「以下」「以上」の言いかえ） {#range}
 
 問題文のことばを、$X$ の値の範囲に直します（@fig-aasl48-idea-b）。
+
+![$p = \tfrac{1}{2}$ の二項分布です。](img/aasl-4-8-idea-b.svg){#fig-aasl48-idea-b width=80%}
+
+@fig-aasl48-idea-b は $X \sim B(6,\ 0.5)$ で、$P(X \le 2)$ は $x = 0, 1, 2$ の棒を足したものです。
 
 | 英語 | 範囲 |
 |:--|:--|
@@ -99,9 +101,9 @@ $$ {#eq-aasl48-pmf}
 
 **境目を含むかどうかを、必ず確かめてください。** `at most 2` は $2$ を含み、`fewer than 2` は含みません。
 
-### 5. mean and variance（平均と分散） {#mean}
+### 5. Mean and variance（平均と分散） {#mean}
 
-$X \sim B(n, p)$ のとき
+二項分布の平均と分散は、$n$ と $p$ だけで決まります。$X \sim B(n, p)$ のとき
 
 $$
 E(X) = np
@@ -115,81 +117,12 @@ $$ {#eq-aasl48-var}
 ## この $2$ つは公式集にあります
 $E(X) = np$ と $\mathrm{Var}(X) = np(1-p)$ は、公式集の **4.8** の欄に *Mean* と *Variance* として載っています。
 
-**分散から標準偏差を出すときは、平方根を取ります。** $\sigma = \sqrt{np(1-p)}$ です。この式は公式集にありませんが、[SL 4.3](aasl-4-3.qmd#sd) のとおり分散は標準偏差の $2$ 乗です。
+**variance**（分散）**から standard deviation**（標準偏差）**を出すときは、平方根を取ります。** $\sigma = \sqrt{np(1-p)}$ です。この式は公式集にありませんが、[SL 4.3](aasl-4-3.qmd#sd) のとおり分散は標準偏差の $2$ 乗です。
 :::
 
-> Not required: Formal proof of mean and variance.
-
-**証明は求められません。** ただし、$E(X) = np$ が自然なことは、[SL 4.5 の期待される回数](aasl-4-5.qmd#expected)と同じ形だと気づけば分かります。
+**この $2$ つの式の証明は求められません。** ただし、$E(X) = np$ が自然なことは、[SL 4.5 の期待される回数](aasl-4-5.qmd#expected)と同じ形だと気づけば分かります。
 
 **$n$ を決めておくと、$\mathrm{Var}(X)$ は $p = 0.5$ のとき最大になります。** $p(1-p)$ が $p = 0.5$ で最大だからです。
-
-### 6. 答えの読み方 {#read}
-
-![A binomial distribution with $p$ below $\tfrac{1}{2}$](img/aasl-4-8-idea-a.svg){#fig-aasl48-idea-a width=100%}
-
-**確率は $0$ 以上 $1$ 以下です。** ここを外したら、入力がまちがっています。
-
-**$P(X = x)$ がいちばん大きくなるのは、$np$ の近くです**（@fig-aasl48-idea-a）。答えが $np$ から遠い $x$ で大きな値になっていたら、疑ってください。
-
-**$E(X) = np$ は「$n$ 回のうち期待される成功の回数」です。** [SL 4.5](aasl-4-5.qmd#expected) の期待される回数と同じものです。
-
-**$p = 0.5$ のときだけ、分布は左右対称になります。** それ以外は、どちらかに寄ります。
-
-::: {.callout-warning}
-## この節の確率の数値は、GDC で出します
-シラバスは、二項分布の確率を**GDC で求める**としています。だから、**確率の数値を出す問題は Paper 2 で出ます。**
-
-**単元全体が Paper 1 の対象外というわけではありません。** 二項分布として扱ってよいかの判断、$E(X) = np$、$p = 0.5$ のときの対称性、確率の式の形は、電卓なしでも問われます。
-
-**答えの見当も、手でつけられます。** $0 \le P \le 1$、$np$ の近くが大きい、$E(X) = np$ ——この $3$ つで、入力ミスのほとんどは見つかります。
-:::
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-**なぜ、$\binom{n}{x}$ をかけるのでしょうか。** $n$ 回のうち、成功が起こる回を選ぶ選び方が何通りあるかを数えているからです。
-
-たとえば $n = 4$、$x = 2$ なら、成功する回の選び方は $\binom{4}{2} = 6$ 通りです。どの $1$ 通りも、確率は $p^{2}(1-p)^{2}$ で同じです。**同じ確率のものが $6$ 通りあるので、足すとかけ算になります。**
-
-**「決まった順番で」の確率が $p^{x}(1-p)^{n-x}$ になるのは、独立だからです。** 各回が独立なので、枝に沿ってかけられます（[SL 4.6](aasl-4-6.qmd#independent)）。成功が $x$ 回、失敗が $n - x$ 回あるので、この形になります。
-
-**もどさない場合は、この議論が崩れます。** $2$ 回目の確率が $1$ 回目によって変わるので、$p^{x}(1-p)^{n-x}$ の形になりません。
-
-**なぜ、全部足すと $1$ になるのでしょうか。** $x = 0$ から $n$ まで足すと
-
-$$
-\sum_{x=0}^{n} \binom{n}{x} p^{x}(1-p)^{n-x} = \bigl(p + (1-p)\bigr)^{n} = 1^{n} = 1
-$$
-
-です。これは [SL 1.9 の binomial theorem](../01-number-and-algebra/aasl-1-9.qmd) そのものです。**二項定理の展開が、そのまま確率の合計になっています。**
-
-**なぜ、$E(X) = np$ が自然なのでしょうか。** $1$ 回あたり平均 $p$ 回成功する、と考えるからです。$n$ 回くり返せば、平均は $n$ 倍の $np$ になります。
-
-**この見方は、[SL 4.5 の期待される回数](aasl-4-5.qmd#expected)と同じです。** $1$ 回あたりの確率に回数をかける、という形が共通しています。
-
-**$E(X) = np$ そのものには、独立性は要りません。** $1$ 回ごとの成功確率がどれも $p$ なら、回どうしに関係があっても、成功回数の期待値は $np$ です。赤 $2$ 個・白 $2$ 個から、もどさずに $2$ 個取るとき、$1$ 回目も $2$ 回目も赤が出る確率は $\dfrac{1}{2}$ なので、赤の個数の期待値は $2 \times \dfrac{1}{2} = 1$ です。
-
-**独立性が要るのは、ここで $X$ を二項分布として扱うためです。** @eq-aasl48-pmf の確率の式と、@eq-aasl48-var の $\mathrm{Var}(X) = np(1-p)$ は、@tbl-aasl48-cond の $4$ 条件がそろって初めて使えます。
-
-**なぜ、$\mathrm{Var}(X)$ が $p = 0.5$ で最大になるのでしょうか。** $p(1-p)$ を平方完成すると
-
-$$
-p(1-p) = -\left(p - \frac{1}{2}\right)^{2} + \frac{1}{4}
-$$
-
-なので、$p = \dfrac{1}{2}$ で最大値 $\dfrac{1}{4}$ を取ります。**結果が読みにくいのは、五分五分のときです。** $p$ が $0$ や $1$ に近いと、結果はほぼ決まっているので、ばらつきが小さくなります。
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-
-**確率の数値は GDC で出します（Paper 2）。** それ以外の判断や式の形は、電卓なしでも進めます。**GDC を使うのは例題 $1$・$2$・$4$(c) です。例題 $3$ と例題 $4$(a)(b)(d) は電卓なしで解けます。**答えは**有効数字 $3$ 桁**（$3$ significant figures）で書きます。$0.0781$ のように、$0$ が続く数では小数の桁数が増えます。
-:::
 
 ::: {#exm-aasl48-basic}
 [The random variable $X$ follows the distribution $X \sim B(8,\ 0.25)$.]{.q-en}
@@ -217,7 +150,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** `binomPdf(8, 0.25, 2)` を使います（[GDC の節](#gdc-pdf)）。
 
@@ -270,88 +204,6 @@ $$P(X \ge 3) = 1 - 0.6785\ldots = 0.321$$
 $$E(X) = 8(0.25) = 2, \qquad \mathrm{Var}(X) = 8(0.25)(0.75) = 1.5$$
 :::
 :::
-
-::: {#exm-aasl48-context}
-[A basketball player scores from a free throw with probability $0.8$, independently of all other throws. She takes $10$ free throws. Let $X$ be the number she scores.]{.q-en}
-
-**(a)** [Find $P(X = 9)$.]{.q-en}
-
-**(b)** [Find $P(X \ge 8)$.]{.q-en}
-
-**(c)** [Find $E(X)$.]{.q-en}
-
-**(d)** [Interpret your answer to part (c) in the context of the question.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-あるバスケットボール選手は、フリースローを確率 $0.8$ で決めます。各回は他の回と独立です。この選手が $10$ 回フリースローを打ちます。決めた回数を $X$ とします。
-
-**(a)** $P(X = 9)$ を求めなさい。
-
-**(b)** $P(X \ge 8)$ を求めなさい。
-
-**(c)** $E(X)$ を求めなさい。
-
-**(d)** (c) の答えを、この問題の文脈で解釈しなさい。
-
-</details>
-
----
-
-$4$ 条件を確かめます（@tbl-aasl48-cond）。回数は $10$ 回で決まっていて、各回は決めるか外すかの $2$ 通り、確率はいつも $0.8$、各回は独立です。だから $X \sim B(10,\ 0.8)$ です。
-
-**(a)** `binomPdf(10, 0.8, 9)` を使います。
-
-$$
-P(X = 9) = 0.268 \ (3 \text{ s.f.})
-$$
-
-**(b)** $X \ge 8$ は $X = 8, 9, 10$ です。`binomCdf(10, 0.8, 8, 10)` を使います。
-
-$$
-P(X \ge 8) = 0.678 \ (3 \text{ s.f.})
-$$
-
-**(c)** @eq-aasl48-mean を使います。
-
-$$
-E(X) = 10 \times 0.8 = 8
-$$
-
-**(d)** `Interpret` なので、英語で書きます。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*If the player took $10$ free throws many times over, she would score $8$ of them on average. It is not a promise that she scores exactly $8$ in any one set of $10$: the number scored varies from set to set.*
-:::
-
-（この選手が $10$ 回のセットを何度もくり返せば、平均して $8$ 回決めることになる。$1$ セットでちょうど $8$ 回決まる保証ではない。決まる回数はセットごとにばらつく、という意味です。）
-
-**検算（(a) について、$np$ との位置で）。** $np = 8$ なので、$x = 9$ は山のすぐ右です。$0.268$ という大きめの値は自然です ✓
-
-**検算（(b) について、(a) との大小で）。** $P(X \ge 8)$ は $P(X = 9)$ を含むので、$0.268$ より大きいはずです。$0.678 > 0.268$ ✓
-
-**検算（(b) について、余事象で）。** `binomCdf(10, 0.8, 0, 7)` は $0.3222\ldots$ で、$1 - 0.3222\ldots = 0.678$ ✓ 別の入力でも同じ値になりました。
-
-**検算（(c) について、$0$ と $n$ の間か）。** $0 \le 8 \le 10$ ✓ $p$ が大きいので、$E(X)$ が $n$ の近くになるのは自然です。
-
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-*$X \sim B(10,\ 0.8)$*
-
-**(a)**
-$$P(X = 9) = 0.268$$
-
-**(b)**
-$$P(X \ge 8) = 0.678$$
-
-**(c)**
-$$E(X) = 10(0.8) = 8$$
-
-**(d)** *over many sets of $10$ throws she would score $8$ on average; any one set of $10$ can give a different number*
-:::
 :::
 
 ::: {#exm-aasl48-model}
@@ -380,14 +232,17 @@ $$E(X) = 10(0.8) = 8$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** `Explain why` なので、英語で理由を書きます。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*There is a fixed number of $15$ seeds, each seed either germinates or does not, the probability of germinating is stated to be $0.8$ for every seed, and the seeds are stated to behave independently. All four conditions hold, so $X \sim B(15,\ 0.8)$, with $n = 15$ and $p = 0.8$.*
+*There is a fixed number of $15$ seeds, each seed either germinates or does not, the probability of germinating is stated to be $0.8$ for every seed, and the seeds are stated to behave independently.*
+
+*All four conditions hold, so $X \sim B(15,\ 0.8)$, with $n = 15$ and $p = 0.8$.*
 :::
 
 （$15$ 個という決まった回数があり、各種は発芽するかしないかの $2$ 通りで、確率はどの種も $0.8$ と書かれており、種どうしは独立と書かれている。$4$ 条件がそろうので $X \sim B(15,\ 0.8)$ である、という意味です。）
@@ -436,6 +291,119 @@ $$P(X \ge 13) = 0.398$$
 $$E(X) = 12, \qquad \mathrm{Var}(X) = 2.4$$
 :::
 :::
+:::
+
+### 6. Checking your answers（答えの見当をつける） {#read}
+
+電卓で出した確率が正しそうかは、分布の形から見当をつけられます。
+
+![$p$ が $\tfrac{1}{2}$ より小さい二項分布です。](img/aasl-4-8-idea-a.svg){#fig-aasl48-idea-a width=80%}
+
+@fig-aasl48-idea-a は $X \sim B(7,\ 0.4)$ で、棒の高さを全部足すと $1$ になります。
+
+**確率は $0$ 以上 $1$ 以下です。** ここを外したら、入力がまちがっています。
+
+**$P(X = x)$ がいちばん大きくなるのは、$np$ の近くです**（@fig-aasl48-idea-a）。答えが $np$ から遠い $x$ で大きな値になっていたら、疑ってください。
+
+**$E(X) = np$ は「$n$ 回のうち期待される成功の回数」です。** [SL 4.5](aasl-4-5.qmd#expected) の期待される回数と同じものです。
+
+**$p = 0.5$ のときだけ、分布は左右対称になります。** それ以外は、どちらかに寄ります。
+
+::: {.callout-warning}
+## この節の確率の数値は、GDC で出します
+二項分布の確率は **GDC で求める**ものです。だから、**確率の数値を出す問題は Paper 2 で出ます。**
+
+**単元全体が Paper 1 の対象外というわけではありません。** 二項分布として扱ってよいかの判断、$E(X) = np$、$p = 0.5$ のときの対称性、確率の式の形は、電卓なしでも問われます。
+
+**答えの見当も、手でつけられます。** $0 \le P \le 1$、$np$ の近くが大きい、$E(X) = np$ ——この $3$ つで、入力ミスのほとんどは見つかります。
+:::
+
+::: {#exm-aasl48-context}
+[A basketball player scores from a free throw with probability $0.8$, independently of all other throws. She takes $10$ free throws. Let $X$ be the number she scores.]{.q-en}
+
+**(a)** [Find $P(X = 9)$.]{.q-en}
+
+**(b)** [Find $P(X \ge 8)$.]{.q-en}
+
+**(c)** [Find $E(X)$.]{.q-en}
+
+**(d)** [Interpret your answer to part (c) in the context of the question.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+あるバスケットボール選手は、フリースローを確率 $0.8$ で決めます。各回は他の回と独立です。この選手が $10$ 回フリースローを打ちます。決めた回数を $X$ とします。
+
+**(a)** $P(X = 9)$ を求めなさい。
+
+**(b)** $P(X \ge 8)$ を求めなさい。
+
+**(c)** $E(X)$ を求めなさい。
+
+**(d)** (c) の答えを、この問題の文脈で解釈しなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+$4$ 条件を確かめます（@tbl-aasl48-cond）。回数は $10$ 回で決まっていて、各回は決めるか外すかの $2$ 通り、確率はいつも $0.8$、各回は独立です。だから $X \sim B(10,\ 0.8)$ です。
+
+**(a)** `binomPdf(10, 0.8, 9)` を使います。
+
+$$
+P(X = 9) = 0.268 \ (3 \text{ s.f.})
+$$
+
+**(b)** $X \ge 8$ は $X = 8, 9, 10$ です。`binomCdf(10, 0.8, 8, 10)` を使います。
+
+$$
+P(X \ge 8) = 0.678 \ (3 \text{ s.f.})
+$$
+
+**(c)** @eq-aasl48-mean を使います。
+
+$$
+E(X) = 10 \times 0.8 = 8
+$$
+
+**(d)** `Interpret` なので、英語で書きます。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*If the player took $10$ free throws many times over, she would score $8$ of them on average.*
+
+*It is not a promise that she scores exactly $8$ in any one set of $10$: the number scored varies from set to set.*
+:::
+
+（この選手が $10$ 回のセットを何度もくり返せば、平均して $8$ 回決めることになる。$1$ セットでちょうど $8$ 回決まる保証ではない。決まる回数はセットごとにばらつく、という意味です。）
+
+**検算（(a) について、$np$ との位置で）。** $np = 8$ なので、$x = 9$ は分布のいちばん高いところのすぐ右です。$0.268$ という大きめの値は自然です ✓
+
+**検算（(b) について、(a) との大小で）。** $P(X \ge 8)$ は $P(X = 9)$ を含むので、$0.268$ より大きいはずです。$0.678 > 0.268$ ✓
+
+**検算（(b) について、余事象で）。** `binomCdf(10, 0.8, 0, 7)` は $0.3222\ldots$ で、$1 - 0.3222\ldots = 0.678$ ✓ 別の入力でも同じ値になりました。
+
+**検算（(c) について、$0$ と $n$ の間か）。** $0 \le 8 \le 10$ ✓ $p$ が大きいので、$E(X)$ が $n$ の近くになるのは自然です。
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+*$X \sim B(10,\ 0.8)$*
+
+**(a)**
+$$P(X = 9) = 0.268$$
+
+**(b)**
+$$P(X \ge 8) = 0.678$$
+
+**(c)**
+$$E(X) = 10(0.8) = 8$$
+
+**(d)** *over many sets of $10$ throws she would score $8$ on average; any one set of $10$ can give a different number*
+:::
+:::
+:::
 
 ::: {#exm-aasl48-find}
 [The random variable $X$ follows the distribution $X \sim B(12,\ p)$ and $E(X) = 4.8$.]{.q-en}
@@ -463,7 +431,8 @@ $$E(X) = 12, \qquad \mathrm{Var}(X) = 2.4$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** @eq-aasl48-mean を $p$ について解きます。
 
@@ -488,7 +457,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The mean is $4.8$ and the standard deviation is $\sqrt{2.88} \approx 1.70$, so $X = 12$ lies more than four standard deviations above the mean. Its probability is `binomPdf`$(12, 0.4, 12) \approx 1.7 \times 10^{-5}$, which is very small, so a value of $12$ would be surprising.*
+*The mean is $4.8$ and the standard deviation is $\sqrt{2.88} \approx 1.70$, so $X = 12$ lies more than four standard deviations above the mean.*
+
+*Its probability is `binomPdf`$(12, 0.4, 12) \approx 1.7 \times 10^{-5}$, which is very small, so a value of $12$ would be surprising.*
 :::
 
 （平均は $4.8$、標準偏差は約 $1.70$ なので、$X = 12$ は平均より $4$ 標準偏差以上大きい。その確率は約 $1.7 \times 10^{-5}$ で非常に小さいので、$12$ という値は意外である、という意味です。）
@@ -499,7 +470,7 @@ $$
 
 **検算（(b) について、大小で）。** $\mathrm{Var}(X) = 2.88$ は $np = 4.8$ より小さいはずです ✓ $1 - p = 0.6 < 1$ をかけているからです。
 
-**検算（(c) について、$np$ との位置で）。** $np = 4.8$ なので、$x = 5$ は山のてっぺんのすぐ近くです。$0.227$ という大きめの値は自然です ✓
+**検算（(c) について、$np$ との位置で）。** $np = 4.8$ なので、$x = 5$ は分布のいちばん高いところのすぐ近くです。$0.227$ という大きめの値は自然です ✓
 
 ::: {.callout-note}
 ## 解答例（答案用紙に書くこと）
@@ -514,6 +485,45 @@ $$P(X = 5) = 0.227$$
 
 **(d)** *$\sqrt{2.88} \approx 1.70$, so $12$ is over four standard deviations above the mean of $4.8$, and $P(X = 12) \approx 1.7 \times 10^{-5}$: it would be surprising*
 :::
+:::
+:::
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+**なぜ、$\binom{n}{x}$ をかけるのでしょうか。** $n$ 回のうち、成功が起こる回を選ぶ選び方が何通りあるかを数えているからです。
+
+たとえば $n = 4$、$x = 2$ なら、成功する回の選び方は $\binom{4}{2} = 6$ 通りです。どの $1$ 通りも、確率は $p^{2}(1-p)^{2}$ で同じです。**同じ確率のものが $6$ 通りあるので、足すとかけ算になります。**
+
+**「決まった順番で」の確率が $p^{x}(1-p)^{n-x}$ になるのは、独立だからです。** 各回が独立なので、枝に沿ってかけられます（[SL 4.6](aasl-4-6.qmd#independent)）。成功が $x$ 回、失敗が $n - x$ 回あるので、この形になります。
+
+**もどさない場合は、この議論が崩れます。** $2$ 回目の確率が $1$ 回目によって変わるので、$p^{x}(1-p)^{n-x}$ の形になりません。
+
+**なぜ、全部足すと $1$ になるのでしょうか。** $x = 0$ から $n$ まで足すと
+
+$$
+\sum_{x=0}^{n} \binom{n}{x} p^{x}(1-p)^{n-x} = \bigl(p + (1-p)\bigr)^{n} = 1^{n} = 1
+$$
+
+です。これは [SL 1.9 の binomial theorem](../01-number-and-algebra/aasl-1-9.qmd) そのものです。**binomial theorem（二項定理）の展開が、そのまま確率の合計になっています。**
+
+**なぜ、$E(X) = np$ が自然なのでしょうか。** $1$ 回あたり平均 $p$ 回成功する、と考えるからです。$n$ 回くり返せば、平均は $n$ 倍の $np$ になります。
+
+**この見方は、[SL 4.5 の期待される回数](aasl-4-5.qmd#expected)と同じです。** $1$ 回あたりの確率に回数をかける、という形が共通しています。
+
+**$E(X) = np$ そのものには、独立性は要りません。** $1$ 回ごとの成功確率がどれも $p$ なら、回どうしに関係があっても、成功回数の **expected value**（期待値）は $np$ です。赤 $2$ 個・白 $2$ 個から、もどさずに $2$ 個取るとき、$1$ 回目も $2$ 回目も赤が出る確率は $\dfrac{1}{2}$ なので、赤の個数の期待値は $2 \times \dfrac{1}{2} = 1$ です。
+
+**独立性が要るのは、ここで $X$ を二項分布として扱うためです。** @eq-aasl48-pmf の確率の式と、@eq-aasl48-var の $\mathrm{Var}(X) = np(1-p)$ は、@tbl-aasl48-cond の $4$ 条件がそろって初めて使えます。
+
+**なぜ、$\mathrm{Var}(X)$ が $p = 0.5$ で最大になるのでしょうか。** $p(1-p)$ を平方完成すると
+
+$$
+p(1-p) = -\left(p - \frac{1}{2}\right)^{2} + \frac{1}{4}
+$$
+
+なので、$p = \dfrac{1}{2}$ で最大値 $\dfrac{1}{4}$ を取ります。**結果が読みにくいのは、五分五分のときです。** $p$ が $0$ や $1$ に近いと、結果はほぼ決まっているので、ばらつきが小さくなります。
 :::
 
 ## Common errors
@@ -556,7 +566,7 @@ $E(X)$ は長い目で見た平均です（[SL 4.7](aasl-4-7.qmd#meaning)）。$
 **手順は答案に書きません。** 書くのは、使った関数と入れた数（`binomPdf(8, 0.25, 2)` など）と、出た答えです。
 :::
 
-### 1. ちょうど $x$ 回：`binomPdf` {#gdc-pdf}
+### 1. Exactly $x$ successes（ちょうど $x$ 回：`binomPdf`） {#gdc-pdf}
 
 計算画面で `menu → Statistics → Distributions` を開き、二項分布の Pdf を選びます。
 
@@ -564,7 +574,7 @@ $E(X)$ は長い目で見た平均です（[SL 4.7](aasl-4-7.qmd#meaning)）。$
 
 **$x$ を $0, 1, 2, \ldots$ と変えて入れれば、どの $x$ が大きいかが見られます。**
 
-### 2. 範囲：`binomCdf` {#gdc-cdf}
+### 2. A range of values（範囲：`binomCdf`） {#gdc-cdf}
 
 同じ `Distributions` の中の、二項分布の Cdf を選びます。
 
@@ -582,7 +592,7 @@ $E(X)$ は長い目で見た平均です（[SL 4.7](aasl-4-7.qmd#meaning)）。$
 
 **$P(X \ge 3)$ は $1 -$ `binomCdf(n, p, 0, 2)` でも出ます。** どちらでもかまいません。
 
-### 3. 入力を確かめる {#gdc-check}
+### 3. Checking the input（入力を確かめる） {#gdc-check}
 
 **まず $np$ を暗算します。** 出た確率が $np$ の近くの $x$ で小さすぎたら、$p$ を $0.04$ と $0.4$ のように桁ちがいで入れていないかを見ます。
 
@@ -595,11 +605,7 @@ $E(X)$ は長い目で見た平均です（[SL 4.7](aasl-4-7.qmd#meaning)）。$
 ## Exercises
 
 ::: {.callout-note appearance="simple"}
-各問題に、折りたたみが $3$ つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です。英語の答案例が付くものもあります）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-
-**GDC を使うのは $1$・$3$・$4$・$7$ です。** $2$・$5$・$6$・$8$・$9$・$10$ は電卓なしで解けます。
+**GDC を使うのは $1$・$3$・$4$・$7$ です。** $2$・$5$・$6$・$8$・$9$・$10$ は電卓なしで解けます。 答えは**有効数字 $3$ 桁**（$3$ significant figures）で書きます。
 :::
 
 ::: {.exercise-block}
@@ -629,7 +635,7 @@ $$P(X \le 1) = 0.420$$
 
 $1$ つ目は `binomPdf`、$2$ つ目は `binomCdf` です（[GDC の節](#gdc-pdf)）。$X \le 1$ は $X = 0$ と $X = 1$ です。
 
-**検算（$np$ との位置で）。** $np = 6 \times 0.3 = 1.8$ です。$x = 2$ は山のすぐ近くなので、$0.324$ という大きめの値は自然です ✓
+**検算（$np$ との位置で）。** $np = 6 \times 0.3 = 1.8$ です。$x = 2$ は分布のいちばん高いところのすぐ近くなので、$0.324$ という大きめの値は自然です ✓
 
 **検算（範囲で）。** どちらも $0$ 以上 $1$ 以下です ✓
 
@@ -666,7 +672,7 @@ $$\mathrm{Var}(X) = 20(0.15)(0.85) = 2.55$$
 
 **取り出しは、ほんとうは非復元です。** $1$ 個取るごとに、残りの中の不良品の割合は少し変わります。だから $X$ の分布は、厳密には二項分布ではありません。
 
-**「バッチは標本にくらべて十分大きい」ので、その変化は無視できます。** 問題文がそう断っているので、独立とみなして**二項モデルで近似**します（@tbl-aasl48-cond）。@eq-aasl48-mean と @eq-aasl48-var を使います。
+**「バッチは sample（標本）にくらべて十分大きい」ので、その変化は無視できます。** 問題文がそう断っているので、独立とみなして**二項モデルで近似**します（@tbl-aasl48-cond）。@eq-aasl48-mean と @eq-aasl48-var を使います。
 
 **$E(X) = np = 3$ は、非復元でも成り立ちます**（[第 5 節](#mean)）。いっぽう **$\mathrm{Var}(X) = 2.55$ は、独立とみなしたモデルでの値**です。$2$ つを混同しないでください。
 
@@ -679,7 +685,9 @@ $$\mathrm{Var}(X) = 20(0.15)(0.85) = 2.55$$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Over many samples of $20$ components, the mean number of faulty ones is $3$. It does not say that every sample contains exactly $3$: the number varies from sample to sample, and the standard deviation $\sqrt{2.55} \approx 1.60$ shows that values a little above or below $3$ are common.*
+*Over many samples of $20$ components, the mean number of faulty ones is $3$.*
+
+*It does not say that every sample contains exactly $3$: the number varies from sample to sample, and the standard deviation $\sqrt{2.55} \approx 1.60$ shows that values a little above or below $3$ are common.*
 :::
 :::
 
@@ -735,6 +743,8 @@ $$P(X \ge 7) = 0.387$$
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
+*Let* $X$ *be the number of faulty components in the box.*
+
 *$X \sim B(25,\ 0.04)$*
 
 *binomCdf*$(25, 0.04, 0, 1)$
@@ -747,7 +757,7 @@ $$P(X \le 1) = 0.736$$
 
 `fewer than two` は $X \le 1$ です（@tbl-aasl48-words）。$2$ は含みません。$4\%$ は $p = 0.04$ です。
 
-**検算（$np$ との位置で）。** $np = 25 \times 0.04 = 1$ です。$X \le 1$ は山をまるごと含むので、$0.5$ より大きくなるはずです。$0.736 > 0.5$ ✓
+**検算（$np$ との位置で）。** $np = 25 \times 0.04 = 1$ です。$X \le 1$ は分布のいちばん高い部分をまるごと含むので、$0.5$ より大きくなるはずです。$0.736 > 0.5$ ✓
 
 **検算（分けて足します）。** `binomPdf(25, 0.04, 0)` は $0.3604$、`binomPdf(25, 0.04, 1)` は $0.3754$ です。$0.3604 + 0.3754 = 0.7358$ ✓
 
@@ -780,12 +790,16 @@ $4$ 条件のうち、どれが崩れるかを名指しします（@tbl-aasl48-c
 
 **検算（実際に変わるか）。** $1$ 枚目がハートである確率は $\dfrac{13}{52} = \dfrac{1}{4}$ です。$1$ 枚目がハートだったとき、$2$ 枚目がハートである確率は $\dfrac{12}{51}$ で、$\dfrac{1}{4}$ とちがいます ✓
 
-**検算（大きな山なら）。** もし $52$ 枚ではなく $52000$ 枚から $5$ 枚取るなら、$\dfrac{12999}{51999}$ は $\dfrac{1}{4}$ にとても近くなります ✓ 母集団が大きければ、二項分布で近似できます。
+**検算（カードがとても多ければ）。** もし $52$ 枚ではなく $52000$ 枚から $5$ 枚取るなら、$\dfrac{12999}{51999}$ は $\dfrac{1}{4}$ にとても近くなります ✓ **population**（母集団）が大きければ、二項分布で近似できます。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*No. The cards are dealt without replacement, so the probability that a card is a heart depends on the cards already dealt: it is $\dfrac{13}{52}$ for the first card but $\dfrac{12}{51}$ for the second if the first was a heart. The trials are therefore not independent, so the binomial model does not apply.*
+*No.*
+
+*The cards are dealt without replacement, so the probability that a card is a heart depends on the cards already dealt: it is $\dfrac{13}{52}$ for the first card but $\dfrac{12}{51}$ for the second if the first was a heart.*
+
+*The trials are therefore not independent, so the binomial model does not apply.*
 :::
 :::
 
@@ -837,6 +851,8 @@ $$\mathrm{Var}(X) = 30(0.6)(0.4) = 7.2$$
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
+*Let* $X$ *be the number of questions the student gets right.*
+
 *$X \sim B(10,\ 0.25)$*
 
 *binomCdf*$(10, 0.25, 5, 10)$
@@ -860,7 +876,11 @@ $4$ 択なので $p = \dfrac{1}{4} = 0.25$、$n = 10$ です。`at least 5` は 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*About $7.8\%$ of students who guess every answer would still get at least $5$ right. That is not a rare event, so reaching $5$ correct answers on its own is weak evidence that the student knows the material. A teacher wanting stronger evidence would need a higher score, more questions, or both.*
+*About $7.8\%$ of students who guess every answer would still get at least $5$ right.*
+
+*That is not a rare event, so reaching $5$ correct answers on its own is weak evidence that the student knows the material.*
+
+*A teacher wanting stronger evidence would need a higher score, more questions, or both.*
 :::
 :::
 
@@ -906,7 +926,9 @@ $$P(X \ge 1) = 1 - 0.8^{n} > 0.95 \iff 0.8^{n} < 0.05$$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Putting $x = 0$ into the binomial formula gives $P(X = 0) = \binom{n}{0}(0.2)^{0}(0.8)^{n} = 0.8^{n}$. The coefficient $\binom{n}{0}$ counts the ways of choosing which trials are successes, and there is exactly one way to have no successes at all, so $\binom{n}{0} = 1$.*
+*Putting $x = 0$ into the binomial formula gives $P(X = 0) = \binom{n}{0}(0.2)^{0}(0.8)^{n} = 0.8^{n}$.*
+
+*The coefficient $\binom{n}{0}$ counts the ways of choosing which trials are successes, and there is exactly one way to have no successes at all, so $\binom{n}{0} = 1$.*
 :::
 
 **(b)** $P(X \ge 1)$ は余事象で書きかえます（[第 4 節](#range)）。
@@ -953,7 +975,11 @@ $X \sim B(20,\ 0.35)$ について $E(X) = 7$ です。ある生徒が、これ�
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The calculation is correct but the reading is not. The value $7$ is the mean number of successes over many sets of $20$ trials, not the number in every set. The standard deviation is $\sqrt{4.55} \approx 2.13$, and $P(3 \le X \le 11) \approx 0.968$, so values from $3$ to $11$ are all common in a single set.*
+*The calculation is correct but the reading is not.*
+
+*The value $7$ is the mean number of successes over many sets of $20$ trials, not the number in every set.*
+
+*The standard deviation is $\sqrt{4.55} \approx 2.13$, and $P(3 \le X \le 11) \approx 0.968$, so values from $3$ to $11$ are all common in a single set.*
 :::
 :::
 
@@ -990,7 +1016,11 @@ $X \sim B(20,\ 0.35)$ について $E(X) = 7$ です。ある生徒が、これ�
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Students in the same class are in contact with one another, so an illness can spread. One student being absent makes it more likely that others are absent on the same day. The absences are therefore not independent, which is one of the four conditions the binomial model requires.*
+*Students in the same class are in contact with one another, so an illness can spread.*
+
+*One student being absent makes it more likely that others are absent on the same day.*
+
+*The absences are therefore not independent, which is one of the four conditions the binomial model requires.*
 :::
 :::
 

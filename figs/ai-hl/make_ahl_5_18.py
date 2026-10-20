@@ -68,8 +68,6 @@ ax.set_ylim(0, 1.08)
 ax.set_xlabel("$t$")
 ax.set_ylabel("$x$")
 ax.legend(fontsize=10.5, frameon=False, loc="upper right")
-ax.set_title("a smaller step $h$ follows the exact curve more closely",
-             fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 ax = axs[1]
@@ -86,15 +84,8 @@ ax.set_ylim(-0.92, 0.18)
 ax.set_xlabel("$x$")
 ax.set_ylabel("$y = \\dfrac{dx}{dt}$")
 ax.legend(fontsize=10.5, frameon=False, loc="lower left")
-ax.set_title("the same run drawn in the $(x,\\ y)$ plane",
-             fontsize=12, color=INK, pad=10)
 tidy(ax)
 
-fig.text(0.5, -0.04,
-         "Both pictures show $\\frac{d^2x}{dt^2} + 3\\frac{dx}{dt} + 2x = 0$ with "
-         "$x = 1$ and $\\dfrac{dx}{dt} = 0$ at $t = 0$, written as $\\dfrac{dx}{dt} = y$, "
-         "$\\dfrac{dy}{dt} = -2x - 3y$.",
-         fontsize=12, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-5-18-euler.svg")
 
@@ -119,45 +110,36 @@ def rk4(a, b, x0, y0, tmax, n=4000):
 
 CASES = [
     (3.0, 2.0, "$\\frac{d^2x}{dt^2} + 3\\frac{dx}{dt} + 2x = 0$",
-     "$\\lambda = -1,\\ -2$   (real, both negative)",
-     "no oscillation: $x$ returns straight to $0$", ACC, 6.0),
+     "$\\lambda = -1,\\ -2$", ACC, 6.0),
     (2.0, 5.0, "$\\frac{d^2x}{dt^2} + 2\\frac{dx}{dt} + 5x = 0$",
-     "$\\lambda = -1 \\pm 2i$   (complex, negative real part)",
-     "oscillates, and the swings die away", GREEN, 6.0),
+     "$\\lambda = -1 \\pm 2i$", GREEN, 6.0),
     (0.0, 4.0, "$\\frac{d^2x}{dt^2} + 4x = 0$",
-     "$\\lambda = \\pm 2i$   (purely imaginary)",
-     "oscillates for ever: the swings keep the same size", GOLD, 6.5),
+     "$\\lambda = \\pm 2i$", GOLD, 6.5),
 ]
 
 # --- 左の列：時間に対する x ---
-fig, axs = plt.subplots(1, 3, figsize=(15.0, 4.6))
-for row, (a, b, eqn, lam, note, col, tmax) in enumerate(CASES):
+fig, axs = plt.subplots(1, 3, figsize=(13.2, 4.0))
+for row, (a, b, eqn, lam, col, tmax) in enumerate(CASES):
     ts, xs, ys = rk4(a, b, 1.0, 0.0, tmax)
 
     ax = axs[row]
     ax.plot(ts, xs, color=col, lw=2.6)
     ax.axhline(0, color=GREY, lw=1.0, alpha=0.7)
-    ylo = -1.48 if a == 0 else -1.15
+    ylo = -1.15
     ax.set_xlim(0, tmax)
     ax.set_ylim(ylo, 1.18)
     ax.set_xlabel("$t$")
     ax.set_ylabel("$x$")
     ax.set_title("%s\n%s" % (eqn, lam), fontsize=12, color=INK, pad=10)
-    ax.text(tmax * 0.98, ylo + 0.06, note, fontsize=11, ha="right",
-            va="bottom", color=col, bbox=BOX)
     tidy(ax)
 
-fig.suptitle("The eigenvalues decide what the motion looks like",
-             fontsize=14.5, y=1.0)
-fig.text(0.5, -0.06, "The displacement $x$ against time $t$.",
-         fontsize=12, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0, 1, 0.93))
+fig.tight_layout()
 save(fig, "ahl-5-18-motion.svg")
 
 
 # --- 右の列：phase portrait ---
-fig, axs = plt.subplots(1, 3, figsize=(15.0, 5.0))
-for row, (a, b, eqn, lam, note, col, tmax) in enumerate(CASES):
+fig, axs = plt.subplots(1, 3, figsize=(13.2, 4.5))
+for row, (a, b, eqn, lam, col, tmax) in enumerate(CASES):
     ax = axs[row]
     for x0, y0, c in ((1.0, 0.0, col), (0.0, 1.2, GREY), (-0.8, -0.6, GREY)):
         _, px, py = rk4(a, b, x0, y0, tmax * 1.6)
@@ -177,12 +159,7 @@ for row, (a, b, eqn, lam, note, col, tmax) in enumerate(CASES):
     ax.set_title("%s" % lam, fontsize=12, color=INK, pad=10)
     tidy(ax)
 
-fig.suptitle("The same three motions in the $(x,\\ y)$ plane",
-             fontsize=14.5, y=1.0)
-fig.text(0.5, -0.06,
-         "The vertical axis is $y = \\dfrac{dx}{dt}$, the VELOCITY.",
-         fontsize=12, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0, 1, 0.93))
+fig.tight_layout()
 save(fig, "ahl-5-18-phase.svg")
 
 print("figures written to", os.path.normpath(OUT))

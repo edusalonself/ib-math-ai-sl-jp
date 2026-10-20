@@ -109,7 +109,7 @@ quarto publish gh-pages
 
 ### 書きかけのコースも GitHub には上がります（2026年9月に確認）
 
-`git add -A` は、**AA SL / AA HL の書きかけページも GitHub に送ります。**
+`git add -A` は、**書きかけのページも GitHub に送ります。**（2026年10月現在、書きかけのコースはありません。）
 
 - **サイトには出ません。** `_quarto.yml` の `render` に入っていないので、HTML すら作られません。
 - ただし **リポジトリは Public** なので、GitHub 上では `.qmd` のソースが誰でも読めます。
@@ -126,15 +126,15 @@ git add ai-sl ai-hl glossary-ai.qmd index.qmd _quarto.yml styles.scss PUBLISH.md
 
 ## D-2. 下書きを手元だけで見る
 
-**まだ書きかけのコース**（AA SL / AA HL）は `_quarto-draft.yml` に書いてあります。
+**まだ書きかけのコース**は `_quarto-draft.yml` に書きます。**2026年10月現在、下書きのコースはありません**（4コースとも `_quarto.yml` に入っています）。
 
 ```bash
 quarto preview --profile draft     # ← 書きかけのコースも見える
 quarto preview                     # ← 公開するものだけ
 ```
 
-`--profile draft` を付けると、ナビバーに **AA SL / AA HL** と
-**「AI と AA、どちらを取るか」** が増え、それぞれのサイドバーが見られます。
+`--profile draft` を付けると、`_quarto-draft.yml` に書いたコースがナビバーに増え、
+そのサイドバーも見られます。いまは中身が空なので、どちらの行でも同じものが出ます。
 
 **`quarto publish gh-pages` には profile を付けません。** ですから
 **書きかけのコースが誤って公開されることはありません。**
@@ -156,6 +156,20 @@ navbar の項目と sidebar のかたまりを切り取って、`_quarto.yml` �
 
 ですから、**`quarto publish gh-pages` を実行すれば AI HL も公開されます。**
 出したくない場合は、この $3$ か所を `_quarto-draft.yml` に戻してください。
+
+---
+
+### AA HL について（2026年10月に変わりました）
+
+**AA HL の 32 項目（35ページ）を書き終え、35 本のチェッカーが全部 NG 0 になったので、
+`_quarto-draft.yml` から `_quarto.yml` へ移しました。** 移したのは次の $3$ か所です。
+
+- `project: render:` の `aa-hl/index.qmd` と `aa-hl/**/*.qmd`
+- `website: navbar:` の `AA HL` の項目
+- `website: sidebar:` の `- id: aa-hl` のかたまり
+
+これで **4 コース（AI SL・AI HL・AA SL・AA HL）がすべて公開対象**になりました。
+`_quarto-draft.yml` は空の雛形として残してあります。
 
 ---
 

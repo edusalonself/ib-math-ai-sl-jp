@@ -46,7 +46,7 @@ CARDS = [
      "$\\log_a xy = \\log_a x + \\log_a y$", GREEN),
     ("divide  $\\longrightarrow$  subtract",
      "$\\log_a \\dfrac{x}{y} = \\log_a x - \\log_a y$", LINE),
-    ("power  $\\longrightarrow$  move to the front",
+    ("power  $\\longrightarrow$  front",
      "$\\log_a x^{m} = m \\log_a x$", ACC),
 ]
 for ax, (title, formula, col) in zip(axs, CARDS):
@@ -65,8 +65,8 @@ fig.tight_layout(rect=(0, 0.05, 1, 1))
 save(fig, "ahl-1-9-three-laws.svg")
 
 # ══════════════ 2. なぜ「掛けたら足す」なのか ══════════════
-fig, ax = plt.subplots(figsize=(9.0, 3.6))
-blank(ax, (-0.4, 13.4), (-1.5, 3.2))
+fig, ax = plt.subplots(figsize=(8.0, 2.7))
+blank(ax, (-0.4, 11.6), (-0.5, 3.0))
 
 ax.text(0.2, 2.4, "$10^{\\,p} = x$", fontsize=14, ha="left", va="center",
         color=LINE)
@@ -80,38 +80,31 @@ ax.text(5.2, 1.9, "$xy = 10^{\\,p} \\times 10^{\\,q} = 10^{\\,p+q}$",
         fontsize=14, ha="left", va="center", color=INK)
 ax.annotate("", xy=(6.6, 0.6), xytext=(6.6, 1.4),
             arrowprops=dict(arrowstyle="-|>", lw=2.0, color=GREY))
-ax.text(6.85, 1.0, "read the exponent", fontsize=11, ha="left",
-        va="center", color=GREY)
 ax.text(6.6, 0.0, "$\\log xy = p + q = \\log x + \\log y$",
         fontsize=14, ha="center", va="center", color=GREEN)
-ax.text(6.7, -1.1, "the exponent rule  $10^{\\,p} \\times 10^{\\,q} "
-                   "= 10^{\\,p+q}$  is doing all the work",
-        fontsize=11.5, ha="center", va="center", color=INK, bbox=BOX)
 fig.tight_layout()
 save(fig, "ahl-1-9-why.svg")
 
 # ══════════════ 3. 指数から x を降ろす ══════════════
-fig, ax = plt.subplots(figsize=(8.4, 4.0))
-blank(ax, (-0.5, 11.5), (-2.4, 3.4))
+fig, ax = plt.subplots(figsize=(4.4, 4.0))
+blank(ax, (-0.3, 5.6), (-2.6, 3.3))
 
 STEPS = [
-    ("$3(1.4)^{t} = 20$", 2.6, INK, "the unknown is stuck in the exponent"),
-    ("$(1.4)^{t} = \\dfrac{20}{3}$", 1.4, INK, "divide by 3 first"),
-    ("$\\log (1.4)^{t} = \\log \\dfrac{20}{3}$", 0.1, INK,
-     "take $\\log$ of both sides"),
-    ("$t \\log 1.4 = \\log \\dfrac{20}{3}$", -1.2, ACC,
-     "the power law brings $t$ down"),
+    ("$3(1.4)^{t} = 20$", 2.6, INK),
+    ("$(1.4)^{t} = \\dfrac{20}{3}$", 1.4, INK),
+    ("$\\log (1.4)^{t} = \\log \\dfrac{20}{3}$", 0.1, INK),
+    ("$t \\log 1.4 = \\log \\dfrac{20}{3}$", -1.2, ACC),
 ]
-for text, y, col, note in STEPS:
+for text, y, col in STEPS:
     ax.text(0.2, y, text, fontsize=14, ha="left", va="center", color=col)
-    ax.text(5.4, y, note, fontsize=11, ha="left", va="center", color=GREY)
 ax.text(0.2, -2.1, "$t = \\dfrac{\\log (20/3)}{\\log 1.4} = 5.64$",
         fontsize=14, ha="left", va="center", color=GREEN)
 fig.tight_layout()
 save(fig, "ahl-1-9-solve.svg")
 
 # ══════════════ 4. log は掛け算を足し算に変える（グラフ） ══════════════
-fig, axs = plt.subplots(1, 2, figsize=(11.0, 4.0))
+fig, axs = plt.subplots(1, 2, figsize=(9.6, 3.6),
+                        gridspec_kw={"width_ratios": [1.6, 1.0]})
 
 ax = axs[0]
 xs = np.linspace(0.15, 12, 600)
@@ -136,7 +129,7 @@ ax.set_title("$y = \\log_{10} x$", fontsize=12, color=INK, pad=8)
 ax = axs[1]
 ax.axis("off")
 ax.set_xlim(0, 10)
-ax.set_ylim(0, 10)
+ax.set_ylim(3.5, 10)
 ax.text(5.0, 8.3, "$2 \\times 3 = 6$", fontsize=15, ha="center",
         color=INK)
 ax.annotate("", xy=(5.0, 6.0), xytext=(5.0, 7.5),
@@ -145,16 +138,12 @@ ax.text(5.35, 6.75, "take $\\log$", fontsize=11.5, ha="left",
         va="center", color=GREY)
 ax.text(5.0, 5.2, "$0.301 + 0.477 = 0.778$", fontsize=15,
         ha="center", color=GREEN)
-ax.text(5.0, 3.4, "multiplying the numbers\nadds the logarithms",
-        fontsize=12.5, ha="center", va="center", color=INK)
-ax.text(5.0, 1.5, "this is why $\\log$ turns\n$\\times$ into $+$",
-        fontsize=12, ha="center", va="center", color=ACC)
 fig.tight_layout()
 save(fig, "ahl-1-9-graph.svg")
 
 # ══════════════ 5. 成り立たない形 ══════════════
-fig, ax = plt.subplots(figsize=(9.4, 3.4))
-blank(ax, (-0.4, 13.0), (-2.6, 2.6))
+fig, ax = plt.subplots(figsize=(5.6, 3.4))
+blank(ax, (-0.1, 7.6), (-2.6, 2.4))
 
 BAD = [
     ("$\\log (x + y) \\neq \\log x + \\log y$", 1.7),
@@ -163,11 +152,7 @@ BAD = [
 ]
 for text, y in BAD:
     ax.text(0.3, y, text, fontsize=14, ha="left", va="center", color=ACC)
-ax.text(7.4, 0.4, "the laws work on\n$\\times$, $\\div$ and powers\n"
-                  "$-$ never on $+$ or $-$",
-        fontsize=12, ha="center", va="center", color=INK, bbox=BOX)
-ax.text(6.5, -2.2, "check with numbers: $\\log(3+4) = 0.845$,"
-                   "  but  $\\log 3 + \\log 4 = 1.079$",
-        fontsize=11.5, ha="center", va="center", color=GOLD)
+ax.text(0.3, -2.2, "$\\log(3+4) = 0.845$,  $\\log 3 + \\log 4 = 1.079$",
+        fontsize=11.5, ha="left", va="center", color=GOLD)
 fig.tight_layout()
 save(fig, "ahl-1-9-not-laws.svg")

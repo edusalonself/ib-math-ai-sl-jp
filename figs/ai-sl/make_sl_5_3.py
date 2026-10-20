@@ -57,12 +57,12 @@ ax.annotate("", xy=(0.50, 0.66), xytext=(0.33, 0.66),
 
 # 「下ろす」
 curved(ax, (0.245, 0.80), (0.585, 0.80), rad=-0.45, color=ACC)
-ax.text(0.415, 0.955, "1.  bring the power down\n     and multiply:  $3\\times 5 = 15$",
+ax.text(0.415, 0.955, "$3\\times 5 = 15$",
         color=ACC, fontsize=12, ha="center", va="center", zorder=9, bbox=BOX)
 
 # 「1 減らす」
 curved(ax, (0.245, 0.53), (0.715, 0.53), rad=0.26, color=GREEN)
-ax.text(0.470, 0.29, "2.  take $1$ off the power:  $5 - 1 = 4$",
+ax.text(0.470, 0.35, "$5 - 1 = 4$",
         color=GREEN, fontsize=12, ha="center", va="center", zorder=9, bbox=BOX)
 
 ax.text(0.5, 0.10, r"$f(x)=ax^{n} \ \Rightarrow \ f'(x)=a\,n\,x^{\,n-1}$",
@@ -88,8 +88,6 @@ ax.text(0.90, 0.80, r"$=f(x)$", fontsize=15, ha="left", va="center",
         color=GREY)
 ax.text(0.90, 0.22, r"$=f'(x)$", fontsize=15, ha="left", va="center",
         color=ACC)
-ax.text(0.53, 0.02, "differentiate each term on its own",
-        fontsize=12, ha="center", va="center", color=INK)
 ax.set_xlim(0.03, 1.03)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-3-terms.svg"), bbox_inches="tight")
@@ -97,7 +95,7 @@ plt.close(fig)
 
 
 # ══════════════ 3. 特別な2つ：定数と1次 ══════════════
-fig, axs = plt.subplots(1, 2, figsize=(11.0, 4.4))
+fig, axs = plt.subplots(1, 2, figsize=(10.4, 4.0))
 
 ax = axs[0]
 axes(ax, (-3.4, 3.4), (-1.4, 6.4), 1, 1)
@@ -107,11 +105,8 @@ for a in (-2, 0, 2):
 ax.plot([-3.2, 3.2], [4, 4], color=LINE, lw=2.4, zorder=5)
 for a in (-2, 0, 2):
     ax.plot([a], [4], "o", color=INK, ms=6, zorder=8)
-ax.text(0, 5.4, "the line is flat everywhere", color=ACC, fontsize=11.5,
-        ha="center", va="center", zorder=10, bbox=BOX)
 ax.text(0, 1.5, r"$y = 4 \ \Rightarrow \ \dfrac{dy}{dx} = 0$", fontsize=15,
         ha="center", va="center", zorder=10, bbox=BOX)
-ax.set_title("a constant", fontsize=12, color=INK, pad=8)
 
 ax = axs[1]
 axes(ax, (-3.4, 3.4), (-6.4, 6.4), 1, 2)
@@ -123,11 +118,8 @@ for a in (-1.5, 0, 1.5):
 ax.plot(xs, 3 * xs - 1, color=LINE, lw=2.4, zorder=5)
 for a in (-1.5, 0, 1.5):
     ax.plot([a], [3 * a - 1], "o", color=INK, ms=6, zorder=8)
-ax.text(-1.9, 4.6, "the gradient is $3$\nat every point", color=ACC,
-        fontsize=11.5, ha="center", va="center", zorder=10, bbox=BOX)
 ax.text(1.1, -4.4, r"$y = 3x-1 \ \Rightarrow \ \dfrac{dy}{dx} = 3$",
         fontsize=14, ha="center", va="center", zorder=10, bbox=BOX)
-ax.set_title("a straight line", fontsize=12, color=INK, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-3-special.svg"), bbox_inches="tight")
@@ -155,7 +147,7 @@ plt.close(fig)
 
 
 # ══════════════ 5. SL 5.1 の答え合わせ ══════════════
-fig, ax = plt.subplots(figsize=(8.2, 5.4))
+fig, ax = plt.subplots(figsize=(7.0, 4.8))
 axes(ax, (-0.4, 3.6), (-0.8, 10.4), 0.5, 2)
 xs = np.linspace(-0.3, 3.4, 400)
 ax.plot(xs, xs ** 2, color=LINE, lw=2.6, zorder=5)
@@ -164,12 +156,8 @@ ax.plot(t, 4 * (t - 2) + 4, color=ACC, lw=2.6, zorder=6)
 ax.plot([2], [4], "o", color=INK, ms=8, zorder=9)
 ax.text(1.86, 3.55, "$P(2,4)$", ha="right", va="top", fontsize=11.5,
         zorder=10, bbox=BOX)
-ax.text(0.15, 9.2, "SL 5.1:  chords gave about $4$",
-        color=GREY, fontsize=11.5, ha="left", va="center", zorder=10, bbox=BOX)
-ax.text(0.15, 8.0, r"SL 5.3:  $f'(x)=2x$,  so  $f'(2)=4$",
+ax.text(0.15, 9.0, r"$f'(x)=2x$,   $f'(2)=4$",
         color=ACC, fontsize=12.5, ha="left", va="center", zorder=10, bbox=BOX)
-ax.text(3.45, 2.2, "the tangent at $P$\nhas gradient $4$", color=ACC,
-        fontsize=11, ha="right", va="center", zorder=10, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-3-check.svg"), bbox_inches="tight")
 plt.close(fig)

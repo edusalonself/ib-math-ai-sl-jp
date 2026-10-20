@@ -39,8 +39,6 @@ fig2, ax2 = plt.subplots(figsize=(5.3, 4.8))
 # ══════════════════════════════════════════════════════════
 # (a) y = a^x
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Exponential functions", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-3.4, 3.4)
 ax1.set_ylim(-1.6, 7.4)
 ax1.axis("off")
@@ -59,9 +57,10 @@ ax1.plot(t, 0.5 ** t, color=WARM, linewidth=2.2)
 ax1.plot([-3.1, 3.1], [0, 0], color=GREY, linewidth=1.1)
 
 ax1.plot([0], [1], marker="o", markersize=6, color=INK, zorder=3)
-ax1.text(0.16, 1.35, "$(0,\\ 1)$", fontsize=10, color=INK)
+ax1.text(-0.42, 0.8, "$(0,\\ 1)$", fontsize=10, color=INK,
+         ha="right", va="bottom")
 
-ax1.text(2.05, 5.2, "$y = 2^{x}$", fontsize=11, color=ACCENT)
+ax1.text(2.5, 4.2, "$y = 2^{x}$", fontsize=11, color=ACCENT)
 ax1.text(1.05, 5.9, "$y = e^{x}$", fontsize=11, color=GREEN)
 ax1.text(-3.3, 2.4, "$y = \\left(\\frac{1}{2}\\right)^{x}$", fontsize=11,
          color=WARM)
@@ -69,8 +68,6 @@ ax1.text(-3.3, 2.4, "$y = \\left(\\frac{1}{2}\\right)^{x}$", fontsize=11,
 # ══════════════════════════════════════════════════════════
 # (b) y = e^x と y = ln x
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Inverse of each other", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax2.set_xlim(-3.4, 5.4)
 ax2.set_ylim(-3.4, 5.4)
 ax2.set_aspect("equal")

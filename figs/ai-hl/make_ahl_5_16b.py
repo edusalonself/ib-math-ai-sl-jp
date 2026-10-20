@@ -75,8 +75,7 @@ ax.plot(TC, YC, "-o", color=LINE, lw=2.4, ms=5, label="$y$  (predator)")
 tidy(ax, "$t$", "population")
 ax.set_xlim(0, 20)
 ax.legend(fontsize=10.5, loc="upper right")
-ax.set_title("(a)  $h = 1$  —  a chain of straight pieces",
-             fontsize=12.5, color=INK, pad=10)
+ax.set_title("(a)  $h = 1$", fontsize=12.5, color=INK, pad=8)
 
 # (b) 細かい h
 ax = axs[1]
@@ -88,17 +87,12 @@ ax.axhline(EQX, color=GREY, lw=1.3, ls="--", zorder=1)
 tidy(ax, "$t$", "population")
 ax.set_xlim(0, 40)
 ax.legend(fontsize=10.5, loc="upper right")
-ax.set_title("(b)  $h = 0.005$  —  the cycle appears",
-             fontsize=12.5, color=INK, pad=10)
+ax.set_title("(b)  $h = 0.005$", fontsize=12.5, color=INK, pad=8)
 
+fig.tight_layout()
 fig.suptitle("$\\dfrac{dx}{dt} = 0.4x - 0.002xy$,   "
-             "$\\dfrac{dy}{dt} = -0.3y + 0.001xy$", fontsize=15, y=1.0)
-fig.text(0.5, -0.05,
-         "Two quantities that feed into each other.   Each Euler step uses the "
-         "OLD $x$ and the OLD $y$ to work out both new values, then updates "
-         "them together.",
-         fontsize=12.5, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0, 1, 0.94))
+             "$\\dfrac{dy}{dt} = -0.3y + 0.001xy$", fontsize=15, y=1.0,
+             va="bottom")
 save(fig, "ahl-5-16b-time.svg")
 
 
@@ -111,8 +105,6 @@ ax.plot([EQX], [EQY], "o", color=ACC, ms=10, zorder=7)
 ax.text(EQX + 10, EQY + 14, "equilibrium\n$(300,\\ 200)$", fontsize=11,
         color=ACC, bbox=BOX, zorder=8)
 tidy(ax, "$x$  (prey)", "$y$  (predator)")
-ax.set_title("the same run, plotted as $(x,\\ y)$", fontsize=12.5,
-             color=GREEN, pad=10)
 
 fig.tight_layout()
 save(fig, "ahl-5-16b-phase.svg")
@@ -126,8 +118,6 @@ ax.plot(XB, YB, "-", color=ACC, lw=2.2, zorder=6, label="$h = 0.5$")
 ax.plot([EQX], [EQY], "o", color=INK, ms=8, zorder=7)
 tidy(ax, "$x$  (prey)", "$y$  (predator)")
 ax.legend(fontsize=10.5, loc="upper right")
-ax.set_title("a big $h$ spirals OUTWARDS\n(the method adds energy)",
-             fontsize=12.5, color=ACC, pad=10)
 
 fig.tight_layout()
 save(fig, "ahl-5-16b-spiral.svg")
@@ -147,16 +137,14 @@ ax.axvline(tt[ix], color=ACC, lw=1.5, ls="--", zorder=2)
 ax.axvline(tt[iy], color=LINE, lw=1.5, ls="--", zorder=2)
 ax.plot([tt[ix]], [xx[ix]], "o", color=ACC, ms=9, zorder=6)
 ax.plot([tt[iy]], [yy[iy]], "o", color=LINE, ms=9, zorder=6)
-ax.annotate("", xy=(tt[iy], 560), xytext=(tt[ix], 560),
+ax.annotate("", xy=(tt[iy], 640), xytext=(tt[ix], 640),
             arrowprops=dict(arrowstyle="<->", color=GOLD, lw=1.8))
-ax.text((tt[ix] + tt[iy]) / 2, 575, "prey peaks FIRST", ha="center",
+ax.text((tt[ix] + tt[iy]) / 2, 655, "prey first", ha="center",
         fontsize=11.5, color=GOLD, bbox=BOX, zorder=8)
 tidy(ax, "$t$", "population")
 ax.set_xlim(10, 32)
-ax.set_ylim(0, 680)
+ax.set_ylim(0, 720)
 ax.legend(fontsize=10.5, loc="upper left")
-ax.set_title("the predator peak comes AFTER the prey peak", fontsize=12.5,
-             color=INK, pad=10)
 
 ax = axs[1]
 ax.plot(XF[m], YF[m], color=GREEN, lw=2.4, zorder=5)
@@ -168,14 +156,6 @@ ax.plot([EQX], [EQY], "o", color=ACC, ms=9, zorder=7)
 ax.text(EQX + 10, EQY + 14, "$(300,\\ 200)$", fontsize=11, color=ACC,
         bbox=BOX, zorder=8)
 tidy(ax, "$x$  (prey)", "$y$  (predator)")
-ax.set_title("the path goes ANTICLOCKWISE round the equilibrium",
-             fontsize=12.5, color=GREEN, pad=10)
-
-fig.text(0.5, -0.05,
-         "More prey means the predators eat well and increase; more predators "
-         "then cut the prey down; fewer prey starve the predators; and the "
-         "cycle repeats.",
-         fontsize=12.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-5-16b-cycle.svg")
 

@@ -16,28 +16,6 @@ sidebar: ai-hl
 - 同じ変換をくり返して **fractal**（フラクタル）を作る仕組みを説明できる。
 :::
 
-::: {.callout-note}
-## AHL 1.14 の続きです
-この項目で使う道具は、[AHL 1.14](../01-number-and-algebra/ahl-1-14.qmd) で出そろっています。
-
-- 行列と縦ベクトルの**かけ算**（[AHL 1.14 第3節](../01-number-and-algebra/ahl-1-14.qmd#multiply)）
-- **determinant**（[AHL 1.14 第6節](../01-number-and-algebra/ahl-1-14.qmd#inverse)）
-- **inverse matrix**（同じ節）
-
-新しいのは、**その計算が図の上で何をしているのか**という見方だけです。
-:::
-
-::: {.callout-tip}
-## 電卓は Degree にしてください
-この項目の rotation と reflection は、**角を度で書きます。** 試験開始直後の設定は、この項目では **Degree** のままにしておいてください。
-
-```
-doc → Settings → Document Settings → Angle: Degree
-```
-
-Radian のままだと、$\cos 90^\circ$ が $-0.448\ldots$ のような値になり、行列そのものが変わってしまいます。
-:::
-
 ## The idea
 
 この項目は、**点を動かす仕組みを行列で書く**項目です。
@@ -46,11 +24,13 @@ Radian のままだと、$\cos 90^\circ$ が $-0.448\ldots$ のような値に�
 
 もとの図形を **object**（もとの図形）、動かしたあとを **image**（像）と呼びます。
 
-![Every point of the object is multiplied by the same matrix](img/ahl-3-9-idea.svg){#fig-ahl39-idea width=94%}
+行列のかけ算、**determinant**（行列式）、**inverse matrix**（逆行列）は、[AHL 1.14](../01-number-and-algebra/ahl-1-14.qmd) で学んだものをそのまま使います。新しいのは、**その計算が図の上で何をしているのか**という見方だけです。
+
+![図形のどの点にも、同じ行列を掛けます。](img/ahl-3-9-idea.svg){#fig-ahl39-idea width=100%}
 
 @fig-ahl39-idea では、三角形の $3$ つの頂点を**それぞれ縦に並べた形**で書き、そのどれにも**同じ transformation matrix を左から掛けて**います。各頂点に同じ変換を行うことで、その結果として**図形全体が変換される**——これがこの項目の中身です。
 
-### 1. 点は列ベクトルで表し、transformation matrix を左から掛けます {#points}
+### 1. Points as column vectors（点を列ベクトルで表す） {#points}
 
 いつもは点を $(3,\ 1)$ と横に書きますが、この項目では**縦**に書きます。
 
@@ -107,6 +87,8 @@ $$
 
 です。**答えを書くときは $(-1,\ 3)$ と横にもどして構いません。** 計算のあいだだけ縦にする、と思ってください。
 
+この項目の rotation と reflection では、角を度で書きます。電卓は **Degree** にしておきます。Radian のままだと $\cos 90$ が $-0.448\ldots$ になり、行列そのものが変わってしまいます（[GDC 第1節](#gdc-angle)）。
+
 ::: {.callout-warning}
 ## transformation matrix は、いつも**左**に置きます
 正しいのは、transformation matrix が左、列ベクトルが右のこの形です。
@@ -118,11 +100,11 @@ $$
 逆にした $\begin{pmatrix} x \\ y \end{pmatrix} M$ とは書けません。$(2 \times 1)(2 \times 2)$ では、**内側の数**（$1$ と $2$）がそろわないので、行列の積そのものが存在しないからです（[AHL 1.14](../01-number-and-algebra/ahl-1-14.qmd#dimension)）。
 :::
 
-### 2. 図形は、頂点を並べて一度に動かします {#shapes}
+### 2. Transforming a shape（図形の頂点をまとめて変換する） {#shapes}
 
 三角形の $3$ 頂点を $1$ つずつ計算してもよいのですが、**$1$ 点を $1$ 列として、横に並べて $1$ つの行列にする**と、transformation matrix を掛けるのが $1$ 回で終わります。
 
-![One column for each vertex](img/ahl-3-9-shape.svg){#fig-ahl39-shape width=90%}
+![頂点 $1$ つを $1$ 列にして並べます。](img/ahl-3-9-shape.svg){#fig-ahl39-shape width=100%}
 
 @fig-ahl39-shape では、$A(1,1)$、$B(4,1)$、$C(1,3)$ をそれぞれ $1$ 列にして、$3$ 列ぶん横に並べ、$2 \times 3$ の行列にしています。$2 \times 2$ に $2 \times 3$ を掛けるので、内側の $2$ がそろっていて計算できます。答えも $2 \times 3$ で、**列がそのまま $A'$、$B'$、$C'$** になります。
 
@@ -168,13 +150,13 @@ $O(0,\ 0)$ の image が $O(0,\ 0)$ のままなのは、**どんな transformat
 だから、transformation matrix だけで表せる変換は、**必ず原点を動かさない**ものになります。次の節で見る公式集の $6$ つが、どれも「原点を中心に」「原点を通る直線で」と書かれているのは、このためです。原点が動く変換を書きたいときは、[第4節](#translation)の translation が要ります。
 :::
 
-### 3. 公式集の $6$ つを、図で見分けます {#booklet-six}
+### 3. The six matrices in the formula booklet（公式集の $6$ つの変換行列） {#booklet-six}
 
-公式集の **AHL 3.9** の欄は、`Transformation matrices` という見出しで、$6$ つの transformation matrix が印刷されています。**どれも覚える必要はありません。覚えるのは、どの場面でどれを選ぶかです。**
+原点を動かさない変換のうち、よく使う $6$ つの transformation matrix を見分けられるようにします。$6$ つとも、公式集の **AHL 3.9** の欄に `Transformation matrices` という見出しで載っています。**どれも覚える必要はありません。覚えるのは、どの場面でどれを選ぶかです。**
 
 まず、$6$ つが実際にどう動かすのかを並べて見ます。
 
-![The six matrices in the formula booklet](img/ahl-3-9-six.svg){#fig-ahl39-six width=100%}
+![公式集にある $6$ つの行列です。](img/ahl-3-9-six.svg){#fig-ahl39-six width=100%}
 
 青い点線が object、赤い実線が image です。以下、$1$ つずつ「**どう動くのか**」と「**公式集ではどう書かれているか**」を並べます。
 
@@ -186,13 +168,13 @@ $$
 \begin{pmatrix} \cos 2\theta & \sin 2\theta \\ \sin 2\theta & -\cos 2\theta \end{pmatrix}
 $$ {#eq-ahl39-reflection}
 
-公式集の説明は `reflection in the line` $y = (\tan\theta)\,x$ です。$\theta$ は、**鏡になる直線が $x$ 軸となす角**を表します。$y = (\tan\theta)x$ という形なので、**鏡になる直線は必ず原点を通ります。**
+公式集の説明は `reflection in the line` $y = (\tan\theta)\,x$ です。$\theta$ は、**鏡になる直線が $x$ 軸と angle between（なす角）**を表します。$y = (\tan\theta)x$ という形なので、**鏡になる直線は必ず原点を通ります。**
 
 ::: {.callout-important}
 ## 入るのは $\theta$ ではなく $2\theta$ です
 @eq-ahl39-reflection でいちばん引っかかるのはここです。**$\theta$ は「鏡になる直線が $x$ 軸となす角」**で、行列の中に入るのは、その $2$ 倍です。
 
-直線 $y = x$ なら、傾きが $1$ なので $\tan\theta = 1$、つまり $\theta = 45^\circ$ です。入れるのは $2\theta = 90^\circ$ のほうです。
+直線 $y = x$ なら、**gradient**（傾き）が $1$ なので $\tan\theta = 1$、つまり $\theta = 45^\circ$ です。入れるのは $2\theta = 90^\circ$ のほうです。
 
 $$
 \begin{pmatrix} \cos 90^\circ & \sin 90^\circ \\ \sin 90^\circ & -\cos 90^\circ \end{pmatrix}
@@ -312,183 +294,13 @@ anticlockwise の行列に $\theta = -90^\circ$ を入れると、clockwise の�
 
 | 載っていないもの | どうするか |
 |---|---|
-| translation を含む形 $A\mathbf{x} + \mathbf{t}$ | シラバスに書かれている形です。**覚えます**（[第4節](#translation)） |
-| $\text{area of image} = \lvert \det A \rvert \times \text{area of object}$ | シラバスの Guidance 欄にあります。**覚えます**（[第6節](#determinant)） |
+| translation を含む形 $A\mathbf{x} + \mathbf{t}$ | **覚えます**（[第4節](#translation)） |
+| $\text{area of image} = \lvert \det A \rvert \times \text{area of object}$ | **覚えます**（[第6節](#determinant)） |
 | 合成は「あとにやるほうを**左**に書く」 | **覚えます**（[第5節](#composition)） |
 
 : 公式集にないもの {#tbl-ahl39-notinbooklet}
 
 なお $\det A = ad - bc$ と inverse matrix の式は、公式集の **AHL 1.14** の欄にあります。この項目でもそのまま使えます。
-:::
-
-### 4. translation だけは、transformation matrix の外に足します {#translation}
-
-平行移動は、**transformation matrix だけでは書けません。**
-
-![A matrix always fixes the origin, so a translation has to be added](img/ahl-3-9-translation.svg){#fig-ahl39-translation width=96%}
-
-理由は @fig-ahl39-translation の左を見ると分かります。$A\begin{pmatrix} 0 \\ 0 \end{pmatrix}$ は、$A$ が何であっても $\begin{pmatrix} 0 \\ 0 \end{pmatrix}$ です。**原点は動きません。** 平行移動は原点も動かすので、transformation matrix では表せないのです。
-
-そこで、シラバスは次の形を使います。
-
-$$
-\begin{pmatrix} x' \\ y' \end{pmatrix}
-= \begin{pmatrix} a & b \\ c & d \end{pmatrix}\begin{pmatrix} x \\ y \end{pmatrix}
-+ \begin{pmatrix} e \\ f \end{pmatrix}
-$$ {#eq-ahl39-affine}
-
-$\begin{pmatrix} e \\ f \end{pmatrix}$ が translation の分です。**先に transformation matrix を掛けて、あとから足します。**
-
-::: {.callout-note}
-## transformation matrix と matrix transformation
-似た言い方が $2$ つ出てきます。
-
-- **transformation matrix**（変換行列）… @eq-ahl39-affine の $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ の部分。$2 \times 2$ の行列そのものです。
-- **matrix transformation**（行列による変換）… @eq-ahl39-affine 全体、つまり translation まで含めた**変換のしかた**のこと。
-
-$\begin{pmatrix} e \\ f \end{pmatrix}$ は transformation matrix の**中には入りません**。シラバスが `Matrix transformations of the form` と書いて、この形を丸ごと示しているのは、そのためです。
-:::
-
-たとえば「$2$ 倍に拡大してから、$x$ 方向に $1$、$y$ 方向に $-3$ 動かす」なら
-
-$$
-\begin{pmatrix} 2 & 0 \\ 0 & 2 \end{pmatrix}\begin{pmatrix} 3 \\ 1 \end{pmatrix} + \begin{pmatrix} 1 \\ -3 \end{pmatrix}
-= \begin{pmatrix} 6 \\ 2 \end{pmatrix} + \begin{pmatrix} 1 \\ -3 \end{pmatrix}
-= \begin{pmatrix} 7 \\ -1 \end{pmatrix}
-$$
-
-です。
-
-### 5. 合成は、あとにやるほうを左に書きます {#composition}
-
-$2$ つの変換を続けて行うことを **composition**（合成）といいます。
-
-変換 $P$ をしてから変換 $Q$ をするなら、点 $\mathbf{x}$ の行き先は
-
-$$
-Q\bigl(P\mathbf{x}\bigr) = (QP)\,\mathbf{x}
-$$ {#eq-ahl39-composition}
-
-です。**$1$ つの行列 $QP$ にまとめられます。**
-
-ここで大事なのは順番です。**先にやる $P$ が右、あとにやる $Q$ が左**です。日本語の語順とは逆になります。
-
-そして [AHL 1.14](../01-number-and-algebra/ahl-1-14.qmd#noncommutative) で見たとおり、$QP$ と $PQ$ は**ふつう違う行列**です。つまり、**順番を変えると結果も変わります。**
-
-![The same two transformations in the two orders](img/ahl-3-9-compose.svg){#fig-ahl39-compose width=100%}
-
-@fig-ahl39-compose は、$P$ を「$x$ 軸に関する reflection」、$Q$ を「$90^\circ$ anticlockwise rotation」としたものです。$QP$ は $y = x$ に関する reflection、$PQ$ は $y = -x$ に関する reflection になり、**別の変換**です。
-
-::: {.callout-tip}
-## 迷ったら、$1$ 点で確かめてください
-$QP$ と $PQ$ のどちらだったか自信がないときは、**わかりやすい点を $1$ つ選んで**、順番どおりに $2$ 回変換してみてください。
-
-$(1,\ 0)$ のような点なら計算が軽く、まとめた行列の $1$ 列目と見くらべるだけで確かめられます。
-:::
-
-### 6. determinant は「面積が何倍になるか」です {#determinant}
-
-transformation matrix $A$ で変換すると、図形の面積は $\lvert \det A \rvert$ 倍になります。シラバスも `Geometric interpretation of the determinant of a transformation matrix` と書いています。
-
-$$
-\text{area of image} = \lvert \det A \rvert \times \text{area of object}
-$$ {#eq-ahl39-area}
-
-![The determinant is the area scale factor](img/ahl-3-9-det.svg){#fig-ahl39-det width=96%}
-
-@fig-ahl39-det の三角形は面積 $4$ で、$\det\begin{pmatrix} 3 & 1 \\ 1 & 2 \end{pmatrix} = 6 - 1 = 5$ なので、像の面積は $5 \times 4 = 20$ です。
-
-#### なぜ絶対値が付くのか {#absolute}
-
-$\det A$ が負になることがあるからです。面積は負になりません。
-
-**$\det A$ が負のときは、図形が裏返っています。** reflection の transformation matrix は、どれも $\det = -1$ です。$-1$ 倍というのは「面積はそのまま、向きだけ裏返る」という意味です。
-
-| $\det A$ | 面積 | 向き |
-|---|---|---|
-| $\det A > 0$ | $\lvert \det A \rvert$ 倍 | そのまま |
-| $\det A < 0$ | $\lvert \det A \rvert$ 倍 | 裏返る |
-| $\det A = 0$ | $0$（つぶれる） | ― |
-
-: determinant の読み方 {#tbl-ahl39-det}
-
-$\det A = 0$ のときは、図形が線分か点につぶれてしまいます。このとき inverse matrix が存在しない（[AHL 1.14](../01-number-and-algebra/ahl-1-14.qmd#singular)）ことと、同じことを言っています。**つぶれたものは、もとにもどせません。**
-
-### 7. 像からもどすときは、inverse matrix を使います {#inverse}
-
-「どの点が $(12,\ 5)$ にうつったか」と聞かれることがあります。$A\mathbf{x} = \mathbf{y}$ を $\mathbf{x}$ について解けばよいので、両辺に $A^{-1}$ を**左から**掛けて
-
-$$
-\mathbf{x} = A^{-1}\mathbf{y}
-$$ {#eq-ahl39-inverse}
-
-です。translation が付いている @eq-ahl39-affine の形なら、**先に引いてから**掛けます。
-
-$$
-\mathbf{x} = A^{-1}\bigl(\mathbf{y} - \mathbf{t}\bigr)
-$$ {#eq-ahl39-inverse-affine}
-
-順番が逆になることに注意してください。行くときは「掛けてから足す」、もどるときは「引いてから掛ける」です。
-
-### 8. fractal は、同じ変換をくり返して作ります {#fractals}
-
-シラバスは、この項目の最後に **fractal**（フラクタル）を挙げています。難しそうな名前ですが、やっていることは**縮小する変換を何度もくり返す**だけです。
-
-![The Sierpinski triangle](img/ahl-3-9-sierpinski.svg){#fig-ahl39-sierpinski width=100%}
-
-@fig-ahl39-sierpinski は **Sierpinski triangle**（シェルピンスキーの三角形）です。$1$ 回の手順は、次の $2$ つでできています。
-
-1. $\begin{pmatrix} \frac{1}{2} & 0 \\ 0 & \frac{1}{2} \end{pmatrix}$ で**半分に縮める**（enlargement, $k = \frac{1}{2}$）
-2. その縮んだ図形を **$3$ つ**、translation で置きなおす
-
-面積で見ると、$1$ つあたりが $\left(\frac{1}{2}\right)^{2} = \frac{1}{4}$ になり、それが $3$ つなので
-
-$$
-3 \times \frac{1}{4} = \frac{3}{4}
-$$
-
-つまり **$1$ 回ごとに面積が $\frac{3}{4}$ 倍**になります。これは公比 $\frac{3}{4}$ の geometric sequence です（[SL 1.3](../../ai-sl/01-number-and-algebra/sl-1-3.qmd)）。$\lvert r \rvert < 1$ なので、$n$ を大きくすると面積は $0$ に近づきます。
-
-**同じ見方で、Koch snowflake（コッホ雪片）は周の長さを追いかけます。**
-
-![The Koch snowflake](img/ahl-3-9-koch.svg){#fig-ahl39-koch width=100%}
-
-@fig-ahl39-koch では、$1$ 本の辺が $\frac{1}{3}$ の長さの辺 $4$ 本に置きかわります。周の長さは $1$ 回ごとに $\frac{4}{3}$ 倍で、こちらは $\lvert r \rvert > 1$ ですから、**いくらでも長くなります。** 面積は有限のままなのに周の長さは無限、というのが、この図形が有名な理由です。
-
-::: {.callout-note}
-## self-similar（自己相似）という言葉
-どこを拡大しても同じ形が出てくることを **self-similar** といいます。**縮小した自分自身を並べる**という作り方をしているので、こうなります。
-
-試験でこの語が出たら、「**縮小した自分自身のコピーでできている**」という意味だと思ってください。
-:::
-
-## Why it works
-
-:::: {.callout-note collapse="true" appearance="simple"}
-## クリックすると開きます
-ここで説明するのは、**なぜ transformation matrix を掛けるだけで図形が動くのか**、その $1$ 点だけです。
-
-$2 \times 2$ の行列に $\begin{pmatrix} 1 \\ 0 \end{pmatrix}$ を掛けると、答えは **$1$ 列目そのもの**になります。同じように $\begin{pmatrix} 0 \\ 1 \end{pmatrix}$ を掛けると **$2$ 列目**が出ます。
-
-$$
-\begin{pmatrix} 3 & 1 \\ 1 & 2 \end{pmatrix}\begin{pmatrix} 1 \\ 0 \end{pmatrix} = \begin{pmatrix} 3 \\ 1 \end{pmatrix}
-\qquad
-\begin{pmatrix} 3 & 1 \\ 1 & 2 \end{pmatrix}\begin{pmatrix} 0 \\ 1 \end{pmatrix} = \begin{pmatrix} 1 \\ 2 \end{pmatrix}
-$$
-
-つまり、**transformation matrix の $2$ つの列は「横向きの $1$ と縦向きの $1$ が、どこへ行くか」を書いたもの**です。
-
-![The columns say where the unit square goes](img/ahl-3-9-columns.svg){#fig-ahl39-columns width=80%}
-
-平面上のどの点も、横向きと縦向きの組み合わせで書けます。$(3,\ 1)$ は「横に $3$、縦に $1$」です。だから、**この $2$ つの行き先さえ決めれば、残りの点の行き先は自動的に決まります。** transformation matrix は、その $2$ つの行き先を並べただけのものです。
-
-@fig-ahl39-columns で、$1$ 辺 $1$ の正方形が平行四辺形になっています。この平行四辺形の面積が $\lvert \det A \rvert$ で、面積が何倍になるか（@eq-ahl39-area）も、ここから来ています。
-::::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
 :::
 
 ::: {#exm-ahl39-point}
@@ -509,9 +321,10 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
-![The image of $P$ under $T$](img/ahl-3-9-we1.svg){#fig-ahl39-we1 width=68%}
+![$T$ による $P$ の像です。](img/ahl-3-9-we1.svg){#fig-ahl39-we1 width=68%}
 
 **(a)** 点を[縦に並べて](#points)、左から $M$ を掛けます。
 
@@ -554,78 +367,71 @@ $$
 **(b)** *A rotation of $90^\circ$ anticlockwise about the origin.*
 :::
 :::
+:::
 
-::: {#exm-ahl39-area}
-[The triangle $OAB$ has vertices $O(0,\ 0)$, $A(4,\ 0)$ and $B(0,\ 3)$. The transformation $S$ is represented by the matrix $N = \begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix}$.]{.q-en}
+### 4. Translations（平行移動） {#translation}
 
-**(a)** [Find the coordinates of $A'$ and $B'$, the images of $A$ and $B$ under $S$.]{.q-en}
+平行移動は、**transformation matrix だけでは書けません。**
 
-**(b)** [Find $\det N$.]{.q-en}
+![行列は原点を必ず動かさないので、平行移動は別に足す必要があります。](img/ahl-3-9-translation.svg){#fig-ahl39-translation width=100%}
 
-**(c)** [Hence find the area of triangle $OA'B'$.]{.q-en}
+理由は @fig-ahl39-translation の左を見ると分かります。$A\begin{pmatrix} 0 \\ 0 \end{pmatrix}$ は、$A$ が何であっても $\begin{pmatrix} 0 \\ 0 \end{pmatrix}$ です。**原点は動きません。** 平行移動は原点も動かすので、transformation matrix では表せないのです。
 
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-三角形 $OAB$ の頂点は $O(0,\ 0)$、$A(4,\ 0)$、$B(0,\ 3)$ です。変換 $S$ は行列 $N = \begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix}$ で表されます。
-
-**(a)** $S$ による $A$ と $B$ の像 $A'$ と $B'$ の座標を求めなさい。
-
-**(b)** $\det N$ を求めなさい。
-
-**(c)** これを使って、三角形 $OA'B'$ の面積を求めなさい。
-
-</details>
-
----
-
-![Triangle $OAB$ and its image](img/ahl-3-9-we2.svg){#fig-ahl39-we2 width=94%}
-
-**(a)** $2$ 点を[まとめて](#shapes)計算します。
+そこで、transformation matrix を掛けたあとに、平行移動の分を足す形を使います。
 
 $$
-\begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix}\begin{pmatrix} 4 & 0 \\ 0 & 3 \end{pmatrix}
-= \begin{pmatrix} 8 & 3 \\ 0 & 9 \end{pmatrix}
-$$
+\begin{pmatrix} x' \\ y' \end{pmatrix}
+= \begin{pmatrix} a & b \\ c & d \end{pmatrix}\begin{pmatrix} x \\ y \end{pmatrix}
++ \begin{pmatrix} e \\ f \end{pmatrix}
+$$ {#eq-ahl39-affine}
 
-列がそのまま答えなので、$A'(8,\ 0)$、$B'(3,\ 9)$ です。
-
-**(b)** $\det N = 2(3) - 1(0) = 6$ です。
-
-**(c)** `Hence` と書かれているので、**(b) の $6$ を使え**という指示です。面積を座標から計算しなおす必要はありません。
-
-もとの三角形 $OAB$ は、直角をはさむ辺が $4$ と $3$ なので
-
-$$
-\text{area of } OAB = \frac{1}{2}(4)(3) = 6
-$$
-
-@eq-ahl39-area より
-
-$$
-\text{area of } OA'B' = \lvert 6 \rvert \times 6 = 36
-$$
-
-**検算。** $A'(8,0)$、$B'(3,9)$ から直接計算すると $\frac{1}{2}\lvert 8(9) - 0(3) \rvert = 36$ ✓
+$\begin{pmatrix} e \\ f \end{pmatrix}$ が translation の分です。**先に transformation matrix を掛けて、あとから足します。**
 
 ::: {.callout-note}
-## 解答例（答案用紙にはこう書く）
-**(a)**
-$$
-\begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix}\begin{pmatrix} 4 & 0 \\ 0 & 3 \end{pmatrix} = \begin{pmatrix} 8 & 3 \\ 0 & 9 \end{pmatrix}
-\quad \Rightarrow \quad A'(8,\ 0),\ \ B'(3,\ 9)
-$$
+## transformation matrix と matrix transformation
+似た言い方が $2$ つ出てきます。
 
-**(b)** $\det N = 2(3) - 1(0) = 6$
+- **transformation matrix**（変換行列）… @eq-ahl39-affine の $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ の部分。$2 \times 2$ の行列そのものです。
+- **matrix transformation**（行列による変換）… @eq-ahl39-affine 全体、つまり translation まで含めた**変換のしかた**のこと。
 
-**(c)**
-$$
-\text{area of } OAB = \tfrac{1}{2}(4)(3) = 6
-$$
-$$
-\text{area of } OA'B' = \lvert 6 \rvert \times 6 = 36
-$$
+$\begin{pmatrix} e \\ f \end{pmatrix}$ は transformation matrix の**中には入りません**。translation まで含めた変換を表すときは、@eq-ahl39-affine の形を丸ごと書きます。
 :::
+
+たとえば「$2$ 倍に拡大してから、$x$ 方向に $1$、$y$ 方向に $-3$ 動かす」なら
+
+$$
+\begin{pmatrix} 2 & 0 \\ 0 & 2 \end{pmatrix}\begin{pmatrix} 3 \\ 1 \end{pmatrix} + \begin{pmatrix} 1 \\ -3 \end{pmatrix}
+= \begin{pmatrix} 6 \\ 2 \end{pmatrix} + \begin{pmatrix} 1 \\ -3 \end{pmatrix}
+= \begin{pmatrix} 7 \\ -1 \end{pmatrix}
+$$
+
+です。
+
+### 5. Composition of transformations（変換の合成） {#composition}
+
+$2$ つの変換を続けて行うことを **composition**（合成）といいます。
+
+変換 $P$ をしてから変換 $Q$ をするなら、点 $\mathbf{x}$ の行き先は
+
+$$
+Q\bigl(P\mathbf{x}\bigr) = (QP)\,\mathbf{x}
+$$ {#eq-ahl39-composition}
+
+です。**$1$ つの行列 $QP$ にまとめられます。**
+
+ここで大事なのは順番です。**先にやる $P$ が右、あとにやる $Q$ が左**です。日本語の語順とは逆になります。
+
+そして [AHL 1.14](../01-number-and-algebra/ahl-1-14.qmd#noncommutative) で見たとおり、$QP$ と $PQ$ は**ふつう違う行列**です。つまり、**順番を変えると結果も変わります。**
+
+![同じ $2$ つの変換を、$2$ 通りの順番で行ったものです。](img/ahl-3-9-compose.svg){#fig-ahl39-compose width=100%}
+
+@fig-ahl39-compose は、$P$ を「$x$ 軸に関する reflection」、$Q$ を「$90^\circ$ anticlockwise rotation」としたものです。$QP$ は $y = x$ に関する reflection、$PQ$ は $y = -x$ に関する reflection になり、**別の変換**です。
+
+::: {.callout-tip}
+## 迷ったら、$1$ 点で確かめてください
+$QP$ と $PQ$ のどちらだったか自信がないときは、**わかりやすい点を $1$ つ選んで**、順番どおりに $2$ 回変換してみてください。
+
+$(1,\ 0)$ のような点なら計算が軽く、まとめた行列の $1$ 列目と見くらべるだけで確かめられます。
 :::
 
 ::: {#exm-ahl39-compose}
@@ -650,7 +456,8 @@ $P$ は $x$ 軸に関する対称移動、$Q$ は原点を中心とする $90^\c
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** $x$ 軸は $y = 0$、つまり傾き $0$ の直線なので $\theta = 0^\circ$ です。@eq-ahl39-reflection に $2\theta = 0^\circ$ を入れます。
 
@@ -700,6 +507,126 @@ $$
 *The order changes the result: $QP$ is a reflection in $y = x$, but $PQ$ is a reflection in $y = -x$.*
 :::
 :::
+:::
+
+### 6. The determinant and area（行列式と面積） {#determinant}
+
+transformation matrix $A$ の determinant には、図の上での意味があります。$A$ で変換すると、図形の面積は $\lvert \det A \rvert$ 倍になります。この式は公式集にないので、覚えておきます。
+
+$$
+\text{area of image} = \lvert \det A \rvert \times \text{area of object}
+$$ {#eq-ahl39-area}
+
+![行列式は面積の拡大率です。](img/ahl-3-9-det.svg){#fig-ahl39-det width=100%}
+
+@fig-ahl39-det の三角形は面積 $4$ で、$\det\begin{pmatrix} 3 & 1 \\ 1 & 2 \end{pmatrix} = 6 - 1 = 5$ なので、像の面積は $5 \times 4 = 20$ です。
+
+#### なぜ絶対値が付くのか {#absolute}
+
+$\det A$ が負になることがあるからです。面積は負になりません。
+
+**$\det A$ が負のときは、図形が裏返っています。** reflection の transformation matrix は、どれも $\det = -1$ です。$-1$ 倍というのは「面積はそのまま、向きだけ裏返る」という意味です。
+
+| $\det A$ | 面積 | 向き |
+|---|---|---|
+| $\det A > 0$ | $\lvert \det A \rvert$ 倍 | そのまま |
+| $\det A < 0$ | $\lvert \det A \rvert$ 倍 | 裏返る |
+| $\det A = 0$ | $0$（つぶれる） | ― |
+
+: determinant の読み方 {#tbl-ahl39-det}
+
+$\det A = 0$ のときは、図形が線分か点につぶれてしまいます。このとき inverse matrix が存在しない（[AHL 1.14](../01-number-and-algebra/ahl-1-14.qmd#singular)）ことと、同じことを言っています。**つぶれたものは、もとにもどせません。**
+
+::: {#exm-ahl39-area}
+[The triangle $OAB$ has vertices $O(0,\ 0)$, $A(4,\ 0)$ and $B(0,\ 3)$. The transformation $S$ is represented by the matrix $N = \begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix}$.]{.q-en}
+
+**(a)** [Find the coordinates of $A'$ and $B'$, the images of $A$ and $B$ under $S$.]{.q-en}
+
+**(b)** [Find $\det N$.]{.q-en}
+
+**(c)** [Hence find the area of triangle $OA'B'$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+三角形 $OAB$ の頂点は $O(0,\ 0)$、$A(4,\ 0)$、$B(0,\ 3)$ です。変換 $S$ は行列 $N = \begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix}$ で表されます。
+
+**(a)** $S$ による $A$ と $B$ の像 $A'$ と $B'$ の座標を求めなさい。
+
+**(b)** $\det N$ を求めなさい。
+
+**(c)** これを使って、三角形 $OA'B'$ の面積を求めなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+![三角形 $OAB$ とその像です。](img/ahl-3-9-we2.svg){#fig-ahl39-we2 width=94%}
+
+**(a)** $2$ 点を[まとめて](#shapes)計算します。
+
+$$
+\begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix}\begin{pmatrix} 4 & 0 \\ 0 & 3 \end{pmatrix}
+= \begin{pmatrix} 8 & 3 \\ 0 & 9 \end{pmatrix}
+$$
+
+列がそのまま答えなので、$A'(8,\ 0)$、$B'(3,\ 9)$ です。
+
+**(b)** $\det N = 2(3) - 1(0) = 6$ です。
+
+**(c)** `Hence` と書かれているので、**(b) の $6$ を使え**という指示です。面積を座標から計算しなおす必要はありません。
+
+もとの三角形 $OAB$ は、直角をはさむ辺が $4$ と $3$ なので
+
+$$
+\text{area of } OAB = \frac{1}{2}(4)(3) = 6
+$$
+
+@eq-ahl39-area より
+
+$$
+\text{area of } OA'B' = \lvert 6 \rvert \times 6 = 36
+$$
+
+**検算。** $A'(8,0)$、$B'(3,9)$ から直接計算すると $\frac{1}{2}\lvert 8(9) - 0(3) \rvert = 36$ ✓
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)**
+$$
+\begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix}\begin{pmatrix} 4 & 0 \\ 0 & 3 \end{pmatrix} = \begin{pmatrix} 8 & 3 \\ 0 & 9 \end{pmatrix}
+\quad \Rightarrow \quad A'(8,\ 0),\ \ B'(3,\ 9)
+$$
+
+**(b)** $\det N = 2(3) - 1(0) = 6$
+
+**(c)**
+$$
+\text{area of } OAB = \tfrac{1}{2}(4)(3) = 6
+$$
+$$
+\text{area of } OA'B' = \lvert 6 \rvert \times 6 = 36
+$$
+:::
+:::
+:::
+
+### 7. Inverse transformations（像からもとの点にもどす） {#inverse}
+
+「どの点が $(12,\ 5)$ にうつったか」と聞かれることがあります。$A\mathbf{x} = \mathbf{y}$ を $\mathbf{x}$ について解けばよいので、両辺に $A^{-1}$ を**左から**掛けて
+
+$$
+\mathbf{x} = A^{-1}\mathbf{y}
+$$ {#eq-ahl39-inverse}
+
+です。translation が付いている @eq-ahl39-affine の形なら、**先に引いてから**掛けます。
+
+$$
+\mathbf{x} = A^{-1}\bigl(\mathbf{y} - \mathbf{t}\bigr)
+$$ {#eq-ahl39-inverse-affine}
+
+順番が逆になることに注意してください。行くときは「掛けてから足す」、もどるときは「引いてから掛ける」です。
 
 ::: {#exm-ahl39-affine}
 [A computer program moves each point $(x,\ y)$ of a design to the point $(x',\ y')$, where]{.q-en}
@@ -731,7 +658,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** [掛けてから足します](#translation)。
 
@@ -756,7 +684,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Since $\det = 1$, the area is unchanged. The design is moved and its shape is distorted, but it covers the same area of $6\ \text{cm}^{2}$.*
+*Since $\det = 1$, the area is unchanged.*
+
+*The design is moved and its shape is distorted, but it covers the same area of $6\ \text{cm}^{2}$.*
 :::
 
 （$\det = 1$ なので面積は変わりません。形はゆがみますが、覆う面積は同じ $6\ \text{cm}^{2}$ です、という意味です。）
@@ -805,6 +735,39 @@ $$
 $\Rightarrow (2,\ 2)$
 :::
 :::
+:::
+
+### 8. Fractals（フラクタル） {#fractals}
+
+**fractal**（フラクタル）は、全体と同じ形の小さなコピーが、どこまでもくり返し現れる図形です。難しそうな名前ですが、やっていることは**縮小する変換を何度もくり返す**だけです。
+
+![シェルピンスキーの三角形です。](img/ahl-3-9-sierpinski.svg){#fig-ahl39-sierpinski width=100%}
+
+@fig-ahl39-sierpinski は **Sierpinski triangle**（シェルピンスキーの三角形）です。$1$ 回の手順は、次の $2$ つでできています。
+
+1. $\begin{pmatrix} \frac{1}{2} & 0 \\ 0 & \frac{1}{2} \end{pmatrix}$ で**半分に縮める**（enlargement, $k = \frac{1}{2}$）
+2. その縮んだ図形を **$3$ つ**、translation で置きなおす
+
+面積で見ると、$1$ つあたりが $\left(\frac{1}{2}\right)^{2} = \frac{1}{4}$ になり、それが $3$ つなので
+
+$$
+3 \times \frac{1}{4} = \frac{3}{4}
+$$
+
+つまり **$1$ 回ごとに面積が $\frac{3}{4}$ 倍**になります。これは **common ratio**（公比） $\frac{3}{4}$ の geometric sequence です（[SL 1.3](../../ai-sl/01-number-and-algebra/sl-1-3.qmd)）。$\lvert r \rvert < 1$ なので、$n$ を大きくすると面積は $0$ に近づきます。
+
+**同じ見方で、Koch snowflake（コッホ雪片）は周の長さを追いかけます。**
+
+![コッホ雪片です。](img/ahl-3-9-koch.svg){#fig-ahl39-koch width=100%}
+
+@fig-ahl39-koch では、$1$ 本の辺が $\frac{1}{3}$ の長さの辺 $4$ 本に置きかわります。周の長さは $1$ 回ごとに $\frac{4}{3}$ 倍で、こちらは $\lvert r \rvert > 1$ ですから、**いくらでも長くなります。** 面積は有限のままなのに周の長さは無限、というのが、この図形が有名な理由です。
+
+::: {.callout-note}
+## self-similar（自己相似）という言葉
+どこを拡大しても同じ形が出てくることを **self-similar** といいます。**縮小した自分自身を並べる**という作り方をしているので、こうなります。
+
+試験でこの語が出たら、「**縮小した自分自身のコピーでできている**」という意味だと思ってください。
+:::
 
 ::: {#exm-ahl39-fractal}
 [A fractal is built from a triangle of area $64\ \text{cm}^{2}$. At each stage, every triangle is replaced by three triangles, each produced by the transformation matrix $\begin{pmatrix} 0.5 & 0 \\ 0 & 0.5 \end{pmatrix}$ together with a translation.]{.q-en}
@@ -832,9 +795,10 @@ $\Rightarrow (2,\ 2)$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
-![The area at each stage](img/ahl-3-9-we5.svg){#fig-ahl39-we5 width=88%}
+![各段階での面積です。](img/ahl-3-9-we5.svg){#fig-ahl39-we5 width=88%}
 
 **(a)** 対角線に同じ数が並んでいるので [enlargement](#enlargement) です。
 
@@ -893,6 +857,30 @@ $$
 **(d)** *The total area tends to $0$.*
 :::
 :::
+:::
+
+## Why it works
+
+:::: {.callout-note collapse="true" appearance="simple"}
+## クリックすると開きます
+ここで説明するのは、**なぜ transformation matrix を掛けるだけで図形が動くのか**、その $1$ 点だけです。
+
+$2 \times 2$ の行列に $\begin{pmatrix} 1 \\ 0 \end{pmatrix}$ を掛けると、答えは **$1$ 列目そのもの**になります。同じように $\begin{pmatrix} 0 \\ 1 \end{pmatrix}$ を掛けると **$2$ 列目**が出ます。
+
+$$
+\begin{pmatrix} 3 & 1 \\ 1 & 2 \end{pmatrix}\begin{pmatrix} 1 \\ 0 \end{pmatrix} = \begin{pmatrix} 3 \\ 1 \end{pmatrix}
+\qquad
+\begin{pmatrix} 3 & 1 \\ 1 & 2 \end{pmatrix}\begin{pmatrix} 0 \\ 1 \end{pmatrix} = \begin{pmatrix} 1 \\ 2 \end{pmatrix}
+$$
+
+つまり、**transformation matrix の $2$ つの列は「横向きの $1$ と縦向きの $1$ が、どこへ行くか」を書いたもの**です。
+
+![行列の列が、単位正方形の行き先を表しています。](img/ahl-3-9-columns.svg){#fig-ahl39-columns width=90%}
+
+平面上のどの点も、横向きと縦向きの組み合わせで書けます。$(3,\ 1)$ は「横に $3$、縦に $1$」です。だから、**この $2$ つの行き先さえ決めれば、残りの点の行き先は自動的に決まります。** transformation matrix は、その $2$ つの行き先を並べただけのものです。
+
+@fig-ahl39-columns で、$1$ 辺 $1$ の正方形が **parallelogram**（平行四辺形）になっています。この平行四辺形の面積が $\lvert \det A \rvert$ で、面積が何倍になるか（@eq-ahl39-area）も、ここから来ています。
+::::
 
 ## Common errors
 
@@ -980,7 +968,7 @@ Sierpinski triangle で、$1$ つの三角形が $\frac{1}{4}$ になること�
 
 行列の入力そのものは [AHL 1.14 の GDC の節](../01-number-and-algebra/ahl-1-14.qmd#gdc-enter)と同じです。ここでは、この項目でよく使う $5$ つを書きます。
 
-### 1. 角の設定を先に確かめます {#gdc-angle}
+### 1. Angle mode（角の設定） {#gdc-angle}
 
 rotation と reflection を計算する前に、**必ず** Degree になっているか見てください。
 
@@ -990,7 +978,7 @@ doc → Settings → Document Settings → Angle: Degree
 
 画面の右上に `DEG` と出ていれば大丈夫です。
 
-### 2. transformation matrix を作って、名前を付けます {#gdc-store}
+### 2. Storing a matrix（変換行列に名前を付けて保存する） {#gdc-store}
 
 Calculator ページで、[AHL 1.14](../01-number-and-algebra/ahl-1-14.qmd#gdc-enter) と同じメニューから $2 \times 2$ の枠を出します。
 
@@ -1013,7 +1001,7 @@ $\cos 90^\circ$ を自分で $0$ に直してから打ちこむ必要はあり�
 $\theta = \tan^{-1} 2$ のような割り切れない角のときは、そのほうが**丸めの誤差が入りません**。
 :::
 
-### 3. 点や図形を、まとめて変換します {#gdc-apply}
+### 3. Transforming points and shapes（点や図形をまとめて変換する） {#gdc-apply}
 
 頂点を並べた $2 \times 3$ の行列を、同じメニューから作ります。こちらにも `ctrl + sto→` で名前を付けます。ここでは `b` としました。
 
@@ -1032,13 +1020,13 @@ $2 \times 3$ に $2 \times 2$ は掛けられないので、電卓が計算を�
 **transformation matrix は、いつも左**です。
 :::
 
-### 4. determinant と逆変換 {#gdc-det}
+### 4. Determinant and inverse（行列式と逆変換） {#gdc-det}
 
 面積の倍率は `det()` で出せます。`det(` は `menu → Matrix & Vector` の中の `Determinant` から入れられます（[AHL 1.14](../01-number-and-algebra/ahl-1-14.qmd#gdc-det)）。
 
 $\texttt{det}(r)$
 
-像からもとの点にもどすときは、逆行列を掛けます。
+像からもとの点にもどすときは、**inverse matrix**（逆行列）を掛けます。
 
 $r^{-1} \times \begin{bmatrix}12\\5\end{bmatrix}$
 
@@ -1046,7 +1034,7 @@ $r^{-1} \times \begin{bmatrix}12\\5\end{bmatrix}$
 
 $r^{-1} \times \left(\begin{bmatrix}12\\5\end{bmatrix} - \begin{bmatrix}4\\-1\end{bmatrix}\right)$
 
-### 5. 同じ変換をくり返すとき {#gdc-power}
+### 5. Repeated transformations（同じ変換のくり返し） {#gdc-power}
 
 fractal のように同じ変換を $n$ 回くり返すときは、行列の累乗が使えます。
 
@@ -1055,12 +1043,6 @@ $r^{5}$
 ただし、面積の話だけなら**行列を $5$ 乗する必要はありません。** $\lvert \det \rvert$ を $5$ 乗するほうが速いです。
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 

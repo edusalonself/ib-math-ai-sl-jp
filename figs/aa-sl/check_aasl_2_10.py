@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "02-functions")
 QMD = os.path.join(BASE, "aasl-2-10.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+
+def _strip_exm(s):
+    """例題ブロック（::: {#exm-...} から対応する ::: まで）を外す。"""
+    out, depth, skip = [], 0, False
+    for _l in s.split(chr(10)):
+        if not skip and _l.startswith("::: {#exm-"):
+            skip, depth = True, 0
+        if skip:
+            if re.match(r"^:{3,}\s*\{", _l):
+                depth += 1
+            elif re.match(r"^:{3,}\s*$", _l):
+                depth -= 1
+                if depth == 0:
+                    skip = False
+            continue
+        out.append(_l)
+    return chr(10).join(out)
+
+
+BODY = _strip_exm(TEXT[:TEXT.index("## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_2_10.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 # 色コード・ファイル名・キーワードはラベルではないので外す
@@ -54,6 +73,10 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている（消したはず）: " + msg + " :: " + sub[:70])
 
 # ══════════════════════════════════════════════════════════
 # 0. 「解く」の意味そのもの
@@ -246,7 +269,7 @@ not_in_text("solve(", "CAS 前提の solve( は書いていない")
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -255,9 +278,16 @@ chk(TEXT.count("{.model-answer}") == 7, f"model-answer が 7: {TEXT.count('{.mod
 chk(len(re.findall(r"^::: \{#exm-aasl210-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
@@ -323,13 +353,13 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Two ways to see a solution", "図(a) の題")
+not_in_fig("Two ways to see a solution", "図(a) の題は外した（キャプションが言う）")
 in_fig("$y = f(x)$", "図(a) の f")
 in_fig("$y = g(x)$", "図(a) の g")
 in_fig("$y = f(x) - g(x)$", "図(a) の差")
 in_fig("$x_{1}$", "図(a) の解 1")
 in_fig("$x_{2}$", "図(a) の解 2")
-in_fig("When no method reaches it", "図(b) の題")
+not_in_fig("When no method reaches it", "図(b) の題は外した（本文とキャプションが言う）")
 in_fig("$y = e^{x}$", "図(b) の指数")
 in_fig("$y = \\\\sin x$", "図(b) の sin")
 # 図に例題・演習の答えを書いていない
@@ -340,11 +370,15 @@ for leak in ["= 4", "= 6", "= 1", "\\ln", "\\log"]:
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-10.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-2-9.qmd") < DRAFT.index("aasl-2-10.qmd"), "並びが 2.9 → 2.10")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/02-functions/aasl-2-10.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-2-9.qmd") < DRAFT.index("aasl-2-10.qmd"), "並びが 2.9 → 2.10")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-10.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -374,7 +408,7 @@ chk(sp.factor(x ** 4 + 5 * x - 6)
 not_in_text("$x^{4} + 5x - 6", "解けてしまう式は例に使わない")
 
 # --- 「解けない」を、この課程の変形に限定した ---------------------------
-in_text("### 6. 習った変形では解けない方程式 {#no-analytic}", "第 6 節の見出し")
+in_text('### 6. Equations with no analytic method（習った変形では解けない方程式） {#no-analytic}', "第 6 節の見出し")
 in_text("この方程式は、**この課程で習う式の変形では解けません。**", "限定した言い方")
 not_in_text("この方程式は、**式の変形では解けません。**", "無条件の断定は消した")
 in_text("- **この課程の変形では解けない方程式**があることを知り", "冒頭 callout も直した")
@@ -460,9 +494,10 @@ not_in_text("*The value $x = -1$ makes $\\ln x$ undefined, so it is not a soluti
 # ══════════════════════════════════════════════════════════
 # E03  第6節を既習の $2^{x} = x+3$ から始め、例題4 に (e) を足す
 # ══════════════════════════════════════════════════════════
-in_text("### 6. 習った変形では解けない方程式 {#no-analytic}",
+in_text('### 6. Equations with no analytic method（習った変形では解けない方程式） {#no-analytic}',
         "E03 第6節の見出し")
-_e03sec = TEXT.split("### 6. 習った変形では解けない方程式")[1].split("### ")[0]
+_e03sec = TEXT.split("### 6. Equations with no analytic method（習った変形では解けない方程式）")[1]
+_e03sec = re.split(r"\n### |\n## Why it works", _e03sec)[0]
 chk(_e03sec.index("2^{x} = x + 3") < _e03sec.index("e^{x} = \\sin x"),
     "E03 第6節は 2^x = x+3 が先、e^x = sin x があと")
 in_text("**三角関数は [SL 3.7a](../03-geometry/aasl-3-7a.qmd) で学びます**",
@@ -491,7 +526,7 @@ chk(abs(float(_e03b) + 2.86250) < 5e-5, "E03 画面に出る値 -2.86250...")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -499,19 +534,19 @@ chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
 chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 つだけ")
 
 # 底（base）は、このページの初出で英語を併記（第 10 節）
-in_text('**底（base）が合わせられるなら、対数は要りません。**', "底の英語併記")
+in_text('**base**（底）を合わせられるなら、対数は要りません。', "底の英語併記")
 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 3. $u$ でおきかえる（substitution） {#substitution}', "見出しの英語: 3. $u$ でおきかえる（substitution")
-in_text('### 4. 両辺の対数をとる（taking logarithms） {#taking-logs}', "見出しの英語: 4. 両辺の対数をとる（taking logarit")
-in_text('### 5. グラフで解く（Paper 2） {#graphical}', "見出しの英語: 5. グラフで解く（Paper 2）")
+in_text('### 3. Substitution（$u$ でおきかえる） {#substitution}', "見出しの英語: 3. $u$ でおきかえる（substitution")
+in_text('### 4. Taking logarithms（両辺の対数をとる） {#taking-logs}', "見出しの英語: 4. 両辺の対数をとる（taking logarit")
+in_text('### 5. Solving graphically（グラフで解く） {#graphical}', "見出しの英語: 5. グラフで解く（Paper 2）")
 not_in_text('### 7. extraneous solution（捨てる解）と、解の個数 {#care}',
             "第 7 節は削除した")
 
 # 2026-09-22：exact value の併記と、図 2 の置き場所
-in_text("**式の変形だけで、exact value（正確な値）まで出す**ことです。",
+in_text("式の変形だけで **exact value**（正確な値）まで出すことです。",
         "exact value の併記")
 _i_sin = TEXT.index("同時に $1$ にはならないので交わりません。）")
 _i_fig = TEXT.index("](img/aasl-2-10-idea-b.svg)")

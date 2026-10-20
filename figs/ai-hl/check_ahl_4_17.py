@@ -241,13 +241,20 @@ for lab, needle in [
 in_text("公式集の Po(m) がある", "X \\sim \\mathrm{Po}(m)")
 in_text("E(X) = m がある", "E(X) = m")
 in_text("Var(X) = m がある", "\\text{Var}(X) = m")
-# ★ シラバスの引用
-in_text("2 条件の引用（independent）", "Events are independent")
-in_text("2 条件の引用（uniform rate）",
-        "Events occur at a uniform average rate")
-in_text("分布の選び分けの引用", "select between the normal, the binomial and "
-                                "the Poisson distributions")
-in_text("Not required の引用", "Formal proof of means and variances")
+# ★ シラバスの引用は本文から外し、内容を日本語で直接書いた（2026-10）
+in_text("シラバスの引用は本文から外した（independent）", "Events are independent", want=False)
+in_text("シラバスの引用は本文から外した（uniform rate）",
+        "Events occur at a uniform average rate", want=False)
+in_text("シラバスの引用は本文から外した（選び分け）", "select between the normal, the binomial and "
+                                "the Poisson distributions", want=False)
+in_text("Not required の引用は本文から外した", "Formal proof of means and variances", want=False)
+in_text("2 条件（independent）を表で説明している",
+        "| **independent** | $1$ 回起きたことが、次に影響しない |")
+in_text("2 条件（uniform average rate）を表で説明している",
+        "| **uniform average rate** | 調べている期間のあいだ、**平均の起こりやすさが変わらない** |")
+in_text("分布の選び分けの節がある",
+        "### 7. Choosing a distribution（正規分布・二項分布・ポアソン分布の選び分け） {#choosing}")
+in_text("平均と分散の証明は不要と日本語で書いている", "この $2$ つを証明する必要はありません。")
 # ★ Common error の数値が、計算した値と一致しているか
 in_text("m を変え忘れたときの値 0.0000571", "0.0000571")
 in_text("  誤った 0.0000066 が残っていない", "0.0000066", want=False)
@@ -270,6 +277,16 @@ in_text("覚える必要があります と書いてある", "覚える必要が
 in_text("m は区間に比例すると書いてある", "比例")
 # ★ 平均 = 分散 が Poisson の目印であること
 in_text("平均と分散が等しいと書いてある", "平均と分散が等しい")
+
+# ── レイアウト（2026-10: Worked examples の節をなくし、例題は The idea の中へ） ──
+import re as _re2
+in_text("Worked examples の節は無い", "## Worked examples", want=False)
+_why2 = TXT.find("\n## Why it works")
+_idea2 = TXT.find("\n## The idea")
+_exs2 = [m.start() for m in _re2.finditer(r"(?m)^::: \{#exm-", TXT)]
+eq("例題の数は変わらない（4）", len(_exs2), 4)
+eq("例題はすべて The idea の中（Why it works より前）",
+   _idea2 >= 0 and _why2 >= 0 and all(_idea2 < q < _why2 for q in _exs2), True)
 
 print()
 print(f"══════════ OK {ok} / NG {ng} ══════════")

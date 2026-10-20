@@ -138,10 +138,8 @@ ax.plot([B[0], C[0]], [B[1], C[1]], color=GOLD, lw=1.6, ls=":", zorder=6)
 ax.plot([9.5], [9.5], "o", color=GOLD, ms=6, zorder=9)
 ax.text(9.9, 9.1, "midpoint", color=GOLD, fontsize=10, ha="left", va="top",
         zorder=10, bbox=BOX)
-ax.text(2.6, 1.2, "$y = x$  is the perpendicular\nbisector of $BC$",
+ax.text(2.6, 1.2, "$y = x$",
         color=ACC, fontsize=11, ha="center", va="center", zorder=10, bbox=BOX)
-ax.set_title("an edge is part of a perpendicular bisector",
-             fontsize=11.5, color=INK, pad=8)
 
 # --- (b) vertex は3つの site から等距離
 ax = axes[1]
@@ -161,10 +159,6 @@ ax.text(9.6, 7.35, "$5$", color=ACC, fontsize=11, ha="center", va="center",
         zorder=10, bbox=BOX)
 ax.text(4.4, 6.6, "$5$", color=ACC, fontsize=11, ha="center", va="center",
         zorder=10, bbox=BOX)
-ax.text(6.6, 1.3, "the vertex is the same distance\nfrom $B$, $C$ and $D$",
-        color=ACC, fontsize=11, ha="center", va="center", zorder=10, bbox=BOX)
-ax.set_title("a vertex is equidistant from three sites",
-             fontsize=11.5, color=INK, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-6-edge.svg"), bbox_inches="tight")
@@ -172,7 +166,7 @@ plt.close(fig)
 
 
 # ══════════════ 3. 一番近い site をさがす ══════════════
-fig, ax = plt.subplots(figsize=(8.6, 7.4))
+fig, ax = plt.subplots(figsize=(6.6, 5.8))
 frame(ax)
 draw_map(ax, alpha=0.75)
 Fm = (10, 3)
@@ -188,8 +182,6 @@ ax.text(10.5, 5.6, r"$\sqrt{20}=4.47$", color=GREY, fontsize=10.5, ha="right",
         va="center", zorder=10, bbox=BOX)
 ax.text(5.4, 5.2, r"$\sqrt{80}=8.94$", color=GREY, fontsize=10.5, ha="center",
         va="center", zorder=10, bbox=BOX)
-ax.text(6.4, 1.0, "the farm is in the cell of $E$, so $E$ is nearest",
-        color=GREEN, fontsize=11, ha="center", va="center", zorder=10, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-6-nearest.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -205,7 +197,7 @@ draw_map(ax, alpha=0.75)
 ax.plot([NEW[0]], [NEW[1]], "s", color=ACC, ms=9, zorder=9)
 ax.text(NEW[0] - 0.32, NEW[1] + 0.28, "$F$", color=ACC, fontsize=12.5,
         ha="right", va="bottom", zorder=10, bbox=BOX)
-ax.set_title("before:  $F$ lies inside the cell of $B$",
+ax.set_title("before",
              fontsize=11.5, color=INK, pad=8)
 
 ax = axes[1]
@@ -216,9 +208,7 @@ polyF = cell(NEW, list(S2.values()))
 ax.add_patch(Polygon(polyF, closed=True, facecolor="#fdecea", edgecolor=ACC,
                      lw=2.6, zorder=6))
 ax.plot([NEW[0]], [NEW[1]], "s", color=ACC, ms=9, zorder=9)
-ax.text(6.4, 1.0, "$F$ takes the nearby part of the\ncells around it",
-        color=ACC, fontsize=11, ha="center", va="center", zorder=11, bbox=BOX)
-ax.set_title("after:  a new cell appears around $F$",
+ax.set_title("after",
              fontsize=11.5, color=INK, pad=8)
 
 fig.tight_layout()
@@ -227,7 +217,7 @@ plt.close(fig)
 
 
 # ══════════════ 5. toxic waste dump ══════════════
-fig, ax = plt.subplots(figsize=(8.6, 7.4))
+fig, ax = plt.subplots(figsize=(6.6, 5.8))
 frame(ax)
 draw_map(ax, alpha=0.55, lw=1.5)
 from math import hypot, sqrt
@@ -249,8 +239,6 @@ for v, r in info:
     col = ACC if v == best[0] else GREY
     ax.text(v[0] + dx, v[1] + dy, t, color=col, fontsize=11, ha=ha, va=va,
             zorder=11, bbox=BOX)
-ax.text(3.4, 1.4, "the largest circle wins:\nthe dump goes at $(7,4)$",
-        color=ACC, fontsize=11.5, ha="center", va="center", zorder=11, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-6-toxic.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -309,11 +297,6 @@ def _interp(ax):
     ax.plot([P[0]], [P[1]], "*", color=ACC, ms=17, zorder=10)
     ax.text(P[0] + 0.35, P[1] - 0.15, "$P$", color=ACC, fontsize=12.5,
             ha="left", va="center", zorder=11, bbox=BOX)
-    ax.text(6.5, 4.6, "$P$ is inside the cell of $B$,\n"
-                      "so the rainfall at $P$ is taken to be $75$ mm",
-            color=ACC, fontsize=11, ha="center", va="center", zorder=11,
-            bbox=BOX)
-    ax.set_title("Nearest neighbour interpolation", fontsize=12, pad=8)
 
 
 we_fig("sl-3-6-interp.svg", _interp, (6.6, 5.8))
@@ -331,10 +314,6 @@ def _w1(ax):
     ax.plot([V[0]], [V[1]], "o", color=ACC, ms=9, zorder=10)
     ax.text(V[0] + 0.35, V[1] - 0.35, "$V(7,7)$", color=ACC, fontsize=12,
             ha="left", va="top", zorder=11, bbox=BOX)
-    ax.text(3.2, 2.4, "three cells meet at $V$", color=ACC, fontsize=11.5,
-            ha="center", va="center", zorder=11, bbox=BOX)
-    ax.set_title("$V$ is the same distance from $B$, $C$ and $D$",
-                 fontsize=12, pad=8)
 
 
 we_fig("sl-3-6-we1.svg", _w1)
@@ -357,10 +336,6 @@ def _w2(ax):
     ax.plot([7], [7], "o", color=INK, ms=9, zorder=10)
     ax.text(7.4, 6.6, "$(7,7)$", color=INK, fontsize=12, ha="left", va="top",
             zorder=11, bbox=BOX)
-    ax.text(6.6, 2.6, "the two edges cross at the vertex", color=INK,
-            fontsize=11, ha="center", va="center", zorder=11, bbox=BOX)
-    ax.set_title("Two perpendicular bisectors, and where they meet",
-                 fontsize=12, pad=8)
 
 
 we_fig("sl-3-6-we2.svg", _w2)
@@ -378,9 +353,6 @@ def _w3(ax):
     ax.plot([F[0]], [F[1]], "*", color=ACC, ms=17, zorder=10)
     ax.text(F[0] + 0.35, F[1] + 0.45, "farm $(10,3)$", color=ACC, fontsize=11,
             ha="left", va="bottom", zorder=11, bbox=BOX)
-    ax.text(3.6, 1.6, "the farm is inside\nthe cell of $E$", color=ACC,
-            fontsize=11, ha="center", va="center", zorder=11, bbox=BOX)
-    ax.set_title("Which village is nearest to the farm?", fontsize=12, pad=8)
 
 
 we_fig("sl-3-6-we3.svg", _w3, (6.6, 5.8))
@@ -417,11 +389,6 @@ def _w4(ax):
     ax.plot([9], [10], "s", color=ACC, ms=9, zorder=10)
     ax.text(9.35, 9.75, "$F(9,10)$", color=ACC, fontsize=12, ha="left",
             va="top", zorder=11, bbox=BOX)
-    ax.text(4.0, 2.2, "the edge is the perpendicular\n"
-                      "bisector of $BF$",
-            color=ACC, fontsize=11, ha="center", va="center", zorder=11,
-            bbox=BOX)
-    ax.set_title("After the new village $F$ is added", fontsize=12, pad=8)
 
 
 we_fig("sl-3-6-we4.svg", _w4)
@@ -447,8 +414,6 @@ def _w5(ax):
             ha="left", va="center", zorder=11, bbox=BOX)
     ax.text(6.3, 3.2, r"$\sqrt{34}=5.83$" + "\nfrom $C$, $D$, $E$", color=ACC,
             fontsize=10.5, ha="right", va="center", zorder=11, bbox=BOX)
-    ax.set_title("The biggest circle wins:  the dump goes at $(7,4)$",
-                 fontsize=12, pad=8, color=ACC)
 
 
 we_fig("sl-3-6-we5.svg", _w5)
@@ -484,8 +449,6 @@ for v in VERTS:
 
 ax.text(3.6, 2.2, "villages: black\nvertices: red", fontsize=10.5, color=GREY,
         ha="center", va="center", zorder=11, bbox=BOX)
-ax.set_title("The map used in these exercises   ($1$ square $= 1$ km)",
-             fontsize=12, pad=8)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-6-map.svg"), bbox_inches="tight")
 plt.close(fig)

@@ -44,8 +44,6 @@ fig3, ax3 = plt.subplots(figsize=(5.8, 4.9))
 # ══════════════════════════════════════════════════════════
 # (a) chord とは
 # ══════════════════════════════════════════════════════════
-ax1.set_title("A chord joins two points on the curve", fontsize=11,
-              color=INK, loc="left", pad=12)
 
 
 def f(t):
@@ -96,8 +94,6 @@ for _x, _lab in ((AX, "$a$"), (BX, "$b$")):
 # ══════════════════════════════════════════════════════════
 # (b) 極限は「近づくときの行き先」
 # ══════════════════════════════════════════════════════════
-ax2.set_title("A limit is where the outputs are heading", fontsize=11,
-              color=INK, loc="left", pad=12)
 
 A = 2.6
 L = 3.2
@@ -112,7 +108,7 @@ XR = np.linspace(A + 0.012, 4.9, 200)
 ax2.plot(XL, g(XL), color=ACCENT, linewidth=1.9)
 ax2.plot(XR, g(XR), color=ACCENT, linewidth=1.9)
 ax2.set_xlim(-0.35, 5.6)
-ax2.set_ylim(-1.85, 8.4)
+ax2.set_ylim(-1.05, 8.4)
 ax2.axis("off")
 ax2.plot([0.0, 5.4], [0, 0], color=GREY, linewidth=1.0)
 ax2.plot([0.0, 0.0], [0, 8.0], color=GREY, linewidth=1.0)
@@ -133,16 +129,10 @@ ax2.annotate("", xy=(A + 0.22, 0.42), xytext=(A + 1.35, 0.42),
 
 ax2.text(4.95, g(4.6) + 0.5, "$y = f(x)$", fontsize=10, color=ACCENT,
          ha="right")
-ax2.text(0.0, -0.85, "from the left and from the right, the outputs head "
-         "for $L$", fontsize=9.5, color=INK)
-ax2.text(0.0, -1.45, "the open circle says $f(a)$ itself need not exist",
-         fontsize=9.5, color=WARM)
 
 # ══════════════════════════════════════════════════════════
 # (c) Q を P に近づけると、割線が接線に近づく
 # ══════════════════════════════════════════════════════════
-ax3.set_title("The chord turns into the tangent", fontsize=11,
-              color=INK, loc="left", pad=12)
 
 ax3.plot(X, f(X), color=ACCENT, linewidth=1.9)
 ax3.set_xlim(-0.35, 5.6)

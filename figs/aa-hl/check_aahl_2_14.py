@@ -49,6 +49,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 def parity(f, want, msg):
     even = sp.simplify(f.subs(x, -x) - f) == 0
     odd = sp.simplify(f.subs(x, -x) + f) == 0
@@ -97,8 +101,6 @@ inverse((2 * x + 1) / (x - 3), (3 * x + 1) / (x - 2), "§4")
 eq(sp.expand((x - 3) ** 2 - 4), x ** 2 - 6 * x + 5, "§5 平方完成")
 chk(sp.solve(sp.Eq((x - 3) ** 2 - 4, y), x)
     == [3 - sp.sqrt(y + 4), 3 + sp.sqrt(y + 4)], "§5 ± の 2 つ")
-# §3 の周期の例（f(x) = x for 0 <= x < 4）
-chk(6 - 4 == 2 and -1 + 4 == 3, "§3 周期の計算")
 # §7 self-inverse
 chk(sp.simplify(sp.simplify(((x + 3) / (x - 1)).subs(x, (x + 3) / (x - 1))) - x) == 0,
     "§7 (x+3)/(x-1) は self-inverse")
@@ -166,7 +168,6 @@ _F6 = x ** 3 + a * x ** 2 + b * x + c
 eq(sp.expand(_F6.subs(x, -x) + _F6), 2 * a * x ** 2 + 2 * c, "演習6 odd の条件")
 chk(sp.solve([sp.Eq(a, -a), sp.Eq(c, -c)], [a, c]) == {a: 0, c: 0}, "演習6 a=c=0")
 parity((x ** 3 + b * x).subs(b, 5), "odd", "演習6 検算 a=c=0 なら odd")
-chk(10 - 4 - 4 == 2 and (-3) + 4 == 1, "演習7 周期の計算")
 chk(2 ** 2 == 4 and 1 ** 2 == 1, "演習7 値は 4 と 1")
 chk(6 - 4 == 2, "演習7 検算 f(6) = f(2)")
 eq(x ** 2 - 4 * x, (x - 2) ** 2 - 4, "演習9 平方完成")
@@ -181,13 +182,9 @@ chk(sp.sqrt(sp.Integer(3) ** 2) == 3, "演習10 x >= 0 なら戻る")
 # ══════════════════════════════════════════════════════════
 # 4. シラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Odd and even functions.", "シラバス（偶奇）を逐語で")
-in_text("> Even: $f(-x) = f(x)$", "Guidance（even）を逐語で")
-in_text("> Odd: $f(-x) = -f(x)$", "Guidance（odd）を逐語で")
-in_text("> Includes periodic functions.", "Guidance（周期）を逐語で")
-in_text("> Finding the inverse function, $f^{-1}(x)$, including domain"
+not_in_text("> Finding the inverse function, $f^{-1}(x)$, including domain"
         " restriction.", "シラバス（逆関数）を逐語で")
-in_text("> Self-inverse functions.", "シラバス（self-inverse）を逐語で")
+not_in_text("> Self-inverse functions.", "シラバス（self-inverse）を逐語で")
 not_in_text("公式集の **2.14**", "ありもしない欄を書かない")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
@@ -206,7 +203,7 @@ in_text("**ただし、定義域は画面に出ません。**", "電卓の限界
 for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -215,11 +212,12 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl214-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
-chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
-    "The idea が 1..7 で連番")
+chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 7)),
+    "The idea が 1..6 で連番")
 chk(TEXT.count("**検算") >= 12, "検算が十分ある: %d" % TEXT.count("**検算"))
 not_in_text("**確かめ", "検算は「検算」で統一")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -261,7 +259,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -277,13 +275,12 @@ for _hh in re.findall(r"^### \d+\. (.+?) \{#", TEXT, re.M):
         "見出しの英語の側に日本語がある: " + _hh)
 in_text("### 1. Even and odd functions（偶関数と奇関数） {#even-odd}", "見出し 1")
 in_text("### 2. The symmetry of the graph（グラフの対称性） {#symmetry}", "見出し 2")
-in_text("### 3. Periodic functions（周期関数） {#periodic}", "見出し 3")
-in_text("### 4. Finding the inverse function（逆関数を求める） {#inverse}", "見出し 4")
-in_text("### 5. Restricting the domain（定義域を制限する） {#restriction}", "見出し 5")
-in_text("### 6. Domain and range swap over（定義域と値域の入れかわり） "
-        "{#domain-range}", "見出し 6")
-in_text("### 7. Self-inverse functions（self-inverse な関数） "
-        "{#self-inverse}", "見出し 7")
+in_text("### 3. Finding the inverse function（逆関数を求める） {#inverse}", "見出し 3")
+in_text("### 4. Restricting the domain（定義域を制限する） {#restriction}", "見出し 4")
+in_text("### 5. Domain and range swap over（定義域と値域の入れかわり） "
+        "{#domain-range}", "見出し 5")
+in_text("### 6. Self-inverse functions（self-inverse な関数） "
+        "{#self-inverse}", "見出し 6")
 
 # ══════════════════════════════════════════════════════════
 # 6. 図
@@ -300,9 +297,9 @@ chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語が�
 in_fig("even: $f(-x) = f(x)$", "図(a) even")
 in_fig("odd: $f(-x) = -f(x)$", "図(a) odd")
 in_fig("a mirror in the $y$-axis", "図(a) の要点")
-in_fig("a half turn about the origin", "図(a) の要点 2")
-in_fig("Cut the domain first, then reflect in $y=x$", "図(b) の題")
-in_fig("the dotted part\\nis cut off", "図(b) の注")
+not_in_fig("a half turn about the origin", "図(a) の要点 2")
+not_in_fig("Cut the domain first, then reflect in $y=x$", "図(b) の題")
+not_in_fig("the dotted part\\nis cut off", "図(b) の注")
 in_text("even は $y$ 軸で折り返せて、odd は原点のまわりに半回転できます。",
         "キャプション (a)")
 in_text("$x \\geq 0$ に切ってから折り返すと、逆関数になります。", "キャプション (b)")
@@ -353,5 +350,41 @@ in_text("**odd な関数が $x = 0$ で定義されていれば、$f(0) = 0$ で
 in_text("**$\\pm$ のまま答えると、関数になりません。**", "± のまま答えない")
 
 print()
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-13 の手直し
+# ══════════════════════════════════════════════════════════
+in_text("定義は、以下のとおりです。", "§1 の言いかえ")
+in_text("- **Even function**：$f(-x) = f(x)$", "even の定義")
+in_text("- **Odd function**：$f(-x) = -f(x)$", "odd の定義")
+not_in_text("シラバスは、定義を式で書いています。", "前の書き出しは消した")
+# 周期関数の節は削除した
+not_in_text("Periodic functions", "周期関数の節はない")
+not_in_text("周期関数", "周期関数は出てこない")
+not_in_text("#periodic", "#periodic への参照もない")
+not_in_text("eq-aahl214-period", "式番号も消えている")
+# 「シラバスは、次のように書いています。」は使わない
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+not_in_text("シラバスは、定義域の制限までを $1$ 行に入れています。", "シラバスを指すだけの前置き・崩れた引用は置かない")
+# 節番号と参照
+chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == [1, 2, 3, 4, 5, 6],
+    "見出しは 1〜6")
+_secno = {"#even-odd": 1, "#symmetry": 2, "#inverse": 3, "#restriction": 4,
+          "#domain-range": 5, "#self-inverse": 6}
+for _m in re.finditer(r"\[第 (\d+) 節\]\((#[a-z-]+)\)", TEXT):
+    chk(_secno.get(_m.group(2)) == int(_m.group(1)),
+        "節番号と参照先が合わない: " + _m.group(0))
+# 差し替えた演習 7（偶関数 × 奇関数 = 奇関数）
+in_text("Show that $h(x) = f(x)g(x)$ is odd.", "演習 7 の問題文")
+in_text("h(-x) = f(-x)g(-x) = f(x)\\bigl(-g(x)\\bigr) = -f(x)g(x) = -h(x)",
+        "演習 7 の解答")
+_xx = sp.Symbol("x")
+for _f, _g in ((_xx ** 2, _xx ** 3), (sp.cos(_xx), sp.sin(_xx)),
+               (sp.Integer(1), _xx), (_xx ** 4 + 1, _xx ** 5 - _xx)):
+    chk(sp.simplify(_f.subs(_xx, -_xx) - _f) == 0, "f は even")
+    chk(sp.simplify(_g.subs(_xx, -_xx) + _g) == 0, "g は odd")
+    chk(sp.simplify((_f * _g).subs(_xx, -_xx) + _f * _g) == 0, "積は odd")
+chk(sp.simplify((_xx ** 5).subs(_xx, -_xx) + _xx ** 5) == 0, "演習 7 の検算 x^5")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

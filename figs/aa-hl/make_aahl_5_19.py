@@ -39,8 +39,6 @@ GREEN = "#15803d"
 # (a) sin x と部分和
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(5.8, 3.4))
-ax1.set_title("more terms, a longer stretch that matches", fontsize=10.5,
-              color=INK, loc="left", pad=10)
 
 t = np.linspace(-5.2, 5.2, 800)
 ax1.plot(t, np.sin(t), color=INK, linewidth=2.2, zorder=5)
@@ -72,8 +70,6 @@ ax1.tick_params(labelsize=9, colors=GREY)
 # (b) 新しい級数を作る 4 つの道
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(6.2, 3.0))
-ax2.set_title("four ways to build a new series from a known one",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 
 
 def box(x, y, w, h, text, col, fs=9.0):
@@ -99,8 +95,6 @@ box(7.8, 1.4, 2.2, 0.8, "integrate", WARM, fs=9.2)
 for _cx in (1.1, 3.7, 6.3, 8.9):
     link((5.0, 3.5), (_cx, 2.3))
 
-ax2.text(0.0, 0.55, "the new series is valid where the original one is,"
-         " after the same substitution", fontsize=9, color=GREY)
 ax2.set_xlim(-0.3, 10.3)
 ax2.set_ylim(0.1, 4.7)
 ax2.axis("off")

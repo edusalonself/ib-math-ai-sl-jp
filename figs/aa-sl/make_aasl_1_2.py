@@ -33,18 +33,14 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig1, ax1 = plt.subplots(figsize=(9.0, 3.1))
-fig2, ax2 = plt.subplots(figsize=(9.0, 3.1))
+fig1, ax1 = plt.subplots(figsize=(6.0, 2.3))
+fig2, ax2 = plt.subplots(figsize=(7.6, 2.6))
 # ══════════════════════════════════════════════════════════
 # (a) 等間隔のジャンプ： u_1 から u_5 まで、d を足すのは 4 回
 # ══════════════════════════════════════════════════════════
-ax1.set_xlim(-0.6, 5.4)
-ax1.set_ylim(-1.15, 1.5)
+ax1.set_xlim(-0.4, 5.2)
+ax1.set_ylim(-1.0, 1.05)
 ax1.axis("off")
-ax1.set_title(
-    "From $u_1$ to $u_n$ the difference $d$ is added $n-1$ times",
-    fontsize=11, color=INK, loc="left", pad=8,
-)
 
 XS = [0.2, 1.2, 2.2, 3.2, 4.2]
 LABELS = ["$u_1$", "$u_2$", "$u_3$", "$u_4$", "$u_5$"]
@@ -62,19 +58,15 @@ for i in range(4):
     ax1.text((a + b) / 2, 0.78, "$+d$", ha="center", va="center",
              fontsize=11, color=WARM)
 
-ax1.text(2.2, -0.80, "4 jumps, not 5   $\\Rightarrow$   $u_5 = u_1 + 4d$",
+ax1.text(2.2, -0.80, "$u_5 = u_1 + 4d$",
          ha="center", va="center", fontsize=11, color=INK)
 
 # ══════════════════════════════════════════════════════════
 # (b) 和を折り返して組にする
 # ══════════════════════════════════════════════════════════
 ax2.set_xlim(-0.6, 5.4)
-ax2.set_ylim(-1.5, 1.7)
+ax2.set_ylim(-1.45, 1.25)
 ax2.axis("off")
-ax2.set_title(
-    "Add the sum forwards and backwards: every pair makes $u_1+u_n$",
-    fontsize=11, color=INK, loc="left", pad=8,
-)
 
 TOP = ["$u_1$", "$u_2$", "$u_3$", "$\\cdots$", "$u_n$"]
 BOT = ["$u_n$", "$u_{n-1}$", "$u_{n-2}$", "$\\cdots$", "$u_1$"]

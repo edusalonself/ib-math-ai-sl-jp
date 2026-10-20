@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "03-geometry")
 QMD = os.path.join(BASE, "aasl-3-5.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取りのぞく。"""
+    _out, _depth = [], 0
+    for _ln in t.split("\n"):
+        _s = _ln.strip()
+        if _depth == 0:
+            if _s.startswith("::: {#exm-"):
+                _depth = 1
+                continue
+            _out.append(_ln)
+        elif re.match(r"^:{3,}\s*$", _s):
+            _depth -= 1
+        elif re.match(r"^:{3,}\s*\S", _s):
+            _depth += 1
+    return "\n".join(_out)
+
+
+# 例題は The idea の中へ移した。「例題より前の本文」は、Common errors より前から
+# 例題ブロックを取りのぞいた部分（もとの Worked examples より前と同じ範囲）。
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_3_5.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 FIGSTR = "\n".join(t for t in re.findall(r'r?"((?:[^"\\]|\\.)*)"', _NODOC)
@@ -48,6 +67,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 def pt(a):
     return (sp.cos(a), sp.sin(a))
@@ -243,7 +265,7 @@ not_in_text("solve(", "CAS 前提の solve( は書いていない")
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -256,12 +278,11 @@ chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答�
 chk(TEXT.count("::: {.callout-warning}") == 12,
     f"Common errors 10 + 本文の注意 2 で 12: {TEXT.count(chr(58)*3 + chr(32) + chr(123) + chr(46) + chr(99))}")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
-chk(_idea == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea}")
+chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
 chk(TEXT.count("**検算") >= 12, f"検算が十分ある: {TEXT.count('**検算')}")
 chk("**確かめ。**" not in TEXT and "**確かめます。**" not in TEXT, "「確かめ。」なし")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -332,9 +353,9 @@ for _n in "abcde":
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("The unit circle", "図(a) の題")
+not_in_fig("The unit circle", "図(a) の題")
 in_fig("$P(\\\\cos\\\\theta,\\\\ \\\\sin\\\\theta)$", "図(a) の P の座標")
-in_fig("Signs, and reflections", "図(b) の題")
+not_in_fig("Signs, and reflections", "図(b) の題")
 in_fig("all $> 0$", "図(b) の第 1 象限")
 in_fig("$\\\\sin\\\\theta > 0$", "図(b) の第 2 象限")
 in_fig("$\\\\tan\\\\theta > 0$", "図(b) の第 3 象限")
@@ -347,11 +368,16 @@ chk(set(re.findall(r"\d+", FIGSTR)) <= {"0", "1", "2", "3", "4", "6"},
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/03-geometry/aasl-3-5.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-3-4.qmd") < DRAFT.index("aasl-3-5.qmd"), "並びが 3.4 → 3.5a")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+DRAFT = None
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/03-geometry/aasl-3-5.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-3-4.qmd") < DRAFT.index("aasl-3-5.qmd"), "並びが 3.4 → 3.5a")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("（注）_quarto.yml がないので、登録のチェックは飛ばした")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(03-geometry/aasl-3-5.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -470,21 +496,24 @@ in_text("- $\\theta$ が鋭角でなくても（鈍角でも、負でも、$2\\p
 # 20. 2026-09-22：3.5a と 3.5b を結合した分
 # ══════════════════════════════════════════════════════════
 # --- 節の見出し ---------------------------------------------------------
-in_text("### 1. unit circle（単位円） {#unit-circle}", "§1 の見出し")
-in_text("### 2. $\\cos\\theta$、$\\sin\\theta$、$\\tan\\theta$ の定義 {#definitions}",
+in_text("### 1. The unit circle（単位円） {#unit-circle}", "§1 の見出し")
+in_text("### 2. Definitions of $\\cos\\theta$, $\\sin\\theta$ and $\\tan\\theta$（$\\cos\\theta$・$\\sin\\theta$・$\\tan\\theta$ の定義） {#definitions}",
         "§2 の見出し")
-in_text("### 3. quadrants and signs（象限と符号） {#quadrants}", "§3 の見出し")
-in_text("### 4. the two special triangles（2 つの特別な三角形） {#special}",
+in_text("### 3. Quadrants and signs（象限と符号） {#quadrants}", "§3 の見出し")
+in_text("### 4. Two special triangles（$2$ つの特別な三角形） {#special}",
         "§4 の見出し")
-in_text("### 5. reference angle（参照角）と、折り返しでできる関係 {#reference}",
+in_text("### 5. Reference angles and reflections（参照角と、折り返しでできる関係） {#reference}",
         "§5 の見出し")
-in_text("### 6. 負の角・$2\\pi$ を超える角（periodicity） {#periodic}", "§6 の見出し")
-not_in_text("### 7. the ambiguous case", "§7 は例題 4 の中へ移した")
-not_in_text("{#ambiguous}", "#ambiguous は無い")
-in_text("**この問題は、$2$ 辺と、そのあいだにない角**", "例題 4 が説明している")
-in_text("これを **ambiguous case**（あいまいな場合）といいます。", "例題 4 で用語を出す")
+in_text("### 6. Negative angles and angles beyond $2\\pi$（負の角と $2\\pi$ を超える角） {#periodic}", "§6 の見出し")
+# 2026-10：あいまいな場合は、例題 4 の解説から The idea の第 7 節に移した
+in_text("### 7. The ambiguous case（あいまいな場合） {#ambiguous}", "§7 の見出し")
+not_in_text("**この問題は、$2$ 辺と、そのあいだにない角**", "例題向けの書き出しは一般的な説明に直した")
+in_text("**$2$ 辺と、そのあいだにない角**（たとえば $a$、$b$、$\\hat{A}$）**が分かっている形**", "§7 が説明している")
+in_text("これを **ambiguous case**（あいまいな場合）といいます。", "§7 で用語を出す")
+chk(TEXT.index("{#ambiguous}") < TEXT.index("::: {#exm-aasl35-count}") < TEXT.index("\n## Why it works"),
+    "例題 4 は §7 の後ろ（The idea の中）")
 _idea5 = [int(m) for m in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
-chk(_idea5 == list(range(1, 7)), f"The idea が 1..6 で連番: {_idea5}")
+chk(_idea5 == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea5}")
 for _a in ("{#tan}", "{#relations}", "{#line}", "{#triangles}", "{#table}",
            "{#reduce}", "{#howmany}", "{#writing}"):
     not_in_text(_a, "吸収したアンカーは残っていない: " + _a)
@@ -522,7 +551,7 @@ for _q, _th in ((1, PI / 4), (2, 3 * PI / 4), (3, 5 * PI / 4), (4, 7 * PI / 4)):
     chk(_cells[4] == _sgn(sp.tan(_th)), f"第 {_q} 象限の tan の符号")
 
 # --- §4 特別な三角形と、正確な値の表 -------------------------------------
-in_text("**`exact values`（特別な三角比の値）は、この $2$ つの三角形から"
+in_text("**exact values**（正確な値）**は、この $2$ つの三角形から"
         "読み取ったものです。**", "§4 に exact values の小見出し")
 in_text(": $0$ から $\\dfrac{\\pi}{2}$ までの正確な値 {#tbl-aasl35-exact}",
         "正確な値の表")
@@ -534,11 +563,11 @@ for _th, _s5, _c5, _t5 in ((PI / 6, R(1, 2), sp.sqrt(3) / 2, sp.sqrt(3) / 3),
     eq(sp.tan(_th), _t5, "表の tan")
 chk(sp.simplify(sp.sqrt(1 ** 2 + 1 ** 2) - sp.sqrt(2)) == 0, "1,1 の斜辺は √2")
 chk(sp.simplify(sp.sqrt(2 ** 2 - 1 ** 2) - sp.sqrt(3)) == 0, "2,1 の残りは √3")
-in_fig("The two special triangles", "図 (d) の題")
+not_in_fig("The two special triangles", "図 (d) の題")
 
 # --- §5 参照角（新しい図と、4 手順）--------------------------------------
 in_text("@fig-aasl35-idea-c を見てください。", "図 (c) を参照している")
-in_fig("Reference angles", "図 (c) の題")
+not_in_fig("Reference angles", "図 (c) の題")
 for _p in ("all $+$", "sin+", "tan+", "cos+"):
     in_fig(_p, "図 (c) の " + _p)
 chk("BASE = (0.0, np.pi, np.pi, 2 * np.pi)" in FIGCODE,
@@ -558,7 +587,7 @@ eq(sp.cos(5 * PI / 6), -sp.sqrt(3) / 2, "本文の例 cos(5π/6)")
 
 # --- §6 負の角・2π を超える角 -------------------------------------------
 in_text("**大きい角や負の角の正確な値も、これで出せます。**", "§6 の書き出し")
-in_text("そのあとは [第 5 節](#reference)と同じ $4$ 手順です。", "§6 から §5 へ")
+in_text("そのあとは [第 5 節](#reference)と同じ $4$ つの手順です。", "§6 から §5 へ")
 in_text("$\\dfrac{9\\pi}{4} - 2\\pi = \\dfrac{\\pi}{4}$",
         "本文の例 9π/4")
 in_text("$\\dfrac{17\\pi}{4} - 4\\pi = \\dfrac{\\pi}{4}$",
@@ -571,13 +600,15 @@ for _th6 in (PI / 4, 9 * PI / 4, 17 * PI / 4):
     eq(sp.cos(_th6), sp.sqrt(2) / 2, "本文の例 cos")
 
 # --- §7 あいまいな場合 ---------------------------------------------------
-in_text(": $\\hat{A}$ が鋭角のとき {#tbl-aasl35-count}", "個数の表は例題 4 の中")
-in_text("**答案では、こう書きます。**", "答案の書き方は例題 4 の中")
+in_text(": $\\hat{A}$ が鋭角のとき {#tbl-aasl35-count}", "個数の表は §7 の中")
+in_text("**答案では、次のように進めます。**", "答案の進め方は §7 の中")
+chk(TEXT.index("{#ambiguous}") < TEXT.index("{#tbl-aasl35-count}") < TEXT.index("::: {#exm-aasl35-count}"),
+    "個数の表は §7 の本文（例題 4 より前）")
 in_text("\\frac{a}{\\sin A} = \\frac{b}{\\sin B}", "正弦定理")
 in_text("$\\sin(\\pi - B) = \\sin B$", "sin(π−B) = sin B")
 eq(sp.sin(PI - TH), sp.sin(TH), "sin(π−θ) = sin θ")
 in_text(": $\\hat{A}$ が鋭角のとき {#tbl-aasl35-count}", "個数の表")
-in_fig("The ambiguous case", "図 (e) の題")
+not_in_fig("The ambiguous case", "図 (e) の題")
 # 個数の判定を、実際の三角形で確かめる
 for _a5, _b5, _A5, _num in ((4, 4 * sp.sqrt(2), PI / 6, 2),
                             (4, 9, PI / 6, 0),
@@ -616,8 +647,9 @@ for _sent in ("the radius is $1$, so the coordinates of $P$ are the",
     chk(_sent not in FIGSTR, "図に説明の文を書いていない: " + _sent[:32])
 
 # --- 登録と、古いファイル -------------------------------------------------
-chk(_OLDA + ".qmd" not in DRAFT and _OLDB + ".qmd" not in DRAFT,
-    "3.5a・3.5b はもう登録されていない")
+if DRAFT is not None:
+    chk(_OLDA + ".qmd" not in DRAFT and _OLDB + ".qmd" not in DRAFT,
+        "3.5a・3.5b はもう登録されていない")
 for _old in (_OLDA + ".qmd", _OLDB + ".qmd"):
     chk(not os.path.exists(os.path.join(BASE, _old)), _old + " は消した")
 for _old in ("make_aasl_3_5" + "a.py", "make_aasl_3_5" + "b.py",
@@ -646,8 +678,8 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 # 2026-10-01：軸の上の 4 点は図に、参照角には α という名前を
 # ══════════════════════════════════════════════════════════
 not_in_text("{#tbl-aasl35-axes}", "4 点の表は消した")
-in_text("![The four points where the unit circle meets the axes]"
-        "(img/aasl-3-5-axes.svg){#fig-aasl35-axes width=100%}", "新しい図")
+in_text("![単位円が座標軸と交わる $4$ つの点です。]"
+        "(img/aasl-3-5-axes.svg){#fig-aasl35-axes width=80%}", "新しい図")
 in_text("@fig-aasl35-axes に、その $4$ 点の $\\cos$ と $\\sin$ を書き入れて"
         "あります。", "図への参照")
 chk(os.path.exists(os.path.join(BASE, "img", "aasl-3-5-axes.svg")),
@@ -680,6 +712,18 @@ in_fig('axX.text(-1.42, 0.06,', "左のラベルも同じ")
 chk('axX.annotate("", xy=(1.35, 0), xytext=(-1.35, 0),' in FIG,
     "横軸はラベルに届かない長さ")
 chk(1.35 < 1.42, "横軸の先より外にラベルがある")
+
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：レイアウト変更。例題は The idea の中（説明の節の直後）に置く
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "Worked examples の節は外した")
+_exm_pos = [_m.start() for _m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(len(_exm_pos) == 4, "例題の数は変わらない（4）: %d" % len(_exm_pos))
+_idea_pos = TEXT.index("\n## The idea")
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(all(_idea_pos < _p < _wiw_pos for _p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

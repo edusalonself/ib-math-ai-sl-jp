@@ -3,7 +3,7 @@
 ::: {.callout-note}
 ## What you should be able to do
 - **site**、**cell**、**edge**、**vertex** の4つの言葉が読める。
-- **edge が垂直二等分線**、**vertex が（ふつうの図では）3つの site から等距離**の点だと分かる。
+- **edge が perpendicular bisector（垂直二等分線）**、**vertex が（ふつうの図では）3つの site から等距離**の点だと分かる。
 - 2つの site が与えられたとき、その境界（edge）の式を求められる。
 - 2本の edge の式から、**vertex の座標**を求められる。
 - ある点に**一番近い site** を、図または距離の計算で決められる。
@@ -13,53 +13,15 @@
 - cell の**面積**を求められる。
 :::
 
-::: {.callout-important}
-## Formula booklet に、この項目の式はありません
-公式集の Topic 3 の欄は **3.1、3.2、3.4 だけ**です。**3.6 の欄はありません。**
-
-使う道具は、全部 [SL 3.5](sl-3-5.qmd) と同じです。
-
-$$
-\left( \frac{x_{1} + x_{2}}{2}, \ \frac{y_{1} + y_{2}}{2} \right), \qquad
-m = \frac{y_{2} - y_{1}}{x_{2} - x_{1}}, \qquad
-m_{\perp} = -\frac{1}{m}
-$$
-
-$$
-d = \sqrt{(x_{1} - x_{2})^{2} + (y_{1} - y_{2})^{2}}
-$$ {#eq-sl36-dist}
-
-**新しい計算は、1つも出てきません。** この項目で新しいのは、**言葉**と**場面の読み取り**です。
-:::
-
-::: {.callout-tip}
-## シラバスが、試験の作り方まで書いている項目です
-SL 3.6 の Guidance 欄には、ふつうは書かれないことまで書いてあります。**そのまま引用します。**
-
-> In examinations, **coordinates of sites** for calculating the perpendicular bisector equations **will be given**.
->
-> Students **will not be required to construct** perpendicular bisectors.
->
-> In examinations, **the solution point will always be at an intersection of three edges**.
-
-つまり、
-
-- **垂直二等分線の式を計算する問題では、必要な site の座標が与えられます**
-- **定規とコンパスで作図する必要はありません**。計算で出します
-- 試験では、toxic waste dump 問題の答えは **vertex にあります**
-
-この3行を知っているだけで、解き方の見通しがずいぶん良くなります。
-:::
-
 ## The idea
 
-### 1. Voronoi 図は「一番近いのはどれか」の地図です {#what}
+### 1. What a Voronoi diagram is（ボロノイ図は「一番近いのはどれか」の地図） {#what}
 
 いくつかの点（お店、病院、基地局、観測所など）が地図の上にあるとします。**「この場所からは、どれが一番近いか」**で地図を塗り分けたものが、**Voronoi diagram**（ボロノイ図）です。
 
-![The parts of a Voronoi diagram](img/sl-3-6-parts.svg){#fig-sl36-parts width=78%}
+![ボロノイ図の各部分](img/sl-3-6-parts.svg){#fig-sl36-parts width=78%}
 
-@fig-sl36-parts は、$5$ つの村 $A$ 〜 $E$ の地図です。$1$ 目盛りが $1$ km だとします。
+@fig-sl36-parts は、$5$ つの村 $A(1,12)$、$B(7,12)$、$C(12,7)$、$D(2,7)$、$E(12,1)$ の地図です。地図の範囲は $0 \le x \le 13$、$0 \le y \le 13$ で、$1$ 目盛りが $1$ km だとします。このページの例題は、すべてこの地図を使います。
 
 | English | 日本語 | 何のことか |
 |---|---|---|
@@ -79,15 +41,21 @@ Voronoi 図は日本の高校では扱いません。ですから、**日本語�
 特に `site` は、ふつうの英語では「場所」ですが、ここでは**もとの点そのもの**を指します。
 :::
 
-### 2. edge は垂直二等分線、vertex は site から等距離 {#edge-vertex}
+### 2. Edges and vertices（境界は垂直二等分線、頂点は等距離の点） {#edge-vertex}
 
-ここが、[SL 3.5](sl-3-5.qmd) とのつなぎ目です。
+ここが、[SL 3.5](sl-3-5.qmd) とのつなぎ目です。公式集に SL 3.6 の欄はなく、使う式（中点・傾き・垂直な傾き・距離）はすべて SL 3.5 と同じです。この項目で新しいのは、計算ではなく**言葉**と**場面の読み取り**です。
 
-![Edges and vertices](img/sl-3-6-edge.svg){#fig-sl36-edge width=100%}
+![辺と頂点](img/sl-3-6-edge.svg){#fig-sl36-edge width=100%}
 
 **edge は、$2$ つの site の垂直二等分線の一部**です。@fig-sl36-edge の左では、$B$ と $C$ の垂直二等分線が $y = x$ で、そのうち**太くかいた部分**が実際の edge になっています。
 
-この章で扱うふつうの図では、**vertex は $3$ つの site から等距離**にある点です。右の図では、$(7,7)$ から $B$、$C$、$D$ までの距離が**どれも $5$** です。だから $(7,7)$ を中心にした半径 $5$ の円が、$3$ つの site をちょうど通ります。
+この章で扱うふつうの図では、**vertex は $3$ つの site から等距離**にある点です。右の図では、$(7,7)$ から $B$、$C$、$D$ までの距離が**どれも $5$** です。距離は、SL 3.5 と同じ式で出します。
+
+$$
+d = \sqrt{(x_{1} - x_{2})^{2} + (y_{1} - y_{2})^{2}}
+$$ {#eq-sl36-dist}
+
+だから $(7,7)$ を中心にした半径 $5$ の円が、$3$ つの site をちょうど通ります。
 
 ::: {.callout-important}
 ## 「なぜ 3 つなのか」を押さえてください
@@ -117,154 +85,7 @@ vertex は、**$2$ 本の edge が交わった点**です。ですから
 
 : vertex の座標を求める手順 {#tbl-sl36-vertex}
 
-### 3. 一番近い site をさがす {#nearest}
-
-`Determine which site is closest to the point ...` は、この項目でよく出る設問です。やり方は $2$ 通りあります。
-
-![Which site is nearest?](img/sl-3-6-nearest.svg){#fig-sl36-nearest width=76%}
-
-- **図から読む** … その点がどの cell の中にあるかを見ます。速いですが、**「図より $E$」とだけ書くと根拠が残りません**
-- **距離を計算する** … @eq-sl36-dist で全部の距離を出して、一番小さいものを選びます
-
-::: {.callout-important}
-## 問題文の指示で、どちらを使うかが決まります
-- `Write down` … 図から読むだけ。計算は要りません
-- **`By finding the distances` と指定されたら** … 指定された距離を**計算して並べ、比べます。** やり方まで指示されているので、そのとおりにします
-- **`Determine` だけのとき** … 図・距離・境界線などを使って、**答えが $1$ つに決まる十分な根拠**を示します
-
-どちらの場合も、**結論だけを書かない**のが大事です。何を根拠にそう決めたのかが、答案に残るようにしてください。
-:::
-
-### 4. nearest neighbour interpolation {#interpolation}
-
-シラバスの Guidance 欄に、こう書かれています。
-
-> All points within a cell can be estimated to have the same value (e.g. **rainfall**) as the value of the site.
-
-つまり、**同じ cell の中の場所は、その site と同じ値だと見なす**という見積もり方です。これを **nearest neighbour interpolation**（最近傍補間）といいます。
-
-**site に値がついている場面**で使います。たとえば、村ごとに雨量計があって、**それぞれの村の雨量が分かっている**とします。村と村のあいだにある地点では測っていませんが、**一番近い村と同じ**だと見なして答える、という考え方です。
-
-![Nearest neighbour interpolation](img/sl-3-6-interp.svg){#fig-sl36-interp width=72%}
-
-やることは、たった $2$ 段階です。
-
-1. その点が**どの cell の中にあるか**を決める
-2. その site の値を、そのまま答えにする
-
-@fig-sl36-interp では、地点 $P(8,10)$ は **$B$ の cell の中**にあります。ですから $P$ の雨量は、$B$ で測った **$75$ mm** と見積もります。
-
-::: {.callout-warning}
-## 「一番近い site の値を、そのまま書く」だけです
-平均を取ったり、距離で重みを付けたりは**しません。**
-
-@fig-sl36-interp の $P$ のまわりには $A$、$C$、$D$ もありますが、$82$、$64$、$71$ と $75$ を**平均して $73$ と答えるのは、別の方法**です。この項目では、**一番近い $1$ つだけ**を見ます。
-:::
-
-### 5. site を1つ足す {#add-site}
-
-シラバスの Content 欄に `Addition of a site to an existing Voronoi diagram` とあります。**新しい店ができた、新しい基地局が建った、という場面**です。
-
-![Adding a new site](img/sl-3-6-addsite.svg){#fig-sl36-addsite width=100%}
-
-新しい site $F$ を足すと、$F$ のまわりに**新しい cell** ができます。その cell は、**まわりの cell から少しずつ取ってきた**ものです。
-
-- $F$ の cell が**現れる**
-- $F$ のとなりだった cell は、**小さくなります**
-- $F$ から遠い cell は、**変わりません**
-
-境界の式の出し方は、いままでと同じです。**$F$ と、となりの site の垂直二等分線**を出します。
-
-::: {.callout-tip}
-## 「大きくなる cell」はありません
-site を足したとき、**どの cell も大きくはなりません。** 小さくなるか、そのままかのどちらかです。
-
-新しい site は、まわりから場所を**取る**だけだからです。
-:::
-
-### 6. toxic waste dump 問題 {#toxic}
-
-`toxic waste dump`（有害廃棄物処分場）は、シラバスに名前が載っている問題です。
-
-> **どの site からもできるだけ遠い**場所を、決められた範囲の中から選びなさい。
-
-処分場、ごみ処理場、騒音の出る工場など、**近くにあってほしくないもの**を置く場面です。
-
-![The toxic waste dump problem](img/sl-3-6-toxic.svg){#fig-sl36-toxic width=76%}
-
-#### 手順は3つです {#toxic-steps}
-
-| | やること |
-|---|---|
-| **1** | すべての **vertex** の座標を書き出す |
-| **2** | それぞれについて、**一番近い site までの距離**を計算する |
-| **3** | その距離が**一番大きい** vertex を選ぶ |
-
-: toxic waste dump 問題の手順 {#tbl-sl36-toxic}
-
-::: {.callout-important}
-## なぜ vertex だけを調べればよいのか
-シラバスが、はっきり書いています。
-
-> In examinations, the solution point will always be at **an intersection of three edges**.
-
-つまり、**試験では答えは必ず vertex にあります。** 探す場所は vertex だけです。
-
-考え方としては、@fig-sl36-toxic の円を見てください。それぞれの vertex を中心に、**一番近い site まで届く円**をかいてあります。この円の中には site が $1$ つも入っていません。**円が大きいほど、まわりに何もない**ということです。だから**一番大きい円の中心**が答えになります。
-:::
-
-::: {.callout-warning}
-## vertex を1つでも飛ばすと、答えが変わります
-「見た感じ真ん中あたり」で選ばないでください。**全部の vertex について距離を出して、並べてから**選びます。
-
-答案には、**調べた vertex を全部書いてください。** 比較したことが見えないと、その vertex を選んだ根拠が示せません。
-:::
-
-### 7. cell の面積 {#area}
-
-Guidance 欄に `calculating the area of a region` とあります。cell は**多角形**なので、面積は次のように出します。
-
-- **三角形・長方形・台形に切り分けて**足す
-- 大きい長方形から、はみ出した三角形を**引く**
-
-::: {.callout-tip}
-## 地図のわくで閉じることを忘れないでください
-外側の cell は、Voronoi の edge だけでは閉じません。**地図のわく（$0 \le x \le 13$ など）も、cell の境界の一部**です。
-
-問題文に「地図の範囲」が書かれていたら、**それも辺として使う**という合図です。
-:::
-
-## Why it works
-
-:::: {.callout-note collapse="true" appearance="simple"}
-## クリックすると開きます
-なぜ Voronoi 図の境界が、垂直二等分線になるのかを説明します。
-
-いま、地図の上のある点 $P$ を考えます。$P$ が「$A$ の cell」に入るのは、$A$ が他のどの site よりも近いときです。
-
-$A$ と $B$ の $2$ つだけで考えると、地図は $3$ つに分かれます。
-
-- $A$ のほうが近い場所
-- $B$ のほうが近い場所
-- **ちょうど同じ距離の場所**
-
-この $3$ つめが、[SL 3.5](sl-3-5.qmd) で見た**「$A$ と $B$ から等距離の点の集まり」**、つまり $AB$ の**垂直二等分線**です。
-
-site が $3$ つ以上あるときも、考え方は変わりません。**site を $2$ つずつ組にして、そのたびに地図を半分に分ける**だけです。$A$ の cell は、「$A$ のほうが $B$ より近い側」と「$A$ のほうが $C$ より近い側」と…を**全部重ねた**部分になります。
-
-半分に切る線がいつも直線なので、**cell はいつも多角形**になります。曲がった境界は出てきません。
-::::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-:::
-
-::: {.callout-note}
-## この5題は、@fig-sl36-parts の地図を使います
-村 $A(1,12)$、$B(7,12)$、$C(12,7)$、$D(2,7)$、$E(12,1)$ の $5$ つです。地図の範囲は $0 \le x \le 13$、$0 \le y \le 13$ で、$1$ 目盛りは $1$ km です。
-:::
+試験では、垂直二等分線の式を計算するのに必要な site の座標は、問題文に与えられます。定規とコンパスで作図する必要はなく、式を計算して求めます。
 
 ::: {#exm-sl36-vertex}
 [The map shows five villages $A(1,12)$, $B(7,12)$, $C(12,7)$, $D(2,7)$ and $E(12,1)$. The point $V$ has coordinates $(7,7)$.]{.q-en}
@@ -288,9 +109,10 @@ site が $3$ つ以上あるときも、考え方は変わりません。**site 
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
-![$V(7,7)$ and the three villages around it](img/sl-3-6-we1.svg){#fig-sl36-we1 width=72%}
+![$V(7,7)$ と、そのまわりの $3$ つの村](img/sl-3-6-we1.svg){#fig-sl36-we1 width=80%}
 
 **(a)** `Show that` なので、**$3$ つとも計算して並べます。** @eq-sl36-dist です。
 
@@ -334,6 +156,7 @@ All three distances are equal, so $V$ is the same distance from $B$, $C$ and $D$
 **(c)** $3$
 :::
 :::
+:::
 
 ::: {#exm-sl36-edges}
 [**(a)** Find the equation of the edge between the cells of $B(7,12)$ and $C(12,7)$.]{.q-en}
@@ -353,11 +176,12 @@ All three distances are equal, so $V$ is the same distance from $B$, $C$ and $D$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 edge は**垂直二等分線**なので、[SL 3.5](sl-3-5.qmd) の手順そのままです。
 
-![The two edges and the vertex where they meet](img/sl-3-6-we2.svg){#fig-sl36-we2 width=72%}
+![2本の辺と、それらが交わる頂点](img/sl-3-6-we2.svg){#fig-sl36-we2 width=80%}
 
 **(a)** $B(7,12)$ と $C(12,7)$ で計算します。
 
@@ -395,7 +219,7 @@ $$
 
 $y = x$ に戻して $y = 7$ です。vertex は **$(7, 7)$** です。
 
-**検算。** 例題1で、この点から $B$、$C$、$D$ までの距離がどれも $5$ だと確かめてあります ✓
+**検算。** [例題 1](#exm-sl36-vertex) で、この点から $B$、$C$、$D$ までの距離がどれも $5$ だと確かめてあります ✓
 
 ::: {.callout-tip}
 ## $3$ 本目の式は、出さなくて構いません
@@ -416,6 +240,47 @@ $y - 9.5 = -(x - 4.5)$, so $y = -x + 14$
 
 **(c)** $x = -x + 14$, so $x = 7$ and $y = 7$.  The vertex is $(7, 7)$.
 :::
+:::
+:::
+
+### 3. The nearest site（一番近い母点をさがす） {#nearest}
+
+地図の上のある点に、どの site が一番近いかを決める問題です。`Determine which site is closest to the point ...` は、この項目でよく出る設問です。やり方は $2$ 通りあります。
+
+![どの site が一番近いか](img/sl-3-6-nearest.svg){#fig-sl36-nearest width=85%}
+
+- **図から読む** … その点がどの cell の中にあるかを見ます。速いですが、**「図より $E$」とだけ書くと根拠が残りません**
+- **距離を計算する** … @eq-sl36-dist で全部の距離を出して、一番小さいものを選びます
+
+::: {.callout-important}
+## 問題文の指示で、どちらを使うかが決まります
+- `Write down` … 図から読むだけ。計算は要りません
+- **`By finding the distances` と指定されたら** … 指定された距離を**計算して並べ、比べます。** やり方まで指示されているので、そのとおりにします
+- **`Determine` だけのとき** … 図・距離・境界線などを使って、**答えが $1$ つに決まる十分な根拠**を示します
+
+どちらの場合も、**結論だけを書かない**のが大事です。何を根拠にそう決めたのかが、答案に残るようにしてください。
+:::
+
+### 4. Nearest neighbour interpolation（最近傍補間） {#interpolation}
+
+**同じ cell の中の場所は、その site と同じ値だと見なす**という見積もり方があります。これを **nearest neighbour interpolation**（最近傍補間）といいます。
+
+**site に値がついている場面**で使います。たとえば、村ごとに雨量計があって、**それぞれの村の雨量が分かっている**とします。村と村のあいだにある地点では測っていませんが、**一番近い村と同じ**だと見なして答える、という考え方です。
+
+![最近傍補間](img/sl-3-6-interp.svg){#fig-sl36-interp width=85%}
+
+やることは、たった $2$ 段階です。
+
+1. その点が**どの cell の中にあるか**を決める
+2. その site の値を、そのまま答えにする
+
+@fig-sl36-interp では、地点 $P(8,10)$ は **$B$ の cell の中**にあります。ですから $P$ の雨量は、$B$ で測った $75$ mm と見積もります。
+
+::: {.callout-warning}
+## 「一番近い site の値を、そのまま書く」だけです
+平均を取ったり、距離で重みを付けたりは**しません。**
+
+@fig-sl36-interp の $P$ のまわりには $A$、$C$、$D$ もありますが、$82$、$64$、$71$ と $75$ を**平均して $73$ と答えるのは、別の方法**です。この項目では、**一番近い $1$ つだけ**を見ます。
 :::
 
 ::: {#exm-sl36-interp}
@@ -444,9 +309,10 @@ $y - 9.5 = -(x - 4.5)$, so $y = -x + 14$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
-![The farm at $(10,3)$, and the rainfall at each village](img/sl-3-6-we3.svg){#fig-sl36-we3 width=72%}
+![$(10,3)$ にある農場と、各村の降水量](img/sl-3-6-we3.svg){#fig-sl36-we3 width=85%}
 
 **(a)** `By finding the distances` と指定されているので、[距離を計算して並べます](#nearest)。
 
@@ -471,7 +337,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The estimate uses only the value at $E$, and the farm is $2.83$ km away from $E$. The rainfall may change between the two places, so the estimate could be quite different from the true value.*
+*The estimate uses only the value at $E$, and the farm is $2.83$ km away from $E$.*
+
+*The rainfall may change between the two places, so the estimate could be quite different from the true value.*
 :::
 
 （この見積もりは $E$ の値だけを使っていますが、農場は $E$ から $2.83$ km 離れています。そのあいだで雨量が変わるかもしれないので、本当の値とはかなり違う可能性があります。）
@@ -498,6 +366,28 @@ $E$ is the nearest village.
 **(c)** *The estimate uses only the value at $E$, and the farm is $2.83$ km away from $E$. The rainfall may change between the two places, so the estimate could be quite different from the true value.*
 :::
 :::
+:::
+
+### 5. Adding a site（母点を 1 つ足す） {#add-site}
+
+すでにある Voronoi 図に、site を $1$ つ足す問題も出ます。**新しい店ができた、新しい基地局が建った、という場面**です。
+
+![新しい site を加える](img/sl-3-6-addsite.svg){#fig-sl36-addsite width=100%}
+
+新しい site $F$ を足すと、$F$ のまわりに**新しい cell** ができます。その cell は、**まわりの cell から少しずつ取ってきた**ものです。
+
+- $F$ の cell が**現れる**
+- $F$ のとなりだった cell は、**小さくなります**
+- $F$ から遠い cell は、**変わりません**
+
+境界の式の出し方は、いままでと同じです。**$F$ と、となりの site の垂直二等分線**を出します。
+
+::: {.callout-tip}
+## 「大きくなる cell」はありません
+site を足したとき、**どの cell も大きくはなりません。** 小さくなるか、そのままかのどちらかです。
+
+新しい site は、まわりから場所を**取る**だけだからです。
+:::
 
 ::: {#exm-sl36-add}
 [A new village $F$ is built at the point $(9,10)$.]{.q-en}
@@ -521,13 +411,14 @@ $E$ is the nearest village.
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** `State` なので、図を見て答えます。@fig-sl36-addsite の左を見ると、$(9,10)$ は **$B$** の cell の中にあります。
 
 念のため計算で確かめるなら、$B(7,12)$ までが $\sqrt{4+4} = \sqrt{8} = 2.83$、$C(12,7)$ までが $\sqrt{9+9} = \sqrt{18} = 4.24$ で、$B$ のほうが近いことが分かります。
 
-![The new village $F$, and the edge between $B$ and $F$](img/sl-3-6-we4.svg){#fig-sl36-we4 width=72%}
+![新しい村 $F$ と、$B$ と $F$ の間の辺](img/sl-3-6-we4.svg){#fig-sl36-we4 width=80%}
 
 **(b)** $B(7,12)$ と $F(9,10)$ の垂直二等分線です。
 
@@ -548,7 +439,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The cell of $B$ becomes smaller. The part of it that is nearer to $F$ than to $B$ now belongs to the cell of $F$.*
+*The cell of $B$ becomes smaller.*
+
+*The part of it that is nearer to $F$ than to $B$ now belongs to the cell of $F$.*
 :::
 
 （$B$ の cell は小さくなります。$B$ よりも $F$ に近い部分が、$F$ の cell に移ります。）
@@ -570,6 +463,43 @@ $y - 11 = 1(x - 8)$, so $y = x + 3$
 
 **(c)** *The cell of $B$ becomes smaller. The part of it that is nearer to $F$ than to $B$ now belongs to the cell of $F$.*
 :::
+:::
+:::
+
+### 6. The toxic waste dump problem（有害廃棄物処分場の問題） {#toxic}
+
+`toxic waste dump`（有害廃棄物処分場）は、よく出る問題です。
+
+> **どの site からもできるだけ遠い**場所を、決められた範囲の中から選びなさい。
+
+処分場、ごみ処理場、騒音の出る工場など、**近くにあってほしくないもの**を置く場面です。
+
+![有害廃棄物処分場の問題](img/sl-3-6-toxic.svg){#fig-sl36-toxic width=85%}
+
+@fig-sl36-toxic では、一番大きい円の中心は $(7,4)$ なので、処分場は $(7,4)$ に置きます。
+
+#### 手順は3つです {#toxic-steps}
+
+| | やること |
+|---|---|
+| **1** | すべての **vertex** の座標を書き出す |
+| **2** | それぞれについて、**一番近い site までの距離**を計算する |
+| **3** | その距離が**一番大きい** vertex を選ぶ |
+
+: toxic waste dump 問題の手順 {#tbl-sl36-toxic}
+
+::: {.callout-important}
+## なぜ vertex だけを調べればよいのか
+**試験では、答えは必ず vertex（edge が $3$ 本交わる点）にあるように作られています。** 探す場所は vertex だけです。
+
+考え方としては、@fig-sl36-toxic の円を見てください。それぞれの vertex を中心に、**一番近い site まで届く円**をかいてあります。この円の中には site が $1$ つも入っていません。**円が大きいほど、まわりに何もない**ということです。だから**一番大きい円の中心**が答えになります。
+:::
+
+::: {.callout-warning}
+## vertex を1つでも飛ばすと、答えが変わります
+「見た感じ真ん中あたり」で選ばないでください。**全部の vertex について距離を出して、並べてから**選びます。
+
+答案には、**調べた vertex を全部書いてください。** 比較したことが見えないと、その vertex を選んだ根拠が示せません。
 :::
 
 ::: {#exm-sl36-toxic}
@@ -594,9 +524,10 @@ $y - 11 = 1(x - 8)$, so $y = x + 3$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
-![The three vertices, and how far each one is from its nearest village](img/sl-3-6-we5.svg){#fig-sl36-we5 width=72%}
+![$3$ つの頂点と、それぞれから一番近い村までの距離](img/sl-3-6-we5.svg){#fig-sl36-we5 width=80%}
 
 **(a)** この図では vertex は $3$ つの site から等距離なので、**その $3$ つのうち $1$ つとの距離を出せば済みます。**
 
@@ -627,7 +558,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Yes. The nearest villages ($C$, $D$ and $E$) are $\sqrt{34} = 5.83$ km away, which is more than $5$ km.*
+*Yes.*
+
+*The nearest villages ($C$, $D$ and $E$) are $\sqrt{34} = 5.83$ km away, which is more than $5$ km.*
 :::
 
 ::: {.callout-important}
@@ -657,6 +590,42 @@ At $(7,4)$: $\sqrt{(7-12)^{2}+(4-7)^{2}} = \sqrt{34} = 5.83$ km (3 s.f.) — fro
 **(c)** *Yes. The nearest villages ($C$, $D$ and $E$) are $\sqrt{34} = 5.83$ km away, which is more than $5$ km.*
 :::
 :::
+:::
+
+### 7. Area of a cell（セルの面積） {#area}
+
+cell の面積を求める問題も出ます。cell は**多角形**なので、面積は次のように出します。
+
+- **三角形・長方形・台形に切り分けて**足す
+- 大きい長方形から、はみ出した三角形を**引く**
+
+::: {.callout-tip}
+## 地図のわくで閉じることを忘れないでください
+外側の cell は、Voronoi の edge だけでは閉じません。**地図のわく（$0 \le x \le 13$ など）も、cell の境界の一部**です。
+
+問題文に「地図の範囲」が書かれていたら、**それも辺として使う**という合図です。
+:::
+
+## Why it works
+
+:::: {.callout-note collapse="true" appearance="simple"}
+## クリックすると開きます
+なぜ Voronoi 図の境界が、垂直二等分線になるのかを説明します。
+
+いま、地図の上のある点 $P$ を考えます。$P$ が「$A$ の cell」に入るのは、$A$ が他のどの site よりも近いときです。
+
+$A$ と $B$ の $2$ つだけで考えると、地図は $3$ つに分かれます。
+
+- $A$ のほうが近い場所
+- $B$ のほうが近い場所
+- **ちょうど同じ距離の場所**
+
+この $3$ つめが、[SL 3.5](sl-3-5.qmd) で見た**「$A$ と $B$ から等距離の点の集まり」**、つまり $AB$ の**垂直二等分線**です。
+
+site が $3$ つ以上あるときも、考え方は変わりません。**site を $2$ つずつ組にして、そのたびに地図を半分に分ける**だけです。$A$ の cell は、「$A$ のほうが $B$ より近い側」と「$A$ のほうが $C$ より近い側」と…を**全部重ねた**部分になります。
+
+半分に切る線がいつも直線なので、**cell はいつも多角形**になります。曲がった境界は出てきません。
+::::
 
 ## Common errors
 
@@ -731,7 +700,7 @@ $F$ の cell が**新しくできて**、まわりの cell が**小さくなる*
 
 この項目では、電卓は**距離の計算と、連立方程式の確認**に使います。図そのものは紙にかきます。
 
-### 1. 距離は $1$ 行で入れる
+### 1. Distances in one line（距離は $1$ 行で入れる） {#gdc-distance}
 
 @eq-sl36-dist は、平方根のテンプレートに入れて $1$ 行で計算します。
 
@@ -739,17 +708,15 @@ $\sqrt{\left(10 - 12\right)^{2} + \left(3 - 7\right)^{2}}$
 
 $\sqrt{20} = 4.4721\ldots$ と返ります。**途中で $20$ を書き出して打ち直さない**でください。
 
-### 2. 距離を比べるだけなら、$\sqrt{\ }$ は要りません
+### 2. Comparing distances（比べるだけなら $\sqrt{\ }$ は要らない） {#gdc-compare}
 
 「どちらが近いか」を知りたいだけなら、**$\sqrt{\ }$ の中身どうしを比べれば十分**です。
 
-$$
-20 \ \text{と} \ 80 \ \text{と} \ 8 \quad \Rightarrow \quad 8 \ \text{が最小} \quad \Rightarrow \quad E \ \text{が一番近い}
-$$
+$20$、$80$、$8$ のうち **$8$ が最小**なので、**$E$ が一番近い**ことが分かります。
 
 平方根は、値が大きいほど元の数も大きいからです。**ただし、答案には距離そのもの（$\sqrt{8} = 2.83$）を書いてください。**
 
-### 3. 連立方程式は Solve System of Linear Equations {#simeq}
+### 3. Simultaneous equations（連立方程式は Solve System of Linear Equations で） {#simeq}
 
 $2$ 本の edge の式から vertex を出すとき、手で解いても構いませんが、電卓でも確認できます。
 
@@ -766,7 +733,7 @@ $y = x$ と $y = -x + 14$ のような形なら、**代入して $1$ 行**で終
 電卓に入れる形（$ax + by = c$）に直す手間のほうが大きい、ということがよくあります。**検算に使うのがちょうどよい**使い方です。
 :::
 
-### 4. Graphs ページで図を確かめる
+### 4. Checking on a graph（Graphs ページで図を確かめる） {#gdc-graph}
 
 edge の式を $f1(x)$、$f2(x)$ に入れると、**交点が本当に vertex になっているか**が目で見えます。
 
@@ -783,24 +750,18 @@ TI-Nspire に「Voronoi」というメニューはありません。**図は問�
 電卓が助けてくれるのは、距離と交点の計算だけです。
 :::
 
-### 5. 面積は、切り分けてから
+### 5. Areas（面積は切り分けてから） {#gdc-area}
 
 cell の面積は、多角形の頂点を書き出して、**三角形や台形に切り分けて**足します。電卓は最後の足し算に使うだけです。
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.callout-note}
 ## 演習 1 〜 8 と 11 は、下の @fig-sl36-map の地図を使います
 村 $A(1,12)$、$B(7,12)$、$C(12,7)$、$D(2,7)$、$E(12,1)$。地図の範囲は $0 \le x \le 13$、$0 \le y \le 13$ で、$1$ 目盛りは $1$ km です。Voronoi 図の vertex は $(4,10)$、$(7,7)$、$(7,4)$ にあります。
 :::
 
-![The map used in exercises 1–8 and 11](img/sl-3-6-map.svg){#fig-sl36-map width=76%}
+![練習問題 1–8 と 11 で使う地図](img/sl-3-6-map.svg){#fig-sl36-map width=90%}
 
 ::: {.exercise-block}
 
@@ -866,7 +827,7 @@ Midpoint $= (12, 4)$, so the edge is $y = 4$
 
 ::: {.callout-tip collapse="true"}
 ## 解説
-どちらも [SL 3.5 のたて・よこの特別な形](sl-3-5.qmd#special)です。**傾きの計算は要りません。**
+どちらも [SL 3.5 のたて・よこの特別な形](sl-3-5.qmd#special)です。**gradient（傾き）の計算は要りません。**
 
 **(a)** $y$ が両方 $12$ → よこ向き → edge は**たて**の線 $x = \ldots$。中点の $x$ は $\dfrac{1+7}{2} = 4$。
 

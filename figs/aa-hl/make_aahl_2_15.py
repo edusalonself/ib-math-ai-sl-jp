@@ -37,8 +37,6 @@ WARM = "#b45309"
 # (a) どちらが上か
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(6.0, 4.0))
-ax1.set_title("The answer is the stretch where one graph is above the other",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 _t = np.linspace(-2.6, 3.4, 400)
 ax1.plot(_t, _t ** 2, color=ACCENT, linewidth=1.8)
 ax1.plot(_t, _t + 2.0, color=WARM, linewidth=1.8)
@@ -55,8 +53,6 @@ ax1.text(3.3, 4.6, "$y=g(x)$", ha="right", va="center", fontsize=9.5,
          color=WARM)
 ax1.text(0.5, 1.2, "$g(x) \\geq f(x)$", ha="center", va="center", fontsize=9.5,
          color=WARM)
-ax1.text(-2.4, -2.6, "the ends of the shaded stretch are the crossing points",
-         ha="left", va="center", fontsize=9, color=GREY)
 ax1.set_xlim(-2.8, 3.6)
 ax1.set_ylim(-3.2, 8.4)
 ax1.set_xticks([])
@@ -72,8 +68,6 @@ ax1.spines["bottom"].set_color(GREY)
 # (b) 符号の表
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(6.2, 3.0))
-ax2.set_title("A sign diagram: multiply the signs down each column",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 ax2.set_xlim(-0.6, 4.4)
 ax2.set_ylim(-0.4, 4.1)
 ax2.axis("off")

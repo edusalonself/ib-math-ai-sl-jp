@@ -134,8 +134,7 @@ save(fig, "ahl-3-16-euler.svg")
 fig, ax = plt.subplots(figsize=(7.2, 4.2))
 board(ax, (-0.9, 7.0), (-0.9, 4.2))
 draw_G(ax, hl=[("A", "B"), ("B", "C"), ("C", "E"), ("E", "D"), ("D", "A")])
-note(ax, 3.0, -0.55, "$A \\to B \\to C \\to E \\to D \\to A$  —  "
-                     "every vertex once", ACC, 11.5)
+note(ax, 3.0, -0.55, "$A \\to B \\to C \\to E \\to D \\to A$", ACC, 11.5)
 fig.tight_layout()
 save(fig, "ahl-3-16-hamilton.svg")
 
@@ -187,8 +186,8 @@ TAB = [["–", "4", "6", "8", "–"],
        ["8", "7", "5", "–", "2"],
        ["–", "–", "9", "2", "–"]]
 PICK = {(0, 1): 1, (1, 2): 2, (2, 3): 3, (3, 4): 4}   # (row, col) → 順番
-fig, ax = plt.subplots(figsize=(7.4, 5.2))
-board(ax, (-1.1, 6.2), (-1.5, 6.0))
+fig, ax = plt.subplots(figsize=(7.4, 4.9))
+board(ax, (-1.1, 6.2), (-0.95, 6.0))
 ax.set_aspect("auto")
 cw, ch = 1.0, 0.85
 x0, y0 = 0.2, 0.4
@@ -219,9 +218,7 @@ for c in range(5):
     X = x0 + (c + 0.5) * cw
     ax.plot([X - 0.42, X + 0.42], [y0 + 5 * ch + 0.10, y0 + 5 * ch + 0.10],
             color=ACC, lw=2.2, zorder=8)
-note(ax, 2.7, -0.55, "cross out a column when its vertex joins the tree",
-     ACC, 11)
-note(ax, 2.7, -1.10, "circled: $4 + 3 + 5 + 2 = 14$", GREEN, 12)
+note(ax, 2.7, -0.55, "circled: $4 + 3 + 5 + 2 = 14$", GREEN, 12)
 fig.tight_layout()
 save(fig, "ahl-3-16-prim-matrix.svg")
 
@@ -409,9 +406,7 @@ for ax, (hl, sub, col) in zip(axs, PAIRS):
     for k, p in QP.items():
         node(ax, p, k, color=ACC, tc=ACC)
     note(ax, 1.9, -0.95, sub, col, 11.5)
-fig.text(0.5, 0.015, "all four vertices have odd degree", fontsize=11,
-         ha="center", color=ACC)
-fig.tight_layout(rect=(0, 0.04, 1, 1))
+fig.tight_layout()
 save(fig, "ahl-3-16-cpp4.svg")
 
 print("figures written to", os.path.normpath(OUT))
@@ -424,10 +419,10 @@ fig, axs = plt.subplots(1, 2, figsize=(12.4, 3.8),
 
 ax = axs[0]
 ax.set_xlim(0, 10)
-ax.set_ylim(-1.0, 6.2)
+ax.set_ylim(0.0, 6.2)
 ax.axis("off")
 BOXES = [
-    (0.3, 0.3, 9.4, 5.6, GREY, "walk", "nothing is forbidden", 5.50),
+    (0.3, 0.3, 9.4, 5.6, GREY, "walk", "no restriction", 5.50),
     (1.4, 0.8, 7.2, 3.9, LINE, "trail", "no edge repeated", 4.32),
     (2.6, 1.3, 4.8, 2.2, GREEN, "path", "no vertex repeated", 3.12),
 ]
@@ -441,15 +436,11 @@ for x, y, w, h, col, name, sub, ty in BOXES:
             va="center", color=col, zorder=5)
 ax.text(5.0, 1.85, "$A \\to B \\to C \\to D$", fontsize=13,
         ha="center", va="center", color=GREEN, zorder=6)
-ax.text(5.0, -0.55, "every path is a trail, and every trail is a walk",
-        fontsize=11.5, ha="center", va="center", color=INK, zorder=6)
 
 ax = axs[1]
 ax.set_xlim(0, 10)
-ax.set_ylim(0, 6.2)
+ax.set_ylim(0.6, 5.3)
 ax.axis("off")
-ax.text(5.0, 5.55, "back to where it started",
-        fontsize=12.5, ha="center", va="center", color=INK, weight="bold")
 PAIRS = [(3.9, "trail", "circuit", LINE), (1.6, "path", "cycle", GREEN)]
 for y, a, b, col in PAIRS:
     ax.add_patch(FancyBboxPatch((0.6, y - 0.55), 3.0, 1.1,
@@ -460,15 +451,13 @@ for y, a, b, col in PAIRS:
     ax.annotate("", xy=(6.2, y), xytext=(3.8, y),
                 arrowprops=dict(arrowstyle="-|>", color=col, lw=2.0,
                                 mutation_scale=15))
-    ax.text(5.0, y + 0.42, "returns to start", fontsize=10, ha="center",
+    ax.text(5.0, y + 0.42, "back to start", fontsize=10, ha="center",
             va="bottom", color=col)
     ax.add_patch(FancyBboxPatch((6.4, y - 0.55), 3.0, 1.1,
                                 boxstyle="round,pad=0.0,rounding_size=0.28",
                                 fc="none", ec=col, lw=2.0))
     ax.text(7.9, y, b, fontsize=13, ha="center", va="center", color=col,
             weight="bold")
-ax.text(5.0, 0.45, "a cycle repeats its starting vertex, and no other",
-        fontsize=10.5, ha="center", va="center", color=GREEN)
 fig.tight_layout()
 save(fig, "ahl-3-16-nested.svg")
 
@@ -480,9 +469,9 @@ MST = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "E")]
 PANELS = [
     (None, "the graph $G$", INK, ""),
     (SUB, "a subgraph", ACC, "some vertices, some edges"),
-    (SPAN_SUB, "a spanning subgraph", GOLD, "all $5$ vertices, still has a cycle"),
-    (SPAN_TREE, "a spanning tree", LINE, "all $5$ vertices, no cycle: $4$ edges"),
-    (MST, "a minimum spanning tree", GREEN, "the lightest spanning tree: $14$"),
+    (SPAN_SUB, "a spanning subgraph", GOLD, "all $5$ vertices, cycle"),
+    (SPAN_TREE, "a spanning tree", LINE, "all $5$ vertices, $4$ edges"),
+    (MST, "a minimum spanning tree", GREEN, "total $= 14$"),
 ]
 fig, axs = plt.subplots(5, 1, figsize=(6.2, 17.5))
 for ax, (keep, title, col, sub) in zip(axs, PANELS):
@@ -520,7 +509,7 @@ def draw_T(ax, hl=None, hlc=ACC):
 
 fig, axs = plt.subplots(3, 1, figsize=(5.4, 12.6))
 PANE = [
-    (None, "two edges of weight $4$", INK, "which one does Kruskal take?"),
+    (None, "$QS = RS = 4$", INK, ""),
     ([("P", "Q"), ("P", "R"), ("Q", "S")], "taking $QS$", LINE,
      "$2 + 2 + 4 = 8$"),
     ([("P", "Q"), ("P", "R"), ("R", "S")], "taking $RS$", GREEN,
@@ -530,8 +519,7 @@ for ax, (hl, title, col, sub) in zip(axs, PANE):
     board(ax, (-0.8, 3.8), (-1.3, 3.5))
     draw_T(ax, hl=hl, hlc=col)
     ax.set_title(title, fontsize=12.5, color=col, pad=6)
-    note(ax, 1.5, -0.85, sub, col, 11.5)
-fig.text(0.5, 0.004, "different trees, but the same minimum total weight",
-         fontsize=12, ha="center", color=INK)
-fig.tight_layout(rect=(0, 0.022, 1, 1))
+    if sub:
+        note(ax, 1.5, -0.85, sub, col, 11.5)
+fig.tight_layout()
 save(fig, "ahl-3-16-tie.svg")

@@ -34,13 +34,11 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig1, ax1 = plt.subplots(figsize=(4.6, 4.6))
-fig2, ax2 = plt.subplots(figsize=(5.3, 4.0))
+fig1, ax1 = plt.subplots(figsize=(4.0, 4.0))
+fig2, ax2 = plt.subplots(figsize=(5.0, 3.6))
 # ══════════════════════════════════════════════════════════
 # (a) 面積 1 の正方形を、半分ずつ埋めていく
 # ══════════════════════════════════════════════════════════
-ax1.set_title("A square of area $1$", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-0.06, 1.06)
 ax1.set_ylim(-0.06, 1.10)
 ax1.set_aspect("equal")
@@ -75,8 +73,6 @@ ax1.text(0.5, 1.075, "$1$", ha="center", va="bottom", fontsize=11,
 # ══════════════════════════════════════════════════════════
 # (b) r の大きさで、項のふるまいが分かれる
 # ══════════════════════════════════════════════════════════
-ax2.set_title("The terms of $r^{\\,n}$", fontsize=11, color=INK,
-              loc="left", pad=10)
 NS = list(range(0, 6))
 small = [0.5 ** k for k in NS]
 big = [2.0 ** k for k in NS]
@@ -90,6 +86,7 @@ ax2.set_xlim(-0.25, 5.6)
 ax2.set_xticks(NS)
 ax2.set_yticks([0, 1, 2, 3, 4])
 ax2.set_xlabel("$n$", fontsize=10, color=INK)
+ax2.set_ylabel("$r^{\\,n}$", fontsize=10, color=INK)
 ax2.tick_params(labelsize=9, colors=INK)
 for side in ("top", "right"):
     ax2.spines[side].set_visible(False)
@@ -99,9 +96,6 @@ ax2.grid(axis="y", color="#e5e7eb", linewidth=0.8)
 ax2.set_axisbelow(True)
 ax2.legend(fontsize=9.5, frameon=False, loc="upper left")
 ax2.axhline(0.0, color=GREY, linewidth=1.0)
-ax2.annotate("dies away to $0$", xy=(4, 0.0625), xytext=(2.3, 0.85),
-             fontsize=9.5, color=ACCENT,
-             arrowprops=dict(arrowstyle="->", color=ACCENT, linewidth=1.0))
 ax2.annotate("off the top", xy=(2.15, 4.15), xytext=(3.1, 3.6),
              fontsize=9.5, color=WARM,
              arrowprops=dict(arrowstyle="->", color=WARM, linewidth=1.0))

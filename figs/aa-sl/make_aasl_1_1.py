@@ -46,18 +46,14 @@ ITEMS = [
     (1.5e11, r"$1.5 \times 10^{11}$", "Earth to Sun (distance)", True),
 ]
 
-fig1, ax1 = plt.subplots(figsize=(9.0, 3.2))
-fig2, ax2 = plt.subplots(figsize=(9.0, 3.2))
+fig1, ax1 = plt.subplots(figsize=(9.0, 2.95))
+fig2, ax2 = plt.subplots(figsize=(7.3, 2.85))
 # ══════════════════════════════════════════════════════════
 # (a) 10 のべきの物差し
 # ══════════════════════════════════════════════════════════
 ax1.set_xlim(-11.8, 12.8)
-ax1.set_ylim(-2.0, 1.9)
+ax1.set_ylim(-2.0, 1.6)
 ax1.axis("off")
-ax1.set_title(
-    "Lengths in metres — one step along the line is ten times bigger",
-    fontsize=11, color=INK, loc="left", pad=8,
-)
 
 ax1.annotate(
     "", xy=(12.6, 0), xytext=(-11.6, 0),
@@ -93,13 +89,9 @@ for value_of, value, name, above in ITEMS:
 # ══════════════════════════════════════════════════════════
 # (b) 小数点の動かし方
 # ══════════════════════════════════════════════════════════
-ax2.set_xlim(0, 6.2)
-ax2.set_ylim(0, 3.5)
+ax2.set_xlim(0, 5.0)
+ax2.set_ylim(0, 3.1)
 ax2.axis("off")
-ax2.set_title(
-    "Move the decimal point until the first factor $a$ has $1 \\leq a < 10$",
-    fontsize=11, color=INK, loc="left", pad=8,
-)
 
 X0, DX = 0.35, 0.30
 

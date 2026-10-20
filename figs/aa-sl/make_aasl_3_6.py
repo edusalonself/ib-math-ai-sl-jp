@@ -35,12 +35,10 @@ WARM = "#b45309"
 GREEN = "#15803d"
 
 fig1, ax1 = plt.subplots(figsize=(5.3, 4.9))
-fig2, ax2 = plt.subplots(figsize=(5.3, 4.9))
+fig2, ax2 = plt.subplots(figsize=(4.0, 3.2))
 # ══════════════════════════════════════════════════════════
 # (a) ピタゴラスの恒等式
 # ══════════════════════════════════════════════════════════
-ax1.set_title("The Pythagorean identity", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-1.55, 1.85)
 ax1.set_ylim(-1.30, 1.55)
 ax1.set_aspect("equal")
@@ -74,10 +72,8 @@ ax1.text(0.12, 0.62, "$1$", fontsize=11, color=ACCENT)
 # ══════════════════════════════════════════════════════════
 # (b) cos 2θ の 3 つの形
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Three forms of $\\cos 2\\theta$", fontsize=11, color=INK,
-              loc="left", pad=10)
-ax2.set_xlim(0, 10)
-ax2.set_ylim(-1.72, 2.05)
+ax2.set_xlim(0.7, 6.7)
+ax2.set_ylim(-1.55, 1.85)
 ax2.axis("off")
 
 BOX = dict(boxstyle="round,pad=0.42", facecolor="#eef4fb", edgecolor=ACCENT,
@@ -97,9 +93,6 @@ ax2.text(3.15, 0.80, "put $\\sin^{2}\\theta = 1 - \\cos^{2}\\theta$",
          fontsize=9.5, color=WARM, ha="right", va="center")
 ax2.text(3.15, -0.50, "put $\\cos^{2}\\theta = 1 - \\sin^{2}\\theta$",
          fontsize=9.5, color=WARM, ha="right", va="center")
-
-ax2.text(0, 1.95, "the same value, written three ways", fontsize=10,
-         color=INK, va="top")
 
 for _fig, _name in ((fig1, "aasl-3-6-idea-a.svg"), (fig2, "aasl-3-6-idea-b.svg")):
     _fig.tight_layout()

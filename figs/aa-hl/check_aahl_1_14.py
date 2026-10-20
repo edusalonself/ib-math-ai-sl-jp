@@ -57,6 +57,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 def cart(r, t):
     return sp.simplify(sp.expand(r * (sp.cos(t) + I * sp.sin(t))))
 
@@ -252,12 +256,12 @@ eq(R(27, 4) + R(81, 4), 27, "27/4 + 81/4 = 27")
 # 4. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
 in_text("公式集の **1.14** の欄に、次の形で印刷されています。", "公式集にある")
-in_text("> De Moivre's theorem", "見出しを逐語で")
-in_text("> $[r(\\cos\\theta + i\\sin\\theta)]^{n} = r^{n}(\\cos n\\theta"
+not_in_text("> De Moivre's theorem", "見出しを逐語で")
+not_in_text("> $[r(\\cos\\theta + i\\sin\\theta)]^{n} = r^{n}(\\cos n\\theta"
         " + i\\sin n\\theta) = r^{n}e^{in\\theta} = r^{n}\\,\\mathrm{cis}\\,n\\theta$",
         "公式集の式を逐語で")
-in_text("> Complex roots occur in conjugate pairs.", "Guidance を逐語で")
-in_text("> Includes proof by induction for the case where $n \\in \\mathbb{Z}^{+}$.",
+not_in_text("> Complex roots occur in conjugate pairs.", "Guidance を逐語で")
+not_in_text("> Includes proof by induction for the case where $n \\in \\mathbb{Z}^{+}$.",
         "帰納法の Guidance を逐語で")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
@@ -275,7 +279,7 @@ in_text("**Paper 1 では使えません。**", "Paper 1 では手で解くと�
 for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -284,8 +288,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl114-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -331,7 +336,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -352,7 +357,7 @@ in_text("### 3. De Moivre's theorem（De Moivre の定理） {#demoivre}", "見�
 in_text("### 4. Finding powers（累乗を出す） {#powers}", "見出し 4")
 in_text("### 5. Rational exponents（有理数の指数） {#rational}", "見出し 5")
 in_text("### 6. The equation $z^{n} = w$ has exactly $n$ roots（$n$ "
-        "乗根は $n$ 個あります） {#nth-roots}", "見出し 6")
+        "乗根は $n$ 個） {#nth-roots}", "見出し 6")
 in_text("### 7. How the $n$th roots are arranged（$n$ 乗根の並び方） "
         "{#roots-picture}", "見出し 7")
 
@@ -368,9 +373,9 @@ for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Each power turns by $\\\\theta$ and stretches by $r$", "図(a) の題")
-in_fig("the argument becomes $n\\\\theta$", "図(a) の要点")
-in_fig("The cube roots of a number, on one circle", "図(b) の題")
+not_in_fig("Each power turns by $\\\\theta$ and stretches by $r$", "図(a) の題")
+not_in_fig("the argument becomes $n\\\\theta$", "図(a) の要点")
+not_in_fig("The cube roots of a number, on one circle", "図(b) の題")
 in_fig("same modulus, arguments", "図(b) の要点")
 in_text("累乗するたびに、角が $\\theta$ ずつ増え、長さが $r$ 倍になります。", "キャプション (a)")
 in_text("$3$ つの解は、同じ円の上に $\\dfrac{2\\pi}{3}$ おきに並びます。", "キャプション (b)")
@@ -417,10 +422,66 @@ chk(_pm is not None and int(_pm.group(1)) == len(_written), "PLAN の進捗")
 in_text("## 「係数が実数のとき」という条件が要ります", "条件を書いてある")
 in_text("$z^{2} - iz = 0$ の解は $0$ と $i$ で、共役な組になっていません。",
         "反例を挙げてある")
-in_text("**$k = 3$ にすると $k = 0$ と同じ点に戻ります。**", "k の範囲")
+in_text("**$k = 3$ にすると $k = 0$ と同じ点に戻り、そのあともこの "
+        "$3$ つをくり返します。**", "k の範囲")
 in_text("**$w = 0$ を除いてあるのは、$0$ には偏角がないからです。**", "w ≠ 0 の理由")
 in_text("**$\\theta = 0$ で確かめても、あまり役に立ちません。**", "効かない検算を名指し")
 
 print()
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-13 の手直し
+# ══════════════════════════════════════════════════════════
+in_text("**$1$ つの解が分かれば、もう $1$ つの解も分かります。**",
+        "共役の言いかえ")
+not_in_text("ただで手に入ります", "「ただで手に入る」は使わない")
+in_text("さらに、もう $1$ つが実数の解 $2$ だと分かっているならば、"
+        "実数係数の $3$ 次式が組み立てられます。", "3 次式の組み立て")
+not_in_text("ここに実数の解 $2$ を足せば", "前の言い方は消した")
+# 分数の指数
+in_text("\\left(re^{i\\theta}\\right)^{\\frac{p}{q}} = "
+        "r^{\\frac{p}{q}}\\,e^{i\\frac{p\\theta}{q}}",
+        "有理数の指数は分数で書く")
+in_text("どれも $\\lvert w \\rvert^{\\frac{1}{n}}$ で", "絶対値も分数で")
+not_in_text("^{p/q}", "斜線の指数は残っていない")
+not_in_text("\\rvert^{1/n}", "同上")
+not_in_text("8^{1/3}", "斜線の 1/3 乗も消した")
+# 第 6 節の導出
+in_text("$z^{3} = 8$ を解いてみましょう。", "解いてみましょう")
+in_text("に $2\\pi$ の整数倍を足しても同じ数を表すので", "偏角の周期")
+in_text("$z^{3} = 8e^{i(0+2k\\pi)}$ となるので、"
+        "@eq-aahl114-rational で $\\dfrac{1}{3}$ 乗すると、絶対値は "
+        "$8^{\\frac{1}{3}} = 2$、偏角は $\\dfrac{2k\\pi}{3}$ に"
+        "なります。", "絶対値と偏角")
+in_text("e^{i \\cdot 8 \\cdot \\frac{\\pi}{4}}", "(1+i)^8 も分数の指数")
+not_in_text("\\cdot \\pi/4", "斜線の pi/4 は消した")
+in_text("e^{-i \\cdot 10 \\cdot \\frac{\\pi}{4}}", "演習の解答も分数の指数")
+in_text("z = 2e^{i\\frac{2k\\pi}{3}}", "一般の解")
+in_text("k = 1: \\quad & z = 2e^{i\\frac{2\\pi}{3}} = -1 + \\sqrt{3}\\,i", "k = 1")
+in_text("k = 2: \\quad & z = 2e^{i\\frac{4\\pi}{3}} = -1 - \\sqrt{3}\\,i", "k = 2")
+in_text("なお、$k = 2$ の $\\dfrac{4\\pi}{3}$ は、$2\\pi$ を引いた "
+        "$-\\dfrac{2\\pi}{3}$ と同じ向きです。", "4π/3 の注")
+in_text("一般に、$w \\neq 0$ のとき、$z^{n} = w$ の異なる複素数解は"
+        "ちょうど $n$ 個あります（$n$ は正の整数）。", "一般の個数")
+not_in_text("主値に直しました", "前の言い方は消した")
+# 3 つの解が本当に z³ = 8 を満たすこと
+_r14 = [sp.Integer(2), -1 + sp.sqrt(3) * sp.I, -1 - sp.sqrt(3) * sp.I]
+for _z14 in _r14:
+    chk(sp.simplify(sp.expand(_z14 ** 3) - 8) == 0, f"({_z14})^3 = 8")
+chk(len(set(_r14)) == 3, "3 つはすべてちがう")
+def _z14num(_t):
+    return complex(sp.N(_t))
+
+
+for _k14, _v14 in enumerate(_r14):
+    chk(abs(_z14num(2 * sp.exp(sp.I * 2 * _k14 * sp.pi / 3)) - _z14num(_v14))
+        < 1e-12, f"k = {_k14} の値")
+chk(abs(_z14num(sp.exp(sp.I * 4 * sp.pi / 3))
+        - _z14num(sp.exp(-sp.I * 2 * sp.pi / 3))) < 1e-12, "4pi/3 と -2pi/3")
+chk(abs(_z14num(2 * sp.exp(sp.I * 2 * 3 * sp.pi / 3)) - 2) < 1e-12,
+    "k = 3 は k = 0 と同じ")
+
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

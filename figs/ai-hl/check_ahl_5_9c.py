@@ -216,10 +216,16 @@ top = [x for x in h2 if x in ("What you should be able to do", "The idea",
                               "Why it works", "Worked examples",
                               "Common errors",
                               "Using your GDC (TI-Nspire CX II)", "Exercises")]
-eq("テンプレートの 7 見出しが順に並ぶ", top,
+eq("テンプレートの 6 見出しが順に並ぶ（Worked examples は廃止）", top,
    ["What you should be able to do", "The idea", "Why it works",
-    "Worked examples", "Common errors",
+    "Common errors",
     "Using your GDC (TI-Nspire CX II)", "Exercises"])
+not_in_text("## Worked examples")
+# related rates の例題（もと 5.9c の 4 つ）は、手順の節（第7〜9節）のあと、Why it works の前
+_exm_c = [m.start() for m in re.finditer(r"::: \{#exm-ahl59c-", TXT)]
+eq("related rates の例題は 4 つ（数は変わらない）", len(_exm_c), 4)
+eq("related rates の例題は第7節より後、Why it works より前",
+   all(TXT.index("{#rates}") < p < TXT.index("## Why it works") for p in _exm_c), True)
 # （統合後の構造チェックは check_ahl_5_9b.py 側にまとめました）
 
 

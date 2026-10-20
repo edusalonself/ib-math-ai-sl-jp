@@ -34,11 +34,9 @@ GREY = "#6b7280"
 WARM = "#b45309"
 
 # ══════════════════════════════════════════════════════════
-# (a) Euler 法
+# (a) 傾きの場（slope field）と解の曲線
 # ══════════════════════════════════════════════════════════
-fig1, ax1 = plt.subplots(figsize=(5.8, 3.6))
-ax1.set_title("Euler's method follows the slope field in straight steps",
-              fontsize=10.2, color=INK, loc="left", pad=10)
+fig1, ax1 = plt.subplots(figsize=(5.0, 3.4))
 
 
 def slope(x, y):
@@ -64,21 +62,9 @@ _keep = [i for i in range(len(_xs)) if _ys[i] <= 3.9]
 ax1.plot(_xs[_keep], [_ys[i] for i in _keep], color=ACCENT,
          linewidth=2.0, zorder=3)
 
-# Euler（h を大きめにして、ずれを見せる）
-_h = 0.6
-_ex, _ey = [0.0], [1.0]
-while _ey[-1] < 3.4:
-    _ey.append(_ey[-1] + _h * slope(_ex[-1], _ey[-1]))
-    _ex.append(_ex[-1] + _h)
-ax1.plot(_ex, _ey, color=WARM, linewidth=1.8, marker="o", markersize=4.5,
-         zorder=4)
-
-ax1.text(0.05, 3.55, "true solution", fontsize=9.5, color=ACCENT)
-ax1.text(1.95, 1.05, "Euler steps", fontsize=9.5, color=WARM)
-ax1.text(-0.12, -0.72, "each step uses the gradient at the point it starts"
-         " from, so error builds up", fontsize=9, color=GREY)
-ax1.set_xlim(-0.25, 3.1)
-ax1.set_ylim(-1.05, 4.2)
+ax1.text(0.05, 3.55, "solution curve", fontsize=9.5, color=ACCENT)
+ax1.set_xlim(-0.25, 2.75)
+ax1.set_ylim(0.0, 4.0)
 ax1.set_xticks([0, 1, 2])
 ax1.set_yticks([])
 ax1.spines["top"].set_visible(False)
@@ -90,8 +76,6 @@ ax1.tick_params(labelsize=9, colors=GREY)
 # (b) ロジスティック曲線
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(5.6, 3.2))
-ax2.set_title("the logistic curve: fast in the middle, flat at both ends",
-              fontsize=10.2, color=INK, loc="left", pad=10)
 
 t = np.linspace(0, 1.0, 500)
 A = 100.0
@@ -102,10 +86,6 @@ ax2.plot([0, 1.0], [A, A], color=GREY, linewidth=1.2,
 ax2.plot([0, 1.0], [A / 2, A / 2], color=WARM, linewidth=1.0,
          linestyle=(0, (2, 2)), zorder=2)
 ax2.text(0.72, A + 4, "the ceiling $a$", fontsize=9.5, color=GREY)
-ax2.text(0.60, A / 2 + 4, "steepest at half the ceiling", fontsize=9.2,
-         color=WARM)
-ax2.text(-0.02, -34, "growth slows as $n$ approaches $a$, because the"
-         " factor $a-n$ shrinks", fontsize=9, color=GREY)
 ax2.set_xlim(-0.03, 1.05)
 ax2.set_ylim(-45, 122)
 ax2.set_xlabel("$t$", fontsize=10, color=INK)
@@ -115,7 +95,39 @@ ax2.set_yticks([])
 ax2.spines["top"].set_visible(False)
 ax2.spines["right"].set_visible(False)
 
-for _fig, _name in ((fig1, "a"), (fig2, "b")):
+
+# ══════════════════════════════════════════════════════════
+# (c) Euler 法を 3 回：本当の曲線と、折れ線
+# ══════════════════════════════════════════════════════════
+fig3, ax3 = plt.subplots(figsize=(5.4, 3.6))
+_xs = np.linspace(0, 1.25, 300)
+ax3.plot(_xs, 2 * np.exp(_xs) - _xs - 1, color=ACCENT, linewidth=2.0, zorder=3)
+_h = 0.4
+_px, _py = [0.0], [1.0]
+for _k in range(3):
+    _py.append(_py[-1] + _h * (_px[-1] + _py[-1]))
+    _px.append(_px[-1] + _h)
+ax3.plot(_px, _py, color=WARM, linewidth=1.8, zorder=4)
+ax3.plot(_px, _py, "o", color=WARM, markersize=5, zorder=5)
+for _k in range(4):
+    ax3.text(_px[_k] + 0.03, _py[_k] - 0.28, "$(x_{%d},\\ y_{%d})$" % (_k, _k),
+             fontsize=9.5, color=WARM)
+# h の目盛り
+for _k in range(3):
+    ax3.annotate("", xy=(_px[_k + 1], 0.35), xytext=(_px[_k], 0.35),
+                 arrowprops=dict(arrowstyle="<|-|>", color=GREY, linewidth=1.0))
+    ax3.text((_px[_k] + _px[_k + 1]) / 2 - 0.02, 0.45, "$h$", fontsize=10,
+             color=GREY)
+ax3.text(0.78, 4.3, "solution", fontsize=10, color=ACCENT)
+ax3.set_xlim(-0.1, 1.4)
+ax3.set_ylim(0.2, 5.3)
+ax3.set_xticks([])
+ax3.set_yticks([])
+for _sp in ("top", "right", "left"):
+    ax3.spines[_sp].set_visible(False)
+ax3.set_xlabel("$x$", fontsize=10, color=INK)
+
+for _fig, _name in ((fig1, "a"), (fig2, "b"), (fig3, "c")):
     _fig.tight_layout()
     _fig.savefig(os.path.join(OUT, "aahl-5-18a-idea-%s.svg" % _name),
                  format="svg", bbox_inches="tight")

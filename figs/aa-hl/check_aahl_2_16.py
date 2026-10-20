@@ -52,6 +52,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 def solves(rel, want, msg):
     got = sp.solveset(rel, x, R)
     chk(got == want, "%s: %s のはずが %s" % (msg, want, got))
@@ -186,14 +190,11 @@ chk(abs(2 * sp.Integer(3) - 1) == 5 and abs(2 * sp.Integer(-2) - 1) == 5,
 # ══════════════════════════════════════════════════════════
 # 4. シラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> The graphs of the functions, $y = \\lvert f(x) \\rvert$ and"
-        " $y = f(\\lvert x \\rvert)$, $y = \\dfrac{1}{f(x)}$, $y = f(ax+b)$,"
-        " $y = [f(x)]^{2}$.", "シラバス本体を逐語で")
-in_text("> Solution of modulus equations and inequalities.",
-        "シラバス（方程式・不等式）を逐語で")
-in_text("> Dynamic graphing packages could be used to investigate these"
-        " transformations.", "Guidance を逐語で")
-in_text("> Example: $\\lvert 3x\\arccos(x) \\rvert > 1$", "Example を逐語で")
+# シラバスは引用せず、本文で説明する（2026-10-14）
+chk(not any(l.startswith(">") for l in TEXT.splitlines()), "シラバスの引用（> 行）を置かない")
+in_text("この項目では、$1$ つの関数 $y = f(x)$ のグラフから、次の $5$ つのグラフを作ります。", "5 つの形を本文で")
+in_text("絶対値を含む**方程式**と**不等式**を、式で解きます。", "§6 の導入")
+in_text("たとえば $\\lvert 3x\\arccos(x) \\rvert > 1$ は、電卓が要ります。", "電卓の例")
 not_in_text("公式集の **2.16**", "ありもしない欄を書かない")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
@@ -212,7 +213,7 @@ in_text("`abs(`", "TI-Nspire の入力")
 for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -221,8 +222,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl216-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -265,7 +267,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -296,21 +298,24 @@ in_text("### 7. Modulus inequalities（絶対値を含む不等式） "
 # ══════════════════════════════════════════════════════════
 # 6. 図
 # ══════════════════════════════════════════════════════════
-for _n in ("a", "b"):
-    _p = os.path.join(BASE, "img", "aahl-2-16-idea-%s.svg" % _n)
+for _n in ("abs", "fabs", "sq", "idea-b"):
+    _p = os.path.join(BASE, "img", "aahl-2-16-%s.svg" % _n)
     chk(os.path.exists(_p), "図 (%s) がある" % _n)
-    chk("](img/aahl-2-16-idea-%s.svg)" % _n in TEXT, "本文が図 (%s) を貼っている" % _n)
+    chk("](img/aahl-2-16-%s.svg)" % _n in TEXT, "本文が図 (%s) を貼っている" % _n)
 for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
     chk(False, "PNG が残っている: " + os.path.basename(_s))
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("One curve, four transformations", "図(a) の題")
-in_fig("$y=f(|x|)$", "図(a) の 3 枚目")
-in_fig("$y=[f(x)]^{2}$", "図(a) の 4 枚目")
-in_fig("they cross where the height is $1$ or $-1$", "図(b) の要点")
-in_fig("t * t - 2.0 * t - 3.0", "図(a) は §1 と同じ関数")
-in_text("$1$ つの曲線から作った $4$ つの形です。", "キャプション (a)")
+in_fig("The part below the axis is reflected upwards", "図 abs の題")
+in_fig("The right half is copied to the left", "図 fabs の題")
+in_fig("smooth at the zeros", "図 sq の題")
+not_in_fig("they cross where the height is $1$ or $-1$", "図(b) の要点")
+in_fig("t * t - 2.0 * t - 3.0", "図は §1 と同じ関数")
+not_in_text("idea-a", "4 枚並べの図は使わない（各節に 1 枚ずつ）")
+not_in_text("折り返したところは、とがります", "削除した囲み")
+for _n in ("abs", "fabs", "sq"):
+    in_text("img/aahl-2-16-%s.svg" % _n, "各節の図 %s" % _n)
 in_text("$f$ が $0$ のところが漸近線、$f$ が $\\pm 1$ のところが交点です。",
         "キャプション (b)")
 for leak in ["-4/3", "5/3", "-5/2"]:
@@ -360,5 +365,7 @@ in_text("**$\\lvert f(x) \\rvert$ と $[f(x)]^{2}$ は、どちらも「下に�
 in_text("**中身がもとの $x$ の役をします。**", "f(ax+b) の要点")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

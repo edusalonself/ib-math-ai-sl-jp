@@ -35,15 +35,13 @@ GREY = "#6b7280"
 WARM = "#b45309"
 RED = "#b91c1c"
 
-fig1, ax1 = plt.subplots(figsize=(5.3, 4.2))
-fig2, ax2 = plt.subplots(figsize=(5.3, 4.2))
+fig1, ax1 = plt.subplots(figsize=(4.35, 3.7))
+fig2, ax2 = plt.subplots(figsize=(5.3, 3.65))
 # ══════════════════════════════════════════════════════════
 # (a) LHS から RHS へ、片側だけを下りる
 # ══════════════════════════════════════════════════════════
-ax1.set_title("The safe layout: down one side only",
-              fontsize=11, color=INK, loc="left", pad=10)
-ax1.set_xlim(0.0, 1.0)
-ax1.set_ylim(0.0, 1.0)
+ax1.set_xlim(0.18, 1.0)
+ax1.set_ylim(0.06, 0.94)
 ax1.axis("off")
 
 STEPS = [(0.86, "LHS $= (x+2)^{2} - 4x$", "start here"),
@@ -62,21 +60,12 @@ for i in range(len(STEPS) - 1):
                  xytext=(0.24, STEPS[i][0] - 0.05),
                  arrowprops=dict(arrowstyle="->", color=ACCENT, linewidth=1.5))
 
-ax1.annotate("", xy=(0.10, 0.86), xytext=(0.10, 0.14),
-             arrowprops=dict(arrowstyle="->", color=RED, linewidth=1.4,
-                             linestyle=(0, (4, 3))))
-ax1.plot([0.045, 0.155], [0.44, 0.56], color=RED, linewidth=2.0)
-ax1.plot([0.045, 0.155], [0.56, 0.44], color=RED, linewidth=2.0)
-ax1.text(0.10, 0.03, "avoid starting\nfrom the answer", ha="center", va="bottom",
-         fontsize=8.5, color=RED)
 
 # ══════════════════════════════════════════════════════════
 # (b) 方程式は 1 点、恒等式はどこでも
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Where the statement is true",
-              fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(-4.6, 5.4)
-ax2.set_ylim(-1.5, 2.3)
+ax2.set_ylim(-1.15, 2.3)
 ax2.axis("off")
 
 XS = np.linspace(-4.0, 5.0, 200)
@@ -101,10 +90,10 @@ ax2.text(-4.0, 0.75, "equation  $2x+1 = 7$",
          ha="left", va="center", fontsize=10.5, color=INK)
 ax2.text(5.25, 0.0, "true at\none value", ha="left", va="center",
          fontsize=9, color=WARM)
-ax2.text(3.0, -0.85, "$x = 3$", ha="center", va="center",
+ax2.text(3.0, -0.65, "$x = 3$", ha="center", va="center",
          fontsize=10, color=WARM)
 
-ax2.text(0.5, -1.35, "$x$", ha="center", va="center", fontsize=10, color=GREY)
+ax2.text(0.5, -0.95, "$x$", ha="center", va="center", fontsize=10, color=GREY)
 
 for _fig, _name in ((fig1, "aasl-1-6-idea-a.svg"), (fig2, "aasl-1-6-idea-b.svg")):
     _fig.tight_layout()

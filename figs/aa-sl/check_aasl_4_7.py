@@ -44,7 +44,25 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
-BODY = TEXT.split("## Worked examples")[0]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
@@ -62,7 +80,7 @@ in_text("# SL 4.7 — Discrete random variables and expected value"
         "（離散確率変数と期待値） {#sec-aasl-4-7}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea", "## Why it works",
-           "## Worked examples", "## Common errors", "## Exercises"):
+           "## Common errors", "## Exercises"):
     in_text(_h, "節 " + _h)
 
 _secs = re.findall(r"^### (\d)\. .*\{#([a-z-]+)\}$", TEXT, re.M)
@@ -78,7 +96,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + 電卓 1）")
 chk(TEXT.count("{.callout-important}") == 1, "callout-important 1（公式集 4.7 の E(X)）")
 chk(TEXT.count("**検算") >= 12, "検算 12 以上: %d" % TEXT.count("**検算"))
@@ -103,8 +121,8 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-4-7-idea-a.svg){#fig-aasl47-idea-a width=100%}", "図 (a) の埋め込み")
-in_text("(img/aasl-4-7-idea-b.svg){#fig-aasl47-idea-b width=100%}", "図 (b) の埋め込み")
+in_text("(img/aasl-4-7-idea-a.svg){#fig-aasl47-idea-a width=80%}", "図 (a) の埋め込み")
+in_text("(img/aasl-4-7-idea-b.svg){#fig-aasl47-idea-b width=80%}", "図 (b) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-7-idea.svg")),
     "分割前の SVG は消してある")
 in_text("@fig-aasl47-idea-a", "図 (a) の参照")
@@ -519,8 +537,7 @@ chk(8 > 2, "例題4 の答え 8 は p > 2 を満たす")
 chk(20 > 4, "演習7 の答え 20 は c > 4 を満たす")
 
 # --- N7 折りたたみの説明 ----------------------------------------------
-in_text("**解説**（なぜそうなるか。日本語です。英語の答案例が付くものも"
-        "あります）。", "N7")
+not_in_text("各問題に、折りたたみが", "演習の使い方はトップページに 1 回だけ")
 
 # --- N8 model answer の条件をそろえた ---------------------------------
 in_text("A function that assigns positive numbers adding to $1$", "N8 例題2")
@@ -544,7 +561,7 @@ in_fig('marker="v"', "N4 三角は線の上に置く")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -559,8 +576,8 @@ for _sent in [
     '$1.6$ is not a value $X$',
 ]:
     chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
-in_text('### 5. expected value（期待値） {#expected}', "その内容は本文にある")
-in_text('### 6. $E(X)$ の意味 {#meaning}', "その内容は本文にある")
+in_text('### 5. Expected value（期待値） {#expected}', "その内容は本文にある")
+in_text('### 6. Meaning of $E(X)$（期待値の意味） {#meaning}', "その内容は本文にある")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：図 (b) から説明の文を外した（方針 第 21 節）
@@ -613,6 +630,16 @@ chk(F(3, 1) * F(1, 3) + F(-2, 1) * F(2, 3) == F(-1, 3),
     "losing game の E(X) = -1/3")
 chk(F(4, 1) * F(1, 3) + F(-2, 1) * F(2, 3) == 0, "fair game の E(X) = 0")
 chk(F(1, 3) + F(2, 3) == 1, "図の確率の合計は 1")
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

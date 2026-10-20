@@ -39,8 +39,6 @@ figL, axL = plt.subplots(figsize=(6.6, 2.7))
 # ══════════════════════════════════════════════════════════
 # (linear) ax + b との合成
 # ══════════════════════════════════════════════════════════
-axL.set_title("Integrating $f'(ax + b)$", fontsize=11, color=INK,
-              loc="left", pad=10)
 axL.set_xlim(0, 10)
 axL.set_ylim(0.15, 3.65)
 axL.axis("off")

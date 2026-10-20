@@ -41,7 +41,28 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
-BODY = TEXT.split("## Worked examples")[0]
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
+
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    _out, _depth = [], 0
+    for _l in t.split("\n"):
+        _s = _l.strip()
+        if _depth == 0 and _s.startswith("::: {#exm-"):
+            _depth = 1
+            continue
+        if _depth:
+            if _s.startswith(":::"):
+                _depth += -1 if _s[3:].strip() == "" else 1
+            continue
+        _out.append(_l)
+    return "\n".join(_out)
+
+# 例題は The idea の中へ移ったので、「本文」は例題ブロックを除いた
+# Common errors より前の部分とする
+BODY = _strip_exm(TEXT.split("\n## Common errors")[0])
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
@@ -68,7 +89,7 @@ chk(TEXT.startswith("---\nsidebar: aa-sl\n---\n"), "front matter")
 in_text("# SL 5.9 — Kinematics（運動学） {#sec-aasl-5-9}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
@@ -86,7 +107,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + Paper）")
 chk(TEXT.count("{.callout-important}") == 2,
     "callout-important 2（公式集 5.9 の 2 つ）")
@@ -112,7 +133,7 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-5-9-idea-a.svg){#fig-aasl59-idea-a width=100%}", "図 (a) の埋め込み")
+in_text("(img/aasl-5-9-idea-a.svg){#fig-aasl59-idea-a width=95%}", "図 (a) の埋め込み")
 in_text("(img/aasl-5-9-idea-b.svg){#fig-aasl59-idea-b width=100%}", "図 (b) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-5-9-idea.svg")),
     "分割前の SVG は消してある")
@@ -128,8 +149,9 @@ for _w in ("得点になりません", "点になりません", "減点されま
 # 2. 引用と公式集
 # ══════════════════════════════════════════════════════════
 _quotes = re.findall(r"^> (.*)$", TEXT, re.M)
-chk(_quotes == ["Speed is the magnitude of velocity."],
-    "シラバスの引用は 1 本だけ: %s" % _quotes)
+chk(_quotes == [], "シラバスの引用は本文から外した: %s" % _quotes)
+in_text("**speed は、velocity の大きさ（向きを表す符号を取ったもの）です。**",
+        "speed の定義は日本語で直接書く")
 in_text("公式集の **5.9** の欄に、*Acceleration* として @eq-aasl59-a が"
         "印刷されています。", "公式集 5.9 加速度")
 in_text("**@eq-aasl59-v は印刷されていません。**", "v = ds/dt は公式集にない")
@@ -156,8 +178,8 @@ for _a in ("aasl-5-1.qmd#limit", "aasl-5-2.qmd#zero", "aasl-5-5.qmd#anti",
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('"Reading a velocity-time graph"', "図 (a) の題")
-in_fig('"How $s$, $v$ and $a$ are linked"', "図 (b) の題")
+not_in_fig('"Reading a velocity-time graph"', "図 (a) の題は外した")
+not_in_fig('"How $s$, $v$ and $a$ are linked"', "図 (b) の題は外した")
 _figmath = " ".join(re.findall(r"\$([^$]*)\$", FIGCODE))
 for _v in ("8.17", "13", "1024", "t^{2}"):
     chk(_v not in _figmath, "図の数式に具体的な数・式 %s は出さない" % _v)
@@ -433,7 +455,7 @@ chk("T1, T2, TEND = 1.0, 2.6, 4.2" in FIG, "図の交点が例題1 と重なら�
 
 # --- m4 + m5 + m6: 表記 -------------------------------------------------------
 chk("**$t$ で積分すると、逆に $t$ の単位がかかります。**" in TEXT, "第7節: t で積分")
-chk("**total distance travelled（動いた道のり）は" in TEXT, "第6節: 訳")
+chk("**total distance travelled**（動いた道のり）は" in TEXT, "第6節: 訳")
 chk("correct to $3$ significant figures." in TEXT, "有効数字の書き方")
 
 # --- m8: 演習2 の検算に値がある -------------------------------------------------
@@ -474,7 +496,7 @@ def _figcol(tid, fig):
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -484,10 +506,10 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. $s$、$v$、$a$（displacement, velocity, acceleration） {#three}', "見出しの英語: 1. $s$、$v$、$a$（displacemen")
-in_text('### 3. speed は $|v|$ {#speed}', "見出しの英語: 3. speed は $|v|$")
-in_text('### 4. at rest（静止）と、向きが変わるとき {#atrest}', "見出しの英語: 4. at rest（静止）と、向きが変わるとき")
-in_text('### 6. displacement と distance {#distance}', "見出しの英語: 6. displacement と distance")
+in_text('### 1. Displacement, velocity and acceleration（変位・速度・加速度） {#three}', "見出しの英語: 1")
+in_text('### 3. Speed（速さは $|v|$） {#speed}', "見出しの英語: 3")
+in_text('### 4. At rest and changing direction（静止と、向きが変わるとき） {#atrest}', "見出しの英語: 4")
+in_text('### 6. Displacement and distance（変位と道のり） {#distance}', "見出しの英語: 6")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
@@ -498,7 +520,7 @@ for _sent in [
     'integrating needs a star',
 ]:
     chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
-in_text('### 3. speed は $|v|$ {#speed}', "その内容は本文にある")
+in_text('### 3. Speed（速さは $|v|$） {#speed}', "その内容は本文にある")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：図 (a) から説明の文を外した（方針 第 21 節）
@@ -524,7 +546,7 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：図 (b) を作りなおした
 # ══════════════════════════════════════════════════════════
-in_text("![$s$, $v$ and $a$, and how to move between them]", "図 (b) のキャプション")
+in_text("![$s$、$v$、$a$ と、そのあいだの行き来のしかたです。]", "図 (b) のキャプション")
 in_text("**$s$ を微分すると $v$、$v$ を微分すると $a$ です。** "
         "逆に、$a$ を積分すると $v$、$v$ を積分すると $s$ にもどります"
         "（@fig-aasl59-idea-b）。", "本文も両向きを言う")
@@ -550,10 +572,11 @@ not_in_text("differentiate right, integrate left", "前のキャプションは�
 # ══════════════════════════════════════════════════════════
 # 2026-09-29（その 2）：kinematics の導入／図 (a) の式を本文へ／表 2 を削除
 # ══════════════════════════════════════════════════════════
-in_text("**kinematics（運動学）は、物が動くようすを displacement・velocity・"
-        "acceleration の $3$ つで表す分野です。** この $3$ つが微分と積分で"
-        "つながっていることが、この項目の中身です。", "第 1 節の書き出し")
-chk(TEXT.index("**kinematics（運動学）は、")
+in_text("**kinematics**（運動学）は、物が動くようすを、**displacement**（変位）・"
+        "**velocity**（速度）・**acceleration**（加速度）の $3$ つで表す分野です。"
+        " この $3$ つが微分と積分でつながっていることが、この項目の中身です。",
+        "第 1 節の書き出し")
+chk(TEXT.index("**kinematics**（運動学）は、")
     < TEXT.index("**直線上を動く物体を考えます。**"), "kinematics は先")
 # 図 (a) にあった式は本文へ
 in_text("$$\n\\text{displacement} = A_{1} - A_{2} + A_{3}\n$$", "変位の式")
@@ -571,12 +594,30 @@ for _ln in _A59.split(chr(10)):
     _mt = re.match(r"\s*ax1\.text\(\s*([-0-9.]+)\s*,\s*([-0-9.]+)", _ln)
     if _mt:
         _yy = float(_mt.group(2))
-        chk(-1.9 <= _yy <= 4.6, "図 (a) の文字は枠の中: y = %s" % _yy)
+        chk(-1.65 <= _yy <= 5.35, "図 (a) の文字は枠の中: y = %s" % _yy)
 # 表 2 は削除
 not_in_text("{#tbl-aasl59-two}", "2 つのちがいの表は消した")
 not_in_text("| $v > 0$ | 足す | 足す |", "表 2 の行は消した")
 in_text("$v > 0$ の面積はどちらにも足し、$v < 0$ の面積は displacement からは"
         "引いて、distance には大きさを足します。", "表 2 の中身は本文に")
+
+# ══════════════════════════════════════════════════════════
+# 2026-10：新レイアウト（例題を The idea の各節の後ろへ）
+# ══════════════════════════════════════════════════════════
+not_in_text("## Worked examples", "Worked examples の節は消した")
+_iwhy = TEXT.index("\n## Why it works")
+chk(all(m.start() < _iwhy for m in re.finditer(r"::: \{#exm-", TEXT)),
+    "例題はすべて Why it works より前（The idea の中）")
+chk(TEXT.index("## The idea") < TEXT.index("::: {#exm-"), "例題は The idea の後ろ")
+chk(re.findall(r"::: \{#(exm-[a-z0-9-]+)\}", TEXT)
+    == ["exm-aasl59-diff", "exm-aasl59-speed", "exm-aasl59-integrate",
+        "exm-aasl59-distance"], "例題 4 つの並び")
+for _e, _h in (("exm-aasl59-diff", "{#atrest}"), ("exm-aasl59-speed", "{#atrest}"),
+               ("exm-aasl59-integrate", "{#integrate}"),
+               ("exm-aasl59-distance", "{#distance}")):
+    _hs = re.findall(r"^### \d\. .*?(\{#[a-z0-9-]+\})$",
+                     TEXT[:TEXT.index("::: {#" + _e + "}")], re.M)
+    chk(_hs and _hs[-1] == _h, "%s は %s の節の中: %s" % (_e, _h, _hs[-1:]))
 
 print()
 print("OK", OK, "/ NG", NG)

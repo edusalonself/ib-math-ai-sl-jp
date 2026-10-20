@@ -33,18 +33,14 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig1, ax1 = plt.subplots(figsize=(9.0, 3.2))
-fig2, ax2 = plt.subplots(figsize=(9.0, 3.2))
+fig1, ax1 = plt.subplots(figsize=(6.0, 2.3))
+fig2, ax2 = plt.subplots(figsize=(9.0, 2.75))
 # ══════════════════════════════════════════════════════════
 # (a) 掛ける回数は n-1
 # ══════════════════════════════════════════════════════════
-ax1.set_xlim(-0.6, 5.4)
-ax1.set_ylim(-1.15, 1.5)
+ax1.set_xlim(-0.4, 5.2)
+ax1.set_ylim(-1.05, 1.05)
 ax1.axis("off")
-ax1.set_title(
-    "From $u_1$ to $u_n$ the ratio $r$ is used $n-1$ times",
-    fontsize=11, color=INK, loc="left", pad=8,
-)
 
 XS = [0.2, 1.2, 2.2, 3.2, 4.2]
 LABELS = ["$u_1$", "$u_1r$", "$u_1r^2$", "$u_1r^3$", "$u_1r^4$"]
@@ -62,20 +58,15 @@ for i in range(4):
     ax1.text((a + b) / 2, 0.78, "$\\times r$", ha="center", va="center",
              fontsize=11, color=WARM)
 
-ax1.text(2.2, -0.85, "4 multiplications, not 5   $\\Rightarrow$   "
-         "$u_5 = u_1r^4$",
+ax1.text(2.2, -0.85, "$u_5 = u_1r^4$",
          ha="center", va="center", fontsize=11, color=INK)
 
 # ══════════════════════════════════════════════════════════
 # (b) S_n と r S_n を並べて引く
 # ══════════════════════════════════════════════════════════
 ax2.set_xlim(-0.2, 10.2)
-ax2.set_ylim(-1.7, 1.8)
+ax2.set_ylim(-1.7, 1.35)
 ax2.axis("off")
-ax2.set_title(
-    "Write $S_n$ and $rS_n$ one above the other: the middle terms cancel",
-    fontsize=11, color=INK, loc="left", pad=8,
-)
 
 COLS = [2.05, 3.35, 4.65, 6.05, 7.55]
 TOP = ["$u_1$", "$u_1r$", "$u_1r^2$", "$\\cdots$", "$u_1r^{n-1}$"]

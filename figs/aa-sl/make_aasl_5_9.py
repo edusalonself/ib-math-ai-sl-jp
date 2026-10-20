@@ -49,17 +49,15 @@ fig2, ax2 = plt.subplots(figsize=(7.8, 3.6))
 # ══════════════════════════════════════════════════════════
 # (a) v-t グラフ
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Reading a velocity-time graph", fontsize=11, color=INK,
-              loc="left", pad=12)
 ax1.plot(T, V, color=ACCENT, linewidth=2.2)
 ax1.axhline(0, color=GREY, linewidth=1.0)
 ax1.set_xlim(-0.25, TEND + 0.35)
-ax1.set_ylim(-1.9, 4.6)
+ax1.set_ylim(-1.65, 5.35)
 ax1.set_xticks([])
 ax1.set_yticks([])
 for _s in ("top", "right", "left", "bottom"):
     ax1.spines[_s].set_visible(False)
-ax1.text(-0.2, 4.3, "$v$", fontsize=11, color=ACCENT)
+ax1.text(-0.2, 4.95, "$v$", fontsize=11, color=ACCENT)
 ax1.text(TEND + 0.25, -0.30, "$t$", fontsize=11, color=GREY, ha="center",
          va="top")
 for _tv, _tl in ((T1, "$t_{1}$"), (T2, "$t_{2}$")):
@@ -77,7 +75,7 @@ ax1.fill_between(T[_m3], 0, V[_m3], color=FILL, edgecolor=ACCENT,
                  linewidth=0.7)
 
 ax1.text(0.42, 0.60, "$A_{1}$", fontsize=12, color=ACCENT, ha="center")
-ax1.text(1.8, -0.55, "$A_{2}$", fontsize=12, color=WARM, ha="center")
+ax1.text(1.8, -0.47, "$A_{2}$", fontsize=12, color=WARM, ha="center")
 ax1.text(3.55, 0.55, "$A_{3}$", fontsize=12, color=ACCENT, ha="center")
 
 ax1.text(0.42, 2.55, "$v > 0$", fontsize=9.5, color=ACCENT, ha="center")
@@ -89,8 +87,6 @@ ax1.text(3.30, 3.45, "$v > 0$", fontsize=9.5, color=ACCENT, ha="center")
 # (b) s → v → a
 # ══════════════════════════════════════════════════════════
 # ★ ラベルは必ず ylim の中に置くこと（外に置くと図がずれます）。
-ax2.set_title("How $s$, $v$ and $a$ are linked", fontsize=11, color=INK,
-              loc="left", pad=8)
 ax2.set_xlim(0, 10)
 ax2.set_ylim(0, 5.3)
 ax2.axis("off")

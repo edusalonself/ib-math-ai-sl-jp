@@ -33,13 +33,11 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig1, ax1 = plt.subplots(figsize=(5.4, 4.6))
-fig2, ax2 = plt.subplots(figsize=(7.6, 2.5))
+fig1, ax1 = plt.subplots(figsize=(5.4, 4.2))
+fig2, ax2 = plt.subplots(figsize=(7.6, 2.0))
 # ══════════════════════════════════════════════════════════
 # (a) 累積度数グラフの読み方
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Reading a cumulative frequency graph", fontsize=11,
-              color=INK, loc="left", pad=10)
 
 # なめらかな S 字（ロジスティック）。数値そのものには意味を持たせない。
 _x = np.linspace(0, 10, 400)
@@ -75,19 +73,14 @@ for _f, _lab in [(0.25, "$Q_1$"), (0.5, "median"), (0.75, "$Q_3$")]:
 
 ax1.text(0.15, 1.10, "cumulative frequency", fontsize=9.5, color=GREY)
 ax1.text(11.3, -0.115, "value", fontsize=9.5, color=GREY, ha="right")
-ax1.annotate("", xy=(2.05, 0.60), xytext=(0.35, 0.60),
+ax1.annotate("", xy=(2.05, 0.555), xytext=(0.35, 0.555),
              arrowprops=dict(arrowstyle="->", color=WARM, linewidth=1.2))
-ax1.text(0.35, 0.66, "in on the vertical axis", fontsize=9.5, color=WARM)
 ax1.annotate("", xy=(_xof(0.5), -0.02), xytext=(_xof(0.5), 0.30),
              arrowprops=dict(arrowstyle="->", color=WARM, linewidth=1.2))
-ax1.text(_xof(0.5) + 1.55, 0.24, "out on the\nhorizontal axis",
-         fontsize=9.5, color=WARM)
 
 # ══════════════════════════════════════════════════════════
 # (b) 箱ひげ図
 # ══════════════════════════════════════════════════════════
-ax2.set_title("A box and whisker diagram with an outlier", fontsize=11,
-              color=INK, loc="left", pad=10)
 ax2.set_xlim(-0.8, 13.6)
 ax2.set_ylim(-0.05, 2.15)
 ax2.axis("off")

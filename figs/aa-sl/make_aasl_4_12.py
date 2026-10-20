@@ -45,13 +45,11 @@ def bell(t):
     return np.exp(-0.5 * t * t) / np.sqrt(2 * np.pi)
 
 
-fig1, ax1 = plt.subplots(figsize=(5.8, 4.9))
-fig2, ax2 = plt.subplots(figsize=(5.8, 4.9))
+fig1, ax1 = plt.subplots(figsize=(5.8, 4.4))
+fig2, ax2 = plt.subplots(figsize=(5.8, 4.2))
 # ══════════════════════════════════════════════════════════
 # (a) 同じ曲線を、2 通りの目もりで読む
 # ══════════════════════════════════════════════════════════
-ax1.set_title("The same curve read on two scales", fontsize=11,
-              color=INK, loc="left", pad=12)
 T = np.linspace(-3.6, 3.6, 400)
 Y = bell(T)
 ax1.plot(T, Y, color=ACCENT, linewidth=1.8)
@@ -78,14 +76,12 @@ ax1.text(-3.95, -0.118, "$z$", fontsize=10, color=WARM, ha="left", va="top")
 
 ax1.text(0.0, 0.435, r"$z = \frac{x - \mu}{\sigma}$", fontsize=12,
          color=WARM, ha="center", va="center")
-ax1.text(0.0, -0.185, r"$x = \mu + z\sigma$ goes the other way",
+ax1.text(0.0, -0.185, r"$x = \mu + z\sigma$",
          fontsize=10, color=ACCENT, ha="center", va="center")
 
 # ══════════════════════════════════════════════════════════
 # (b) 2 つの面積 → 2 つの z → 2 本の式
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Two known areas give two equations", fontsize=11,
-              color=INK, loc="left", pad=12)
 ax2.plot(T, Y, color=ACCENT, linewidth=1.8)
 LO, HI = -1.15, 0.95
 ML = T <= LO
@@ -93,7 +89,7 @@ MR = T >= HI
 ax2.fill_between(T[ML], 0, Y[ML], color=SHADE)
 ax2.fill_between(T[MR], 0, Y[MR], color=SHADE)
 ax2.set_xlim(-4.1, 4.1)
-ax2.set_ylim(-0.30, 0.50)
+ax2.set_ylim(-0.19, 0.44)
 ax2.axis("off")
 ax2.plot([-3.9, 3.9], [0, 0], color=GREY, linewidth=1.0)
 
@@ -110,8 +106,6 @@ ax2.text(2.8, 0.155, "given area", fontsize=9, color=GREY, ha="center")
 
 ax2.text(0.0, -0.135, r"$a = \mu + z_1\sigma$    and    $b = \mu + z_2\sigma$",
          fontsize=11, color=ACCENT, ha="center", va="center")
-ax2.text(0.0, -0.245, "two equations, two unknowns", fontsize=9.5,
-         color=INK, ha="center", va="center")
 
 for _fig, _name in ((fig1, "aasl-4-12-idea-a.svg"), (fig2, "aasl-4-12-idea-b.svg")):
     _fig.tight_layout()

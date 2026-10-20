@@ -54,6 +54,9 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
+
 # ══════════════════════════════════════════════════════════
 # 0. 定義そのもの
 # ══════════════════════════════════════════════════════════
@@ -218,22 +221,29 @@ chk(0 not in sp.Interval(5, sp.oo), "x=0 は生徒の範囲の外")
 # ══════════════════════════════════════════════════════════
 not_in_text("## この項目には、公式集の欄がありません", "公式集の囲みは置かない")
 not_in_text("**2.2 の内容は、公式集には載っていません。**", "同上")
-in_text("**domain に影響することが多いのは、次の $2$ つの例**です。", "表の前置き")
+in_text("指定がないときに **domain を狭めることが多いのは、次の $2$ つ**です。", "表の前置き")
 not_in_text("式が意味をもたなくなるのは", "古い言い方は残っていない")
 not_in_text("> Function notation, for example", "Content 欄の引用は置かない")
-in_text("シラバスは、$f(x)$、$v(t)$、$C(n)$ のような書き方を挙げています。", "文章で書く")
-in_text("> Unless otherwise stated, the domain will be the largest possible "
-        "domain for which a function is defined.", "domain の但し書きを逐語で")
+not_in_text("シラバスは、$f(x)$、$v(t)$、$C(n)$ のような書き方を挙げています。", "シラバスを引く文は直接の説明にした")
+in_text("関数は、$f(x)$、$v(t)$、$C(n)$ のような記号で書きます。", "文章で書く")
+not_in_text("> Unless otherwise stated", "シラバス（Guidance）の引用は本文から外した")
+in_text("**(ii) 指定がなければ、式が意味をもつ最大の範囲。**", "domain の但し書きの内容は (ii) にある")
 not_in_text("> For example, for the function", "Content 欄の引用は置かない")
-in_text("シラバスも、$f(x) = \\sqrt{2-x}$ をそのまま例に挙げ、domain は $x \\le 2$、"
-        "range は $f(x) \\ge 0$ だとしています。", "文章で書く")
+not_in_text("シラバスも、$f(x) = \\sqrt{2-x}$ をそのまま例に挙げ", "シラバスを引く文は直接の説明にした")
+in_text("たとえば $f(x) = \\sqrt{2-x}$ の domain は $x \\le 2$ です。", "√(2−x) の domain")
+in_text("$f(x) = \\sqrt{2-x}$ では $x = 2$ で $0$ が出るので $f(x) \\ge 0$ です。", "√(2−x) の range")
 not_in_text("> The concept of a function as a mathematical model.",
             "Content 欄の引用は置かない")
-in_text("シラバスは、関数を**現実の場面のモデル**として使うことも求めています。", "文章で書く")
-in_text("> Solving $f(x) = 10$ is equivalent to finding $f^{-1}(10)$.",
-        "逆関数の言いかえを逐語で")
-in_text("> An inverse function exists for one-to-one functions.",
-        "one-to-one の条件を逐語で")
+not_in_text("シラバスは、関数を", "シラバスを引く文は直接の説明にした")
+in_text("関数は、現実の場面を表す **mathematical model**（数理モデル）としても使います。", "文章で書く")
+not_in_text("> Solving $f(x) = 10$ is equivalent to finding $f^{-1}(10)$.",
+            "シラバス（Guidance）の引用は本文から外した")
+in_text("**「$f(x) = 10$ を解く」ことと「$f^{-1}(10)$ を求める」ことは、同じ作業**です。",
+        "逆関数の言いかえは日本語で直接書いた")
+not_in_text("> An inverse function exists for one-to-one functions.",
+            "シラバスの引用は本文から外した")
+in_text("逆関数があるのは、関数が one-to-one のときだけです。",
+        "one-to-one の条件は日本語で直接書いた")
 in_text("**そっくり入れかわります。** $f^{-1}$ の domain は $f$ の range であり、"
         "$f^{-1}$ の range は $f$ の domain です。", "domain と range の入れかわり")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
@@ -241,8 +251,8 @@ not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシ
 # ══════════════════════════════════════════════════════════
 # 8. 説明のしかた
 # ══════════════════════════════════════════════════════════
-in_text("これを **vertical line test** と言います。",
-        "vertical line test は英語だけ")
+in_text("これを **vertical line test**（縦線のテスト）と言います。",
+        "vertical line test は English（日本語）の形")
 not_in_text("縦線判定", "訳語は置かない")
 not_in_text("横線判定", "同上")
 in_text("$f^{-1}(x)$ は $\\dfrac{1}{f(x)}$ ではありません", "指数ではない")
@@ -253,7 +263,7 @@ in_text("**domain を見ずに range は書けません。**", "Common errors �
 in_text("$\\dfrac{1}{\\sqrt{x+2}}$ のように**両方あるとき**", "分母と根号が両方")
 in_text("分母が $0$ になってもいけないので $x > -2$ です。", "その条件")
 not_in_text("$\\dfrac{1}{\\sqrt{x-1}}$", "演習 7 と同じ式は使わない")
-in_text("このとき、$2$ 点を結ぶ線分の傾きは", "a = b を先に片づけてから")
+in_text("このとき、$2$ 点を結ぶ線分の **gradient**（傾き）は", "a = b を先に片づけてから")
 
 # ══════════════════════════════════════════════════════════
 # 9. GDC
@@ -270,7 +280,7 @@ in_text("**Paper 1 では使えません。**", "Paper 1 では手で解くと�
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -279,9 +289,16 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aasl22-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -343,12 +360,12 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Domain on the $x$-axis, range on the $y$-axis", "図(a) の題")
+not_in_fig("Domain on the $x$-axis, range on the $y$-axis", "図(a) の題")
 in_fig("$y = \\\\sqrt{2-x}$", "図(a) の関数")
 in_fig("domain: $x \\\\leq 2$", "図(a) の domain")
 in_fig("range:\\n$y \\\\geq 0$", "図(a) の range")
-in_fig("shadow on each axis", "図(a) の要点")
-in_fig("The inverse is the reflection in $y = x$", "図(b) の題")
+not_in_fig("shadow on each axis", "図(a) の要点")
+not_in_fig("The inverse is the reflection in $y = x$", "図(b) の題")
 in_fig("$y = f(x)$", "図(b) の f")
 in_fig("$y = f^{-1}(x)$", "図(b) の逆関数")
 # 図が使っている 2 点は、実際に入れかえの関係
@@ -362,11 +379,15 @@ for leak in ["x \\\\leq 5", "x \\\\geq 1", "x \\\\geq -3", "f(x) \\\\geq -3",
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-2.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-2-1.qmd") < DRAFT.index("aasl-2-2.qmd"), "並びが 2.1 → 2.2")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/02-functions/aasl-2-2.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-2-1.qmd") < DRAFT.index("aasl-2-2.qmd"), "並びが 2.1 → 2.2")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-2.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -441,7 +462,7 @@ for _blk in re.findall(r"::: \{\.model-answer\}(.*?):::", TEXT, re.S):
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -451,12 +472,12 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 2. function notation（関数の書き方） {#notation}', "見出しの英語: 2. function notation（関数の書き")
-in_text('### 3. domain（定義域） {#domain}', "見出しの英語: 3. domain（定義域）")
-in_text('### 4. range（値域） {#range}', "見出しの英語: 4. range（値域）")
-in_text('### 5. グラフから domain と range を読む {#from-graph}', "見出しの英語: 5. グラフから domain と range を読")
-in_text('### 6. 関数は、現実世界のモデルになる（mathematical model） {#model}', "見出しの英語: 6. 関数は、場面のモデルになる（mathemati")
-in_text('### 7. inverse function（逆関数）は、もとに戻す関数 {#inverse}', "見出しの英語: 7. inverse function（逆関数）は、")
+in_text('### 2. Function notation（関数の書き方） {#notation}', "見出しの英語: 2. function notation（関数の書き")
+in_text('### 3. Domain（定義域） {#domain}', "見出しの英語: 3. domain（定義域）")
+in_text('### 4. Range（値域） {#range}', "見出しの英語: 4. range（値域）")
+in_text('### 5. Domain and range from a graph（グラフから定義域と値域を読む） {#from-graph}', "見出しの英語: 5. グラフから domain と range を読")
+in_text('### 6. Mathematical models（関数は、現実の場面のモデルになる） {#model}', "見出しの英語: 6. 関数は、場面のモデルになる（mathemati")
+in_text('### 7. Inverse functions（逆関数は、もとに戻す関数） {#inverse}', "見出しの英語: 7. inverse function（逆関数）は、")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：定義・規則の文を図から本文へ（方針 第 21 節）
@@ -487,13 +508,13 @@ in_text("**関数かどうかは、グラフでは、縦線を引いて確かめ
 not_in_text("グラフでは、**縦線を引いて確かめられます**。", "前の書き出しは消した")
 in_text(": 「ちょうど $1$ つ」を確かめる {#tbl-aasl22-isfn .tbl-nowrap}",
         "表 1 は tbl-nowrap")
-in_text("### 6. 関数は、現実世界のモデルになる（mathematical model） {#model}",
+in_text('### 6. Mathematical models（関数は、現実の場面のモデルになる） {#model}',
         "第 6 節の見出し")
-in_text("### 7. inverse function（逆関数）は、もとに戻す関数 {#inverse}",
+in_text('### 7. Inverse functions（逆関数は、もとに戻す関数） {#inverse}',
         "第 7 節の見出し")
 
 # --- vertical line test の図 --------------------------------------------
-in_text("![A vertical line meets a function once, and this circle twice]"
+in_text("![縦線は、関数のグラフとは $1$ か所で、この円とは $2$ か所で交わります。]"
         "(img/aasl-2-2-vlt.svg){#fig-aasl22-vlt width=100%}", "図のキャプション")
 in_text("@fig-aasl22-vlt の左は関数です。", "図への参照")
 chk(os.path.exists(os.path.join(BASE, "img", "aasl-2-2-vlt.svg")),
@@ -507,7 +528,7 @@ chk(TEXT.count("](img/") == 4, "図は 4 枚: %d" % TEXT.count("](img/"))
 # --- horizontal line test の図 ------------------------------------------
 in_text("**one-to-one かどうかは、グラフでは、横線を引いて確かめられます。**",
         "horizontal line test の書き出し")
-in_text("![A horizontal line meets $y = 4x-7$ once, and $y = x^{2}$ twice]"
+in_text("![横線は、$y = 4x-7$ とは $1$ か所で、$y = x^{2}$ とは $2$ か所で交わります。]"
         "(img/aasl-2-2-hlt.svg){#fig-aasl22-hlt width=100%}",
         "横線判定の図のキャプション")
 in_text("@fig-aasl22-hlt の左 $y = 4x-7$ は、", "横線判定の図への参照")

@@ -48,6 +48,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 
 _x = sp.Symbol("x")
 _u = sp.Symbol("u", positive=True)
@@ -150,29 +154,29 @@ chk(sp.simplify((_x * sp.exp(_x) + sp.exp(_x))
 # ══════════════════════════════════════════════════════════
 # 3. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Integration by substitution.", "シラバス 1 行目を逐語で")
-in_text("> On examination papers, substitutions will be provided if the"
+not_in_text("> Integration by substitution.", "シラバス 1 行目を逐語で")
+not_in_text("> On examination papers, substitutions will be provided if the"
         " integral is not of the form $\\int kg'(x) f (g(x))\\mathrm{d}x$.",
         "置換が与えられることを逐語で")
-in_text("> Link to: integration by substitution (SL5.10).",
+not_in_text("> Link to: integration by substitution (SL5.10).",
         "SL5.10 への Link を逐語で")
-in_text("> Integration by parts.", "部分積分を逐語で")
-in_text("> Repeated integration by parts.", "くり返しを逐語で")
-in_text("> Examples: $\\int x\\sin x\\,\\mathrm{d}x$,"
+not_in_text("> Integration by parts.", "部分積分を逐語で")
+not_in_text("> Repeated integration by parts.", "くり返しを逐語で")
+not_in_text("> Examples: $\\int x\\sin x\\,\\mathrm{d}x$,"
         " $\\int \\ln x\\,\\mathrm{d}x$,"
         " $\\int \\arcsin x\\,\\mathrm{d}x$", "例を逐語で")
-in_text("> Examples: $\\int x^{2}e^{x}\\mathrm{d}x$ and"
+not_in_text("> Examples: $\\int x^{2}e^{x}\\mathrm{d}x$ and"
         " $\\int e^{x}\\sin x\\,\\mathrm{d}x$.", "くり返しの例を逐語で")
 in_text("公式集の **5.16** の欄", "公式集の場所")
-in_text("> Integration by parts", "公式集の見出しを逐語で")
+not_in_text("> Integration by parts", "公式集の見出しを逐語で")
 
 # ══════════════════════════════════════════════════════════
 # 4. 図と、答えの漏れ
 # ══════════════════════════════════════════════════════════
-in_fig("integration by substitution, step by step", "図(a) の題")
-in_fig("nothing in $x$ may be left behind", "図(a) の注")
-in_fig("splits into two pieces", "図(b) の題")
-in_fig("the whole rectangle is $uv$", "図(b) の注")
+not_in_fig("integration by substitution, step by step", "図(a) の題")
+not_in_fig("nothing in $x$ may be left behind", "図(a) の注")
+not_in_fig("splits into two pieces", "図(b) の題")
+not_in_fig("the whole rectangle is $uv$", "図(b) の注")
 in_text("手順は $4$ つです。", "キャプション (a)")
 in_text("が $2$ つに分かれます。", "キャプション (b)")
 _BODY = TEXT[:TEXT.index("## Exercises")]
@@ -194,20 +198,21 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
-chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
-chk(TEXT.count("</details>") == 14, "</details> も 14")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
+chk(TEXT.count('<details class="jp-trans">') == 13, "日本語訳が 13")
+chk(TEXT.count("</details>") == 13, "</details> も 13")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
 chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
 chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
-chk(len(re.findall(r"^::: \{#exm-aahl516-", TEXT, re.M)) == 4, "例題が 4")
-chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
+chk(len(re.findall(r"^::: \{#exm-aahl516-", TEXT, re.M)) == 3, "例題が 3")
+chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 13, "解答例が 13")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
-chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
-    "The idea が 1..7 で連番")
+chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 6)),
+    "The idea が 1..5 で連番")
 chk(TEXT.count("**検算") >= 12, "検算が十分ある: %d" % TEXT.count("**検算"))
 not_in_text("**確かめ", "検算は「検算」で統一")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -247,7 +252,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -306,6 +311,13 @@ in_text("## $u$ の選び方をまちがえる", "選び方")
 in_text("## $\\ln x$ と $\\arcsin x$ は、積分できないほうです", "u に置く")
 in_text("**$x$ が $1$ つでも残っていたら、まだ終わっていません。**", "x を残さない")
 
+# HL 5.16 は HL の内容だけ（SL 5.10・5.11 の inspection と基本の置換は扱わない）
+not_in_text("{#recognise}", "SL の inspection の節は置かない")
+not_in_text("{#limits}", "SL 5.11 の上端・下端の節は置かない")
+in_text("### 1. What HL adds（SL からのつながり） {#from-sl}", "SL とのつながりの節")
+
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

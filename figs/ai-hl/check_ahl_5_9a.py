@@ -222,14 +222,15 @@ not_in_text("> The derivatives of $\\sin x$, $\\cos x$, $\\tan x$, $e^{x}$, $\\l
             "$x^{n}$ where $n \\in \\mathbb{Q}$.")
 in_text("**rational number**（有理数、つまり分数で書ける数）")
 # シラバス AHL Topic 3 冒頭
-in_text("> On HL examination papers radian measure should be assumed unless "
-        "otherwise indicated.")
-in_text("シラバスの AHL Topic 3 の冒頭に")
+not_in_text("> On HL examination papers radian measure")  # シラバスの引用は本文から外した
+in_text("HL の試験では、問題に特に書いていなければ、角度は radian で測ると考えます。")
+not_in_text("シラバスの AHL Topic 3 の冒頭に")
 # 2026-09: degree symbol の一文（AHL 2.9 Guidance）は削除
 not_in_text("シラバスの **AHL 2.9** の Guidance 欄にも")
 not_in_text("シラバスも、そう決めています。")
 # Link to SL5.6 / SL5.7
-in_text("> Link to: maximum and minimum points (SL5.6) and optimisation (SL5.7).")
+not_in_text("> Link to: maximum and minimum points")  # シラバスの引用は本文から外した
+in_text("この $5$ つの導関数は、SL で学んだ極大・極小（[SL 5.6](../../ai-sl/05-calculus/sl-5-6.qmd)）や最適化（[SL 5.7](../../ai-sl/05-calculus/sl-5-7.qmd)）に、そのまま使えます。")
 
 # ══════════════════════════════════════════════════════════════
 # 10. レビューで直した点の見張り
@@ -268,14 +269,19 @@ top = [h for h in h2 if h in ("What you should be able to do", "The idea",
                               "Why it works", "Worked examples",
                               "Common errors",
                               "Using your GDC (TI-Nspire CX II)", "Exercises")]
-eq("テンプレートの 7 見出しが順に並ぶ", top,
+eq("テンプレートの 6 見出しが順に並ぶ（Worked examples は廃止）", top,
    ["What you should be able to do", "The idea", "Why it works",
-    "Worked examples", "Common errors",
+    "Common errors",
     "Using your GDC (TI-Nspire CX II)", "Exercises"])
-eq("例題は 4 つ", len(re.findall(r"::: \{#exm-", TXT)), 4)
+not_in_text("## Worked examples")
+_exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(TXT.index("## The idea") < p < TXT.index("## Why it works")
+       for p in _exm), True)
+eq("例題は 4 つ（数は変わらない）", len(_exm), 4)
 eq("演習は 10 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 10)
 eq("ex-sep は 9 個", TXT.count(".ex-sep"), 9)
-eq("例題の下の区切り線は 4 本（+ YAML の 1 本）", TXT.count("\n---\n"), 5)
+eq("区切り線は YAML の 1 本だけ", TXT.count("\n---\n"), 1)
 # 禁止語
 for w in ("誰でもできる", "簡単です", "当然", "明らか", "もちろん", "当たり前",
           "そのとおり", "ご指摘", "確かめ。"):

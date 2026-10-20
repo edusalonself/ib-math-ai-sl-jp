@@ -56,8 +56,6 @@ XS1 = list(range(N1 + 1))
 YS1 = [binom(N1, P1, x) for x in XS1]
 MEAN1 = N1 * P1
 
-ax1.set_title("$X \\sim B(7,\\ 0.4)$: the bars add to $1$", fontsize=11,
-              color=INK, loc="left", pad=12)
 ax1.bar(XS1, YS1, width=0.5, color=FILL, edgecolor=ACCENT, linewidth=1.2)
 ax1.set_xlim(-0.8, 7.8)
 ax1.set_ylim(-0.01, 0.40)
@@ -86,8 +84,6 @@ N2, P2 = 6, 0.5
 XS2 = list(range(N2 + 1))
 YS2 = [binom(N2, P2, x) for x in XS2]
 
-ax2.set_title("$X \\sim B(6,\\ 0.5)$: $P(X \\leq 2)$ adds the bars up "
-              "to $x = 2$", fontsize=11, color=INK, loc="left", pad=12)
 _cols = [SHADE if x <= 2 else FILL for x in XS2]
 _edges = [WARM if x <= 2 else ACCENT for x in XS2]
 for _x, _y, _c, _e in zip(XS2, YS2, _cols, _edges):

@@ -39,8 +39,6 @@ fig2, ax2 = plt.subplots(figsize=(5.3, 4.8))
 # ══════════════════════════════════════════════════════════
 # (a) 交点として見る／差の零点として見る
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Two ways to see a solution", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-3.6, 4.4)
 ax1.set_ylim(-6.9, 9.4)
 ax1.axis("off")
@@ -77,8 +75,6 @@ ax1.text(1.15, -5.3, "$y = f(x) - g(x)$", fontsize=10.5, color=GREEN)
 # ══════════════════════════════════════════════════════════
 # (b) e^x = sin x
 # ══════════════════════════════════════════════════════════
-ax2.set_title("When no method reaches it", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax2.set_xlim(-9.6, 3.2)
 ax2.set_ylim(-1.9, 3.1)
 ax2.axis("off")

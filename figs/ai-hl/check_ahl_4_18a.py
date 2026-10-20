@@ -404,14 +404,38 @@ for lab, needle in [
         ("演習7 の 0.0210", "0.0210")]:
     in_text(lab, needle)
 
+# ★ 第4節（2026-10: 表をやめ、箇条書き＋電卓で出せる、に変更）
+in_text("critical value の表は削除した", "{#tbl-ahl418a-cv}", want=False)
+in_text("  H1 と region の表も削除した", "{#tbl-ahl418a-signs}", want=False)
+in_text("  表への参照も残っていない", "@tbl-ahl418a-signs", want=False)
+in_text("  「覚える必要があります」は第4節から消えている",
+        "公式集に 4.18 の欄はないので、この $4$ つは**覚える必要があります。**", want=False)
+in_text("電卓で出せると書いてある",
+        "**覚えていなくても、[GDC 第1節](#gdc-inv) の `Inverse Normal` で出せます。**")
+in_text("裾の面積で決まると書いてある", "critical value は、**片方の裾の面積**で決まります。")
+for _lab, _s in [("片側 5%", "- 片側 $5\\%$ … $1.645$"),
+                 ("両側 5%", "- 両側 $5\\%$ … $1.96$（左右に $2.5\\%$ ずつ）"),
+                 ("片側 1%", "- 片側 $1\\%$ … $2.326$"),
+                 ("両側 1%", "- 両側 $1\\%$ … $2.576$（左右に $0.5\\%$ ずつ）")]:
+    in_text("第4節の箇条書きに " + _lab, _s)
+in_text("符号の決め方が本文にある",
+        "上側（$\\mu > \\mu_0$）なら $z > 1.645$、下側（$\\mu < \\mu_0$）なら $z < -1.645$ です。")
+in_text("  両側は 2 つの範囲だと書いてある",
+        "$z < -1.96$ **または** $z > 1.96$ の $2$ つの範囲で、$1$ つにまとめて書けません。")
+
 # ★ シラバスの引用（t の critical region は不要）
-in_text("t の critical region が不要という引用",
-        "not be expected to calculate critical regions for $t$-tests")
-in_text("離散は片側のみという引用",
-        "critical regions will only be required for one-tailed tests")
-in_text("最大にするという引用",
+in_text("t の critical region は計算しない",
+        "critical regions are not calculated for $t$-tests")
+# 2026-10: 下の 2 つはシラバスの英文引用をやめ、第6節で日本語で直接書いた
+in_text("シラバスの引用は本文から外した（片側のみ）",
+        "critical regions will only be required for one-tailed tests", want=False)
+in_text("シラバスの引用は本文から外した（最大にする）",
         "maximize the probability of a Type I error while keeping it less "
-        "than the stated significance level")
+        "than the stated significance level", want=False)
+in_text("離散は片側のみと日本語で書いている",
+        "なお、binomial と Poisson で critical region を求めるのは**片側検定だけ**です。")
+in_text("α を超えない範囲で最大の region を選ぶと日本語で書いている",
+        "**確率が $\\alpha$ を超えない範囲で、いちばん大きい region を選びます。**")
 # ★ GDC のメニュー（ユーザーの実機画面で確認したもの）
 in_text("Inverse Normal がある", "Inverse Normal")
 in_text("Inverse Binomial がある", "Inverse Binomial")
@@ -465,6 +489,68 @@ in_text("離散では α ちょうどにならないと書いてある", "ちょ
 # ★ critical region と p-value が同じ判定になること
 in_text("2 つの判定が一致すると書いてある", "同じ判定")
 
+print("══════════ 第5節の書き直し（2026-10: 標準誤差 → 変形 → 数値 → 図） ══════════")
+# 数値（1.645 は丸めた値。丸めない z と区別して検算する）
+approx("1.645 × 1.6 = 2.632（丸めた z での値）", 1.645 * 1.6, 2.632)
+approx("  500 - 2.632 = 497.368（ちょうど）", 500 - 1.645 * 1.6, 497.368)
+approx("丸めない z = 1.6448536…", round(stats.norm.ppf(0.95), 7), 1.6448536)
+approx("  丸めない z での境目 = 497.3682…",
+       round(500 - stats.norm.ppf(0.95) * 1.6, 4), 497.3682)
+eq("  2 つの境目は 1 d.p. では同じ 497.4",
+   (round(500 - 1.645 * 1.6, 1),
+    round(500 - stats.norm.ppf(0.95) * 1.6, 1)), (497.4, 497.4))
+approx("standard error は σ の 1/√n（8 → 1.6）", 8 / math.sqrt(25), 1.6)
+eq("  √25 = 5 なので「5 分の 1」", math.sqrt(25), 5.0)
+
+# ① standard error の説明
+in_text("standard error は標本平均の標準偏差だと書いてある",
+        "この**標本平均のばらつき**を表す標準偏差が standard error です。")
+in_text("  「誤差」は計算ミスではないと書いてある",
+        "**計算ミスという意味ではありません。**")
+in_text("  σ = 8 g と standard error = 1.6 g を比べている",
+        "**袋 $1$ 個の重さの標準偏差は $8$ g ですが、$25$ 個の平均の標準誤差は $1.6$ g。**")
+in_text("  標本を取り直したときのばらつきだと書いてある",
+        "**標本を取り直したときに、$\\bar{x}$ がどれくらい動くか**")
+# ② H0 の仮定と、正規分布として扱える条件
+in_text("中心が μ0 になるのは H0 を仮定したときだと書いてある",
+        "**$H_0$ が正しいと仮定したとき**")
+in_text("  母集団が normal なら正確に normal と書いてある",
+        "**母集団が正規分布なら、$\\bar{X}$ は正確に正規分布**")
+in_text("  CLT なら近似的だと書いてある", "**近似的に**正規分布として扱います")
+# ③ 標準化の式からの変形
+in_text("標準化の式を変形すると求められると書いてある",
+        "**この形を覚える必要はありません。標準化の式を変形すると求められます。**")
+in_text("  第5節の「覚える必要があります」が消えている",
+        "この式は公式集には載っていません。**覚える必要があります。**", want=False)
+in_text("  ± の公式が残っていない", "\\mu_0 \\pm z_{\\text{crit}}", want=False)
+in_text("境界の式は + の形（z の符号をそのまま入れる）",
+        "\\bar{x}_{\\text{crit}} = \\mu_0 + z_{\\text{crit}} \\times \\frac{\\sigma}{\\sqrt{n}}")
+in_text("  下側では負の z を入れると書いてある",
+        "入れるのは**負の値**です。有意水準 $5\\%$ なら $z_{\\text{crit}} = -1.645$")
+# ④ 数値を 1 行ずつ
+in_text("変形を 1 行ずつ書いている", "\\bar{x} &< 500 - 2.632 = 497.368")
+in_text("  「表し直しただけ」と書いてある", "表し直しただけ")
+in_text("  1.645 が丸めた値だと書いてある", "$-1.6448536\\ldots$ を丸めた値")
+# ⑤ 2 つの図
+in_text("2 つの図が同じ条件だと書いてある", "表している棄却の条件は同じです")
+in_text("  左側の面積 5% と書いてある", "**左側の面積が $5\\%$**")
+FIGSRC = open(os.path.join(os.path.dirname(__file__), "make_ahl_4_18a.py"),
+              encoding="utf-8").read()
+eq("  図の両方のパネルに 5% の表示がある",
+   FIGSRC.count('"left area $= 5\\\\%$"'), 2)
+eq("  図の古いラベル 497.37… が残っていない", "497.37" in FIGSRC, False)
+# ⑥ 補足は折りたたみ、必要な指示は通常表示
+in_text("補足が折りたたみにまとまっている",
+        '::: {.callout-note collapse="true"}\n## 詳しく知りたい人へ')
+in_text("  答案の精度のルールは通常表示",
+        "**途中の計算と判定には、丸める前の値を使います。答案には、問題文が指定した精度で書きます。**")
+# 解説の部分だけ（例題の中の warning は別あつかい）
+_sec5 = TXT[TXT.find("### 5. Critical region"):TXT.find("::: {#exm-ahl418a-normal}")]
+eq("  第5節に赤・緑の BOX が並んでいない（折りたたみ 1 つだけ）",
+   (_sec5.count("::: {.callout-important}"), _sec5.count("::: {.callout-warning}"),
+    _sec5.count("::: {.callout-tip}"), _sec5.count('::: {.callout-note collapse="true"}')),
+   (0, 0, 0, 1))
+
 # ★ code span の中に数式や markdown が入っていないか（レンダリングが壊れる）
 import re as _re
 _bad = [m for m in _re.findall(r"`[^`\n]+`", TXT)
@@ -476,6 +562,16 @@ _nb = [i + 1 for i, l in enumerate(_L)
        if _re.match(r"^:{3,} *\{", l) and i > 0
        and _L[i - 1].strip() != "" and not _L[i - 1].lstrip().startswith("#")]
 eq("開き fence の前に空行がある", _nb, [])
+
+# ── レイアウト（2026-10: Worked examples の節をなくし、例題は The idea の中へ） ──
+import re as _re2
+in_text("Worked examples の節は無い", "## Worked examples", want=False)
+_why2 = TXT.find("\n## Why it works")
+_idea2 = TXT.find("\n## The idea")
+_exs2 = [m.start() for m in _re2.finditer(r"(?m)^::: \{#exm-", TXT)]
+eq("例題の数は変わらない（4）", len(_exs2), 4)
+eq("例題はすべて The idea の中（Why it works より前）",
+   _idea2 >= 0 and _why2 >= 0 and all(_idea2 < q < _why2 for q in _exs2), True)
 
 print()
 print(f"══════════ OK {ok} / NG {ng} ══════════")

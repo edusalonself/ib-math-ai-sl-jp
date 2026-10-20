@@ -45,8 +45,6 @@ def arrow(ax, p, q, col, lw=1.8, ls="-", sb=0):
 # (a) 位置ベクトルと変位ベクトル
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(5.0, 4.2))
-ax1.set_title("From $O$ to $A$ and to $B$, then across from $A$ to $B$",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 O = np.array([0.0, 0.0])
 A = np.array([3.0, 1.0])
 B = np.array([1.4, 3.2])
@@ -60,8 +58,6 @@ for _p, _lab, _dx, _dy in ((O, "$O$", -0.22, -0.22), (A, "$A$", 0.12, -0.16),
 ax1.text(1.75, 0.30, "$\\mathbf{a}$", fontsize=11, color=ACCENT)
 ax1.text(0.55, 1.85, "$\\mathbf{b}$", fontsize=11, color=ACCENT)
 ax1.text(2.35, 2.35, "$\\mathbf{b}-\\mathbf{a}$", fontsize=11, color=WARM)
-ax1.text(-0.35, 4.05, "go back along $\\mathbf{a}$, then out along $\\mathbf{b}$",
-         fontsize=9, color=GREY)
 ax1.set_xlim(-0.6, 4.0)
 ax1.set_ylim(-0.6, 4.3)
 ax1.set_aspect("equal")
@@ -83,7 +79,6 @@ arrow(ax, O, u + w, WARM)
 ax.text(1.35, 0.06, "$\\mathbf{u}$", fontsize=10.5, color=ACCENT)
 ax.text(0.26, 1.15, "$\\mathbf{w}$", fontsize=10.5, color=ACCENT)
 ax.text(1.55, 1.75, "$\\mathbf{u}+\\mathbf{w}$", fontsize=10.5, color=WARM)
-ax.set_title("the parallelogram rule", fontsize=10, color=INK, pad=6)
 ax.set_xlim(-0.5, 4.2)
 ax.set_ylim(-0.5, 3.4)
 
@@ -94,8 +89,6 @@ arrow(ax, O, -0.8 * u, GREY, lw=1.4)
 ax.text(1.25, 0.06, "$\\mathbf{u}$", fontsize=10.5, color=ACCENT)
 ax.text(3.2, 1.25, "$1.5\\mathbf{u}$", fontsize=10.5, color=WARM)
 ax.text(-1.9, -0.95, "$-0.8\\mathbf{u}$", fontsize=10.5, color=GREY)
-ax.set_title("a scalar keeps the line, not the length",
-             fontsize=10, color=INK, pad=6)
 ax.set_xlim(-2.6, 4.6)
 ax.set_ylim(-1.5, 2.2)
 

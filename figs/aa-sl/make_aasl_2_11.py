@@ -48,8 +48,6 @@ fig3, ax3 = plt.subplots(figsize=(5.3, 4.8))
 # ══════════════════════════════════════════════════════════
 # (a) 平行移動（第 2 節）
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Translations", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax1.set_xlim(-4.4, 6.4)
 ax1.set_ylim(-1.6, 5.4)
 ax1.axis("off")
@@ -66,8 +64,8 @@ ax1.plot(t, bump(t), color=INK, linewidth=2.4)
 ax1.plot(t, bump(t) + 2.0, color=ACCENT, linewidth=1.9, linestyle=(0, (6, 3)))
 ax1.plot(t, bump(t - 3.0), color=GREEN, linewidth=1.9, linestyle=(0, (6, 3)))
 
-ax1.text(0.30, 0.95, "$y = f(x)$", fontsize=10.5, color=INK,
-         ha="center", va="bottom")
+ax1.text(-0.95, 1.0, "$y = f(x)$", fontsize=10.5, color=INK,
+         ha="right", va="bottom")
 ax1.text(0.35, 4.28, "$y = f(x) + b$", fontsize=10.5, color=ACCENT,
          ha="center", va="bottom")
 ax1.text(3.15, 2.6, "$y = f(x - a)$", fontsize=10.5, color=GREEN)
@@ -83,7 +81,6 @@ ax1.text(1.35, 0.62, "$a$", fontsize=10.5, color=GREEN)
 # ══════════════════════════════════════════════════════════
 # (b) 拡大
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Stretches", fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(-4.4, 4.8)
 ax2.set_ylim(-1.6, 5.8)
 ax2.axis("off")
@@ -111,7 +108,6 @@ ax2.annotate("", xy=(0.62, 1.05), xytext=(-2.5, 2.5),
 # ══════════════════════════════════════════════════════════
 # (c) 対称移動（第 3 節）
 # ══════════════════════════════════════════════════════════
-ax3.set_title("Reflections", fontsize=11, color=INK, loc="left", pad=10)
 ax3.set_xlim(-4.4, 4.8)
 ax3.set_ylim(-3.6, 3.6)
 ax3.axis("off")

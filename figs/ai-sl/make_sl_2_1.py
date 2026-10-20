@@ -48,7 +48,6 @@ ax.annotate("run $= 4$", (4, 5), textcoords="offset points", xytext=(-24, -18),
 ax.annotate("rise $= 8$", (6, 9), textcoords="offset points", xytext=(8, -6),
             color=ACC, fontsize=11.5)
 ax.annotate("$m = \\dfrac{8}{4} = 2$", (0.4, 12.2), color=ACC, fontsize=13)
-ax.set_title("gradient $=$ rise $\\div$ run", fontsize=12, pad=10)
 axes_through_origin(ax, (-1.4, 8.2), (-1.5, 15.5))
 ax.set_xticks([2, 4, 6, 8])
 ax.set_yticks([5, 10, 15])
@@ -64,7 +63,6 @@ for mm, col, lab, ypos in [(1, "#2874a6", "$m > 0$", 4.2),
 ax.plot([2.2, 2.2], [-4.3, 4.3], color=ACC, linewidth=2.2, linestyle="--", zorder=4)
 ax.annotate("undefined\n(vertical)", (2.1, -3.3), color=ACC, fontsize=11,
             ha="right")
-ax.set_title("the four cases", fontsize=12, pad=10)
 axes_through_origin(ax, (-4.6, 7.0), (-4.9, 4.9))
 ax.set_xticks([-2, 2, 4])
 ax.set_yticks([-2, 2, 4])
@@ -83,7 +81,6 @@ ax.plot(xs, 2 * xs - 3, color="#5dade2", linewidth=2.2, zorder=4)
 ax.annotate("$y = 2x + 1$", (-4.45, -2.7), color=LINE, fontsize=11.5)
 ax.annotate("$y = 2x - 3$", (0.6, -3.7), color="#2e86c1", fontsize=11.5)
 ax.annotate("$m_1 = m_2 = 2$", (-4.45, 3.9), color=ACC, fontsize=13)
-ax.set_title("parallel:   $m_1 = m_2$", fontsize=12.5, pad=10)
 axes_through_origin(ax, (-4.6, 4.6), (-4.6, 4.6))
 ax.set_xticks([-2, 2, 4]); ax.set_yticks([-2, 2, 4])
 ax.set_aspect("equal", adjustable="box")
@@ -110,7 +107,6 @@ ax.annotate("$-1$", (2, -0.5), textcoords="offset points", xytext=(8, -5),
             color="#8a4b12", fontsize=11.5)
 ax.annotate("$2 \\times \\left(-\\frac{1}{2}\\right) = -1$", (-4.45, 3.9),
             color=ACC, fontsize=13)
-ax.set_title("perpendicular:   $m_1 \\times m_2 = -1$", fontsize=12.5, pad=10)
 axes_through_origin(ax, (-4.6, 4.6), (-4.6, 4.6))
 ax.set_xticks([-2, 2, 4]); ax.set_yticks([-2, 2, 4])
 ax.set_aspect("equal", adjustable="box")
@@ -137,7 +133,8 @@ ax.set_xticks([])
 ax.set_yticks([])
 for sp in ("top", "right", "left", "bottom"):
     ax.spines[sp].set_visible(False)
-ax.set_title("The gradient of a mountain road  (not to scale)", fontsize=12.5, pad=8)
+ax.text(1700, 140, "(not to scale)", ha="right", va="top", fontsize=10.5,
+        color="#6b7280")
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-2-1-incline.svg"), format="svg", bbox_inches="tight")
 plt.close(fig)

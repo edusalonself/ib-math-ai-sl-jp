@@ -31,9 +31,9 @@ def tidy(ax):
 
 
 # ══════════ fig 1a: 機械の直列つなぎ ══════════
-fig, ax = plt.subplots(figsize=(6.8, 4.5))
+fig, ax = plt.subplots(figsize=(6.8, 3.8))
 ax.set_xlim(0, 10.6)
-ax.set_ylim(-0.4, 6.4)
+ax.set_ylim(0.6, 6.4)
 ax.axis("off")
 
 
@@ -71,12 +71,8 @@ flow(8.05, 10.1, 1.5, "$49$", ACC)
 ax.text(0.1, 2.55, "$(g \\circ f)(3) = g(f(3)) = 49$", fontsize=13,
         color=ACC, ha="left", va="center")
 
-ax.text(5.3, 0.20, "same two machines, different order — different answer",
-        fontsize=11.5, color=GREY, ha="center", va="center")
 ax.text(0.1, 3.35, "$f(x) = 2x+1$,   $g(x) = x^{2}$", fontsize=12.5,
         color=INK, ha="left", va="center")
-ax.set_title("a composite is two machines in a row", fontsize=12,
-             color=INK, pad=10)
 
 fig.tight_layout()
 save(fig, "ahl-2-7-composite.svg")
@@ -92,14 +88,14 @@ ax.plot(X, (2 * X + 1) ** 2, color=ACC, lw=2.8, ls="--",
 ax.plot([0], [1], "o", color=GREEN, ms=8, zorder=6)
 ax.plot([0], [1], "o", color=ACC, ms=8, zorder=6, mfc="none", mew=2)
 ax.plot([-0.5], [0], "o", color=ACC, ms=8, zorder=6)
-ax.annotate("$(g \\circ f)$ is zero\nat $x = -0.5$",
-            xy=(-0.5, 0.0), xytext=(0.85, 1.05), fontsize=11, color=ACC,
-            ha="left", va="bottom", bbox=BOX, zorder=8,
+ax.annotate("$(-0.5,\\ 0)$",
+            xy=(-0.5, 0.0), xytext=(-1.25, -0.75), fontsize=11, color=ACC,
+            ha="right", va="center", bbox=BOX, zorder=8,
             arrowprops=dict(arrowstyle="->", color=ACC, lw=1.4,
                             shrinkA=2, shrinkB=6))
-ax.annotate("$(f \\circ g)$ is never\nbelow $1$", xy=(0.0, 1.0),
-            xytext=(-2.15, 1.7), fontsize=11, color=GREEN,
-            ha="left", va="bottom", bbox=BOX, zorder=8,
+ax.annotate("$(0,\\ 1)$", xy=(0.0, 1.0),
+            xytext=(0.3, 0.35), fontsize=11, color=GREEN,
+            ha="left", va="center", bbox=BOX, zorder=8,
             arrowprops=dict(arrowstyle="->", color=GREEN, lw=1.4,
                             shrinkA=2, shrinkB=6))
 ax.axhline(0, color=GREY, lw=1.2)
@@ -107,8 +103,6 @@ ax.set_xlim(-2.3, 2.6)
 ax.set_ylim(-1.4, 12.6)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=11, frameon=False, loc="upper center")
-ax.set_title("the two composites are different functions",
-             fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()
@@ -133,14 +127,11 @@ ax.text(3, -2.75, "vertex $(3,\\ -2)$", fontsize=11.5, color=GOLD,
         ha="center", va="top")
 ax.text(6.9, 8.6, "$f(x) = (x-3)^{2} - 2$", fontsize=12, color=LINE,
         ha="right", va="center", bbox=BOX, zorder=8)
-ax.text(-0.4, 11.6, "one output, two inputs:\nthere is no way back",
-        fontsize=12, color=INK, ha="left", va="top", bbox=BOX, zorder=8)
 ax.axhline(0, color=GREY, lw=1.2)
-ax.set_xlim(-0.9, 9.4)
+ax.set_xlim(-0.9, 8.2)
 ax.set_ylim(-3.8, 12.4)
 ax.set_xlabel("$x$")
-ax.set_title("(a)  without a restriction there is no inverse",
-             fontsize=12, color=INK, pad=10)
+ax.set_title("(a)", fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 ax = axs[1]
@@ -162,8 +153,6 @@ ax.text(1.7, 5.4, "$(2,\\ 5)$", fontsize=11.5, color=ACC, ha="right",
         va="bottom")
 ax.plot([3], [-2], "o", color=LINE, ms=8, zorder=6)
 ax.plot([-2], [3], "o", color=ACC, ms=8, zorder=6)
-ax.text(-3.3, 13.0, "the restricted branch and its\nreflection in $y = x$",
-        fontsize=12, color=INK, ha="left", va="top", bbox=BOX, zorder=8)
 ax.axhline(0, color=GREY, lw=1.2)
 ax.axvline(0, color=GREY, lw=1.2)
 ax.set_xlim(-3.5, 14.5)
@@ -171,8 +160,7 @@ ax.set_ylim(-3.5, 14.5)
 ax.set_aspect("equal")
 ax.set_xlabel("$x$")
 ax.legend(fontsize=10, frameon=False, loc="lower right")
-ax.set_title("(b)  restrict to $x \\geq 3$ and the inverse exists",
-             fontsize=12, color=INK, pad=10)
+ax.set_title("(b)", fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()

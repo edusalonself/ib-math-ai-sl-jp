@@ -56,10 +56,10 @@ def corr(xs, ys):
     return sxy / math.sqrt(sxx * syy)
 
 
-fig1 = plt.figure(figsize=(5.6, 4.8))
-gs = GridSpec(2, 2, figure=fig1, wspace=0.30, hspace=0.55,
-              left=0.07, right=0.94, top=0.86, bottom=0.10)
-fig2 = plt.figure(figsize=(5.8, 4.8))
+fig1 = plt.figure(figsize=(5.6, 4.0))
+gs = GridSpec(2, 2, figure=fig1, wspace=0.30, hspace=0.40,
+              left=0.07, right=0.94, top=0.93, bottom=0.05)
+fig2 = plt.figure(figsize=(5.8, 4.4))
 
 # ══════════════════════════════════════════════════════════
 # (a) 4 つの散布図
@@ -77,17 +77,11 @@ for _i, (_lab, _ys) in enumerate(PANELS):
     ax.set_title(f"{_lab}   $r = {_r:.2f}$", fontsize=9, color=INK,
                  loc="left", pad=4)
     ax.margins(0.14)
-    if _i == 0:
-        ax.text(-0.06, 1.62, "Direction and strength", fontsize=11,
-                color=INK, transform=ax.transAxes)
-    if _i == 2:
 
 # ══════════════════════════════════════════════════════════
 # (b) 回帰直線・mean point・外挿
 # ══════════════════════════════════════════════════════════
 ax2 = fig2.add_subplot(111)
-ax2.set_title("Where the line can be trusted", fontsize=11, color=INK,
-              loc="left", pad=10)
 
 DX = [2.2, 3.0, 3.8, 4.6, 5.4, 6.2, 7.0, 7.8]
 DY = [3.4, 3.2, 4.4, 4.2, 5.4, 5.6, 6.2, 6.8]

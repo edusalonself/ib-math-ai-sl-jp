@@ -49,6 +49,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 def vert(num, den, want, msg):
     """垂直漸近線（約分してから分母 = 0）が want であること。"""
     f = sp.cancel(num / den)
@@ -251,14 +255,8 @@ chk(sp.nsimplify((_N / _D).subs(x, sp.Rational(-21, 10))) == sp.Rational(-11, 10
 # ══════════════════════════════════════════════════════════
 # 4. シラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Rational functions of the form $f(x) = \\dfrac{ax+b}{cx^{2}+dx+e}$,"
+not_in_text("> Rational functions of the form $f(x) = \\dfrac{ax+b}{cx^{2}+dx+e}$,"
         " and $f(x) = \\dfrac{ax^{2}+bx+c}{dx+e}$.", "シラバス本体を逐語で")
-in_text("> The reciprocal function is a particular case.",
-        "Guidance（逆数関数）を逐語で")
-in_text("> Graphs should include all asymptotes (horizontal, vertical and oblique)"
-        " and any intercepts with axes.", "Guidance（かくもの）を逐語で")
-in_text("> Link to: rational functions (SL 2.8).", "Link to を逐語で")
-in_text("## 公式集には、この項目の欄がありません", "公式集にないことを書く")
 not_in_text("公式集の **2.13**", "ありもしない欄を書かない")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
@@ -278,7 +276,7 @@ in_text("**漸近線は、電卓が引いてくれるわけではありません
 for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -287,8 +285,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl213-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -334,7 +333,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -372,10 +371,10 @@ for _s in glob.glob(os.path.join(BASE, "img", "*.png")):
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("A quadratic denominator: two vertical asymptotes, and $y=0$", "図(a) の題")
-in_fig("the degree on top is smaller", "図(a) の要点")
-in_fig("A quadratic on top: one vertical asymptote, and a slanted one", "図(b) の題")
-in_fig("divide first: the quotient is the slanted asymptote", "図(b) の要点")
+not_in_fig("A quadratic denominator: two vertical asymptotes, and $y=0$", "図(a) の題")
+not_in_fig("the degree on top is smaller", "図(a) の要点")
+not_in_fig("A quadratic on top: one vertical asymptote, and a slanted one", "図(b) の題")
+not_in_fig("divide first: the quotient is the slanted asymptote", "図(b) の要点")
 in_text("分母のほうが次数が高いので、遠くでは $y$ が $0$ に近づきます。",
         "キャプション (a)")
 in_text("割り算をすると、商が斜めの漸近線になります。", "キャプション (b)")
@@ -429,5 +428,26 @@ in_text("**$x$ 軸との交点は、分子だけ**を見ます。", "x 切片は
 in_text("**順番を守ってください。**", "因数分解 → 約分 → 漸近線")
 
 print()
+
+# ══════════════════════════════════════════════════════════
+# 2026-10-13 の手直し
+# ══════════════════════════════════════════════════════════
+not_in_text("> Link to: rational functions (SL 2.8).", "§1 の引用は削除した")
+not_in_text("The reciprocal function is a particular case", "同上")
+not_in_text("Graphs should include all asymptotes", "同上")
+not_in_text("公式集には、この項目の欄がありません", "§1 の callout は削除した")
+in_text("SL では $\\dfrac{ax+b}{cx+d}$ の形を扱いました", "SL とのつながりは残す")
+in_text("が vertical asymptote（垂直漸近線）です。**$2$ 本あります。**",
+        "§2 は英語（日本語）")
+in_text("が oblique asymptote（斜め漸近線）です。", "§4 は英語（日本語）")
+in_text("**分母 $x-3 = 0$ から、vertical asymptote（垂直漸近線）$x = 3$ も"
+        "あります。**", "§4 の垂直漸近線も英語（日本語）")
+in_text("漸近線が言っているのは、**無限大での様子**だけです。それ以外のところで"
+        "交わってもかまいません。", "§3 の言いかえ")
+for _cs in re.findall(r"`([^`\n]+)`", TEXT):
+    chk("$" not in _cs, "code span の中に数式: " + _cs[:50])
+
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

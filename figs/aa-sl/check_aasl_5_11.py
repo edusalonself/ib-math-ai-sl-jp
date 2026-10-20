@@ -16,6 +16,22 @@ QMD = os.path.join(ROOT, "aa-sl", "05-calculus", "aasl-5-11.qmd")
 FIGP = os.path.join(HERE, "make_aasl_5_11.py")
 
 TEXT = open(QMD, encoding="utf-8").read()
+
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
 FIG = open(FIGP, encoding="utf-8").read()
 FIGCODE = FIG.split('"""', 2)[-1]
 
@@ -34,6 +50,9 @@ def chk(cond, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
 
 
 def in_text(sub, msg=""):
@@ -61,7 +80,7 @@ def val(expr, lo, hi, want, msg):
 in_text("# SL 5.11 — Definite integrals and areas（定積分と面積） "
         "{#sec-aasl-5-11}", "ページの題")
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
@@ -77,7 +96,8 @@ chk([s[2] for s in _secs] == ["what", "props", "positive", "negative",
                               "booklet", "between", "sub"],
     "アンカー: %s" % [s[2] for s in _secs])
 for _n, _t, _ in _secs:
-    chk(re.match(r"^[a-z]", _t), "見出し %s は英語で始まる: %s" % (_n, _t))
+    chk(re.match(r"^[A-Z][^（]*（[^（）]*(?:（[^）]*）[^（）]*)*）$", _t),
+        "見出し %s は「English（日本語）」の形（英語は大文字で始まる）: %s" % (_n, _t))
     chk("（" in _t and "）" in _t, "見出し %s は 英語（日本語）: %s" % (_n, _t))
 
 chk(len(re.findall(r"^\[\d+\]\{\.ex-no\}", TEXT, re.M)) == 10, "演習 10 問")
@@ -87,7 +107,7 @@ chk(TEXT.count("::: {#exm-") == 4, "例題 4 つ")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14 個")
 chk(TEXT.count("## 解答例") == 14, "解答例 14 個")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭の --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭の --- は 6 本")
 chk(TEXT.count("**検算") >= 12, "検算は 12 本以上: %d" % TEXT.count("**検算"))
 chk(TEXT.count(":::") % 2 == 0, "::: の数が偶数")
 chk("\n\n\n" not in TEXT, "空行が 2 つ続いていない")
@@ -109,11 +129,11 @@ for _e in ("{#eq-aasl511-bracket}", "{#eq-aasl511-swap}",
            "{#eq-aasl511-pos}", "{#eq-aasl511-neg}",
            "{#eq-aasl511-abs}", "{#eq-aasl511-between}"):
     in_text(_e, "式 " + _e)
-for _f, _i in (("aasl-5-11-area.svg", "fig-aasl511-area"),
-               ("aasl-5-11-below.svg", "fig-aasl511-below"),
-               ("aasl-5-11-cross.svg", "fig-aasl511-cross"),
-               ("aasl-5-11-between.svg", "fig-aasl511-between")):
-    in_text("(img/%s){#%s width=100%%}" % (_f, _i), "図 " + _f)
+for _f, _i, _w in (("aasl-5-11-area.svg", "fig-aasl511-area", 90),
+                   ("aasl-5-11-below.svg", "fig-aasl511-below", 90),
+                   ("aasl-5-11-cross.svg", "fig-aasl511-cross", 90),
+                   ("aasl-5-11-between.svg", "fig-aasl511-between", 90)):
+    in_text("(img/%s){#%s width=%d%%}" % (_f, _i, _w), "図 " + _f)
     chk(os.path.exists(os.path.join(os.path.dirname(QMD), "img", _f)),
         "SVG がある: " + _f)
     chk(("@" + _i) in TEXT, "図を本文から参照している: " + _i)
@@ -151,14 +171,13 @@ for _m in re.finditer(r"\[第 (\d+) 節\]\(#([a-z0-9-]+)\)", TEXT):
 # ══════════════════════════════════════════════════════════
 # 3. The idea の本文
 # ══════════════════════════════════════════════════════════
-in_text("**definite integral（定積分）とは、関数を $a \\leq x \\leq b$ の範囲で"
-        "積分して、$1$ つの数を出すものです。**", "第 1 節の書き出し")
-in_text("**その数は、antiderivative（原始関数）$F$ の両端での差です。**",
+in_text("**definite integral**（定積分）とは、関数を $a \\leq x \\leq b$ の範囲で積分して、$1$ つの数を出すものです。", "第 1 節の書き出し")
+in_text("その数は、**antiderivative**（原始関数）$F$ の、両端での値の差です。",
         "原始関数は英語も添える")
 in_text("$$\n\\int_{a}^{b} f(x)\\,dx = \\bigl[F(x)\\bigr]_{a}^{b} "
         "= F(b) - F(a)\n$$ {#eq-aasl511-bracket}", "定義の式は F と f")
 not_in_text("g(b) - g(a)", "定義を g' と g で書いていない")
-in_text("**$a$ を lower limit（下端）、$b$ を upper limit（上端）といいます。**",
+in_text("$a$ を **lower limit**（下端）、$b$ を **upper limit**（上端）といいます。",
         "上端・下端の英語")
 in_text("**引く順番は「上端 $-$ 下端」です。**", "引く順番")
 in_text("**$+C$ は書きません。**", "+C を書かない")
@@ -168,15 +187,15 @@ for _s in ("**$F(a)$ が負のときは、かっこを付けてください。**
            "**@eq-aasl511-bracket は公式集にありません。**",
            "**@eq-aasl511-bracket が使えるのは"):
     not_in_text(_s, "第 1 節の後半は削除した")
-_i1a = TEXT.index("### 1. definite integral")
-chk(len(TEXT[_i1a:TEXT.index("### 2. limits")].split("\n\n")) <= 8,
-    "第 1 節は短くなった")
+_i1a = TEXT.index("### 1. Definite integral（定積分）")
+chk(len(_strip_exm(TEXT[_i1a:TEXT.index("### 2. Limits of integration")]).split("\n\n")) <= 8,
+    "第 1 節（例題を除く本文）は短くなった")
 not_in_text("tbl-aasl511", "表は置いていない")
 not_in_text("| 手順 |", "手順の表は置いていない")
 # 第 2 節は式を文の中に入れない
-_i2 = TEXT.index("### 2. limits of integration")
-_i3 = TEXT.index("### 3. area under a curve")
-_s2 = TEXT[_i2:_i3]
+_i2 = TEXT.index("### 2. Limits of integration（上端・下端の性質）")
+_i3 = TEXT.index("### 3. Area under a curve（$x$ 軸より上のとき）")
+_s2 = _strip_exm(TEXT[_i2:_i3])  # 例題は第 2 節の後ろに移ったので除いて数える
 chk(len(re.findall(r"^\$\$", _s2, re.M)) == 10,
     "第 2 節の display は 5 本: %d" % (len(re.findall(r"^\$\$", _s2, re.M)) / 2))
 not_in_text("**どれも @eq-aasl511-bracket から出ます。**", "ここは削除した")
@@ -190,7 +209,7 @@ for _s in ("**$1$ つ目。上下を入れかえると、符号が変わりま�
 chk("\\int_{b}^{a} f(x)\\,dx = -\\int_{a}^{b} f(x)\\,dx$" not in _s2,
     "入れかえの式を文の中に埋めていない")
 # 第 3 節（新しい図）
-in_text("![The region between $y = f(x)$ and the $x$-axis, from $a$ to $b$]"
+in_text("![$y = f(x)$ と $x$ 軸ではさまれた、$a$ から $b$ までの部分です。]"
         "(img/aasl-5-11-area.svg)", "第 3 節の図")
 in_text("**ここでいう面積は、曲線 $y = f(x)$、$x$ 軸、そして $2$ 本の"
         "たての直線 $x = a$、$x = b$ で囲まれた部分の面積です。**",
@@ -207,8 +226,7 @@ for _s in ("**「面積が負になった」ということは起こりません
            "**マイナスを前に書くか、上下を入れかえるかは同じことです**"):
     not_in_text(_s, "第 4 節から削除した")
 # 第 5 節（絶対値＋符号の変わる点）
-in_text("### 5. the formula booklet form（絶対値でまとめ、符号の変わる点で"
-        "分ける） {#booklet}", "第 5 節の見出し")
+in_text("### 5. Area using the absolute value（絶対値でまとめ、符号の変わる点で分ける） {#booklet}", "第 5 節の見出し")
 not_in_text("{#split}", "符号の節は第 5 節に合流した")
 not_in_text("splitting at a sign change", "その見出しは消した")
 not_in_text("eq-aasl511-areasplit", "一般の式は消した")
@@ -250,8 +268,8 @@ chk(TEXT.index("img/aasl-5-11-area.svg")
     < TEXT.index("img/aasl-5-11-between.svg"), "図の順")
 # 置換の節はいちばん最後
 chk(_secs[-1][2] == "sub", "置換は The idea の最後の節")
-_isub = TEXT.index("### 7. substitution")
-chk(TEXT.index("### 6. area between two curves") < _isub,
+_isub = TEXT.index("### 7. Substitution（置換したら、上端・下端も変える）")
+chk(TEXT.index("### 6. Area between two curves（$2$ 曲線ではさまれた面積）") < _isub,
     "置換は面積の説明のあと")
 chk("## この項目は電卓なしで解きます" in TEXT[_isub:TEXT.index("## Why it works")],
     "Paper の callout は第 7 節に")
@@ -342,6 +360,10 @@ for _p, _s, _m in (
      "索引"),
     (os.path.join(ROOT, "_AA-SL-PLAN.md"), "`aasl-5-11.qmd`", "計画"),
 ):
+    if not os.path.exists(_p):
+        print("SKIP: %s がこの作業環境にないので、%s のチェックは飛ばす"
+              % (os.path.basename(_p), _m))
+        continue
     chk(_s in open(_p, encoding="utf-8").read(), _m + " に SL 5.11 がある")
 for _p in (os.path.join(ROOT, "aa-sl", "05-calculus", "aasl-5-11a.qmd"),
            os.path.join(ROOT, "aa-sl", "05-calculus", "aasl-5-11b.qmd")):
@@ -350,10 +372,10 @@ for _p in (os.path.join(ROOT, "aa-sl", "05-calculus", "aasl-5-11a.qmd"),
 
 
 # --- 図 2 は具体的な y = 2x - x^2 ----------------------------------------
-in_text("![$y = 2x - x^{2}$: $A_{1}$ is above the axis, $A_{2}$ is below]"
-        "(img/aasl-5-11-cross.svg){#fig-aasl511-cross width=100%}",
+in_text("![$y = 2x - x^{2}$ では、$A_{1}$ が $x$ 軸より上、$A_{2}$ が下にあります。]"
+        "(img/aasl-5-11-cross.svg){#fig-aasl511-cross width=90%}",
         "図 2 のキャプション")
-in_fig('ax1.set_title("$y = 2x - x^2$"', "図 2 の題")
+not_in_fig('ax1.set_title("$y = 2x - x^2$"', "図 2 に題は置かない（式はキャプションにある）")
 in_fig("YS = 2 * XS - XS ** 2", "図 2 は y = 2x - x^2")
 in_fig('ax1.set_xticklabels(["$0$", "$2$", "$3$"]', "図 2 の目盛は 0, 2, 3")
 chk("A curve that crosses the axis" not in FIG, "前の題は消した")
@@ -373,12 +395,12 @@ in_text("**定積分には、計算が短くなる性質が $3$ つあります�
 not_in_text("**上端と下端には、計算が短くなる", "前の書き出しは消した")
 
 # --- 第 4 節：ずっと x 軸の下にある曲線 ----------------------------------
-in_text("![$y = x^{2} - 4$ between $x = -2$ and $x = 2$, below the axis]"
-        "(img/aasl-5-11-below.svg){#fig-aasl511-below width=100%}", "図 2")
+in_text("![$x = -2$ から $x = 2$ までの $y = x^{2} - 4$ は、$x$ 軸より下にあります。]"
+        "(img/aasl-5-11-below.svg){#fig-aasl511-below width=90%}", "図 2")
 in_fig("YB = XB ** 2 - 4", "図 2 は y = x^2 - 4")
-in_fig('ax3.set_title("$y = x^2 - 4$"', "図 2 の題")
-_i4d = TEXT.index("### 4. area below the axis")
-_i5d = TEXT.index("### 5. the formula booklet form")
+not_in_fig('ax3.set_title("$y = x^2 - 4$"', "図 2 に題は置かない（式はキャプションにある）")
+_i4d = TEXT.index("### 4. Area below the axis（$x$ 軸より下のとき）")
+_i5d = TEXT.index("### 5. Area using the absolute value")
 _s4d = TEXT[_i4d:_i5d]
 chk("img/aasl-5-11-below.svg" in _s4d, "図 2 は第 4 節の中")
 chk("img/aasl-5-11-cross.svg" not in _s4d, "交わる図は第 4 節から外した")
@@ -400,11 +422,30 @@ in_text("**そこで、$x$ 軸の上と下の場合で分けます。**", "x 軸
 in_text("**まず、グラフの $x$ 切片（`x-intercept`、`zero`、`root`）を"
         "見つけます**（[SL 5.2](aasl-5-2.qmd#zero)）。", "x 切片")
 not_in_text("解が見つかったら、その前後で $1$ 点ずつ", "ここは削除した")
-chk("img/aasl-5-11-cross.svg" in TEXT[_i5d:TEXT.index("### 6. area between")],
+chk("img/aasl-5-11-cross.svg" in TEXT[_i5d:TEXT.index("### 6. Area between")],
     "交わる図は第 5 節の中")
 chk(TEXT.index("**まず、グラフの $x$ 切片")
     < TEXT.index("img/aasl-5-11-cross.svg")
     < TEXT.index("**$y = 2x - x^{2}$ と $x$ 軸が"), "図は x 切片の話と例の間")
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
+
+# シラバスの引用は本文から外し、内容を日本語で直接書いた（2026-10 の書き換え）
+chk(re.findall(r"^> (.*)$", TEXT, re.M) == [], "シラバスの引用は本文から外した")
+not_in_text("Students are expected to first write", "シラバスの引用は本文から外した")
+not_in_text("Areas of a region", "シラバスの引用は本文から外した")
+not_in_text("シラバスは", "シラバスを引いて説明する文は直した")
+in_text("**答案では、値を出す前に、面積を表す式を書きます。**", "先に式を書くことは日本語で書いた")
+in_text("$x$ 軸の上と下にまたがる部分の面積は、電卓なしで求める問題も出ます。",
+        "電卓なしの問題が出ることは日本語で書いた")
 
 print()
 print("OK", OK, "/ NG", NG)

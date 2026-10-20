@@ -316,13 +316,22 @@ for cas in ["expand(", "factor(", "solve(", "csolve(", "Polar"]:
 # 8. シラバス・公式集についての記述
 # ══════════════════════════════════════════════════════════
 # 2026-09: シラバス欄は短くした（引用は Guidance の Example 1 行だけ）
-in_text("Content 欄の $4$ 行は、")
-in_text("(f \\circ f^{-1})(x) = (f^{-1} \\circ f)(x) = x$ と、$1$ つの例が挙がっています。")
-in_text("has an inverse if the domain is restricted to $x \\geq 3$ or to $x \\leq 3$")
-in_text("**シラバスが名指しした関数**なので、@exm-ahl27-restrict でそのまま扱います。")
+not_in_text("Content 欄の $4$ 行は、")
+not_in_text("(f \\circ f^{-1})(x) = (f^{-1} \\circ f)(x) = x$ と、$1$ つの例が挙がっています。")
+# 2026-10: シラバスの Example の引用は外し、同じ関数を第 8 節の本文で扱う
+not_in_text("has an inverse if the domain is restricted to $x \\geq 3$ or to $x \\leq 3$",
+            "シラバスの引用は本文から外した")
+not_in_text("**シラバスが名指しした関数**", "シラバスを引いた説明は直接の説明にした")
+in_text("$$\nf(x) = (x-3)^{2} - 2\n$$ {#eq-ahl27-example}", "シラバスの例の関数は第 8 節にある")
+in_text("定義域を「$x \\geq 3$ **または** $x \\leq 3$」と制限するのは、この $2$ 通りのことです。",
+        "x >= 3 と x <= 3 の 2 通りの制限")
+in_text("[The domain of $f$ is now restricted to $x \\geq 3$.]{.q-en}", "例題 4 で同じ関数を扱う")
 not_in_text("Recommended teaching hours", "授業時間数のような、生徒に関係のない情報は載せない")
 # 公式集にない、と言い切っている
-in_text("## 公式集の AHL 2.7 の欄\n**ありません。**")
+# 2026-10: 公式集のボックスは外し、「公式集にない」を本文で 1 文ずつ言う
+not_in_text("## 公式集の AHL 2.7 の欄", "公式集のボックスは外した")
+in_text("この記号の意味は公式集に載っていないので、自分で覚えておいてください。", "記号は公式集にない")
+in_text("この手順も公式集には載っていません。", "逆関数の手順も公式集にない")
 not_in_text("公式集に載っているので覚える必要はありません", "公式集にない項目で誤った安心を与えない")
 
 # ══════════════════════════════════════════════════════════
@@ -330,13 +339,26 @@ not_in_text("公式集に載っているので覚える必要はありません"
 # ══════════════════════════════════════════════════════════
 heads = re.findall(r"(?m)^## (.+)$", TEXT)
 need = ["What you should be able to do", "The idea", "Why it works",
-        "Worked examples", "Common errors",
+        "Common errors",
         "Using your GDC (TI-Nspire CX II)", "Exercises"]
 for h in need:
     chk(h in heads, "見出しがない: " + h)
-chk([h for h in heads if h in need] == need, "7 つの見出しの順序")
+chk([h for h in heads if h in need] == need, "6 つの見出しの順序（Worked examples は 2026-10 に削除）")
+# 2026-10 新レイアウト：例題は The idea の各節の後ろ
+not_in_text("## Worked examples", "Worked examples の節は消した")
+_iw = TEXT.index("\n## Why it works")
+chk(all(TEXT.index("## The idea") < m.start() < _iw
+        for m in re.finditer(r"::: \{#exm-", TEXT)), "例題はすべて The idea の中")
+chk(re.findall(r"::: \{#(exm-[a-z0-9-]+)\}", TEXT)
+    == ["exm-ahl27-basic", "exm-ahl27-photo", "exm-ahl27-find",
+        "exm-ahl27-restrict"], "例題の並び")
+for _e, _s in (("exm-ahl27-basic", "order"), ("exm-ahl27-photo", "context"),
+               ("exm-ahl27-find", "undo"), ("exm-ahl27-restrict", "restriction")):
+    _hs = re.findall(r"^### \d+\. .*?\{#([a-z0-9-]+)\}$",
+                     TEXT[:TEXT.index("::: {#" + _e + "}")], re.M)
+    chk(_hs[-1:] == [_s], "%s は %s の節の中: %s" % (_e, _s, _hs[-1:]))
 
-chk(len(re.findall(r"(?m)^---$", TEXT)) == 6, "--- は 6 個（front matter 2 + 例題 4）")
+chk(len(re.findall(r"(?m)^---$", TEXT)) == 2, "--- は 6 個（front matter 2 + 例題 4）")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳は 14 個")
 chk(TEXT.count("::: {.ex-sep}") == 9, ".ex-sep は 9 個")
 chk(len(re.findall(r"::: \{#exm-ahl27-[\w-]+\}", TEXT)) == 4, "worked example は 4 個")
@@ -370,9 +392,9 @@ for term in ["**composite function**（合成関数）",
     in_text(term, "英語→日本語の順")
 
 # 図
-in_text("![Two machines in a row](img/ahl-2-7-composite.svg)")
-in_text("![The two composites are different functions](img/ahl-2-7-order.svg)")
-in_text("![Why a restriction is needed, and what it fixes](img/ahl-2-7-inverse.svg)")
+in_text("![$2$ 台の機械を続けて通します。](img/ahl-2-7-composite.svg)")
+in_text("![$2$ つの合成関数は、別の関数です。](img/ahl-2-7-order.svg)")
+in_text("![定義域を制限する必要がある理由と、制限で解決することです。](img/ahl-2-7-inverse.svg)")
 for svg in ["ahl-2-7-composite.svg", "ahl-2-7-order.svg", "ahl-2-7-inverse.svg"]:
     chk(os.path.exists(os.path.join(HERE, "..", "..", "ai-hl", "02-functions",
                                     "img", svg)), "図がある: " + svg)

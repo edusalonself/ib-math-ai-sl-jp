@@ -39,8 +39,6 @@ fig1, ax1 = plt.subplots(figsize=(6.4, 1.8))
 # ══════════════════════════════════════════════════════════
 # (a) べき乗の微分の 2 つの動き
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Two things happen to the power", fontsize=11, color=INK,
-              loc="left", pad=6)
 ax1.set_xlim(0, 10)
 ax1.set_ylim(6.9, 9.0)
 ax1.axis("off")

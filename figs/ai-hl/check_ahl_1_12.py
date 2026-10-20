@@ -340,17 +340,17 @@ eq("40-30-50", sp.sqrt(40 ** 2 + 30 ** 2), 50)
 # ══════════════════════════════════════════════════════════════
 # 5. シラバス・公式集から確かめた事実
 # ══════════════════════════════════════════════════════════════
-inA("> Complex numbers: the number $i$ such that $i^{2} = -1$.")
-inA("> Calculating powers of complex numbers, in Cartesian form, with technology.")
-inA("> Quadratic formula and the link with the graph of $f(x) = ax^{2}+bx+c$.")
-inA("**Topic 2 の「Prior learning – HL」**の欄に、解の公式そのものが載っています。")
-inA("$2$ つ目の見出しは「**Discriminant**」（判別式）です。")
-inA("AI **SL** の公式集を最後まで見ても、$x = \\dfrac{-b \\pm \\sqrt{b^{2}-4ac}}{2a}$ は出てきません。")
-inB("> On HL examination papers radian measure should be assumed unless otherwise indicated.")
-inB("> Use and draw Argand diagrams.")
-inB("> Cartesian form: $z=a+bi$; the terms real part, imaginary part, conjugate, **modulus and argument**.")
-inB("z = r(\\cos\\theta + i\\sin\\theta) = r\\,e^{i\\theta} = r\\operatorname{cis}\\theta")
-inB("**$a$ と $b$ から $r$ と $\\theta$ を出す式は、どこにも印刷されていません。**")
+# 2026-10: シラバスの引用と公式集のボックスは外し、内容を本文に直接書いた
+eq("1.12a シラバスの引用は本文から外した", re.findall(r"^> ", TA, re.M), [])
+eq("1.12b シラバスの引用は本文から外した", re.findall(r"^> ", TB, re.M), [])
+inA("この約束 $i^{2} = -1$ は、公式集には載っていません。**覚えておいてください。**")
+inA("この式は、公式集の 1.12 の欄にあります。")
+inA("この式は、公式集の Topic 2 の「Prior learning – HL」の欄にあります（AI SL の公式集にはありません）。")
+inA("を **discriminant**（判別式）といい、公式集の 1.12 の欄にあります。")
+inA("conjugate の使い方も公式集には載っていないので、自分で使えるようにしておいてください。")
+inB("HL の試験問題では、とくに指定がなければ角は radian で考えます。")
+notB("z = r(\\cos\\theta + i\\sin\\theta) = r\\,e^{i\\theta} = r\\operatorname{cis}\\theta")
+inB("$a$ と $b$ から modulus や argument を出す式は、公式集には載っていません。")
 inB("d = \\sqrt{(x_1-x_2)^{2}+(y_1-y_2)^{2}}")
 # 「Content 欄は 1 行」という誤りが復活していないこと
 notB("Content 欄は $1$ 行です。")
@@ -401,7 +401,9 @@ inA("返ってくるのは $-0.5 + 1.5\\,i$ と $-0.5 - 1.5\\,i$ のような**�
 # 8: 過去形をやめた
 notA("[AHL 5.17b](../05-calculus/ahl-5-17b.qmd#gdc-complex) でも同じ設定を使いました。")
 # 9: 英語ファースト
-inA("**complex plane**（複素平面）と **modulus**（絶対値）・**argument**（偏角）")
+# 2026-10: 1.12b を案内するボックスは外した。modulus は 1.12b へのリンクつきで英語ファースト
+inA("[AHL 1.12b](ahl-1-12b.qmd#modulus) で扱う **modulus**（絶対値）")
+inB("この平面を **complex plane**（複素平面）といい")
 notA("複素平面（complex plane）と modulus・argument は")
 inA("#### なぜ、いつも **conjugate pair**（共役な組）になるのか {#why-pair}")
 # 10: 符号の説明
@@ -412,8 +414,8 @@ inA("**負の数どうしをかけると正になる**ので、符号が $-$ か
 inA("| $\\Delta < 0$ | 交わらない | **実数ではない複素数が $2$ つ** |")
 
 # 1.12b — 1: シラバスの引用を直した
-inB("AHL 1.12 の Content 欄は $5$ 行あり")
-inB("**modulus と argument は、Content 欄に名前が挙がっています。**")
+notB("AHL 1.12 の Content 欄は $5$ 行あり")
+notB("**modulus と argument は、Content 欄に名前が挙がっています。**")
 # 2: 実軸の行を足した
 inB("$b = 0$ の行、つまり実軸上の点は、どの象限にも入りません。")
 notB("実軸の上の点は")
@@ -428,7 +430,7 @@ inB("です。点 $(3,\\ 2)$ は第 $1$ 象限にあるので、この $\\theta$
 notB("$1$. **点をかいて、どの象限にあるか見る**")
 inB("1. **点をかいて、どの象限にあるか見る**")
 # 6: 見出しに条件
-inB("### 6. $\\Delta < 0$ のとき、$2$ つの解は実軸に関して対称に並びます {#roots}")
+inB("### 6. Complex roots of a quadratic equation（$2$ 次方程式の複素数の解） {#roots}")
 notB("### 6. $2$ 次方程式の解は、実軸に関して対称に並びます {#roots}")
 inB("- 実数係数の $2$ 次方程式で $\\Delta < 0$ のとき、解が実軸に関して**対称な $2$ 点**になることを説明できる。")
 # 7: principal argument の条件
@@ -454,16 +456,21 @@ eq("1.12b strictly between が 3 か所",
 # 8. 構造の不変条件
 # ══════════════════════════════════════════════════════════════
 HEADS = ["What you should be able to do", "The idea", "Why it works",
-         "Worked examples", "Common errors",
+         "Common errors",
          "Using your GDC (TI-Nspire CX II)", "Exercises"]
 for tag, TXT in (("1.12a", TA), ("1.12b", TB)):
     h2 = [h for h in re.findall(r"^## (.+)$", TXT, re.M) if h in HEADS]
-    eq(tag + " 7 見出し", h2, HEADS)
+    eq(tag + " 6 見出し（Worked examples は 2026-10 に削除）", h2, HEADS)
+    eq(tag + " Worked examples の節はない", "## Worked examples" in TXT, False)
+    _iw = TXT.index("\n## Why it works")
+    eq(tag + " 例題はすべて The idea の中",
+       all(TXT.index("## The idea") < m.start() < _iw
+           for m in re.finditer(r"::: \{#exm-", TXT)), True)
     eq(tag + " 例題 4 つ", len(re.findall(r"::: \{#exm-", TXT)), 4)
     eq(tag + " 演習 10 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 10)
     eq(tag + " ex-sep 9 個", TXT.count(".ex-sep"), 9)
-    eq(tag + " --- は 6 個（front matter 2 + 例題 4）",
-       len(re.findall(r"^---$", TXT, re.M)), 6)
+    eq(tag + " --- は 2 個（front matter 2）",
+       len(re.findall(r"^---$", TXT, re.M)), 2)
     eq(tag + " 日本語訳の折りたたみ 14 個",
        TXT.count('<details class="jp-trans">'), 14)
     # 禁止語
@@ -515,8 +522,12 @@ eq("png を残していない",
 #    登録先は _quarto-draft.yml ではなく _quarto.yml です。
 #    ai-hl/index.qmd も、そのときに項目表のないページへ書きかえたので、
 #    「index.qmd に」「残りの N 項目」は、もう検査しません。
-QY = io.open(os.path.join(HERE, "..", "..", "_quarto.yml"),
-             encoding="utf-8").read()
+# この作業用コピーには _quarto.yml / _quarto-draft.yml がないので、ないときは
+# 登録の検査を飛ばす（ページ本文の検査ではない）。
+def _rd(*a):
+    _p = os.path.join(HERE, "..", "..", *a)
+    return io.open(_p, encoding="utf-8").read() if os.path.exists(_p) else None
+QY = _rd("_quarto.yml")
 IX = io.open(os.path.join(HERE, "..", "..", "ai-hl", "index.qmd"),
              encoding="utf-8").read()
 GL = io.open(os.path.join(HERE, "..", "..", "glossary-ai.qmd"),
@@ -525,11 +536,12 @@ for s in ("ai-hl/01-number-and-algebra/ahl-1-12a.qmd",
           "ai-hl/01-number-and-algebra/ahl-1-12b.qmd",
           "AHL 1.12a — Complex numbers in Cartesian form",
           "AHL 1.12b — The complex plane"):
-    eq("_quarto.yml に " + s[:44], s in QY, True)
-QD = io.open(os.path.join(HERE, "..", "..", "_quarto-draft.yml"),
-             encoding="utf-8").read()
+    if QY is not None:
+        eq("_quarto.yml に " + s[:44], s in QY, True)
+QD = _rd("_quarto-draft.yml")
 for s in ("ai-hl/01-number-and-algebra/ahl-1-12a.qmd", "ai-hl/01-number-and-algebra/ahl-1-12b.qmd"):
-    eq("下書き用の _quarto-draft.yml には残っていない: " + s[:44], s in QD, False)
+    if QD is not None:
+        eq("下書き用の _quarto-draft.yml には残っていない: " + s[:44], s in QD, False)
 for s in ("| discriminant | 判別式 |", "| Argand diagram | アルガン図 |",
           "| argument | 偏角 |", "| principal argument | 主偏角 |",
           "| complex plane | 複素平面 |", "| imaginary unit | 虚数単位 |",
@@ -547,6 +559,19 @@ eq("glossary の AA の例から discriminant を外した",
 inB("$z = 0$ のときは向きが決まらないので、argument は定義されません。")
 inB("**$z \\neq 0$ なら**、この $2$ つがそろえば、点の場所は $1$ つに決まります。")
 notB("$\\arg z$ は「どの向きか」です。この $2$ つがそろえば、点の場所は $1$ つに決まります。")
+
+# ══════════════════════════════════════════════════════════════
+#  2026-10 新レイアウト：例題は練習する節の後ろ
+# ══════════════════════════════════════════════════════════════
+def _sec_of(T, eid):
+    _hs = re.findall(r"^### \d+\. .*?\{#([a-z0-9-]+)\}$", T[:T.index("::: {#" + eid + "}")], re.M)
+    return _hs[-1] if _hs else None
+for eid, sec in (("exm-ahl112a-power", "multiply"), ("exm-ahl112a-conj", "conjugate"),
+                 ("exm-ahl112a-four", "divide"), ("exm-ahl112a-quad", "quadratic")):
+    eq("1.12a %s は %s の節の中" % (eid, sec), _sec_of(TA, eid), sec)
+for eid, sec in (("exm-ahl112b-basic", "argument"), ("exm-ahl112b-quadrant", "argument"),
+                 ("exm-ahl112b-circuit", "argument"), ("exm-ahl112b-roots", "roots")):
+    eq("1.12b %s は %s の節の中" % (eid, sec), _sec_of(TB, eid), sec)
 
 print("=" * 78)
 print("結果:  OK %d / NG %d" % (OK, NG))

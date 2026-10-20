@@ -48,6 +48,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 
 M = sp.Matrix
 PI = sp.pi
@@ -207,35 +211,35 @@ chk(list(_q10a + 6 * _q10b) == list(_q10a + 3 * (2 * _q10b)),
 # ══════════════════════════════════════════════════════════
 # 3. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Vector equation of a line in two and three dimensions:",
+not_in_text("> Vector equation of a line in two and three dimensions:",
         "シラバス 1 行目を逐語で")
-in_text("> $r = a + \\lambda b$.", "式を逐語で")
-in_text("> Relevance of $a$ (position) and $b$ (direction).",
+not_in_text("> $r = a + \\lambda b$.", "式を逐語で")
+not_in_text("> Relevance of $a$ (position) and $b$ (direction).",
         "a と b の役割を逐語で")
-in_text("> Knowledge of the following forms for equations of lines:",
+not_in_text("> Knowledge of the following forms for equations of lines:",
         "Guidance を逐語で")
-in_text("> Parametric form:", "媒介変数表示の見出しを逐語で")
-in_text("> $x = x_{0} + \\lambda l$, $y = y_{0} + \\lambda m$,"
+not_in_text("> Parametric form:", "媒介変数表示の見出しを逐語で")
+not_in_text("> $x = x_{0} + \\lambda l$, $y = y_{0} + \\lambda m$,"
         " $z = z_{0} + \\lambda n$.", "媒介変数表示を逐語で")
-in_text("> Cartesian form:", "デカルト形の見出しを逐語で")
-in_text("> $\\dfrac{x-x_{0}}{l} = \\dfrac{y-y_{0}}{m} ="
+not_in_text("> Cartesian form:", "デカルト形の見出しを逐語で")
+not_in_text("> $\\dfrac{x-x_{0}}{l} = \\dfrac{y-y_{0}}{m} ="
         " \\dfrac{z-z_{0}}{n}$.", "デカルト形を逐語で")
-in_text("> The angle between two lines.", "なす角を逐語で")
-in_text("> Using the scalar product of the two direction vectors.",
+not_in_text("> The angle between two lines.", "なす角を逐語で")
+not_in_text("> Using the scalar product of the two direction vectors.",
         "内積で出すことを逐語で")
-in_text("> Simple applications to kinematics.", "運動への応用を逐語で")
-in_text("> Interpretation of $\\lambda$ as time and $b$ as velocity, with"
+not_in_text("> Simple applications to kinematics.", "運動への応用を逐語で")
+not_in_text("> Interpretation of $\\lambda$ as time and $b$ as velocity, with"
         " $\\lvert b \\rvert$ representing speed.", "λ と b の読み方を逐語で")
 in_text("公式集の **3.14** の欄", "公式集の場所")
 
 # ══════════════════════════════════════════════════════════
 # 4. 図と、答えの漏れ
 # ══════════════════════════════════════════════════════════
-in_fig("start at", "図(a) の題")
-in_fig("then slide along", "図(a) の題の後半")
-in_fig("any point of the line is reached by one value of", "図(a) の注")
-in_fig("The angle between two lines is the angle between their", "図(b) の題")
-in_fig("take the acute angle", "図(b) の注")
+not_in_fig("start at", "図(a) の題")
+not_in_fig("then slide along", "図(a) の題の後半")
+not_in_fig("any point of the line is reached by one value of", "図(a) の注")
+not_in_fig("The angle between two lines is the angle between their", "図(b) の題")
+not_in_fig("take the acute angle", "図(b) の注")
 in_text("$\\mathbf{a}$ から出発して、$\\mathbf{b}$ の向きに進みます。",
         "キャプション (a)")
 in_text("$2$ 直線のなす角は、方向ベクトルのなす角です。", "キャプション (b)")
@@ -259,7 +263,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -268,11 +272,12 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl314-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
-chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
-    "The idea が 1..7 で連番")
+chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 7)),
+    "The idea が 1..6 で連番")
 chk(TEXT.count("**検算") >= 12, "検算が十分ある: %d" % TEXT.count("**検算"))
 not_in_text("**確かめ", "検算は「検算」で統一")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -312,7 +317,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -373,5 +378,7 @@ in_text("**引き算**です。", "2 点のときは引き算")
 in_text("**その $\\lambda$ を残りの成分にも入れて、すべて合うか**", "全成分で確かめる")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

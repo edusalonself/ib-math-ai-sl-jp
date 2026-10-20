@@ -63,6 +63,10 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている（消したはず）: " + msg + " :: " + sub[:70])
+
 # ══════════════════════════════════════════════════════════
 # 0. 定義そのもの
 # ══════════════════════════════════════════════════════════
@@ -243,7 +247,9 @@ not_in_text("> $a^{\\frac{1}{m}} = \\sqrt[m]{a}$, if $m$ is even this refers to"
             " the positive root.", "Guidance の引用も置かない")
 # 「m が偶数なら正の根」は、囲みを消しても本文に残っている
 in_text("- $m$ が偶数のとき、**正の根**を指すという約束を守れる。", "冒頭で約束を述べる")
-in_text("`if m is even this refers to the positive root`", "Why it works で引用")
+not_in_text("`if m is even this refers to the positive root`", "シラバスの引用は本文から外した")
+in_text("だから、$m$ が偶数のとき、$a^{\\frac{1}{m}}$ は**正の根**を指すと決めてあります。",
+        "Why it works で約束を日本語で直接述べる")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
 # ══════════════════════════════════════════════════════════
@@ -261,7 +267,7 @@ in_text("**Paper 1 では使えません。**", "Paper 1 では手で解くと�
 # ══════════════════════════════════════════════════════════
 # 9. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -269,9 +275,16 @@ chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
 chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aasl17a-", TEXT, re.M)) == 4, "例題が 4")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h for h in _h2 if h in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -320,11 +333,11 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Two routes to $27^{\\\\frac{2}{3}}$", "図(a) の題")
+not_in_fig("Two routes to", "図(a) の題は外した（本文が言う）")
 in_fig("cube root", "図(a) の道すじ")
-in_fig("small numbers all the way", "図(a) の要点")
-in_fig("a hard root to do by hand", "図(a) のもう一方")
-in_fig("Half-steps in the exponent, base $9$", "図(b) の題")
+not_in_fig("small numbers all the way", "図(a) の説明の文は外した（本文が言う）")
+not_in_fig("a hard root to do by hand", "図(a) の説明の文は外した（本文が言う）")
+not_in_fig("Half-steps in the exponent", "図(b) の題は外した（本文が言う）")
 # 図の値が本文と合っているか
 eq(R(27) ** R(2, 3), 9, "図(a) の行き先")
 eq(sp.root(27, 3), 3, "図(a) の途中（上の道）")
@@ -338,11 +351,15 @@ for _lk in ["16", "64", "125", "49", "4096", "1/5", "2/5", "1/8"]:
 # 11. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-7a.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-1-6.qmd") < DRAFT.index("aasl-1-7a.qmd"), "並びが 1.6 → 1.7a")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/01-number-and-algebra/aasl-1-7a.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-1-6.qmd") < DRAFT.index("aasl-1-7a.qmd"), "並びが 1.6 → 1.7a")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(01-number-and-algebra/aasl-1-7a.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -358,7 +375,7 @@ for t in ["| rational exponent |", "| root |", "| square root |",
 # ══════════════════════════════════════════════════════════
 # 12. レビュー反映の見張り
 # ══════════════════════════════════════════════════════════
-in_text("## このページでは、底（base）は正とします", "底が正であることを明記")
+in_text("## このページでは、**base**（底）は正とします", "底が正であることを明記")
 in_text("$(-16)^{\\frac{1}{2}}$ は、実数としては定義されません。", "負の底の偶数根")
 not_in_text("**対数の法則・底の変換・$a^{x} = \\mathrm{e}^{x\\ln a}$** だけです",
             "公式集の中身の説明も消した")
@@ -427,7 +444,7 @@ ne(R(2) ** R(4, 3), 8, "2^(4/3) は 8 ではない")
 # (-4)^(-3/2) は実数として定義されない
 in_text("**実数としては定義されない**", "戻し計算が書けないことを説明")
 # 図のキャプション（2026-09-29 に短くした）
-in_text("Half-steps on the exponent, for base $9$", "図 (b) のキャプション")
+in_text("底が $9$ のとき、指数を $\\dfrac{1}{2}$ ずつ進めます。", "図 (b) のキャプション")
 # 指数法則は底が正のとき
 in_text("$\\left((-2)^{2}\\right)^{\\frac{1}{2}} = 4^{\\frac{1}{2}} = 2$ であって、$-2$ ではありません",
         "底が負だと崩れる例")
@@ -438,7 +455,7 @@ ne(2, -2, "-2 には戻らない")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -448,17 +465,17 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 公式の前に「何を表す式か」を 1 文（_方針変更-2026-09-15.md 第 14 節）
 # ══════════════════════════════════════════════════════════
-in_text('$m$ 乗根（$m$th root）を、分数の指数で書きかえる式は、次のとおりです。',
+in_text('$m$ 乗すると $a$ になる数を、$a$ の **$m$th root**（$m$ 乗根）と言います。これを分数の指数で書きかえる式は、次のとおりです。',
         "公式の前置き 1")
 
 # ══════════════════════════════════════════════════════════
 # 英語併記（ページ初出・第 10 節）と、命令語
 # ══════════════════════════════════════════════════════════
-in_text("### 1. fractional exponent（分数の指数）は、どこから来るのか {#idea}",
+in_text('### 1. Fractional exponents（分数の指数は、どこから来るのか） {#idea}',
         "分数の指数の併記")
 in_text("- 負の有理数の指数（negative rational exponent）$a^{-\\frac{m}{n}}$ を扱える。",
         "負の有理数の指数の併記")
-in_text("$729$ の $3$ 乗根（cube root）を直接出すのは大変です。", "3 乗根の併記")
+in_text("$729$ の **cube root**（$3$ 乗根）を直接出すのは大変です。", "3 乗根の併記")
 in_text("**`Solve`（解を求めよ）なのか `Find the value of`（値を求めよ）なのか**",
         "命令語の併記")
 in_text("**「$m$ が偶数なら正の根」という約束がかかるのは、根の次数のほう**",
@@ -468,10 +485,10 @@ not_in_text("という但し書きが、いちばん大事なところです", "
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. fractional exponent（分数の指数）は、どこから来るのか {#idea}', "見出しの英語: 1. fractional exponent（分数の")
-in_text('### 2. $a^{\\frac{1}{m}} = \\sqrt[m]{a}$（$m$th root） {#root}', "見出しの英語: 2. $a^{\frac{1}{m}} = \sqr")
-in_text('### 4. negative rational exponents（負の有理数の指数） {#negative}', "見出しの英語: 4. negative rational expon")
-in_text('### 6. surd form and index form（根号の形と、指数の形） {#surds}', "見出しの英語: 6. surd form and index for")
+in_text('### 1. Fractional exponents（分数の指数は、どこから来るのか） {#idea}', "見出しの英語: 1. fractional exponent（分数の")
+in_text('### 2. The $m$th root（$m$ 乗根） {#root}', "見出しの英語: 2. $a^{\frac{1}{m}} = \sqr")
+in_text('### 4. Negative rational exponents（負の有理数の指数） {#negative}', "見出しの英語: 4. negative rational expon")
+in_text('### 6. Surd form and index form（根号の形と、指数の形） {#surds}', "見出しの英語: 6. surd form and index for")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：規則の文を図から本文へ（方針 第 21 節）

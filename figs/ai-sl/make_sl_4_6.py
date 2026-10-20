@@ -27,7 +27,7 @@ def frame(ax):
 
 
 # ---------- 1. 重なるベン図 と 排反 ----------
-fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.4))
+fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.1))
 
 # 左：重なる
 ax = axes[0]
@@ -44,8 +44,6 @@ ax.annotate("$A \\cap B$", (0.50, 0.48), fontsize=10, ha="center", va="center",
             color=ACC)
 ax.annotate("neither", (0.5, 0.13), fontsize=9.5, ha="center", va="center",
             color="#5b6472")
-ax.set_title("Overlapping:  $\\mathrm{P}(A \\cap B) \\neq 0$",
-             fontsize=11, pad=10)
 
 # 右：排反
 ax = axes[1]
@@ -58,8 +56,6 @@ ax.annotate("$A$", (0.27, 0.48), fontsize=13, ha="center", va="center")
 ax.annotate("$B$", (0.73, 0.48), fontsize=13, ha="center", va="center")
 ax.annotate("no overlap", (0.5, 0.13), fontsize=9.5, ha="center", va="center",
             color=ACC)
-ax.set_title("Mutually exclusive:  $\\mathrm{P}(A \\cap B) = 0$",
-             fontsize=11, pad=10)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-4-6-venn.svg"), format="svg", bbox_inches="tight")

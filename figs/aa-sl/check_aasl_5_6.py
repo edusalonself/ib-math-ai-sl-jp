@@ -42,7 +42,25 @@ def not_in_text(sub, msg=""):
     chk(sub not in TEXT, "本文に残っている: %s :: %s" % (msg, sub[:60]))
 
 
-BODY = TEXT.split("## Worked examples")[0]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 
 def not_in_body(sub, msg=""):
@@ -63,7 +81,7 @@ def d(e, v=X):
 in_text("# SL 5.6 — Standard derivatives and the rules of differentiation"
         "（標準的な導関数と微分の規則） {#sec-aasl-5-6}", "ページの題")
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
@@ -78,9 +96,9 @@ chk([s[2] for s in _secs] == ["rational", "standard", "composite", "chain",
 # 見出しはすべて 英語（日本語）（方針 第 17 節の ①②）
 for _n, _t, _a in _secs:
     if _n == "4":
-        chk(_t == "合成関数の微分＝chain rule", "第 4 節の見出し: " + _t)
-        continue
-    chk(re.match(r"^[a-z]", _t), "見出し %s は英語で始まる: %s" % (_n, _t))
+        chk(_t == "The chain rule（合成関数の微分）", "第 4 節の見出し: " + _t)
+    chk(re.match(r"^[A-Z][^（]*（[^（）]*(?:（[^）]*）[^（）]*)*）$", _t),
+        "見出し %s は「English（日本語）」の形（英語は大文字で始まる）: %s" % (_n, _t))
 
 chk(len(re.findall(r"^\[\d+\]\{\.ex-no\}", TEXT, re.M)) == 10, "演習 10 問")
 chk([int(x) for x in re.findall(r"^\[(\d+)\]\{\.ex-no\}", TEXT, re.M)]
@@ -89,7 +107,7 @@ chk(TEXT.count("::: {#exm-") == 4, "例題 4 つ")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14 個")
 chk(TEXT.count("## 解答例") == 14, "解答例 14 個")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭の --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭の --- は 6 本")
 chk(TEXT.count("**検算") >= 12, "検算は 12 本以上: %d" % TEXT.count("**検算"))
 chk(TEXT.count(":::") % 2 == 0, "::: の数が偶数: %d" % TEXT.count(":::"))
 chk("\n\n\n" not in TEXT, "空行が 2 つ続いていない")
@@ -162,29 +180,31 @@ chk(not os.path.exists(os.path.join(ROOT, "aa-sl", "05-calculus", "img",
     "5.6a の図（合成関数）は消した")
 
 # (2) 移したもの
-in_text("**$\\sin$ と $\\cos$ の derivative は、$x$ が radian（ラジアン）の"
-        "ときの式です。**", "ラジアンの注意は第 2 節に")
-chk(TEXT.index("radian（ラジアン）のときの式です")
-    < TEXT.index("### 3. composite function"), "ラジアンの注意は第 2 節の中")
-in_text("**いちばん多い誤りは、内側の derivative をかけ忘れることです。**",
+in_text("**$\\sin$ と $\\cos$ の導関数は、$x$ がラジアンのときの式です。**", "ラジアンの注意は第 2 節に")
+chk(TEXT.index("$x$ がラジアンのときの式です")
+    < TEXT.index("### 3. Composite functions（合成関数）"), "ラジアンの注意は第 2 節の中")
+in_text("**いちばん多い誤りは、内側の導関数をかけ忘れることです。**",
         "連鎖律の注意は第 4 節に")
-chk(TEXT.index("いちばん多い誤りは、内側の derivative")
-    < TEXT.index("### 5. product rule"), "連鎖律の注意は第 4 節の中")
+chk(TEXT.index("いちばん多い誤りは、内側の導関数")
+    < TEXT.index("### 5. The product rule（積の微分法）"), "連鎖律の注意は第 4 節の中")
 in_text("**分子は、$v\\dfrac{du}{dx}$ が先です。** 上を $u$、下を $v$ とします。",
         "分子の順番と u・v は第 6 節（商）に")
-chk(TEXT.index("### 6. quotient rule")
+chk(TEXT.index("### 6. The quotient rule（商の微分法）")
     < TEXT.index("**分子は、$v\\dfrac{du}{dx}$ が先です。**")
-    < TEXT.index("### 7. combining the rules"), "第 6 節の中にある")
+    < TEXT.index("### 7. Combining the rules（規則を組み合わせる）"), "第 6 節の中にある")
 
-# (3) 「導関数」は derivative に（題名と見出しの日本語はそのまま）
-chk(TEXT.count("derivative（導関数）") == 1, "併記は 1 回だけ")
+# (3) 用語は初出で **derivative**（導関数）、あとは日本語の「導関数」
+#     （2026-10 の書き換え：日本語の文中に英語の derivative は混ぜない）
+chk(TEXT.count("**derivative**（導関数）") == 1, "併記は初出の 1 回だけ")
+chk(TEXT.count("derivative（導関数）") == 0, "併記は **English**（日本語）の形")
 for _ln in TEXT.split("\n"):
     if _ln.startswith("# ") or _ln.startswith("### "):
         continue
-    chk("導関数" not in _ln.replace("derivative（導関数）", ""),
-        "本文に導関数が残っている: " + _ln.strip()[:50])
+    if re.search(r"[ぁ-んァ-ヶ一-龯]", _ln):
+        chk("derivative" not in _ln.replace("**derivative**（導関数）", ""),
+            "日本語の文に derivative が残っている: " + _ln.strip()[:50])
 in_text("（標準的な導関数と微分の規則）", "題名の日本語は「導関数」のまま")
-in_text("### 2. standard derivatives（標準的な導関数） {#standard}",
+in_text("### 2. Standard derivatives（標準的な導関数） {#standard}",
         "第 2 節の見出しの日本語は「導関数」のまま")
 chk(not re.search(r"[぀-ヿ一-鿿]derivative", TEXT),
     "derivative の前に空白がある")
@@ -276,7 +296,7 @@ chk(sp.simplify(sp.diff(_u / _v, X)
     "式 5：商の微分法")
 
 
-in_text("### 4. 合成関数の微分＝chain rule {#chain}", "第 4 節の見出し")
+in_text("### 4. The chain rule（合成関数の微分） {#chain}", "第 4 節の見出し")
 not_in_text("### 4. chain rule（連鎖律）", "前の見出しは消した")
 in_text("合成関数を微分するときに使うのが、**chain rule**（連鎖律）です。",
         "第 4 節の書き出し")
@@ -292,7 +312,7 @@ chk(TEXT.index("合成関数を微分するときに使うのが")
 # ══════════════════════════════════════════════════════════
 
 # --- 第 5 節（積）---------------------------------------------------------
-in_text("### 5. product rule（積の微分法） {#product}", "第 5 節の見出し")
+in_text("### 5. The product rule（積の微分法） {#product}", "第 5 節の見出し")
 in_text("微分したい関数が、$2$ つの関数の **product**（積）の形で表されている"
         "ときには、専用の規則があります。", "第 5 節の書き出し")
 not_in_text("$2$ つの関数の**積**は、それぞれを微分してかけ算しても求まりません。",
@@ -303,7 +323,7 @@ for _s in ("**$2$ 項できます。**", "**積では、どちらを $u$ にし�
 in_text("$u$ と $v$ の取り方の例です。", "表（積での u と v）の前置き")
 
 # --- 第 6 節（商）---------------------------------------------------------
-in_text("### 6. quotient rule（商の微分法） {#quotient}", "第 6 節の見出し")
+in_text("### 6. The quotient rule（商の微分法） {#quotient}", "第 6 節の見出し")
 in_text("微分したい関数が、**quotient**（商）の形、つまり分数の形で表されている"
         "ときにも、専用の規則があります。", "第 6 節の書き出し")
 not_in_text("**わり算**の形にも、専用の規則があります。", "前の書き出しは消した")
@@ -313,7 +333,7 @@ for _s in ("**$v = 0$ になる $x$ は、はじめから定義域の外です�
     not_in_text(_s, "第 6 節から消した: " + _s[:26])
 
 # --- 第 7 節（組み合わせる）：具体例 --------------------------------------
-in_text("### 7. combining the rules（規則を組み合わせる） {#withchain}",
+in_text("### 7. Combining the rules（規則を組み合わせる） {#withchain}",
         "第 7 節の見出し")
 in_text("たとえば $y = x^{2}\\cos(4x + 1)$ を微分します。"
         "**全体はかけ算の形なので、まず積の微分法です。**", "第 7 節の例")
@@ -334,10 +354,10 @@ eq(2 * X * sp.cos(4 * X + 1) - 4 * X ** 2 * sp.sin(4 * X + 1),
 eq(d(sp.cos(4 * X + 1)), -4 * sp.sin(4 * X + 1), "第 7 節 dv/dx")
 
 # --- 第 9 節（どの規則を使うか）はいちばん最後 -----------------------------
-in_text("### 9. choosing the rule（どの規則を使うか） {#spot}", "第 9 節の見出し")
-chk(TEXT.index("### 8. simplify first") < TEXT.index("### 9. choosing the rule"),
+in_text("### 9. Choosing the rule（どの規則を使うか） {#spot}", "第 9 節の見出し")
+chk(TEXT.index("### 8. Simplifying first（先に整理する）") < TEXT.index("### 9. Choosing the rule（どの規則を使うか）"),
     "「どの規則を使うか」は「先に整理する」のあと")
-_i9 = TEXT.index("### 9. choosing the rule（どの規則を使うか） {#spot}")
+_i9 = TEXT.index("### 9. Choosing the rule（どの規則を使うか） {#spot}")
 _s9 = TEXT[_i9:TEXT.index(chr(10) + "## Why it works")]
 chk("## この項目は Paper 1 に出ます" in _s9, "Paper 1 の callout は第 9 節に")
 chk("## 電卓が使えるときは、こう確かめます" in _s9, "電卓の callout は第 9 節に")
@@ -365,7 +385,7 @@ in_text("\\frac{dy}{dx} = \\frac{dy}{du} \\times \\frac{du}{dx} "
         "= 4u^{3} \\times 3 = 12u^{3}", "連鎖律に入れる")
 in_text("$$\n\\frac{dy}{dx} = 12(3x + 1)^{3}\n$$", "u をもどす")
 chk(TEXT.index("**混乱するときは、最初に内側を $u$ と置いて")
-    < TEXT.index("### 5. product rule"), "手順は第 4 節の中にある")
+    < TEXT.index("### 5. The product rule（積の微分法）"), "手順は第 4 節の中にある")
 # 式は 1 つずつ改行して置いてある
 chk(TEXT.count("$$\ny = u^{4}\n$$") == 1, "y = u^4 は独立した式")
 # 手順の計算
@@ -385,6 +405,16 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

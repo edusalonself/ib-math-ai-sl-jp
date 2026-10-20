@@ -194,22 +194,23 @@ anti("本文 4x sin(x^2)", 4 * x * sp.sin(x ** 2), -2 * sp.cos(x ** 2))
 # ══════════════════════════════════════════════════════════════
 # 6. シラバス・公式集から確かめた事実
 # ══════════════════════════════════════════════════════════════
-inA("> Definite and indefinite integration of $x^{n}$ where $n \\in \\mathbb{Q}$, "
-    "including $n = -1$, $\\sin x$, $\\cos x$, $\\dfrac{1}{\\cos^{2}x}$ and $e^{x}$.")
-inB("> Integration by inspection, or substitution of the form "
-    "$\\displaystyle\\int f(g(x))g'(x)\\,dx$.")
+# シラバスの引用は本文から外し、日本語で直接書いた
+notA("> Definite and indefinite integration of")  # シラバスの引用は本文から外した
+inA("$n$ は **rational number**（有理数）、つまり $n \\in \\mathbb{Q}$ であればよいのです")
+inA("### 2. The case $n = -1$（$n = -1$ のときの公式） {#minus-one}")
+notB("> Integration by inspection, or substitution")  # シラバスの引用は本文から外した
 # Examples のブロックは削除した
 notB("> Examples: $\\displaystyle\\int\\sin(2x+5)\\,dx$")
 # 公式集: 5.11 の欄は 5 つ、power rule は 5.5 の欄
 # 冒頭の「公式集の 5.11 の欄」の囲みは削除し、第1節の表の下に一文で残した
 notA("## 公式集の 5.11 の欄")
 inA("**この $5$ つは、公式集の $5.11$ の欄にそのまま印刷されています。**")
-inA("べき乗の公式は、公式集では $5.5$ の欄のほうに印刷されています。")
+inA("べき乗の公式は、公式集の **5.5** の欄にあります。")
 inA("\\int x^{n}\\,dx = \\frac{x^{\\,n+1}}{n+1} + C, \\qquad n \\neq -1")
 # 5.11b の冒頭の 2 つの囲みは削除し、シラバスの Content 欄だけ第1節に残した
 notB("## 公式集の 5.11 の欄に、この方法の公式はありません")
 notB("## [AHL 5.11a](ahl-5-11a.qmd) の $5$ つを、先に見ておいてください")
-inB("これが **integration by inspection** です。")
+inB("これが **integration by inspection**（微分の逆から予想する積分）です。")
 
 # ══════════════════════════════════════════════════════════════
 # 7. レビューで直した点の見張り（5.11a）
@@ -222,7 +223,7 @@ inA("**数値で答える定積分は、電卓で出して構いません**")
 notA("**定積分の値は、電卓で出すのがふつうです**")
 inA(": 電卓で済むかどうかの見分け方 {#tbl-ahl511a-when}")
 # 4: SL 5.5 の出典
-inA("**AHL 5.11 に同じ一文はありません**")
+inA("面積を計算する前に、正しい式を先に書きます。")
 notA("シラバスは、[SL 5.5](../../ai-sl/05-calculus/sl-5-5.qmd#write-first) の段階から")
 inA("## 積分の式を書かずに、電卓の値だけを書く")
 # 5: 循環引用をやめた
@@ -242,9 +243,9 @@ inA("6 \\times 1.60944 = 9.6566")
 inA("\\ln 3 = 1.10 \\ (3 \\text{ s.f.})")
 # 14: 英語ファースト
 inA("#### **modulus**（絶対値）が付く理由 {#abs}")
-inA("**被積分関数**（integrand）")
-inA("**定積分**（**definite integral**）")
-inA("**積分定数**（**constant of integration**）")
+inA("**integrand**（被積分関数）")
+inA("**definite integral**（定積分）")
+inA("**constant of integration**（積分定数）")
 # GDC の入力は「画面で見たままの形」で書く
 notA("`5+4cos(x)`")
 inA("**anti-derivative**（原始関数）")
@@ -276,7 +277,7 @@ inB("`exact value` や `Show that` でなければ、定積分の値は電卓で
 # 7: 分母が 0 の条件
 inB("## 分母が $0$ になる点をまたぐ区間では使えません")
 # 9: シラバスの言い方
-inB("**$2$ つの方法が挙げられています。**")
+inB("このページでは、inspection と、$u$ に置きかえる **substitution**（置換積分）の $2$ つの方法を学びます。どちらで書いても正解です。")
 notB("**inspection と substitution のどちらでもよい**、と書かれています")
 # 11: 例題と演習を本文と別の数に
 inB("\\int 6x\\cos(x^{2})\\,dx")
@@ -292,23 +293,28 @@ notB("$u = g(x)$ は $g(a)$ から $g(b)$ まで動きます")
 inB("$\\ln(\\ln x)$ になるのは $\\displaystyle\\int\\dfrac{1}{x\\ln x}\\,dx$ のほうです。")
 # 15: Guidance の 4 例の振り分け
 notB("はじめの $2$ つがこの節、後ろの $2$ つは")
-inB("### 3. 中身の微分が掛けられているとき — inspection {#inspection2}")
-inB("### 4. substitution — 置きかえて進めます {#sub}")
+inB("### 3. Spotting the inner derivative（中身の微分が掛けられているとき） {#inspection2}")
+inB("### 4. Integration by substitution（置換積分） {#sub}")
 inB("#### $\\displaystyle\\int \\frac{f'(x)}{f(x)}\\,dx$ の形 {#log-form}")
 
 # ══════════════════════════════════════════════════════════════
 # 9. 構造の不変条件
 # ══════════════════════════════════════════════════════════════
-HEADS = ["What you should be able to do", "The idea", "Why it works",
-         "Worked examples", "Common errors",
-         "Using your GDC (TI-Nspire CX II)", "Exercises"]
+HEADS_ALL = ["What you should be able to do", "The idea", "Why it works",
+             "Worked examples", "Common errors",
+             "Using your GDC (TI-Nspire CX II)", "Exercises"]
+HEADS = [h for h in HEADS_ALL if h != "Worked examples"]  # Worked examples は廃止
 for tag, TXT, path in (("5.11a", TA, A), ("5.11b", TB, B)):
-    h2 = [h for h in re.findall(r"^## (.+)$", TXT, re.M) if h in HEADS]
-    eq(tag + " 7 見出し", h2, HEADS)
-    eq(tag + " 例題 4 つ", len(re.findall(r"::: \{#exm-", TXT)), 4)
+    h2 = [h for h in re.findall(r"^## (.+)$", TXT, re.M) if h in HEADS_ALL]
+    eq(tag + " 6 見出し（Worked examples なし）", h2, HEADS)
+    _exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+    eq(tag + " 例題はすべて The idea の中（Why it works より前）",
+       all(TXT.index("## The idea") < p < TXT.index("## Why it works")
+           for p in _exm), True)
+    eq(tag + " 例題 4 つ（数は変わらない）", len(_exm), 4)
     eq(tag + " 演習 10 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 10)
     eq(tag + " ex-sep 9 個", TXT.count(".ex-sep"), 9)
-    eq(tag + " 区切り線", TXT.count("\n---\n"), 5)
+    eq(tag + " 区切り線", TXT.count("\n---\n"), 1)
     for w in ("誰でもできる", "簡単です", "当然", "明らか", "もちろん",
               "当たり前", "そのとおり", "ご指摘", "確かめ。"):
         if w in TXT:

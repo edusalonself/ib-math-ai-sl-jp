@@ -121,23 +121,12 @@ W = np.array([1.0, 2.0, 0.0])
 CR = np.cross(V, W)                      # (0, 0, 6)
 SC = 0.45                                # 上向き矢印の縮尺（6 → 2.7）
 
-fig = plt.figure(figsize=(11.4, 4.6))
+fig = plt.figure(figsize=(11.4, 3.9))
 
-for k, (cross, title, note) in enumerate([
-        (CR, "(a)  $\\mathbf{v}\\times\\mathbf{w}$ points one way",
-         "$\\mathbf{v} = \\binom{3}{0}$ and $\\mathbf{w} = \\binom{1}{2}$ in the"
-         " plane (third component $0$).\n"
-         "Right hand: fingers turn from $\\mathbf{v}$ to $\\mathbf{w}$, thumb"
-         " gives $\\mathbf{v}\\times\\mathbf{w}$, at right angles to both\n"
-         "(the upright arrow is drawn shorter than its true length)."),
-        (-CR, "(b)  $\\mathbf{w}\\times\\mathbf{v}$ points the other way",
-         "Turning from $\\mathbf{w}$ to $\\mathbf{v}$ instead points the thumb"
-         " down.\n"
-         "Same length, opposite direction:"
-         " $\\mathbf{w}\\times\\mathbf{v} = -(\\mathbf{v}\\times\\mathbf{w})$.")]):
+for k, (cross, title) in enumerate([(CR, "(a)"), (-CR, "(b)")]):
     ax = fig.add_subplot(1, 2, k + 1, projection="3d")
     frame3(ax)
-    text3(ax, (-1.3, -1.2, 0), "the plane of\n$\\mathbf{v}$ and $\\mathbf{w}$",
+    text3(ax, (3.0, 3.6, 0), "plane",
           color=GREY, fontsize=10.5, ha="center", va="center")
     # v と w が張る平行四辺形は、塗らずに破線の 2 辺だけで示す
     # （塗ると、その下の矢印の色が薄く見えてしまうため）
@@ -158,11 +147,8 @@ for k, (cross, title, note) in enumerate([
     text3(ax, cross * SC + np.array([0.2, 0.2, 0.35 if k == 0 else -0.55]),
           lab, color=ACC, fontsize=14)
     ax.set_title(title, fontsize=12.5, color=INK, pad=2)
-    # 説明は 2 次元の座標で置く（3 次元だと位置が読みにくいため）
-    ax.text2D(0.5, -0.02, note, transform=ax.transAxes, fontsize=11.5,
-              color=INK, ha="center", va="top", bbox=BOX, zorder=20)
 
-fig.subplots_adjust(left=0.0, right=1.0, top=0.99, bottom=0.20,
+fig.subplots_adjust(left=0.0, right=1.0, top=0.99, bottom=0.0,
                     wspace=0.0)
 save(fig, "ahl-3-13b-idea.svg")
 
@@ -196,7 +182,7 @@ ax.text(2.0, -1.5, "$A = $ base $\\times$ height $= |\\mathbf{v}||\\mathbf{w}|"
                    "\\sin\\theta = |\\mathbf{v}\\times\\mathbf{w}| = 6$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 blank(ax, (-1.2, 6.4), (-2.6, 3.6), step=1, axes=False)
-ax.set_title("(a)  the parallelogram", fontsize=12.5, color=INK, pad=6)
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) 三角形は、その半分
 ax = axs[1]
@@ -219,8 +205,7 @@ ax.text(2.0, -1.5, "triangle $= \\frac{1}{2}|\\mathbf{v}\\times\\mathbf{w}|"
                    " = 3$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 blank(ax, (-1.2, 6.4), (-2.6, 3.6), step=1, axes=False)
-ax.set_title("(b)  the triangle is half of it", fontsize=12.5, color=INK,
-             pad=6)
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=2.0)
 save(fig, "ahl-3-13b-area.svg")
@@ -264,13 +249,9 @@ ax.text(a3[0] - 0.25, a3[1] + 0.25, "$\\mathbf{a} = \\binom{-1}{6}$",
 ax.text(b3[0] + 0.10, b3[1] - 0.55, "$\\mathbf{b} = \\binom{4}{3}$",
         fontsize=13, color=GREEN, ha="left", va="top")
 ax.text(-0.30, -0.30, "$O$", fontsize=12, color=INK, ha="right", va="top")
-ax.text(3.0, -2.6, "the two parts make a right-angled triangle:\n"
-                   "$2.8^2 + 5.4^2 = 37 = |\\mathbf{a}|^2$",
+ax.text(3.0, -2.6, "$2.8^2 + 5.4^2 = 37 = |\\mathbf{a}|^2$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=10)
 blank(ax, (-3.0, 9.0), (-4.0, 7.6), step=1, axes=False)
-ax.set_title("$\\mathbf{a}$ splits into a part along $\\mathbf{b}$\n"
-             "and a part at right angles to $\\mathbf{b}$",
-             fontsize=12.5, color=INK, pad=8)
 
 fig.tight_layout()
 save(fig, "ahl-3-13b-component.svg")

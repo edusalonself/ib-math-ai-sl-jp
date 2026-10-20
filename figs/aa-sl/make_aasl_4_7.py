@@ -39,12 +39,10 @@ WARM = "#b45309"
 FILL = "#cfe0f2"
 
 fig1, ax1 = plt.subplots(figsize=(5.6, 4.8))
-fig2, ax2 = plt.subplots(figsize=(5.6, 4.8))
+fig2, ax2 = plt.subplots(figsize=(5.6, 4.3))
 # ══════════════════════════════════════════════════════════
 # (a) 確率分布と、つり合う点
 # ══════════════════════════════════════════════════════════
-ax1.set_title("$E(X)$ is where the distribution balances", fontsize=11,
-              color=INK, loc="left", pad=12)
 
 XS = [0, 1, 2, 3]
 PS = [0.1, 0.3, 0.5, 0.1]
@@ -80,10 +78,8 @@ ax1.text(MEAN + 0.10, 0.61, "$E(X) = 1.6$", fontsize=10, color=WARM)
 # ══════════════════════════════════════════════════════════
 # (b) ゲームの利得
 # ══════════════════════════════════════════════════════════
-ax2.set_title("A game is fair when $E(X) = 0$", fontsize=11, color=INK,
-              loc="left", pad=12)
 ax2.set_xlim(-3.6, 5.6)
-ax2.set_ylim(-3.1, 3.1)
+ax2.set_ylim(-2.8, 2.9)
 ax2.axis("off")
 
 

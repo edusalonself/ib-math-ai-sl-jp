@@ -14,26 +14,9 @@ sidebar: ai-hl
 - 最大・最小の値と時刻から、$a$、$b$、$c$、$d$ を決められる。
 :::
 
-::: {.callout-important}
-## 公式集の AHL 2.9 の欄
-**$1$ 行だけあります。** ただし、それは logistic function のもので、[AHL 2.9b](ahl-2-9b.qmd) で扱います。
-
-$$
-f(x) = \frac{L}{1+Ce^{-kx}}, \quad L,\ C,\ k > 0
-$$
-
-**このページの $3$ つのモデルは、$1$ つも印刷されていません。**
-
-- half-life の式 … ありません
-- $f(x) = a + b\ln x$ … ありません
-- period $= \dfrac{2\pi}{b}$ … ありません
-
-とくに **period $= \dfrac{2\pi}{b}$ は、自分で持っておく必要があります。** [SL 2.5](../../ai-sl/02-functions/sl-2-5.qmd#what-is-b) で $\dfrac{360}{b}$ を覚えたはずですが、HL ではラジアンが既定なので $\dfrac{2\pi}{b}$ のほうを使います（[第6節](#radian)）。
-:::
-
 ## The idea
 
-### 1. AHL で足される $5$ つのモデル {#idea}
+### 1. Models added at HL（HL で加わるモデル） {#idea}
 
 [SL 2.5](../../ai-sl/02-functions/sl-2-5.qmd) で $6$ つのモデル（linear、quadratic、exponential、direct/inverse variation、cubic、sinusoidal）を扱いました。HL では、次の $5$ つが足されます。
 
@@ -53,7 +36,9 @@ $$
 - sinusoidal … **ラジアンになり、$c$（phase shift）が入る**
 - natural logarithmic … まるごと新しい形です
 
-### 2. half-life は「半分になるまでの時間」です {#half-life}
+公式集の **AHL 2.9** の欄にあるのは、logistic の式（[AHL 2.9b](ahl-2-9b.qmd)）だけです。**このページの $3$ つのモデルの式は、どれも載っていません。**
+
+### 2. Half-life（半減期） {#half-life}
 
 **half-life**（半減期）は、量が半分になるまでにかかる時間です。放射性物質、体の中の薬、コーヒーのカフェイン——**減り方が指数的なもの**に使います。
 
@@ -63,7 +48,7 @@ $$ {#eq-ahl29a-decay}
 
 $M_0$ ははじめの量、$k$ は減り方の速さです。**量を表すモデルなので、はじめの量 $M_0$ は正**とします。
 
-![Half-life: equal steps, equal halving](img/ahl-2-9a-halflife.svg){#fig-ahl29a-halflife width=72%}
+![半減期：同じ時間がたつごとに、量が半分になります。](img/ahl-2-9a-halflife.svg){#fig-ahl29a-halflife width=95%}
 
 @fig-ahl29a-halflife が $M = 500e^{-0.12t}$ です（@exm-ahl29a-decay でも使います）。$500 \to 250 \to 125 \to 62.5$ と半分ずつ減っていきますが、**そのたびにかかる時間はいつも同じ $5.78$ 年**です。これが half-life です。
 
@@ -89,6 +74,8 @@ $$
 T = \frac{\ln 2}{k}
 $$ {#eq-ahl29a-halflife}
 
+この式は公式集にないので、上の流れで自分で導けるようにしておいてください。
+
 （$M_0 = 0$ だと $M$ はいつも $0$ で、$M = \dfrac{1}{2}M_0$ がどの時刻でも成り立ってしまい、**half-life が $1$ つに決まりません。** だから $M_0 > 0$ としています。）
 
 @eq-ahl29a-decay の $k = 0.12$ なら
@@ -104,166 +91,6 @@ $500$ mg から始めても $50$ mg から始めても、半分になるまで�
 理由は上の $2$ 行目にあります。**両辺を $M_0$ で割った時点で、$M_0$ が式から消えている**からです。
 
 `State what happens to the half-life if the initial mass is doubled` と聞かれたら、答えは「変わらない」です。同じ話が [AHL 1.9](../01-number-and-algebra/ahl-1-9.qmd) にも出ています。
-:::
-
-### 3. half-life と $k$ は、行き来できます {#k-and-T}
-
-@eq-ahl29a-halflife は、どちらの向きにも使えます。
-
-| 分かっているもの | 求めるもの | 使う式 |
-|:--|:--|:--|
-| $k$ | half-life $T$ | $T = \dfrac{\ln 2}{k}$ |
-| half-life $T$ | $k$ | $k = \dfrac{\ln 2}{T}$ |
-
-: $k$ と $T$ の行き来 {#tbl-ahl29a-kT}
-
-$e$ を使わずに、**半分にする回数**で書く形もあります。
-
-$$
-M = M_0\left(\frac{1}{2}\right)^{\frac{t}{T}}
-$$ {#eq-ahl29a-halving}
-
-$t = T$ なら指数が $1$ で半分、$t = 2T$ なら $\dfrac{1}{4}$ です。@eq-ahl29a-decay と @eq-ahl29a-halving は**同じもの**で、$k$ と $T$ が @eq-ahl29a-halflife で結ばれています。
-
-### 4. natural logarithmic model $f(x) = a + b\ln x$ {#log-model}
-
-シラバスが指定している形です。
-
-$$
-f(x) = a + b\ln x
-$$ {#eq-ahl29a-log}
-
-![A natural logarithmic model](img/ahl-2-9a-log.svg){#fig-ahl29a-log width=72%}
-
-@fig-ahl29a-log は **$b > 0$ の場合**です。$b > 0$ なら、**はじめは急に上がり、そのあと増え方が緩やかになります。** 上限はなく、$x$ が大きくなると増加を続けます。
-
-**$b < 0$ ならグラフの上下が反転します。** はじめは急に下がり、そのあと下がり方が緩やかになります。
-
-@eq-ahl29a-log の（$b > 0$ のときの）使いどころは、**「増えるけれど、だんだん増え方が鈍る」**場面です。学習の習熟度、音の大きさの感じ方、地震の規模——pH scale、Richter scale、sound intensity は、どれも対数の目盛りです。
-
-大事な点が $2$ つあります。
-
-- **domain は $x > 0$ です。** $\ln 0$ も $\ln(\text{負})$ も定義されません。@fig-ahl29a-log で、$x = 0$ が **vertical asymptote**（垂直漸近線）になっています
-- **$b > 0$ なら increasing（増加）、$b < 0$ なら decreasing（減少）**です。$b = 0$ なら $f(x) = a$ という **constant function**（定数関数）になり、$x$ による変化を表さないモデルになります。$\ln x$ 自体は増える関数なので、向きは $b$ の符号で決まります
-
-::: {.callout-warning}
-## $x = 0$ を入れられません
-「$t = 0$ のときの値」を聞かれる文脈問題では、この形は使えません。
-
-$f(x) = 4 + 4.33\ln x$ で $x = 0$ とすると、$\ln 0$ が定義されないので値がありません。それどころか、$x$ を $0$ に近づけると $f(x)$ は**いくらでも小さくなります**（@fig-ahl29a-log の左端）。
-
-文脈問題では、$x \geq 1$ のように**始まりの点を決めて**使います（演習 $7$）。
-:::
-
-### 5. $a$ と $b$ は、$2$ 点から出します {#fit-log}
-
-パラメータの決め方は [SL 2.6](../../ai-sl/02-functions/sl-2-6.qmd) と同じです（Guidance の `Link to: modelling skills (SL2.6)` は、この項目全体にかかっています）。**$2$ 点を入れて、連立方程式にします。**
-
-$(2,\ 7)$ と $(8,\ 13)$ を通るとします。
-
-$$
-a + b\ln 2 = 7
-$$
-
-$$
-a + b\ln 8 = 13
-$$
-
-引き算すると $a$ が消えます。
-
-$$
-b(\ln 8 - \ln 2) = 6
-$$
-
-$\ln 8 - \ln 2 = \ln 4$ です（[AHL 1.9](../01-number-and-algebra/ahl-1-9.qmd)）。
-
-$$
-b = \frac{6}{\ln 4} = 4.3280\ldots
-$$
-
-$1$ つ目の式にもどして
-
-$$
-a = 7 - 4.3280\ldots \times \ln 2 = 7 - 3 = 4
-$$
-
-**$\ln$ の値は、丸めずに電卓の中のまま使ってください**（[GDC](#gdc-store)）。
-
-### 6. sinusoidal model ── HL はラジアンです {#radian}
-
-$$
-f(x) = a\sin\bigl(b(x-c)\bigr)+d
-$$ {#eq-ahl29a-sine}
-
-[SL 2.5](../../ai-sl/02-functions/sl-2-5.qmd#sinusoidal) では $a\sin(bx)+d$ の形で、**度数法**で扱いました。HL では $c$ が入り、**ラジアンが既定**になります。
-
-ここでは $b > 0$ とします。$b$ が負のときの period は $\dfrac{2\pi}{\lvert b \rvert}$ です。$\sin(-2x)$ の period は $\pi$ で、$\dfrac{2\pi}{-2} = -\pi$ ではありません。
-
-::: {.callout-important}
-## period は $\dfrac{2\pi}{b}$ です。$\dfrac{360}{b}$ ではありません
-SL で覚えた $\dfrac{360}{b}$ は、**度数法のときの式**です。
-
-$$
-\text{ラジアン} \ \Rightarrow \ \text{period} = \frac{2\pi}{b}, \qquad
-\text{度数法} \ \Rightarrow \ \text{period} = \frac{360}{b}
-$$
-
-**見分け方は、$\sin$ の中の角に度の記号 $^{\circ}$ が付いているかどうか**です。$f(x) = \sin x^{\circ}$ のように書いてあれば度数法、書いてなければラジアンです。**摂氏の $^{\circ}\text{C}$ は角の単位ではないので、これには関係ありません**（演習 $9$）。
-
-電卓の角の設定も、それに合わせて変えてください（[GDC](#gdc-angle)）。$\dfrac{2\pi}{b}$ と $\dfrac{360}{b}$ を取りちがえると、答えが $57.3$ 倍ずれます（演習 $10$）。
-:::
-
-### 7. $a$、$b$、$c$、$d$ の $4$ 文字 {#four-letters}
-
-![The four letters of a sinusoidal model](img/ahl-2-9a-sine.svg){#fig-ahl29a-sine width=100%}
-
-@fig-ahl29a-sine の (a) が、$h = 8\sin\left(\dfrac{\pi}{6}(t-2)\right)+12$ です。
-
-| 文字 | 名前 | 読み方 | 図では |
-|:--|:--|:--|:--|
-| $a$ | **amplitude**（振幅） | 中心線からの高さ。$\lvert a \rvert$ | $8$ |
-| $b$ | — | period $= \dfrac{2\pi}{b}$（$b > 0$） | $\dfrac{\pi}{6}$、period $12$ |
-| $c$ | **phase shift**（位相のずれ） | 横に $c$ だけ右へ | $2$ |
-| $d$ | **principal axis**（中心線） | $y = d$ | $12$ |
-
-: $4$ 文字の読み方 {#tbl-ahl29a-letters}
-
-$c$ を「phase shift と呼ぶことがある」と、Guidance がわざわざ断っています（@exm-ahl29a-tide の (c) で問われる形です）。
-
-**これは [AHL 2.8](ahl-2-8.qmd#translation) の平行移動そのものです。** $\sin$ の中で $x$ が $x-c$ になっているので、$c > 0$ なら右に $c$、$c < 0$ なら左に $\lvert c \rvert$ です。
-
-最大値と最小値からは、次のように決まります。**以下、$a > 0$、$b > 0$ にとります。**
-
-$$
-\lvert a \rvert = \frac{\text{最大} - \text{最小}}{2}, \qquad d = \frac{\text{最大} + \text{最小}}{2}
-$$ {#eq-ahl29a-ad}
-
-$$
-\text{period} = 2 \times \lvert \text{最大の時刻} - \text{最小の時刻} \rvert
-$$ {#eq-ahl29a-period}
-
-@eq-ahl29a-period は、**となり合う最大と最小のあいだが、ちょうど半周期**だからです。**あいだに別の山や谷をはさんだ最大と最小では使えません。**
-
-![The rule needs neighbouring turning points](img/ahl-2-9a-period.svg){#fig-ahl29a-period width=80%}
-
-@fig-ahl29a-period で確かめてください。$t = 5$ の最大と $t = 11$ の最小はとなり合っているので、$2(11-5) = 12$ が period です。$t = 23$ も最小ですが、あいだに $t = 17$ の最大がはさまっているので、$2(23-5) = 36$ は period になりません。
-
-**$c$ を読むときは、かっこの中の形に気をつけてください。** @eq-ahl29a-sine は $a\sin\bigl(b(x-c)\bigr)+d$ で、**$b$ がかっこの外**にあります。$a\sin(bx-c)+d$ と書くと**別のもの**になるので（@fig-ahl29a-sine の (b)）、かっこの中を $b(x-c)$ の形に**因数分解してから** $c$ を読みます（[AHL 2.8](ahl-2-8.qmd#composite) と同じ読み方です）。
-
-## Why it works
-
-**なぜ period が $\dfrac{2\pi}{b}$ になるのか。** $\sin$ は、中身が $2\pi$ 増えるごとに $1$ 周します。中身は $b(x-c)$ ですから、$x$ が $P$ 増えたときに中身が $2\pi$ 増えるとすると
-
-$$
-bP = 2\pi \ \Longrightarrow \ P = \frac{2\pi}{b}
-$$
-
-です。**$c$ は出てきません。** 横にずらしても、くり返しの速さは変わらないからです。
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
 :::
 
 ::: {#exm-ahl29a-decay}
@@ -294,7 +121,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** $t = 10$ を入れるだけです。
 
@@ -359,6 +187,26 @@ $$t = 5.78 \text{ years}$$
 $$500e^{-0.12t} = 100 \ \Rightarrow \ e^{-0.12t} = 0.2 \ \Rightarrow \ t = \frac{\ln 0.2}{-0.12} = 13.4 \text{ years}$$
 :::
 :::
+:::
+
+### 3. Half-life and the decay constant（半減期と減り方の定数） {#k-and-T}
+
+half-life と $k$ は、どちらからでももう一方を求められます。@eq-ahl29a-halflife は、どちらの向きにも使えます。
+
+| 分かっているもの | 求めるもの | 使う式 |
+|:--|:--|:--|
+| $k$ | half-life $T$ | $T = \dfrac{\ln 2}{k}$ |
+| half-life $T$ | $k$ | $k = \dfrac{\ln 2}{T}$ |
+
+: $k$ と $T$ の行き来 {#tbl-ahl29a-kT}
+
+$e$ を使わずに、**半分にする回数**で書く形もあります。
+
+$$
+M = M_0\left(\frac{1}{2}\right)^{\frac{t}{T}}
+$$ {#eq-ahl29a-halving}
+
+$t = T$ なら指数が $1$ で半分、$t = 2T$ なら $\dfrac{1}{4}$ です。@eq-ahl29a-decay と @eq-ahl29a-halving は**同じもの**で、$k$ と $T$ が @eq-ahl29a-halflife で結ばれています。
 
 ::: {#exm-ahl29a-caffeine}
 [The amount of caffeine in a person's body decreases exponentially with a half-life of $5$ hours. A person drinks a coffee containing $200$ mg of caffeine.]{.q-en}
@@ -382,7 +230,8 @@ $$500e^{-0.12t} = 100 \ \Rightarrow \ e^{-0.12t} = 0.2 \ \Rightarrow \ t = \frac
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 今度は half-life から $k$ を出します（@tbl-ahl29a-kT）。
 
@@ -446,6 +295,71 @@ $$A = 200e^{-0.138629 \times 12} = 37.9 \text{ mg}$$
 $$200e^{-kt} = 20 \ \Rightarrow \ e^{-kt} = 0.1 \ \Rightarrow \ t = 16.6 \text{ hours}$$
 :::
 :::
+:::
+
+### 4. Natural logarithmic models（自然対数モデル） {#log-model}
+
+**natural logarithmic model**（自然対数モデル）は、次の形のモデルです。この形も公式集には載っていません。
+
+$$
+f(x) = a + b\ln x
+$$ {#eq-ahl29a-log}
+
+![自然対数のモデルです。](img/ahl-2-9a-log.svg){#fig-ahl29a-log width=95%}
+
+@fig-ahl29a-log は **$b > 0$ の場合**です。$b > 0$ なら、**はじめは急に上がり、そのあと増え方が緩やかになります。** 上限はなく、$x$ が大きくなると増加を続けます。
+
+**$b < 0$ ならグラフの上下が反転します。** はじめは急に下がり、そのあと下がり方が緩やかになります。
+
+@eq-ahl29a-log の（$b > 0$ のときの）使いどころは、**「増えるけれど、だんだん増え方が鈍る」**場面です。学習の習熟度、音の大きさの感じ方、地震の規模——pH scale、Richter scale、sound intensity は、どれも対数の目盛りです。
+
+大事な点が $2$ つあります。
+
+- **domain は $x > 0$ です。** $\ln 0$ も $\ln(\text{負})$ も定義されません。@fig-ahl29a-log で、$x = 0$ が **vertical asymptote**（垂直漸近線）になっています
+- **$b > 0$ なら increasing（増加）、$b < 0$ なら decreasing（減少）**です。$b = 0$ なら $f(x) = a$ という **constant function**（定数関数）になり、$x$ による変化を表さないモデルになります。$\ln x$ 自体は増える関数なので、向きは $b$ の符号で決まります
+
+::: {.callout-warning}
+## $x = 0$ を入れられません
+「$t = 0$ のときの値」を聞かれる文脈問題では、この形は使えません。
+
+$f(x) = 4 + 4.33\ln x$ で $x = 0$ とすると、$\ln 0$ が定義されないので値がありません。それどころか、$x$ を $0$ に近づけると $f(x)$ は**いくらでも小さくなります**（@fig-ahl29a-log の左端）。
+
+文脈問題では、$x \geq 1$ のように**始まりの点を決めて**使います（演習 $7$）。
+:::
+
+### 5. Finding the parameters（$a$ と $b$ の求め方） {#fit-log}
+
+$a$ と $b$ は、グラフが通る $2$ 点から求めます。決め方は [SL 2.6](../../ai-sl/02-functions/sl-2-6.qmd) と同じです。**$2$ 点を入れて、連立方程式にします。**
+
+$(2,\ 7)$ と $(8,\ 13)$ を通るとします。
+
+$$
+a + b\ln 2 = 7
+$$
+
+$$
+a + b\ln 8 = 13
+$$
+
+引き算すると $a$ が消えます。
+
+$$
+b(\ln 8 - \ln 2) = 6
+$$
+
+$\ln 8 - \ln 2 = \ln 4$ です（[AHL 1.9](../01-number-and-algebra/ahl-1-9.qmd)）。
+
+$$
+b = \frac{6}{\ln 4} = 4.3280\ldots
+$$
+
+$1$ つ目の式にもどして
+
+$$
+a = 7 - 4.3280\ldots \times \ln 2 = 7 - 3 = 4
+$$
+
+**$\ln$ の値は、丸めずに電卓の中のまま使ってください**（[GDC](#gdc-store)）。
 
 ::: {#exm-ahl29a-log}
 [The height of a young tree, in centimetres, is modelled by $h(x) = a + b\ln x$, where $x$ is the number of months since it was planted. The tree is $7$ cm tall after $2$ months and $13$ cm tall after $8$ months.]{.q-en}
@@ -469,7 +383,8 @@ $$200e^{-kt} = 20 \ \Rightarrow \ e^{-kt} = 0.1 \ \Rightarrow \ t = 16.6 \text{ 
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** [第5節](#fit-log) のとおり、$2$ 点を入れて連立させます。
 
@@ -510,7 +425,11 @@ $8$ か月で $13$ cm だったものが、$20$ か月でも $17$ cm です。**
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Planting corresponds to $x = 0$, and $\ln 0$ is not defined, so $h(0)$ has no value. In fact, as $x$ approaches $0$ the value of $\ln x$ decreases without limit, so the model predicts heights that become arbitrarily large and negative. The model can only be used for $x > 0$, and in practice only after the tree has been growing for some time.*
+*Planting corresponds to $x = 0$, and $\ln 0$ is not defined, so $h(0)$ has no value.*
+
+*In fact, as $x$ approaches $0$ the value of $\ln x$ decreases without limit, so the model predicts heights that become arbitrarily large and negative.*
+
+*The model can only be used for $x > 0$, and in practice only after the tree has been growing for some time.*
 :::
 
 （植えた瞬間は $x = 0$ にあたるが、$\ln 0$ は定義されないので $h(0)$ には値がない。それどころか $x$ を $0$ に近づけると $\ln x$ は限りなく小さくなるので、モデルはいくらでも大きな負の高さを出してしまう。このモデルは $x > 0$ でしか使えず、実際には木がある程度育ったあとにしか使えない、という意味です。）
@@ -528,6 +447,72 @@ $$h(20) = 4 + \frac{6}{\ln 4}\ln 20 = 17.0 \text{ cm}$$
 *$x = 0$ gives $\ln 0$, which is not defined, so the model has no value there. The model requires $x > 0$.*
 :::
 :::
+:::
+
+### 6. Sinusoidal models in radians（ラジアンで書く正弦モデル） {#radian}
+
+**sinusoidal model**（正弦モデル）は、HL では次の形で書きます。角はラジアンで扱います。
+
+$$
+f(x) = a\sin\bigl(b(x-c)\bigr)+d
+$$ {#eq-ahl29a-sine}
+
+[SL 2.5](../../ai-sl/02-functions/sl-2-5.qmd#sinusoidal) では $a\sin(bx)+d$ の形で、**度数法**で扱いました。HL では $c$ が入り、**ラジアンが既定**になります。
+
+period は $\dfrac{2\pi}{b}$ です（理由は [Why it works](#why-it-works)）。**この式は公式集に載っていないので、覚えておく必要があります。**
+
+ここでは $b > 0$ とします。$b$ が負のときの period は $\dfrac{2\pi}{\lvert b \rvert}$ です。$\sin(-2x)$ の period は $\pi$ で、$\dfrac{2\pi}{-2} = -\pi$ ではありません。
+
+::: {.callout-important}
+## period は $\dfrac{2\pi}{b}$ です。$\dfrac{360}{b}$ ではありません
+SL で覚えた $\dfrac{360}{b}$ は、**度数法のときの式**です。
+
+- ラジアンのとき … period $= \dfrac{2\pi}{b}$
+- 度数法のとき … period $= \dfrac{360}{b}$
+
+**見分け方は、$\sin$ の中の角に度の記号 $^{\circ}$ が付いているかどうか**です。$f(x) = \sin x^{\circ}$ のように書いてあれば度数法、書いてなければラジアンです。**摂氏の $^{\circ}\text{C}$ は角の単位ではないので、これには関係ありません**（演習 $9$）。
+
+電卓の角の設定も、それに合わせて変えてください（[GDC](#gdc-angle)）。$\dfrac{2\pi}{b}$ と $\dfrac{360}{b}$ を取りちがえると、答えが $57.3$ 倍ずれます（演習 $10$）。
+:::
+
+### 7. The four parameters（$a$、$b$、$c$、$d$ の読み方） {#four-letters}
+
+@eq-ahl29a-sine の $4$ つの文字が、それぞれグラフの何を決めるかを見ます。
+
+![正弦波モデルの $4$ つの文字が決めるものです。](img/ahl-2-9a-sine.svg){#fig-ahl29a-sine width=100%}
+
+@fig-ahl29a-sine の (a) が、$h = 8\sin\left(\dfrac{\pi}{6}(t-2)\right)+12$ です。
+
+| 文字 | 名前 | 読み方 | 図では |
+|:--|:--|:--|:--|
+| $a$ | **amplitude**（振幅） | 中心線からの高さ。$\lvert a \rvert$ | $8$ |
+| $b$ | — | period $= \dfrac{2\pi}{b}$（$b > 0$） | $\dfrac{\pi}{6}$、period $12$ |
+| $c$ | **phase shift**（位相のずれ） | 横に $c$ だけ右へ | $2$ |
+| $d$ | **principal axis**（中心線） | $y = d$ | $12$ |
+
+: $4$ 文字の読み方 {#tbl-ahl29a-letters}
+
+$c$ は **phase shift** と呼ばれることがあります（@exm-ahl29a-tide の (c) で問われる形です）。
+
+**これは [AHL 2.8](ahl-2-8.qmd#translation) の平行移動そのものです。** $\sin$ の中で $x$ が $x-c$ になっているので、$c > 0$ なら右に $c$、$c < 0$ なら左に $\lvert c \rvert$ です。
+
+最大値と最小値からは、次のように決まります。**以下、$a > 0$、$b > 0$ にとります。**
+
+$$
+\lvert a \rvert = \frac{\text{最大} - \text{最小}}{2}, \qquad d = \frac{\text{最大} + \text{最小}}{2}
+$$ {#eq-ahl29a-ad}
+
+$$
+\text{period} = 2 \times \lvert \text{最大の時刻} - \text{最小の時刻} \rvert
+$$ {#eq-ahl29a-period}
+
+@eq-ahl29a-period は、**となり合う最大と最小のあいだが、ちょうど半周期**だからです。**あいだに別の最大や最小をはさんだ組では使えません。**
+
+![この決まりは、となり合う最大と最小にだけ使えます。](img/ahl-2-9a-period.svg){#fig-ahl29a-period width=100%}
+
+@fig-ahl29a-period で確かめてください。$t = 5$ の最大と $t = 11$ の最小はとなり合っているので、$2(11-5) = 12$ が period です。$t = 23$ も最小ですが、あいだに $t = 17$ の最大がはさまっているので、$2(23-5) = 36$ は period になりません。
+
+**$c$ を読むときは、かっこの中の形に気をつけてください。** @eq-ahl29a-sine は $a\sin\bigl(b(x-c)\bigr)+d$ で、**$b$ がかっこの外**にあります。$a\sin(bx-c)+d$ と書くと**別のもの**になるので（@fig-ahl29a-sine の (b)）、かっこの中を $b(x-c)$ の形に**因数分解してから** $c$ を読みます（[AHL 2.8](ahl-2-8.qmd#composite) と同じ読み方です）。
 
 ::: {#exm-ahl29a-tide}
 [The depth of water in a harbour, in metres, is modelled by $h(t) = a\sin\bigl(b(t-c)\bigr)+d$, where $t$ is the time in hours after midnight. The first high water is $20$ m at $t = 5$, and the first low water is $4$ m at $t = 11$.]{.q-en}
@@ -551,7 +536,8 @@ $$h(20) = 4 + \frac{6}{\ln 4}\ln 20 = 17.0 \text{ cm}$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** @eq-ahl29a-ad から始めます。
 
@@ -600,7 +586,11 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The value $c = 2$ is the phase shift: the whole tidal pattern is shifted $2$ hours to the right. It means that the water is at its mean depth of $12$ m and rising at $t = 2$, that is, at $2$ a.m. Equivalently, the tide reaches high water $3$ hours later, one quarter of the $12$-hour period after $t = 2$.*
+*The value $c = 2$ is the phase shift: the whole tidal pattern is shifted $2$ hours to the right.*
+
+*It means that the water is at its mean depth of $12$ m and rising at $t = 2$, that is, at $2$ a.m.*
+
+*Equivalently, the tide reaches high water $3$ hours later, one quarter of the $12$-hour period after $t = 2$.*
 :::
 
 （$c = 2$ は phase shift で、潮の動き全体が $2$ 時間だけ右にずれていることを表す。$t = 2$、つまり午前 $2$ 時に水深が平均の $12$ m で、しかも上がっている途中である、という意味である。言いかえれば、そこから $12$ 時間周期の $4$ 分の $1$ である $3$ 時間後に満潮になる、という意味です。）
@@ -619,6 +609,17 @@ $$h(0) = 8\sin\left(-\frac{\pi}{3}\right)+12 = 5.07 \text{ m}$$
 *$c = 2$ is the phase shift: the pattern is moved $2$ hours to the right, so the depth is at its mean of $12$ m and rising at $2$ a.m.*
 :::
 :::
+:::
+
+## Why it works
+
+**なぜ period が $\dfrac{2\pi}{b}$ になるのか。** $\sin$ は、中身が $2\pi$ 増えるごとに $1$ 周します。中身は $b(x-c)$ ですから、$x$ が $P$ 増えたときに中身が $2\pi$ 増えるとすると
+
+$$
+bP = 2\pi \ \Longrightarrow \ P = \frac{2\pi}{b}
+$$
+
+です。**$c$ は出てきません。** 横にずらしても、くり返しの速さは変わらないからです。
 
 ## Common errors
 
@@ -646,7 +647,7 @@ $\sin$ や $\cos$ の**中の角**に $^{\circ}$ が付いているかどうか�
 
 ::: {.callout-warning}
 ## $a\sin(bx-c)+d$ の $c$ を、そのまま phase shift と読む
-シラバスの形は $a\sin\bigl(b(x-c)\bigr)+d$ で、**$b$ がかっこの外**です。
+このページで使う形は $a\sin\bigl(b(x-c)\bigr)+d$ で、**$b$ がかっこの外**です。
 
 $$
 8\sin\left(\frac{\pi}{6}t-2\right)+12
@@ -681,7 +682,9 @@ $k = \dfrac{\ln 2}{5} = 0.138629\ldots$ を $0.139$ にしてから $12$ 時間�
 
 ## Using your GDC (TI-Nspire CX II)
 
-### 1. 角の設定を、いちばん先に確かめます {#gdc-angle}
+### 1. Checking the angle setting（角の設定の確認） {#gdc-angle}
+
+角の設定は、いちばん先に確かめます。
 
 ```
 doc → Settings → Document Settings
@@ -693,7 +696,7 @@ doc → Settings → Document Settings
 
 **設定が合っていないと、答えの数字はもっともらしいのに全部ずれます。** ここは毎回確かめる価値があります。
 
-### 2. $k$ を保存して、丸めずに使う {#gdc-store}
+### 2. Storing values（$k$ を保存して丸めずに使う） {#gdc-store}
 
 Calculator ページで、名前を付けて保存します。
 
@@ -716,7 +719,7 @@ $\dfrac{6}{\ln(4)} \ \to \ b$
 変数のまま計算すると、エラーになるか、意味のない値が返ります。
 :::
 
-### 3. 方程式は、graph の交点で解くのが確実です {#gdc-solve}
+### 3. Solving with intersections（グラフの交点で方程式を解く） {#gdc-solve}
 
 「$100$ mg になるのはいつか」のような問題は、**グラフの交点**で解けます。
 
@@ -733,7 +736,7 @@ CX II に `solve(` はありません。数値で解く `nSolve(` はありま�
 
 **$\ln$ を使った手計算と、交点の値が合うかを見てください。** 両方できるようにしておくと、どちらかが詰まっても進めます。
 
-### 4. sinusoidal は、まずグラフで形を見る {#gdc-sine}
+### 4. Graphing a sinusoidal model（正弦モデルをグラフで確かめる） {#gdc-sine}
 
 $a$、$b$、$c$、$d$ を求めたら、**そのままグラフにして最大・最小を確かめます。**
 
@@ -745,7 +748,9 @@ $f1(x) = 8 \times \sin\left(\dfrac{\pi}{6} \times \left(x - 2\right)\right) + 12
 
 `Zoom - Fit` は、**いまの $x$ の範囲に合わせて $y$ の範囲だけを合わせます。** $x$ の範囲が $1$ 周期に足りないままだと、波が $1$ 周も見えません。**$x$ を先に決めてください**（[SL 2.5](../../ai-sl/02-functions/sl-2-5.qmd) と同じ注意です）。
 
-### 5. 検算のしかた {#gdc-check}
+### 5. Checking your answer（検算のしかた） {#gdc-check}
+
+答えは、次の方法で確かめます。
 
 - half-life を出したら、**その時間だけ進めて半分になるか**を電卓で確かめる
 - $k$ を出したら、**$e$ の式と $\left(\frac{1}{2}\right)^{\frac{t}{T}}$ の式の両方**で計算して突き合わせる（@eq-ahl29a-halving）
@@ -757,12 +762,6 @@ $1$ つ目と $2$ つ目が、とくに効きます。**$2$ つの道で同じ�
 ただし、$2$ つの形は $k = \dfrac{\ln 2}{T}$ で結ばれた**同じ式**です。$T$ そのものを問題文から読みまちがえていると、**両方とも同じだけずれます。** $T$ は問題文にもどって確かめてください。
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -899,7 +898,11 @@ $T$ を先に文字で置くのがコツです。**「半分になるまでの�
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Let $T$ be the half-life, so that $A_0 e^{-kT} = \tfrac{1}{2}A_0$. Dividing by $A_0$, which is not zero, gives $e^{-kT} = \tfrac{1}{2}$, so $-kT = -\ln 2$ and $T = \dfrac{\ln 2}{k}$. Because $A_0$ cancels, the half-life depends only on $k$: doubling, halving or otherwise changing the initial amount leaves the half-life unchanged.*
+*Let $T$ be the half-life, so that $A_0 e^{-kT} = \tfrac{1}{2}A_0$.*
+
+*Dividing by $A_0$, which is not zero, gives $e^{-kT} = \tfrac{1}{2}$, so $-kT = -\ln 2$ and $T = \dfrac{\ln 2}{k}$.*
+
+*Because $A_0$ cancels, the half-life depends only on $k$: doubling, halving or otherwise changing the initial amount leaves the half-life unchanged.*
 :::
 :::
 
@@ -1005,7 +1008,7 @@ $x = 1$ の点が与えられていない問題では、[第5節](#fit-log) の�
 `Explain why` なので、英語で理由を書きます。言うべきことは $2$ つです。
 
 - $\ln 0$ が定義されない
-- $x \to 0$ で値が負に発散し、文脈に合わない（単語数が負にはなりません）
+- $x \to 0$ で値が負に **divergence**（発散）し、文脈に合わない（単語数が負にはなりません）
 
 **$2$ つ目まで書けると、しっかりした答案になります。** 「定義されない」だけでは、なぜ困るのかが伝わりません（[第4節](#log-model)）。
 
@@ -1014,7 +1017,11 @@ $x = 1$ の点が与えられていない問題では、[第5節](#fit-log) の�
 ::: {.model-answer}
 **試験ではこう書く**
 
-*At birth $x = 0$, and $\ln 0$ is not defined, so the model gives no value. Since the number of words increases with age, $b > 0$, and $\ln x \to -\infty$ as $x \to 0^{+}$, so close to birth the model predicts a large negative number of words, which is impossible. The student should restrict the domain, for example to $x \geq 1$, and use the model only from the age of one month.*
+*At birth $x = 0$, and $\ln 0$ is not defined, so the model gives no value.*
+
+*Since the number of words increases with age, $b > 0$, and $\ln x \to -\infty$ as $x \to 0^{+}$, so close to birth the model predicts a large negative number of words, which is impossible.*
+
+*The student should restrict the domain, for example to $x \geq 1$, and use the model only from the age of one month.*
 :::
 :::
 
@@ -1114,7 +1121,9 @@ $d$ は「平均」と言い切って構いません。$\sin$ が中心線の上
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The value $d = 19$ is the principal axis of the model, so it represents the mean temperature in the city over a full day, namely $19\,^{\circ}\text{C}$. The temperature rises $7\,^{\circ}\text{C}$ above it and falls $7\,^{\circ}\text{C}$ below it, giving the maximum of $26\,^{\circ}\text{C}$ and the minimum of $12\,^{\circ}\text{C}$.*
+*The value $d = 19$ is the principal axis of the model, so it represents the mean temperature in the city over a full day, namely $19\,^{\circ}\text{C}$.*
+
+*The temperature rises $7\,^{\circ}\text{C}$ above it and falls $7\,^{\circ}\text{C}$ below it, giving the maximum of $26\,^{\circ}\text{C}$ and the minimum of $12\,^{\circ}\text{C}$.*
 :::
 :::
 
@@ -1155,58 +1164,17 @@ $\dfrac{2\pi}{3} = 2.0944\ldots$ なので $2.09$ です。$120$ とは $57$ 倍
 
 **検算。** $t = 0.5$ で $h = 5\sin 1.5+2 = 6.99$。$1$ 周期あとの $t = 0.5+2.0944 = 2.5944$ でも $6.99$ ✓ もどりました。半分の $1.047$ だけ進めると $-2.99$ で、もどっていません。
 
-**中心線の上の点（$h = 2$）で確かめると、半周期でも同じ値になってしまいます。** 山や谷の途中の点を選んでください。
+**中心線の上の点（$h = 2$）で確かめると、半周期でも同じ値になってしまいます。** 中心線から離れた点を選んでください。
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The student used $\dfrac{360}{b}$, which is the period only when the angle is measured in degrees. There is no degree symbol in $5\sin(3t)+2$, so the angle is in radians and the correct formula is $\dfrac{2\pi}{b}$. The period is $\dfrac{2\pi}{3} = 2.09$, not $120$.*
+*The student used $\dfrac{360}{b}$, which is the period only when the angle is measured in degrees.*
+
+*There is no degree symbol in $5\sin(3t)+2$, so the angle is in radians and the correct formula is $\dfrac{2\pi}{b}$.*
+
+*The period is $\dfrac{2\pi}{3} = 2.09$, not $120$.*
 :::
 :::
 
 :::
-
-## 参考：シラバスの原文 {#syllabus}
-
-:::: {.callout-note collapse="true" appearance="simple"}
-## クリックすると開きます
-Content 欄は、導入の $1$ 行と、$5$ つのモデルからできています。
-
-> In addition to the models covered in the SL content the AHL content extends this to include modelling with the following functions:
-
-> Exponential models to calculate half-life.
-
-> Natural logarithmic models: $f(x) = a + b\ln x$
-
-> Sinusoidal models: $f(x) = a\sin\bigl(b(x-c)\bigr)+d$
-
-> Logistic models: $f(x) = \dfrac{L}{1+Ce^{-kx}}$; $L$, $C$, $k > 0$
-
-> Piecewise models.
-
-**このページは、上の $3$ つ**（half-life・natural logarithmic・sinusoidal）を扱います。logistic と piecewise は [AHL 2.9b](ahl-2-9b.qmd) です。
-
-Guidance 欄のうち、このページに関わるのは次の $5$ つです。
-
-> **Link to:** modelling skills (SL2.6).
-
-> Radian measure should be assumed unless otherwise indicated by the use of the degree symbol, for example with $f(x) = \sin x^{\circ}$.
-
-> In radians, period is $\dfrac{2\pi}{b}$.
-
-> Students should be aware that a horizontal translation of $c$ can be referred to as a phase shift.
-
-> **Link to:** radian measure (AHL 3.7)
-
-**Natural logarithmic models の行は、Guidance 欄に対応する記述がありません。** 形をそのまま使う、ということです。
-
-Connections 欄の `Other contexts` が、sinusoidal の文脈を並べています。
-
-> **Sinusoidal models:** Waxing and waning of the moon, rainfall patterns, temperature, movement of bridges and buildings, pH scale, Richter scale, sound intensity, brightness of stars.
-
-`Links to other subjects` の $1$ つ目が half-life です。
-
-> Half-life (chemistry and physics); AC circuits and waves (physics); ...
-
-モデルの立て方そのものは [SL 2.6](../../ai-sl/02-functions/sl-2-6.qmd) の手順に従います。**このページで新しいのは、使える関数が増えることだけ**です。
-::::

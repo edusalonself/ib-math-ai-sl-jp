@@ -68,9 +68,7 @@ ax.text(-2.05, -1.35, "$z = 1 + \\sqrt{3}\\,i$\n"
         "$z = 2\\left(\\cos\\dfrac{\\pi}{3} + i\\sin\\dfrac{\\pi}{3}\\right)$\n"
         "$z = 2\\,\\mathrm{cis}\\,\\dfrac{\\pi}{3} = 2e^{i\\frac{\\pi}{3}}$",
         fontsize=11.5, color=INK, ha="left", va="top", bbox=BOX, zorder=8)
-plane(ax, (-2.2, 3.0), (-2.9, 2.6))
-ax.set_title("one point, three ways of writing it",
-             fontsize=12, color=INK, pad=10)
+plane(ax, (-2.2, 3.0), (-2.75, 2.6))
 
 fig.tight_layout()
 save(fig, "ahl-1-13-forms.svg")
@@ -94,9 +92,7 @@ ax.text(-4.45, 2.15, "$b = 4\\sin\\dfrac{2\\pi}{3} = 2\\sqrt{3}$",
 ax.text(-2.15, 3.75, "$4\\,\\mathrm{cis}\\,\\dfrac{2\\pi}{3}"
         " = -2 + 2\\sqrt{3}\\,i$", fontsize=12.5, color=ACC, ha="left",
         va="bottom", bbox=BOX, zorder=8)
-plane(ax, (-4.6, 4.0), (-2.2, 5.0))
-ax.set_title("going back: $a = r\\cos\\theta$,  $b = r\\sin\\theta$",
-             fontsize=12, color=INK, pad=10)
+plane(ax, (-4.6, 4.0), (-1.1, 5.0))
 
 fig.tight_layout()
 save(fig, "ahl-1-13-back.svg")
@@ -121,14 +117,12 @@ for p, col, lab, dx, dy, ha, va in (
             va=va)
 ax.add_patch(Arc((0, 0), 3.0, 3.0, theta1=18.43, theta2=108.43, color=ACC,
                  lw=1.8, ls=":", zorder=4))
-ax.text(0.30, 1.75, "$\\times\\, i$: turn by $\\dfrac{\\pi}{2}$,\n"
-        "same length", fontsize=11, color=ACC, ha="left", va="center",
-        bbox=BOX, zorder=8)
-ax.text(2.9, -1.35, "$\\times\\, 2$: same direction,\ntwice as long",
-        fontsize=11, color=GOLD, ha="center", va="top", bbox=BOX, zorder=8)
-plane(ax, (-2.6, 7.4), (-2.9, 4.4))
-ax.set_title("(a)  multiplying turns and stretches", fontsize=12,
-             color=INK, pad=10)
+ax.text(0.55, 1.75, "$\\times\\, i$", fontsize=12, color=ACC, ha="left",
+        va="center", bbox=BOX, zorder=8)
+ax.text(3.9, 1.75, "$\\times\\, 2$", fontsize=12, color=GOLD, ha="center",
+        va="bottom", bbox=BOX, zorder=8)
+plane(ax, (-2.2, 7.4), (-1.2, 4.4))
+ax.set_title("(a)", fontsize=12, color=INK, pad=10)
 
 ax = axs[1]
 z1 = np.array([4.0, 1.0])
@@ -149,12 +143,10 @@ ax.text(0.80, 3.30, "$z_2 = 1 + 3i$", fontsize=12, color=ACC, ha="right",
         va="bottom")
 ax.text(5.15, 4.10, "$z_1 + z_2 = 5 + 4i$", fontsize=12, color=GREEN,
         ha="left", va="bottom")
-ax.text(-1.85, -1.10, "the diagonal is never longer than\n"
-        "the two sides added:  $|z_1+z_2| \\leq |z_1| + |z_2|$",
+ax.text(1.0, -0.55, "$|z_1+z_2| \\leq |z_1| + |z_2|$",
         fontsize=11, color=GREY, ha="left", va="top", bbox=BOX, zorder=8)
-plane(ax, (-2.0, 8.6), (-2.3, 5.4))
-ax.set_title("(b)  adding follows the parallelogram", fontsize=12,
-             color=INK, pad=10)
+plane(ax, (-1.5, 8.0), (-1.6, 5.0))
+ax.set_title("(b)", fontsize=12, color=INK, pad=10)
 
 fig.tight_layout()
 save(fig, "ahl-1-13-mult.svg")
@@ -179,8 +171,6 @@ ax.set_xlim(0, 0.275)
 ax.set_ylim(-6.4, 8.6)
 ax.set_xlabel("$t$")
 ax.legend(fontsize=10, frameon=False, loc="upper right", ncol=1)
-ax.set_title("the sum is a sine wave of the same period",
-             fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()
@@ -206,12 +196,10 @@ ax.text(2.7, -4.55, "$5\\,\\mathrm{cis}\\left(-\\dfrac{\\pi}{3}\\right)$",
         fontsize=12, color=ACC, ha="left", va="top")
 ax.text(5.15, 0.60, "sum $= 5$", fontsize=13, color=GREEN, ha="center",
         bbox=BOX, zorder=7)
-ax.text(-5.6, -4.75, "the imaginary parts cancel:\n"
-        "$(2.5 + 4.33i) + (2.5 - 4.33i) = 5$", fontsize=11.5, color=GREY,
-        ha="left", va="top", bbox=BOX, zorder=8)
+ax.text(-5.6, 6.3, "$(2.5 + 4.33i) + (2.5 - 4.33i) = 5$", fontsize=11.5,
+        color=GREY, ha="left", va="top", bbox=BOX, zorder=8)
 plane(ax, (-5.8, 8.4), (-6.6, 6.6))
-ax.set_title("(a)  two amplitudes of $5$ give $5$, not $10$",
-             fontsize=12, color=INK, pad=10)
+ax.set_title("(a)", fontsize=12, color=INK, pad=10)
 
 ax = axs[1]
 T = np.linspace(0, 0.33, 900)
@@ -224,14 +212,13 @@ ax.plot(T, 5 * np.cos(w * T), color=GREEN, lw=3.0,
         label="sum $= 5\\cos 40t$")
 ax.axhline(0, color=GREY, lw=1.2)
 ax.axhline(10, color=GREY, lw=1.0, ls=":")
-ax.text(0.004, 10.35, "$10$: the two amplitudes simply added",
-        fontsize=10.5, color=GREY, ha="left", va="bottom")
+ax.text(0.004, 10.35, "$10$", fontsize=10.5, color=GREY, ha="left",
+        va="bottom")
 ax.set_xlim(0, 0.35)
 ax.set_ylim(-7.2, 16.0)
 ax.set_xlabel("$t$")
 ax.legend(fontsize=10, frameon=False, loc="upper right")
-ax.set_title("(b)  the sum never reaches $10$", fontsize=12, color=INK,
-             pad=10)
+ax.set_title("(b)", fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()

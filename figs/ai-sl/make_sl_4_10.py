@@ -75,7 +75,7 @@ yb = [2, 3, 5, 9, 16, 28, 50, 90]            # increasing, strongly curved
 
 fig, axes = plt.subplots(1, 2, figsize=(10.2, 4.2))
 v1 = panel(axes[0], xa, ya, "Linear", "$x$", "$y$")
-v2 = panel(axes[1], xb, yb, "Curved, but always increasing", "$x$", "$y$")
+v2 = panel(axes[1], xb, yb, "Curved", "$x$", "$y$")
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-4-10-monotonic.svg"), format="svg", bbox_inches="tight")
 plt.close(fig)

@@ -49,8 +49,6 @@ def frame(ax):
 # (a) cos と sec
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(6.2, 4.0))
-ax1.set_title("Where $\\cos x$ is zero, $\\sec x$ has an asymptote",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 _t = np.linspace(-2.2 * PI, 2.2 * PI, 1200)
 ax1.plot(_t, np.cos(_t), color=ACCENT, linewidth=1.6)
 _breaks = [-1.5 * PI, -0.5 * PI, 0.5 * PI, 1.5 * PI]
@@ -71,9 +69,6 @@ ax1.text(-2.1 * PI, 3.4, "$y=\\sec x$", ha="left", va="center", fontsize=9.5,
          color=WARM)
 ax1.text(0.35, 1.25, "$y=\\cos x$", ha="left", va="center", fontsize=9.5,
          color=ACCENT)
-ax1.text(-2.1 * PI, -3.6, "$|\\sec x| \\geq 1$ always: it never enters the strip",
-         ha="left", va="center", fontsize=9, color=GREY,
-         bbox=dict(facecolor="white", edgecolor="none", pad=1.5))
 ax1.set_xlim(-2.3 * PI, 2.3 * PI)
 ax1.set_ylim(-4.2, 4.2)
 frame(ax1)
@@ -116,8 +111,6 @@ axes2[2].set_xticks([])
 for _ax in axes2:
     frame(_ax)
     _ax.tick_params(length=2, colors=GREY)
-fig2.suptitle("The range is cut so that each input gives one output",
-              fontsize=10.5, color=INK, x=0.02, ha="left", y=1.05)
 
 for _fig, _name in ((fig1, "a"), (fig2, "b")):
     _fig.tight_layout()

@@ -98,16 +98,13 @@ ax.text(0.0, -7.4, r"$\mathbf{v}\cdot\mathbf{w} = 3(2)+4(-5) = -14$"
                    "\n"
                    r"$\cos\theta = \frac{-14}{5\sqrt{29}}$",
         fontsize=12.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-blank(ax, (-6.0, 6.0), (-9.4, 6.2), step=2)
-ax.set_title("the angle is measured between the two arrows,\n"
-             "both drawn from the same point",
-             fontsize=12.5, color=INK, pad=6)
+blank(ax, (-6.0, 6.0), (-9.0, 6.2), step=2)
 fig.tight_layout()
 save(fig, "ahl-3-13a-idea.svg")
 
 
 # ══════════ fig 1b: 符号が語ること（3 組を横に並べる） ══════════
-fig, ax = plt.subplots(figsize=(6.4, 4.4))
+fig, ax = plt.subplots(figsize=(6.4, 2.6))
 cases = [
     (-3.9, [1.0, 0.0], [0.85, 0.95], ACC, r"$\mathbf{v}\cdot\mathbf{w} > 0$",
      "acute"),
@@ -128,12 +125,7 @@ for cx, a, b, col, lab, note in cases:
         arc_between(ax, c, a, b, 0.80, color=GOLD)
     ax.text(cx, -1.75, lab, fontsize=12.5, color=col, ha="center", va="top")
     ax.text(cx, -2.65, note, fontsize=11.5, color=INK, ha="center", va="top")
-ax.text(0.0, 2.85, r"the sign of $\mathbf{v}\cdot\mathbf{w}$ tells you"
-                  " the kind of angle\n"
-                  r"(both vectors non-zero)",
-        fontsize=12.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-blank(ax, (-5.9, 5.9), (-3.9, 3.9), step=1, axes=False, grid=False)
-ax.set_title("reading the sign", fontsize=12.5, color=INK, pad=6)
+blank(ax, (-5.9, 5.9), (-3.5, 1.5), step=1, axes=False, grid=False)
 fig.tight_layout()
 save(fig, "ahl-3-13a-sign.svg")
 
@@ -159,11 +151,8 @@ ax.text(3.15, 2.95, r"$70.3^{\circ}$", fontsize=12.5, color=ACC, ha="right",
 ax.plot([P[0]], [P[1]], "o", color=INK, ms=7, zorder=9)
 ax.text(10.3, 11.0, r"$L_1$", fontsize=13, color=LINE, ha="left", va="center")
 ax.text(-5.1, 6.6, r"$L_2$", fontsize=13, color=GREEN, ha="right", va="center")
-ax.text(3.4, -3.4, "two lines make two angles;\n"
-                   "the answer wanted is the acute one",
-        fontsize=12.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-blank(ax, (-7.5, 13.0), (-5.6, 12.6), step=2, axes=False)
-ax.set_title("(a)  the two lines", fontsize=12.5, color=INK, pad=6)
+blank(ax, (-7.5, 13.0), (-3.8, 12.6), step=2, axes=False)
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) 方向ベクトルだけを、同じ点から
 ax = axs[1]
@@ -182,16 +171,12 @@ ax.text(-4.15, 1.25, r"$\mathbf{d}_2 = \binom{-4}{1}$", fontsize=12.5,
         color=GREEN, ha="right", va="bottom")
 ax.text(-1.85, -3.35, r"$-\mathbf{d}_1$", fontsize=12.5, color=LINE,
         ha="right", va="center")
-ax.text(0.6, -5.9, r"$\mathbf{d}_1$ and $-\mathbf{d}_1$ give the same line."
+ax.text(2.6, -2.2, r"$\cos\theta = \frac{-5}{\sqrt{221}}$"
                    "\n"
-                   r"$\cos\theta = \frac{-5}{\sqrt{221}}$ gives"
-                   r" $109.7^{\circ}$;" " the acute angle is\n"
-                   r"$180^{\circ}-109.7^{\circ} = 70.3^{\circ}$"
-                   " (do not round to $110^{\circ}$ first)",
+                   r"$180^{\circ}-109.7^{\circ} = 70.3^{\circ}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-blank(ax, (-6.8, 6.8), (-8.4, 5.2), step=1, axes=False)
-ax.set_title("(b)  the direction vectors, drawn from one point",
-             fontsize=12.5, color=INK, pad=6)
+blank(ax, (-6.8, 6.8), (-4.0, 5.2), step=1, axes=False)
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=2.2)
 save(fig, "ahl-3-13a-lines.svg")
@@ -251,7 +236,7 @@ component_panel(
                 "\n"
                 r"component $= \frac{14}{5} = 2.8$  (positive)"),
     (-3.0, 9.5), (-5.6, 8.2), 1,
-    "(a)  acute angle: the shadow points along $\\mathbf{b}$",
+    "(a)",
     off=1.15, lab_side=-1.0, blab=(0.1, -0.9))
 
 component_panel(
@@ -261,7 +246,7 @@ component_panel(
                 "\n"
                 r"component $= \frac{-16}{5} = -3.2$  (negative)"),
     (-6.2, 8.0), (-9.4, 8.6), 1,
-    "(b)  obtuse angle: the shadow points the other way",
+    "(b)",
     off=1.25, lab_side=-1.0, blab=(0.25, -0.9), lab_off=1.45,
     olab=(0.35, "left"))
 

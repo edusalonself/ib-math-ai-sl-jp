@@ -48,7 +48,7 @@ ax.set_xlabel("$x$")
 ax.set_ylabel("$y$")
 ax.text(0.15, 84, "$y = 5 \\times 2^{x}$", fontsize=12.5, color=LINE,
         ha="left", va="top", bbox=BOX, zorder=8)
-ax.set_title("(a)  exponential data: a curve", fontsize=12, color=INK, pad=9)
+ax.set_title("(a)", fontsize=12, color=INK, pad=9)
 tidy(ax)
 
 # ── (b) 指数のデータ、semi-log
@@ -71,7 +71,7 @@ ax.set_xlim(-0.35, 4.6)
 ax.set_ylim(0.35, 2.15)
 ax.set_xlabel("$x$")
 ax.set_ylabel("$\\log y$")
-ax.set_title("(b)  semi-log: a straight line", fontsize=12, color=INK, pad=9)
+ax.set_title("(b)", fontsize=12, color=INK, pad=9)
 tidy(ax)
 
 fig.tight_layout(w_pad=2.6)
@@ -92,7 +92,7 @@ ax.set_xlabel("$x$")
 ax.set_ylabel("$y$")
 ax.text(0.6, 265, "$y = 2x^{3}$", fontsize=12.5, color=LINE, ha="left",
         va="top", bbox=BOX, zorder=8)
-ax.set_title("(a)  power data: also a curve", fontsize=12, color=INK, pad=9)
+ax.set_title("(a)", fontsize=12, color=INK, pad=9)
 tidy(ax)
 
 # ── (b) 累乗のデータ、log-log
@@ -115,7 +115,7 @@ ax.set_xlim(-0.09, 0.94)
 ax.set_ylim(-0.05, 2.75)
 ax.set_xlabel("$\\log x$")
 ax.set_ylabel("$\\log y$")
-ax.set_title("(b)  log-log: a straight line", fontsize=12, color=INK, pad=9)
+ax.set_title("(b)", fontsize=12, color=INK, pad=9)
 tidy(ax)
 
 fig.tight_layout(w_pad=2.6)
@@ -131,18 +131,13 @@ V = 50 * 8.0 ** M            # 50, 400, 3200, 25600, 204800, 1638400
 # ── (a) ふつうの目盛り
 ax = axs[0]
 ax.plot(M, V, "-o", color=LINE, lw=2.4, ms=9)
-for i in (0, 1, 2, 3):
-    ax.annotate("", xy=(M[i], V[i]), xytext=(M[i] + 0.75, 430000),
-                arrowprops=dict(arrowstyle="->", color=GREY, lw=1.0))
-ax.text(0.55, 470000, "the first four months are\nflattened onto the axis",
-        fontsize=11, color=GREY, ha="left", va="bottom", bbox=BOX, zorder=8)
 ax.set_xlim(-0.35, 5.5)
 ax.set_ylim(-90000, 1900000)
 ax.set_yticks([0, 500000, 1000000, 1500000])
 ax.set_yticklabels(["$0$", "$500\,000$", "$1\,000\,000$", "$1\,500\,000$"])
 ax.set_xlabel("month")
 ax.set_ylabel("visits")
-ax.set_title("(a)  an ordinary scale", fontsize=12, color=INK, pad=9)
+ax.set_title("(a)", fontsize=12, color=INK, pad=9)
 tidy(ax)
 
 # ── (b) 対数目盛り
@@ -156,13 +151,13 @@ ax.annotate("", xy=(4, V[3]), xytext=(3, V[3]),
             arrowprops=dict(arrowstyle="->", color=ACC, lw=1.5))
 ax.annotate("", xy=(4, V[4]), xytext=(4, V[3]),
             arrowprops=dict(arrowstyle="->", color=ACC, lw=1.5))
-ax.text(0.15, 190000, "the same step up every month:\n$\\times 8$, so $\\log 8 = 0.903$",
+ax.text(4.12, np.sqrt(V[3] * V[4]), "$\\times 8$",
         fontsize=11, color=ACC, ha="left", va="center", bbox=BOX, zorder=8)
 ax.set_xlim(-0.35, 5.5)
 ax.set_ylim(20, 6e6)
 ax.set_xlabel("month")
 ax.set_ylabel("visits (log scale)")
-ax.set_title("(b)  a logarithmic scale", fontsize=12, color=INK, pad=9)
+ax.set_title("(b)", fontsize=12, color=INK, pad=9)
 ax.grid(True, which="both", color=GRID, lw=0.8)
 ax.set_axisbelow(True)
 for sp in ("top", "right"):

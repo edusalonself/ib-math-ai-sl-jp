@@ -17,15 +17,15 @@ sidebar: aa-sl
 
 ## The idea
 
-### 1. 正規分布の曲線 {#curve}
-
-![The normal curve, and the $68$–$95$–$99.7$ areas](img/aasl-4-9-idea-a.svg){#fig-aasl49-idea-a width=100%}
+### 1. The normal curve（正規分布の曲線） {#curve}
 
 **normal distribution**（正規分布）は、真ん中が高く、両側になだらかに下がっていく**釣り鐘型**の分布です（@fig-aasl49-idea-a）。
 
+![正規分布の曲線と、$68$–$95$–$99.7$ の面積です。](img/aasl-4-9-idea-a.svg){#fig-aasl49-idea-a width=80%}
+
 **身長、測定の誤差、大量生産した製品の重さ**など、多くの量がこの形に近くなります。
 
-$X$ が平均 $\mu$、標準偏差 $\sigma$ の正規分布に従うとき
+$X$ が平均 $\mu$、**standard deviation**（標準偏差） $\sigma$ の正規分布に従うとき
 
 $$
 X \sim N(\mu,\ \sigma^{2})
@@ -33,11 +33,13 @@ $$ {#eq-aasl49-not}
 
 と書きます。
 
-**かっこの中の $2$ つ目は分散です。** $N(90,\ 49)$ なら $\sigma^{2} = 49$、つまり $\sigma = 7$ です。問題文が「標準偏差 $7$」と書いていることも多いので、どちらで与えられているか確かめてください。
+**かっこの中の $2$ つ目は variance**（分散）**です。** $N(90,\ 49)$ なら $\sigma^{2} = 49$、つまり $\sigma = 7$ です。問題文が「標準偏差 $7$」と書いていることも多いので、どちらで与えられているか確かめてください。
 
-**$X$ は連続量です。** 二項分布とちがい、$X$ はとびとびの値ではなく、区間のどの値も取りえます。
+**$X$ は連続量です。** **binomial distribution**（二項分布）とちがい、$X$ はとびとびの値ではなく、区間のどの値も取りえます。
 
-### 2. 曲線の性質 {#properties}
+### 2. Properties of the normal curve（曲線の性質） {#properties}
+
+正規分布の曲線には、次の $4$ つの性質があります。
 
 | 性質 | 中身 |
 |:--|:--|
@@ -58,7 +60,7 @@ $$
 
 で、**「より小さい」と「以下」（同じく「より大きい」と「以上」）を区別する必要がありません。** 二項分布とはここがちがいます。
 
-### 3. $68\%$ / $95\%$ / $99.7\%$ のめやす {#empirical}
+### 3. The $68$–$95$–$99.7$ rule（$68\%$ / $95\%$ / $99.7\%$ のめやす） {#empirical}
 
 正規分布では、次のことが成り立ちます（@fig-aasl49-idea-a）。
 
@@ -78,11 +80,11 @@ $$
 
 **$\mu$ から何 $\sigma$ 離れているかを暗算すると、桁ちがいの入力ミスが見つかります。** たとえば $\mu$ から $1\sigma$ ほどの値なのに確率が $0.001$ と出たら、入力を疑います。
 
-### 4. 確率は面積 {#calc}
-
-![A probability is the area to the left of a value](img/aasl-4-9-idea-b.svg){#fig-aasl49-idea-b width=100%}
+### 4. Probability as area（確率は面積） {#calc}
 
 **$P(a < X < b)$ は、曲線の下の $a$ から $b$ までの面積です**（@fig-aasl49-idea-b）。
+
+![確率は、その値より左の面積です。](img/aasl-4-9-idea-b.svg){#fig-aasl49-idea-b width=80%}
 
 **ちょうど $1$ つの値をとる確率は $0$ です。** 幅のない区間には、面積がないからです。だから **$P(X < a)$ と $P(X \le a)$ は同じ値**になり、等号が付いているかどうかを気にする必要はありません。（[SL 4.5](aasl-4-5.qmd#properties) の「確率 $0$ = 起こらない」は、結果が有限個の場面の話です。ここでは、確率 $0$ の値も実際に出ます。）
 
@@ -92,9 +94,9 @@ GDC では `normCdf(lower, upper, μ, σ)` で求めます（[GDC の節](#gdc-n
 
 **分散を入れないでください。** $\sigma$ を入れます。$N(90,\ 49)$ なら $7$ です。
 
-### 5. 片側と区間 {#tails}
+### 5. One-sided probabilities and intervals（片側の確率と区間の確率） {#tails}
 
-片側だけのときは、反対の端をとても大きな数（または小さな数）にします。
+$P(X > a)$ のように片側だけの確率を `normCdf` で出すときは、反対の端をとても大きな数（または小さな数）にします。
 
 | 求めたいもの | 入れ方 |
 |:--|:--|
@@ -107,73 +109,6 @@ GDC では `normCdf(lower, upper, μ, σ)` で求めます（[GDC の節](#gdc-n
 **$\infty$ は記号パレットから入れられます**（キーボードのいちばん下、左端の **`π` のキー**を押すと開きます）。$\pm 10^{9}$ のような大きな数でも、実用上は同じ答えになります。
 
 **余事象でも出せます。** $P(X > a) = 1 - P(X < a)$ です。$2$ とおりで出して比べると、検算になります。
-
-### 6. inverse normal（逆正規計算） {#inverse}
-
-**面積が分かっていて、値を求める**のが inverse normal calculation です。
-
-GDC では `invNorm(area, μ, σ)` を使います（[GDC の節](#gdc-invnorm)）。
-
-**`area` は「その値より左の面積」です。** $P(X < k) = 0.9$ なら `invNorm(0.9, μ, σ)` です。
-
-**「上位 $10\%$」は、左の面積が $0.9$ です。** 右側の割合が与えられたときは、$1$ から引いてから入れます。ここが最も多い誤りです。
-
-> For inverse normal calculations mean and standard deviation will be given.
-
-**$\mu$ と $\sigma$ が分からない問題は、[SL 4.12](aasl-4-12.qmd) で扱います。** このページでは、必ず与えられます。
-
-**答えが $\mu$ より上か下かを、面積から先に予想してください。** 面積と $0.5$ の大小を見ます。
-
-### 7. 図をかいてから {#sketch}
-
-**まず釣り鐘の絵をかき、$\mu$ に縦線を入れます。** 次に、求めたい部分に色を塗ります。
-
-**塗った部分が半分より広いか狭いかを見ます。** そこから、答えが $0.5$ より大きいか小さいかが分かります。
-
-**この $1$ 手間で、上端と下端の入れちがいがほとんど防げます。** 図と答えが合わなければ、入力を見直します。
-
-::: {.callout-warning}
-## この節の確率と値は、GDC で出します
-シラバスは、正規分布の確率と値を**GDC で求める**としています。だから、**その数値を出す問題は Paper 2 で出ます。**
-
-**単元全体が Paper 1 の対象外というわけではありません。** 曲線の対称性、$68$–$95$–$99.7$ のめやす、$\mu$ や $\sigma$ を変えたときの形の変化は、電卓なしでも問われます。
-
-**答えの見当も、手でつけられます。** $\mu$ を中心とした対称性、$0.5$ との大小、$68$–$95$–$99.7$ のめやす ——この $3$ つで、入力ミスのほとんどは見つかります。
-:::
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-**なぜ、確率が面積になるのでしょうか。** 正規分布は連続量の分布だからです。
-
-離散の場合は、棒の高さが確率でした（[SL 4.8](aasl-4-8.qmd#pmf)）。連続の場合、区間の中の**どの点にも**同じだけの正の確率を割りあてると、点は無限にあるので、合計はいくらでも大きくなってしまいます。
-
-そこで、**確率を「区間ごとの面積」で表します。** 全体の面積を $1$ にすれば、どの区間の面積も $0$ 以上 $1$ 以下になり、確率として使えます。
-
-**この決め方から、$P(X = a) = 0$ が出ます。** $1$ 点の幅は $0$ なので、面積も $0$ です。だから境目を含めても含めなくても、確率は変わりません。
-
-**なぜ、対称なら $P(X < \mu) = 0.5$ なのでしょうか。** 曲線が $\mu$ を軸に左右対称で、全体の面積が $1$ だからです。左右の面積が等しく、足して $1$ なので、どちらも $\dfrac{1}{2}$ です。
-
-**なぜ、$68$–$95$–$99.7$ が $\mu$ と $\sigma$ によらないのでしょうか。** どの正規分布も、**同じ曲線を平行移動して拡大・縮小したもの**だからです。
-
-$\mu$ を変えると曲線は左右に動くだけ、$\sigma$ を変えると横に伸び縮みして高さが調整されるだけで、**「$\mu$ から $\sigma$ いくつぶん」で測った面積は変わりません**。だから $68\%$ という割合は、どの正規分布でも同じです。
-
-**この「$\sigma$ いくつぶん」を数にしたものが $z$ 値です。** 詳しくは [SL 4.12](aasl-4-12.qmd) で扱います。
-
-**なぜ、逆正規計算では面積を「左から」で数えるのでしょうか。** `invNorm` がもどしているのは、「$k$ に、$k$ より左の面積を対応させる関数」の逆だからです。$P(X < k)$ は $k$ が右へ動くほど増えていくので、面積 $1$ つに対して $k$ が $1$ つだけ決まります。右からの面積で決めることもできますが、どちらかに約束を決めておかないと、同じ面積に $2$ とおりの答えが出ます。
-
-**この向きは、図をかけば目で確かめられます。** 面積と $0.5$ の大小を、$k$ と $\mu$ の大小と見くらべてください。
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-
-**確率と値の数値は GDC で出します（Paper 2）。** 対称性やめやすによる見当づけは、電卓なしでも進めます。**どの問題で GDC を使うかは、演習のまえがきに書きました。**答えは**有効数字 $3$ 桁**（$3$ significant figures）で書きます。
-:::
 
 ::: {#exm-aasl49-basic}
 [The random variable $X$ follows the distribution $X \sim N(50,\ 8^{2})$.]{.q-en}
@@ -201,7 +136,8 @@ $\mu$ を変えると曲線は左右に動くだけ、$\sigma$ を変えると�
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 $\mu = 50$、$\sigma = 8$ です。
 
@@ -228,7 +164,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Every value with $X > 50$ also has $X > 45$, and the values between $45$ and $50$ are extra. By symmetry $P(X > 50) = 0.5$, and the extra part has positive area, so $P(X > 45) > 0.5$.*
+*Every value with $X > 50$ also has $X > 45$, and the values between $45$ and $50$ are extra.*
+
+*By symmetry $P(X > 50) = 0.5$, and the extra part has positive area, so $P(X > 45) > 0.5$.*
 :::
 
 （曲線は平均 $50$ について対称なので $P(X > 50) = 0.5$ である。$X > 45$ の範囲は $X > 50$ を全部含み、さらに $45$ から $50$ までの部分も含む。その面積は正なので、$0.5$ より大きくなる、という意味です。）
@@ -255,6 +193,7 @@ $$P(45 < X < 60) = 0.628$$
 **(d)** *by symmetry $P(X > 50) = 0.5$, and $X > 45$ also contains the part from $45$ to $50$, so the probability is larger than $0.5$*
 :::
 :::
+:::
 
 ::: {#exm-aasl49-height}
 [The heights of a large group of adults are normally distributed with mean $170$ cm and standard deviation $6$ cm.]{.q-en}
@@ -278,7 +217,8 @@ $$P(45 < X < 60) = 0.628$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 $\mu = 170$、$\sigma = 6$ です。
 
@@ -299,7 +239,11 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The values $164$ and $176$ are exactly $170 - 6$ and $170 + 6$, that is one standard deviation either side of the mean. The guide says about $68\%$ of a normal distribution lies in that interval, and the calculator gives $0.683$, which agrees. So roughly two adults in every three have a height in this range.*
+*The values $164$ and $176$ are exactly $170 - 6$ and $170 + 6$, that is one standard deviation either side of the mean.*
+
+*The guide says about $68\%$ of a normal distribution lies in that interval, and the calculator gives $0.683$, which agrees.*
+
+*So roughly two adults in every three have a height in this range.*
 :::
 
 （$164$ と $176$ はちょうど平均から標準偏差 $1$ つぶん左右である。めやすではこの区間に約 $68\%$ が入るとされ、電卓の $0.683$ と一致する。だいたい $3$ 人に $2$ 人がこの範囲に入る、という意味です。）
@@ -312,6 +256,8 @@ $$
 
 ::: {.callout-note}
 ## 解答例（答案用紙に書くこと）
+*Let* $X$ *be the height, in cm, of a randomly chosen adult.*
+
 *$X \sim N(170,\ 6^{2})$*
 
 **(a)** *normCdf*$(180, 10^{9}, 170, 6)$
@@ -322,90 +268,6 @@ $$P(164 < X < 176) = 0.683$$
 
 **(c)** *$164$ and $176$ are $\mu \pm \sigma$, and the guide gives about $68\%$, which matches $0.683$*
 :::
-:::
-
-::: {#exm-aasl49-inverse}
-[The lifetime, in hours, of a type of lamp is normally distributed with mean $500$ and standard deviation $40$.]{.q-en}
-
-**(a)** [Find the value of $k$ such that $P(X < k) = 0.9$.]{.q-en}
-
-**(b)** [Sketch the normal curve, shade the region whose area is $0.05$, and hence find the lifetime that is exceeded by only the longest-lasting $5\%$ of the lamps.]{.q-en}
-
-**(c)** [Find the probability that a randomly chosen lamp lasts between $460$ and $560$ hours.]{.q-en}
-
-**(d)** [Explain why the answer to part (a) must be greater than $500$.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-ある種類のランプの寿命（時間）は、平均 $500$、標準偏差 $40$ の正規分布に従います。
-
-**(a)** $P(X < k) = 0.9$ となる $k$ の値を求めなさい。
-
-**(b)** 正規分布の曲線をかき、面積が $0.05$ になる部分に色を塗りなさい。そのうえで、寿命の長いほうから $5\%$ のランプだけがこえる寿命を求めなさい。
-
-**(c)** 無作為に選んだランプの寿命が $460$ 時間から $560$ 時間の間である確率を求めなさい。
-
-**(d)** (a) の答えが $500$ より大きくなければならない理由を説明しなさい。
-
-</details>
-
----
-
-$\mu = 500$、$\sigma = 40$ です。
-
-**(a)** `invNorm(0.9, 500, 40)` を使います（[第 6 節](#inverse)）。
-
-$$
-k = 551 \ (3 \text{ s.f.})
-$$
-
-**(b)** **図：$\mu = 500$ に縦線を入れ、右のすその細い部分を塗ります。**塗った部分の面積が $0.05$ なので、その左は $1 - 0.05 = 0.95$ です。`invNorm(0.95, 500, 40)` を使います。
-
-![A normal curve with the upper tail shaded](img/aasl-4-9-tail.svg){#fig-aasl49-tail width=100%}
-
-$$
-566 \ \text{hours} \ (3 \text{ s.f.})
-$$
-
-**(c)** $460$ は $\mu - \sigma$、$560$ は $\mu + 1.5\sigma$ です。`normCdf(460, 560, 500, 40)` を使います。
-
-$$
-P(460 < X < 560) = 0.775 \ (3 \text{ s.f.})
-$$
-
-**(d)** `Explain why` なので、英語で理由を書きます。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*The curve is symmetric about $500$, so exactly half the area lies to the left of $500$, giving $P(X < 500) = 0.5$. The required area to the left of $k$ is $0.9$, which is larger than $0.5$, so $k$ must lie to the right of $500$.*
-:::
-
-（曲線は $500$ について対称なので、$500$ の左の面積はちょうど半分で $P(X < 500) = 0.5$ である。$k$ の左に必要な面積 $0.9$ はそれより大きいので、$k$ は $500$ より右にある、という意味です。）
-
-**検算（(a) について、もどします）。** `normCdf(-10^9, 551.26, 500, 40)` は $0.900$ です ✓ 与えられた面積と一致します。
-
-**検算（(a) について、めやすで）。** $\mu + \sigma = 540$ までで約 $84\%$、$\mu + 2\sigma = 580$ までで約 $97.5\%$ です。$90\%$ はその間なので、$k$ は $540$ と $580$ の間のはずです ✓ $551$ はこの中にあります。
-
-**検算（(b) について、(a) との大小で）。** 上位 $5\%$ の境目は、上位 $10\%$ の境目より右にあるはずです。$566 > 551$ ✓
-
-**検算（(c) について、めやすで）。** 左は $1\sigma$、右は $1.5\sigma$ です。$\mu \pm \sigma$（約 $68\%$）より広く、$\mu \pm 2\sigma$（約 $95\%$）より狭いはずです ✓ $0.775$ はこの間にあります。
-
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-*$X \sim N(500,\ 40^{2})$*
-
-**(a)** *invNorm*$(0.9, 500, 40)$
-$$k = 551$$
-
-**(b)** *sketch: curve with the right-hand tail of area $0.05$ shaded; area to the left* $= 0.95$; *invNorm*$(0.95, 500, 40)$
-$$566 \text{ hours}$$
-
-**(c)** *normCdf*$(460, 560, 500, 40)$
-$$P(460 < X < 560) = 0.775$$
-
-**(d)** *by symmetry $P(X < 500) = 0.5$, and $0.9 > 0.5$, so $k$ is to the right of $500$*
 :::
 :::
 
@@ -435,7 +297,8 @@ $$P(460 < X < 560) = 0.775$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 $\mu = 72$、$\sigma = 5$ です。
 
@@ -462,7 +325,11 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*It cannot be exactly correct. A normal distribution gives positive probability to every interval, including intervals of negative values, but an apple cannot have a negative mass. Here zero lies $14.4$ standard deviations below the mean, so $P(X < 0)$ is far too small to matter and the model is a good approximation over the range of masses that actually occur.*
+*It cannot be exactly correct.*
+
+*A normal distribution gives positive probability to every interval, including intervals of negative values, but an apple cannot have a negative mass.*
+
+*Here zero lies $14.4$ standard deviations below the mean, so $P(X < 0)$ is far too small to matter and the model is a good approximation over the range of masses that actually occur.*
 :::
 
 （厳密には正しくない。正規分布はどんな区間にも正の確率を与えるので、負の値の区間にも確率がついてしまうが、りんごの質量が負になることはない。ここでは $0$ が平均より $14.4$ 標準偏差下にあるので、$P(X < 0)$ は無視できるほど小さく、実際に現れる質量の範囲ではよい近似である、という意味です。）
@@ -479,6 +346,8 @@ $$
 
 ::: {.callout-note}
 ## 解答例（答案用紙に書くこと）
+*Let* $X$ *be the mass, in grams, of a randomly chosen apple.*
+
 *$X \sim N(72,\ 5^{2})$*
 
 **(a)** *normCdf*$(80, 10^{9}, 72, 5)$
@@ -492,6 +361,155 @@ $$P(62 < X < 82) = 0.954$$
 
 **(d)** *the normal model gives positive probability to intervals of negative masses, which is impossible; but $0$ is $14.4$ standard deviations below the mean, so the model is a good approximation*
 :::
+:::
+:::
+
+### 6. Inverse normal calculations（逆正規計算） {#inverse}
+
+**面積が分かっていて、値を求める**のが **inverse normal calculation**（逆正規計算）です。
+
+GDC では `invNorm(area, μ, σ)` を使います（[GDC の節](#gdc-invnorm)）。
+
+**`area` は「その値より左の面積」です。** $P(X < k) = 0.9$ なら `invNorm(0.9, μ, σ)` です。
+
+**「上位 $10\%$」は、左の面積が $0.9$ です。** 右側の割合が与えられたときは、$1$ から引いてから入れます。ここが最も多い誤りです。
+
+**逆正規計算の問題では、$\mu$ と $\sigma$ は必ず与えられます。** $\mu$ と $\sigma$ が分からない問題は、[SL 4.12](aasl-4-12.qmd) で扱います。
+
+**答えが $\mu$ より上か下かを、面積から先に予想してください。** 面積と $0.5$ の大小を見ます。
+
+### 7. Sketching the curve（まず図をかく） {#sketch}
+
+**まず釣り鐘の絵をかき、$\mu$ に縦線を入れます。** 次に、求めたい部分に色を塗ります。
+
+**塗った部分が半分より広いか狭いかを見ます。** そこから、答えが $0.5$ より大きいか小さいかが分かります。
+
+**このひと手間で、上端と下端の入れちがいがほとんど防げます。** 図と答えが合わなければ、入力を見直します。
+
+::: {.callout-warning}
+## この節の確率と値は、GDC で出します
+正規分布の確率と値は **GDC で求める**ものです。だから、**その数値を出す問題は Paper 2 で出ます。**
+
+**単元全体が Paper 1 の対象外というわけではありません。** 曲線の対称性、$68$–$95$–$99.7$ のめやす、$\mu$ や $\sigma$ を変えたときの形の変化は、電卓なしでも問われます。
+
+**答えの見当も、手でつけられます。** $\mu$ を中心とした対称性、$0.5$ との大小、$68$–$95$–$99.7$ のめやす ——この $3$ つで、入力ミスのほとんどは見つかります。
+:::
+
+::: {#exm-aasl49-inverse}
+[The lifetime, in hours, of a type of lamp is normally distributed with mean $500$ and standard deviation $40$.]{.q-en}
+
+**(a)** [Find the value of $k$ such that $P(X < k) = 0.9$.]{.q-en}
+
+**(b)** [Sketch the normal curve, shade the region whose area is $0.05$, and hence find the lifetime that is exceeded by only the longest-lasting $5\%$ of the lamps.]{.q-en}
+
+**(c)** [Find the probability that a randomly chosen lamp lasts between $460$ and $560$ hours.]{.q-en}
+
+**(d)** [Explain why the answer to part (a) must be greater than $500$.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある種類のランプの寿命（時間）は、平均 $500$、標準偏差 $40$ の正規分布に従います。
+
+**(a)** $P(X < k) = 0.9$ となる $k$ の値を求めなさい。
+
+**(b)** 正規分布の曲線をかき、面積が $0.05$ になる部分に色を塗りなさい。そのうえで、寿命の長いほうから $5\%$ のランプだけがこえる寿命を求めなさい。
+
+**(c)** 無作為に選んだランプの寿命が $460$ 時間から $560$ 時間の間である確率を求めなさい。
+
+**(d)** (a) の答えが $500$ より大きくなければならない理由を説明しなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+$\mu = 500$、$\sigma = 40$ です。
+
+**(a)** `invNorm(0.9, 500, 40)` を使います（[第 6 節](#inverse)）。
+
+$$
+k = 551 \ (3 \text{ s.f.})
+$$
+
+**(b)** **図：$\mu = 500$ に縦線を入れ、右のすその細い部分を塗ります。**塗った部分の面積が $0.05$ なので、その左は $1 - 0.05 = 0.95$ です。`invNorm(0.95, 500, 40)` を使います。
+
+![上側のすそに色をつけた正規分布の曲線です。](img/aasl-4-9-tail.svg){#fig-aasl49-tail width=100%}
+
+$$
+566 \ \text{hours} \ (3 \text{ s.f.})
+$$
+
+**(c)** $460$ は $\mu - \sigma$、$560$ は $\mu + 1.5\sigma$ です。`normCdf(460, 560, 500, 40)` を使います。
+
+$$
+P(460 < X < 560) = 0.775 \ (3 \text{ s.f.})
+$$
+
+**(d)** `Explain why` なので、英語で理由を書きます。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*The curve is symmetric about $500$, so exactly half the area lies to the left of $500$, giving $P(X < 500) = 0.5$.*
+
+*The required area to the left of $k$ is $0.9$, which is larger than $0.5$, so $k$ must lie to the right of $500$.*
+:::
+
+（曲線は $500$ について対称なので、$500$ の左の面積はちょうど半分で $P(X < 500) = 0.5$ である。$k$ の左に必要な面積 $0.9$ はそれより大きいので、$k$ は $500$ より右にある、という意味です。）
+
+**検算（(a) について、もどします）。** `normCdf(-10^9, 551.26, 500, 40)` は $0.900$ です ✓ 与えられた面積と一致します。
+
+**検算（(a) について、めやすで）。** $\mu + \sigma = 540$ までで約 $84\%$、$\mu + 2\sigma = 580$ までで約 $97.5\%$ です。$90\%$ はその間なので、$k$ は $540$ と $580$ の間のはずです ✓ $551$ はこの中にあります。
+
+**検算（(b) について、(a) との大小で）。** 上位 $5\%$ の境目は、上位 $10\%$ の境目より右にあるはずです。$566 > 551$ ✓
+
+**検算（(c) について、めやすで）。** 左は $1\sigma$、右は $1.5\sigma$ です。$\mu \pm \sigma$（約 $68\%$）より広く、$\mu \pm 2\sigma$（約 $95\%$）より狭いはずです ✓ $0.775$ はこの間にあります。
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+*Let* $X$ *be the lifetime, in hours, of a randomly chosen lamp.*
+
+*$X \sim N(500,\ 40^{2})$*
+
+**(a)** *invNorm*$(0.9, 500, 40)$
+$$k = 551$$
+
+**(b)** *sketch: curve with the right-hand tail of area $0.05$ shaded; area to the left* $= 0.95$; *invNorm*$(0.95, 500, 40)$
+$$566 \text{ hours}$$
+
+**(c)** *normCdf*$(460, 560, 500, 40)$
+$$P(460 < X < 560) = 0.775$$
+
+**(d)** *by symmetry $P(X < 500) = 0.5$, and $0.9 > 0.5$, so $k$ is to the right of $500$*
+:::
+:::
+:::
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+**なぜ、確率が面積になるのでしょうか。** 正規分布は連続量の分布だからです。
+
+離散の場合は、棒の高さが確率でした（[SL 4.8](aasl-4-8.qmd#pmf)）。連続の場合、区間の中の**どの点にも**同じだけの正の確率を割りあてると、点は無限にあるので、合計はいくらでも大きくなってしまいます。
+
+そこで、**確率を「区間ごとの面積」で表します。** 全体の面積を $1$ にすれば、どの区間の面積も $0$ 以上 $1$ 以下になり、確率として使えます。
+
+**この決め方から、$P(X = a) = 0$ が出ます。** $1$ 点の幅は $0$ なので、面積も $0$ です。だから境目を含めても含めなくても、確率は変わりません。
+
+**なぜ、対称なら $P(X < \mu) = 0.5$ なのでしょうか。** 曲線が $\mu$ を軸に左右対称で、全体の面積が $1$ だからです。左右の面積が等しく、足して $1$ なので、どちらも $\dfrac{1}{2}$ です。
+
+**なぜ、$68$–$95$–$99.7$ が $\mu$ と $\sigma$ によらないのでしょうか。** どの正規分布も、**同じ曲線を translation**（平行移動）**して拡大・縮小したもの**だからです。
+
+$\mu$ を変えると曲線は左右に動くだけ、$\sigma$ を変えると横に伸び縮みして高さが調整されるだけで、**「$\mu$ から $\sigma$ いくつぶん」で測った面積は変わりません**。だから $68\%$ という割合は、どの正規分布でも同じです。
+
+**この「$\sigma$ いくつぶん」を数にしたものが $z$ 値です。** 詳しくは [SL 4.12](aasl-4-12.qmd) で扱います。
+
+**なぜ、逆正規計算では面積を「左から」で数えるのでしょうか。** `invNorm` がもどしているのは、「$k$ に、$k$ より左の面積を対応させる関数」の逆だからです。$P(X < k)$ は $k$ が右へ動くほど増えていくので、面積 $1$ つに対して $k$ が $1$ つだけ決まります。右からの面積で決めることもできますが、どちらかに約束を決めておかないと、同じ面積に $2$ とおりの答えが出ます。
+
+**この向きは、図をかけば目で確かめられます。** 面積と $0.5$ の大小を、$k$ と $\mu$ の大小と見くらべてください。
 :::
 
 ## Common errors
@@ -534,7 +552,7 @@ $P(X > a)$ でも、上端に大きな数（または $\infty$）が必要です
 **手順は答案に書きません。** 書くのは、使った関数と入れた数（`normCdf(45, 60, 50, 8)` など）と、出た答えです。
 :::
 
-### 1. 確率を求める：`normCdf` {#gdc-normcdf}
+### 1. Finding probabilities（確率を求める：`normCdf`） {#gdc-normcdf}
 
 `menu → Statistics → Distributions` から `normCdf` を出します。
 
@@ -544,7 +562,7 @@ $P(X > a)$ でも、上端に大きな数（または $\infty$）が必要です
 
 **入れるのは $\sigma$ です。** 分散を入れると、答えが変わります。
 
-### 2. 値を求める：`invNorm` {#gdc-invnorm}
+### 2. Finding values（値を求める：`invNorm`） {#gdc-invnorm}
 
 同じ `menu → Statistics → Distributions` から `invNorm` を出します。
 
@@ -559,7 +577,7 @@ $P(X > a)$ でも、上端に大きな数（または $\infty$）が必要です
 
 : `invNorm` に入れる面積 {#tbl-aasl49-inv}
 
-### 3. 入力を確かめる {#gdc-check}
+### 3. Checking the input（入力を確かめる） {#gdc-check}
 
 **答えを `normCdf` にもどします。** `invNorm` で出した $k$ を `normCdf(-10^9, k, μ, σ)` に入れて、もとの面積になるか見ます。
 
@@ -572,11 +590,7 @@ $P(X > a)$ でも、上端に大きな数（または $\infty$）が必要です
 ## Exercises
 
 ::: {.callout-note appearance="simple"}
-各問題に、折りたたみが $3$ つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です。英語の答案例が付くものもあります）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-
-**GDC を使うのは $1$ から $8$ です。** $9$・$10$ は、与えられた値をもとに考える問題なので、電卓なしで解けます。
+**GDC を使うのは $1$ から $8$ です。** $9$・$10$ は、与えられた値をもとに考える問題なので、電卓なしで解けます。 答えは**有効数字 $3$ 桁**（$3$ significant figures）で書きます。
 :::
 
 ::: {.exercise-block}
@@ -697,6 +711,8 @@ $$Q_{3} = 258 \ (3 \text{ s.f.})$$
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
+*Let* $X$ *be the volume, in litres, in a randomly chosen bottle.*
+
 *$X \sim N(4.2,\ 0.6^{2})$*
 
 *normCdf*$(5, 10^{9}, 4.2, 0.6)$
@@ -750,7 +766,9 @@ $$k = 54.7 \ (3 \text{ s.f.})$$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The curve is symmetric about the mean, so $P(X < 65) = 0.5$. The area required to the left of $k$ is $0.1$, which is smaller than $0.5$, so $k$ must lie to the left of $65$.*
+*The curve is symmetric about the mean, so $P(X < 65) = 0.5$.*
+
+*The area required to the left of $k$ is $0.1$, which is smaller than $0.5$, so $k$ must lie to the left of $65$.*
 :::
 :::
 
@@ -833,6 +851,8 @@ $$k = 36.6 \ (3 \text{ s.f.})$$
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 
+*Let* $X$ *be the time, in minutes, taken by a randomly chosen student.*
+
 *$X \sim N(12,\ 2.5^{2})$*
 
 *normCdf*$(-10^{9}, 10, 12, 2.5)$
@@ -858,7 +878,9 @@ $\mu = 12$、$\sigma = 2.5$ です。$10 < \mu$ なので、答えは $0.5$ よ�
 ::: {.model-answer}
 **試験ではこう書く**
 
-*About $21.2\%$ of students finish in under $10$ minutes, so in a class of $200$ the expected number is $200 \times 0.212 = 42.4$, that is roughly $42$ students. This is a long-run average: the actual number in any one class of $200$ will vary around $42$.*
+*About $21.2\%$ of students finish in under $10$ minutes, so in a class of $200$ the expected number is $200 \times 0.212 = 42.4$, that is roughly $42$ students.*
+
+*This is a long-run average: the actual number in any one class of $200$ will vary around $42$.*
 :::
 :::
 
@@ -895,7 +917,11 @@ $\mu = 12$、$\sigma = 2.5$ です。$10 < \mu$ なので、答えは $0.5$ よ�
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The equation $P(X \le 50) = P(X < 50) + P(X = 50)$ is correct, but the value used for the last term is wrong. A normally distributed variable is continuous, so probabilities are areas under the curve and a single value has zero width. Hence $P(X = 50) = 0$, not $0.0001$, and $P(X \le 50) = P(X < 50) = 0.798$.*
+*The equation $P(X \le 50) = P(X < 50) + P(X = 50)$ is correct, but the value used for the last term is wrong.*
+
+*A normally distributed variable is continuous, so probabilities are areas under the curve and a single value has zero width.*
+
+*Hence $P(X = 50) = 0$, not $0.0001$, and $P(X \le 50) = P(X < 50) = 0.798$.*
 :::
 :::
 
@@ -913,6 +939,8 @@ $\mu = 12$、$\sigma = 2.5$ です。$10 < \mu$ なので、答えは $0.5$ よ�
 
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
+
+*Let* $X$ *be the mass, in grams, of a randomly chosen bird.*
 
 *$50$ g is $5$ standard deviations above the mean, so $P(X > 50) \approx 2.87 \times 10^{-7}$: very unlikely, but not impossible under the model*
 
@@ -932,7 +960,11 @@ $\mu = 12$、$\sigma = 2.5$ です。$10 < \mu$ なので、答えは $0.5$ よ�
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Under this model $50$ g is five standard deviations above the mean, and $P(X > 50) \approx 2.87 \times 10^{-7}$. That is extremely small but not zero, so the model does not make such a bird impossible, only very unlikely. Saying it is impossible would be a statement about real birds, not about the normal model.*
+*Under this model $50$ g is five standard deviations above the mean, and $P(X > 50) \approx 2.87 \times 10^{-7}$.*
+
+*That is extremely small but not zero, so the model does not make such a bird impossible, only very unlikely.*
+
+*Saying it is impossible would be a statement about real birds, not about the normal model.*
 :::
 :::
 

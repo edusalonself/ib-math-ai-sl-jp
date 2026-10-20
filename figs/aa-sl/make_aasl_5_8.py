@@ -51,8 +51,6 @@ fig1, ax1 = plt.subplots(figsize=(6.1, 5.4))
 # ══════════════════════════════════════════════════════════
 # (a) 極大・極小・変曲点
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Maximum, minimum and point of inflexion", fontsize=11,
-              color=INK, loc="left", pad=12)
 ax1.plot(X, F, color=ACCENT, linewidth=2.2)
 ax1.axhline(0, color=GREY, linewidth=0.9)
 ax1.set_xlim(-0.6, 4.6)
@@ -107,14 +105,11 @@ def _panel(ax, up):
                 color=INK, linewidth=1.6)
         ax.plot([_x0], [_a * _x0 ** 2], "o", color=INK, markersize=4)
     ax.set_xlim(-2.0, 2.0)
-    ax.set_ylim(-1.55, 1.55)
+    ax.set_ylim(-1.15, 1.15)
     ax.axis("off")
     ax.set_title("concave-up:  $f'' > 0$" if up
                  else "concave-down:  $f'' < 0$",
                  fontsize=11, color=INK, pad=8)
-    ax.text(0, -1.42, "the tangents turn anticlockwise" if up
-            else "the tangents turn clockwise",
-            fontsize=9, color=GREY, ha="center")
 
 
 _panel(axC[0], True)
@@ -125,10 +120,8 @@ figB, axB = plt.subplots(figsize=(6.1, 5.6))
 # ══════════════════════════════════════════════════════════
 # (box) ふたのない箱
 # ══════════════════════════════════════════════════════════
-axB.set_title("An open box made from a square sheet", fontsize=11,
-              color=INK, loc="left", pad=12)
-axB.set_xlim(-1.3, 11.3)
-axB.set_ylim(-2.6, 10.0)
+axB.set_xlim(-1.3, 10.4)
+axB.set_ylim(-1.0, 8.9)
 axB.axis("off")
 axB.set_aspect("equal", adjustable="box")
 
@@ -169,8 +162,6 @@ axB.text(X0 + S + 0.55, Y0 + S - C / 2, "cut off", fontsize=9.5, color=WARM,
 axB.text(X0 + S + 0.55, Y0 + S / 2, "fold up", fontsize=9.5, color=GREY,
          ha="left", va="center")
 
-axB.text(-1.2, -1.95, "base $(a - 2x)$ by $(a - 2x)$, height $x$",
-         fontsize=10, color=INK, ha="left", va="center")
 
 for _fig, _name in ((fig1, "aasl-5-8-idea-a.svg"),
                     (figC, "aasl-5-8-concavity.svg"),

@@ -47,6 +47,10 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
 A, B, th = sp.symbols("A B theta")
 PI = sp.pi
 S, C, T = sp.sin, sp.cos, sp.tan
@@ -161,28 +165,29 @@ chk(C(PI / 3) * C(PI / 3) + S(PI / 3) * S(PI / 3) == 1, "演習10 正しい式�
 # ══════════════════════════════════════════════════════════
 # 3. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Compound angle identities.", "シラバス 1 行目を逐語で")
-in_text("> Double angle identity for tan.", "シラバス 2 行目を逐語で")
-in_text("> Derivation of double angle identities from compound angle"
+not_in_text("> Compound angle identities.", "シラバス 1 行目を逐語で")
+not_in_text("> Double angle identity for tan.", "シラバス 2 行目を逐語で")
+not_in_text("> Derivation of double angle identities from compound angle"
         " identities.", "Guidance を逐語で")
-in_text("> Link to: De Moivre's theorem (AHL1.14).", "Link to を逐語で")
+not_in_text("> Link to: De Moivre's theorem (AHL1.14).", "Link to を逐語で")
 in_text("公式集の **3.10** の欄", "公式集の場所")
-in_text("> $\\sin(A \\pm B) = \\sin A\\cos B \\pm \\cos A\\sin B$", "公式集 sin")
-in_text("> $\\cos(A \\pm B) = \\cos A\\cos B \\mp \\sin A\\sin B$", "公式集 cos")
-in_text("> $\\tan(A \\pm B) = \\dfrac{\\tan A \\pm \\tan B}"
-        "{1 \\mp \\tan A\\tan B}$", "公式集 tan")
-in_text("> $\\tan 2\\theta = \\dfrac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$",
+in_text("\\sin(A \\pm B) = \\sin A\\cos B \\pm \\cos A\\sin B", "公式集 sin（本文の式）")
+in_text("\\cos(A \\pm B) = \\cos A\\cos B \\mp \\sin A\\sin B", "公式集 cos（本文の式）")
+in_text("\\tan(A \\pm B) = \\frac{\\tan A \\pm \\tan B}{1 \\mp \\tan A\\tan B}", "公式集 tan（本文の式）")
+not_in_text("> Compound angle identities", "加法定理は引用でなく本文の式で")
+not_in_text("> $\\tan 2\\theta = \\dfrac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$",
         "公式集 tan 2θ")
 
 # ══════════════════════════════════════════════════════════
 # 4. 図と、答えの漏れ
 # ══════════════════════════════════════════════════════════
 in_fig("A picture behind $\\\\sin(A+B)$", "図(a) の題")
-in_fig("it splits into two pieces, one from each triangle", "図(a) の要点")
-in_fig("Put $B = A$ and the double angle identities drop out", "図(b) の題")
-in_fig("the booklet prints the left column; the right one you derive",
+not_in_fig("it splits into two pieces, one from each triangle", "図(a) の要点")
+not_in_fig("Put $B = A$ and the double angle identities drop out", "図(b) の題")
+not_in_fig("the booklet prints the left column; the right one you derive",
        "図(b) の要点")
-in_text("$\\sin(A+B)$ の図です。", "キャプション (a)")
+not_in_text("img/aahl-3-10-idea-a.svg", "sin(A+B) の図は使わない（2026-10-14 削除）")
+not_in_text("{#why-picture}", "図による説明も削除")
 in_text("加法定理に $B = A$ を入れると、$2$ 倍角が出ます。", "キャプション (b)")
 for leak in ["63", "84", "sqrt(3)-1"]:
     chk(leak not in FIGSTR, "図が例題・演習の答えを載せている: " + leak)
@@ -207,7 +212,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -216,8 +221,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl310-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -260,7 +266,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -278,7 +284,7 @@ for _hh in re.findall(r"^### \d+\. (.+?) \{#", TEXT, re.M):
 # ══════════════════════════════════════════════════════════
 # 図
 # ══════════════════════════════════════════════════════════
-for _n in ("a", "b"):
+for _n in ("b",):
     _p = os.path.join(BASE, "img", "aahl-3-10-idea-%s.svg" % _n)
     chk(os.path.exists(_p), "図 (%s) がある" % _n)
     chk("](img/aahl-3-10-idea-%s.svg)" % _n in TEXT,
@@ -321,5 +327,7 @@ in_text("**分母が $0$ になる $\\theta$ では使えません。**", "tan 2
 in_text("**$\\sin$ は同じ、$\\cos$ は逆**と覚えておいてください。", "複号の覚え方")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

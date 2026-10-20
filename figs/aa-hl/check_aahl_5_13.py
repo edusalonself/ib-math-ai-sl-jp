@@ -48,6 +48,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 
 _x = sp.Symbol("x")
 R = sp.Rational
@@ -161,23 +165,23 @@ chk(sp.limit((_x * sp.cos(_x) - sp.sin(_x)) / _x ** 2, _x, 0) == 0,
 # ══════════════════════════════════════════════════════════
 # 3. シラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> The indeterminate forms $\\dfrac{0}{0}$ and"
+not_in_text("> The indeterminate forms $\\dfrac{0}{0}$ and"
         " $\\dfrac{\\infty}{\\infty}$.", "不定形を逐語で")
-in_text("> The evaluation of limits of the form"
+not_in_text("> The evaluation of limits of the form"
         " $\\displaystyle\\lim_{x \\to a}\\frac{f(x)}{g(x)}$ and"
         " $\\displaystyle\\lim_{x \\to \\infty}\\frac{f(x)}{g(x)}$ using"
         " l'Hôpital's rule or the Maclaurin series.", "Content を逐語で")
-in_text("> Repeated use of l'Hôpital's rule.", "くり返しを逐語で")
-in_text("> Link to: horizontal asymptotes (SL2.8).", "水平漸近線への Link を逐語で")
-in_text("> For example: $\\displaystyle\\lim_{\\theta \\to 0}"
+not_in_text("> Repeated use of l'Hôpital's rule.", "くり返しを逐語で")
+not_in_text("> Link to: horizontal asymptotes (SL2.8).", "水平漸近線への Link を逐語で")
+not_in_text("> For example: $\\displaystyle\\lim_{\\theta \\to 0}"
         "\\frac{\\sin\\theta}{\\theta} = 1$.", "例を逐語で")
 
 # ══════════════════════════════════════════════════════════
 # 4. 図と、答えの漏れ
 # ══════════════════════════════════════════════════════════
-in_fig("near a common zero, each curve looks like its tangent", "図(a) の題")
-in_fig("both are $0$ at $x = a$", "図(a) の注")
-in_fig("has a hole at $x = 0$", "図(b) の題")
+not_in_fig("near a common zero, each curve looks like its tangent", "図(a) の題")
+not_in_fig("both are $0$ at $x = a$", "図(a) の注")
+not_in_fig("has a hole at $x = 0$", "図(b) の題")
 in_fig("the values approach $1$", "図(b) の注")
 in_text("$0$ になる点の近くでは、曲線は接線とほぼ同じです。", "キャプション (a)")
 in_text("に穴があり、値は $1$ に近づきます。", "キャプション (b)")
@@ -200,7 +204,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -209,8 +213,9 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl513-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
 chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
     "The idea が 1..7 で連番")
@@ -253,13 +258,15 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
 chk(_wiw.rstrip().endswith(":::"), "折りたたみが閉じてある")
 # ★ The idea の見出しは「英語（日本語）」の形（_AA-HL-PLAN.md の「決まったこと」5）
 for _hh in re.findall(r"^### \d+\. (.+?) \{#", TEXT, re.M):
+    if not re.search(r"[ぁ-んァ-ヶ一-龥]", _hh):
+        continue  # 数式だけの見出しは（日本語）を付けない
     chk(_hh.endswith("）") and "（" in _hh,
         "見出しが 英語（日本語） の形でない: " + _hh)
     chk(re.match(r"[A-Za-z$]", _hh) is not None,
@@ -310,8 +317,10 @@ in_text("## 不定形でないときは使えません", "条件の確認")
 in_text("## 商の微分をしてしまう", "別々に微分")
 in_text("## $1$ 回で止めてしまう", "くり返す")
 in_text("## 度で計算する", "ラジアン")
-in_text("**分子と分母を、別々に微分します。**", "別々に微分（本文）")
+in_text("**分子と分母をそれぞれ微分してから、極限を求めればよい**", "別々に微分（本文）")
 
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

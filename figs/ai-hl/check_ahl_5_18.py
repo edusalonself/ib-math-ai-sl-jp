@@ -232,22 +232,25 @@ in_text("$\\Delta = a^{2} - 4b = 0 + 4 = 4 > 0$")
 # ══════════════════════════════════════════════════════════════
 # 4. シラバス・公式集から確かめた事実
 # ══════════════════════════════════════════════════════════════
-# 4-1 シラバスの引用（Guidance 欄）
-in_text("> Write as coupled first order equations $\\dfrac{dx}{dt} = y$ and "
-        "$\\dfrac{dy}{dt} = f(x,\\ y,\\ t)$.")
-in_text("can also be investigated using the phase portrait method in AHL 5.17 above.")
-in_text("> Understanding the occurrence of simple second order differential equations "
-        "in physical phenomena would aid understanding but **in examinations the equation "
-        "will be given.**")
-in_text("> Use of spreadsheets to generate values.")
+# 4-1 シラバスの引用（Guidance 欄）は本文から外し、日本語で直接書いた
+not_in_text("> Write as coupled first order equations")           # シラバスの引用は本文から外した
+not_in_text("can also be investigated using the phase portrait method")  # シラバスの引用は本文から外した
+not_in_text("> Understanding the occurrence of simple second order")     # シラバスの引用は本文から外した
+not_in_text("> Use of spreadsheets to generate values.")                 # シラバスの引用は本文から外した
+in_text("このような $2$ 本の式を **coupled first order equations**（連立1階微分方程式）といい、"
+        "試験では `Write as coupled first order equations` の形でよく問われます。")
+in_text("$2$ 階の式の **phase portrait**（相図）は、横軸が位置 $x$、縦軸が速度 $y$ です。")
+in_text("**試験では、$2$ 階の式は必ず与えられます。** ばねのような物理の場面でこの式が出てくることを知っておくと、理解の助けにはなります。")
+in_text("Euler 法の値は、**spreadsheet**（スプレッドシート）で表にして出すこともできます。")
 # 4-2 公式集に 5.18 の欄は無い
 in_text("公式集に 5.18 の欄は無く")
 # 4-3 厳密解は固有値が異なる 2 つの実数のときだけ
-in_text("Calculation of exact solutions is only required for the case of "
-        "**real distinct eigenvalues**.")
-in_text("固有値が**重解**（$\\lambda_1 = \\lambda_2$）になる場合は、**この課程では出題されません。**")
+not_in_text("Calculation of exact solutions is only required")  # シラバスの引用は本文から外した
+in_text("厳密解を求めるのは、固有値が異なる $2$ つの実数のときだけです（[AHL 5.17a](ahl-5-17a.qmd)）。")
+in_text("固有値が **repeated root**（重解）、つまり $\\lambda_1 = \\lambda_2$ になる場合は、**この課程では出題されません。**")
 # 4-4 overdamped などはシラバスの語ではない
-in_text("**AI HL のシラバスにはこれらの語はありません。**")
+in_text("## `overdamped` のような英語は、この課程の用語ではありません")
+in_text("**AI HL ではこれらの語を使いません。**")
 not_in_text("overdamped と呼びます。答案では")
 
 # 変換と行列の要点
@@ -285,17 +288,23 @@ eq("exercise-block は 1 つ", TXT.count("::: {.exercise-block}"), 1)
 eq("例題は 4 つ", TXT.count("::: {#exm-ahl518-"), 4)
 eq("日本語訳の折りたたみ", TXT.count('<details class="jp-trans">'), 14)
 
-i_we = TXT.index("## Worked examples")
+not_in_text("## Worked examples")
+i_idea = TXT.index("## The idea")
+i_why = TXT.index("## Why it works")
 i_ce = TXT.index("## Common errors")
-we = TXT[i_we:i_ce]
-eq("例題の日本語訳の下に区切り線がある",
-   we.count("</details>\n\n---\n\n"), we.count("</details>"))
+_exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(i_idea < p < i_why for p in _exm), True)
+eq("例題の数は変わらない（4）", len(_exm), 4)
+we = TXT[i_idea:i_why]   # 例題は The idea の中にある
+eq("例題の日本語訳の下に、解説と解答例の折りたたみがある",
+   we.count('</details>\n\n::: {.callout-tip collapse="true"}\n## 解説と解答例'), we.count("::: {#exm-"))
 eq("演習には区切り線を入れない", TXT[i_ce:].count("\n---\n"), 0)
 
 chapters = [l[3:] for i, l in enumerate(L)
             if l.startswith("## ") and not (i and L[i - 1].lstrip().startswith(":::"))]
 eq("章見出しは _TEMPLATE の順どおり", chapters == [
-    "The idea", "Why it works", "Worked examples", "Common errors",
+    "The idea", "Why it works", "Common errors",
     "Using your GDC (TI-Nspire CX II)", "Exercises"], True)
 in_text("::: {.callout-note}\n## What you should be able to do")
 
@@ -308,8 +317,8 @@ for w in ("誰でもできる", "簡単です", "当然", "明らか", "もち�
 
 eq("検算が書かれている", TXT.count("**検算。**") >= 5, True)
 eq("model-answer がある", TXT.count("::: {.model-answer}") >= 8, True)
-in_text("![Euler's method and the exact solution for the same equation](img/ahl-5-18-euler.svg)")
-in_text("![What the eigenvalues say about the motion](img/ahl-5-18-motion.svg)")
+in_text("![同じ方程式の、Euler 法の解と正確な解です。](img/ahl-5-18-euler.svg)")
+in_text("![固有値から分かる、動き方です。](img/ahl-5-18-motion.svg)")
 
 
 
@@ -317,10 +326,11 @@ in_text("![What the eigenvalues say about the motion](img/ahl-5-18-motion.svg)")
 # 6. レビューで直した点（元に戻っていないか）
 # ══════════════════════════════════════════════════════════════
 in_text("## この課程で厳密解を求めるのは、固有値が異なる $2$ つの実数のときだけです")
-in_text("複素数の固有値でも、解の式そのものは存在します。ただし、**この課程では求められていません。**")
+in_text("**complex number**（複素数）の固有値でも、解の式そのものは存在します。ただし、**この課程では求められていません。**")
 not_in_text("## 厳密解を書けるのは、実で異なる固有値のときだけです")
 not_in_text("実で異なる")
-in_text("> Systems will have **distinct, non-zero, eigenvalues**.")
+not_in_text("> Systems will have **distinct, non-zero, eigenvalues**.")  # シラバスの引用は本文から外した
+in_text("固有値が $0$ になる場合も出題されません。試験に出る系の固有値は、いつも異なる $2$ つで、$0$ ではありません。")
 close("誤差の百分率", round(100 * (0.98 - (2 * math.exp(-0.2) - math.exp(-0.4)))
                         / (2 * math.exp(-0.2) - math.exp(-0.4)), 1), 1.3)
 in_text("which is about $1.3\\%$")
@@ -333,7 +343,7 @@ in_text("右辺はどちらも **$x$ と $y$ の一次式だけ**で、定数項
 not_in_text("右辺が **$x$ と $y$ の一次式だけ**なので")
 in_text("| $a < 0$、$b > 0$、$\\Delta < 0$ | 複素数、**実部が正** |")
 in_text("\\lambda = \\frac{-a \\pm \\sqrt{\\Delta}}{2}")
-in_text("**$\\Delta < 0$ のとき、$2$ つの固有値の実部はどちらも $-\\dfrac{a}{2}$** です")
+in_text("**$\\Delta < 0$ のとき、$2$ つの固有値の **real part**（実部）はどちらも $-\\dfrac{a}{2}$** です")
 in_text("この式そのものが誤りというわけではありませんが、**この課程では求められていません。**")
 in_text("y_{n+1} = y_n + h \\times f(x_n,\\ y_n)")
 in_text("ですから文字を $y \\to x$、$x \\to t$ と読みかえます")

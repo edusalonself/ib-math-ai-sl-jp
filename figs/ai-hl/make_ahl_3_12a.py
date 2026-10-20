@@ -73,13 +73,10 @@ for i, p in enumerate(P):
 arrow(ax, tuple(P[0]), tuple(P[1]), color=ACC, lw=3.0)
 ax.text(2.0, 2.15, "$\\mathbf{v}$", fontsize=14, color=ACC, ha="center",
         va="top")
-ax.text(5.6, -1.4, "$\\mathbf{r} = \\binom{1}{2} + t\\binom{2}{1}$\n"
-                   "the dots are evenly spaced,\n"
-                   "because $\\mathbf{v}$ is the SAME every second",
+ax.text(5.6, -1.4, "$\\mathbf{r} = \\binom{1}{2} + t\\binom{2}{1}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-1.6, 11.4), (-3.4, 7.4))
-ax.set_title("(a)  one step of $\\mathbf{v}$ per unit of time", fontsize=12.5,
-             color=INK, pad=6)
+grid(ax, (-1.6, 11.4), (-2.6, 7.4))
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) 同じ道すじ、ちがう速さ
 ax = axs[1]
@@ -96,13 +93,8 @@ ax.text(5.6, -0.7, "$P$: $\\mathbf{v} = \\binom{2}{1}$",
         fontsize=12, color=LINE, ha="center", va="center", zorder=10)
 ax.text(5.6, -1.7, "$Q$: $\\mathbf{v} = \\binom{4}{2}$",
         fontsize=12, color=GREEN, ha="center", va="center", zorder=10)
-ax.text(5.6, -2.8, "SAME path, but $Q$ is twice as fast\n"
-                   "here the LENGTH of $\\mathbf{v}$ matters",
-        fontsize=12, color=INK, ha="center", va="center", zorder=10)
-grid(ax, (-1.6, 11.4), (-3.4, 7.4))
-ax.set_title("(b)  same path, different speed\n"
-             "(the numbers on the dots are the times)", fontsize=12.5,
-             color=INK, pad=6)
+grid(ax, (-1.6, 11.4), (-2.6, 7.4))
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=1.8)
 save(fig, "ahl-3-12a-idea.svg")
@@ -128,14 +120,10 @@ for i, p in enumerate(PB):
             ha="left", va="top")
 ax.plot([3.0], [5.0], "o", color=ACC, ms=13, mfc="none", mew=2.5, zorder=10)
 ax.plot([3.6, 8.4], [5.4, 7.6], color=ACC, lw=1.2, ls=":", zorder=4)
-ax.text(10.6, 8.2, "paths cross at $(3,\\ 5)$", fontsize=11.5, color=ACC,
+ax.text(10.6, 8.2, "$(3,\\ 5)$", fontsize=11.5, color=ACC,
         ha="center", va="center", bbox=BOX, zorder=9)
-ax.text(6.6, -3.4, "$A$ is there at $t = 1$, $B$ at $t = 5$\n"
-                   "different times: no collision",
-        fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-1.6, 15.4), (-5.4, 12.6))
-ax.set_title("(a)  the paths cross, but the particles do not meet",
-             fontsize=12.5, color=INK, pad=6)
+grid(ax, (-1.6, 15.4), (-1.6, 12.6))
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) 衝突する
 ax = axs[1]
@@ -152,12 +140,10 @@ for i, p in enumerate(PC):
             ha="left", va="top")
 ax.plot([3.0], [5.0], "o", color=ACC, ms=13, zorder=10)
 ax.plot([3.6, 8.4], [5.4, 7.6], color=ACC, lw=1.2, ls=":", zorder=4)
-ax.text(10.6, 8.2, "both at $(3,\\ 5)$ when $t = 1$", fontsize=11.5, color=ACC,
+ax.text(10.6, 8.2, "$(3,\\ 5)$, $t = 1$", fontsize=11.5, color=ACC,
         ha="center", va="center", bbox=BOX, zorder=9)
-ax.text(6.6, -3.4, "same place at the SAME time:\ncollision at $t = 1$",
-        fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-1.6, 15.4), (-5.4, 12.6))
-ax.set_title("(b)  a real collision", fontsize=12.5, color=INK, pad=6)
+grid(ax, (-1.6, 15.4), (-1.6, 12.6))
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=1.8)
 save(fig, "ahl-3-12a-cross.svg")
@@ -191,12 +177,8 @@ for T in (0, 3, 5):
             ha="left", va="center")
 ax.text(13.6, 9.2, "$20$ km", fontsize=12.5, color=ACC, ha="right",
         va="center", bbox=BOX, zorder=9)
-ax.text(13.0, -7.0, "$A$ goes east at $3$, $B$ goes north at $4$\n"
-                    "the gap is smallest at $t = 3$",
-        fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-3.4, 32.4), (-10.4, 22.4), step=5)
-ax.set_title("(a)  two ships, and the gap between them", fontsize=12.5,
-             color=INK, pad=6)
+grid(ax, (-3.4, 32.4), (-5.4, 22.4), step=5)
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) d(t) のグラフ
 ax = axs[1]
@@ -223,9 +205,7 @@ ax.axvline(0, color=GREY, lw=1.2)
 ax.set_xlabel("$t$ (hours)", fontsize=11.5, color=INK)
 ax.set_ylabel("$d$ (km)", fontsize=11.5, color=INK)
 ax.tick_params(labelsize=10, colors=INK)
-ax.set_title("(b)  the distance never reaches $0$\n"
-             "least value $20$ km, at $t = 3$",
-             fontsize=12.5, color=INK, pad=6)
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=2.4)
 save(fig, "ahl-3-12a-closest.svg")

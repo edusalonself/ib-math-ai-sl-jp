@@ -117,8 +117,6 @@ ax.annotate("arc  (length $l$)", xy=P(60, R * 1.02), xytext=(0.10, 1.30),
             arrowprops=dict(arrowstyle="->", color=ACC, lw=1.4), zorder=9)
 ax.text(*P(60, 0.68), "sector", color=LINE, ha="center", va="center",
         fontsize=11, zorder=9, bbox=BOX)
-ax.text(0, -1.42, "sector = two radii + the arc between them",
-        ha="center", va="center", fontsize=10.5, color=INK)
 clean(ax, (-1.45, 1.45), (-1.75, 1.45))
 
 # --- (3) segment -------------------------------------------------
@@ -136,8 +134,6 @@ ax.text(0, -0.72, "segment", color=ACC, ha="center", va="center",
         fontsize=11, zorder=9, bbox=BOX)
 ax.text(0, -0.26, "chord", color=GOLD, ha="center", va="bottom",
         fontsize=10.5, zorder=9, bbox=BOX)
-ax.text(0, -1.42, "segment = the part cut off by a chord",
-        ha="center", va="center", fontsize=10.5, color=INK)
 clean(ax, (-1.45, 1.45), (-1.75, 1.45))
 
 fig.tight_layout()
@@ -166,8 +162,6 @@ for ax, (th, lab, frac) in zip(axes, cases):
     ax.text(0, -1.38, frac, ha="center", va="center", fontsize=15, color=INK)
     clean(ax, (-1.35, 1.35), (-1.85, 1.35))
 
-fig.suptitle(r"the sector is this fraction of the whole circle",
-             y=0.99, fontsize=11.5, color=INK)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-4-fraction.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -207,8 +201,6 @@ arcline(ax, O, R, 20, 20 + th)
 dot(ax, O, color=GREY)
 ax.text(0, -1.42, r"perimeter $= l$   $\times$",
         ha="center", va="center", fontsize=12.5, color=ACC)
-ax.text(0, -0.58, "the two radii\nare forgotten", color=ACC, fontsize=10.5,
-        ha="center", va="center", zorder=9, bbox=BOX)
 clean(ax, (-1.45, 1.45), (-1.75, 1.80))
 
 fig.tight_layout()
@@ -302,7 +294,7 @@ ax.annotate("45 cm", xy=(q[0], q[1]), xytext=(-44.0, 46.0), color=ACC,
             fontsize=11, ha="center", va="bottom",
             arrowprops=dict(arrowstyle="->", color=ACC, lw=1.3), zorder=9)
 
-ax.text(*P(90.5, 28.0), "the part\nthat is wiped", color=LINE, fontsize=11,
+ax.text(*P(90.5, 28.0), "wiped", color=LINE, fontsize=11,
         ha="center", va="center", zorder=9, bbox=BOX)
 
 clean(ax, (-56, 60), (-9, 58))
@@ -375,8 +367,6 @@ def _e1(ax):
     ax.annotate("perimeter $=$ arc $+$ two radii",
                 (0.15, -0.62), fontsize=11.5, color=GREEN, ha="center")
     clean(ax, (-0.95, 2.05), (-0.95, 1.35))
-    ax.set_title("Radius $12$ cm, angle $65^{\\circ}$ at the centre",
-                 fontsize=11.5, pad=8)
 
 
 we_fig("sl-3-4-we1.svg", _e1, (5.4, 3.5))
@@ -397,11 +387,7 @@ def _e2(ax):
                 fontsize=12.5, color=ACC, ha="center", va="bottom")
     ax.annotate("$A = ?$", (0.72 * np.cos(mid), 0.72 * np.sin(mid)),
                 fontsize=12.5, color=LINE, ha="center", va="center")
-    ax.annotate("the whole circle has circumference $2\\pi(9) = 56.5$ cm",
-                (0, -1.42), fontsize=11, color=GREY, ha="center")
-    clean(ax, (-1.75, 1.75), (-1.75, 1.75))
-    ax.set_title("An arc of $20$ cm on a circle of radius $9$ cm",
-                 fontsize=11.5, pad=8)
+    clean(ax, (-1.75, 1.75), (-1.25, 1.75))
 
 
 we_fig("sl-3-4-we2.svg", _e2, (4.9, 4.0))
@@ -422,11 +408,7 @@ def _e3(ax):
                 fontsize=12, color=LINE, ha="center", va="center")
     ax.annotate("arc $l = ?$", (1.16 * np.cos(mid), 1.16 * np.sin(mid)),
                 fontsize=12, color=ACC, ha="center", va="bottom")
-    ax.annotate("the area gives $r^{2}$ first — take the square root at the end",
-                (0, -0.72), fontsize=11, color=ACC, ha="center")
-    clean(ax, (-1.42, 1.42), (-0.92, 1.30))
-    ax.set_title("Angle $140^{\\circ}$, area $95$ cm$^{2}$", fontsize=11.5,
-                 pad=8)
+    clean(ax, (-1.42, 1.42), (-0.45, 1.30))
 
 
 we_fig("sl-3-4-we3.svg", _e3, (4.9, 4.0))
@@ -476,8 +458,6 @@ def _e4(ax):
     ax.annotate("segment $=$ sector $-$ triangle", (0, -1.30), fontsize=12,
                 color=INK, ha="center")
     clean(ax, (-1.85, 2.15), (-1.55, 1.45))
-    ax.set_title("Radius $10$ cm, angle $A\\hat{O}B = 80^{\\circ}$",
-                 fontsize=11.5, pad=8)
 
 
 we_fig("sl-3-4-we4.svg", _e4, (5.0, 4.2))

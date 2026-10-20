@@ -56,8 +56,6 @@ def axes(ax, xlo, xhi, ylo, yhi):
 # ══════════════════════════════════════════════════════════
 # (a) Argand diagram に 4 点
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Four complex numbers on the complex plane",
-              fontsize=11, color=INK, loc="left", pad=10)
 axes(ax1, -3.6, 4.4, -3.2, 3.2)
 for _k in range(-3, 5):
     if _k:
@@ -76,14 +74,10 @@ for _a, _b, _lab, _c, _ha, _va in PTS:
              _lab, ha=_ha, va=_va, fontsize=10.5, color=_c)
 ax1.plot([3, 3], [2, -2], linestyle=(0, (3, 3)), linewidth=1.2,
          color=ACCENT, zorder=3)
-ax1.text(2.72, 1.05, "mirror images\nin the real axis", ha="right",
-         va="center", fontsize=9.5, color=ACCENT)
 
 # ══════════════════════════════════════════════════════════
 # (b) modulus と argument
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Modulus and argument of $z = -1 + i\\sqrt{3}$",
-              fontsize=11, color=INK, loc="left", pad=10)
 axes(ax2, -2.8, 2.8, -1.4, 2.6)
 ZX, ZY = -1.0, np.sqrt(3.0)
 ax2.plot([0, ZX], [0, ZY], color=ACCENT, linewidth=2.0, zorder=4)
@@ -97,15 +91,13 @@ ax2.plot([0, ZX], [0, 0], linestyle=(0, (3, 3)), linewidth=1.1,
 ax2.text(-0.5, -0.18, "$-1$", ha="center", va="top", fontsize=10, color=GREY)
 ax2.text(ZX - 0.12, ZY / 2, "$\\sqrt{3}$", ha="right", va="center",
          fontsize=10, color=GREY)
-ax2.text(-0.16, 1.06, "$r = 2$", ha="left", va="center",
+ax2.text(-0.52, 0.64, "$r = 2$", ha="right", va="center",
          fontsize=11, color=ACCENT)
 _th = np.linspace(0.0, 2.0 * np.pi / 3.0, 200)
 ax2.plot(0.62 * np.cos(_th), 0.62 * np.sin(_th), color=WARM,
          linewidth=1.5, zorder=4)
 ax2.text(0.92 * np.cos(1.05), 0.92 * np.sin(1.05), "$\\theta$",
          ha="center", va="center", fontsize=12, color=WARM)
-ax2.text(1.25, 1.55, "$\\theta = \\frac{2\\pi}{3}$, measured from\nthe positive real axis",
-         ha="left", va="center", fontsize=9.5, color=WARM)
 
 for _fig, _name in ((fig1, "aahl-1-12-idea-a.svg"),
                     (fig2, "aahl-1-12-idea-b.svg")):

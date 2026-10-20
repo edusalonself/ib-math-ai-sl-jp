@@ -35,7 +35,7 @@ def tidy(ax):
 # 2026-09: 5.9b の chain rule の図は本文から削除したため、生成もやめました。
 
 # ══════════ 5.9b-2  product rule の面積の絵 ══════════
-fig, ax = plt.subplots(figsize=(6.0, 4.9))
+fig, ax = plt.subplots(figsize=(5.2, 4.2))
 u, v, du, dv = 3.0, 2.0, 0.9, 0.7
 ax.add_patch(plt.Rectangle((0, 0), u, v, fc=FILL, ec=LINE, lw=2.2, zorder=2))
 ax.add_patch(plt.Rectangle((u, 0), du, v, fc="#fdecea", ec=ACC, lw=2.0,
@@ -67,12 +67,9 @@ ax.annotate("", xy=(-0.32, v), xytext=(-0.32, v + dv),
 ax.text(-0.78, v + dv / 2, "$\\delta v$", fontsize=12, va="center",
         ha="center", color=ACC)
 ax.set_xlim(-1.3, 4.6)
-ax.set_ylim(-1.2, 4.3)
+ax.set_ylim(-1.0, 3.6)
 ax.set_aspect("equal")
 ax.axis("off")
-ax.set_title("the extra area is $v\\,\\delta u + u\\,\\delta v$",
-             fontsize=12, color=INK, pad=10)
-
 fig.tight_layout()
 save(fig, "ahl-5-9b-product.svg")
 
@@ -95,8 +92,6 @@ ax.set_xlim(0, 60)
 ax.set_ylim(0, 6.9)
 ax.set_xlabel("$t$  (seconds)")
 ax.legend(fontsize=10.5, frameon=False, loc="lower right")
-ax.set_title("air goes in at a steady rate,\nbut $r$ grows more and "
-             "more slowly", fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()

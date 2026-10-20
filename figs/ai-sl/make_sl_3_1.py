@@ -52,7 +52,7 @@ def clean(ax):
 
 
 # ================= 1. 3次元の座標と距離 =================
-fig, axes = plt.subplots(1, 2, figsize=(11.2, 4.6))
+fig, axes = plt.subplots(1, 2, figsize=(11.2, 4.0))
 
 # --- 左：座標軸と点 ---
 ax = axes[0]
@@ -70,11 +70,8 @@ seg(ax, (4, 3, 0), A, color=LINE, lw=1.3, ls=":")
 ax.scatter(*P(*A), s=70, color=ACC, edgecolor=INK, linewidth=0.9, zorder=8)
 ax.annotate("$A(4,\\ 3,\\ 3)$", P(*A), textcoords="offset points", xytext=(10, 6),
             fontsize=12, color=ACC, zorder=9)
-ax.annotate("go 4 along $x$,\nthen 3 along $y$,\nthen 3 up $z$",
-            (0.35, 4.15), fontsize=10, color=LINE, ha="left", zorder=9)
-ax.set_xlim(-1.3, 8.0); ax.set_ylim(-1.5, 5.2)
+ax.set_xlim(-1.3, 8.0); ax.set_ylim(-0.6, 5.2)
 clean(ax)
-ax.set_title("A point in three dimensions", fontsize=12, pad=8)
 
 # --- 右：距離は Pythagoras を2回 ---
 ax = axes[1]
@@ -90,7 +87,7 @@ seg(ax, (0, 0, 0), B, color=ACC, lw=2.6)
 seg(ax, (5, 3.4, 0), B, color=LINE, lw=2.2)
 
 right_angle(ax, (5, 3.4, 0), (-1, 0, 0), (0, 0, 1))
-ax.annotate("first Pythagoras\n(on the base)", P(2.5, 1.7, 0),
+ax.annotate("first Pythagoras", P(2.5, 1.7, 0),
             textcoords="offset points", xytext=(-2, -30), fontsize=10,
             color=GREEN, ha="center", bbox=BOX, zorder=9)
 ax.annotate("second\nPythagoras", P(2.5, 1.7, 1.5), textcoords="offset points",
@@ -98,16 +95,15 @@ ax.annotate("second\nPythagoras", P(2.5, 1.7, 1.5), textcoords="offset points",
             bbox=BOX, zorder=9)
 ax.scatter(*P(0, 0, 0), s=56, color=INK, zorder=8)
 ax.scatter(*P(*B), s=56, color=INK, zorder=8)
-ax.set_xlim(-0.9, 8.0); ax.set_ylim(-1.5, 5.2)
+ax.set_xlim(-0.9, 8.0); ax.set_ylim(-0.6, 5.2)
 clean(ax)
-ax.set_title("The 3D distance is Pythagoras twice", fontsize=12, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-1-space.svg"), format="svg", bbox_inches="tight")
 plt.close(fig)
 
 # ================= 2. 立体と、どの文字がどれか =================
-fig, axes = plt.subplots(1, 3, figsize=(11.6, 4.2))
+fig, axes = plt.subplots(1, 3, figsize=(11.6, 3.9))
 
 
 def ellipse(ax, cx, cy, rx, ry, color=INK, lw=1.6, ls="-", z=4, top=True,
@@ -131,7 +127,7 @@ ax.annotate("$r$", (r / 2, -0.34), color=GREEN, fontsize=13, ha="center")
 ax.annotate("$h$", (-0.26, hh / 2), color=GREY, fontsize=13, ha="center")
 ax.annotate("$l$", (r / 2 + 0.24, hh / 2 + 0.08), color=ACC, fontsize=13)
 ax.annotate("slant height", (r / 2 + 0.5, hh / 2 - 0.42), color=ACC, fontsize=9.5)
-ax.set_xlim(-2.6, 3.2); ax.set_ylim(-2.0, 4.2)
+ax.set_xlim(-2.6, 3.2); ax.set_ylim(-1.4, 4.2)
 clean(ax)
 ax.set_title("Cone:  $l = \\sqrt{r^{2} + h^{2}}$", fontsize=11.5, pad=8)
 
@@ -152,9 +148,7 @@ ellipse(ax, 1.75, 0.9, 1.15, 0.34, color=GREEN, lw=1.6, z=5)
 ax.plot([1.75, 2.90], [0.9, 0.9], color=ACC, linewidth=2.2, zorder=6)
 ax.annotate("$r$", (2.30, 1.06), color=ACC, fontsize=13)
 ax.annotate("hemisphere", (1.75, -0.05), fontsize=10.5, ha="center", color=GREEN)
-ax.annotate("the flat circle\ncounts too", (1.75, -0.95), fontsize=9.5,
-            ha="center", color=ACC)
-ax.set_xlim(-3.1, 3.6); ax.set_ylim(-2.0, 4.2)
+ax.set_xlim(-3.1, 3.6); ax.set_ylim(-1.4, 4.2)
 clean(ax)
 ax.set_title("Sphere and hemisphere", fontsize=11.5, pad=8)
 
@@ -179,7 +173,7 @@ ax.annotate("slant height", P(0, -b, 1.05), textcoords="offset points",
 ax.annotate("base area $A$", P(0, 0, 0), textcoords="offset points",
             xytext=(0, -34), color=LINE, fontsize=10.5, ha="center",
             bbox=BOX, zorder=9)
-ax.set_xlim(-2.6, 3.1); ax.set_ylim(-2.0, 4.2)
+ax.set_xlim(-2.6, 3.1); ax.set_ylim(-1.4, 4.2)
 clean(ax)
 ax.set_title("Right pyramid:  $V = \\dfrac{1}{3}Ah$", fontsize=11.5, pad=8)
 
@@ -218,7 +212,6 @@ ax.annotate("space diagonal", P(2.0, 1.3, 1.2), textcoords="offset points",
             zorder=9)
 ax.annotate(r"$\theta$", P(0.75, 0.5, 0.12), fontsize=13, color=ACC, zorder=9)
 clean(ax)
-ax.set_title("The angle between $AG$ and the base", fontsize=12, pad=8)
 
 # --- 右：取り出した直角三角形 ---
 ax = axes[1]
@@ -238,8 +231,6 @@ ax.annotate("$G$", (4.24, 2.42), fontsize=12)
 ax.annotate(r"$\tan\theta = \dfrac{CG}{AC}$", (1.5, 2.0), fontsize=13, color=ACC)
 ax.set_xlim(-0.9, 6.4); ax.set_ylim(-1.0, 3.3)
 clean(ax)
-ax.set_title("Redraw it flat, then use right-angled trigonometry",
-             fontsize=12, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-1-angle.svg"), format="svg",
@@ -281,13 +272,12 @@ ax.plot([0.001, 0.30, 0.30], [0.30, 0.30, 0.001], color=GREY, linewidth=1.1,
 ax.annotate("$r$", (r / 2, -0.40), color=GREEN, fontsize=14, ha="center")
 ax.annotate("$h$", (-0.30, hh / 2), color=GREY, fontsize=14, ha="right")
 ax.annotate("$l$", (r / 2 + 0.26, hh / 2 + 0.10), color=ACC, fontsize=14)
-ax.annotate("slant height\n(apex to the rim)", (r + 0.75, hh / 2 - 0.30),
+ax.annotate("slant height", (r / 2 + 0.45, hh / 2 - 0.35),
             color=ACC, fontsize=10, ha="left", va="center")
-ax.annotate(r"$A = \pi r l$   uses $l$,  never $h$", (0, -1.55), color=ACC,
+ax.annotate(r"$A = \pi r l$", (0, -1.55), color=ACC,
             fontsize=12, ha="center")
-ax.set_xlim(-4.0, 4.6); ax.set_ylim(-2.3, 4.4)
+ax.set_xlim(-2.6, 3.8); ax.set_ylim(-2.3, 4.4)
 clean(ax)
-ax.set_title("The three lengths in a cone", fontsize=12, pad=8)
 
 # --- 右：取り出した直角三角形（5, 12, 13） ---
 ax = axes[1]
@@ -305,8 +295,6 @@ ax.annotate(r"$l = \sqrt{r^{2} + h^{2}} = \sqrt{5^{2} + 12^{2}}"
             color=INK)
 ax.set_xlim(-2.8, 5.8); ax.set_ylim(-2.3, 4.4)
 clean(ax)
-ax.set_title("Pull the triangle out flat, then use Pythagoras",
-             fontsize=12, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-1-slant.svg"), format="svg",
@@ -359,8 +347,6 @@ ax.annotate(r"$\dfrac{2}{3}\pi r^{3}$", (2.6, 3.55), fontsize=14, ha="center",
             color=GREEN)
 ax.set_xlim(-4.6, 4.9); ax.set_ylim(-1.6, 4.8)
 clean(ax)
-ax.set_title("Volume:  halving the sphere is correct", fontsize=12, pad=8,
-             color=GREEN)
 
 # --- 右：表面積は半分では足りない（曲面 ＋ 切り口の円） ---
 ax = axes[1]
@@ -384,7 +370,6 @@ ax.annotate(r"$\mathrm{total} = 2\pi r^{2} + \pi r^{2} = 3\pi r^{2}$", (0.15, -1
             fontsize=13, ha="center", color=ACC)
 ax.set_xlim(-4.6, 4.9); ax.set_ylim(-1.6, 4.8)
 clean(ax)
-ax.set_title("Surface area:  half is NOT enough", fontsize=12, pad=8, color=ACC)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-1-hemisphere.svg"), format="svg",
@@ -428,16 +413,15 @@ ax.annotate("cylinder", (cr + 0.55, top / 2), color=LINE, fontsize=11,
 ax.annotate(r"$V = \pi(3)^{2}(10) + \dfrac{2}{3}\pi(3)^{3}"
             r" = 90\pi + 18\pi = 108\pi$", (0.1, -1.35), fontsize=12,
             ha="center", color=INK)
-ax.set_xlim(-4.3, 4.6); ax.set_ylim(-2.1, 5.6)
+ax.set_xlim(-4.3, 4.6); ax.set_ylim(-2.1, 4.8)
 clean(ax)
-ax.set_title("Volume:  just add the two parts", fontsize=12, pad=8)
 
 # --- 右：表面積で数える面・数えない面 ---
 ax = axes[1]
 top = cyl_hemi(ax)
 ell(ax, 0, top, cr, cry, color=ACC, lw=1.5, ls="--", z=6)
 # くっついた円（数えない）
-ax.annotate("the join is inside:\nnot counted", (cr + 0.60, top + 0.10),
+ax.annotate("not counted", (cr + 0.60, top + 0.10),
             color=ACC, fontsize=10, ha="left", va="center")
 ax.annotate("", xy=(0.35, top - 0.10), xytext=(cr + 0.50, top + 0.10),
             arrowprops=dict(arrowstyle="-|>", color=ACC, lw=1.5), zorder=9)
@@ -451,9 +435,8 @@ ax.annotate("", xy=(-0.35, -cry * 0.55), xytext=(-cr - 0.40, -0.50),
             arrowprops=dict(arrowstyle="-|>", color=LINE, lw=1.4), zorder=9)
 ax.annotate(r"$A = 60\pi + 9\pi + 18\pi = 87\pi$", (0.1, -1.35), fontsize=12,
             ha="center", color=INK)
-ax.set_xlim(-4.6, 4.3); ax.set_ylim(-2.1, 5.6)
+ax.set_xlim(-4.6, 4.3); ax.set_ylim(-2.1, 4.8)
 clean(ax)
-ax.set_title("Surface area:  only the faces you can see", fontsize=12, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-3-1-combined.svg"), format="svg",

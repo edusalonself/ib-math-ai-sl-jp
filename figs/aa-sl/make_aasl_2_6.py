@@ -42,8 +42,6 @@ fig3, ax3 = plt.subplots(figsize=(5.3, 4.6))
 # ══════════════════════════════════════════════════════════
 # (a) 3 つの形が見せてくれるもの
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Each form shows a different feature", fontsize=11,
-              color=INK, loc="left", pad=10)
 ax1.set_xlim(-3.4, 5.6)
 ax1.set_ylim(-4.6, 5.2)
 ax1.axis("off")
@@ -70,16 +68,16 @@ ax1.plot([0], [A * (0 - P) * (0 - Q)], marker="o", markersize=6,
          color=GREEN, zorder=3)
 ax1.plot([H], [K], marker="o", markersize=6, color=INK, zorder=3)
 
-ax1.annotate("$a(x-p)(x-q)$\nshows the $x$-intercepts", xy=(P, 0),
+ax1.annotate("$a(x-p)(x-q)$", xy=(P, 0),
              xytext=(-3.3, 3.2), fontsize=10, color=WARM,
              arrowprops=dict(arrowstyle="->", color=WARM, linewidth=0.9))
-ax1.annotate("", xy=(Q, 0), xytext=(-0.9, 2.85),
+ax1.annotate("", xy=(Q, 0), xytext=(-1.1, 3.3),
              arrowprops=dict(arrowstyle="->", color=WARM, linewidth=0.9))
-ax1.annotate("$ax^{2}+bx+c$\nshows the $y$-intercept",
+ax1.annotate("$ax^{2}+bx+c$",
              xy=(0, A * (0 - P) * (0 - Q)), xytext=(-3.3, -2.4), fontsize=10,
              color=GREEN, va="top",
              arrowprops=dict(arrowstyle="->", color=GREEN, linewidth=0.9))
-ax1.annotate("$a(x-h)^{2}+k$\nshows the vertex", xy=(H, K),
+ax1.annotate("$a(x-h)^{2}+k$", xy=(H, K),
              xytext=(2.6, 3.4), fontsize=10, color=INK,
              arrowprops=dict(arrowstyle="->", color=INK, linewidth=0.9))
 ax1.text(H + 0.14, 4.9, "axis of\nsymmetry", fontsize=9.5, color=GREY,
@@ -88,8 +86,6 @@ ax1.text(H + 0.14, 4.9, "axis of\nsymmetry", fontsize=9.5, color=GREY,
 # ══════════════════════════════════════════════════════════
 # (b) a の符号と大きさ
 # ══════════════════════════════════════════════════════════
-ax2.set_title("The sign and size of $a$", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax2.set_xlim(-3.0, 3.6)
 ax2.set_ylim(-5.2, 4.6)
 ax2.axis("off")
@@ -106,19 +102,17 @@ ax2.plot(u, 2.0 * u ** 2, color=ACCENT, linewidth=2.2)
 ax2.plot(u, 0.5 * u ** 2, color=GREEN, linewidth=2.2)
 ax2.plot(u, -1.0 * u ** 2, color=WARM, linewidth=2.2)
 
-ax2.text(1.05, 3.9, "large $a > 0$:\nnarrow", fontsize=10, color=ACCENT,
+ax2.text(1.55, 3.9, "large $a > 0$:\nnarrow", fontsize=10, color=ACCENT,
          va="top")
 ax2.text(2.3, 2.1, "small $a > 0$:\nwide", fontsize=10, color=GREEN,
          va="top")
-ax2.text(-2.9, -2.6, "$a < 0$:\nopens downwards", fontsize=10, color=WARM,
+ax2.text(-2.9, -0.5, "$a < 0$:\nopens downwards", fontsize=10, color=WARM,
          va="top")
 
 # ══════════════════════════════════════════════════════════
 # (c) factorised form は、x 切片と軸を見せる（第 3 節）
 #     (a) と同じ放物線を使う。読むものだけを変える。
 # ══════════════════════════════════════════════════════════
-ax3.set_title("Factorised form shows the $x$-intercepts", fontsize=11,
-              color=INK, loc="left", pad=10)
 ax3.set_xlim(-3.4, 5.6)
 ax3.set_ylim(-4.6, 5.2)
 ax3.axis("off")
@@ -143,8 +137,6 @@ ax3.text(-3.3, 3.4, "$f(x) = a(x-p)(x-q)$", fontsize=11, color=ACCENT,
          ha="left", va="center")
 ax3.text(H + 0.14, 4.9, "$x = \\dfrac{p+q}{2}$", fontsize=11, color=GREY,
          ha="left", va="top")
-ax3.text(H + 0.14, 3.9, "halfway between\nthe two intercepts",
-         fontsize=9, color=GREY, ha="left", va="top")
 
 for _fig, _name in ((fig1, "aasl-2-6-idea-a.svg"),
                     (fig2, "aasl-2-6-idea-b.svg"),

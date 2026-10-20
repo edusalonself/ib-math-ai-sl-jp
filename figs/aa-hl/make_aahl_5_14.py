@@ -37,8 +37,6 @@ WARM = "#b45309"
 # (a) 円と接線
 # ══════════════════════════════════════════════════════════
 fig1, ax1 = plt.subplots(figsize=(5.2, 3.8))
-ax1.set_title("a circle is not the graph of one function, yet every point"
-              " has a tangent", fontsize=9.6, color=INK, loc="left", pad=10)
 
 th = np.linspace(0, 2 * np.pi, 600)
 ax1.plot(5 * np.cos(th), 5 * np.sin(th), color=ACCENT, linewidth=2.0,
@@ -54,9 +52,6 @@ ax1.text(1.90, 1.55, "radius", fontsize=9.5, color=GREY)
 ax1.text(5.35, 2.35, "tangent", fontsize=9.5, color=WARM)
 ax1.plot([-2.8, 2.8], [3.0, 3.0], color=GREY, linewidth=1.0,
          linestyle=(0, (3, 3)), zorder=2)
-ax1.text(-6.9, -5.35, "one value of $x$ can give", fontsize=8.8,
-         color=GREY)
-ax1.text(-6.9, -5.95, "two values of $y$", fontsize=8.8, color=GREY)
 ax1.plot([-4.0], [3.0], "o", color=ACCENT, markersize=4.5, zorder=5)
 ax1.plot([-4.0], [-3.0], "o", color=ACCENT, markersize=4.5, zorder=5)
 ax1.plot([-4.0, -4.0], [-3.0, 3.0], color=GREY, linewidth=1.0,
@@ -75,8 +70,6 @@ for _s in ("top", "right", "bottom", "left"):
 # (b) 関連する変化率（はしご）
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(5.4, 3.6))
-ax2.set_title("related rates: $x$ and $y$ are tied together by the"
-              " ladder", fontsize=10.2, color=INK, loc="left", pad=10)
 
 X0, Y0 = 3.0, 4.0
 ax2.plot([0, 0], [0, 5.4], color=GREY, linewidth=2.2, zorder=2)
@@ -95,10 +88,6 @@ ax2.annotate("", xy=(0, Y0 - 1.0), xytext=(0, Y0 - 0.15),
              arrowprops=dict(arrowstyle="-|>", color=WARM, linewidth=1.8))
 ax2.text(X0 + 0.20, 0.28, "$\\frac{dx}{dt}$", fontsize=11, color=WARM)
 ax2.text(0.20, Y0 - 1.50, "$\\frac{dy}{dt}$", fontsize=11, color=WARM)
-ax2.text(-0.5, -1.55, "$x^{2} + y^{2} = L^{2}$ holds at every moment,"
-         " so differentiating with", fontsize=9, color=GREY)
-ax2.text(-0.5, -2.05, "respect to $t$ links the two rates", fontsize=9,
-         color=GREY)
 ax2.set_xlim(-1.1, 6.4)
 ax2.set_ylim(-2.5, 5.8)
 ax2.set_aspect("equal")

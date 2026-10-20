@@ -37,8 +37,6 @@ WARM = "#b45309"
 # (a) つながっていない・穴・角
 # ══════════════════════════════════════════════════════════
 fig1, axs = plt.subplots(1, 3, figsize=(7.4, 2.6))
-fig1.suptitle("three ways a graph can fail to be smooth", fontsize=11,
-              color=INK, x=0.01, ha="left", y=1.03)
 
 # 1. とび（jump）
 ax = axs[0]
@@ -50,9 +48,6 @@ ax.plot([0], [0.4], "o", color=ACCENT, markersize=5.5)
 ax.plot([0], [-0.9], "o", color="white", markeredgecolor=ACCENT,
         markeredgewidth=1.5, markersize=5.5)
 ax.set_title("a jump", fontsize=9.8, color=INK, loc="left", pad=4)
-ax.text(-1.55, -2.1, "not continuous: the two sides", fontsize=8.4,
-        color=GREY)
-ax.text(-1.55, -2.45, "do not meet", fontsize=8.4, color=GREY)
 
 # 2. 穴（hole）
 ax = axs[1]
@@ -62,7 +57,6 @@ ax.plot([0.6], [0.42], "o", color="white", markeredgecolor=ACCENT,
         markeredgewidth=1.5, markersize=5.5)
 ax.set_title("a hole", fontsize=9.8, color=INK, loc="left", pad=4)
 ax.text(-1.55, -2.1, "not continuous: one value", fontsize=8.4, color=GREY)
-ax.text(-1.55, -2.45, "is missing", fontsize=8.4, color=GREY)
 
 # 3. 角（corner）
 ax = axs[2]
@@ -71,7 +65,6 @@ ax.plot([0], [-0.3], "o", color=ACCENT, markersize=5.5)
 ax.set_title("a corner", fontsize=9.8, color=INK, loc="left", pad=4)
 ax.text(-1.55, -2.1, "continuous, but the gradient", fontsize=8.4,
         color=GREY)
-ax.text(-1.55, -2.45, "jumps from $-1$ to $+1$", fontsize=8.4, color=GREY)
 
 for _ax in axs:
     _ax.set_xlim(-1.75, 1.75)
@@ -87,8 +80,6 @@ for _ax in axs:
 # (b) 割線から接線へ
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(5.8, 3.6))
-ax2.set_title("the gradient of the chord, as $h$ shrinks to $0$",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 
 t = np.linspace(-0.25, 2.5, 500)
 ax2.plot(t, t ** 2, color=ACCENT, linewidth=2.0, zorder=3)
@@ -116,8 +107,6 @@ ax2.text(Q[0] + 0.08, (P[1] + Q[1]) / 2, "$f(x+h) - f(x)$", fontsize=9.5,
 ax2.text(0.05, 3.9, "chord", fontsize=10, color=WARM)
 ax2.text(X0 + 0.84, P[1] + _mt * 0.80 - 0.10, "tangent", fontsize=10,
          color=GREY)
-ax2.text(-0.35, -1.45, "the chord turns into the tangent as $Q$ slides"
-         " back to $P$", fontsize=9, color=GREY)
 ax2.set_xlim(-0.45, 3.3)
 ax2.set_ylim(-1.8, 5.2)
 ax2.set_xticks([])

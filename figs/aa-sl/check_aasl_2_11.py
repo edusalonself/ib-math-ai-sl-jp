@@ -14,7 +14,26 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 BASE = os.path.join(ROOT, "aa-sl", "02-functions")
 QMD = os.path.join(BASE, "aasl-2-11.qmd")
 TEXT = open(QMD, encoding="utf-8").read()
-BODY = TEXT[:TEXT.index("## Worked examples")]
+
+def _strip_exm(s):
+    """例題ブロック（::: {#exm-...} から対応する ::: まで）を外す。"""
+    out, depth, skip = [], 0, False
+    for _l in s.split(chr(10)):
+        if not skip and _l.startswith("::: {#exm-"):
+            skip, depth = True, 0
+        if skip:
+            if re.match(r"^:{3,}\s*\{", _l):
+                depth += 1
+            elif re.match(r"^:{3,}\s*$", _l):
+                depth -= 1
+                if depth == 0:
+                    skip = False
+            continue
+        out.append(_l)
+    return chr(10).join(out)
+
+
+BODY = _strip_exm(TEXT[:TEXT.index("## Common errors")])
 FIG = open(os.path.join(HERE, "make_aasl_2_11.py"), encoding="utf-8").read()
 _NODOC = re.sub(r'"""(?:.|\n)*?"""', "", FIG)
 # 色コード・ファイル名・キーワードはラベルではないので外す
@@ -54,6 +73,9 @@ def not_in_body(sub, msg=""):
 
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
+
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている: " + msg + " :: " + sub[:70])
 
 # ══════════════════════════════════════════════════════════
 # 0. 変換の規則そのもの（一般の f で確かめる）
@@ -178,10 +200,13 @@ chk("::: {.callout-important}" not in TEXT,
 not_in_text("公式集の **2.11**", "公式集に 2.11 の欄はない")
 chk(TEXT.count("\n> ") == 0, f"引用は置かない: {TEXT.count(chr(10) + '> ')}")
 # ★ Not required の行だけは、内容として書いてよい
-in_text("シラバスの 2.11 には `Not required:` として、**$f(ax+b)$ の形の"
-        "変換**が挙がっています。", "Not required の行")
+not_in_text("`Not required:`", "シラバスの Not required の引用は外した")
+in_text("**$f(ax+b)$ の形の変換**は、この項目（2.11）では問われません。",
+        "Not required の内容は日本語で直接書いた")
 not_in_text("Translations: $y = f(x)+b$", "シラバス本文は引かない")
-not_in_text("Composite transformations", "シラバス本文は引かない")
+chk(all("Composite transformations" not in _l for _l in TEXT.splitlines()
+        if not _l.startswith("### 5. ")),
+    "シラバス本文は引かない（Composite transformations は第 5 節の見出しの用語だけ）")
 not_in_text("シラバスは、", "「シラバスは」で始まる文は置かない")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
@@ -219,7 +244,7 @@ not_in_text("solve(", "CAS 前提の solve( は書いていない")
 # ══════════════════════════════════════════════════════════
 # 10. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -242,9 +267,16 @@ chk(3 * 0 + 2 == 2 and 3 * (0 + 2) == 6, "E04 y 切片もちがう")
 chk(len(re.findall(r"^::: \{#exm-aasl211-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h_ for h_ in _h2 if h_ in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h_ for h_ in _h2 if h_ in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 chk([h_ for h_ in _h2 if h_ in _want][-1] == "Exercises", "Exercises で終わる")
 _idea = [int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
 chk(_idea == list(range(1, 8)), f"The idea が 1..7 で連番: {_idea}")
@@ -317,11 +349,11 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("Translations", "図(a) の題")
+not_in_fig("Translations", "図(a) の題")
 in_fig("$y = f(x) + b$", "図(a) の上へ")
 in_fig("$y = f(x - a)$", "図(a) の右へ")
 in_fig("$y = -f(x)$", "図(a) の折り返し")
-in_fig("Stretches", "図(b) の題")
+not_in_fig("Stretches", "図(b) の題")
 in_fig("$y = p\\\\,f(x)$", "図(b) の縦")
 in_fig("$y = f(qx)$", "図(b) の横")
 # 図に例題・演習の答えを書いていない（動かす量は文字だけ）
@@ -334,11 +366,15 @@ chk(not re.search(r"\d", FIGSTR.replace("\\frac{1}{q}", "")),
 # 12. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/02-functions/aasl-2-11.qmd" in DRAFT, "_quarto.yml に登録")
-chk(DRAFT.index("aasl-2-10.qmd") < DRAFT.index("aasl-2-11.qmd"), "並びが 2.10 → 2.11")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/02-functions/aasl-2-11.qmd" in DRAFT, "_quarto.yml に登録")
+    chk(DRAFT.index("aasl-2-10.qmd") < DRAFT.index("aasl-2-11.qmd"), "並びが 2.10 → 2.11")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("(02-functions/aasl-2-11.qmd)" in IDX, "index にある")
 _written = sorted(glob.glob(os.path.join(ROOT, "aa-sl", "*", "aasl-*.qmd")))
@@ -403,7 +439,7 @@ in_text("**変換は、平面のすべての点に同じことをします。**"
 in_text("**グラフが触れていない漸近線も**、同じ規則で動きます。", "漸近線も動く")
 not_in_text("**移動は、グラフ上のすべての点に同じことをします。**",
             "グラフ上の点だけ、という言い方は消した")
-in_text("### 6. 特徴のある点や線は、どう動くか {#features}", "第 6 節の見出し")
+in_text('### 6. Key points and asymptotes（特徴のある点や線は、どう動くか） {#features}', "第 6 節の見出し")
 
 # --- 「1 点で確かめる」の参照先 -----------------------------------------
 not_in_text("$1$ 点で確かめる**のが確実です（[第 7 節](#answers)）",
@@ -498,7 +534,7 @@ chk(sp.simplify(sp.sin(2 * (sp.Symbol("x") + sp.pi / 2))
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -513,11 +549,11 @@ in_text('グラフを軸で折り返すときの式は、次の $2$ つです。
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. transformation は、グラフ全体を動かす操作 {#idea}', "見出しの英語: 1. transformation は、グラフ全体を")
-in_text('### 2. translation（平行移動） {#translation}', "見出しの英語: 2. translation（平行移動）")
-in_text('### 3. reflection（対称移動） {#reflection}', "見出しの英語: 3. reflection（対称移動）")
-in_text('### 4. stretch（拡大） {#stretch}', "見出しの英語: 4. stretch（拡大）")
-in_text('### 5. composite transformations（移動を組み合わせる） {#composite}', "見出しの英語: 5. composite transformations（移動を")
+in_text('### 1. Transformations（グラフ全体を動かす操作） {#idea}', "見出しの英語: 1. transformation は、グラフ全体を")
+in_text('### 2. Translation（平行移動） {#translation}', "見出しの英語: 2. translation（平行移動）")
+in_text('### 3. Reflection（対称移動） {#reflection}', "見出しの英語: 3. reflection（対称移動）")
+in_text('### 4. Stretch（拡大） {#stretch}', "見出しの英語: 4. stretch（拡大）")
+in_text('### 5. Composite transformations（移動を組み合わせる） {#composite}', "見出しの英語: 5. composite transformations（移動を")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-22：平行移動と対称移動を、別の図に分けた
@@ -527,7 +563,7 @@ chk(os.path.exists(SVG_C), "図 (c) がある")
 chk(not os.path.exists(SVG_C[:-4] + ".png"), "図 (c) の PNG は消してある")
 in_text("](img/aasl-2-11-idea-c.svg){#fig-aasl211-idea-c", "本文が図 (c) を貼っている")
 in_text("@fig-aasl211-idea-c を見てください。", "図 (c) を参照している")
-in_fig("Reflections", "図 (c) の題")
+not_in_fig("Reflections", "図 (c) の題")
 in_fig("$y = f(-x)$", "図 (c) に f(-x)")
 # 図 (a) からは対称移動を外した
 chk("-bump(t)" not in FIGCODE.split("(c) 対称移動")[0],
@@ -535,9 +571,9 @@ chk("-bump(t)" not in FIGCODE.split("(c) 対称移動")[0],
 not_in_text("@fig-aasl211-idea-a の点々の曲線が $y = -f(x)$ です。",
             "図 (a) を対称移動の説明に使っていない")
 # 置き場所：(a) は第 2 節、(c) は第 3 節
-_i2 = TEXT.index("### 2. translation")
-_i3 = TEXT.index("### 3. reflection")
-_i4 = TEXT.index("### 4. stretch")
+_i2 = TEXT.index("### 2. Translation")
+_i3 = TEXT.index("### 3. Reflection")
+_i4 = TEXT.index("### 4. Stretch")
 chk(_i2 < TEXT.index("](img/aasl-2-11-idea-a.svg)") < _i3, "図 (a) は第 2 節")
 chk(_i3 < TEXT.index("](img/aasl-2-11-idea-c.svg)") < _i4, "図 (c) は第 3 節")
 

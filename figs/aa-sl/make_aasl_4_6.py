@@ -38,16 +38,14 @@ GREY = "#6b7280"
 WARM = "#b45309"
 FILL = "#dbe8f5"
 
-fig1, ax1 = plt.subplots(figsize=(5.6, 4.7))
-fig2, ax2 = plt.subplots(figsize=(5.6, 4.7))
+fig1, ax1 = plt.subplots(figsize=(5.6, 3.6))
+fig2, ax2 = plt.subplots(figsize=(5.6, 3.2))
 fig3, ax3 = plt.subplots(figsize=(5.7, 4.4))
 # ══════════════════════════════════════════════════════════
 # (a) Venn diagram
 # ══════════════════════════════════════════════════════════
-ax1.set_title("A Venn diagram", fontsize=11,
-              color=INK, loc="left", pad=10)
 ax1.set_xlim(-0.6, 6.6)
-ax1.set_ylim(-1.35, 4.7)
+ax1.set_ylim(-0.5, 4.1)
 ax1.set_aspect("equal", adjustable="datalim")
 ax1.axis("off")
 
@@ -67,19 +65,12 @@ ax1.text(3.10, 1.75, "$10$", fontsize=12, color=WARM, ha="center")
 ax1.text(4.58, 1.75, "$12$", fontsize=12, color=INK, ha="center")
 ax1.text(0.30, 0.10, "$13$", fontsize=12, color=INK)
 
-ax1.annotate("", xy=(3.10, 1.45), xytext=(3.10, -0.72),
-             arrowprops=dict(arrowstyle="->", color=WARM, linewidth=1.2))
-ax1.text(3.30, -0.80, "this part is in $A$ and in $B$", fontsize=9.5,
-         color=WARM)
-
 
 # ══════════════════════════════════════════════════════════
 # (b) tree diagram
 # ══════════════════════════════════════════════════════════
-ax2.set_title("A tree diagram",
-              fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(-0.45, 6.9)
-ax2.set_ylim(-2.55, 4.7)
+ax2.set_ylim(-0.45, 4.15)
 ax2.axis("off")
 
 ROOT = (0.15, 1.8)
@@ -124,8 +115,6 @@ for _key, _pt in L2.items():
 # ══════════════════════════════════════════════════════════
 # (c) もどさない樹形図（赤 3・青 2）
 # ══════════════════════════════════════════════════════════
-ax3.set_title("Without replacement, the second stage changes",
-              fontsize=11, color=INK, loc="left", pad=12)
 ax3.set_xlim(-0.4, 6.5)
 ax3.set_ylim(-1.6, 1.9)
 ax3.axis("off")

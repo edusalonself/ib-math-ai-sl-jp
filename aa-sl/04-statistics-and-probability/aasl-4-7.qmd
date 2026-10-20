@@ -18,7 +18,7 @@ sidebar: aa-sl
 
 ## The idea
 
-### 1. random variable とは {#rv}
+### 1. Random variables（確率変数とは） {#rv}
 
 **discrete random variable**（離散確率変数）$X$ は、**試行の結果に数を割りあてる**しくみです。
 
@@ -29,7 +29,7 @@ sidebar: aa-sl
 
 **大文字と小文字を使い分けます。** $X$ は変数そのもの、$x$ はその値です。$P(X = x)$ は「$X$ が値 $x$ になる確率」です。
 
-### 2. probability distribution（確率分布） {#dist}
+### 2. Probability distributions（確率分布） {#dist}
 
 **probability distribution**（確率分布）は、**とりうる値**と**その確率**の対応です。表で書くのがふつうです。
 
@@ -43,9 +43,9 @@ sidebar: aa-sl
 
 **とりうる値をすべて書きます。** 書きもらすと、合計が $1$ になりません。
 
-### 3. 確率の合計は $1$ {#sumone}
+### 3. Probabilities add up to $1$（確率の合計は $1$） {#sumone}
 
-とりうる値は、すき間なく全部を分けています。だから
+$X$ のとりうる値は、起こりうる結果をすき間なく分けています。だから、確率をすべて足すと $1$ になります。
 
 $$
 \sum_{i=1}^{k} P(X = x_i) = 1
@@ -57,7 +57,7 @@ $$ {#eq-aasl47-sum}
 
 **「$X$ が $3$ 以上」のような確率は、あてはまる確率を足します。** 表の中から選んで足すだけです。
 
-### 4. 式で与えられる場合 {#formula}
+### 4. Distributions given by a formula（式で与えられる分布） {#formula}
 
 分布は、表ではなく**式**で与えられることもあります。たとえば
 
@@ -73,11 +73,11 @@ $$
 
 **とりうる値の範囲を見落とさないでください。** $x \in \{1, 2, 3\}$ と書いてあれば、$x = 0$ や $x = 4$ は入りません。
 
-### 5. expected value（期待値） {#expected}
-
-![A probability distribution as a bar chart, balancing at $E(X)$](img/aasl-4-7-idea-a.svg){#fig-aasl47-idea-a width=100%}
+### 5. Expected value（期待値） {#expected}
 
 **expected value**（期待値）$E(X)$ は、値を**確率で重みづけした平均**です。
+
+![確率分布を棒グラフにすると、$E(X)$ でつり合います。](img/aasl-4-7-idea-a.svg){#fig-aasl47-idea-a width=80%}
 
 $$
 E(X) = \sum_{i=1}^{k} x_i P(X = x_i)
@@ -94,7 +94,93 @@ $E(X) = \displaystyle\sum_{i=1}^{k} x_i P(X = x_i)$ は、公式集の **4.7** �
 
 **$E(X)$ は「つり合う点」です**（@fig-aasl47-idea-a）。棒グラフを板に載せたとき、支点になる位置です。
 
-### 6. $E(X)$ の意味 {#meaning}
+::: {#exm-aasl47-formula}
+[The discrete random variable $X$ has probability distribution given by]{.q-en}
+
+$$
+P(X = x) = k(x + 1), \qquad x \in \{1, 2, 3, 4\}
+$$
+
+**(a)** [Find the value of $k$.]{.q-en}
+
+**(b)** [Write the probability distribution of $X$ as a table.]{.q-en}
+
+**(c)** [Find $E(X)$.]{.q-en}
+
+**(d)** [Justify that the formula gives a valid probability distribution.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+離散確率変数 $X$ の確率分布が、上の式で与えられています。
+
+**(a)** $k$ の値を求めなさい。
+
+**(b)** $X$ の確率分布を表で書きなさい。
+
+**(c)** $E(X)$ を求めなさい。
+
+**(d)** この式が正しい確率分布を与えていることを示しなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** $x = 1, 2, 3, 4$ を入れると、確率は $2k$、$3k$、$4k$、$5k$ です。合計を $1$ とおきます（@eq-aasl47-sum）。
+
+$$
+2k + 3k + 4k + 5k = 14k = 1, \qquad k = \frac{1}{14}
+$$
+
+**(b)**
+
+| $x$ | $1$ | $2$ | $3$ | $4$ |
+|:--|--:|--:|--:|--:|
+| $P(X = x)$ | $\dfrac{2}{14}$ | $\dfrac{3}{14}$ | $\dfrac{4}{14}$ | $\dfrac{5}{14}$ |
+
+**(c)** @eq-aasl47-ev を使います。分母がそろっているので、分子だけ計算できます。
+
+$$
+E(X) = \frac{1(2) + 2(3) + 3(4) + 4(5)}{14} = \frac{2 + 6 + 12 + 20}{14} = \frac{40}{14} = \frac{20}{7}
+$$
+
+**(d)** `Justify` なので、英語で理由を書きます。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*With $k = \dfrac{1}{14}$, the four probabilities are $\dfrac{2}{14}$, $\dfrac{3}{14}$, $\dfrac{4}{14}$ and $\dfrac{5}{14}$.*
+
+*Each is greater than $0$ and less than $1$, and their sum is $\dfrac{14}{14} = 1$.*
+
+*A function that assigns positive numbers adding to $1$ to every value of $X$ is a valid probability distribution.*
+:::
+
+（$k = \dfrac{1}{14}$ のとき $4$ つの確率はすべて $0$ より大きく $1$ より小さく、合計が $1$ になる。とりうるすべての値に、負でなく合計が $1$ の数を与えているので、正しい確率分布である、という意味です。）
+
+**検算（(a) について）。** **もどして足します。** $\dfrac{2 + 3 + 4 + 5}{14} = \dfrac{14}{14} = 1$ ✓
+
+**検算（(c) について、範囲で）。** $1 \le \dfrac{20}{7} \le 4$ です。$\dfrac{20}{7} \approx 2.86$ ✓ 最小値と最大値の間に入っています。
+
+**検算（(c) について、かたよりで）。** 確率は $x$ が大きいほど大きいので、$E(X)$ は真ん中の $2.5$ より大きくなるはずです。$\dfrac{20}{7} > \dfrac{5}{2}$ ✓
+
+::: {.callout-note}
+## 解答例（答案用紙に書くこと）
+**(a)**
+$$2k + 3k + 4k + 5k = 1 \implies k = \frac{1}{14}$$
+
+**(b)** *table:* $P(X = x) = \dfrac{2}{14}, \dfrac{3}{14}, \dfrac{4}{14}, \dfrac{5}{14}$ *for* $x = 1, 2, 3, 4$
+
+**(c)**
+$$E(X) = \frac{2 + 6 + 12 + 20}{14} = \frac{20}{7}$$
+
+**(d)** *all four probabilities are positive and they add to $1$, so the formula gives a valid distribution*
+:::
+:::
+:::
+
+### 6. Meaning of $E(X)$（期待値の意味） {#meaning}
 
 **$E(X)$ は、同じことを何回もくり返したときの $1$ 回あたりの平均です。** $1$ 回の結果の予想ではありません。
 
@@ -103,78 +189,6 @@ $E(X) = \displaystyle\sum_{i=1}^{k} x_i P(X = x_i)$ は、公式集の **4.7** �
 **$n$ 回くり返したときの合計の予想は $n \times E(X)$ です。** これは [SL 4.5 の期待される回数](aasl-4-5.qmd#expected)と同じ考え方です。
 
 **単位を落とさないでください。** $X$ が円なら $E(X)$ も円、$X$ が人数なら $E(X)$ も人数です。
-
-### 7. fair game（公平なゲーム） {#game}
-
-![Two games on a number line of gains](img/aasl-4-7-idea-b.svg){#fig-aasl47-idea-b width=100%}
-
-**$X$ を「プレイヤーの利得」とすると、$E(X) = 0$ のゲームを fair（公平）といいます**（@fig-aasl47-idea-b）。
-
-**@fig-aasl47-idea-b は、$2$ つのゲームを利得の数直線にのせたものです。** 点の位置が利得、**点の大きさがその利得になる確率**、**三角が $E(X)$ の位置**です。
-
-- 上の **losing game** は、確率 $\dfrac{1}{3}$ で $+3$、確率 $\dfrac{2}{3}$ で $-2$ です。$E(X) = -\dfrac{1}{3}$ なので、三角は $0$ より左にあります。
-- 下の **fair game** は、確率 $\dfrac{1}{3}$ で $+4$、確率 $\dfrac{2}{3}$ で $-2$ です。$E(X) = 0$ なので、三角はちょうど $0$ のところにあります。
-
-**利得は、受け取る額から払う額を引いたものです。** 参加料を引き忘れるのが、いちばん多い誤りです。
-
-- $E(X) > 0$ なら、長い目で見てプレイヤーの得です。
-- $E(X) = 0$ なら、長い目で見てどちらの得にもなりません。
-- $E(X) < 0$ なら、長い目で見てプレイヤーの損です。
-
-**「公平」は $1$ 回ごとの話ではありません。** $E(X) = 0$ でも、$1$ 回では勝つことも負けることもあります。
-
-::: {.callout-warning}
-## この項目に電卓は要りません
-このページの計算は、Paper 1 でも Paper 2 でも**手でできます**。かけて足すだけです。
-
-**答えは分数のままで書けます。** $\dfrac{45}{20}$ は $\dfrac{9}{4}$ まで約分します。
-:::
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-**なぜ、値に確率をかけて足すのでしょうか。** 度数で考えると分かります。
-
-同じ試行を $N$ 回くり返したとします。値 $x_i$ が出る回数は、およそ $N \times P(X = x_i)$ 回です。すると、$N$ 回ぶんの合計はおよそ
-
-$$
-\sum_{i=1}^{k} x_i \times N \, P(X = x_i)
-$$
-
-です。$1$ 回あたりの平均を出すために $N$ で割ると、$N$ が約分されて
-
-$$
-\sum_{i=1}^{k} x_i P(X = x_i)
-$$
-
-が**およその値として**出てきます。**$N$ を大きくするほど、この近似はよくなります。** そこで、この値を $E(X)$ の定義にします（@eq-aasl47-ev）。**度数の平均が、相対度数の重みづけ平均に変わっただけです。**（これは定義の動機づけであって、証明ではありません。）
-
-**[SL 4.3 の平均](aasl-4-3.qmd#mean)と同じ形です。** $\bar{x} = \dfrac{\sum f_i x_i}{n}$ の $\dfrac{f_i}{n}$ を確率に置きかえたものが $E(X)$ です。
-
-**なぜ、$E(X)$ が $X$ のとれない値でよいのでしょうか。** 平均だからです。$1$ 回ごとには整数しか出なくても、何回ぶんも平均すれば、その間のどんな値にもなりえます。
-
-**$E(X)$ は、必ず最小値と最大値の間に入ります。** どの $x_i$ も $x_{\min}$ 以上なので
-
-$$
-\sum x_i P(X = x_i) \ge \sum x_{\min} P(X = x_i) = x_{\min}
-$$
-
-です（最後の等号で $\sum P(X = x_i) = 1$ を使いました）。上側も同じように示せます。**この不等式は、検算に使えます。**
-
-**なぜ、$E(X) = 0$ が「公平」なのでしょうか。** $X$ が利得なら、$N$ 回のあとの **$1$ 回あたりの平均**はおよそ $E(X)$ です。$E(X) = 0$ なら、この平均は $N$ が大きいほど $0$ に近づきます。合計そのものは $0$ から離れることもありますが、$N$ に比例して増えていくことはありません。**どちらにもかたよらない**、という意味です。
-
-**$E(X) \ne 0$ なら、$N$ が大きいほど差が開きます。** $E(X) = -0.2$ なら、$100$ 回で約 $-20$、$1000$ 回で約 $-200$ です。$1$ 回あたりの損は小さくても、回数を重ねると積み上がります。
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-
-**例題も演習も、すべて電卓なしで解けます。** 答えは分数のままで書いてかまいません。
-:::
 
 ::: {#exm-aasl47-table}
 [The discrete random variable $X$ has the probability distribution shown.]{.q-en}
@@ -206,7 +220,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 確率の合計は $1$ です（@eq-aasl47-sum）。
 
@@ -231,7 +246,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The variable $X$ takes only the values $1$, $2$, $3$ and $4$, but $E(X)$ is a weighted average of those values, not one of the outcomes. It is the mean value per trial over many trials, so it may lie between two possible values, as $2.7$ does here.*
+*The variable $X$ takes only the values $1$, $2$, $3$ and $4$, but $E(X)$ is a weighted average of those values, not one of the outcomes.*
+
+*It is the mean value per trial over many trials, so it may lie between two possible values, as $2.7$ does here.*
 :::
 
 （$X$ は $1$ から $4$ の整数しか取らないが、$E(X)$ はそれらの重みづけ平均であって、結果の $1$ つではない。何回もくり返したときの $1$ 回あたりの平均なので、$2.7$ のように $2$ つの値の間にきてよい、という意味です。）
@@ -264,85 +281,32 @@ $$E(X) = 1(0.1) + 2(0.3) + 3(0.4) + 4(0.2) = 2.7$$
 **(d)** *$E(X)$ is a weighted average of the values, not one of the outcomes, so it may lie between two of them*
 :::
 :::
-
-::: {#exm-aasl47-formula}
-[The discrete random variable $X$ has probability distribution given by]{.q-en}
-
-$$
-P(X = x) = k(x + 1), \qquad x \in \{1, 2, 3, 4\}
-$$
-
-**(a)** [Find the value of $k$.]{.q-en}
-
-**(b)** [Write the probability distribution of $X$ as a table.]{.q-en}
-
-**(c)** [Find $E(X)$.]{.q-en}
-
-**(d)** [Justify that the formula gives a valid probability distribution.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-離散確率変数 $X$ の確率分布が、上の式で与えられています。
-
-**(a)** $k$ の値を求めなさい。
-
-**(b)** $X$ の確率分布を表で書きなさい。
-
-**(c)** $E(X)$ を求めなさい。
-
-**(d)** この式が正しい確率分布を与えていることを示しなさい。
-
-</details>
-
----
-
-**(a)** $x = 1, 2, 3, 4$ を入れると、確率は $2k$、$3k$、$4k$、$5k$ です。合計を $1$ とおきます（@eq-aasl47-sum）。
-
-$$
-2k + 3k + 4k + 5k = 14k = 1, \qquad k = \frac{1}{14}
-$$
-
-**(b)**
-
-| $x$ | $1$ | $2$ | $3$ | $4$ |
-|:--|--:|--:|--:|--:|
-| $P(X = x)$ | $\dfrac{2}{14}$ | $\dfrac{3}{14}$ | $\dfrac{4}{14}$ | $\dfrac{5}{14}$ |
-
-**(c)** @eq-aasl47-ev を使います。分母がそろっているので、分子だけ計算できます。
-
-$$
-E(X) = \frac{1(2) + 2(3) + 3(4) + 4(5)}{14} = \frac{2 + 6 + 12 + 20}{14} = \frac{40}{14} = \frac{20}{7}
-$$
-
-**(d)** `Justify` なので、英語で理由を書きます。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*With $k = \dfrac{1}{14}$, the four probabilities are $\dfrac{2}{14}$, $\dfrac{3}{14}$, $\dfrac{4}{14}$ and $\dfrac{5}{14}$. Each is greater than $0$ and less than $1$, and their sum is $\dfrac{14}{14} = 1$. A function that assigns positive numbers adding to $1$ to every value of $X$ is a valid probability distribution.*
 :::
 
-（$k = \dfrac{1}{14}$ のとき $4$ つの確率はすべて $0$ より大きく $1$ より小さく、合計が $1$ になる。とりうるすべての値に、負でなく合計が $1$ の数を与えているので、正しい確率分布である、という意味です。）
+### 7. Fair games（公平なゲーム） {#game}
 
-**検算（(a) について）。** **もどして足します。** $\dfrac{2 + 3 + 4 + 5}{14} = \dfrac{14}{14} = 1$ ✓
+**$X$ を「プレイヤーの利得」とすると、$E(X) = 0$ のゲームを fair（公平）といいます**（@fig-aasl47-idea-b）。
 
-**検算（(c) について、範囲で）。** $1 \le \dfrac{20}{7} \le 4$ です。$\dfrac{20}{7} \approx 2.86$ ✓ 最小値と最大値の間に入っています。
+![$2$ つのゲームを、利得の数直線にのせています。](img/aasl-4-7-idea-b.svg){#fig-aasl47-idea-b width=80%}
 
-**検算（(c) について、かたよりで）。** 確率は $x$ が大きいほど大きいので、$E(X)$ は真ん中の $2.5$ より大きくなるはずです。$\dfrac{20}{7} > \dfrac{5}{2}$ ✓
+**@fig-aasl47-idea-b は、$2$ つのゲームを利得の数直線にのせたものです。** 点の位置が利得、**点の大きさがその利得になる確率**、**三角が $E(X)$ の位置**です。
 
-::: {.callout-note}
-## 解答例（答案用紙に書くこと）
-**(a)**
-$$2k + 3k + 4k + 5k = 1 \implies k = \frac{1}{14}$$
+- 上の **losing game** は、確率 $\dfrac{1}{3}$ で $+3$、確率 $\dfrac{2}{3}$ で $-2$ です。$E(X) = -\dfrac{1}{3}$ なので、三角は $0$ より左にあります。
+- 下の **fair game** は、確率 $\dfrac{1}{3}$ で $+4$、確率 $\dfrac{2}{3}$ で $-2$ です。$E(X) = 0$ なので、三角はちょうど $0$ のところにあります。
 
-**(b)** *table:* $P(X = x) = \dfrac{2}{14}, \dfrac{3}{14}, \dfrac{4}{14}, \dfrac{5}{14}$ *for* $x = 1, 2, 3, 4$
+**利得は、受け取る額から払う額を引いたものです。** 参加料を引き忘れるのが、いちばん多い誤りです。
 
-**(c)**
-$$E(X) = \frac{2 + 6 + 12 + 20}{14} = \frac{20}{7}$$
+- $E(X) > 0$ なら、長い目で見てプレイヤーの得です。
+- $E(X) = 0$ なら、長い目で見てどちらの得にもなりません。
+- $E(X) < 0$ なら、長い目で見てプレイヤーの損です。
 
-**(d)** *all four probabilities are positive and they add to $1$, so the formula gives a valid distribution*
-:::
+**「公平」は $1$ 回ごとの話ではありません。** $E(X) = 0$ でも、$1$ 回では勝つことも負けることもあります。
+
+::: {.callout-warning}
+## この項目に電卓は要りません
+このページの計算は、Paper 1 でも Paper 2 でも**手でできます**。かけて足すだけです。
+
+**答えは分数のままで書けます。** $\dfrac{45}{20}$ は $\dfrac{9}{4}$ まで約分します。
 :::
 
 ::: {#exm-aasl47-game}
@@ -375,7 +339,8 @@ $$E(X) = \frac{2 + 6 + 12 + 20}{14} = \frac{20}{7}$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 分母を $6$ にそろえます。
 
@@ -425,6 +390,7 @@ $$30 \times \left(-\frac{1}{2}\right) = -15$$
 **(d)** *the player loses $\$0.50$ per turn on average in the long run, so the game is not fair*
 :::
 :::
+:::
 
 ::: {#exm-aasl47-fair}
 [A game costs $\$2$ to play. The player wins a prize of $\$p$, where $p > 2$, with probability $\dfrac{1}{4}$, and wins nothing otherwise. Let $X$ be the gain of the player in dollars.]{.q-en}
@@ -452,7 +418,8 @@ $$30 \times \left(-\frac{1}{2}\right) = -15$$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** 利得は「もらう額 $-$ 払う額」です（[第 7 節](#game)）。当たれば $p - 2$、はずれれば $-2$ です。
 
@@ -501,6 +468,45 @@ $$\frac{p - 8}{4} = 0 \implies p = 8$$
 **(d)** *over many turns the average gain per turn is close to $\$0$; a single turn still gives $\$6$ or $-\$2$*
 :::
 :::
+:::
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+**なぜ、値に確率をかけて足すのでしょうか。** 度数で考えると分かります。
+
+同じ試行を $N$ 回くり返したとします。値 $x_i$ が出る回数は、およそ $N \times P(X = x_i)$ 回です。すると、$N$ 回ぶんの合計はおよそ
+
+$$
+\sum_{i=1}^{k} x_i \times N \, P(X = x_i)
+$$
+
+です。$1$ 回あたりの平均を出すために $N$ で割ると、$N$ が約分されて
+
+$$
+\sum_{i=1}^{k} x_i P(X = x_i)
+$$
+
+が**およその値として**出てきます。**$N$ を大きくするほど、この近似はよくなります。** そこで、この値を $E(X)$ の定義にします（@eq-aasl47-ev）。**度数の平均が、相対度数の重みづけ平均に変わっただけです。**（これは定義の動機づけであって、証明ではありません。）
+
+**[SL 4.3 の平均](aasl-4-3.qmd#mean)と同じ形です。** $\bar{x} = \dfrac{\sum f_i x_i}{n}$ の $\dfrac{f_i}{n}$ を確率に置きかえたものが $E(X)$ です。
+
+**なぜ、$E(X)$ が $X$ のとれない値でよいのでしょうか。** 平均だからです。$1$ 回ごとには整数しか出なくても、何回ぶんも平均すれば、その間のどんな値にもなりえます。
+
+**$E(X)$ は、必ず最小値と最大値の間に入ります。** どの $x_i$ も $x_{\min}$ 以上なので
+
+$$
+\sum x_i P(X = x_i) \ge \sum x_{\min} P(X = x_i) = x_{\min}
+$$
+
+です（最後の等号で $\sum P(X = x_i) = 1$ を使いました）。上側も同じように示せます。**この不等式は、検算に使えます。**
+
+**なぜ、$E(X) = 0$ が「公平」なのでしょうか。** $X$ が利得なら、$N$ 回のあとの **$1$ 回あたりの平均**はおよそ $E(X)$ です。$E(X) = 0$ なら、この平均は $N$ が大きいほど $0$ に近づきます。合計そのものは $0$ から離れることもありますが、$N$ に比例して増えていくことはありません。**どちらにもかたよらない**、という意味です。
+
+**$E(X) \ne 0$ なら、$N$ が大きいほど差が開きます。** $E(X) = -0.2$ なら、$100$ 回で約 $-20$、$1000$ 回で約 $-200$ です。$1$ 回あたりの損は小さくても、回数を重ねると積み上がります。
+:::
 
 ## Common errors
 
@@ -535,12 +541,6 @@ $x \in \{1, 2, 3, 4\}$ のように書いてあります（[第 4 節](#formula)
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが $3$ つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です。英語の答案例が付くものもあります）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -760,7 +760,9 @@ $$40 \times 0.75 = 30$$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*$X$ is the number of broken eggs in one box, so $X = 0$ means that the box contains no broken eggs at all. The table lists every value that $X$ can take, so $X$ takes the values $0$, $1$, $2$ and $3$.*
+*$X$ is the number of broken eggs in one box, so $X = 0$ means that the box contains no broken eggs at all.*
+
+*The table lists every value that $X$ can take, so $X$ takes the values $0$, $1$, $2$ and $3$.*
 :::
 
 **(b)** @eq-aasl47-ev で $E(X)$ を出し、$40$ 倍します（[第 6 節](#meaning)）。
@@ -774,7 +776,11 @@ $$40 \times 0.75 = 30$$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The mean number of broken eggs is $0.75$ per box. Over $40$ boxes the shop should expect about $40 \times 0.75 = 30$ broken eggs in total. This is a long-run average, so the actual number in any $40$ boxes may be more or less than $30$.*
+*The mean number of broken eggs is $0.75$ per box.*
+
+*Over $40$ boxes the shop should expect about $40 \times 0.75 = 30$ broken eggs in total.*
+
+*This is a long-run average, so the actual number in any $40$ boxes may be more or less than $30$.*
 :::
 :::
 
@@ -844,7 +850,11 @@ $$E(X) = 0\left(\frac{1}{2}\right) + 1\left(\frac{1}{2}\right) = \frac{1}{2}$$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Here $E(X) = 0\left(\dfrac{1}{2}\right) + 1\left(\dfrac{1}{2}\right) = \dfrac{1}{2}$, which is neither $0$ nor $1$. The expected value is a weighted average of the values of $X$, not one of the outcomes, so it need not be a value that $X$ can take. It is the mean value per trial over many trials.*
+*Here $E(X) = 0\left(\dfrac{1}{2}\right) + 1\left(\dfrac{1}{2}\right) = \dfrac{1}{2}$, which is neither $0$ nor $1$.*
+
+*The expected value is a weighted average of the values of $X$, not one of the outcomes, so it need not be a value that $X$ can take.*
+
+*It is the mean value per trial over many trials.*
 :::
 :::
 
@@ -883,7 +893,11 @@ $x = 2, 3, 4$ を入れると確率は $\dfrac{1}{6}$、$\dfrac{2}{6}$、$\dfrac
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The three probabilities are $\dfrac{1}{6}$, $\dfrac{2}{6}$ and $\dfrac{3}{6}$. Each is positive and less than $1$, and their sum is $\dfrac{1 + 2 + 3}{6} = 1$. Since the formula assigns positive numbers adding to $1$ to every value that $X$ can take, it is a valid probability distribution.*
+*The three probabilities are $\dfrac{1}{6}$, $\dfrac{2}{6}$ and $\dfrac{3}{6}$.*
+
+*Each is positive and less than $1$, and their sum is $\dfrac{1 + 2 + 3}{6} = 1$.*
+
+*Since the formula assigns positive numbers adding to $1$ to every value that $X$ can take, it is a valid probability distribution.*
 :::
 :::
 

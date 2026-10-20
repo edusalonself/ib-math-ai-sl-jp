@@ -62,8 +62,7 @@ ax.text(0.75, 2.85, "$|\\mathbf{v}|$", fontsize=15, color=LINE,
 ax.text(1.6, -1.55, "$|\\mathbf{v}| = \\sqrt{3^2+4^2} = 5$",
         fontsize=13.5, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 grid(ax, (-1.4, 4.8), (-2.6, 5.0))
-ax.set_title("(a)  in 2D it is just Pythagoras", fontsize=12.5, color=INK,
-             pad=6)
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) 3 次元（直方体の対角線）
 ax = axs[1]
@@ -102,21 +101,19 @@ ax.text(2.95, 0.42, "$3$", fontsize=12.5, color=GREY, ha="left",
         va="top")
 ax.text(p1[0] + 0.28, (p1[1] + p2[1]) / 2, "$6$", fontsize=12.5, color=ACC,
         ha="left", va="center")
-ax.text(3.9, 0.55, "step 1:\nthe floor", fontsize=11, color=GREEN,
+ax.text(3.9, 0.55, "step 1", fontsize=11, color=GREEN,
         ha="left", va="center")
-ax.text(-3.0, 5.2, "step 2:\nfloor, then height", fontsize=11, color=LINE,
-        ha="left", va="center")
+ax.text(1.3, 4.6, "step 2", fontsize=11, color=LINE,
+        ha="right", va="center")
 ax.text(1.6, -1.95, "$|\\mathbf{v}| = "
                      "\\sqrt{\\left(\\sqrt{2^2+3^2}\\right)^2 + 6^2} = "
                      "\\sqrt{2^2+3^2+6^2} = 7$",
         fontsize=13, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-ax.set_xlim(-3.2, 6.4)
+ax.set_xlim(-1.6, 6.4)
 ax.set_ylim(-3.0, 7.6)
 ax.set_aspect("equal")
 ax.axis("off")
-ax.set_title("(b)  in 3D you use Pythagoras twice\n"
-             "the middle square root is never worked out",
-             fontsize=12.5, color=INK, pad=6)
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=1.8)
 save(fig, "ahl-3-10b-magnitude.svg")
@@ -146,13 +143,10 @@ ax.text(4.2, -1.5, "$\\mathbf{b}$", fontsize=14, color=GOLD, ha="left",
         va="bottom")
 ax.text(4.6, 1.1, "$\\overrightarrow{AB}$", fontsize=14, color=ACC,
         ha="left", va="center")
-ax.text(3.0, -6.6, "go back along $\\mathbf{a}$, then out along $\\mathbf{b}$:\n"
-                   "$\\overrightarrow{AB} = \\mathbf{b} - \\mathbf{a}$   "
-                   "(finish $-$ start)",
+ax.text(3.0, -6.4, "$\\overrightarrow{AB} = \\mathbf{b} - \\mathbf{a}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-2.0, 9.4), (-8.4, 6.2))
-ax.set_title("(a)  position vectors, and the vector from $A$ to $B$",
-             fontsize=12.5, color=INK, pad=6)
+grid(ax, (-2.0, 9.4), (-7.6, 6.2))
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) |AB| は 2 点間の距離
 ax = axs[1]
@@ -170,14 +164,12 @@ ax.text((A[0] + B[0]) / 2, A[1] + 0.3, "$6$ across", fontsize=12, color=GREEN,
         ha="center", va="bottom")
 ax.text(B[0] + 0.3, -2.2, "$8$ down", fontsize=12, color=GOLD,
         ha="left", va="center")
-ax.text(3.0, -6.6, "$\\overrightarrow{AB} = \\binom{6}{-8}$,   "
+ax.text(3.0, -6.4, "$\\overrightarrow{AB} = \\binom{6}{-8}$,   "
                    "$|\\overrightarrow{AB}| = "
-                   "\\sqrt{6^2+(-8)^2} = 10$\n"
-                   "this is the distance from $A$ to $B$",
+                   "\\sqrt{6^2+(-8)^2} = 10$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-2.0, 9.4), (-8.4, 6.2))
-ax.set_title("(b)  the length of that vector is the distance",
-             fontsize=12.5, color=INK, pad=6)
+grid(ax, (-2.0, 9.4), (-7.6, 6.2))
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=1.8)
 save(fig, "ahl-3-10b-position.svg")
@@ -200,13 +192,11 @@ ax.text(2.5, 1.85, "$\\mathbf{v} = \\binom{3}{4}$,   "
         fontsize=12.5, color=LINE, ha="left", va="center", bbox=BOX, zorder=9)
 ax.text(0.88, 0.48, "$\\hat{\\mathbf{v}}$", fontsize=14, color=ACC,
         ha="left", va="top")
-ax.text(1.4, -1.35, "$\\dfrac{\\mathbf{v}}{|\\mathbf{v}|} = "
-                    "\\dfrac{1}{5}\\binom{3}{4} = \\binom{0.6}{0.8}$\n"
-                    "same direction, length exactly $1$",
+ax.text(1.4, -1.65, "$\\dfrac{\\mathbf{v}}{|\\mathbf{v}|} = "
+                    "\\dfrac{1}{5}\\binom{3}{4} = \\binom{0.6}{0.8}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
 grid(ax, (-1.6, 5.0), (-2.6, 5.0))
-ax.set_title("(a)  dividing by the length lands you on the unit circle",
-             fontsize=12.5, color=INK, pad=6)
+ax.set_title("(a)", fontsize=12.5, color=INK, pad=6)
 
 # ── (b) speed x unit vector
 ax = axs[1]
@@ -214,19 +204,16 @@ OFFB = np.array([-0.40, 0.30])
 arrow(ax, tuple(OFFB), tuple(W + OFFB), color=GREY, lw=2.2, ls=":", z=8)
 arrow(ax, O, U, color=ACC, lw=3.0, z=7)
 arrow(ax, O, 7 * U, color=GREEN, lw=3.2, z=6)
-ax.text(0.55, 3.75, "$3\\mathbf{i}+4\\mathbf{j}$\n(length $5$, not $7$)",
+ax.text(0.15, 3.75, "$3\\mathbf{i}+4\\mathbf{j}$",
         fontsize=11, color=GREY, ha="right", va="center")
 ax.text(0.88, 0.48, "$\\hat{\\mathbf{v}}$", fontsize=13, color=ACC,
         ha="left", va="top")
 ax.text(4.45, 5.95, "$7\\hat{\\mathbf{v}}$", fontsize=14, color=GREEN,
         ha="left", va="center")
-ax.text(2.6, -1.6, "speed $7$ in the direction $3\\mathbf{i}+4\\mathbf{j}$:\n"
-                   "$7 \\times \\binom{0.6}{0.8} = \\binom{4.2}{5.6}$",
+ax.text(2.6, -1.4, "$7 \\times \\binom{0.6}{0.8} = \\binom{4.2}{5.6}$",
         fontsize=12, color=INK, ha="center", va="center", bbox=BOX, zorder=9)
-grid(ax, (-1.6, 7.0), (-2.8, 6.8))
-ax.set_title("(b)  put the length you want back on\n"
-             "$3\\mathbf{i}+4\\mathbf{j}$ has length $5$, not $7$",
-             fontsize=12.5, color=INK, pad=6)
+grid(ax, (-1.6, 7.0), (-2.4, 6.8))
+ax.set_title("(b)", fontsize=12.5, color=INK, pad=6)
 
 fig.tight_layout(w_pad=1.8)
 save(fig, "ahl-3-10b-unit.svg")

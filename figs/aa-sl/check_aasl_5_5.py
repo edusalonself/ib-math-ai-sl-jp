@@ -47,7 +47,29 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
 
-BODY = TEXT.split("## Worked examples")[0]
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に残っている: %s :: %s" % (msg, sub[:60]))
+
+
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 
 def not_in_body(sub, msg=""):
@@ -77,7 +99,7 @@ in_text("# SL 5.5 — Introduction to integration（原始関数・積分定数�
         "{#sec-aasl-5-5}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea",
-           "## Why it works", "## Worked examples", "## Common errors",
+           "## Why it works", "## Common errors",
            "## Exercises"):
     in_text(_h, "節 " + _h)
 not_in_text("## Using your GDC", "Topic 5 に GDC の節は置かない")
@@ -95,7 +117,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + Paper）")
 chk(TEXT.count("{.callout-important}") == 2,
     "callout-important 2（公式集 5.5 の 2 つ）")
@@ -121,8 +143,8 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-5-5-idea-a.svg){#fig-aasl55-idea-a width=100%}", "図 (a) の埋め込み")
-in_text("(img/aasl-5-5-idea-b.svg){#fig-aasl55-idea-b width=100%}", "図 (b) の埋め込み")
+in_text("(img/aasl-5-5-idea-a.svg){#fig-aasl55-idea-a width=85%}", "図 (a) の埋め込み")
+in_text("(img/aasl-5-5-idea-b.svg){#fig-aasl55-idea-b width=85%}", "図 (b) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-5-5-idea.svg")),
     "分割前の SVG は消してある")
 in_text("@fig-aasl55-idea-a", "図 (a) の参照")
@@ -137,9 +159,11 @@ for _w in ("得点になりません", "点になりません", "減点されま
 # 2. 引用と公式集
 # ══════════════════════════════════════════════════════════
 _quotes = re.findall(r"^> (.*)$", TEXT, re.M)
-chk(_quotes == ["Students are expected to first write a correct expression "
-                "before calculating the area."],
-    "シラバスの引用は 1 本だけ: %s" % _quotes)
+chk(_quotes == [], "シラバスの引用は本文から外した: %s" % _quotes)
+not_in_text("Students are expected to first write a correct expression",
+            "シラバスの引用は本文から外した")
+in_text("面積を求める問題では、値を出す前に、面積を表す積分の式を書くことが求められます。",
+        "引用の内容は日本語で直接書いた")
 in_text("公式集の **5.5** の欄に、*Integral of $x^{n}$* として", "公式集 5.5 積分")
 in_text("公式集の **5.5** の欄に、*Area between a curve $y = f(x)$ and the "
         "$x$-axis, where $f(x) > 0$* として", "公式集 5.5 面積")
@@ -162,10 +186,10 @@ in_text("[SL 5.2](aasl-5-2.qmd#interval)", "5.2 への参照（区間）")
 # ══════════════════════════════════════════════════════════
 # 3. 図
 # ══════════════════════════════════════════════════════════
-in_fig('"Why the constant is needed"', "図 (a) の題")
-in_fig('"Area under a curve that stays above the axis"', "図 (b) の題")
+not_in_fig('"Why the constant is needed"', "図 (a) の題は外した")
+not_in_fig('"Area under a curve that stays above the axis"', "図 (b) の題は外した")
 in_fig('"$+C$"', "図 (a) の +C")
-in_fig("when $f(x) > 0$ ", "図 (b) の条件")
+not_in_fig("when $f(x) > 0$ ", "図 (b) の条件は本文にある")
 # 図の 3 本の曲線は、同じ x で同じ傾き
 _g = X ** 3 - 2 * X
 for _c in (R(3, 2), 0, R(-3, 2)):
@@ -408,7 +432,7 @@ chk("**検算（面積として）。** 面積は $1$ つに決まる量です" 
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -425,11 +449,11 @@ in_text('$x^{n}$ の不定積分を求める公式は、次のとおりです。
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 1. antidifferentiation（微分の逆をたどる） {#anti}',
+in_text('### 1. Antidifferentiation（微分の逆をたどる） {#anti}',
         "見出しの英語: 1. antidifferentiation（微分の逆をたどる）")
 not_in_text('### 1. 微分の逆をたどる（', "前の見出しは消した")
-in_text('### 2. constant of integration（積分定数） {#plusc}', "見出しの英語: 2. constant of integration")
-in_text('### 5. boundary condition（境界条件）で $C$ を決める {#boundary}', "見出しの英語: 5. boundary condition（境界条件")
+in_text('### 2. Constant of integration（積分定数） {#plusc}', "見出しの英語: 2. constant of integration")
+in_text('### 5. Boundary conditions（境界条件で $C$ を決める） {#boundary}', "見出しの英語: 5. boundary condition（境界条件")
 
 
 
@@ -441,7 +465,7 @@ for _sent in [
     'write the expression fir',
 ]:
     chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
-in_text('**グラフで見ると、縦にずらした曲線の束です。** どれも同じ形なので、どの $x$ でも傾きが同じです。', "その内容は本文にある")
+in_text('**グラフで見ると、縦にずらした曲線の束です。** どれも同じ形なので、どの $x$ でも **gradient**（傾き）が同じです。', "その内容は本文にある")
 in_text('まず式を書いてから、値を出します', "その内容は本文にある")
 
 
@@ -459,16 +483,14 @@ in_text("**グラフで見ると、縦にずらした曲線の束です。**", "
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：∫ の英語での読み方
 # ══════════════════════════════════════════════════════════
-in_text("**$\\displaystyle\\int$ は integral sign（積分記号）といいます。** "
-        "@eq-aasl55-def の左辺は `the integral of f of x with respect to x` と"
-        "読みます。$dx$ が `with respect to x` の部分です。",
+in_text("$\\displaystyle\\int$ は **integral sign**（積分記号）といいます。 @eq-aasl55-def の左辺は `the integral of f of x with respect to x` と読みます。$dx$ が `with respect to x` の部分です。",
         "∫ の読み方")
 # 読み方は、記号を出したあと・dx の説明のあとに置く
 chk(TEXT.index("$\\displaystyle\\int$ の記号で書きます")
     < TEXT.index("**$dx$ は「$x$ について」という印です。**")
-    < TEXT.index("integral sign（積分記号）"), "記号 → dx → 読み方 の順")
-chk(TEXT.index("integral sign（積分記号）")
-    < TEXT.index("### 2. constant of integration（積分定数）"),
+    < TEXT.index("**integral sign**（積分記号）"), "記号 → dx → 読み方 の順")
+chk(TEXT.index("**integral sign**（積分記号）")
+    < TEXT.index("### 2. Constant of integration（積分定数）"),
     "読み方は第 1 節の中")
 
 
@@ -476,7 +498,7 @@ chk(TEXT.index("integral sign（積分記号）")
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：第 6 節の見出しと、どの条件かを書く
 # ══════════════════════════════════════════════════════════
-in_text("### 6. area under a curve（面積とのつながり） {#area}", "第 6 節の見出し")
+in_text("### 6. Area under a curve（面積とのつながり） {#area}", "第 6 節の見出し")
 not_in_text("### 6. 面積とのつながり", "前の見出しは消した")
 in_text("**$f(x) > 0$ という条件が要ります。** 曲線が $x$ 軸より下にある部分を"
         "ふくむと、この式のままでは面積になりません。", "どの条件かを書いてある")
@@ -497,6 +519,16 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
     chk(0 < len(_cm.group(1)) <= 75,
         "図のキャプションは 75 字以内（%d 字）: %s"
         % (len(_cm.group(1)), _cm.group(1)[:50]))
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

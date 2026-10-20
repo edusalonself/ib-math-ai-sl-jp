@@ -349,20 +349,21 @@ eq("fence の開閉が一致",
    len([l for l in L if re.match(r"^:{3,} *\{", l)]),
    len([l for l in L if re.match(r"^:{3,} *$", l)]))
 
-in_text("Worked examples の定型 callout",
-        "問題文は英語です。意味が理解できなかったら、問題文の下の"
-        "「**日本語訳**」を開いてください。解説は日本語です。")
+not_in_text("例題の前の案内は置かない", "問題文は英語です。意味が")
 in_text("例題の解答例の見出し", "## 解答例（答案用紙にはこう書く）")
 in_text("演習の解答例の見出し", "## 解答例（答案用紙に書くこと）")
 in_text("GDC の見出し", "## Using your GDC (TI-Nspire CX II)")
 
 # 公式集・シラバス
 in_text("公式集の式", "y_{n+1} = y_n + h \\times f(x_n,\\ y_n), \\qquad x_{n+1} = x_n + h")
-in_text("公式集に載っている旨", "使う式は**公式集に載っています（5.16 の欄）。覚える必要はありません。**")
-in_text("シラバス語 approximate", "シラバスも **`approximate`**（近似）と書いています。")
-in_text("シラバス Guidance",
-        "Spreadsheets should be used to find approximate solutions to "
-        "differential equations.")
+in_text("公式集に載っている旨", "公式集の **5.16** の欄にあるので、**覚える必要はありません。**")
+not_in_text("シラバスの引用（approximate）は本文から外した", "シラバスも **`approximate`**")
+in_text("近似値であることを書いている",
+        "この方法で出るのは **approximation**（近似値）です。**ぴったりの答えは出ません。**")
+not_in_text("シラバス Guidance の引用は本文から外した",
+            "Spreadsheets should be used to find approximate solutions")
+in_text("スプレッドシートで求めると日本語で書いている",
+        "Euler's method の近似値は、ふつうはスプレッドシート（表計算）で求めます。")
 in_text("試験モードで使える旨", "## この項目は、試験モードでも使えます")
 
 # レビュー修正の固定（回帰防止）
@@ -385,7 +386,7 @@ in_text("Fill の但し書き", "**列ごとに $1$ つずつ** `Fill` してく
 in_text("concave-down のときの書きかえも示している",
         "**concave-down のときは、②だけを入れかえます。**")
 in_text("シラバス語 concave-up / concave-down を使っている",
-        "**concave-up / concave-down は、シラバスが名指ししている言葉です**")
+        "**concave-up / concave-down という言葉は、そのまま覚えてください**")
 not_in_text("旧表記 convex が残っていない", "convex")
 not_in_text("旧表記の断り書きが残っていない",
             "convex / concave という語は、シラバスには出てきません")
@@ -402,6 +403,14 @@ in_text("演習5 の表見出し",
         "| $n$ | $t_n$ | $P_n$ | $f = 0.2P_n\\left(1 - \\dfrac{P_n}{500}\\right)$ |")
 not_in_text("旧・スラッシュ表記",
             "| $n$ | $t_n$ | $P_n$ | $f = 0.2P_n(1 - P_n/500)$ |")
+
+# ★ レイアウト：Worked examples の節は無く、例題は The idea の中にある
+not_in_text("## Worked examples が無い", "## Worked examples")
+_exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(TXT.index("## The idea") < p < TXT.index("## Why it works")
+       for p in _exm), True)
+eq("例題の数は変わらない", len(_exm), 4)
 
 print()
 print("=" * 78)

@@ -7,64 +7,44 @@ sidebar: ai-hl
 ::: {.callout-note}
 ## What you should be able to do
 - **Type I error** と **Type II error** を、場面ごとに区別できる。
-- **Type I error の確率**を、$H_0$ の分布で critical region に入る確率として計算できる。連続分布では設定した $\alpha$ に等しく、離散分布では一般に $\alpha$ 以下になる。
-- **$P(\text{Type II}) = \beta$** を、**対立仮説の具体的な値**の分布から計算できる。
-- **$\beta \neq 1 - \alpha$** である理由を説明できる。
-- normal（分散既知）・binomial・Poisson の $3$ つで、両方の確率を出せる。
-- 検定のあとで、**どちらの誤りが起こりえたか**を言える。
-- $\alpha$ を小さくすると $\beta$ が大きくなることを説明できる。
-:::
-
-::: {.callout-note}
-## AHL 4.18 の $3$ ページめです
-| ページ | 中身 |
-|---|---|
-| [AHL 4.18a](ahl-4-18a.qmd) | critical value と critical region の考え方 |
-| [AHL 4.18b](ahl-4-18b.qmd) | 分布ごとの検定 |
-| **AHL 4.18c**（このページ） | **Type I error と Type II error** |
-
-: AHL 4.18 の $3$ ページ {#tbl-ahl418c-map}
-
-::: {.callout-important}
-## [AHL 4.18a](ahl-4-18a.qmd) の critical region が、そのまま道具になります
-このページの計算は、**すべて critical region から出発します。** critical region が求まっていないと、どちらの誤りの確率も出せません。
-
-[AHL 4.18a](ahl-4-18a.qmd#discrete) を先に読んでおいてください。
-:::
-:::
-
-::: {.callout-warning}
-## シラバスが範囲を限っています
-> Type I and II errors including calculations of their probabilities.
->
-> **Applied to normal with known variance, Poisson and binomial distributions.**
-
-**$3$ つだけ**です。**$t$ 検定には適用しません。** $\sigma$ が分からない場面で Type II error を計算させる問題は出ません。
-
-> For discrete random variables, hypothesis tests and **critical regions will only be required for one-tailed tests**. The critical region will **maximize the probability of a Type I error while keeping it less than the stated significance level**.
-
-binomial と Poisson は、**片側だけ**です。$2$ 文めは [AHL 4.18a](ahl-4-18a.qmd#discrete) の critical region の作り方そのもので、それがそのまま Type I error の確率になります（[第2節](#typeI)）。
-:::
-
-::: {.callout-important}
-## Formula booklet に 4.18 の欄はありません
-$\alpha$ と $\beta$ の計算に、公式はありません。**確率の計算そのもの**です。
-
-覚えるのは、次の $2$ 行だけです。
-
-- $P(\text{Type I})$ は、**$H_0$ の分布**で計算する
-- $P(\text{Type II})$ は、**対立仮説の具体的な値の分布**で計算する
-
-**どちらの分布を使うか**——これがこの項目のすべてです。
+- $2$ つの確率を、**使う分布と範囲**を選んで計算できる（normal・binomial・Poisson）。連続分布では設定した $\alpha$ に等しく、離散分布では一般に $\alpha$ 以下になる。
+- **$\beta \neq 1 - \alpha$** である理由を説明でき、$\beta$ には**対立仮説に対応する具体的な値**が要ると分かる。
+- 検定のあとで**どちらの誤りが起こりえたか**を言え、$\alpha$ と $\beta$ の関係を説明できる。
 :::
 
 ## The idea
 
-### 1. 判定は $2$ 通り、真実も $2$ 通り。合わせて $4$ つ {#idea}
+### 1. Two kinds of error（$2$ つの誤り） {#idea}
 
-検定の結論は「reject する」か「reject しない」かの $2$ 通りです。そして $H_0$ は、本当は正しいか正しくないかの $2$ 通りです。
+このページは AHL 4.18 の $3$ ページめです。[AHL 4.18a](ahl-4-18a.qmd) で critical region（棄却域）を、[AHL 4.18b](ahl-4-18b.qmd) で検定の選び方を学びました。ここでは、**検定がまちがえる確率**を考えます。
 
-組み合わせると $4$ 通りになります。
+コインが表に偏っているかを、$5\%$ の有意水準で検定します。
+
+$$
+H_0: p = 0.5, \qquad H_1: p > 0.5
+$$
+
+$20$ 回投げて、表の出た回数を $X$ とします。$H_0$ のもとで $X \sim B(20,\ 0.5)$ なので、$P(X \geq k) \leq 0.05$ となる**最小の $k$** を探します。
+
+$$
+P(X \geq 14) = 0.0577 > 0.05, \qquad P(X \geq 15) = 0.0207 \leq 0.05
+$$
+
+ですから、**棄却域は $X \geq 15$** です（[AHL 4.18a](ahl-4-18a.qmd#discrete)）。
+
+このとき、まちがいは $2$ 通りあります。
+
+- **Type I error**（第1種の誤り）… 本当は公平なコインなのに、表が $15$ 回以上出て、$H_0$ を棄却してしまう。
+- **Type II error**（第2種の誤り）… 本当は表が出やすいコインなのに、表が $14$ 回以下しか出ず、$H_0$ を棄却できない。
+
+![コインの例での $2$ つの誤りです。](img/ahl-4-18c-discrete.svg){#fig-ahl418c-discrete width=100%}
+
+一般には、こう言います。
+
+- **Type I error** … **正しい $H_0$ を reject してしまう**（*rejecting $H_0$ when $H_0$ is true*）
+- **Type II error** … **正しくない $H_0$ を reject しない**（*failing to reject $H_0$ when $H_0$ is false*）
+
+検定の結論（reject するかしないか）と、$H_0$ が本当は正しいかどうかを組み合わせると、$4$ 通りになります。
 
 | | $H_0$ は本当は**正しい** | $H_0$ は本当は**正しくない** |
 |---|---|---|
@@ -73,521 +53,89 @@ $\alpha$ と $\beta$ の計算に、公式はありません。**確率の計算
 
 : $4$ つの場合 {#tbl-ahl418c-four}
 
-**斜めの $2$ つが正しい判断、残りの $2$ つが誤りです。**
+なお、**「reject しない」は「$H_0$ が正しいと証明した」という意味ではありません**（[SL 4.11](../../ai-sl/04-statistics-and-probability/sl-4-11.qmd#accept)）。
 
-::: {.callout-important}
-## $2$ つの誤りを、ことばで言うと
-**Type I error**（第1種の誤り）… **正しい $H_0$ を、reject してしまう。**
+::: {.callout-note collapse="true"}
+## 詳しく知りたい人へ（別の呼び方と、裁判のたとえ）
+検査の場面では、Type I を **false positive**（偽陽性。何もないのに「ある」と言ってしまう）、Type II を **false negative**（偽陰性。あるのに「ない」と言ってしまう）と呼びます。
 
-*Rejecting $H_0$ when $H_0$ is actually true.*
-
-**Type II error**（第2種の誤り）… **正しくない $H_0$ を、reject しない。**
-
-*Failing to reject $H_0$ when $H_0$ is actually false.*
-
-英語では、こう呼ばれることもあります。
-
-| | 別の呼び方 | 意味 |
-|---|---|---|
-| Type I | **false positive**（偽陽性） | 何もないのに「ある」と言ってしまう |
-| Type II | **false negative**（偽陰性） | あるのに「ない」と言ってしまう |
-
-: もう $1$ 組の呼び方 {#tbl-ahl418c-falsepn}
-
-検査の場面では、こちらの言い方のほうがよく使われます。
+裁判にたとえると、$H_0$ は「無罪」です。Type I は**冤罪**（無実の人を有罪にする）、Type II は**取り逃がし**（犯人を無罪にする）にあたります。裁判では冤罪を強く避けるので $\alpha$ を小さく設定し、その代わり取り逃がしやすくなります。
 :::
 
-::: {.callout-tip}
-## 裁判にたとえると、覚えやすくなります
-$H_0$ は「無罪」です。検定は「有罪と言えるだけの証拠があるか」を調べています。
+### 2. The two probabilities（$2$ つの確率を求める） {#typeI}
 
-| | 本当は無罪 | 本当は有罪 |
-|---|---|---|
-| 有罪と判決（reject） | **Type I**：無実の人を有罪にした | 正しい |
-| 無罪と判決（do not reject） | 正しい | **Type II**：犯人を逃した |
+同じコインの例で、$2$ つの確率を求めます。**棄却域 $X \geq 15$ は、どちらでも同じもの**を使います。
 
-: 裁判のたとえ {#tbl-ahl418c-court}
-
-**Type I は「冤罪」、Type II は「取り逃がし」**です。
-
-そして、裁判では冤罪を強く避けます。だから「疑わしきは罰せず」——つまり **$\alpha$ を小さく設定する**わけです。その代わり、犯人を取り逃がしやすくなります。
-:::
-
-### 2. $P(\text{Type I})$ は、$H_0$ の分布で計算します {#typeI}
-
-Type I error は「$H_0$ が正しいのに reject する」ことです。つまり、**$H_0$ が正しいという前提のもとで**、データが critical region に入ってしまう確率です。
+**Type I error の確率。** $H_0$ が正しい、つまり $p = 0.5$ のときの分布で、棄却域に入る確率です。
 
 $$
-P(\text{Type I}) = P(\text{データが critical region に入る} \mid H_0 \ \text{が正しい})
-$$ {#eq-ahl418c-typeI}
+X \sim B(20,\ 0.5), \qquad P(\text{Type I}) = P(X \geq 15) = 0.0207
+$$
 
-**これは、critical region の確率そのもの**です（[AHL 4.18a](ahl-4-18a.qmd#idea)）。
+#### Type II error の確率 $\beta$ {#typeII}
 
-::: {.callout-important}
-## $2$ つの「significance level」を区別してください
-| 呼び方 | 意味 |
-|---|---|
-| **stated significance level** $\alpha$ | 問題文が決めた値（$5\%$ など） |
-| **actual significance level** | その critical region で、実際に $H_0$ を棄却してしまう確率 |
+本当は表が出やすい——たとえば**本当の値が $p = 0.8$** だとします。そのときの分布で、棄却域の**外**に入る確率が $\beta$ です。
 
-: $2$ つの significance level {#tbl-ahl418c-two-alpha}
+$$
+X \sim B(20,\ 0.8), \qquad \beta = P(X \leq 14) = 0.196
+$$
 
-**連続な分布（normal）では、この $2$ つが一致します。** critical region を**丸める前の critical value**で作るので（[AHL 4.18a](ahl-4-18a.qmd#rounding)）、面積がちょうど $\alpha$ になるからです。
+**棄却域は変えません。使う分布を変えます。** 上の図の $2$ 枚は、同じ境目（$14$ と $15$ のあいだ）で、別々の分布を測ったものです。
+
+| 求める確率 | 使う分布 | 求める範囲 |
+|---|---|---|
+| Type I | $H_0$ が正しいときの分布 | 棄却域の**中** |
+| Type II | **指定された本当の値**での分布 | 棄却域の**外** |
+
+: $2$ つの誤りの計算 {#tbl-ahl418c-two}
+
+**Type II error の確率を数値で求めるには、対立仮説に対応する具体的な母数の値が必要です。** この例の $p = 0.8$ がそれで、問題文には `if the true probability of a head is 0.8` のような形で書かれています。
+
+#### 指定した $\alpha$ と、実際の確率 {#two-alpha}
+
+「significance level」ということばは、$2$ つの意味で使われます。
+
+- **stated significance level**（指定された有意水準）$\alpha$ … 問題文が決めた値（$5\%$ など）
+- **actual significance level** … その棄却域で**実際に** $H_0$ を棄却してしまう確率。つまり $P(\text{Type I})$ そのもの
+
+**binomial・Poisson（離散）では、$\alpha$ ちょうどにはなりません。** 整数の境目しか選べないからです。上のコインの例でも、$\alpha = 0.05$ と指定されているのに、実際は $0.0207$ でした。
+
+$$
+P(\text{Type I}) \leq \alpha \quad (\text{離散分布})
+$$
+
+**normal（連続）では一致します。** 棄却域を**丸める前の critical value**で作るので（[AHL 4.18a](ahl-4-18a.qmd#rounding)）、面積がちょうど $\alpha$ になります。
 
 $$
 P(\text{Type I}) = \alpha \quad (\text{連続分布})
 $$
 
-**離散な分布（binomial・Poisson）では、一致しません。** 整数の境目しか選べないので、実際の値は $\alpha$ より**小さく**なります。
+ですから `Find the probability of a Type I error` と問われたら、離散分布では**必ず計算してください。**
 
-$$
-P(\text{Type I}) \leq \alpha \quad (\text{離散分布})
-$$
-:::
+### 3. $\beta$ is not $1 - \alpha$（$\beta$ は $1 - \alpha$ ではない） {#not-complement}
 
-::: {.callout-warning}
-## 離散分布では、$\alpha$ ちょうどにはなりません
-binomial と Poisson では、critical region の確率は $\alpha$ より**小さく**なります（[AHL 4.18a](ahl-4-18a.qmd#discrete)）。
+「$\alpha = 0.05$ なら $\beta = 0.95$」——これが、この項目でいちばん多い誤解です。コインの例でも $0.0207$ と $0.196$ で、足しても $1$ になりません。
 
-$B(20,\ 0.5)$ で $X \geq 15$ を critical region にすると
+$2$ つは、**使っている分布が違う**からです。
 
-$$
-P(\text{Type I}) = P(X \geq 15 \mid p = 0.5) = 0.0207
-$$
+- $1 - \alpha$ … **$H_0$ が正しいとき**に、棄却しない確率（ここでは、実際の Type I error の確率が $\alpha$ に等しい場合を考えています）
+- $\beta$ … **指定された本当の値のもとで**、$H_0$ が誤っているときに、棄却しない確率
 
-です。**$0.05$ ではありません。**
+同じ分布の中と外なら足して $1$ になりますが、**この $2$ つは使う分布が違います。**
 
-`Find the probability of a Type I error` と問われたら、**必ず計算してください。** 「$5\%$ だから $0.05$」と書くと、離散では誤りになります。
-:::
+$1 - \beta$ には名前があり、**power**（検出力）といいます。「$H_0$ が正しくないときに、ちゃんと棄却できる確率」です。
 
-### 3. $P(\text{Type II})$ には、$H_1$ の「具体的な値」が要ります {#typeII}
+### 4. Normal distribution with known variance（分散が分かっている正規分布） {#normal}
 
-Type II error は「$H_0$ が正しくないのに reject しない」ことです。
+$\alpha$ と $\beta$ を計算するのは、**分散が分かっている正規分布・二項分布・ポアソン分布**の $3$ つです。$\sigma$ が分からない $t$ 検定では計算しません。
 
-**ここで問題が起きます。** $H_1$ が $\mu > 100$ だとして、本当の $\mu$ はいくつなのでしょうか。$101$ かもしれないし、$150$ かもしれません。**値が決まらないと、確率が計算できません。**
+正規分布では、$1$ つの値ではなく**標本平均 $\bar{X}$ の分布**を使います（[AHL 4.15](ahl-4-15.qmd#xbar)）。その標準偏差は standard error $\dfrac{\sigma}{\sqrt{n}}$ で、**本当の値に取りかえても standard error は変わりません。動くのは中心だけです。**
 
-::: {.callout-important}
-## だから問題文が、必ず「本当の値」を教えてくれます
-`Find the probability of a Type II error when the true mean is 106` のように、**具体的な数**が与えられます。
+![$\alpha$ と $\beta$ が表す部分です。](img/ahl-4-18c-two-errors.svg){#fig-ahl418c-two width=100%}
 
-その数を使って分布を作り直し、**critical region の外に入る確率**を求めます。
+@fig-ahl418c-two は、$\mu_0 = 100$、$\sigma = 15$、$n = 25$、片側 $5\%$ の例です。実線が $H_0$ の分布、破線が本当の平均が $106$ のときの分布で、赤い部分が $\alpha$、青い部分が $\beta$ です。**別々の曲線の上で測っています。**
 
-$$
-P(\text{Type II}) = P(\text{データが critical region の外} \mid \text{本当の値})
-$$ {#eq-ahl418c-typeII}
-:::
-
-::: {.callout-tip}
-## $2$ つの確率は、$2$ つの別の分布の上にあります
-これがこの項目の中心です。
-
-| | 使う分布 | 見る範囲 |
-|---|---|---|
-| $P(\text{Type I})$（実際の significance level） | **$H_0$ の値**で作った分布 | critical region の**中** |
-| $P(\text{Type II}) = \beta$ | **本当の値**で作った分布 | critical region の**外** |
-
-: $2$ つの誤りの計算 {#tbl-ahl418c-two}
-
-**critical region は同じもの**です。変わるのは、**どの分布の上でその範囲を測るか**だけです。
-:::
-
-![Where $\alpha$ and $\beta$ live](img/ahl-4-18c-two-errors.svg){#fig-ahl418c-two width=100%}
-
-@fig-ahl418c-two を見てください。**曲線が $2$ 本あります。**
-
-- **実線**… $H_0$ が正しいときの $\bar{X}$ の分布
-- **破線**… 本当の平均が $106$ のときの $\bar{X}$ の分布
-
-赤い部分（$\alpha$）は**実線の下**、青い部分（$\beta$）は**破線の下**にあります。**別々の曲線の上で測っています。**
-
-### 4. $\beta = 1 - \alpha$ では、ありません {#not-complement}
-
-**この項目でいちばん多い誤解です。**
-
-$\alpha = 0.05$ なら $\beta = 0.95$——そう考えたくなりますが、**違います。**
-
-@fig-ahl418c-two では $\alpha = 0.05$ で $\beta = 0.361$ です。足しても $1$ になりません。
-
-::: {.callout-important}
-## 理由は、$2$ つが別の分布の上にあるからです
-足して $1$ になるのは、**同じ分布の上で、範囲を分け合ったとき**です。
-
-$\alpha$ は実線の下、$\beta$ は破線の下にあります。**そもそも同じ全体を分け合っていません。**
-
-実線の下で $\alpha = 0.05$ の反対側は $0.95$ ですが、それは「$H_0$ が正しいときに reject しない確率」であって、Type II error ではありません。**$H_0$ が正しいときは、そもそも Type II error は起こりえません。**
-:::
-
-::: {.callout-tip}
-## $2$ つの「世界」で分けて考えると、はっきりします {#two-worlds}
-@tbl-ahl418c-four の $4$ つを、確率で埋めてみます。
-
-**$H_0$ が正しい世界**では、起こりうるのは上の行の $2$ つだけです。
-
-$$
-P(\text{reject} \mid H_0) + P(\text{do not reject} \mid H_0) = \alpha + (1 - \alpha) = 1
-$$
-
-**本当の値が $106$ の世界**では、起こりうるのは下の行の $2$ つだけです。
-
-$$
-P(\text{reject} \mid \mu = 106) + P(\text{do not reject} \mid \mu = 106)
-= (1 - \beta) + \beta = 1
-$$
-
-**それぞれの世界の中では、ちゃんと足して $1$ になっています。** $\alpha$ と $\beta$ は別々の世界の住人なので、足しても意味がありません。
-:::
-
-::: {.callout-note appearance="simple"}
-$1 - \beta$ には名前があり、**power**（検出力）といいます。「$H_0$ が間違っているときに、ちゃんと気づける確率」です。
-
-@fig-ahl418c-two なら $1 - 0.361 = 0.639$ です。
-
-**AI HL のシラバスは power を求めていません。** ただ、$\beta$ の意味を確かめるのに便利なので、覚えておくと役に立ちます。
-:::
-
-### 5. normal（分散既知）での計算 {#normal}
-
-手順は $3$ 段階です。
-
-1. **critical value を出す**（[AHL 4.18a](ahl-4-18a.qmd#xbar)）
-2. $P(\text{Type I}) = \alpha$（連続なので、ちょうど）
-3. **本当の平均で分布を作り直して**、critical region の外の確率を出す
-
-@fig-ahl418c-two の設定（$\mu_0 = 100$、$\sigma = 15$、$n = 25$、片側 $5\%$）でやってみます。
-
-standard error は $\dfrac{15}{\sqrt{25}} = 3$ なので
-
-$$
-\bar{x}_{\text{crit}} = 100 + 1.645 \times 3 = 104.9346\ldots \approx 104.9
-$$
-
-本当の平均が $106$ なら、$\bar{X} \sim N(106,\ 3^2)$ です。critical region の外は $\bar{x} < 104.9346\ldots$ なので
-
-$$
-\beta = P(\bar{X} < 104.9346 \mid \mu = 106) = 0.361
-$$
-
-**丸めた $104.9$ ではなく、丸める前の値を使ってください。** $104.9$ で計算すると $0.357$ になり、$3$ 桁目がずれます。
-
-**standard error は変わりません。** 変わるのは**中心だけ**です。
-
-### 6. binomial・Poisson での計算 {#discrete}
-
-離散でも、やることは同じです。**$2$ つの分布を使い分けます。**
-
-![The same picture for a discrete distribution](img/ahl-4-18c-discrete.svg){#fig-ahl418c-discrete width=58%}
-
-@fig-ahl418c-discrete は $B(20,\ 0.5)$ と $B(20,\ 0.8)$ です。critical region は**どちらも $X \geq 15$** で同じです。
-
-| | 分布 | 範囲 | 確率 |
-|---|---|---|---|
-| $\alpha$ | $B(20,\ 0.5)$（$H_0$） | $X \geq 15$ | $0.0207$ |
-| $\beta$ | $B(20,\ 0.8)$（本当の値） | $X \leq 14$ | $0.196$ |
-
-: 離散での $2$ つの誤り {#tbl-ahl418c-disc}
-
-::: {.callout-warning}
-## 境目の扱いを間違えないでください
-critical region が $X \geq 15$ なら、その**外は $X \leq 14$** です。$X < 15$ と書いても同じですが、電卓に入れるのは $0$ から $14$ です。
-
-$X \leq 15$ としてしまうと、**$15$ を二重に数えます**（[AHL 4.18b](ahl-4-18b.qmd#include)）。
-:::
-
-### 7. 検定のあとは、どちらか一方しか起こりえません {#after}
-
-**確率を計算するのは、標本をとる前**です。$\alpha$ も $\beta$ も「これから何が起きるか」の確率だからです。
-
-**では、標本をとって結論を出したあとは？**
-
-そのときには、**起こりえた誤りは片方だけ**に決まります。
-
-| 出した結論 | 起こりえた誤り | 起こりえない誤り |
-|---|---|---|
-| $H_0$ を **reject した** | **Type I** | Type II |
-| $H_0$ を **reject しなかった** | **Type II** | Type I |
-
-: 結論を出したあとに起こりえる誤り {#tbl-ahl418c-after}
-
-理由は、定義を読めば分かります。**Type I は「reject してしまう」誤り**なので、reject しなかったのなら起こりようがありません。**Type II は「reject しない」誤り**なので、reject したのなら起こりようがありません。
-
-::: {.callout-important}
-## `State which error could have occurred` は、よく出ます
-$$
-\text{reject した} \ \longrightarrow \ \text{Type I} \qquad
-\text{reject しなかった} \ \longrightarrow \ \text{Type II}
-$$
-
-**「どちらが起こりえたか」と「どちらが起こりえないか」**の両方の聞き方があります。落ち着いて、**自分がどちらの結論を出したか**を先に確かめてください。
-
-なお、**どちらの場合も「誤りが起きた」とは限りません。** 正しい判断だった可能性のほうが高いのがふつうです。聞かれているのは「**起こりえたのはどちらか**」です。
-:::
-
-::: {.callout-warning}
-## 結論を出したあとに、$\beta$ を計算させる問題は出ません
-$\beta$ は「本当の値」が分からないと計算できません（[第3節](#typeII)）。標本をとったあとでも、本当の値は分からないままです。
-
-問題文が本当の値を教えてくれるのは、**「もし本当は $\mu = 106$ だったら」という仮の話**をしているときだけです。
-
-`Find the probability of a Type II error` と書いてあったら、**問題文のどこかに必ず具体的な値があります。** 見つからなければ、読み落としています。
-:::
-
-### 8. $\alpha$ を小さくすると、$\beta$ は大きくなります {#tradeoff}
-
-**$2$ つを同時に小さくすることはできません**（標本の大きさを変えなければ）。
-
-![The trade-off between $\alpha$ and $\beta$](img/ahl-4-18c-tradeoff.svg){#fig-ahl418c-tradeoff width=48%}
-
-@fig-ahl418c-tradeoff の $3$ 枚は、**同じ $2$ 本の曲線**です。動いているのは境目だけです。
-
-| significance level | critical value | $\alpha$ | $\beta$ |
-|---|---|---|---|
-| $10\%$ | $103.8$ | $0.10$ | $0.236$ |
-| $5\%$ | $104.9$ | $0.05$ | $0.361$ |
-| $1\%$ | $107.0$ | $0.01$ | $0.628$ |
-
-: $\alpha$ を下げると $\beta$ が上がる {#tbl-ahl418c-tradeoff}
-
-$\alpha$ を小さくするには、境目を**外へ**動かします。すると赤い部分は小さくなりますが、**青い部分が大きくなります。**
-
-::: {.callout-tip}
-## どちらの誤りが困るかは、場面で決まります
-数学だけでは決められません。**何を守りたいか**によります。
-
-| 場面 | 重い誤り | なぜ |
-|---|---|---|
-| 新しい薬に副作用があるかの検査 | **Type II**（見逃す） | 危険な薬を売ってしまう |
-| 医療機器の異常を知らせる警報 | **Type II**（見逃す） | 患者が危険にさらされる |
-| 有罪かどうかの裁判 | **Type I**（冤罪） | 無実の人を罰する |
-| 工場で製品を全部作り直すかの判断 | **Type I** | 問題ないのに大きな費用がかかる |
-
-: どちらが重いか {#tbl-ahl418c-which-worse}
-
-`Comment on which type of error is more serious` と問われたら、**場面のことばで理由を書いてください。** 「Type I のほうが重い」だけでは点になりません。
-:::
-
-::: {.callout-note appearance="simple"}
-$2$ つとも**前より**小さくできる方法が、$1$ つだけあります。**標本を大きくすること**です。
-
-$n$ が大きくなると standard error $\dfrac{\sigma}{\sqrt{n}}$ が小さくなり、$2$ 本の曲線が細くなります。**中心は動きませんが、細くなるぶん重なりが減ります。**
-
-有意水準をそのままにすれば $\beta$ だけが小さくなり、そのぶん有意水準も下げられるので、結果として $\alpha$ と $\beta$ の両方を前より小さくできます。
-:::
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-### なぜ $\beta$ には「本当の値」が要るのか {#why}
-
-$H_0$ は $\mu = 100$ のように、**$1$ つの数**を指定します。ですから「$H_0$ が正しいときの分布」は $1$ つに決まります。$\alpha$ が計算できるのは、そのおかげです。
-
-$H_1$ は $\mu > 100$ のように、**範囲**を指定します。$100.1$ も $200$ も、どちらも $H_1$ に含まれます。
-
-**「$H_1$ が正しいときの分布」は、$1$ つに決まりません。** ですから $\beta$ も $1$ つに決まりません。
-
-$$
-\mu = 101 \ \text{なら} \ \beta = 0.905, \qquad
-\mu = 110 \ \text{なら} \ \beta = 0.0457
-$$
-
-（@fig-ahl418c-two の設定です。）
-
-**本当の平均が $H_0$ から遠いほど、見逃しにくくなります。** これは感覚とも合っています。「$1$ g の差」より「$10$ g の差」のほうが気づきやすい、ということです。
-
-だから問題文は、必ず**特定の値**を指定します。それがないと $\beta$ という数が存在しません。
-
-:::
-
-## Worked examples
-
-::: {#exm-ahl418c-binom}
-[A coin is tested for bias towards heads. It is tossed $20$ times, and $X$ is the number of heads. The test is carried out at the $5\%$ significance level.]{.q-en}
-
-**(a)** [Find the critical region for $X$.]{.q-en}
-
-**(b)** [Find the probability of a Type I error.]{.q-en}
-
-**(c)** [Find the probability of a Type II error if the true probability of a head is $0.8$.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-あるコインが表に偏っているかを検定します。$20$ 回投げ、$X$ を表の出た回数とします。有意水準 $5\%$ で検定します。
-
-`bias towards heads` は「表への偏り」という意味です。
-
-**(a)** $X$ の critical region を求めなさい。
-
-**(b)** Type I error の確率を求めなさい。
-
-**(c)** 表の出る本当の確率が $0.8$ のとき、Type II error の確率を求めなさい。
-
-</details>
-
----
-
-**(a)** $H_0$: $p = 0.5$、$H_1$: $p > 0.5$。$H_0$ のもとで $X \sim B(20,\ 0.5)$ です。
-
-$P(X \geq k) \leq 0.05$ となる最小の $k$ を探します（[AHL 4.18a](ahl-4-18a.qmd#discrete)）。
-
-| $k$ | $P(X \geq k)$ | $0.05$ 以下か |
-|---|---|---|
-| $14$ | $0.0577$ | いいえ |
-| $15$ | $\mathbf{0.0207}$ | **はい** |
-
-: critical region を探す {#tbl-ahl418c-search}
-
-critical region は $X \geq 15$ です。
-
-**(b)** Type I error は「$H_0$ が正しいのに reject」です。**$H_0$ の分布 $B(20,\ 0.5)$ で**、critical region に入る確率です。
-
-$$
-P(\text{Type I}) = P(X \geq 15 \mid p = 0.5) = 0.0207
-$$
-
-**(a) で出した値が、そのまま答えです。**
-
-**(c)** 本当の $p$ が $0.8$ なら、$X \sim B(20,\ 0.8)$ に**作り直します。**
-
-Type II error は「reject しない」ことなので、critical region の**外**です。$X \geq 15$ の外は $X \leq 14$ です。
-
-```
-Binomial Cdf:   n: 20   p: 0.8   Lower Bound: 0   Upper Bound: 14
-```
-
-$$
-\beta = P(X \leq 14 \mid p = 0.8) = 0.196
-$$
-
-**検算。** $0.0207$ と $0.196$ を足しても、$1$ にはなりません ✓ **なってはいけません**（[第4節](#not-complement)）。
-
-::: {.callout-warning}
-## (b) と (c) で、$p$ が違います
-**(b) は $p = 0.5$、(c) は $p = 0.8$** です。電卓に入れる `Prob Success` が変わります。
-
-ここを変え忘れるのが、この項目でいちばん多いミスです。**「どちらの世界の話か」を、毎回声に出して確かめてください。**
-:::
-
-::: {.callout-note}
-## 解答例（答案用紙にはこう書く）
-**(a)** *$H_0: p = 0.5$, $H_1: p > 0.5$. Under $H_0$, $X \sim B(20,\ 0.5)$.*
-$$
-P(X \geq 14) = 0.0577 > 0.05, \qquad P(X \geq 15) = 0.0207 < 0.05
-$$
-*Critical region: $X \geq 15$.*
-
-**(b)**
-$$
-P(\text{Type I}) = P(X \geq 15 \mid p = 0.5) = 0.0207
-$$
-
-**(c)** *If $p = 0.8$, then $X \sim B(20,\ 0.8)$.*
-$$
-P(\text{Type II}) = P(X \leq 14 \mid p = 0.8) = 0.196
-$$
-:::
-:::
-
-::: {#exm-ahl418c-pois}
-[The number of accidents at a road junction follows a Poisson distribution with a mean of $3$ per month. After a change to the traffic lights, the council tests whether the mean has increased, using the number of accidents in one month and a $5\%$ significance level.]{.q-en}
-
-**(a)** [Show that the critical region is $X \geq 7$.]{.q-en}
-
-**(b)** [Find the probability of a Type I error.]{.q-en}
-
-**(c)** [Find the probability of a Type II error if the true mean is $5$ per month.]{.q-en}
-
-**(d)** [Explain what a Type II error would mean in this context.]{.q-en}
-
-<details class="jp-trans">
-<summary>日本語訳</summary>
-
-ある交差点の事故の件数は、$1$ か月あたり平均 $3$ 件のポアソン分布にしたがいます。信号を変えたあと、自治体は平均が増えたかどうかを、$1$ か月の事故件数と有意水準 $5\%$ を使って検定します。
-
-`junction` は「交差点」、`traffic lights` は「信号」、`council` は「自治体」という意味です。
-
-**(a)** critical region が $X \geq 7$ であることを示しなさい。
-
-**(b)** Type I error の確率を求めなさい。
-
-**(c)** 本当の平均が $1$ か月あたり $5$ 件のとき、Type II error の確率を求めなさい。
-
-**(d)** この場面で Type II error が何を意味するかを説明しなさい。
-
-</details>
-
----
-
-**(a)** $H_0$: $m = 3$、$H_1$: $m > 3$。$H_0$ のもとで $X \sim \mathrm{Po}(3)$ です。
-
-| $k$ | $P(X \geq k)$ | $0.05$ 以下か |
-|---|---|---|
-| $6$ | $0.0839$ | いいえ |
-| $7$ | $\mathbf{0.0335}$ | **はい** |
-
-: Poisson の critical region {#tbl-ahl418c-pois-search}
-
-$k = 6$ では超えてしまい、$k = 7$ で初めて $0.05$ 以下になります。critical region は $X \geq 7$ です。
-
-**(b)**
-
-$$
-P(\text{Type I}) = P(X \geq 7 \mid m = 3) = 0.0335
-$$
-
-**(c)** 本当の平均が $5$ なら $X \sim \mathrm{Po}(5)$ です。critical region の外は $X \leq 6$。
-
-```
-Poisson Cdf:   λ: 5   Lower Bound: 0   Upper Bound: 6
-```
-
-$$
-\beta = P(X \leq 6 \mid m = 5) = 0.762
-$$
-
-**(d)**
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*A Type II error would mean that the mean number of accidents has actually increased after the change to the traffic lights, but the council fails to detect this and concludes that there is no evidence of an increase. The dangerous junction would then be left unchanged.*
-:::
-
-（Type II error は、信号を変えたあとで事故の平均件数が実際には増えているのに、自治体がそれに気づかず、増加の証拠はないと結論してしまうことを意味する。その場合、危険な交差点はそのまま放置される、という意味です。）
-
-::: {.callout-warning}
-## $\beta = 0.762$ は、とても大きい値です
-本当は事故が増えているのに、**$76\%$ の確率で気づけません。**
-
-理由は、**$1$ か月ぶんしか見ていないから**です。$\mathrm{Po}(3)$ と $\mathrm{Po}(5)$ は形が近く、$1$ 回の観測では見分けがつきにくいのです。
-
-$3$ か月ぶんを見れば $m_0 = 9$、$m_1 = 15$ になり、はるかに見分けやすくなります（[AHL 4.17](ahl-4-17.qmd#scaling)）。
-
-**「$\beta$ が大きい」は、計算ミスではなく、その検定の弱さを表しています。**
-:::
-
-::: {.callout-note}
-## 解答例（答案用紙にはこう書く）
-**(a)** *Under $H_0$, $X \sim \mathrm{Po}(3)$.*
-$$
-P(X \geq 6) = 0.0839 > 0.05, \qquad P(X \geq 7) = 0.0335 < 0.05
-$$
-*So the critical region is $X \geq 7$.*
-
-**(b)**
-$$
-P(\text{Type I}) = P(X \geq 7 \mid m = 3) = 0.0335
-$$
-
-**(c)** *If $m = 5$, then $X \sim \mathrm{Po}(5)$.*
-$$
-P(\text{Type II}) = P(X \leq 6 \mid m = 5) = 0.762
-$$
-
-**(d)** *A Type II error means the mean number of accidents has really increased but the test does not detect it, so the council wrongly concludes there is no evidence of an increase and leaves the junction unchanged.*
-:::
-:::
+**critical value は、丸める前の値を使ってください。** $104.9346\ldots$ を $104.9$ に丸めて計算すると、$\beta$ が $0.361$ ではなく $0.357$ になります（[AHL 4.18a](ahl-4-18a.qmd#rounding)）。
 
 ::: {#exm-ahl418c-normal}
 [The mass of a bag of sugar is normally distributed with standard deviation $\sigma = 15$ grams. The stated mean is $100$ grams. A consumer group suspects the mean is greater than $100$ grams and tests, at the $5\%$ significance level, using a random sample of $25$ bags.]{.q-en}
@@ -615,7 +163,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)** standard error は
 
@@ -629,7 +178,7 @@ $$
 \bar{x}_{\text{crit}} = 100 + 1.645 \times 3 = 104.9346\ldots \approx 104.9
 $$
 
-**(b)** 正規分布は連続なので、critical region の面積は**ちょうど** $\alpha$ です。
+**(b)** **normal distribution**（正規分布）は連続なので、critical region の面積は**ちょうど** $\alpha$ です。
 
 $$
 P(\text{Type I}) = 0.05
@@ -637,9 +186,12 @@ $$
 
 計算は要りません。
 
-**(c)** 本当の平均が $106$ なら $\bar{X} \sim N(106,\ 3^2)$ です。**standard error は $3$ のまま、中心だけが動きます。**
+**(c)** 手順どおりに進めます。
 
-critical region の外は $\bar{x} < 104.9346\ldots$ です。**丸める前の値**を入れます。
+1. **棄却域を確認する** … $\bar{x} \geq 104.9346\ldots$（(a) の**丸める前**の値）
+2. **使用する分布を書く** … 本当の平均が $106$ なので $\bar{X} \sim N(106,\ 3^2)$。**standard error は $3$ のまま、中心だけが動きます。**
+3. **求める確率を書く** … 棄却域の外なので $P(\bar{X} < 104.9346\ldots)$
+4. **計算する**
 
 ```
 Normal Cdf:   Lower Bound: -∞   Upper Bound: 104.9346
@@ -663,19 +215,18 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Lowering the significance level from $5\%$ to $1\%$ moves the critical value further from $100$, which makes the critical region smaller. The probability of a Type I error falls from $0.05$ to $0.01$, but the probability of a Type II error rises from $0.361$ to $0.628$. With the same sample size, reducing one type of error increases the other.*
+*Lowering the significance level from $5\%$ to $1\%$ moves the critical value further from $100$, which makes the critical region smaller.*
+
+*The probability of a Type I error falls from $0.05$ to $0.01$, but the probability of a Type II error rises from $0.361$ to $0.628$.*
+
+*With the same sample size, reducing one type of error increases the other.*
 :::
 
 （有意水準を $5\%$ から $1\%$ に下げると critical value が $100$ からさらに離れ、critical region が小さくなる。Type I error の確率は $0.05$ から $0.01$ に下がるが、Type II error の確率は $0.361$ から $0.628$ に上がる。標本の大きさが同じなら、一方の誤りを減らすともう一方が増える、という意味です。）
 
 **検算。** $\beta$ が $0.361$ から $0.628$ へ**増えました** ✓ @tbl-ahl418c-tradeoff と同じ向きです。
 
-::: {.callout-warning}
-## (c) と (d) で、$\mu$ は同じ $106$ です
-変えたのは**有意水準**だけで、本当の平均は $106$ のままです。
-
-$\bar{X} \sim N(106,\ 3^2)$ という分布は (c) と (d) で同じで、**比べる境目だけが $104.9$ から $107.0$ に動きます。**
-:::
+**(c) と (d) で、$\mu$ は同じ $106$ です。** 変えたのは有意水準だけなので、$\bar{X} \sim N(106,\ 3^2)$ は同じまま、**比べる境目だけが $104.9$ から $107.0$ に動きます。**
 
 ::: {.callout-note}
 ## 解答例（答案用紙にはこう書く）
@@ -705,41 +256,217 @@ $$
 *Lowering $\alpha$ from $0.05$ to $0.01$ raises $\beta$ from $0.361$ to $0.628$: with the same sample size, reducing one type of error increases the other.*
 :::
 :::
+:::
+
+### 5. Binomial and Poisson distributions（二項分布とポアソン分布） {#discrete}
+
+離散分布でも、やることは[第1節](#idea)のコインの例と同じです。$H_0$ の分布で棄却域の中、本当の値の分布で棄却域の外を求めます。なお、二項分布とポアソン分布の検定は、片側検定だけが出ます。
+
+**境目の扱いに気をつけてください。** 棄却域が $X \geq 15$ なら、その外は $X \leq 14$ です。電卓には $0$ から $14$ を入れます。$X \leq 15$ とすると、$15$ を二重に数えます（[AHL 4.18b](ahl-4-18b.qmd#include)）。
+
+::: {#exm-ahl418c-pois}
+[The number of accidents at a road junction follows a Poisson distribution with a mean of $3$ per month. After a change to the traffic lights, the council tests whether the mean has increased, using the number of accidents in one month and a $5\%$ significance level.]{.q-en}
+
+**(a)** [Show that the critical region is $X \geq 7$.]{.q-en}
+
+**(b)** [Find the probability of a Type I error.]{.q-en}
+
+**(c)** [Find the probability of a Type II error if the true mean is $5$ per month.]{.q-en}
+
+**(d)** [Explain what a Type II error would mean in this context.]{.q-en}
+
+<details class="jp-trans">
+<summary>日本語訳</summary>
+
+ある交差点の事故の件数は、$1$ か月あたり平均 $3$ 件のポアソン分布にしたがいます。信号を変えたあと、自治体は平均が増えたかどうかを、$1$ か月の事故件数と有意水準 $5\%$ を使って検定します。
+
+`junction` は「交差点」、`traffic lights` は「信号」、`council` は「自治体」という意味です。
+
+**(a)** critical region が $X \geq 7$ であることを示しなさい。
+
+**(b)** Type I error の確率を求めなさい。
+
+**(c)** 本当の平均が $1$ か月あたり $5$ 件のとき、Type II error の確率を求めなさい。
+
+**(d)** この場面で Type II error が何を意味するかを説明しなさい。
+
+</details>
+
+::: {.callout-tip collapse="true"}
+## 解説と解答例
+
+**(a)** $H_0$: $m = 3$、$H_1$: $m > 3$。$H_0$ のもとで $X \sim \mathrm{Po}(3)$ です。
+
+| $k$ | $P(X \geq k)$ | $0.05$ 以下か |
+|---|---|---|
+| $6$ | $0.0839$ | いいえ |
+| $7$ | $\mathbf{0.0335}$ | **はい** |
+
+: Poisson の critical region {#tbl-ahl418c-pois-search}
+
+$k = 6$ では超えてしまい、$k = 7$ で初めて $0.05$ 以下になります。critical region は $X \geq 7$ です。
+
+**(b)**
+
+$$
+P(\text{Type I}) = P(X \geq 7 \mid m = 3) = 0.0335
+$$
+
+**(c)** 手順どおりに進めます。
+
+1. **棄却域を確認する** … $X \geq 7$
+2. **使用する分布を書く** … 本当の平均が $5$ なので $X \sim \mathrm{Po}(5)$
+3. **求める確率を書く** … 棄却域の外なので $P(X \leq 6)$
+4. **計算する**
+
+```
+Poisson Cdf:   λ: 5   Lower Bound: 0   Upper Bound: 6
+```
+
+$$
+\beta = P(X \leq 6 \mid m = 5) = 0.762
+$$
+
+**(d)**
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*A Type II error would mean that the mean number of accidents has actually increased after the change to the traffic lights, but the council fails to detect this and concludes that there is no evidence of an increase.*
+
+*The dangerous junction would then be left unchanged.*
+:::
+
+（Type II error は、信号を変えたあとで事故の平均件数が実際には増えているのに、自治体がそれに気づかず、増加の証拠はないと結論してしまうことを意味する。その場合、危険な交差点はそのまま放置される、という意味です。）
+
+**$\beta = 0.762$ は、とても大きい値です。** 本当は事故が増えているのに、$76\%$ の確率で気づけません。$1$ か月ぶんしか見ていないので、$\mathrm{Po}(3)$ と $\mathrm{Po}(5)$ の見分けがつきにくいからです。$3$ か月ぶんを見れば $m_0 = 9$、$m_1 = 15$ になり、はるかに見分けやすくなります（[AHL 4.17](ahl-4-17.qmd#scaling)）。
+
+::: {.callout-note}
+## 解答例（答案用紙にはこう書く）
+**(a)** *Under $H_0$, $X \sim \mathrm{Po}(3)$.*
+$$
+P(X \geq 6) = 0.0839 > 0.05, \qquad P(X \geq 7) = 0.0335 < 0.05
+$$
+*So the critical region is $X \geq 7$.*
+
+**(b)**
+$$
+P(\text{Type I}) = P(X \geq 7 \mid m = 3) = 0.0335
+$$
+
+**(c)** *If $m = 5$, then $X \sim \mathrm{Po}(5)$.*
+$$
+P(\text{Type II}) = P(X \leq 6 \mid m = 5) = 0.762
+$$
+
+**(d)** *A Type II error means the mean number of accidents has really increased but the test does not detect it, so the council wrongly concludes there is no evidence of an increase and leaves the junction unchanged.*
+:::
+:::
+:::
+
+### 6. Errors after a test（検定のあとに起こりえた誤り） {#after}
+
+$\alpha$ も $\beta$ も、**標本をとる前**の確率です。結論を出したあとは、起こりえた誤りは片方だけに決まります。
+
+| 検定の結論 | 起こりえた誤り |
+|---|---|
+| $H_0$ を棄却した | **Type I** |
+| $H_0$ を棄却しなかった | **Type II** |
+
+: 結論を出したあとに起こりえた誤り {#tbl-ahl418c-after}
+
+**Type I は「reject してしまう」誤り**なので、reject しなかったのなら起こりようがありません。**Type II は「reject しない」誤り**なので、reject したのなら起こりようがありません。`State which error could have occurred` と問われたら、**自分がどちらの結論を出したか**を先に確かめてください。
+
+なお、$\alpha$ や $\beta$ は、**今回出した結論が間違っている確率ではありません。** 同じ方法をくり返し使ったときに、どれくらいまちがえるかを表す値です。
+
+### 7. The trade-off between $\alpha$ and $\beta$（$\alpha$ と $\beta$ の関係） {#tradeoff}
+
+**標本の大きさが同じなら、$2$ つを同時に小さくすることはできません。**
+
+![$\alpha$ を小さくすると、$\beta$ が大きくなります。](img/ahl-4-18c-tradeoff.svg){#fig-ahl418c-tradeoff width=95%}
+
+@fig-ahl418c-tradeoff の $3$ 枚は、**同じ $2$ 本の曲線**です。動いているのは境目だけです。
+
+| significance level | critical value | $\alpha$ | $\beta$ |
+|---|---|---|---|
+| $10\%$ | $103.8$ | $0.10$ | $0.236$ |
+| $5\%$ | $104.9$ | $0.05$ | $0.361$ |
+| $1\%$ | $107.0$ | $0.01$ | $0.628$ |
+
+: $\alpha$ を下げると $\beta$ が上がる {#tbl-ahl418c-tradeoff}
+
+$\alpha$ を小さくするには、境目を**外へ**動かします。すると赤い部分は小さくなりますが、**青い部分が大きくなります。** 同じ条件で棄却域を狭めると、**誤って棄却しにくくなる一方で、本当の違いを見逃しやすくなる**ということです。
+
+**両方を小さくする代表的な方法は、標本を大きくすることです。** $n$ が大きくなると standard error $\dfrac{\sigma}{\sqrt{n}}$ が小さくなり、$2$ 本の曲線が細くなります。中心は動きませんが、細くなるぶん重なりが減るので、有意水準をそのままにすれば $\beta$ が小さくなります。
+
+どちらの誤りが困るかは、場面で決まります。数学だけでは決められません。
+
+| 場面 | 重い誤り | なぜ |
+|---|---|---|
+| 新しい薬に副作用があるかの検査 | **Type II**（見逃す） | 危険な薬を売ってしまう |
+| 医療機器の異常を知らせる警報 | **Type II**（見逃す） | 患者が危険にさらされる |
+| 有罪かどうかの裁判 | **Type I**（冤罪） | 無実の人を罰する |
+| 工場で製品を全部作り直すかの判断 | **Type I** | 問題ないのに大きな費用がかかる |
+
+: どちらが重いか {#tbl-ahl418c-which-worse}
+
+`Comment on which type of error is more serious` と問われたら、**場面のことばで理由を書いてください。** 「Type I のほうが重い」だけでは点になりません。
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+#### なぜ $\beta$ には「本当の値」が要るのか {#why}
+
+$H_0$ は $\mu = 100$ のように、**$1$ つの数**を指定します。ですから「$H_0$ が正しいときの分布」は $1$ つに決まります。$\alpha$ が計算できるのは、そのおかげです。
+
+$H_1$ は $\mu > 100$ のように、**範囲**を指定します。$100.1$ も $200$ も、どちらも $H_1$ に含まれます。
+
+**「$H_1$ が正しいときの分布」は、$1$ つに決まりません。** ですから $\beta$ も $1$ つに決まりません。
+
+@fig-ahl418c-two の設定では、$\mu = 101$ なら $\beta = 0.905$、$\mu = 110$ なら $\beta = 0.0457$ です。
+
+**本当の平均が $H_0$ から遠いほど、見逃しにくくなります。** これは感覚とも合っています。「$1$ g の差」より「$10$ g の差」のほうが気づきやすい、ということです。
+
+だから問題文は、必ず**特定の値**を指定します。それがないと $\beta$ という数が存在しません。
+
+:::
 
 ## Common errors
 
 ::: {.callout-warning}
 ## $\beta = 1 - \alpha$ としてしまう
-$2$ つは**別の分布**の上にあります（[第4節](#not-complement)）。足して $1$ にはなりません。
+$2$ つは**別の分布**の上にあります（[第3節](#not-complement)）。足して $1$ にはなりません。
 :::
 
 ::: {.callout-warning}
 ## $\beta$ の計算で、$H_0$ の値のまま電卓に入れる
 $\beta$ を出すときは、**本当の値**に入れ替えます（[第3節](#typeII)）。
 
-@exm-ahl418c-binom なら、`Prob Success` を $0.5$ から $0.8$ に変えます。
+[第1節](#idea) のコインの例なら、`Prob Success` を $0.5$ から $0.8$ に変えます。
 :::
 
 ::: {.callout-warning}
 ## 離散分布で $P(\text{Type I}) = 0.05$ と書く
 離散では $\alpha$ ちょうどになりません（[第2節](#typeI)）。**計算してください。**
 
-@exm-ahl418c-binom では $0.0207$、@exm-ahl418c-pois では $0.0335$ です。
+[第1節](#idea) のコインの例では $0.0207$、@exm-ahl418c-pois では $0.0335$ です。
 :::
 
 ::: {.callout-warning}
 ## critical region の外の範囲を、$1$ つずらす
-$X \geq 15$ の外は $X \leq 14$ です。$X \leq 15$ ではありません（[第6節](#discrete)）。
+$X \geq 15$ の外は $X \leq 14$ です。$X \leq 15$ ではありません（[第5節](#discrete)）。
 :::
 
 ::: {.callout-warning}
 ## $\beta$ の計算で standard error を変えてしまう
-正規分布では、本当の平均に変えても $\dfrac{\sigma}{\sqrt{n}}$ は**そのまま**です（[第5節](#normal)）。動くのは中心だけです。
+正規分布では、本当の平均に変えても $\dfrac{\sigma}{\sqrt{n}}$ は**そのまま**です（[第4節](#normal)）。動くのは中心だけです。
 :::
 
 ::: {.callout-warning}
 ## $\alpha$ を下げれば $\beta$ も下がると考える
-逆です。**$\alpha$ を下げると $\beta$ は上がります**（[第8節](#tradeoff)）。
+逆です。**$\alpha$ を下げると $\beta$ は上がります**（[第7節](#tradeoff)）。
 :::
 
 ::: {.callout-warning}
@@ -751,22 +478,22 @@ $X \geq 15$ の外は $X \leq 14$ です。$X \leq 15$ ではありません（[
 
 ::: {.callout-warning}
 ## どちらが重いかを、場面のことばで書かない
-`Type I is more serious` だけでは点になりません。**「その場面で何が起きるか」**を書いてください（[第8節](#tradeoff)）。
+`Type I is more serious` だけでは点になりません。**「その場面で何が起きるか」**を書いてください（[第7節](#tradeoff)）。
 :::
 
 ::: {.callout-warning}
 ## 検定のあとで、両方の誤りが起こりえたと書く
-$H_0$ を棄却したなら Type I、棄却しなかったなら Type II——**起こりえるのは片方だけ**です（[第7節](#after)）。
+$H_0$ を棄却したなら Type I、棄却しなかったなら Type II——**起こりえるのは片方だけ**です（[第6節](#after)）。
 :::
 
 ::: {.callout-warning}
 ## $\beta$ を求めるのに、本当の値を問題文から探さない
-$\beta$ は本当の値がないと計算できません（[第3節](#typeII)）。`Find the probability of a Type II error` とあれば、**問題文のどこかに必ず具体的な値があります。**
+$\beta$ は本当の値がないと計算できません（[第3節](#typeII)）。`Find the probability of a Type II error` とあれば、**問題文に具体的な値が与えられているはずです。** それが無いと、$\beta$ は数値では求まりません。
 :::
 
 ::: {.callout-warning}
 ## $t$ 検定で Type II error を計算しようとする
-シラバスは `Applied to normal with known variance, Poisson and binomial distributions` と限っています。**$t$ には適用しません。**
+Type II error の確率を計算するのは、正規分布（分散が分かっているとき）・ポアソン分布・二項分布だけです（[第4節](#normal)）。**$t$ 検定では計算しません。**
 :::
 
 ## Using your GDC (TI-Nspire CX II)
@@ -775,11 +502,11 @@ $\beta$ は本当の値がないと計算できません（[第3節](#typeII)）
 **新しいコマンドはありません。** [AHL 4.18a](ahl-4-18a.qmd#gdc-inv) と [AHL 4.18b](ahl-4-18b.qmd#gdc-z) で使ったものを、**分布の数字だけ入れ替えて**もう一度使います。
 :::
 
-### 離散分布のとき {#gdc-discrete}
+### Discrete distributions（離散分布のとき） {#gdc-discrete}
 
 **$2$ 回、`Cdf` を使います。**
 
-@exm-ahl418c-binom を例にすると、critical region は $X \geq 15$ です。
+[第1節](#idea) のコインの例なら、critical region は $X \geq 15$ です。
 
 ```
 ① Type I:    Binomial Cdf   n: 20   p: 0.5   Lower: 15   Upper: 20
@@ -796,13 +523,13 @@ $\beta$ は本当の値がないと計算できません（[第3節](#typeII)）
 : 離散での入力 {#tbl-ahl418c-gdc-disc}
 
 ::: {.callout-tip}
-## `Upper` を $1$ 引くところが要です
+## `Upper` を $1$ 引くところがポイントです
 critical region が $X \geq 15$ なら、その外は $X \leq 14$。**`Upper Bound` は $14$** です。
 
 $15$ と入れると、critical region の $1$ 本ぶんを二重に数えます。
 :::
 
-### 正規分布のとき {#gdc-normal}
+### Normal distributions（正規分布のとき） {#gdc-normal}
 
 `Normal Cdf` を使います（[SL 4.9](../../ai-sl/04-statistics-and-probability/sl-4-9.qmd)）。
 
@@ -836,12 +563,6 @@ $15$ を入れると $\beta = 0.472$ となり、答えが変わってしまい�
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -889,9 +610,9 @@ Binomial Cdf:   n: 25   p: 0.4   Lower: 15   Upper: 25
 Binomial Cdf:   n: 25   p: 0.6   Lower: 0   Upper: 14
 ```
 
-**検算。** $0.0344$ と $0.414$ を足しても $1$ になりません ✓ **なってはいけません**（[第4節](#not-complement)）。
+**検算。** $0.0344$ と $0.414$ を足しても $1$ になりません ✓ **なってはいけません**（[第3節](#not-complement)）。
 
-この critical region は [AHL 4.18a](ahl-4-18a.qmd) の例題3 と同じものです。
+この critical region は [AHL 4.18a の例題3](ahl-4-18a.qmd#exm-ahl418a-binom) と同じものです。
 :::
 
 ::: {.ex-sep}
@@ -1006,7 +727,7 @@ $3$ 桁で $51.6$ です。
 
 **(b)** 正規分布は連続なので、**ちょうど $0.05$** です（[第2節](#typeI)）。計算しません。
 
-**(c)** 中心を $52$ に動かします。**standard error は $1$ のまま**です（[第5節](#normal)）。
+**(c)** 中心を $52$ に動かします。**standard error は $1$ のまま**です（[第4節](#normal)）。
 
 ```
 Normal Cdf:   Lower: -∞   Upper: 51.6449   μ: 52   σ: 1
@@ -1022,7 +743,7 @@ $$
 
 **同じ有意水準なら**、$\beta$ を決めるのは**「本当の値が $\mu_0$ から standard error 何個ぶん離れているか」**だけです。実際の単位や $n$ ではありません。
 
-有意水準が変われば、同じ距離でも $\beta$ は変わります（[第8節](#tradeoff)）。
+有意水準が変われば、同じ距離でも $\beta$ は変わります（[第7節](#tradeoff)）。
 :::
 
 **検算。** 丸めた $51.6$ ではなく $51.6449$ で計算しました。丸めた $51.6$ を使うと $0.345$ になり、$2$ 桁目からずれます ✓ **$\beta$ の計算では、丸める前の critical value を使ってください。**
@@ -1073,7 +794,9 @@ $$
 **(d)**
 
 ::: {.model-answer}
-*A Type II error could have occurred, because $H_0$ was not rejected and a Type II error is failing to reject a false $H_0$. A Type I error could not have occurred, because that requires $H_0$ to be rejected.*
+*A Type II error could have occurred, because $H_0$ was not rejected and a Type II error is failing to reject a false $H_0$.*
+
+*A Type I error could not have occurred, because that requires $H_0$ to be rejected.*
 :::
 
 （Type II error が起こりえた。$H_0$ が棄却されておらず、Type II error は誤った $H_0$ を棄却しないことだからである。Type I error は起こりえない。それには $H_0$ が棄却されている必要があるからである、という意味です。）
@@ -1091,13 +814,13 @@ $$
 
 **(c)** 満たしていない（$H_0$ は正しくない）ので不合格（reject）→ **正しい判断**
 
-**(d)** **結論を出したあとの問い**です（[第7節](#after)）。
+**(d)** **結論を出したあとの問い**です（[第6節](#after)）。
 
 $H_0$ を棄却しなかったのだから、**「棄却してしまう」誤り（Type I）は起こりようがありません。**
 
 残るのは Type II だけです。@tbl-ahl418c-after を見てください。
 
-**「起こりえた」であって、「起きた」ではありません。** 正しい判断だった可能性のほうが高いのがふつうです。
+**「起こりえた」であって、「起きた」ではありません。** 聞かれているのは、起こりえたのはどちらか、です。
 
 ::: {.callout-warning}
 ## 「不合格」が reject に対応します
@@ -1132,7 +855,13 @@ $H_0$ を棄却しなかったのだから、**「棄却してしまう」誤り
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 ::: {.model-answer}
-*The two probabilities are calculated under different distributions, so they do not add to $1$. $P(\text{Type I})$ is found assuming $H_0$ is true, while $P(\text{Type II})$ is found assuming a specific alternative value is true. A Type II error cannot even occur when $H_0$ is true. In addition, $P(\text{Type II})$ cannot be found at all until a particular alternative value is given, so it is not determined by the significance level.*
+*The two probabilities are calculated under different distributions, so they do not add to $1$.*
+
+*$P(\text{Type I})$ is found assuming $H_0$ is true, while $P(\text{Type II})$ is found assuming a specific alternative value is true.*
+
+*A Type II error cannot even occur when $H_0$ is true.*
+
+*In addition, $P(\text{Type II})$ cannot be found at all until a particular alternative value is given, so it is not determined by the significance level.*
 :::
 
 （$2$ つの確率は別々の分布のもとで計算されるので、足して $1$ にはならない。$P(\text{Type I})$ は $H_0$ が正しいという仮定のもとで求め、$P(\text{Type II})$ は特定の対立仮説の値が正しいという仮定のもとで求める。$H_0$ が正しいときには Type II error は起こりえない。さらに、$P(\text{Type II})$ は特定の対立仮説の値が与えられるまで求めることすらできないので、有意水準では決まらない、という意味です。）
@@ -1142,7 +871,7 @@ $H_0$ を棄却しなかったのだから、**「棄却してしまう」誤り
 ## 解説
 **誤りは $2$ つあります。両方書いてください。**
 
-**$1$ つめ。$\beta = 1 - \alpha$ ではありません**（[第4節](#not-complement)）。$2$ つは別の分布の上にあるので、足す意味がありません。
+**$1$ つめ。$\beta = 1 - \alpha$ ではありません**（[第3節](#not-complement)）。$2$ つは別の分布の上にあるので、足す意味がありません。
 
 **$2$ つめ。そもそも $\beta$ は、有意水準だけでは決まりません。** 本当の値が与えられないと計算できません（[第3節](#typeII)）。
 
@@ -1200,7 +929,9 @@ $$
 **(c)**
 
 ::: {.model-answer}
-*Lowering the significance level from $5\%$ to $1\%$ reduces the probability of a Type I error from $0.05$ to $0.01$, but it raises the probability of a Type II error from $0.196$ to $0.431$. With a fixed sample size the two cannot both be made small, so the choice of significance level depends on which error matters more in the situation.*
+*Lowering the significance level from $5\%$ to $1\%$ reduces the probability of a Type I error from $0.05$ to $0.01$, but it raises the probability of a Type II error from $0.196$ to $0.431$.*
+
+*With a fixed sample size the two cannot both be made small, so the choice of significance level depends on which error matters more in the situation.*
 :::
 
 （有意水準を $5\%$ から $1\%$ に下げると Type I error の確率は $0.05$ から $0.01$ に減るが、Type II error の確率は $0.196$ から $0.431$ に上がる。標本の大きさが決まっていれば $2$ つを同時に小さくはできないので、有意水準の選び方は、その場面でどちらの誤りが重いかによる、という意味です。）
@@ -1228,7 +959,7 @@ $$
 
 **(c)** $\beta$ が $0.196$ から $0.431$ へ、**$2$ 倍以上**に増えました。
 
-**この対比が、この問題の中心です**（[第8節](#tradeoff)）。「どちらの誤りを避けたいか」で有意水準を選ぶ、というところまで書いてください。
+**この対比が、この問題の中心です**（[第7節](#tradeoff)）。「どちらの誤りを避けたいか」で有意水準を選ぶ、というところまで書いてください。
 
 **検算。** $\alpha$ を下げたら $\beta$ が上がりました ✓ 逆になっていたら、どこかで分布か範囲を取り違えています。
 :::
@@ -1266,7 +997,11 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*The probability of a Type II error decreases as the true mean increases. When the true mean is far from the value in $H_0$, the observed count is much more likely to fall in the critical region, so the test is much more likely to detect that $H_0$ is false. A small departure from $H_0$ is hard to detect; a large one is easy.*
+*The probability of a Type II error decreases as the true mean increases.*
+
+*When the true mean is far from the value in $H_0$, the observed count is much more likely to fall in the critical region, so the test is much more likely to detect that $H_0$ is false.*
+
+*A small departure from $H_0$ is hard to detect; a large one is easy.*
 :::
 
 （本当の平均が大きくなるにつれて Type II error の確率は減る。本当の平均が $H_0$ の値から遠いと、観測される件数が critical region に入る可能性がずっと高くなるので、検定が $H_0$ の誤りを見つけられる可能性がずっと高くなる。$H_0$ からのわずかなずれは見つけにくく、大きなずれは見つけやすい、という意味です。）
@@ -1329,7 +1064,9 @@ P(\text{Type I}) = P(X \geq 13 \mid p = 0.25) = 0.0216
 $$
 
 ::: {.model-answer}
-*$X$ can only take whole-number values, so the probability of the critical region changes in jumps and cannot be made exactly $0.05$. The region is chosen to be the largest whose probability is still less than $0.05$, and here that probability is $0.0216$.*
+*$X$ can only take whole-number values, so the probability of the critical region changes in jumps and cannot be made exactly $0.05$.*
+
+*The region is chosen to be the largest whose probability is still less than $0.05$, and here that probability is $0.0216$.*
 :::
 
 （$X$ は整数の値しか取れないので critical region の確率は飛び飛びに変わり、ちょうど $0.05$ にはできない。region は確率が $0.05$ を超えない範囲でいちばん大きいものが選ばれ、ここではその確率が $0.0216$ である、という意味です。）
@@ -1390,7 +1127,9 @@ $$
 **(a)**
 
 ::: {.model-answer}
-*A Type I error means that a patient who does not have the condition is referred for further investigation. A Type II error means that a patient who does have the condition is not referred, so the condition is missed.*
+*A Type I error means that a patient who does not have the condition is referred for further investigation.*
+
+*A Type II error means that a patient who does have the condition is not referred, so the condition is missed.*
 :::
 
 （Type I error は、その病気ではない患者がさらに詳しい検査に回されることを意味する。Type II error は、その病気である患者が回されず、病気が見逃されることを意味する、という意味です。）
@@ -1398,7 +1137,11 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*A Type II error is more serious here, because a patient who has the condition would go untreated and their health could deteriorate. A Type I error causes unnecessary further testing, which costs money and causes the patient anxiety, but it is usually corrected at the next stage. For this reason a screening test is often set up with a fairly large significance level, accepting more Type I errors in order to make Type II errors rare.*
+*A Type II error is more serious here, because a patient who has the condition would go untreated and their health could deteriorate.*
+
+*A Type I error causes unnecessary further testing, which costs money and causes the patient anxiety, but it is usually corrected at the next stage.*
+
+*For this reason a screening test is often set up with a fairly large significance level, accepting more Type I errors in order to make Type II errors rare.*
 :::
 
 （ここでは Type II error のほうが重大である。病気である患者が治療されないままになり、健康が悪化しうるからだ。Type I error は不要な追加検査を招き、費用がかかり患者に不安を与えるが、ふつうは次の段階で訂正される。このため検診は、Type II error をまれにするために Type I error が増えるのを受け入れて、やや大きめの有意水準で設定されることが多い、という意味です。）
@@ -1484,7 +1227,11 @@ $$
 **(d)**
 
 ::: {.model-answer}
-*The supervisor could take a larger sample. Increasing $n$ reduces the standard error $\sigma / \sqrt{n}$, so both distributions become narrower and overlap less. At the same significance level the probability of a Type II error becomes much smaller, and because of that the supervisor could also lower the significance level, so that both error probabilities end up smaller than before.*
+*The supervisor could take a larger sample.*
+
+*Increasing $n$ reduces the standard error $\sigma / \sqrt{n}$, so both distributions become narrower and overlap less.*
+
+*At the same significance level the probability of a Type II error becomes much smaller, and because of that the supervisor could also lower the significance level, so that both error probabilities end up smaller than before.*
 :::
 
 （管理者は標本を大きくすればよい。$n$ を増やすと standard error $\sigma / \sqrt{n}$ が小さくなるので、$2$ つの分布はどちらも細くなり、重なりが減る。同じ有意水準のままなら Type II error の確率が大きく下がり、そのぶん有意水準も下げられるので、結果として $2$ 種類の誤りの確率を両方とも前より小さくできる、という意味です。）
@@ -1523,15 +1270,13 @@ $$
 **critical region の外がどちらか**を、毎回、絵を描いて確かめてください。
 :::
 
-**(d)** [第8節](#tradeoff)の最後にある注のことです。
+**(d)** [第7節](#tradeoff)の最後に書いた、標本を大きくする話のことです。
 
 **有意水準を動かすだけでは、片方しか減らせません。** 両方減らすには、**分布そのものを細くする**しかありません。
 
-$$
-\frac{\sigma}{\sqrt{n}} \ \text{を小さくする} \ \Longleftarrow \ n \ \text{を大きくする}
-$$
+**$n$ を大きくすれば、$\dfrac{\sigma}{\sqrt{n}}$ が小さくなります。**
 
-$\sigma$ は母集団の性質なので、勝手に変えられません。**変えられるのは $n$ だけ**です。
+$\sigma$ は **population**（母集団）の性質なので、勝手に変えられません。**変えられるのは $n$ だけ**です。
 
 **検算。** $\beta = 0.0877$ は小さめです。本当の平均 $23.5$ は critical value $24.2$ より**下**にあり、つまり critical region の**中**にあります。見つけやすい状況なので、$\beta$ が小さいのは正しい向きです ✓
 :::

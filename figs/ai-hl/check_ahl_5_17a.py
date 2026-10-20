@@ -312,9 +312,10 @@ eq("図の M_IN が [[-3,2],[2,-3]]",
    "M_IN = [[-3, 2], [2, -3]]" in MK, True)
 eq("図の M_SAD が [[1,2],[2,1]]",
    "M_SAD = [[1, 2], [2, 1]]" in MK, True)
-for lab in ("along an eigenvector", "(a)  $\\\\lambda = 5,\\\\ 1$",
-            "(b)  $\\\\lambda = -1,\\\\ -5$", "$\\\\lambda = 3,\\\\ -1$"):
+for lab in ("(a)  $\\\\lambda = 5,\\\\ 1$", "(b)  $\\\\lambda = -1,\\\\ -5$"):
     eq("図のパネル %s" % lab[:12], lab in MK, True)
+for lab in ("along an eigenvector", "$\\\\lambda = 3,\\\\ -1$  (OPPOSITE signs)"):
+    eq("図の題（説明文）は外した %s" % lab[:12], lab in MK, False)
 # 鞍点図のラベルが取りちがえられていないか
 eq("saddle 図：上から出発 → 右上（青）",
    'traj(ax, M_SAD, (1.4, -1.15), col=LINE' in MK
@@ -368,7 +369,7 @@ not_in_text("λ<0 で「同じ向き」と書いていない", "**進む向き�
 in_text("λ の符号は e^{λt} で説明している",
         "- $\\lambda < 0$ なら、$e^{\\lambda t}$ は時間とともに **$0$ へ近づく**")
 in_text("trace の別解を AHL 1.15 に送っている",
-        "対角に並ぶ $2$ つの数の和（**trace**）と $\\det M$ を使えば")
+        "**trace**（対角に並ぶ $2$ つの数の和）と $\\det M$ を使えば、**determinant**（行列式）を展開せずに書けます（[AHL 1.15](../01-number-and-algebra/ahl-1-15.qmd#expand)）")
 in_text("node の訳", "**node**（結節点）と **saddle point**（鞍点）")
 in_text("unstable node の訳", "**unstable node**（不安定な結節点）")
 in_text("早見表に判別式が入っている", "| $\\Delta < 0$ | **複素数** → [AHL 5.17b](ahl-5-17b.qmd) |")
@@ -401,9 +402,7 @@ eq("fence の開閉が一致",
    len([l for l in L if re.match(r"^:{3,} *\{", l)]),
    len([l for l in L if re.match(r"^:{3,} *$", l)]))
 
-in_text("Worked examples の定型 callout",
-        "問題文は英語です。意味が理解できなかったら、問題文の下の"
-        "「**日本語訳**」を開いてください。解説は日本語です。")
+not_in_text("例題の前の案内は置かない", "問題文は英語です。意味が")
 in_text("例題の解答例の見出し", "## 解答例（答案用紙にはこう書く）")
 in_text("演習の解答例の見出し", "## 解答例（答案用紙に書くこと）")
 in_text("GDC の見出し", "## Using your GDC (TI-Nspire CX II)")
@@ -413,10 +412,12 @@ in_text("公式集に載っている旨", "この式は**公式集に載って�
 in_text("char eq は覚える", "**$\\det(M - \\lambda I) = 0$ は公式集に載っていません**")
 in_text("扱う形", "**右辺が $x$ と $y$ の一次式だけ**という特別な場合")
 in_text("厳密解の限定",
-        "シラバスで**式による解法が求められている、異なる $2$ つの実固有値**の場合を扱います")
+        "このページで扱うのは、固有値が**異なる $2$ つの実数**になる場合です（絵は直線・node・saddle point）。この場合は、式で解くことまで求められます。")
 not_in_text("旧・実で異なる", "**実で、異なる**")
-in_text("シラバス distinct non-zero",
-        'Systems will have **distinct, non-zero**, eigenvalues')
+not_in_text("シラバス distinct non-zero の引用は本文から外した",
+            'Systems will have **distinct, non-zero**, eigenvalues')
+in_text("distinct non-zero を日本語で書いている",
+        "AI HL で扱う系が、**異なる $2$ つの、$0$ でない固有値**をもつものに限られているのは、このためです。")
 
 
 # ══════════════════════════════════════════════════════════
@@ -448,8 +449,7 @@ in_text("A≠0 の条件",
         "(A \\neq 0 \\text{ で、} t \\text{ が大きいとき})")
 not_in_text("旧・無条件の近似",
             "\\mathbf{X} \\approx A\\mathbf{p}_1 e^{5t} \\qquad (t \\text{ が大きいとき})")
-in_text("支配的の言い換え",
-        "\\text{係数が } 0 \\text{ でなければ、大きいほうの } \\lambda \\text{ の項が支配的になる}")
+in_text("支配的の言い換え", "**係数が $0$ でなければ、大きいほうの $\\lambda$ の項が支配的になります。**")
 not_in_text("旧・いつも勝つ", "\\text{生き残るのは、いつも } \\lambda \\text{ が大きいほう}")
 in_text("係数 0 の例外",
         "**ただし、その項の係数が $0$ の場合は例外です。**")
@@ -508,10 +508,18 @@ eq("図のファイルがある",
    _os.path.exists(_os.path.join(_HERE, "..", "..", "ai-hl", "05-calculus",
                                  "img", "ahl-5-17a-longrun.svg")), True)
 _SRC = open(_os.path.join(_HERE, "make_ahl_5_17a.py"), encoding="utf-8").read()
-eq("図の脚注に「係数が 0 でなければ」",
-   "whenever its coefficient is not zero" in _SRC, True)
+eq("図の脚注（説明文）は図から外した",
+   "whenever its coefficient is not zero" in _SRC, False)
 eq("図の脚注から「come in along it, then turn」を外した",
    "paths come in " in _SRC, False)
+
+# ★ レイアウト：Worked examples の節は無く、例題は The idea の中にある
+not_in_text("## Worked examples が無い", "## Worked examples")
+_exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(TXT.index("## The idea") < p < TXT.index("## Why it works")
+       for p in _exm), True)
+eq("例題の数は変わらない", len(_exm), 4)
 
 print()
 print("=" * 78)

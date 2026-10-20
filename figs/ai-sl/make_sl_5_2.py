@@ -104,9 +104,6 @@ for x0 in (-2.0, 2.0):
             markeredgewidth=2.0, ms=8, zorder=8)
     ax.text(x0, BAND + 0.5, f"${int(x0)}$", color=ACC, fontsize=10.5,
             ha="center", va="bottom", zorder=10, bbox=BOX)
-ax.text(-4.25, BAND + 1.6, "the two values where $f'(x)=0$\nsplit the $x$-axis "
-                           "into three intervals",
-        color=INK, fontsize=10.5, ha="left", va="center", zorder=10, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-2-intervals.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -123,7 +120,7 @@ for (a, b), c in seg:
 for x0 in (-2.0, 2.0):
     ax.plot([x0], [f(x0)], "o", color=ACC, ms=7, zorder=9)
     ax.axvline(x0, color=ACC, lw=1.1, ls="--", zorder=3)
-ax.set_title("the graph of  $y=f(x)$", fontsize=12, color=INK, pad=8)
+ax.set_title("$y=f(x)$", fontsize=12, color=INK, pad=8)
 ax.text(-3.6, 5.4, "up", color=GREEN, fontsize=11, ha="center", va="center",
         zorder=10, bbox=BOX)
 ax.text(0.0, 1.6, "down", color=GOLD, fontsize=11, ha="center", va="center",
@@ -147,7 +144,7 @@ ax.text(0.0, -1.9, "$f'(x)<0$", color=GOLD, fontsize=11.5, ha="center",
         va="center", zorder=10, bbox=BOX)
 ax.text(3.4, 3.4, "$f'(x)>0$", color=GREEN, fontsize=11.5, ha="center",
         va="center", zorder=10, bbox=BOX)
-ax.set_title("the graph of  $y=f'(x)$", fontsize=12, color=INK, pad=8)
+ax.set_title("$y=f'(x)$", fontsize=12, color=INK, pad=8)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-2-fdash.svg"), bbox_inches="tight")

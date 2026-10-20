@@ -71,6 +71,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図のスクリプトに残っている（消したはず）: " + msg + " :: " + sub[:70])
+
+
 def term(u1, d, n):
     """第 n 項。定義（d を n-1 回足す）から。"""
     return sp.nsimplify(u1) + (n - 1) * sp.nsimplify(d)
@@ -253,7 +257,7 @@ eq(2 + 15 * 7, 107, "誤答 107")
 eq((2 + 7 * _n).subs(_n, 15), 107, "誤った式でも n=15 なら 107（一致してしまう）")
 eq((7 * _n - 5).subs(_n, 1), 2, "正しい式は n=1 で 2")
 eq((2 + 7 * _n).subs(_n, 1), 9, "誤った式は n=1 で 9（ここで捕まる）")
-in_text("**$n = 1$ を先に入れるのが要です。**", "n=1 を先に入れる（レビュー B-3）")
+in_text("**$n = 1$ を先に入れるのがポイントです。**", "n=1 を先に入れる（レビュー B-3）")
 
 eq(sp.Rational(45 - 20, 5), 5, "演習3 d = 5")
 eq(20 - 3 * 5, 5, "演習3 u_1 = 5")
@@ -360,8 +364,10 @@ in_text("公式集の **1.2** の欄に、`The nth term of an arithmetic sequenc
 in_text("`The sum of n terms of an arithmetic sequence`", "和の欄の見出し")
 in_text("覚える必要はありません", "公式集にあるものを暗記させていない")
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
-in_text("> Students will need to approximate common differences.",
-        "Guidance の一文（近似）を引用ブロックで")
+not_in_text("> Students will need to approximate common differences.",
+            "シラバス（Guidance）の引用は本文から外した")
+in_text("そういうときは、common difference を**見積もり**ます。",
+        "近似の内容は日本語で直接書いた")
 
 # ══════════════════════════════════════════════════════════
 # 8. GDC（AI SL で検証済みの事実と合っているか）
@@ -380,7 +386,7 @@ chk("## Using your GDC" not in TEXT, "独立した GDC の節は置いていな�
 # ══════════════════════════════════════════════════════════
 # 9. 構成の不変量
 # ══════════════════════════════════════════════════════════
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6,
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2,
     "--- は 6 本（front matter 2 + 例題 4）")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
@@ -389,9 +395,16 @@ chk(TEXT.count("{.ex-no}") == 10, "演習が 10")
 chk(TEXT.count("{.model-answer}") == 6, "model-answer が 6")
 chk(len(re.findall(r"^::: \{#exm-aasl12-", TEXT, re.M)) == 4, "例題が 4")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
-         "Exercises"]
-chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
+_want = ["The idea", "Why it works", "Common errors", "Exercises"]
+chk([h for h in _h2 if h in _want] == _want, "4 つの見出しが所定の順")
+
+# ★2026-10-15 レイアウト変更：例題は The idea の中（説明の節の直後）に置く
+chk("## Worked examples" not in TEXT, "## Worked examples の節はもうない")
+_wiw_pos = TEXT.index(chr(10) + "## Why it works" + chr(10))
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+chk(_exm_pos and all(TEXT.index(chr(10) + "## The idea") < p < _wiw_pos
+                     for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）にある")
 _sections = [h for h in _h2 if h in _want]
 chk(_sections and _sections[-1] == "Exercises", "Exercises で終わる")
 _idea = [int(m) for m in re.findall(r"^### (\d+)\. ", TEXT, re.M)]
@@ -443,8 +456,8 @@ chk(not os.path.exists(SVG_B[:-4] + ".png"), "図 (b) の PNG は消してある
 for bad in ["pmatrix", "\\lvert", "\\rvert"]:
     chk(bad not in FIGCODE, "図で使えない記法: " + bad)
 chk(not re.search(r"[ぁ-んァ-ン]", FIGSTR), "図のラベルに日本語がない")
-in_fig("4 jumps, not 5", "図(a) の要点")
-in_fig("every pair makes", "図(b) の要点")
+not_in_fig("4 jumps, not 5", "図(a) の説明の文は外した（本文が言う）")
+not_in_fig("every pair makes", "図(b) の見出しは外した（本文が言う）")
 # 図が演習の答えを載せていないか
 for leak in ["38", "100", "2730", "2772", "670", "765", "4200", "168", "42",
              "3n + 2", "7n - 5"]:
@@ -454,13 +467,17 @@ for leak in ["38", "100", "2730", "2772", "670", "765", "4200", "168", "42",
 # 11. 登録
 # ══════════════════════════════════════════════════════════
 # 2026-10-05：AA SL は公開側（_quarto.yml）に移した
-DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("aa-sl/01-number-and-algebra/aasl-1-2.qmd" in DRAFT,
-    "_quarto.yml に登録されている")
-chk(DRAFT.index("aasl-1-1.qmd") < DRAFT.index("aasl-1-2.qmd"),
-    "サイドバーの並びが 1.1 → 1.2")
-PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
-chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+_QY = os.path.join(ROOT, "_quarto.yml")
+if os.path.exists(_QY):
+    DRAFT = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("aa-sl/01-number-and-algebra/aasl-1-2.qmd" in DRAFT,
+        "_quarto.yml に登録されている")
+    chk(DRAFT.index("aasl-1-1.qmd") < DRAFT.index("aasl-1-2.qmd"),
+        "サイドバーの並びが 1.1 → 1.2")
+    PUB = open(os.path.join(ROOT, "_quarto.yml"), encoding="utf-8").read()
+    chk("- aa-sl/**/*.qmd" in PUB, "公開用の render に AA SL")
+else:
+    print("SKIP: _quarto.yml がこの作業環境にないので、登録のチェックは飛ばす")
 IDX = open(os.path.join(ROOT, "aa-sl", "index.qmd"), encoding="utf-8").read()
 chk("**[Arithmetic sequences and series]"
     "(01-number-and-algebra/aasl-1-2.qmd)** ✅" in IDX,
@@ -489,7 +506,7 @@ chk(TEXT.index("もう $1$ つの形をどう導くかは")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -500,10 +517,10 @@ chk(_wiw.count("クリックすると開きます") == 1, "折りたたみは 1 
 # ══════════════════════════════════════════════════════════
 # 節の見出しの英語（_方針変更-2026-09-15.md 第 17 節）
 # ══════════════════════════════════════════════════════════
-in_text('### 2. the $n$th term（$n$ 番目の項）：なぜ $n-1$ なのか {#nth}', "見出しの英語: 2. the $n$th term（$n$ 番目の項")
-in_text('### 4. sum of the first $n$ terms（和）：$S_n$ の $2$ つの形 {#sum}', "見出しの英語: 4. sum of the first $n$ te")
-in_text('### 6. sigma notation {#sigma}', "見出しの英語: 6. sigma notation")
-in_text('### 7. 現実の場面：simple interest（単利） {#applications}', "見出しの英語: 7. 現実の場面：simple interest（単")
+in_text('### 2. The $n$th term（第 $n$ 項の式） {#nth}', "見出しの英語: 2. the $n$th term（$n$ 番目の項")
+in_text('### 4. The sum of the first $n$ terms（はじめの $n$ 項の和） {#sum}', "見出しの英語: 4. sum of the first $n$ te")
+in_text('### 6. Sigma notation（シグマ記号） {#sigma}', "見出しの英語: 6. sigma notation")
+in_text('### 7. Simple interest（単利） {#applications}', "見出しの英語: 7. 現実の場面：simple interest（単")
 
 
 
@@ -520,7 +537,7 @@ for _cm in re.finditer(r"^!\[(.*?)\]\(img/", TEXT, re.M):
 # ══════════════════════════════════════════════════════════
 # 2026-10-01 の手直し
 # ══════════════════════════════════════════════════════════
-in_text("### 1. arithmetic sequence（等差数列） {#idea}", "第 1 節の見出し")
+in_text('### 1. Arithmetic sequences（等差数列） {#idea}', "第 1 節の見出し")
 not_in_text("### 1. 同じ数ずつ変わる並び", "前の見出しは消した")
 # なぜ n-1 なのか：小見出しと表をやめて、1 段落に
 not_in_text("#### なぜ $n$ ではなく $n-1$ なのか", "小見出しは消した")
@@ -532,14 +549,14 @@ in_text("**足す回数は、項の番号より $1$ つ少ないから、$n$ で
         "いません。", "普通の文章になった")
 chk(5 + (5 - 1) * 3 == 17, "u_5 = 17（本文から外したが、値は正しい）")
 # 連立方程式
-in_text("**連立方程式（simultaneous equations）を解きます。**", "連立方程式")
+in_text("**simultaneous equations**（連立方程式）を解きます。", "連立方程式（用語は English（日本語）の順）")
 not_in_text("**引き算をすると $u_1$ が消えます。**", "前の言い方は消した")
 # sigma
 in_text("$k$ は **index**（添字）で、シグマ記号のうしろの式と同じものを"
         "使います。**その $k$ に値を代入して求めた数を、全部足します。**",
         "index の説明")
 not_in_text("名前は何でも構いません", "前の言い方は消した")
-in_text("**$k$ の式が $1$ 次なら、それは等差数列（arithmetic sequence）です。**",
+in_text("**$k$ の式が $1$ 次なら、それは等差数列です。**",
         "1 次なら等差（本文）")
 not_in_text("## $k$ の式が $1$ 次なら、それは等差数列です", "tip の見出しは消した")
 # 「n 年後」の警告

@@ -229,15 +229,16 @@ eq("pi 落とし 6.4 も 2 乗落とし 8pi/3 も円柱より小さい",
 # ══════════════════════════════════════════════════════════════
 inA("A = \\int_{a}^{b} |y|\\,dx")
 inA("A = \\int_{a}^{b} |x|\\,dy")
-inA("見出しは「**Area of region enclosed by a curve and $x$ or $y$-axes**」で、")
-inA("> Including negative integrals.")
-inA("シラバスの Guidance 欄も、一言だけ書いています。")
+notA("Area of region enclosed by a curve")  # 公式集の欄の英語見出しの引用は本文から外した
+notA("> Including negative integrals.")     # シラバスの引用は本文から外した
+inA("定積分が負になる場合も扱います。")
+inA("HL の公式集の面積の式は $\\displaystyle\\int\\lvert y \\rvert\\,dx$ だけで、$f(x) > 0$ という条件はありません。")
 inB("V = \\int_{a}^{b}\\pi y^{2}\\,dx")
 inB("V = \\int_{a}^{b}\\pi x^{2}\\,dy")
 # 冒頭の 2 つの囲みは削除し、第1節に一文でまとめた
 notB("## 公式集の 5.12 の欄（体積）")
-inB("見出しは「**Volume of revolution about $x$ or $y$-axes**」で、")
-inB("**公式集の $5.12$ の欄にあります。配られるので、覚える必要はありません。**")
+notB("Volume of revolution about")  # 公式集の欄の英語見出しの引用は本文から外した
+inB("**公式集の 5.12 の欄にあります。** 覚える必要はありません。$y$ 軸のための式（[第3節](#y-axis)）と $2$ つ並んでいます。")
 # 円柱・円の面積は Prior learning、円錐は 3.1
 inB("（公式集の Prior learning の欄）", 2)
 inB("円錐の公式（公式集の $3.1$ の欄）")
@@ -253,7 +254,7 @@ inA("**符号が変わらないときに限り**")
 notA("**答え全体の絶対値をとるだけ**で済みます")
 notA("*The curve is below the $x$-axis throughout, so*")
 # 4: HL 公式集に SL の欄は無い
-inA("**HL の公式集には、この欄そのものがありません。**")
+inA("[SL 5.5](../../ai-sl/05-calculus/sl-5-5.qmd) では、**曲線が $x$ 軸より上にある場合**（$f(x) > 0$）だけを扱いました。")
 notA("HL の公式集では、その条件が消えて**絶対値**に変わります。")
 # 5: 高さ → 面積
 inA("その部分が $+\\dfrac{16}{3}$ の面積として数えられます")
@@ -261,7 +262,7 @@ notA("折り返せば高さが $+\\dfrac{16}{3}$ 分として数えられます"
 # 6: 短ざくの向き
 notA("$x$ 軸のときは縦の短ざく（幅 $y$、厚み $dx$）でしたが")
 # 8+9: modulus と「覚える必要はありません」
-inA("**公式集の $5.12$ の欄にあります。配られるので、覚える必要はありません。**")
+inA("**公式集の 5.12 の欄にあります。** 覚える必要はありません。$y$ 軸のための式（[第4節](#y-axis)）と $2$ つ並んでいます。")
 inA("**違うのは modulus（絶対値）だけ**です。")
 # 10: ± の枝を表の前に
 inA("**$2$ 乗のように偶数乗の式は、$x$ について解くと $2$ つになります。**")
@@ -313,16 +314,21 @@ inB("**原点をとがった先とする**半径 $2$・高さ $4$ の円錐")
 # ══════════════════════════════════════════════════════════════
 # 8. 構造の不変条件
 # ══════════════════════════════════════════════════════════════
-HEADS = ["What you should be able to do", "The idea", "Why it works",
-         "Worked examples", "Common errors",
-         "Using your GDC (TI-Nspire CX II)", "Exercises"]
+HEADS_ALL = ["What you should be able to do", "The idea", "Why it works",
+             "Worked examples", "Common errors",
+             "Using your GDC (TI-Nspire CX II)", "Exercises"]
+HEADS = [h for h in HEADS_ALL if h != "Worked examples"]  # Worked examples は廃止
 for tag, TXT, path in (("5.12a", TA, A), ("5.12b", TB, B)):
-    h2 = [h for h in re.findall(r"^## (.+)$", TXT, re.M) if h in HEADS]
-    eq(tag + " 7 見出し", h2, HEADS)
-    eq(tag + " 例題 4 つ", len(re.findall(r"::: \{#exm-", TXT)), 4)
+    h2 = [h for h in re.findall(r"^## (.+)$", TXT, re.M) if h in HEADS_ALL]
+    eq(tag + " 6 見出し（Worked examples なし）", h2, HEADS)
+    _exm = [m.start() for m in re.finditer(r"::: \{#exm-", TXT)]
+    eq(tag + " 例題はすべて The idea の中（Why it works より前）",
+       all(TXT.index("## The idea") < p < TXT.index("## Why it works")
+           for p in _exm), True)
+    eq(tag + " 例題 4 つ（数は変わらない）", len(_exm), 4)
     eq(tag + " 演習 10 問", len(re.findall(r"\[\d+\]\{\.ex-no\}", TXT)), 10)
     eq(tag + " ex-sep 9 個", TXT.count(".ex-sep"), 9)
-    eq(tag + " 区切り線", TXT.count("\n---\n"), 5)
+    eq(tag + " 区切り線", TXT.count("\n---\n"), 1)
     for w in ("誰でもできる", "簡単です", "当然", "明らか", "もちろん",
               "当たり前", "そのとおり", "ご指摘", "確かめ。"):
         if w in TXT:

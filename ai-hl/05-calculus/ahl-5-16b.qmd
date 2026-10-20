@@ -16,18 +16,7 @@ sidebar: ai-hl
 
 ## The idea
 
-### 1. $2$ つの量が、互いに影響しあいます {#idea}
-
-シラバスの AHL 5.16 は、**$2$ つの部分**からできています。
-
-| 部分 | 中身 | ページ |
-|---|---|---|
-| 前半 | $1$ つの微分方程式 $\dfrac{dy}{dx} = f(x,\ y)$ | [AHL 5.16a](ahl-5-16a.qmd) |
-| 後半 | **連立系** $\dfrac{dx}{dt} = f_1$、$\dfrac{dy}{dt} = f_2$ | このページ |
-
-: AHL 5.16 の $2$ つの部分 {#tbl-ahl516b-two}
-
-**やり方は [AHL 5.16a](ahl-5-16a.qmd) とまったく同じ**です。歩き方が $1$ 本から $2$ 本に増えるだけです。先に [AHL 5.16a](ahl-5-16a.qmd) を読んでください。
+### 1. Coupled systems（$2$ つの量が影響しあう連立系） {#idea}
 
 [AHL 5.16a](ahl-5-16a.qmd) では、変わる量が $y$ の $1$ つだけでした。
 
@@ -45,7 +34,18 @@ $$
 \frac{dx}{dt} = f_1(x,\ y,\ t), \qquad \frac{dy}{dt} = f_2(x,\ y,\ t)
 $$
 
-**どちらの右辺にも、$x$ と $y$ の両方が出てきます。** これが「連立」の意味です。
+**どちらの右辺にも、$x$ と $y$ の両方が出てきます。** これが「連立」の意味で、このような式の組を **coupled system**（連立系）といいます。
+
+AHL 5.16 の内容は、**$2$ つの部分**に分かれています。
+
+| 部分 | 中身 | ページ |
+|---|---|---|
+| 前半 | $1$ つの微分方程式 $\dfrac{dy}{dx} = f(x,\ y)$ | [AHL 5.16a](ahl-5-16a.qmd) |
+| 後半 | **連立系** $\dfrac{dx}{dt} = f_1$、$\dfrac{dy}{dt} = f_2$ | このページ |
+
+: AHL 5.16 の $2$ つの部分 {#tbl-ahl516b-two}
+
+**やり方は [AHL 5.16a](ahl-5-16a.qmd) とまったく同じ**です。歩き方が $1$ 本から $2$ 本に増えるだけです。先に [AHL 5.16a](ahl-5-16a.qmd) を読んでください。
 
 ::: {.callout-tip}
 ## 独立変数が $t$ に変わります
@@ -71,9 +71,9 @@ $$
 $t$ が無くても、**式の形は変わりません。** $t$ の列は「今、何時か」を数えるためだけに使います。
 :::
 
-### 2. 公式の読み方 {#formula}
+### 2. Reading the formula（公式の読み方） {#formula}
 
-この $3$ 本の式も**公式集に載っています（5.16 の欄、$2$ つ目）。覚える必要はありません。**
+連立系で、$x$ と $y$ を $1$ 歩ずつ進めるための式です。公式集の **5.16** の欄の $2$ つ目にあるので、**覚える必要はありません。**
 
 $$
 \begin{aligned}
@@ -83,7 +83,7 @@ t_{n+1} &= t_n + h
 \end{aligned}
 $$ {#eq-ahl516b-euler}
 
-> where $h$ is a constant (step length)
+ここで $h$ は定数（刻み幅）です。
 
 **覚えておくのは、右辺にはどこも「$n$」しか出てこない**ということです（[第3節](#old)）。
 
@@ -104,9 +104,9 @@ $2$ 本目も同じです。$3$ 本目は、時計を進めるだけです。
 
 : 連立系の公式の記号 {#tbl-ahl516b-symbols}
 
-### 3. 古い値で両方を計算してから、まとめて更新します {#old}
+### 3. Updating both values together（古い値で両方を計算してから、まとめて更新する） {#old}
 
-**この項目で、いちばん点を落とすところです。**
+連立系では、$x$ と $y$ を同時に $1$ 歩進めます。そのときの計算の順番が大事です。**この項目で、いちばん点を落とすところです。**
 
 公式の右辺を、もう一度よく見てください。
 
@@ -153,218 +153,6 @@ $f_1$ と $f_2$ の列を、**同じ行に**書いてください。
 **行をまたいで値を持ってこない**——これだけ守れば間違えません。
 :::
 
-### 4. predator–prey model {#predator}
-
-シラバスが名指ししている場面です。
-
-> Contexts could include predator-prey models.
-
-$x$ を **prey**（被食者、餌になる動物）、$y$ を **predator**（捕食者）とします。
-
-$$
-\frac{dx}{dt} = 0.4x - 0.002xy, \qquad \frac{dy}{dt} = -0.3y + 0.001xy
-$$
-
-**それぞれの項に意味があります。**
-
-| 項 | 意味 |
-|---|---|
-| $+0.4x$ | 捕食者がいなければ、prey は増える |
-| $-0.002xy$ | **出会うと食べられる**（$x$ と $y$ の**積**） |
-| $-0.3y$ | 餌がなければ、predator は減る |
-| $+0.001xy$ | **食べたぶん、predator が増える** |
-
-: 各項の意味 {#tbl-ahl516b-terms}
-
-::: {.callout-important}
-## $xy$ の項が「出会い」を表しています
-なぜ $x + y$ ではなく $xy$ なのでしょうか。
-
-**出会う回数は、両方の数に比例する**からです。ウサギが $2$ 倍いれば出会いは $2$ 倍、キツネも $2$ 倍なら $4$ 倍です。
-
-$$
-(\text{出会う回数}) \propto x \times y
-$$
-
-**片方が $0$ なら、出会いは $0$ です。** $x + y$ ではそうなりません。
-:::
-
-::: {.callout-warning}
-## 符号が $2$ 本の式で逆になります
-$-0.002xy$ と $+0.001xy$ です。**捕食者にとっては得、被食者にとっては損**だからです。
-
-**係数も同じとはかぎりません。** ウサギ $1$ 匹でキツネが $1$ 匹増えるわけではないので、$0.002$ と $0.001$ のように違う数になります。
-:::
-
-### 5. 結果の読み方 {#interpret}
-
-![Solving a coupled system with Euler's method](img/ahl-5-16b-time.svg){#fig-ahl516b-time width=100%}
-
-@fig-ahl516b-time の (a) は $h = 1$、(b) は $h = 0.005$ です。**$h$ を小さくすると、なめらかな周期的な動きが見えてきます。**
-
-![Who peaks first](img/ahl-5-16b-cycle.svg){#fig-ahl516b-cycle width=100%}
-
-@fig-ahl516b-cycle が、この動きの中身です。
-
-::: {.callout-note appearance="simple"}
-**$4$ つの段階がくり返されます。**
-
-1. prey が増える（捕食者がまだ少ない）
-2. 餌が多いので、**predator が増える**
-3. 捕食者が多いので、**prey が減る**
-4. 餌が減って、**predator も減る** → 1 へ戻る
-:::
-
-::: {.callout-important}
-## prey のピークが先、predator のピークが後です
-@fig-ahl516b-cycle の左を見てください。**$x$ の山が先、$y$ の山が後**です。
-
-理由は $1$ つです。**捕食者が増えるには、まず餌が増えている必要がある**からです。
-
-*Describe the relationship between the two populations* と問われたら、こう書きます。
-
-::: {.model-answer}
-**試験ではこう書く**
-
-*Both populations rise and fall in a repeating cycle of the same period. The prey population reaches its maximum first, and the predator population reaches its maximum a short time later, because the predators can only increase once there is plenty of prey to eat.*
-:::
-
-（どちらの個体数も同じ周期でくり返し増減する。被食者の個体数が先に最大となり、捕食者の個体数はその少しあとに最大となる。捕食者は、食べる被食者が十分にいてはじめて増えられるからである、という意味です。）
-:::
-
-### 6. 平衡点 {#equilibrium}
-
-**両方の変化率が同時に $0$ になる点**を、**equilibrium point**（平衡点）といいます。
-
-::: {.callout-note appearance="simple"}
-`equilibrium point` という語そのものは、シラバスでは **AHL 5.17**（phase portrait）に出てきます。
-
-ただし、**Euler の表が正しいかを判断するのにとても役に立つ**ので、ここで先に扱います。
-:::
-
-$$
-\frac{dx}{dt} = 0 \quad \text{かつ} \quad \frac{dy}{dt} = 0
-$$
-
-上のモデルなら
-
-$$
-0.4x - 0.002xy = 0 \ \Longrightarrow \ x(0.4 - 0.002y) = 0 \ \Longrightarrow \ y = 200
-$$
-
-$$
--0.3y + 0.001xy = 0 \ \Longrightarrow \ y(-0.3 + 0.001x) = 0 \ \Longrightarrow \ x = 300
-$$
-
-**平衡点は $(300,\ 200)$ です。**
-
-::: {.callout-tip}
-## 両方から $x$ と $y$ をくくり出してください
-$0.4x - 0.002xy = 0$ の両辺を $x$ で割りたくなりますが、**$x = 0$ の場合を落とします。**
-
-$$
-x(0.4 - 0.002y) = 0 \ \Longrightarrow \ x = 0 \ \text{または} \ y = 200
-$$
-
-**$(0,\ 0)$ も平衡点です。** どちらもいなければ、何も起こりません。
-
-問題が聞いているのはふつう**もう $1$ つのほう**ですが、$x = 0$ を書き落とさないでください。
-:::
-
-::: {.callout-warning}
-## 平衡点は「$x$ の値」ではなく「点」です
-答えは $(300,\ 200)$ という**点**です。$x = 300$ だけでは半分です。
-
-そして、**この predator–prey の形では**、$x$ の式から出るのが $y$ の値、$y$ の式から出るのが $x$ の値になります。**入れ替わります。** $xy$ の項があるからです。[第7節](#phase)の @fig-ahl516b-phase で、位置を確かめてください。
-
-**ほかの形の連立系では、そうなるとはかぎりません。** 演習8 では $\dfrac{da}{dt} = 0$ から $b = 2a$ という**関係**しか出ません。
-:::
-
-### 7. $(x,\ y)$ 平面に描く {#phase}
-
-![The same run, plotted as $(x, y)$](img/ahl-5-16b-phase.svg){#fig-ahl516b-phase width=62%}
-
-@fig-ahl516b-phase は、**時間を消して** $x$ と $y$ だけを描いたものです。この曲線を **trajectory**（軌道）といいます。
-
-**閉じた輪になっています。** 同じところをぐるぐる回る——それが「周期的」ということです。
-
-@fig-ahl516b-cycle の右に矢印を入れてあります。**反時計回り**です。
-
-::: {.callout-tip}
-## 回る向きは、右端の点を見れば分かります
-$x$ がいちばん大きい点（右端）では、prey が最大です。そこでは **predator がまだ増えている最中**なので、$y$ が上がります。
-
-$$
-\text{右端で上向き} \ \Longrightarrow \ \text{反時計回り}
-$$
-
-**$1$ 点だけ調べれば、向きが決まります。**
-:::
-
-::: {.callout-note appearance="simple"}
-この $(x,\ y)$ 平面の図を、シラバスの **AHL 5.17** では **phase portrait**（相図）と呼んで、くわしく扱います。
-
-**AHL 5.16 では、Euler で出した点を並べて描くところまで**です。
-:::
-
-### 8. スプレッドシートで {#tech}
-
-歩数が増えるので、**手で解くのは $2$〜$3$ 歩まで**です。
-
-列は $3$ つ（$t$、$x$、$y$）で足ります。$f_1$ と $f_2$ は式の中に入れてしまうので、列にしなくても構いません。やり方は [GDC 第1節](#gdc-sheet)です。
-
-## Why it works
-
-::: {.callout-tip collapse="true"}
-## クリックすると開きます
-
-### $1$ 本のときと、まったく同じ理屈です {#why}
-
-[AHL 5.16a](ahl-5-16a.qmd#why) で見たとおり、$h$ が小さいとき
-
-$$
-x(t+h) \approx x(t) + h \times \frac{dx}{dt}
-$$
-
-が成り立ちます。**この式は $x$ についてのものです。** $y$ についても、同じことが別に成り立ちます。
-
-$$
-y(t+h) \approx y(t) + h \times \frac{dy}{dt}
-$$
-
-**$2$ 本を並べて、同じ $h$ で同時に進めるだけ**です。新しい考え方は要りません。
-
-### なぜ「古い値」で計算するのか {#why-old}
-
-上の $2$ 本の式で、右辺の $\dfrac{dx}{dt}$ と $\dfrac{dy}{dt}$ は、**どちらも時刻 $t$ での値**です。
-
-時刻 $t$ での $\dfrac{dy}{dt}$ を出すには、**時刻 $t$ での $x$** が要ります。$t + h$ での $x$ ではありません。
-
-**新しい $x$ を使ってしまうと、$2$ 本の式が「同じ瞬間」の話でなくなります。** それが [第3節](#old) の間違いです。
-
-### $h$ が大きいと、輪が閉じません {#why-spiral}
-
-![A big $h$ spirals outwards](img/ahl-5-16b-spiral.svg){#fig-ahl516b-spiral width=62%}
-
-@fig-ahl516b-spiral を見てください。$h = 0.5$ の軌道は、**外へ外へと広がっています。**
-
-本当の解は閉じた輪なのに、Euler の折れ線は毎回**輪の外側へ**はみ出します。接線が輪の外を通るからです。
-
-**そのずれが $1$ 周ごとにたまって、渦巻きになります。**
-
-::: {.callout-note appearance="simple"}
-このふるまいは **AI HL では問われません。** ただし、*Comment on the reliability of your answer* と聞かれたときに、「$h$ が大きいと長い時間では信用できない」と書ける材料になります。
-
-シラバスは Enrichment として **Runge–Kutta methods** を挙げています。これは、この弱点を減らす、もっと精度の高い方法です。**試験には出ません。**
-:::
-:::
-
-## Worked examples
-
-::: {.callout-note appearance="simple"}
-問題文は英語です。意味が理解できなかったら、問題文の下の「**日本語訳**」を開いてください。解説は日本語です。
-:::
-
 ::: {#exm-ahl516b-basic}
 [Consider the coupled system]{.q-en}
 
@@ -387,7 +175,8 @@ $h = 0.1$ の Euler 法を使って、$t = 0.2$ のときの $x$ と $y$ の近�
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **$2$ 歩です。**
 
@@ -442,6 +231,7 @@ x \approx 2.07, \qquad y \approx 2.34
 $$
 :::
 :::
+:::
 
 ::: {#exm-ahl516b-error}
 [A student solves the system of @exm-ahl516b-basic and writes:]{.q-en}
@@ -465,14 +255,19 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)**
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The student has used the new value $x_1 = 1.5$ when calculating $f_2$. The formula requires $f_2(x_n,\ y_n,\ t_n)$, that is the OLD value $x_0 = 1$. The correct calculation is $f_2 = 3(1) - 2 = 1$, giving $y_1 = 2.1$.*
+*The student has used the new value $x_1 = 1.5$ when calculating $f_2$.*
+
+*The formula requires $f_2(x_n,\ y_n,\ t_n)$, that is the OLD value $x_0 = 1$.*
+
+*The correct calculation is $f_2 = 3(1) - 2 = 1$, giving $y_1 = 2.1$.*
 :::
 
 （生徒は $f_2$ を計算するときに新しい値 $x_1 = 1.5$ を使ってしまっている。公式が要求しているのは $f_2(x_n,\ y_n,\ t_n)$、つまり古い値 $x_0 = 1$ である。正しい計算は $f_2 = 3(1) - 2 = 1$ で、$y_1 = 2.1$ となる、という意味です。）
@@ -482,10 +277,12 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Both derivatives describe the rates of change at the same instant $t = 0$. The value $x_1 = 1.5$ belongs to the later time $t = 0.1$, so mixing it into $f_2$ combines two different moments and the step no longer follows the system.*
+*Both derivatives describe the rates of change at the same instant $t = 0$.*
+
+*The value $x_1 = 1.5$ belongs to the later time $t = 0.1$, so mixing it into $f_2$ combines two different moments and the step no longer follows the system.*
 :::
 
-（どちらの導関数も、同じ瞬間 $t = 0$ における変化率を表している。$x_1 = 1.5$ は後の時刻 $t = 0.1$ の値なので、それを $f_2$ に混ぜると $2$ つの異なる瞬間を組み合わせることになり、その $1$ 歩はもう系に従っていない、という意味です。）
+（どちらの **derivative**（導関数）も、同じ瞬間 $t = 0$ における変化率を表している。$x_1 = 1.5$ は後の時刻 $t = 0.1$ の値なので、それを $f_2$ に混ぜると $2$ つの異なる瞬間を組み合わせることになり、その $1$ 歩はもう系に従っていない、という意味です。）
 
 **検算。** 正しい $y_1$ は $2.1$、生徒の $y_1$ は $2.25$ です。差は $0.15$ で、**$1$ 歩目からすでにずれています** ✓ このずれは、あとの歩にそのまま持ち越されます。
 
@@ -501,15 +298,147 @@ $$
 **(a)**
 
 ::: {.model-answer}
-*The student used the new value $x_1 = 1.5$ in $f_2$. The formula uses $f_2(x_n,\ y_n,\ t_n)$, so the old value $x_0 = 1$ is required: $f_2 = 3(1) - 2 = 1$ and $y_1 = 2.1$.*
+*The student used the new value $x_1 = 1.5$ in $f_2$.*
+
+*The formula uses $f_2(x_n,\ y_n,\ t_n)$, so the old value $x_0 = 1$ is required: $f_2 = 3(1) - 2 = 1$ and $y_1 = 2.1$.*
 :::
 
 **(b)**
 
 ::: {.model-answer}
-*Both rates of change are evaluated at the same instant $t = 0$. Using $x_1$, which belongs to $t = 0.1$, mixes two different times.*
+*Both rates of change are evaluated at the same instant $t = 0$.*
+
+*Using $x_1$, which belongs to $t = 0.1$, mixes two different times.*
 :::
 :::
+:::
+:::
+
+### 4. Predator–prey models（捕食者と被食者のモデル） {#predator}
+
+連立系がよく使われる場面の $1$ つが、**predator–prey model**（捕食者・被食者モデル）です。$x$ を **prey**（被食者、餌になる動物）、$y$ を **predator**（捕食者）とします。
+
+$$
+\frac{dx}{dt} = 0.4x - 0.002xy, \qquad \frac{dy}{dt} = -0.3y + 0.001xy
+$$
+
+**それぞれの項に意味があります。**
+
+| 項 | 意味 |
+|---|---|
+| $+0.4x$ | 捕食者がいなければ、prey は増える |
+| $-0.002xy$ | **出会うと食べられる**（$x$ と $y$ の**積**） |
+| $-0.3y$ | 餌がなければ、predator は減る |
+| $+0.001xy$ | **食べたぶん、predator が増える** |
+
+: 各項の意味 {#tbl-ahl516b-terms}
+
+::: {.callout-important}
+## $xy$ の項が「出会い」を表しています
+なぜ $x + y$ ではなく $xy$ なのでしょうか。
+
+**出会う回数は、両方の数に比例する**からです。ウサギが $2$ 倍いれば出会いは $2$ 倍、キツネも $2$ 倍なら $4$ 倍です。
+
+$$
+(\text{出会う回数}) \propto x \times y
+$$
+
+**片方が $0$ なら、出会いは $0$ です。** $x + y$ ではそうなりません。
+:::
+
+::: {.callout-warning}
+## 符号が $2$ 本の式で逆になります
+$-0.002xy$ と $+0.001xy$ です。**捕食者にとっては得、被食者にとっては損**だからです。
+
+**係数も同じとはかぎりません。** ウサギ $1$ 匹でキツネが $1$ 匹増えるわけではないので、$0.002$ と $0.001$ のように違う数になります。
+:::
+
+### 5. Interpreting the results（結果の読み方） {#interpret}
+
+Euler's method で計算した $x$ と $y$ を、時間 $t$ に対してグラフにすると、$2$ つの量の動き方が見えます。
+
+![連立の微分方程式を、Euler's method で解いたものです。](img/ahl-5-16b-time.svg){#fig-ahl516b-time width=100%}
+
+@fig-ahl516b-time の (a) は $h = 1$、(b) は $h = 0.005$ です。**$h$ を小さくすると、なめらかな周期的な動きが見えてきます。**
+
+![どちらが先に山になるかです。](img/ahl-5-16b-cycle.svg){#fig-ahl516b-cycle width=100%}
+
+@fig-ahl516b-cycle が、この動きの中身です。
+
+::: {.callout-note appearance="simple"}
+**$4$ つの段階がくり返されます。**
+
+1. prey が増える（捕食者がまだ少ない）
+2. 餌が多いので、**predator が増える**
+3. 捕食者が多いので、**prey が減る**
+4. 餌が減って、**predator も減る** → 1 へ戻る
+:::
+
+::: {.callout-important}
+## prey のピークが先、predator のピークが後です
+@fig-ahl516b-cycle の左を見てください。**$x$ のピークが先、$y$ のピークが後**です。
+
+理由は $1$ つです。**捕食者が増えるには、まず餌が増えている必要がある**からです。
+
+*Describe the relationship between the two populations* と問われたら、こう書きます。
+
+::: {.model-answer}
+**試験ではこう書く**
+
+*Both populations rise and fall in a repeating cycle of the same period.*
+
+*The prey population reaches its maximum first, and the predator population reaches its maximum a short time later, because the predators can only increase once there is plenty of prey to eat.*
+:::
+
+（どちらの個体数も同じ周期でくり返し増減する。被食者の個体数が先に最大となり、捕食者の個体数はその少しあとに最大となる。捕食者は、食べる被食者が十分にいてはじめて増えられるからである、という意味です。）
+:::
+
+### 6. Equilibrium points（平衡点） {#equilibrium}
+
+**両方の変化率が同時に $0$ になる点**を、**equilibrium point**（平衡点）といいます。
+
+::: {.callout-note appearance="simple"}
+平衡点は、[AHL 5.17a](ahl-5-17a.qmd) の **phase portrait**（相図）のところで、くわしく扱います。
+
+ただし、**Euler の表が正しいかを判断するのにとても役に立つ**ので、ここで先に扱います。
+:::
+
+$$
+\frac{dx}{dt} = 0 \quad \text{かつ} \quad \frac{dy}{dt} = 0
+$$
+
+上のモデルなら
+
+$$
+0.4x - 0.002xy = 0 \ \Longrightarrow \ x(0.4 - 0.002y) = 0 \ \Longrightarrow \ y = 200
+$$
+
+$$
+-0.3y + 0.001xy = 0 \ \Longrightarrow \ y(-0.3 + 0.001x) = 0 \ \Longrightarrow \ x = 300
+$$
+
+**平衡点は $(300,\ 200)$ です。**
+
+::: {.callout-tip}
+## 両方から $x$ と $y$ をくくり出してください
+$0.4x - 0.002xy = 0$ の両辺を $x$ で割りたくなりますが、**$x = 0$ の場合を落とします。**
+
+$$
+x(0.4 - 0.002y) = 0 \ \Longrightarrow \ x = 0 \ \text{または} \ y = 200
+$$
+
+**$(0,\ 0)$ も平衡点です。** どちらもいなければ、何も起こりません。
+
+問題が聞いているのはふつう**もう $1$ つのほう**ですが、$x = 0$ を書き落とさないでください。
+:::
+
+::: {.callout-warning}
+## 平衡点は「$x$ の値」ではなく「点」です
+答えは $(300,\ 200)$ という**点**です。$x = 300$ だけでは半分です。
+
+そして、**この predator–prey の形では**、$x$ の式から出るのが $y$ の値、$y$ の式から出るのが $x$ の値になります。**入れ替わります。** $xy$ の項があるからです。[第7節](#phase)の @fig-ahl516b-phase で、位置を確かめてください。
+
+**ほかの形の連立系では、そうなるとはかぎりません。** 演習8 では $\dfrac{da}{dt} = 0$ から $b = 2a$ という**関係**しか出ません。
 :::
 
 ::: {#exm-ahl516b-predator}
@@ -544,7 +473,8 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a) $n = 0$：** $t_0 = 0$、$x_0 = 400$、$y_0 = 100$
 
@@ -593,7 +523,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*The term $-0.002xy$ is the rate at which rabbits are lost to foxes. It is negative because rabbits are removed, and it depends on the product $xy$ because the number of encounters between rabbits and foxes depends on how many there are of each.*
+*The term $-0.002xy$ is the rate at which rabbits are lost to foxes.*
+
+*It is negative because rabbits are removed, and it depends on the product $xy$ because the number of encounters between rabbits and foxes depends on how many there are of each.*
 :::
 
 （$-0.002xy$ の項は、キツネによってウサギが失われる割合である。ウサギが減るので負であり、ウサギとキツネの出会いの回数は両方の数によって決まるので、積 $xy$ に依存する、という意味です。）
@@ -630,9 +562,39 @@ $$
 **(c)**
 
 ::: {.model-answer}
-*It is the rate at which rabbits are eaten by foxes. It is negative because rabbits are lost, and it depends on $xy$ because the number of encounters depends on both populations.*
+*It is the rate at which rabbits are eaten by foxes.*
+
+*It is negative because rabbits are lost, and it depends on $xy$ because the number of encounters depends on both populations.*
 :::
 :::
+:::
+:::
+
+### 7. Trajectories（$(x,\ y)$ 平面に描く） {#phase}
+
+時間 $t$ を使わずに、$x$ を横軸、$y$ を縦軸にとって点を並べることもできます。
+
+![同じ計算を、$(x, y)$ 平面に描いたものです。](img/ahl-5-16b-phase.svg){#fig-ahl516b-phase width=85%}
+
+@fig-ahl516b-phase は、**時間を消して** $x$ と $y$ だけを描いたものです。この曲線を **trajectory**（軌道）といいます。
+
+**閉じた輪になっています。** 同じところをぐるぐる回る——それが「周期的」ということです。
+
+@fig-ahl516b-cycle の右に矢印を入れてあります。**反時計回り**です。
+
+::: {.callout-tip}
+## 回る向きは、右端の点を見れば分かります
+$x$ がいちばん大きい点（右端）では、prey が最大です。そこでは **predator がまだ増えている最中**なので、$y$ が上がります。
+
+**右端で上向きなら、反時計回りです。**
+
+**$1$ 点だけ調べれば、向きが決まります。**
+:::
+
+::: {.callout-note appearance="simple"}
+この $(x,\ y)$ 平面の図を、[AHL 5.17a](ahl-5-17a.qmd) では相図と呼んで、くわしく扱います。
+
+**AHL 5.16 では、Euler で出した点を並べて描くところまで**です。
 :::
 
 ::: {#exm-ahl516b-read}
@@ -659,14 +621,17 @@ $$
 
 </details>
 
----
+::: {.callout-tip collapse="true"}
+## 解説と解答例
 
 **(a)**
 
 ::: {.model-answer}
 **試験ではこう書く**
 
-*Both populations rise and fall in a repeating cycle with the same period. The rabbit population reaches its maximum first, and the fox population reaches its maximum a short time afterwards, because the foxes can only increase once there are plenty of rabbits.*
+*Both populations rise and fall in a repeating cycle with the same period.*
+
+*The rabbit population reaches its maximum first, and the fox population reaches its maximum a short time afterwards, because the foxes can only increase once there are plenty of rabbits.*
 :::
 
 （どちらの個体数も同じ周期でくり返し増減する。ウサギの個体数が先に最大となり、キツネの個体数はその少しあとに最大となる。キツネはウサギが十分にいてはじめて増えられるからである、という意味です。）
@@ -676,7 +641,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*A closed loop means the pair $(x,\ y)$ returns to exactly the values it started from, so the whole cycle repeats. The two populations are periodic and neither dies out nor grows without limit.*
+*A closed loop means the pair $(x,\ y)$ returns to exactly the values it started from, so the whole cycle repeats.*
+
+*The two populations are periodic and neither dies out nor grows without limit.*
 :::
 
 （閉じた輪は、組 $(x,\ y)$ が出発したときの値にちょうど戻ることを意味し、したがって周期全体がくり返される。$2$ つの個体数は周期的で、絶滅もせず、限りなく増えもしない、という意味です。）
@@ -686,7 +653,9 @@ $$
 ::: {.model-answer}
 **試験ではこう書く**
 
-*With $h = 1$ year, twenty steps would be needed and each one follows a straight line while the true solution curves. The errors build up, and over a full cycle the estimated path drifts away from the true closed loop, so the values after $20$ years could be well out.*
+*With $h = 1$ year, twenty steps would be needed and each one follows a straight line while the true solution curves.*
+
+*The errors build up, and over a full cycle the estimated path drifts away from the true closed loop, so the values after $20$ years could be well out.*
 :::
 
 （$h = 1$ 年では $20$ 歩が必要で、真の解が曲がるあいだ、それぞれの歩は直線をたどる。誤差が積み重なり、$1$ 周を通じて推定された経路は真の閉じた輪から離れていくので、$20$ 年後の値はかなりずれる可能性がある、という意味です。）
@@ -695,13 +664,13 @@ $$
 
 ::: {.callout-tip}
 ## 「周期」も読み取れます
-**山から次の山までの間隔が周期です。**
+**ピークから次のピークまでの間隔が周期です。**
 
-@fig-ahl516b-time の (b) には山が $2$ つ見えています。$t = 3$ 前後と $t = 22$ 前後です。**周期はおよそ $19$ 年**です。
+@fig-ahl516b-time の (b) にはピークが $2$ つ見えています。$t = 3$ 前後と $t = 22$ 前後です。**周期はおよそ $19$ 年**です。
 
-（@fig-ahl516b-cycle の左は $t = 10$ から $32$ までを拡大したもので、山が $1$ つしか入っていません。周期はこちらでは測れません。）
+（@fig-ahl516b-cycle の左は $t = 10$ から $32$ までを拡大したもので、ピークが $1$ つしか入っていません。周期はこちらでは測れません。）
 
-*Estimate the period* と問われたら、**山から山まで**を読んでください。
+*Estimate the period* と問われたら、**ピークからピークまで**を読んでください。
 :::
 
 ::: {.callout-note}
@@ -709,13 +678,17 @@ $$
 **(a)**
 
 ::: {.model-answer}
-*Both populations cycle with the same period. The rabbits peak first and the foxes peak shortly afterwards, since the foxes can only increase when there are plenty of rabbits.*
+*Both populations cycle with the same period.*
+
+*The rabbits peak first and the foxes peak shortly afterwards, since the foxes can only increase when there are plenty of rabbits.*
 :::
 
 **(b)**
 
 ::: {.model-answer}
-*The pair $(x,\ y)$ returns to its starting values, so the behaviour repeats. Both populations are periodic; neither dies out nor grows without limit.*
+*The pair $(x,\ y)$ returns to its starting values, so the behaviour repeats.*
+
+*Both populations are periodic; neither dies out nor grows without limit.*
 :::
 
 **(c)**
@@ -723,6 +696,59 @@ $$
 ::: {.model-answer}
 *Twenty steps of straight-line approximation would be needed, and the errors accumulate, so the estimated path drifts away from the true cycle.*
 :::
+:::
+:::
+:::
+
+### 8. Using a spreadsheet（スプレッドシートで計算する） {#tech}
+
+連立系の Euler's method は、スプレッドシートで計算するのがふつうです。歩数が増えるので、**手で解くのは $2$〜$3$ 歩まで**です。
+
+列は $3$ つ（$t$、$x$、$y$）で足ります。$f_1$ と $f_2$ は式の中に入れてしまうので、列にしなくても構いません。やり方は [GDC 第1節](#gdc-sheet)です。
+
+## Why it works
+
+::: {.callout-tip collapse="true"}
+## クリックすると開きます
+
+#### $1$ 本のときと、まったく同じ理屈です {#why}
+
+[AHL 5.16a](ahl-5-16a.qmd#why) で見たとおり、$h$ が小さいとき
+
+$$
+x(t+h) \approx x(t) + h \times \frac{dx}{dt}
+$$
+
+が成り立ちます。**この式は $x$ についてのものです。** $y$ についても、同じことが別に成り立ちます。
+
+$$
+y(t+h) \approx y(t) + h \times \frac{dy}{dt}
+$$
+
+**$2$ 本を並べて、同じ $h$ で同時に進めるだけ**です。新しい考え方は要りません。
+
+#### なぜ「古い値」で計算するのか {#why-old}
+
+上の $2$ 本の式で、右辺の $\dfrac{dx}{dt}$ と $\dfrac{dy}{dt}$ は、**どちらも時刻 $t$ での値**です。
+
+時刻 $t$ での $\dfrac{dy}{dt}$ を出すには、**時刻 $t$ での $x$** が要ります。$t + h$ での $x$ ではありません。
+
+**新しい $x$ を使ってしまうと、$2$ 本の式が「同じ瞬間」の話でなくなります。** それが [第3節](#old) の間違いです。
+
+#### $h$ が大きいと、輪が閉じません {#why-spiral}
+
+![$h$ が大きいと、軌道は外へ広がっていきます。](img/ahl-5-16b-spiral.svg){#fig-ahl516b-spiral width=85%}
+
+@fig-ahl516b-spiral を見てください。$h = 0.5$ の軌道は、**外へ外へと広がっています。**
+
+本当の解は閉じた輪なのに、Euler の折れ線は毎回**輪の外側へ**はみ出します。**tangent**（接線）が輪の外を通るからです。
+
+**そのずれが $1$ 周ごとにたまって、渦巻きになります。**
+
+::: {.callout-note appearance="simple"}
+このふるまいは **AI HL では問われません。** ただし、*Comment on the reliability of your answer* と聞かれたときに、「$h$ が大きいと長い時間では信用できない」と書ける材料になります。
+
+この弱点を減らす、もっと精度の高い方法として **Runge–Kutta methods**（ルンゲ・クッタ法）があります。**試験には出ません。**
 :::
 :::
 
@@ -785,7 +811,7 @@ $x = 0$ かつ $y = 0$ も平衡点です（[第6節](#equilibrium)）。
 Lists & Spreadsheet は Press-to-Test で止められていません（[AHL 5.16a](ahl-5-16a.qmd#gdc-sheet)）。**ここで説明する方法は、試験でもそのまま使えます。**
 :::
 
-### $5$ 列のスプレッドシートを作る {#gdc-sheet}
+### Setting up the spreadsheet（スプレッドシートを作る） {#gdc-sheet}
 
 ```
 ctrl + doc → Add Lists & Spreadsheet
@@ -826,9 +852,9 @@ menu → Data → Fill
 `a1`、`b1`、`c1` です。`a[]` は**列ぜんぶ**を指すので、ここでは使えません（[AHL 5.16a](ahl-5-16a.qmd#gdc-sheet)）。
 :::
 
-### $(x,\ y)$ の軌道を描く {#gdc-plot}
+### Plotting the trajectory（$(x,\ y)$ の軌道を描く） {#gdc-plot}
 
-列 B と C ができたら、**散布図**にすれば @fig-ahl516b-phase の形が出ます。
+列 B と C ができたら、**scatter diagram**（散布図）にすれば @fig-ahl516b-phase の形が出ます。
 
 ```
 ctrl + doc → Add Data & Statistics
@@ -841,7 +867,9 @@ $x$ 軸に列 B、$y$ 軸に列 C を割りあてます。
 列のいちばん上のグレーの行に `t`、`x`、`y` と打っておくと、Data & Statistics で選びやすくなります（[SL 4.2](../../ai-sl/04-statistics-and-probability/sl-4-2.qmd)）。
 :::
 
-### 答えの確かめ方 {#gdc-check}
+### Checking your answers（答えの確かめ方） {#gdc-check}
+
+電卓で作った表は、次の $3$ つで確かめます。
 
 1. **符号**が場面に合っているか（増えるはずのものが増えているか）
 2. **平衡点**を計算して、そこを中心に回っているか
@@ -855,12 +883,6 @@ $x$ 軸に列 B、$y$ 軸に列 C を割りあてます。
 :::
 
 ## Exercises
-
-::: {.callout-note appearance="simple"}
-各問題に、折りたたみが3つ付いています。**日本語訳**、**解答例**（答案用紙に書くべきこと。英語です）、**解説**（なぜそうなるか。日本語です）。
-
-まず自分で解いて、次に解答例と見くらべてください。**解説は、合わなかったときだけ開けば十分です。**
-:::
 
 ::: {.exercise-block}
 
@@ -960,7 +982,9 @@ $$
 ::: {.callout-note collapse="true"}
 ## 解答例（答案用紙に書くこと）
 ::: {.model-answer}
-*The student used the new value $x_1 = 1.2$ when calculating $f_2$. Euler's method requires $f_2(x_n,\ y_n,\ t_n)$, that is the old value $x_0 = 1$.*
+*The student used the new value $x_1 = 1.2$ when calculating $f_2$.*
+
+*Euler's method requires $f_2(x_n,\ y_n,\ t_n)$, that is the old value $x_0 = 1$.*
 :::
 
 $$
@@ -1119,7 +1143,11 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*The predators can only increase while there is plenty of prey to eat. So the predator numbers keep rising after the prey numbers have started to fall, and the predator maximum comes later. Once the prey has fallen far enough, the predators begin to decrease as well.*
+*The predators can only increase while there is plenty of prey to eat.*
+
+*So the predator numbers keep rising after the prey numbers have started to fall, and the predator maximum comes later.*
+
+*Once the prey has fallen far enough, the predators begin to decrease as well.*
 :::
 :::
 
@@ -1129,7 +1157,7 @@ $$
 
 **「捕食者は、餌があってはじめて増える」**——この $1$ 文が理由です。
 
-**検算。** 図の左で、赤（prey）の点線が青（predator）の点線より**左**にあります ✓ $x$ の山が $t \approx 22$、$y$ の山が $t \approx 25.5$ です。
+**検算。** 図の左で、赤（prey）の点線が青（predator）の点線より**左**にあります ✓ $x$ のピークが $t \approx 22$、$y$ のピークが $t \approx 25.5$ です。
 
 ::: {.callout-warning}
 ## 「同時に最大になる」ではありません
@@ -1164,7 +1192,9 @@ $2$ つのグラフは**ずれています。** そのずれこそが、この�
 **(a)**
 
 ::: {.model-answer}
-*At that point the prey population is at its largest, so there is plenty of food and the predators are still increasing. Therefore $y$ is increasing.*
+*At that point the prey population is at its largest, so there is plenty of food and the predators are still increasing.*
+
+*Therefore $y$ is increasing.*
 :::
 
 **(b)** *The trajectory is traced anticlockwise.*
@@ -1176,9 +1206,7 @@ $2$ つのグラフは**ずれています。** そのずれこそが、この�
 
 $x$ が最大の点は、輪の**右端**です。そこで $y$ が増えるので、**上向き**に進みます。
 
-$$
-\text{右端で上向き} \ \Longrightarrow \ \text{反時計回り}
-$$
+**右端で上向きなら、反時計回りです。**
 
 **検算。** @fig-ahl516b-cycle の右の矢印を見てください ✓ 右端で上を向いています。
 
@@ -1234,7 +1262,9 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*The term $0.2a$ is the rate at which liquid flows out of tank A and into tank B. It is negative in the first equation because that liquid leaves A, and positive in the second because the same liquid arrives in B.*
+*The term $0.2a$ is the rate at which liquid flows out of tank A and into tank B.*
+
+*It is negative in the first equation because that liquid leaves A, and positive in the second because the same liquid arrives in B.*
 :::
 :::
 
@@ -1307,7 +1337,11 @@ $1$ 分後に $b = 20$ なので、次の $1$ 分で減るのは $0.2 \times 20 
 **(a)**
 
 ::: {.model-answer}
-*Euler's method follows a straight line for each step, while the true trajectory curves. With $h = 2$ each straight piece is long, so it leaves the true loop by a large amount, and these errors build up around the loop into a spiral. With $h = 0.1$ each piece is short and stays close to the true path.*
+*Euler's method follows a straight line for each step, while the true trajectory curves.*
+
+*With $h = 2$ each straight piece is long, so it leaves the true loop by a large amount, and these errors build up around the loop into a spiral.*
+
+*With $h = 0.1$ each piece is short and stays close to the true path.*
 :::
 
 **(b)**
@@ -1376,13 +1410,19 @@ $$
 **(b)**
 
 ::: {.model-answer}
-*The term $0.1x$ is the rate at which infected students recover. They leave the infected group, which is why it is subtracted in the first equation, and they join the recovered group, which is why it is added in the second.*
+*The term $0.1x$ is the rate at which infected students recover.*
+
+*They leave the infected group, which is why it is subtracted in the first equation, and they join the recovered group, which is why it is added in the second.*
 :::
 
 **(c)**
 
 ::: {.model-answer}
-*The model is not realistic over a long period. Since $\dfrac{dx}{dt} = 0.2x$, the number of infected students grows exponentially without limit, so it would eventually exceed $500$, which is impossible. A realistic model would slow the spread as the number of students still available to infect runs out.*
+*The model is not realistic over a long period.*
+
+*Since $\dfrac{dx}{dt} = 0.2x$, the number of infected students grows exponentially without limit, so it would eventually exceed $500$, which is impossible.*
+
+*A realistic model would slow the spread as the number of students still available to infect runs out.*
 :::
 :::
 

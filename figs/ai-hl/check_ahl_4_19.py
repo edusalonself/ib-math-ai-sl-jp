@@ -186,5 +186,17 @@ eq("8  20000 人の長期分布（3 状態 W）",
    [20000 * x for x in M([R(1, 5), R(3, 10), R(1, 2)])],
    [4000, 6000, 10000])
 
+print("══════════ ページの構成 ══════════")
+import os as _os, re as _re
+_QMD = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..",
+                     "ai-hl", "04-statistics-and-probability", "ahl-4-19.qmd")
+TXT = open(_QMD, encoding="utf-8").read()
+eq("## Worked examples が無い", "## Worked examples" in TXT, False)
+_exm = [m.start() for m in _re.finditer(r"::: \{#exm-", TXT)]
+_idea, _why = TXT.index("## The idea"), TXT.index("## Why it works")
+eq("例題はすべて The idea の中（Why it works より前）",
+   all(_idea < p < _why for p in _exm), True)
+eq("例題の数は変わらない", len(_exm), 5)
+
 print()
 print(f"══════════ OK {ok} / NG {ng} ══════════")

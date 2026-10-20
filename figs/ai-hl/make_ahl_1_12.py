@@ -53,14 +53,12 @@ for c, col, lab, ls in specs:
 ax.plot([1, 3], [0, 0], "o", color=GREEN, ms=8, zorder=6)
 ax.plot([2], [0], "o", color=GOLD, ms=8, zorder=6)
 ax.axhline(0, color=GREY, lw=1.4)
-ax.text(3.75, 3.1, "roots  $2 \\pm i$", fontsize=12, color=ACC, ha="center",
+ax.text(2.0, 2.0, "roots  $2 \\pm i$", fontsize=12, color=ACC, ha="center",
         bbox=BOX, zorder=7)
 ax.set_xlim(-0.4, 4.4)
 ax.set_ylim(-1.9, 7.4)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=10.5, frameon=False, loc="upper left")
-ax.set_title("the same parabola moved up: what $\\Delta$ tells you",
-             fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()
@@ -91,8 +89,7 @@ ax.text(3.12, 1.0, "$2$", fontsize=12, color=GREY, ha="left")
 ax.text(-3.4, 3.25, "$\\theta = \\arg z = \\arctan\\dfrac{2}{3} = 0.588$",
         fontsize=12, color=GREEN, ha="left", va="top", bbox=BOX, zorder=7)
 plane(ax, (-3.6, 5.4), (-3.2, 3.5))
-ax.set_title("(a)  modulus is a length, argument is an angle",
-             fontsize=12, color=INK, pad=10)
+ax.set_title("(a)", fontsize=12, color=INK, pad=10)
 
 ax = axs[1]
 w = (-3, 2)
@@ -105,20 +102,18 @@ wrong = (3 * np.cos(-0.588003) * 1.15, 3 * np.sin(-0.588003) * 1.15)
 ax.add_patch(FancyArrowPatch((0, 0), wrong, arrowstyle="-|>",
                              mutation_scale=15, color=ACC, lw=2.0, ls=":",
                              zorder=4))
-ax.text(2.95, -2.20, "$\\arctan\\dfrac{2}{-3} = -0.588$\n"
-        "points the wrong way", fontsize=11, color=ACC,
+ax.text(2.95, -2.20, "$\\arctan\\dfrac{2}{-3} = -0.588$", fontsize=11,
+        color=ACC,
         ha="center", va="top", bbox=BOX, zorder=7)
 ax.add_patch(Arc((0, 0), 2.6, 2.6, theta1=0, theta2=146.31, color=GREEN,
                  lw=2.0, zorder=5))
 ax.text(0.30, 1.50, "$2.55$", fontsize=12, color=GREEN, zorder=7, bbox=BOX)
 ax.add_patch(Arc((0, 0), 2.0, 2.0, theta1=-33.69, theta2=0, color=ACC,
                  lw=1.8, ls=":", zorder=5))
-ax.text(-5.1, 4.05, "the point is in the second quadrant,\n"
-        "so add $\\pi$:   $-0.588 + \\pi = 2.55$", fontsize=11.5,
+ax.text(-5.1, 4.05, "$-0.588 + \\pi = 2.55$", fontsize=11.5,
         color=GREEN, ha="left", va="top", bbox=BOX, zorder=7)
 plane(ax, (-5.3, 4.6), (-3.4, 4.3))
-ax.set_title("(b)  the calculator angle needs checking against the picture",
-             fontsize=12, color=INK, pad=10)
+ax.set_title("(b)", fontsize=12, color=INK, pad=10)
 
 fig.tight_layout()
 save(fig, "ahl-1-12b-argand.svg")
@@ -140,13 +135,8 @@ for pt, col, lab, va in (((1, 3), LINE, "$z = 1 + 3i$", "bottom"),
     ax.plot([pt[0]], [pt[1]], "o", color=col, ms=9, zorder=6)
     ax.text(pt[0] + 0.30, pt[1], lab, fontsize=12.5, color=col, va=va)
 ax.plot([1, 1], [3, -3], color=GREY, lw=1.2, ls=":", zorder=3)
-ax.text(-4.15, 4.35, "both roots of $x^{2}-2x+10=0$", fontsize=12,
-        color=INK, ha="left", va="top", bbox=BOX, zorder=7)
-ax.text(-4.15, -2.55, "same distance $\\sqrt{10} = 3.16$\nfrom the origin",
-        fontsize=11.5, color=GREY, ha="left", va="top", bbox=BOX, zorder=7)
 plane(ax, (-4.3, 4.6), (-4.3, 4.6))
-ax.set_title("(a)  a conjugate pair is a mirror image in the real axis",
-             fontsize=12, color=INK, pad=10)
+ax.set_title("(a)", fontsize=12, color=INK, pad=10)
 
 ax = axs[1]
 X = np.linspace(-2.2, 4.2, 400)
@@ -158,16 +148,13 @@ ax.text(0.85, 9.0, "vertex $(1,\\ 9)$", fontsize=11.5, color=GOLD,
         ha="right", va="center", bbox=BOX, zorder=7)
 ax.annotate("", xy=(2.9, 0), xytext=(2.9, 9.0),
             arrowprops=dict(arrowstyle="<->", color=ACC, lw=1.6))
-ax.text(3.05, 4.5, "the curve never\nreaches the axis", fontsize=11,
-        color=ACC, va="center", bbox=BOX, zorder=7)
 ax.text(-2.0, 20.5, "$\\Delta = (-2)^{2} - 4(1)(10) = -36 < 0$", fontsize=12,
         color=INK, ha="left", va="top", bbox=BOX, zorder=7)
 ax.set_xlim(-2.2, 4.6)
 ax.set_ylim(-2.0, 22.5)
 ax.set_xlabel("$x$")
 ax.legend(fontsize=11, frameon=False, loc="upper right")
-ax.set_title("(b)  no $x$-intercepts is the same information",
-             fontsize=12, color=INK, pad=10)
+ax.set_title("(b)", fontsize=12, color=INK, pad=10)
 tidy(ax)
 
 fig.tight_layout()

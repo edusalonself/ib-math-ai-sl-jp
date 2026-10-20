@@ -77,12 +77,10 @@ ax.annotate("", xy=(2.75, 5.75), xytext=(1.6, 4.6),
             arrowprops=dict(arrowstyle="->", color=GREEN, lw=1.8))
 ax.annotate("", xy=(3.25, 6.25), xytext=(4.4, 7.4),
             arrowprops=dict(arrowstyle="->", color=GREEN, lw=1.8))
-ax.text(3.35, 5.15, "there is a hole\nat $x=3$", color=ACC, fontsize=10.5,
+ax.text(3.35, 5.15, "hole", color=ACC, fontsize=10.5,
         ha="left", va="center", zorder=10, bbox=BOX)
 ax.text(0.85, 8.3, r"$\lim_{x\to 3}\ f(x)=6$", color=INK, fontsize=13,
         ha="left", va="center", zorder=10, bbox=BOX)
-ax.set_title("the graph gets close to $6$ from both sides",
-             fontsize=11.5, color=INK, pad=10)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-1-limit.svg"), bbox_inches="tight")
@@ -130,16 +128,13 @@ ax.text(1.86, 3.55, "$P(2,4)$", ha="right", va="top", fontsize=11.5,
 leg = ax.legend(loc="upper left", fontsize=10, frameon=True, framealpha=0.95,
                 edgecolor="none", borderpad=0.7, labelspacing=0.6)
 leg.set_zorder(12)
-ax.text(3.45, 1.0, "as the second point slides towards $P$,\n"
-                   "the chord turns into the tangent",
-        color=GREEN, fontsize=11, ha="right", va="center", zorder=10, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-1-chords.svg"), bbox_inches="tight")
 plt.close(fig)
 
 
 # ══════════════ 3. 傾きの関数（gradient function）══════════════
-fig, axs = plt.subplots(1, 2, figsize=(11.4, 4.8))
+fig, axs = plt.subplots(1, 2, figsize=(10.4, 4.3))
 
 ax = axs[0]
 axes(ax, (-2.6, 2.6), (-0.6, 6.4), 1, 1)
@@ -156,8 +151,6 @@ for a in (-2, -1, 0, 1, 2):
     else:
         ax.text(a, a ** 2 - 0.55, f"${m}$", color=ACC, fontsize=10.5,
                 ha="center", va="top", zorder=10, bbox=BOX)
-ax.set_title("the gradient at each point of  $y=x^{2}$",
-             fontsize=11.5, color=INK, pad=10)
 
 ax = axs[1]
 axes(ax, (-2.6, 2.6), (-4.6, 4.6), 1, 2, ylab="gradient")
@@ -165,10 +158,6 @@ ax.plot(np.linspace(-2.5, 2.5, 200), 2 * np.linspace(-2.5, 2.5, 200),
         color=ACC, lw=2.4, zorder=5)
 for a in (-2, -1, 0, 1, 2):
     ax.plot([a], [2 * a], "o", color=ACC, ms=7, zorder=8)
-ax.text(-2.35, 3.4, "plot the gradients\nagainst $x$", color=GREEN,
-        fontsize=11, ha="left", va="center", zorder=10, bbox=BOX)
-ax.set_title("those gradients form a new function",
-             fontsize=11.5, color=INK, pad=10)
 
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-1-gradient-fn.svg"), bbox_inches="tight")
@@ -199,10 +188,8 @@ m = -9 * exp(-0.6)
 tt = np.array([1.8, 6.6])
 ax.plot(tt, m * (tt - 4) + Tf(4), color=ACC, lw=2.2, ls="--", zorder=7)
 ax.plot([4], [Tf(4)], "o", color=ACC, ms=8, zorder=9)
-ax.text(0.4, 32.0, r"chord:  $\dfrac{-20}{4}=-5\ ^{\circ}$C per minute",
+ax.text(0.4, 27.0, r"chord:  $\dfrac{-20}{4}=-5\ ^{\circ}$C per minute",
         color=GREEN, fontsize=11.5, ha="left", va="center", zorder=10, bbox=BOX)
-ax.text(0.4, 25.0, "the chord gradient estimates\nthe tangent gradient at $t=4$",
-        color=ACC, fontsize=10.5, ha="left", va="center", zorder=10, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-1-rate.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -325,8 +312,8 @@ print("wrote sl-5-1-q1.svg, sl-5-1-q2.svg, sl-5-1-q4.svg")
 # ══════════════════════════════════════════════════════════
 from matplotlib.patches import Rectangle
 
-fig, ax = plt.subplots(figsize=(9.2, 3.6))
-ax.set_xlim(0, 124); ax.set_ylim(0, 53); ax.axis("off")
+fig, ax = plt.subplots(figsize=(7.4, 3.4))
+ax.set_xlim(0, 100); ax.set_ylim(0, 46); ax.axis("off")
 
 SCR_BG, SCR_EDGE, HDR = "#ffffff", "#9aa0ac", "#eef0f3"
 
@@ -374,11 +361,6 @@ for i, (a, b) in enumerate(rows):
                                edgecolor=ACC, linewidth=2.0, zorder=7))
         yhit = y + rh / 2
 
-ax.annotate("$f(3)$ does not exist", xy=(99.8, yhit), xytext=(102.5, yhit),
-            color=ACC, fontsize=11, ha="left", va="center", zorder=9,
-            arrowprops=dict(arrowstyle="->", color=ACC, lw=1.4))
-ax.text(50, 49.0, "the table comes out already filled in", fontsize=11,
-        color=INK, ha="center", va="center", zorder=9)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-1-gdc-table.svg"), bbox_inches="tight",
             transparent=True)

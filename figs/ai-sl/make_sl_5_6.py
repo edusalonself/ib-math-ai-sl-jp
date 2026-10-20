@@ -52,7 +52,7 @@ for a, y, lab, dy, va in ((1, 5, "local maximum  $(1,\\,5)$", 0.85, "bottom"),
     ax.text(a, y + dy, lab, color=ACC, fontsize=12, ha="center", va=va,
             zorder=10, bbox=BOX)
 
-ax.text(0.05, 7.7, "at both points the tangent is horizontal:  $f'(x)=0$",
+ax.text(0.18, 7.7, "$f'(x)=0$",
         fontsize=12, ha="left", va="center", color=INK, zorder=10, bbox=BOX)
 ax.text(4.5, 6.4, "$y=f(x)$", color=LINE, fontsize=12.5, ha="right",
         va="center", zorder=10, bbox=BOX)
@@ -62,8 +62,8 @@ plt.close(fig)
 
 
 # ══════════════ 2. 符号で見分ける ══════════════
-fig, ax = plt.subplots(figsize=(8.6, 3.9))
-blank(ax, (-0.02, 1.02), (0.0, 1.0))
+fig, ax = plt.subplots(figsize=(8.6, 3.2))
+blank(ax, (-0.02, 1.02), (0.12, 0.92))
 
 y0 = 0.30
 ax.plot([0.06, 0.96], [y0, y0], color=INK, lw=1.6, zorder=4)
@@ -93,9 +93,6 @@ for px, lab in ((0.36, "peak"), (0.68, "valley")):
             color=INK)
 ax.text(0.02, sh, "shape", fontsize=13, ha="left", va="center")
 
-ax.text(0.50, 0.03, "$+$ then $-$  $\\Rightarrow$  local maximum      "
-                    "$-$ then $+$  $\\Rightarrow$  local minimum",
-        fontsize=12.5, ha="center", va="center", color=GOLD)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-6-sign.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -122,8 +119,6 @@ for a in (1, 3):
     ax.axvline(a, color=GOLD, lw=1.6, ls=(0, (6, 4)), zorder=3)
     ax.plot([a], [0], "o", color=INK, ms=7, zorder=9)
 ax.set_title("$y=f'(x)$", fontsize=13, color=GREEN, pad=6)
-ax.text(2.0, 7.6, "$f'$ crosses the $x$-axis exactly\nwhere $f$ has a peak or a valley",
-        fontsize=11.5, ha="center", va="center", color=INK, zorder=10, bbox=BOX)
 
 fig.savefig(os.path.join(OUT, "sl-5-6-fdash.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -150,11 +145,8 @@ for a, y, lab, ha, dx in ((-1, -15, "least value $-15$", "left", 0.22),
 
 ax.axvline(-1, color=GREY, lw=1.4, ls=(0, (5, 4)), zorder=2)
 ax.axvline(5, color=GREY, lw=1.4, ls=(0, (5, 4)), zorder=2)
-ax.text(-1.55, 23.5, "on the domain $-1 \\leq x \\leq 5$", fontsize=12,
+ax.text(-1.55, 23.5, "$-1 \\leq x \\leq 5$", fontsize=12,
         ha="left", va="center", color=INK, zorder=10, bbox=BOX)
-ax.text(1.3, -9.5, "the greatest and least values are at the ENDS,\n"
-                   "not at the local maximum or minimum",
-        fontsize=11.5, ha="left", va="center", color=GOLD, zorder=10, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-6-local-global.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -176,8 +168,6 @@ ax.text(40, -60, "$x=40$", color=ACC, fontsize=11.5, ha="center", va="top",
         zorder=10, bbox=BOX)
 ax.text(2, 640, "profit $P$  (dollars)", color=LINE, fontsize=12,
         ha="left", va="center", zorder=10, bbox=BOX)
-ax.text(2, -300, "$P'(x)=0$  gives the best number to sell", fontsize=12,
-        ha="left", va="center", color=GOLD, zorder=10, bbox=BOX)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-6-context.svg"), bbox_inches="tight")
 plt.close(fig)

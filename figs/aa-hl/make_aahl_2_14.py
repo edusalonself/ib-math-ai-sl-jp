@@ -70,8 +70,6 @@ axes1[1].annotate("", xy=(1.45, 1.63), xytext=(-1.45, -1.63),
                                   linestyle="--"))
 axes1[1].plot([0.0], [0.0], "o", color=WARM, markersize=5)
 axes1[1].set_title("odd: $f(-x) = -f(x)$", fontsize=10.5, color=ACCENT, pad=6)
-axes1[1].text(0.0, -2.6, "a half turn about the origin", ha="center",
-              va="center", fontsize=8.5, color=GREY)
 axes1[1].set_xlim(-2.2, 2.2)
 axes1[1].set_ylim(-2.2, 2.6)
 frame(axes1[1])
@@ -80,8 +78,6 @@ frame(axes1[1])
 # (b) 定義域を切って、y = x で折り返す
 # ══════════════════════════════════════════════════════════
 fig2, ax2 = plt.subplots(figsize=(5.4, 4.4))
-ax2.set_title("Cut the domain first, then reflect in $y=x$",
-              fontsize=10.5, color=INK, loc="left", pad=10)
 _u = np.linspace(-2.2, 2.6, 300)
 ax2.plot(_u, _u ** 2, color=GREY, linewidth=1.2, linestyle=":")
 _p = np.linspace(0.0, 2.6, 200)
@@ -95,8 +91,6 @@ ax2.text(1.35, 6.0, "$y=f(x)$, $x \\geq 0$", ha="center", va="center",
 ax2.text(5.6, 1.5, "$y=f^{-1}(x)$", ha="center", va="center", fontsize=9.5,
          color=WARM, bbox=dict(facecolor="white", edgecolor="none", pad=1.5))
 ax2.text(5.2, 5.6, "$y=x$", ha="center", va="center", fontsize=9, color=GREY)
-ax2.text(-1.7, 5.2, "the dotted part\nis cut off", ha="left", va="center",
-         fontsize=8.5, color=GREY)
 ax2.set_xlim(-2.4, 6.8)
 ax2.set_ylim(-1.2, 6.8)
 frame(ax2)

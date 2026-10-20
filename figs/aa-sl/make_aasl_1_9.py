@@ -33,15 +33,13 @@ ACCENT = "#0b5cad"
 GREY = "#6b7280"
 WARM = "#b45309"
 
-fig1, ax1 = plt.subplots(figsize=(5.5, 4.2))
-fig2, ax2 = plt.subplots(figsize=(5.5, 4.2))
+fig1, ax1 = plt.subplots(figsize=(4.85, 3.9))
+fig2, ax2 = plt.subplots(figsize=(5.5, 3.5))
 # ══════════════════════════════════════════════════════════
 # (a) パスカルの三角形（n = 0 から 4）
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Pascal's triangle", fontsize=11, color=INK,
-              loc="left", pad=10)
-ax1.set_xlim(-3.0, 3.0)
-ax1.set_ylim(-0.95, 4.9)
+ax1.set_xlim(-3.0, 2.3)
+ax1.set_ylim(-0.75, 4.6)
 ax1.axis("off")
 
 ROWS = [[1], [1, 1], [1, 2, 1], [1, 3, 3, 1], [1, 4, 6, 4, 1]]
@@ -72,10 +70,8 @@ ax1.text(0.0, -0.42, "$3 + 3 = 6$", ha="center", va="center",
 # ══════════════════════════════════════════════════════════
 # (b) 一般項の読み方
 # ══════════════════════════════════════════════════════════
-ax2.set_title("Reading a term of $(a+b)^{4}$", fontsize=11, color=INK,
-              loc="left", pad=10)
 ax2.set_xlim(0.0, 1.0)
-ax2.set_ylim(0.0, 1.0)
+ax2.set_ylim(0.05, 0.98)
 ax2.axis("off")
 
 TERMS = [(0.28, "$a^{4}$", 4, 0),

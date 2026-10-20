@@ -33,7 +33,7 @@ def curve_ax(ax):
 
 
 # ══════════════ 1. 独立な normal を足すと、やはり normal ══════════════
-fig, ax = plt.subplots(figsize=(9.6, 4.6))
+fig, ax = plt.subplots(figsize=(9.0, 4.0))
 xs = np.linspace(150, 480, 1200)
 for mu, sd, col, ls, lab in (
         (250.0, 8.0, LINE, "-", "$M \\sim N(250,\\,8^{2})$"),
@@ -50,15 +50,13 @@ ax.set_xlim(150, 480)
 ax.set_ylim(0, 0.082)
 ax.set_xlabel("mass (g)")
 ax.legend(fontsize=10.5, loc="upper center", frameon=False)
-ax.set_title("adding two independent normals gives another normal",
-             fontsize=12.5, color=INK, pad=10)
 curve_ax(ax)
 fig.tight_layout()
 save(fig, "ahl-4-15-sum.svg")
 
 
 # ══════════════ 2. 標本平均は、n が大きいほど細くなる ══════════════
-fig, ax = plt.subplots(figsize=(9.6, 4.6))
+fig, ax = plt.subplots(figsize=(9.0, 4.2))
 MU, SD = 1000.0, 12.0
 xs = np.linspace(955, 1045, 1200)
 for n, col, lw in ((1, GREY, 2.0), (4, LINE, 2.2), (9, GREEN, 2.4),
@@ -74,8 +72,6 @@ ax.set_xlim(955, 1045)
 ax.set_ylim(0, 0.190)
 ax.set_xlabel("mass (g)")
 ax.legend(fontsize=10.5, loc="upper right", frameon=False)
-ax.set_title("$\\bar{X}$ keeps the same centre, but gets narrower as $n$ grows",
-             fontsize=12.5, color=INK, pad=10)
 curve_ax(ax)
 fig.tight_layout()
 save(fig, "ahl-4-15-xbar.svg")
@@ -84,14 +80,13 @@ save(fig, "ahl-4-15-xbar.svg")
 # ══════════════ 3. 中心極限定理 ══════════════
 rng = np.random.default_rng(415)
 POP = rng.exponential(1.0, 400_000)      # 右に大きく歪んだ母集団
-fig, axs = plt.subplots(1, 4, figsize=(14.2, 3.7))
+fig, axs = plt.subplots(1, 4, figsize=(13.0, 3.3))
 
 # 母集団そのもの
 ax = axs[0]
 ax.hist(POP, bins=70, range=(0, 5), density=True, color=GREY, alpha=0.8)
 ax.set_xlim(0, 5)
-ax.set_title("the population itself\n(strongly skewed, NOT normal)",
-             fontsize=11, color=INK, pad=8)
+ax.set_title("population", fontsize=11.5, color=INK, pad=8)
 ax.set_xlabel("$x$")
 curve_ax(ax)
 
@@ -106,10 +101,6 @@ for ax, n in zip(axs[1:], (2, 10, 40)):
     ax.set_xlabel("$\\bar{x}$")
     curve_ax(ax)
 
-fig.text(0.5, -0.04,
-         "the red curve is the normal distribution with the same mean and "
-         "standard deviation:   by $n = 40$ the histogram sits on it",
-         fontsize=11.5, ha="center", color=INK)
 fig.tight_layout()
 save(fig, "ahl-4-15-clt.svg")
 

@@ -40,7 +40,7 @@ FAINT = "#e5e7eb"
 
 fig0, (ax0L, ax0R) = plt.subplots(1, 2, figsize=(6.8, 3.1))
 figH, (axHL, axHR) = plt.subplots(1, 2, figsize=(6.8, 3.1))
-fig1, ax1 = plt.subplots(figsize=(5.3, 4.4))
+fig1, ax1 = plt.subplots(figsize=(5.3, 4.1))
 fig2, ax2 = plt.subplots(figsize=(5.3, 4.4))
 # ══════════════════════════════════════════════════════════
 # (vlt) vertical line test
@@ -122,10 +122,8 @@ axHR.text(0.15, 3.35, "two points", fontsize=10, color=WARM,
 # ══════════════════════════════════════════════════════════
 # (a) domain と range
 # ══════════════════════════════════════════════════════════
-ax1.set_title("Domain on the $x$-axis, range on the $y$-axis",
-              fontsize=11, color=INK, loc="left", pad=10)
 ax1.set_xlim(-4.6, 3.6)
-ax1.set_ylim(-1.3, 3.2)
+ax1.set_ylim(-0.95, 3.2)
 ax1.axis("off")
 
 ax1.annotate("", xy=(3.4, 0), xytext=(-4.4, 0),
@@ -133,8 +131,8 @@ ax1.annotate("", xy=(3.4, 0), xytext=(-4.4, 0),
 ax1.annotate("", xy=(0, 3.0), xytext=(0, -1.0),
              arrowprops=dict(arrowstyle="->", color=GREY, linewidth=1.1))
 ax1.text(3.5, -0.3, "$x$", fontsize=10, color=GREY, ha="center")
-ax1.text(-0.28, 3.05, "$y$", fontsize=10, color=GREY, va="center")
-ax1.text(2.0, -0.34, "$2$", fontsize=10, color=INK, ha="center")
+ax1.text(0.12, 3.05, "$y$", fontsize=10, color=GREY, va="center")
+ax1.text(2.12, 0.08, "$2$", fontsize=10, color=INK, ha="left")
 
 xs = np.linspace(-4.0, 2.0, 200)
 ax1.plot(xs, np.sqrt(2 - xs), color=ACCENT, linewidth=2.2)
@@ -158,14 +156,10 @@ ax1.text(-0.52, 1.15, "range:\n$y \\geq 0$", fontsize=11, color=WARM,
          ha="right", va="center")
 
 ax1.plot([-4.2, 2.0], [0, 0], color=FAINT, linewidth=0.0)
-ax1.text(-0.5, -1.22, "shadow on each axis", fontsize=9.5, color=INK,
-         ha="center")
 
 # ══════════════════════════════════════════════════════════
 # (b) y = x について対称
 # ══════════════════════════════════════════════════════════
-ax2.set_title("The inverse is the reflection in $y = x$",
-              fontsize=11, color=INK, loc="left", pad=10)
 ax2.set_xlim(-0.5, 3.4)
 ax2.set_ylim(-0.5, 3.4)
 ax2.set_aspect("equal")
@@ -185,9 +179,9 @@ d = np.linspace(-0.2, 3.15, 20)
 ax2.plot(d, d, color=INK, linewidth=1.1, linestyle=(0, (5, 4)))
 
 ax2.text(1.0, 2.75, "$y = f(x)$", fontsize=11, color=ACCENT)
-ax2.text(2.9, 1.62, "$y = f^{-1}(x)$", fontsize=11, color=WARM,
-         ha="center")
-ax2.text(2.55, 2.85, "$y = x$", fontsize=10.5, color=INK)
+ax2.text(2.75, 1.38, "$y = f^{-1}(x)$", fontsize=11, color=WARM,
+         ha="center", va="top")
+ax2.text(2.85, 2.55, "$y = x$", fontsize=10.5, color=INK)
 
 # 対応する 2 点
 A, B = 1.4, 1.96

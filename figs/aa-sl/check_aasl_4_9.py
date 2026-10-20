@@ -44,7 +44,25 @@ def not_in_text(sub, msg=""):
 def in_fig(sub, msg=""):
     chk(sub in FIG, "図に見つからない: %s :: %s" % (msg, sub[:60]))
 
-BODY = TEXT.split("## Worked examples")[0]
+def _strip_exm(t):
+    """例題ブロック（::: {#exm-...} から対応する閉じ ::: まで）を取り除く。"""
+    out, depth = [], 0
+    for line in t.split("\n"):
+        s = line.strip()
+        if depth == 0:
+            if s.startswith("::: {#exm-"):
+                depth = 1
+                continue
+            out.append(line)
+        elif re.match(r"^:{3,}\s*\S", s):
+            depth += 1
+        elif re.match(r"^:{3,}\s*$", s):
+            depth -= 1
+    return "\n".join(out)
+
+# 例題は The idea の中に移ったので、「例題より前の本文」は
+# Common errors より前から例題ブロックを除いたもの
+BODY = _strip_exm(TEXT[:TEXT.index("\n## Common errors")])
 
 def not_in_body(sub, msg=""):
     chk(sub not in BODY, "本文（例題より前）に残っている: %s :: %s" % (msg, sub[:60]))
@@ -75,7 +93,7 @@ chk(TEXT.startswith("---\nsidebar: aa-sl\n---\n"), "front matter")
 in_text("# SL 4.9 — The normal distribution（正規分布） {#sec-aasl-4-9}", "見出し")
 
 for _h in ("## What you should be able to do", "## The idea", "## Why it works",
-           "## Worked examples", "## Common errors",
+           "## Common errors",
            "## Using your GDC (TI-Nspire CX II)", "## Exercises"):
     in_text(_h, "節 " + _h)
 
@@ -97,7 +115,7 @@ chk(TEXT.count("{.ex-sep}") == 9, "ex-sep 9 個")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳 14")
 chk(TEXT.count("</details>") == 14, "details 閉じ 14")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例 14")
-chk(len(re.findall(r"^---$", TEXT, re.M)) == 6, "行頭 --- は 6 本")
+chk(len(re.findall(r"^---$", TEXT, re.M)) == 2, "行頭 --- は 6 本")
 chk(TEXT.count("{.callout-warning}") == 7, "callout-warning 7（誤り 6 + Paper 2 の注 1）")
 chk(TEXT.count("{.callout-important}") == 0,
     "callout-important 0（4.9 は公式集に欄がない）")
@@ -123,24 +141,26 @@ for _i, _m in enumerate(re.findall(r"\{\.model-answer\}(.*?):::", TEXT, re.S), 1
     chk(not [c for c in _b if "぀" <= c <= "ヿ" or "一" <= c <= "鿿"],
         "model answer %d に日本語がない" % _i)
 
-in_text("(img/aasl-4-9-idea-a.svg){#fig-aasl49-idea-a width=100%}", "図 (a) の埋め込み")
-in_text("(img/aasl-4-9-idea-b.svg){#fig-aasl49-idea-b width=100%}", "図 (b) の埋め込み")
+in_text("(img/aasl-4-9-idea-a.svg){#fig-aasl49-idea-a width=80%}", "図 (a) の埋め込み")
+in_text("(img/aasl-4-9-idea-b.svg){#fig-aasl49-idea-b width=80%}", "図 (b) の埋め込み")
 chk(not os.path.exists(os.path.join(os.path.dirname(QMD), "img", "aasl-4-9-idea.svg")),
     "分割前の SVG は消してある")
 in_text("@fig-aasl49-idea-a", "図 (a) の参照")
 in_text("@fig-aasl49-idea-b", "図 (b) の参照")
 
 _quotes = re.findall(r"^> (.+)$", TEXT, re.M)
-chk(_quotes == ["For inverse normal calculations mean and standard deviation "
-                "will be given."],
-    "引用は inverse normal の 1 行だけ: %s" % _quotes)
+chk(_quotes == [], "シラバスの引用は本文から外した: %s" % _quotes)
+not_in_text("For inverse normal calculations mean and standard deviation",
+            "シラバスの引用は本文から外した")
+in_text("**逆正規計算の問題では、$\\mu$ と $\\sigma$ は必ず与えられます。**",
+        "引用の内容は日本語で直接書いた")
 for _w in ("そのとおり", "もちろん", "簡単です", "自明", "当たり前", "明らか"):
     not_in_text(_w, "禁止語 " + _w)
 for _w in ("得点になりません", "点になりません", "減点されます"):
     not_in_text(_w, "採点の断定 " + _w)
 
 # 4.9 では z を使わない（4.12 の内容）
-chk("$z$" not in TEXT.split("## Why it works")[1].split("## Worked examples")[0]
+chk("$z$" not in TEXT.split("## Why it works")[1].split("\n## Common errors")[0]
     or "[SL 4.12]" in TEXT, "z に触れるときは 4.12 に送る")
 not_in_text("z = \\frac{x - \\mu}", "z の式は 4.12 で扱う")
 not_in_text("標準化", "標準化は 4.12 で扱う")
@@ -382,7 +402,7 @@ for _k in (-2, -1, 0, 1, 2):
 not_in_text("左半分だけで面積は $0.5$ なので、それをこえるには $\\mu$ を通りすぎる",
             "答案そのものは本文から消した")
 chk("面積が $0.5$ より大きければ $k > \\mu$、小さければ $k < \\mu$ です。"
-    not in TEXT.split("## Worked examples")[0],
+    not in BODY,
     "§6 の先出しは消した（GDC の節に検査として残すのは可）")
 chk("$k$ is above $\\mu$ because the area exceeds" not in FIG,
     "図の説明から理由は消した")
@@ -537,7 +557,7 @@ chk(500 < 566, "E09 右のすそは平均より右")
 # Why it works は折りたたむ（AI HL と同じ形）
 # ══════════════════════════════════════════════════════════
 _wiw_i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_wiw_j = TEXT.index(chr(10) + "## Worked examples", _wiw_i)
+_wiw_j = TEXT.index(chr(10) + "## Common errors", _wiw_i)
 _wiw = TEXT[_wiw_i:_wiw_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -554,10 +574,10 @@ for _sent in [
     'given the area, finding ',
 ]:
     chk(_sent not in FIGCODE, "図に説明の文を書いていない: " + _sent[:24])
-in_text('### 2. 曲線の性質 {#properties}', "その内容は本文にある")
-in_text('### 3. $68\\%$ / $95\\%$ / $99.7\\%$ のめやす {#empirical}', "その内容は本文にある")
-in_text('### 4. 確率は面積 {#calc}', "その内容は本文にある")
-in_text('### 6. inverse normal（逆正規計算） {#inverse}', "その内容は本文にある")
+in_text('### 2. Properties of the normal curve（曲線の性質） {#properties}', "その内容は本文にある")
+in_text('### 3. The $68$–$95$–$99.7$ rule（$68\\%$ / $95\\%$ / $99.7\\%$ のめやす） {#empirical}', "その内容は本文にある")
+in_text('### 4. Probability as area（確率は面積） {#calc}', "その内容は本文にある")
+in_text('### 6. Inverse normal calculations（逆正規計算） {#inverse}', "その内容は本文にある")
 
 # ══════════════════════════════════════════════════════════
 # 2026-09-29：演習の図から説明の文を外した（方針 第 21 節）
@@ -595,6 +615,16 @@ in_text("ただし、$3$ 個分の区間の**外側**の確率を見積もる例
 chk(ncdf(-3, 3, 0, 1) > 0.99, "μ±3σ は 99% 以上")
 chk(near(ncdf(-3, 3, 0, 1), 0.9973, 5e-4), "その値は約 99.7%")
 chk(near(1 - ncdf(-3, 3, 0, 1), 0.0027, 5e-4), "外側は約 0.27%")
+
+# ══════════════════════════════════════════════════════════
+# 新レイアウト：例題は The idea の中（## Worked examples はない）
+# ══════════════════════════════════════════════════════════
+chk("## Worked examples" not in TEXT, "## Worked examples の節は消した")
+_exm_pos = [m.start() for m in re.finditer(r"^::: \{#exm-", TEXT, re.M)]
+_wiw_pos = TEXT.index("\n## Why it works")
+chk(len(_exm_pos) == 4, "例題の数は 4 のまま: %d" % len(_exm_pos))
+chk(all(TEXT.index("\n## The idea") < p < _wiw_pos for p in _exm_pos),
+    "例題はすべて The idea の中（Why it works より前）")
 
 print()
 print("OK", OK, "/ NG", NG)

@@ -48,6 +48,10 @@ def in_fig(sub, msg=""):
     chk(sub in FIG, "図のスクリプトに見つからない: " + msg + " :: " + sub[:70])
 
 
+def not_in_fig(sub, msg=""):
+    chk(sub not in FIG, "図に文章が残っている: " + msg + " :: " + sub[:70])
+
+
 
 _x = sp.Symbol("x", positive=True)
 _y = sp.Symbol("y", positive=True)
@@ -145,23 +149,23 @@ chk(12 * PI - 3 * PI == 9 * PI, "演習10 差は 9π")
 # ══════════════════════════════════════════════════════════
 # 3. 公式集とシラバス（逐語）
 # ══════════════════════════════════════════════════════════
-in_text("> Area of the region enclosed by a curve and the y-axis in a given"
+not_in_text("> Area of the region enclosed by a curve and the y-axis in a given"
         " interval.", "シラバス 1 行目を逐語で")
-in_text("> Volumes of revolution about the x-axis or y-axis.",
+not_in_text("> Volumes of revolution about the x-axis or y-axis.",
         "回転体を逐語で")
 in_text("公式集の **5.17** の欄", "公式集の場所")
-in_text("> Area of region enclosed by a curve and y-axis",
+not_in_text("> Area of region enclosed by a curve and y-axis",
         "公式集の面積の見出しを逐語で")
-in_text("> Volume of revolution about the x or y-axes",
+not_in_text("> Volume of revolution about the x or y-axes",
         "公式集の体積の見出しを逐語で")
 
 # ══════════════════════════════════════════════════════════
 # 4. 図と、答えの漏れ
 # ══════════════════════════════════════════════════════════
-in_fig("area between a curve and the $y$-axis", "図(a) の題")
-in_fig("each strip has area", "図(a) の注")
-in_fig("a stack of circular discs", "図(b) の題")
-in_fig("each disc has volume", "図(b) の注")
+not_in_fig("area between a curve and the $y$-axis", "図(a) の題")
+not_in_fig("each strip has area", "図(a) の注")
+not_in_fig("a stack of circular discs", "図(b) の題")
+not_in_fig("each disc has volume", "図(b) の注")
 in_text("よこ長の細い長方形を積みます。", "キャプション (a)")
 in_text("の円板を積みます。", "キャプション (b)")
 _BODY = TEXT[:TEXT.index("## Exercises")]
@@ -183,7 +187,7 @@ for _m in ["Casio", "fx-CG50", "TI-84", "OPTN", "PRB", "cSolve"]:
     not_in_text(_m, "他機種・確かめていない機能: " + _m)
 not_in_text("## 参考：この項目のシラバス（原文）", "末尾のシラバスは置かない")
 
-chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 6, "--- は 6 本")
+chk(len([l for l in TEXT.splitlines() if l.rstrip() == "---"]) == 2, "--- は 2 本")
 chk(TEXT.count('<details class="jp-trans">') == 14, "日本語訳が 14")
 chk(TEXT.count("</details>") == 14, "</details> も 14")
 chk(TEXT.count("{.ex-sep}") == 9, "ex-sep が 9")
@@ -192,11 +196,12 @@ chk(TEXT.count("{.model-answer}") == 4, "model-answer が 4")
 chk(len(re.findall(r"^::: \{#exm-aahl517-", TEXT, re.M)) == 4, "例題が 4")
 chk(TEXT.count("## 解答例（答案用紙に書くこと）") == 14, "解答例が 14")
 _h2 = re.findall(r"^## (.+)$", TEXT, re.M)
-_want = ["The idea", "Why it works", "Worked examples", "Common errors",
+_want = ["The idea", "Why it works", "Common errors",
          "Exercises"]
+not_in_text("## Worked examples", "例題は各節の説明のすぐ後に置く")
 chk([h for h in _h2 if h in _want] == _want, "5 つの見出しが所定の順")
-chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 8)),
-    "The idea が 1..7 で連番")
+chk([int(_v) for _v in re.findall(r"^### (\d+)\. ", TEXT, re.M)] == list(range(1, 6)),
+    "The idea が 1..5 で連番")
 chk(TEXT.count("**検算") >= 12, "検算が十分ある: %d" % TEXT.count("**検算"))
 not_in_text("**確かめ", "検算は「検算」で統一")
 for word in ["誰でもできる", "簡単です", "当然", "明らか", "もちろん",
@@ -236,7 +241,7 @@ chk(len(re.findall(r"^::: ", TEXT, re.M)) == len(re.findall(r"^:::$", TEXT, re.M
 for _h in re.findall(r"^#{1,4} .+$", TEXT, re.M):
     chk(not re.search(r"\$\s*—", _h), "見出しで数式の直後に —: " + _h)
 _i = TEXT.index(chr(10) + "## Why it works" + chr(10))
-_j = TEXT.index(chr(10) + "## Worked examples", _i)
+_j = TEXT.index(chr(10) + "## Common errors", _i)
 _wiw = TEXT[_i:_j]
 chk('collapse="true"}' + chr(10) + "## クリックすると開きます" in _wiw,
     "Why it works は折りたたんである")
@@ -295,6 +300,12 @@ in_text("## 上端・下端に、もう一方の変数の値を使う", "上端�
 in_text("## $2$ 曲線のとき、差を $2$ 乗する", "2 乗の差")
 in_text("**$2$ 乗してから引く**、と覚えてください。", "2 乗してから引く")
 
+not_in_text("### 7. Checking with a known solid", "知っている立体の節は消した")
+not_in_text("{#limits}", "上端・下端は第 4 節の説明につなげた")
+in_text("](img/aahl-5-17-idea-c.svg)", "y 軸まわりの図")
+in_text("](img/aahl-5-17-idea-d.svg)", "2 曲線のあいだの図")
 print()
+not_in_text("シラバスは、次のように書いています。", "決まり文句は使わない")
+
 print("OK", OK, "/ NG", NG)
 sys.exit(1 if NG else 0)

@@ -39,8 +39,6 @@ fig1, ax1 = plt.subplots(figsize=(5.8, 5.2))
 # ══════════════════════════════════════════════════════════
 # (a) 接線と法線
 # ══════════════════════════════════════════════════════════
-ax1.set_title("The tangent and the normal at $P$", fontsize=11, color=INK,
-              loc="left", pad=12)
 
 
 def f(t):
@@ -54,7 +52,7 @@ M = 2 * 0.16 * PX
 T = np.linspace(0.15, 5.0, 400)
 ax1.plot(T, f(T), color=ACCENT, linewidth=2.0)
 ax1.set_xlim(-0.45, 5.7)
-ax1.set_ylim(-1.25, 4.90)
+ax1.set_ylim(-0.30, 4.90)
 # ★ 直角を直角に見せるため、縦横の目もりの幅をそろえる。
 ax1.set_aspect("equal", adjustable="box")
 ax1.axis("off")
@@ -78,15 +76,13 @@ ax1.plot([(_c + _u)[0], (_c + _u + _v)[0], (_c + _v)[0]],
          [(_c + _u)[1], (_c + _u + _v)[1], (_c + _v)[1]],
          color=GREY, linewidth=1.1)
 
-ax1.text(PX - 0.16, PY + 0.24, "$P$", fontsize=12, color=INK, ha="right")
+ax1.text(PX - 0.22, PY + 0.02, "$P$", fontsize=12, color=INK, ha="right",
+         va="center")
 ax1.text(4.64, PY + M * (4.55 - PX), "tangent", fontsize=10, color=WARM,
          va="center")
 ax1.text(1.24, PY - (1.0 / M) * (1.35 - PX), "normal", fontsize=10,
          color=ACCENT, va="center", ha="right")
 
-ax1.text(0.0, -0.62, "gradient of tangent $= m$", fontsize=10, color=WARM)
-ax1.text(0.0, -1.06, r"gradient of normal $= -\frac{1}{m}$   (when $m \neq 0$)",
-         fontsize=10, color=ACCENT)
 
 for _fig, _name in ((fig1, "aasl-5-4-idea-a.svg"),):
     _fig.tight_layout()

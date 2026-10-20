@@ -50,8 +50,8 @@ def dim(ax, p, q, lab, off=0.0, side=1, color=INK, fs=12, rot=0):
 
 
 # ══════════════ 1. 5つの手順 ══════════════
-fig, ax = plt.subplots(figsize=(7.2, 4.2))
-blank(ax, (0, 1), (0, 1))
+fig, ax = plt.subplots(figsize=(7.2, 3.9))
+blank(ax, (0, 1), (0.06, 1))
 
 steps = [
     ("1", "name the variable", "$x = \\ldots$", ACC),
@@ -70,16 +70,14 @@ for i, (no, lab, eq, col) in enumerate(steps):
     if i < 4:
         ax.annotate("", xy=(0.055, y - 0.145), xytext=(0.055, y - 0.045),
                     arrowprops=dict(arrowstyle="-|>", color=GREY, lw=1.6))
-ax.text(0.5, 0.015, "step 2 is the one students forget",
-        fontsize=12, ha="center", va="center", color=GOLD)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-7-steps.svg"), bbox_inches="tight")
 plt.close(fig)
 
 
 # ══════════════ 2. 壁ぎわの囲い ══════════════
-fig, ax = plt.subplots(figsize=(6.6, 4.0))
-blank(ax, (-1.2, 11.2), (-1.9, 5.4))
+fig, ax = plt.subplots(figsize=(5.6, 3.4))
+blank(ax, (-1.4, 8.8), (-1.3, 4.5))
 ax.set_aspect("equal")
 
 W, H = 8.0, 3.2
@@ -87,7 +85,7 @@ W, H = 8.0, 3.2
 ax.plot([-0.6, W + 0.6], [H, H], color=INK, lw=4.0, zorder=6)
 for t in np.arange(-0.6, W + 0.7, 0.42):
     ax.plot([t, t - 0.30], [H, H + 0.34], color=GREY, lw=1.3, zorder=5)
-ax.text(W / 2, H + 0.72, "wall  (no fence needed here)", fontsize=12,
+ax.text(W / 2, H + 0.72, "wall", fontsize=12,
         ha="center", va="bottom", color=INK)
 
 ax.add_patch(Rectangle((0, 0), W, H, facecolor=LINE, alpha=0.13, zorder=2))
@@ -99,10 +97,6 @@ dim(ax, (-0.75, 0), (-0.75, H), "$x$", off=0.0, color=ACC, fs=13)
 dim(ax, (0, -0.85), (W, -0.85), "$60-2x$", off=0.0, color=ACC, fs=13)
 ax.text(W / 2, H / 2, "area $= x(60-2x)$", fontsize=13.5, ha="center",
         va="center", color=INK, zorder=10, bbox=BOX)
-ax.text(10.9, 1.6, "the fence has\n$3$ sides only", fontsize=11.5,
-        ha="right", va="center", color=ACC, zorder=10, bbox=BOX)
-ax.text(-1.1, 4.9, "$60$ m of fencing:   $2x + (\\text{other side}) = 60$",
-        fontsize=12.5, ha="left", va="center", color=GOLD)
 fig.tight_layout()
 fig.savefig(os.path.join(OUT, "sl-5-7-fence.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -128,8 +122,6 @@ dim(ax, (0, -1.3), (S, -1.3), "$12$", off=0.0, fs=12.5)
 dim(ax, (0, S + 1.1), (c, S + 1.1), "$x$", off=0.0, color=ACC, fs=12.5)
 dim(ax, (c, S + 1.1), (S - c, S + 1.1), "$12-2x$", off=0.0, color=GREEN,
     fs=12.5)
-ax.set_title("cut a square of side $x$ from each corner", fontsize=12.5,
-             color=INK, pad=10)
 
 ax = axs[1]
 blank(ax, (-1.6, 13.6), (-2.6, 15.2))
@@ -159,8 +151,6 @@ dim(ax, (FBL[0], FBL[1] - 1.1), (FBR[0], FBR[1] - 1.1), "$12-2x$", off=0.0,
     color=GREEN, fs=12.5)
 ax.text(6.0, 13.0, "$V = x(12-2x)^{2}$", fontsize=15, ha="center",
         va="center", color=INK)
-ax.set_title("fold up the sides: an open box", fontsize=12.5, color=INK,
-             pad=10)
 
 fig.savefig(os.path.join(OUT, "sl-5-7-box.svg"), bbox_inches="tight")
 plt.close(fig)
@@ -180,12 +170,10 @@ ax.plot([2], [128], "o", color=ACC, ms=10, zorder=9)
 ax.text(2.35, 148, "maximum  $(2,\\,128)$", color=ACC, fontsize=12.5,
         ha="left", va="center", zorder=10, bbox=BOX)
 ax.plot([6], [0], "o", color=GREY, ms=8, zorder=9)
-ax.text(6.15, 34, "$x=6$ also solves\n$V'(x)=0$, but the box\nwould have no base",
-        color=GREY, fontsize=11, ha="right", va="center", zorder=10, bbox=BOX)
 
 for a in (0, 6):
     ax.axvline(a, color=GOLD, lw=1.6, ls=(0, (5, 4)), zorder=2)
-ax.text(3.0, -28, "the only sensible domain is  $0 < x < 6$",
+ax.text(3.0, -28, "$0 < x < 6$",
         color=GOLD, fontsize=12.5, ha="center", va="center", zorder=10,
         bbox=BOX)
 ax.set_xlabel("$x$  (cm cut from each corner)", fontsize=11, color=INK,
@@ -198,11 +186,11 @@ plt.close(fig)
 
 
 # ══════════════ 5. 円柱：公式集にあるのは「側面」だけ ══════════════
-fig, axs = plt.subplots(1, 2, figsize=(9.8, 4.4),
+fig, axs = plt.subplots(1, 2, figsize=(9.8, 3.8),
                         gridspec_kw=dict(wspace=0.08))
 
 ax = axs[0]
-blank(ax, (-3.4, 3.4), (-1.4, 6.4))
+blank(ax, (-3.4, 3.4), (-1.3, 5.3))
 ax.set_aspect("equal")
 R, HH = 1.9, 3.6
 ax.add_patch(Rectangle((-R, 0.6), 2 * R, HH, facecolor=LINE, alpha=0.14,
@@ -219,28 +207,26 @@ ax.text(R / 2, 0.6 + HH + 0.42, "$r$", color=ACC, fontsize=13, ha="center",
         va="bottom", zorder=9)
 dim(ax, (R + 0.75, 0.6), (R + 0.75, 0.6 + HH), "$h$", off=0.0, color=ACC,
     fs=12.5)
-ax.text(0, -0.9, "open at the top", fontsize=12, ha="center", va="center",
+ax.text(0, -0.9, "open top", fontsize=12, ha="center", va="center",
         color=INK)
-ax.set_title("the container", fontsize=12.5, color=INK, pad=8)
 
 ax = axs[1]
-blank(ax, (-0.6, 10.6), (-2.2, 6.6))
+blank(ax, (-0.6, 10.6), (-0.3, 6.0))
 ax.set_aspect("equal")
 ax.add_patch(Rectangle((0.4, 2.0), 5.0, 2.9, facecolor=LINE, alpha=0.14,
                        edgecolor=INK, lw=1.8, zorder=3))
 ax.text(2.9, 3.45, "$2\\pi r \\times h$", fontsize=15, ha="center",
         va="center", color=INK, zorder=6)
-ax.text(2.9, 5.15, "curved surface\nIN the booklet", color=GREEN,
+ax.text(2.9, 5.15, "curved surface", color=GREEN,
         fontsize=11.5, ha="center", va="bottom", zorder=6)
 ax.add_patch(plt.Circle((8.0, 3.45), 1.25, facecolor=GREEN, alpha=0.20,
                         edgecolor=INK, lw=1.8, zorder=3))
 ax.text(8.0, 3.45, "$\\pi r^{2}$", fontsize=15, ha="center", va="center",
         color=INK, zorder=6)
-ax.text(8.0, 5.15, "the base\nNOT in the booklet", color=ACC, fontsize=11.5,
+ax.text(8.0, 5.15, "base", color=ACC, fontsize=11.5,
         ha="center", va="bottom", zorder=6)
 ax.text(4.6, 0.4, "$S = 2\\pi r h + \\pi r^{2}$", fontsize=15.5,
         ha="center", va="center", color=INK)
-ax.set_title("its surface, opened out", fontsize=12.5, color=INK, pad=8)
 
 fig.savefig(os.path.join(OUT, "sl-5-7-cylinder.svg"), bbox_inches="tight")
 plt.close(fig)
